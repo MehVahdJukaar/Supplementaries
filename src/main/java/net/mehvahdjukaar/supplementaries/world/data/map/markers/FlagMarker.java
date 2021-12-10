@@ -4,10 +4,10 @@ import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.ColoredDecoration;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;

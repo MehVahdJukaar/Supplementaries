@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -74,32 +75,35 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
             world.setBlock(pos, state.setValue(TRIGGERED, powered), 4);
             //server
             //calls event on server and client through packet
-            if (powered)
+            if (powered) {
+                world.gameEvent(GameEvent.BLOCK_PRESS, pos);
                 world.blockEvent(pos, state.getBlock(), 1, 0);
+            }
         }
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
-            if (worldIn.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+            if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
                 tile.sheared = !tile.sheared;
                 tile.setChanged();
-                worldIn.sendBlockUpdated(pos, state, state, 3);
-                if (worldIn.isClientSide) {
+                level.sendBlockUpdated(pos, state, state, 3);
+                if (level.isClientSide) {
                     Minecraft.getInstance().particleEngine.destroy(pos, state);
                 }
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
-        if (!worldIn.isClientSide) {
-            worldIn.blockEvent(pos, state.getBlock(), 1, 0);
+        if (!level.isClientSide) {
+            level.gameEvent(player,GameEvent.BLOCK_PRESS, pos);
+            level.blockEvent(pos, state.getBlock(), 1, 0);
         } else {
             player.displayClientMessage(new TextComponent("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
         }
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

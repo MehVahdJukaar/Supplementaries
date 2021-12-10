@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
+import net.mehvahdjukaar.supplementaries.network.ClientBoundOpenScreenPacket;
+import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 
 public interface IScreenProvider {
 
-    default void openScreen(Level level, BlockPos pos, Player player) {
-        Screen s = this.getScreen();
-        if (s != null) {
-            Minecraft.getInstance().setScreen(this.getScreen());
-        }
-    }
+    void openScreen(Level level, BlockPos pos, Player player);
 
-    Screen getScreen();
+    default void sendOpenGuiPacket(Level level, BlockPos pos, Player player) {
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                new ClientBoundOpenScreenPacket(pos));
+    }
 }

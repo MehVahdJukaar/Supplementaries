@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;

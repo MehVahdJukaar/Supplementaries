@@ -30,6 +30,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Method;
@@ -109,6 +110,7 @@ public class WrenchItem extends Item {
 
                 if (player instanceof ServerPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, itemstack);
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 } else {
                     playTurningEffects(pos, shiftDown, dir, level, player);
                 }

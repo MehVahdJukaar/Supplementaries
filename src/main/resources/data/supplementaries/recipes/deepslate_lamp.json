@@ -4,13 +4,6 @@
     {
       "conditions": [
         {
-          "type": "forge:not",
-          "value": {
-            "type": "forge:tag_empty",
-            "tag": "supplementaries:deepslate"
-          }
-        },
-        {
           "flag": "deepslate_lamp",
           "type": "supplementaries:flag"
         }
@@ -24,7 +17,7 @@
         ],
         "key": {
           "0": {
-            "tag": "supplementaries:deepslate"
+            "item": "minecraft:deepslate"
           },
           "1": {
             "item": "minecraft:shroomlight"

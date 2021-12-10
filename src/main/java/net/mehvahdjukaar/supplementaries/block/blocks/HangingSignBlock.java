@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,49 +55,53 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
-            ItemStack handItem = player.getItemInHand(handIn);
-            boolean server = !level.isClientSide();
+        if(!level.isClientSide) {
+            if (level.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
+                ItemStack handItem = player.getItemInHand(handIn);
 
-            InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
-            if(result != InteractionResult.PASS) return result;
+                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile);
+                if (result != InteractionResult.PASS) return result;
 
-            //place item
-            //TODO: fix left hand(shield)
-            if (handIn == InteractionHand.MAIN_HAND) {
-                //remove
-                if (!tile.isEmpty() && handItem.isEmpty()) {
-                    ItemStack it = tile.removeStackFromSlot(0);
-                    if (!level.isClientSide()) {
-                        player.setItemInHand(handIn, it);
-                        tile.setChanged();
+                //place item
+                //TODO: fix left hand(shield)
+                if (handIn == InteractionHand.MAIN_HAND) {
+                    //remove
+                    if (!tile.isEmpty() && handItem.isEmpty()) {
+                        ItemStack it = tile.removeStackFromSlot(0);
+                        if (!level.isClientSide()) {
+                            player.setItemInHand(handIn, it);
+                            tile.setChanged();
+                        }
+                        return InteractionResult.CONSUME;
                     }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
-                }
-                //place
-                else if (!handItem.isEmpty() && tile.isEmpty()) {
-                    ItemStack it = handItem.copy();
-                    it.setCount(1);
-                    tile.setItems(NonNullList.withSize(1, it));
+                    //place
+                    else if (!handItem.isEmpty() && tile.isEmpty()) {
+                        ItemStack it = handItem.copy();
+                        it.setCount(1);
+                        tile.setItems(NonNullList.withSize(1, it));
 
-                    if (!player.isCreative()) {
-                        handItem.shrink(1);
-                    }
-                    if (!level.isClientSide()) {
+                        if (!player.isCreative()) {
+                            handItem.shrink(1);
+                        }
+
                         level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
                         tile.setChanged();
-                    }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
-                }
 
-                // open gui (edit sign with empty hand)
-                else if (handItem.isEmpty()) {
-                    if (!server) tile.openScreen(level, pos, player);
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                        return InteractionResult.CONSUME;
+                    }
+
+                    // open gui (edit sign with empty hand)
+                    else {
+                        tile.sendOpenGuiPacket(level, pos, player);
+                        return InteractionResult.CONSUME;
+                    }
                 }
             }
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        else{
+            return InteractionResult.SUCCESS;
+        }
     }
 
     @Override

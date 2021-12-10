@@ -10,15 +10,15 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -67,11 +67,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public TextHolder getTextHolder() {
         return this.textHolder;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public Screen getScreen() {
-        return new SignPostGui(this);
     }
 
     @Override
@@ -166,5 +161,10 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 //TODO: add antique ink cap also
         //if(cap == CapabilityHandler.ANTIQUE_TEXT_CAP) return LazyOptional.of(()->this.textHolder);
         return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player) {
+        Minecraft.getInstance().setScreen(new SignPostGui(this));
     }
 }

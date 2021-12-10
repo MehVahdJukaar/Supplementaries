@@ -3,13 +3,17 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
+import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-
-public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected {
+public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider {
 
     private UUID owner = null;
 
@@ -157,5 +160,10 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected 
     @Override
     public void setOwner(UUID owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player) {
+        Minecraft.getInstance().setScreen(new BlackBoardGui(this));
     }
 }

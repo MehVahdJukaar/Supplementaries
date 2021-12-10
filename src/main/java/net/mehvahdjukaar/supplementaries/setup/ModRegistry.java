@@ -44,7 +44,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -52,7 +51,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Supplier;
+
+import static net.mehvahdjukaar.supplementaries.setup.RegistryHelper.*;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -84,40 +84,9 @@ public class ModRegistry {
     }
 
     //creative tab
-
     public static final CreativeModeTab MOD_TAB = !RegistryConfigs.reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
     public static final CreativeModeTab JAR_TAB = !RegistryConfigs.reg.JAR_TAB.get() ? null : new JarTab("jars");
 
-    public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (RegistryConfigs.reg.isEnabled(regName)) {
-            return MOD_TAB == null ? g : MOD_TAB;
-        }
-        return null;
-    }
-
-    public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
-        return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
-    }
-
-    private static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
-        return ITEMS.register(name, sup);
-    }
-
-    protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group) {
-        return regItem(blockSup.getId().getPath(), () -> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
-    }
-
-    protected static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group, int burnTime) {
-        return regItem(blockSup.getId().getPath(), () -> new BurnableBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
-    }
-
-    private static RegistryObject<SimpleParticleType> regParticle(String name) {
-        return PARTICLES.register(name, () -> new SimpleParticleType(true));
-    }
-
-    private static RegistryObject<SoundEvent> makeSoundEvent(String name) {
-        return SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
-    }
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"),
             new LootItemFunctionType(new CurseLootFunction.Serializer()));
@@ -358,8 +327,8 @@ public class ModRegistry {
     //TODO: datagen signs tags
     //hanging signs
     public static final String HANGING_SIGN_NAME = "hanging_sign";
-    public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = Variants.makeHangingSingsBlocks();
-    public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = Variants.makeHangingSignsItems();
+    public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = RegistryHelper.makeHangingSingsBlocks();
+    public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = RegistryHelper.makeHangingSignsItems();
 
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
     public static final RegistryObject<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES
@@ -377,12 +346,12 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME, () -> BlockEntityType.Builder.of(
             SignPostBlockTile::new, SIGN_POST.get()).build(null));
 
-    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = Variants.makeSignPostItems();
+    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = RegistryHelper.makeSignPostItems();
 
     //flags
     public static final String FLAG_NAME = "flag";
-    public static final Map<DyeColor, RegistryObject<Block>> FLAGS = Variants.makeFlagBlocks(FLAG_NAME);
-    public static final Map<DyeColor, RegistryObject<Item>> FLAGS_ITEMS = Variants.makeFlagItems(FLAG_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> FLAGS = RegistryHelper.makeFlagBlocks(FLAG_NAME);
+    public static final Map<DyeColor, RegistryObject<Item>> FLAGS_ITEMS = RegistryHelper.makeFlagItems(FLAG_NAME);
 
     public static final RegistryObject<BlockEntityType<FlagBlockTile>> FLAG_TILE = TILES
             .register(FLAG_NAME, () -> BlockEntityType.Builder.of(FlagBlockTile::new,
@@ -390,7 +359,7 @@ public class ModRegistry {
 
     //ceiling banner
     public static final String CEILING_BANNER_NAME = "ceiling_banner";
-    public static final Map<DyeColor, RegistryObject<Block>> CEILING_BANNERS = Variants.makeCeilingBanners(CEILING_BANNER_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> CEILING_BANNERS = RegistryHelper.makeCeilingBanners(CEILING_BANNER_NAME);
 
     public static final RegistryObject<BlockEntityType<CeilingBannerBlockTile>> CEILING_BANNER_TILE = TILES
             .register(CEILING_BANNER_NAME, () -> BlockEntityType.Builder.of(CeilingBannerBlockTile::new,
@@ -400,13 +369,13 @@ public class ModRegistry {
 
     public static final String PRESENT_NAME = "present";
 
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = RegistryHelper.makePresents(PRESENT_NAME);
 
     public static final RegistryObject<BlockEntityType<PresentBlockTile>> PRESENT_TILE = TILES
             .register(PRESENT_NAME, () -> BlockEntityType.Builder.of(PresentBlockTile::new,
                     PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
+    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = RegistryHelper.makePresentsItems();
 
     public static final RegistryObject<MenuType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
             .register(PRESENT_NAME, () -> IForgeMenuType.create(PresentContainer::new));
@@ -1225,21 +1194,21 @@ public class ModRegistry {
     //ashen bricks
     public static final String ASH_BRICKS_NAME = "ash_bricks";
 
-    public static EnumMap<Variants.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
-            Variants.registerFullBlockSet(ASH_BRICKS_NAME, Blocks.STONE_BRICKS);
+    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
+            RegistryHelper.registerFullBlockSet(ASH_BRICKS_NAME, Blocks.STONE_BRICKS);
 
 
     //stone tile
     public static final String STONE_TILE_NAME = "stone_tile";
 
-    public static EnumMap<Variants.VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
-            Variants.registerFullBlockSet(STONE_TILE_NAME, Blocks.STONE_BRICKS);
+    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
+            RegistryHelper.registerFullBlockSet(STONE_TILE_NAME, Blocks.STONE_BRICKS);
 
     //blackstone tile
     public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
 
-    public static EnumMap<Variants.VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
-            Variants.registerFullBlockSet(BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE);
+    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
+            RegistryHelper.registerFullBlockSet(BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE);
 
     //stone lamp
     public static final String STONE_LAMP_NAME = "stone_lamp";

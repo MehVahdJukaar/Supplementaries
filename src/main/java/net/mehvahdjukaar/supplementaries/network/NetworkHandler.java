@@ -4,13 +4,11 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkDirection;
@@ -94,6 +92,9 @@ public class NetworkHandler {
 
         register(ClientBoundSpawnBlockParticlePacket.class, ClientBoundSpawnBlockParticlePacket::buffer,
                 ClientBoundSpawnBlockParticlePacket::new, ClientBoundSpawnBlockParticlePacket::handler);
+
+        register(ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::buffer,
+                ClientBoundOpenScreenPacket::new, ClientBoundOpenScreenPacket::handler);
 
 
     }

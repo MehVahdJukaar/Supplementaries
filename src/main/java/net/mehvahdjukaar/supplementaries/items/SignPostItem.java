@@ -8,26 +8,24 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
-
-import net.minecraft.world.item.Item.Properties;
 
 import javax.annotation.Nullable;
 
@@ -60,21 +58,22 @@ public class SignPostItem extends Item {
         Level world = context.getLevel();
         ItemStack itemstack = context.getItemInHand();
 
-        Block targetblock = world.getBlockState(blockpos).getBlock();
+        BlockState state = world.getBlockState(blockpos);
+        Block targetBlock = state.getBlock();
 
         boolean framed = false;
 
-        boolean isFence = isFence(targetblock);
-        boolean isSignPost = targetblock instanceof SignPostBlock;
+        boolean isFence = isFence(targetBlock);
+        boolean isSignPost = targetBlock instanceof SignPostBlock;
         if (isFence || isSignPost) {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
             if (CompatHandler.framedblocks) {
-                Block f = FramedSignPost.tryGettingFramedBlock(targetblock, world, blockpos);
+                Block f = FramedSignPost.tryGettingFramedBlock(targetBlock, world, blockpos);
                 if (f != null) {
                     framed = true;
-                    if (f != Blocks.AIR) targetblock = f;
+                    if (f != Blocks.AIR) targetBlock = f;
                 }
             }
 
@@ -108,9 +107,10 @@ public class SignPostItem extends Item {
                     flag = true;
                 }
                 if (flag) {
-                    if (isFence) tile.mimic = targetblock.defaultBlockState();
+                    if (isFence) tile.mimic = targetBlock.defaultBlockState();
                     tile.framed = framed;
                     tile.setChanged();
+                    world.sendBlockUpdated(blockpos,state,state,3);
                 }
 
             }

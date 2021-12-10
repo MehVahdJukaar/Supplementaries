@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
 

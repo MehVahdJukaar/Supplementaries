@@ -277,6 +277,7 @@
   "filled_map.antique.tooltip": "Antique",
   "filled_map.antique": "Antique Map",
   "block.supplementaries.globe_sepia": "Sepia Globe",
+  "message.supplementaries.present": "To: %s",
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",

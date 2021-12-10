@@ -1,31 +1,18 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 
 //TODO: improve this
@@ -53,10 +40,12 @@ public class TurnTableBlockTile extends BlockEntity {
         if (tile.cooldown == 0) {
             Direction dir = state.getValue(TurnTableBlock.FACING);
             boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
-            boolean success = BlockUtils.tryRotatingBlock(dir,ccw, pos.relative(dir), level, null).isPresent();
+            BlockPos targetPos = pos.relative(dir);
+            boolean success = BlockUtils.tryRotatingBlock(dir,ccw, targetPos, level, null).isPresent();
             if(success){
-                level.blockEvent(pos, state.getBlock(),0,0);
-                level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+                level.blockEvent(targetPos, state.getBlock(),0,0);
+                level.gameEvent(GameEvent.BLOCK_CHANGE, targetPos);
+                level.playSound(null, targetPos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
             }
 
             tile.cooldown = TurnTableBlock.getPeriod(state);
@@ -69,7 +58,6 @@ public class TurnTableBlockTile extends BlockEntity {
             }
         } else if (tile.canRotate) {
             tile.cooldown--;
-            ServerLevel l;
         }
     }
     //TODO: this makes block instantly rotate when condition becomes true

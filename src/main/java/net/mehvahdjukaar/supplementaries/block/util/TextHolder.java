@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -125,8 +126,9 @@ public class TextHolder implements IAntiqueTextProvider {
         this.hasGlowingText = glowing;
     }
 
+    //TODO: make server sided & send block updated
     //should only be called server side
-    public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, Runnable successCallback) {
+    public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
         if (player.getAbilities().mayBuild) {
             ItemStack stack = player.getItemInHand(hand);
             Item item = stack.getItem();
@@ -169,7 +171,8 @@ public class TextHolder implements IAntiqueTextProvider {
                 }
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                    successCallback.run();
+                    tile.setChanged();
+                    level.sendBlockUpdated(pos,tile.getBlockState(), tile.getBlockState(), 3);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }

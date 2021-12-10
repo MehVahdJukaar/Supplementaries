@@ -50,6 +50,6 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
     @OnlyIn(Dist.CLIENT)
     private static void spawnParticles(BlockPos pos){
         ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, pos, ModRegistry.SUDS_PARTICLE.get(),
-                UniformInt.of(2, 4), 0.01f, true);
+                UniformInt.of(2, 4), 0.001f,0.01f, true);
     }
 }

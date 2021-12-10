@@ -15,7 +15,7 @@ import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS
 
 public class Materials {
 
-    public static final Material BLACKBOARD_GRID = new Material(LOCATION_BLOCKS, Textures.BLACKBOARD_GRID);
+    public static final Material BLACKBOARD_OUTLINE = new Material(LOCATION_BLOCKS, Textures.BLACKBOARD_GRID);
 
 
     public static final Material BELLOWS_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);

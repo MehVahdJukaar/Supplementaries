@@ -20,7 +20,6 @@ import net.mehvahdjukaar.supplementaries.items.JarItem;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
@@ -50,6 +49,7 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -1026,9 +1026,8 @@ public class ItemsOverrideHandler {
             //place block
             BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
 
-            if (itemOverride instanceof BlockItem) {
-                result = ((BlockItem) itemOverride).place(ctx);
-
+            if (itemOverride instanceof BlockItem blockItem) {
+                result = blockItem.place(ctx);
             }
         }
         if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
@@ -1092,6 +1091,8 @@ public class ItemsOverrideHandler {
         if (player instanceof ServerPlayer) {
             CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
         }
+        world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
+
         if (sound == null) sound = newState.getSoundType(world, pos, player);
         world.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
         if (player == null || !player.getAbilities().instabuild) {

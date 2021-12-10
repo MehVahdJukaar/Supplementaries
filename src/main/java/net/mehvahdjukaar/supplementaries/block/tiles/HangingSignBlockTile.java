@@ -6,16 +6,16 @@ import net.mehvahdjukaar.supplementaries.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -59,9 +59,9 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         return this.textHolder;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public Screen getScreen() {
-        return new HangingSignGui(this);
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player) {
+        Minecraft.getInstance().setScreen(new HangingSignGui(this));
     }
 
     @Override

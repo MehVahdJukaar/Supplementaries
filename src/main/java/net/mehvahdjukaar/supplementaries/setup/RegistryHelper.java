@@ -1,12 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -26,7 +31,40 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("ConstantConditions")
-public class Variants {
+public class RegistryHelper {
+
+
+    public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
+        if (RegistryConfigs.reg.isEnabled(regName)) {
+            return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;
+        }
+        return null;
+    }
+
+    public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
+        return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
+    }
+
+    public static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
+        return ModRegistry.ITEMS.register(name, sup);
+    }
+
+    public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group) {
+        return regItem(blockSup.getId().getPath(), () -> new BlockItem(blockSup.get(), (new Item.Properties()).tab(group)));
+    }
+
+    public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group, int burnTime) {
+        return regItem(blockSup.getId().getPath(), () -> new BurnableBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
+    }
+
+    public static RegistryObject<SimpleParticleType> regParticle(String name) {
+        return ModRegistry.PARTICLES.register(name, () -> new SimpleParticleType(true));
+    }
+
+    public static RegistryObject<SoundEvent> makeSoundEvent(String name) {
+        return ModRegistry.SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
+    }
+
 
     public static boolean doesntHaveWoodInstalled(IWoodType wood) {
         return !ModList.get().isLoaded(wood.getNamespace());
@@ -58,7 +96,7 @@ public class Variants {
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
-                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), 200
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), 200
             )));
         }
         return map;
@@ -77,7 +115,7 @@ public class Variants {
             String name = getSignPostName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new SignPostItem(
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
-                            ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)), wood
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)), wood
             )));
         }
         return map;
@@ -112,7 +150,7 @@ public class Variants {
             map.put(color, ModRegistry.ITEMS.register(name, () -> new FlagItem(ModRegistry.FLAGS.get(color).get(),
                     new Item.Properties()
                             .stacksTo(16)
-                            .tab(ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
+                            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.FLAG_NAME))
             )));
         }
         return map;
@@ -142,7 +180,7 @@ public class Variants {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
         for (DyeColor color : DyeColor.values()) {
-            map.put(color, ModRegistry.regBlockItem(ModRegistry.CEILING_BANNERS.get(color), null));
+            map.put(color, regBlockItem(ModRegistry.CEILING_BANNERS.get(color), null));
         }
         return map;
     }
@@ -172,13 +210,16 @@ public class Variants {
     public static Map<DyeColor, RegistryObject<Item>> makePresentsItems() {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
-        /*
-        for(DyeColor color : DyeColor.values()){
+
+        for (DyeColor color : DyeColor.values()) {
             //ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)
-            map.put(color, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(color), ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)));
+            var p = ModRegistry.PRESENTS.get(color);
+            map.put(color, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
+                    (new Item.Properties()).tab(getTab(null, ModRegistry.PRESENT_NAME)))));
         }
-        */
-        map.put(null, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(null), null));
+        var p = ModRegistry.PRESENTS.get(null);
+        map.put(null, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
+                (new Item.Properties()).tab(getTab(null, ModRegistry.PRESENT_NAME)))));
 
         return map;
     }
@@ -211,11 +252,11 @@ public class Variants {
             if (!type.equals(VariantType.BLOCK)) name += "_" + type.name().toLowerCase();
             RegistryObject<Block> block = ModRegistry.BLOCKS.register(name, () -> type.create(parentBlock));
             CreativeModeTab tab = switch (type) {
-                case VERTICAL_SLAB -> ModRegistry.getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
-                case WALL -> ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, baseName);
-                default -> ModRegistry.getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
+                case VERTICAL_SLAB -> getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
+                case WALL -> getTab(CreativeModeTab.TAB_DECORATIONS, baseName);
+                default -> getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);
             };
-            ModRegistry.regBlockItem(block, tab);
+            regBlockItem(block, tab);
             map.put(type, block);
         }
         return map;

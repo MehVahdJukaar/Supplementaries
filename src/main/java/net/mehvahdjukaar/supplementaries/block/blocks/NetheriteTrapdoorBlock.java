@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.block.util.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -15,7 +14,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -27,9 +25,9 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -61,7 +59,9 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
                 }
 
                 //TODO: replace with proper sound event
-                this.playSound(player, worldIn, pos, state.getValue(OPEN));
+                boolean open = state.getValue(OPEN);
+                this.playSound(player, worldIn, pos, open);
+                worldIn.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
         }
 
@@ -76,7 +76,6 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
             worldIn.scheduleTick(pos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
         }
     }
-
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {

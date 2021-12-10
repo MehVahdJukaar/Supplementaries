@@ -8,12 +8,8 @@ import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRedesignRenderer;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.entities.goals.EatFodderGoal;
-import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.setup.DispenserStuff;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -92,7 +88,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
     public static class VisualBook {
         private final float angle;
-        private final @Nullable BookColor color;
+        private final @Nullable
+        BookColor color;
         private final Material material;
         private final ItemStack stack;
         private final boolean isEnchanted;
@@ -116,13 +113,13 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
                 this.material = Materials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
-            }else if(item.getRegistryName().getNamespace().equals("inspirations")) {
+            } else if (item.getRegistryName().getNamespace().equals("inspirations")) {
                 String colName = item.getRegistryName().getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
                 this.material = Materials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
-            }else if(BookPileBlock.isWrittenBook(item)){
+            } else if (BookPileBlock.isWrittenBook(item)) {
                 this.color = null;
                 this.material = item instanceof WritableBookItem ? Materials.BOOK_AND_QUILL_MATERIAL : Materials.BOOK_WRITTEN_MATERIAL;
 
@@ -158,13 +155,13 @@ public class BookPileBlockTile extends ItemDisplayTile {
         }
     }
 
-    private static final BookColor[] VALID_RANDOM_COLORS = {BookColor.BROWN,BookColor.ORANGE,BookColor.YELLOW,BookColor.RED,
-            BookColor.DARK_GREEN,BookColor.LIME,BookColor.TEAL,BookColor.BLUE,BookColor.PURPLE};
+    private static final BookColor[] VALID_RANDOM_COLORS = {BookColor.BROWN, BookColor.ORANGE, BookColor.YELLOW, BookColor.RED,
+            BookColor.DARK_GREEN, BookColor.LIME, BookColor.TEAL, BookColor.BLUE, BookColor.PURPLE};
 
     public enum BookColor {
-        BROWN(DyeColor.BROWN,1),
-        WHITE(DyeColor.WHITE,1),
-        BLACK(DyeColor.BLACK,1),
+        BROWN(DyeColor.BROWN, 1),
+        WHITE(DyeColor.WHITE, 1),
+        BLACK(DyeColor.BLACK, 1),
         LIGHT_GRAY(DyeColor.LIGHT_GRAY),
         GRAY(DyeColor.GRAY),
         ORANGE(DyeColor.ORANGE),
@@ -203,8 +200,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
             this(color.getName(), ColorHelper.pack(color.getTextureDiffuseColors()), -1);
         }
 
-        public static BookColor byName(String name){
-            for(BookColor c : values()) {
+        public static BookColor byName(String name) {
+            for (BookColor c : values()) {
                 if (c.name.equals(name)) {
                     return c;
                 }

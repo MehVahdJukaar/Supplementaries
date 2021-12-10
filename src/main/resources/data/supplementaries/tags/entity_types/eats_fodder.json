@@ -4,7 +4,8 @@
     "minecraft:pig",
     "minecraft:cow",
     "minecraft:sheep",
-    "minecraft:chicken"
+    "minecraft:chicken",
+    "minecraft:goat"
   ],
   "optional": [
     "autumnity:snail",

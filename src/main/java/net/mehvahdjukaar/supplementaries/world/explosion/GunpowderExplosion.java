@@ -26,6 +26,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class GunpowderExplosion extends Explosion {
 
         this.radius *= 2.0F;
 
-        net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
+        ForgeEventFactory.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
 
         explodeBlock(x + 1, y, z);
         explodeBlock(x - 1, y, z);

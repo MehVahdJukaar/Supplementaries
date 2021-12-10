@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.common.util.Lazy;
@@ -87,16 +88,17 @@ public class FrameBlockTile extends MimicBlockTile {
     public InteractionResult handleInteraction(Player player, InteractionHand hand, BlockHitResult trace) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        if (player.getAbilities().mayBuild && item instanceof BlockItem && this.getHeldBlock().isAir()) {
+        if (player.getAbilities().mayBuild && item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
 
-            BlockState toPlace = ((BlockItem) item).getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
+            BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
 
             if (isValidBlock(toPlace, this.worldPosition, this.level)) {
 
                 BlockState newState = this.acceptBlock(toPlace);
 
                 SoundType s = newState.getSoundType(level, worldPosition, player);
-                this.level.playSound(player, worldPosition, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
+                this.level.gameEvent(player, GameEvent.BLOCK_CHANGE, this.worldPosition);
+                this.level.playSound(player, this.worldPosition, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                 if (!player.isCreative() && !level.isClientSide()) {
                     stack.shrink(1);
                 }

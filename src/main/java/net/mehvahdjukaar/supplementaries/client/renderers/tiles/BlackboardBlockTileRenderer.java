@@ -4,23 +4,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.BlackboardBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.CrankBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -83,11 +81,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         float p = 1 / 16f;
                         float x = pair.getFirst() * p;
                         float y = pair.getSecond() * p;
-                        VertexConsumer builder2 = Materials.BLACKBOARD_GRID.buffer(bufferIn, RenderType::entityCutout);
+                        VertexConsumer builder2 = Materials.BLACKBOARD_OUTLINE.buffer(bufferIn, RenderType::entityCutout);
                         matrixStackIn.pushPose();
 
                         matrixStackIn.translate(x,1 - y - p, 0.001);
-                        RendererUtil.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, Materials.BLACKBOARD_GRID.sprite());
+                        RendererUtil.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, Materials.BLACKBOARD_OUTLINE.sprite());
                         matrixStackIn.popPose();
                     }
                 }

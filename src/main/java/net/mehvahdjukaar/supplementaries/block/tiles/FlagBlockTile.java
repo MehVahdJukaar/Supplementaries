@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -12,7 +11,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
@@ -22,8 +20,6 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -52,23 +48,10 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
         this.baseColor = color;
     }
 
-    public static ResourceLocation getFlagLocation(BannerPattern pattern) {
-        return new ResourceLocation(Supplementaries.MOD_ID, "textures/entity/flags/" + pattern.getFilename() + ".png");
-    }
-
     public void setCustomName(Component p_213136_1_) {
         this.name = p_213136_1_;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void fromItem(ItemStack stack, DyeColor color) {
-        this.itemPatterns = BannerBlockEntity.getItemPatterns(stack);
-        this.baseColor = color;
-        this.patterns = null;
-        this.receivedData = true;
-    }
-
-    @OnlyIn(Dist.CLIENT)
     public List<Pair<BannerPattern, DyeColor>> getPatterns() {
         if (this.patterns == null && this.receivedData) {
             this.patterns = BannerBlockEntity.createPatterns(this.getBaseColor(this::getBlockState), this.itemPatterns);

@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkDoubleDoorPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -23,6 +22,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,15 +39,17 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
 
         BlockPos p = this.hasTileEntity(state) ? pos : pos.below();
         BlockEntity te = worldIn.getBlockEntity(p);
-        if (te instanceof KeyLockableTile) {
-            if (((KeyLockableTile) te).handleAction(player, handIn, "door")) {
+        if (te instanceof KeyLockableTile keyLockableTile) {
+            if (keyLockableTile.handleAction(player, handIn, "door")) {
 
                 if (CompatHandler.quark) QuarkDoubleDoorPlugin.openDoorKey(worldIn, state, pos, player, handIn);
 
                 state = state.cycle(OPEN);
                 worldIn.setBlock(pos, state, 10);
                 //TODO: replace with proper sound event
-                worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+                boolean open =  state.getValue(OPEN);
+                worldIn.levelEvent(player, open? this.getOpenSound() : this.getCloseSound(), pos, 0);
+                worldIn.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
         }
 

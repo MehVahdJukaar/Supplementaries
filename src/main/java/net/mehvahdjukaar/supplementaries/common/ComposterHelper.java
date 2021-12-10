@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common;
 
-import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.HashMap;
 import java.util.Map;

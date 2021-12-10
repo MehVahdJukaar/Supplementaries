@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
-import net.minecraft.core.Direction;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.minecraft.core.Direction;
 
 import java.util.Arrays;
 import java.util.Map;

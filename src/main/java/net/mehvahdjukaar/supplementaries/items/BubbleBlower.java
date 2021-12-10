@@ -149,8 +149,10 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         //}&& entity.isUsingItem()
 
         if (entity != null && entity.isUsingItem()) {
-            boolean local = entity == Minecraft.getInstance().player;
-            boolean check = local ? CURRENT_LOCAL_PLAYER_USE_ITEM == stack : entity.getUseItem().getItem() == stack.getItem();
+            boolean local = false; //entity == Minecraft.getInstance().player;
+            boolean check = entity.getUseItem().equals(stack, true);
+
+            //local ? CURRENT_LOCAL_PLAYER_USE_ITEM == stack : entity.getUseItem().getItem() == stack.getItem();
             return check ? 1.0F : 0.0F;
         }
         return 0;

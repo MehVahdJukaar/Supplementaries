@@ -1,13 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.NonNullList;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.Block;
 
 public class BambooSpikesItem extends BurnableBlockItem {
     public BambooSpikesItem(Block blockIn, Properties builder) {

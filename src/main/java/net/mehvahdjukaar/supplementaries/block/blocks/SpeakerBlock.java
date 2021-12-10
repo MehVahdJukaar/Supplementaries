@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
@@ -28,11 +26,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SpeakerBlock extends Block implements EntityBlock{
@@ -96,6 +93,7 @@ public class SpeakerBlock extends Block implements EntityBlock{
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
                     if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
                         tile.sendMessage();
+                        world.gameEvent(GameEvent.RING_BELL, pos);
                     }
                 }
             }

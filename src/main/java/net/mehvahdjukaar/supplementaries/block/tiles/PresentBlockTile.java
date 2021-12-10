@@ -7,20 +7,20 @@ import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class PresentBlockTile extends ItemDisplayTile {
 
-    private int numPlayersUsing;
+    private int numPlayersUsing = 0;
 
     private String recipient = "";
     private String sender = "";
@@ -39,9 +39,7 @@ public class PresentBlockTile extends ItemDisplayTile {
         CompoundTag com = stack.getTag();
         if (com != null) {
             CompoundTag nbt = com.getCompound("BlockEntityTag");
-            if (nbt != null) {
-                return nbt.getBoolean("Packed");
-            }
+            return nbt.getBoolean("Packed");
         }
         return false;
     }

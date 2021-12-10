@@ -1,18 +1,17 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class DrippingLiquidParticle extends TextureSheetParticle{
+public class DrippingLiquidParticle extends TextureSheetParticle {
     private final Fluid fluid;
+
     private DrippingLiquidParticle(ClientLevel world, double x, double y, double z, Fluid fluid) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
@@ -28,16 +27,16 @@ public class DrippingLiquidParticle extends TextureSheetParticle{
         this.zo = this.z;
         this.ageParticle();
         if (!this.removed) {
-            this.yd -= (double)this.gravity;
+            this.yd -= (double) this.gravity;
             this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
             if (!this.removed) {
-                this.xd *= (double)0.98F;
-                this.yd *= (double)0.98F;
-                this.zd *= (double)0.98F;
+                this.xd *= (double) 0.98F;
+                this.yd *= (double) 0.98F;
+                this.zd *= (double) 0.98F;
                 BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (fluidstate.getType() == this.fluid && this.y < (double)((float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (fluidstate.getType() == this.fluid && this.y < (double) ((float) blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
 
@@ -52,6 +51,7 @@ public class DrippingLiquidParticle extends TextureSheetParticle{
         }
 
     }
+
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
@@ -63,8 +63,6 @@ public class DrippingLiquidParticle extends TextureSheetParticle{
     }
 
 
-
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         protected final SpriteSet spriteSet;
 
@@ -72,11 +70,12 @@ public class DrippingLiquidParticle extends TextureSheetParticle{
             this.spriteSet = spriteSet;
         }
 
+        @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
-            DrippingLiquidParticle dripparticle = new DrippingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
-            dripparticle.setColor((float)r, (float)g, (float)b);
-            dripparticle.pickSprite(this.spriteSet);
-            return dripparticle;
+            DrippingLiquidParticle drippingLiquidParticle = new DrippingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
+            drippingLiquidParticle.setColor((float) r, (float) g, (float) b);
+            drippingLiquidParticle.pickSprite(this.spriteSet);
+            return drippingLiquidParticle;
         }
     }
 }

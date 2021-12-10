@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.compat.decorativeblocks;
 
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 
 public class DecoBlocksCompatClient {
     public static void registerRenderLayers(){

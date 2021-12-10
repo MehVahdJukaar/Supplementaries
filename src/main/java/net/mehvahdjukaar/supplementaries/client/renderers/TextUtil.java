@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.mehvahdjukaar.supplementaries.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -66,6 +65,7 @@ public class TextUtil {
                         Mattew M
                         Lyon M
                         DrPineapple
+                        Colleen Cleland
                         Astralis
                         Toffanelly
                         Elijah

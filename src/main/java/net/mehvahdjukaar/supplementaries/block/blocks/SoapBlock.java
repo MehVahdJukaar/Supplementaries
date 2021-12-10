@@ -30,11 +30,10 @@ public class SoapBlock extends Block {
     @Override
     public boolean triggerEvent(BlockState pState, Level level, BlockPos pos, int pId, int pParam) {
         if (pId == 0) {
-
             Random r = level.random;
             for (int i = 0; i < 2; i++) {
-                level.addParticle(ModRegistry.SUDS_PARTICLE.get(), pos.getX() + r.nextFloat(), pos.getY() + 1.05, pos.getZ() + r.nextFloat(),
-                        (0.5 - r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.1f);
+                level.addParticle(ModRegistry.SUDS_PARTICLE.get(), pos.getX() + r.nextFloat(), pos.getY() + 1.1, pos.getZ() + r.nextFloat(),
+                        (0.5 - r.nextFloat()) * 0.1f, (r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.1f);
             }
             return true;
         }

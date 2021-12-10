@@ -16,8 +16,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RedMerchantContainer extends AbstractContainerMenu {
     private final Merchant trader;
@@ -73,37 +71,30 @@ public class RedMerchantContainer extends AbstractContainerMenu {
         return this.trader.getTradingPlayer() == pPlayer;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getTraderXp() {
         return this.trader.getVillagerXp();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getFutureTraderXp() {
         return this.tradeContainer.getFutureXp();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void setXp(int i) {
         this.trader.overrideXp(i);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public int getTraderLevel() {
         return this.merchantLevel;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void setMerchantLevel(int i) {
         this.merchantLevel = i;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void setCanRestock(boolean b) {
         this.canRestock = b;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean canRestock() {
         return this.canRestock;
     }
@@ -240,7 +231,6 @@ public class RedMerchantContainer extends AbstractContainerMenu {
         return stack.getItem() == stack1.getItem() && ItemStack.tagMatches(stack, stack1);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void setOffers(MerchantOffers merchantOffers) {
         this.trader.overrideOffers(merchantOffers);
     }
@@ -249,7 +239,6 @@ public class RedMerchantContainer extends AbstractContainerMenu {
         return this.trader.getOffers();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean showProgressBar() {
         return this.showProgressBar;
     }

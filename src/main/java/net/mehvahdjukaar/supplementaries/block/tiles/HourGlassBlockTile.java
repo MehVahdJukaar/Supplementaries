@@ -24,9 +24,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
@@ -58,7 +55,6 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         this.progress = p;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public TextureAtlasSprite getOrCreateSprite() {
         if (this.cachedTexture == null) {
             this.cachedTexture = this.sandType.getSprite(this.getDisplayedItem(), this.level);

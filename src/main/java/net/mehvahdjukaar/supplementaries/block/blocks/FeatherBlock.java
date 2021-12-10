@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.*;
 
-import java.util.Optional;
 import java.util.Random;
 import java.util.TreeMap;
 

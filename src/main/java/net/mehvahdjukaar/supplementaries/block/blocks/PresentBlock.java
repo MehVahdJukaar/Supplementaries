@@ -78,14 +78,10 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            BlockEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof PresentBlockTile) {
-
-                if (((PresentBlockTile) tileentity).isUnused()) {
-                    NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tileentity, tileentity.getBlockPos());
-                    //player.openMenu((INamedContainerProvider) tileentity);
+            if (worldIn.getBlockEntity(pos) instanceof PresentBlockTile tile) {
+                if (true || tile.isUnused()) {
+                    NetworkHooks.openGui((ServerPlayer) player, tile, pos);
                     PiglinAi.angerNearbyPiglins(player, true);
-
                     return InteractionResult.CONSUME;
                 }
             }

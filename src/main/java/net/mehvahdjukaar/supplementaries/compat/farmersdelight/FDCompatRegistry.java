@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
@@ -46,12 +47,12 @@ public class FDCompatRegistry {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> reg = event.getRegistry();
         reg.register(new BlockItem(PLANTER_RICH,
-                new Item.Properties().tab(ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, PLANTER_RICH_NAME))
+                new Item.Properties().tab(RegistryHelper.getTab(CreativeModeTab.TAB_DECORATIONS, PLANTER_RICH_NAME))
         ).setRegistryName(PLANTER_RICH_NAME));
 
         if (CompatHandler.nethersdelight) {
             reg.register(new BlockItem(PLANTER_RICH_SOUL,
-                    new Item.Properties().tab(ModRegistry.getTab(CreativeModeTab.TAB_DECORATIONS, PLANTER_RICH_SOUL_NAME))
+                    new Item.Properties().tab(RegistryHelper.getTab(CreativeModeTab.TAB_DECORATIONS, PLANTER_RICH_SOUL_NAME))
             ).setRegistryName(PLANTER_RICH_SOUL_NAME));
         }
 

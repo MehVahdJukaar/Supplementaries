@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -25,10 +24,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.List;
 
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {

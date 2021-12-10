@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.world.data.map.markers;
 
 import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
 import net.mehvahdjukaar.supplementaries.block.tiles.CeilingBannerBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.ColoredDecoration;
 import net.minecraft.core.BlockPos;

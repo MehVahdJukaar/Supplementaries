@@ -21,17 +21,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContainer> {
+public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer> {
     private static final ResourceLocation VILLAGER_LOCATION = Textures.RED_MERCHANT_GUI_TEXTURE;
     private static final Component TRADES_LABEL = new TranslatableComponent("merchant.trades");
     private static final Component LEVEL_SEPARATOR = new TextComponent(" - ");
     private static final Component DEPRECATED_TOOLTIP = new TranslatableComponent("merchant.deprecated");
     private int shopItem;
-    private final OrangeMerchantGui.TradeButton[] tradeOfferButtons = new OrangeMerchantGui.TradeButton[7];
+    private final RedMerchantGui.TradeOfferButton[] tradeOfferButtons = new RedMerchantGui.TradeOfferButton[7];
     private int scrollOff;
     private boolean isDragging;
 
-    public OrangeMerchantGui(RedMerchantContainer p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
+    public RedMerchantGui(RedMerchantContainer p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
         super(p_i51080_1_, p_i51080_2_, p_i51080_3_);
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
@@ -51,9 +51,9 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         int k = j + 16 + 2;
 
         for (int l = 0; l < 7; ++l) {
-            this.tradeOfferButtons[l] = this.addWidget(new OrangeMerchantGui.TradeButton(i + 5, k, l, (p_214132_1_) -> {
-                if (p_214132_1_ instanceof OrangeMerchantGui.TradeButton) {
-                    this.shopItem = ((OrangeMerchantGui.TradeButton) p_214132_1_).getIndex() + this.scrollOff;
+            this.tradeOfferButtons[l] = this.addWidget(new RedMerchantGui.TradeOfferButton(i + 5, k, l, (p_214132_1_) -> {
+                if (p_214132_1_ instanceof RedMerchantGui.TradeOfferButton) {
+                    this.shopItem = ((RedMerchantGui.TradeOfferButton) p_214132_1_).getIndex() + this.scrollOff;
                     this.postButtonClick();
                 }
 
@@ -85,26 +85,25 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
     }
 
 
-    @Override
-    protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
+    protected void renderBg(PoseStack poseStack, float partialTicks, int pX, int pY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        blit(pMatrixStack, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 512);
-        MerchantOffers merchantoffers = this.menu.getOffers();
-        if (!merchantoffers.isEmpty()) {
-            int k = this.shopItem;
-            if (k < 0 || k >= merchantoffers.size()) {
+        blit(poseStack, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
+        MerchantOffers merchantOffers = this.menu.getOffers();
+        if (!merchantOffers.isEmpty()) {
+            int $$7 = this.shopItem;
+            if ($$7 < 0 || $$7 >= merchantOffers.size()) {
                 return;
             }
 
-            MerchantOffer merchantoffer = merchantoffers.get(k);
-            if (merchantoffer.isOutOfStock()) {
+            MerchantOffer $$8 = merchantOffers.get($$7);
+            if ($$8.isOutOfStock()) {
                 RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                blit(pMatrixStack, this.leftPos + 83 + 99, this.topPos + 35, this.getBlitOffset(), 311.0F, 0.0F, 28, 21, 256, 512);
+                blit(poseStack, this.leftPos + 83 + 99, this.topPos + 35, this.getBlitOffset(), 311.0F, 0.0F, 28, 21, 512, 256);
             }
         }
     }
@@ -115,17 +114,17 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         int i = this.menu.getTraderLevel();
         int j = this.menu.getTraderXp();
         if (i < 5) {
-            blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 186.0F, 102, 5, 256, 512);
+            blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 186.0F, 102, 5, 512, 256);
             int k = VillagerData.getMinXpPerLevel(i);
             if (j >= k && VillagerData.canLevelUp(i)) {
                 int l = 100;
                 float f = 100.0F / (float) (VillagerData.getMaxXpPerLevel(i) - k);
                 int i1 = Math.min(Mth.floor(f * (float) (j - k)), 100);
-                blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 191.0F, i1 + 1, 5, 256, 512);
+                blit(poseStack, pX + 136, pY + 16, this.getBlitOffset(), 0.0F, 191.0F, i1 + 1, 5, 512, 256);
                 int j1 = this.menu.getFutureTraderXp();
                 if (j1 > 0) {
                     int k1 = Math.min(Mth.floor((float) j1 * f), 100 - i1);
-                    blit(poseStack, pX + 136 + i1 + 1, pY + 16 + 1, this.getBlitOffset(), 2.0F, 182.0F, k1, 3, 256, 512);
+                    blit(poseStack, pX + 136 + i1 + 1, pY + 16 + 1, this.getBlitOffset(), 2.0F, 182.0F, k1, 3, 512, 256);
                 }
 
             }
@@ -143,9 +142,9 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
                 i1 = 113;
             }
 
-            blit(p_238840_1_, p_238840_2_ + 94, p_238840_3_ + 18 + i1, this.getBlitOffset(), 0.0F, 199.0F, 6, 27, 256, 512);
+            blit(p_238840_1_, p_238840_2_ + 94, p_238840_3_ + 18 + i1, this.getBlitOffset(), 0.0F, 199.0F, 6, 27, 512, 256);
         } else {
-            blit(p_238840_1_, p_238840_2_ + 94, p_238840_3_ + 18, this.getBlitOffset(), 6.0F, 199.0F, 6, 27, 256, 512);
+            blit(p_238840_1_, p_238840_2_ + 94, p_238840_3_ + 18, this.getBlitOffset(), 6.0F, 199.0F, 6, 27, 512, 256);
         }
 
     }
@@ -166,9 +165,7 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
             int i1 = 0;
 
             for (MerchantOffer merchantoffer : merchantoffers) {
-                if (this.canScroll(merchantoffers.size()) && (i1 < this.scrollOff || i1 >= 7 + this.scrollOff)) {
-                    ++i1;
-                } else {
+                if (!this.canScroll(merchantoffers.size()) || (i1 >= this.scrollOff && i1 < 7 + this.scrollOff)) {
                     ItemStack itemstack = merchantoffer.getBaseCostA();
                     ItemStack itemstack1 = merchantoffer.getCostA();
                     ItemStack itemstack2 = merchantoffer.getCostB();
@@ -186,8 +183,8 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
                     this.itemRenderer.renderGuiItemDecorations(this.font, itemstack3, i + 5 + 68, j1);
                     this.itemRenderer.blitOffset = 0.0F;
                     k += 20;
-                    ++i1;
                 }
+                ++i1;
             }
 
             int k1 = this.shopItem;
@@ -200,7 +197,7 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
                 this.renderTooltip(pMatrixStack, DEPRECATED_TOOLTIP, pMouseX, pMouseY);
             }
 
-            for (OrangeMerchantGui.TradeButton tradeButton : this.tradeOfferButtons) {
+            for (RedMerchantGui.TradeOfferButton tradeButton : this.tradeOfferButtons) {
                 if (tradeButton.isHoveredOrFocused()) {
                     tradeButton.renderToolTip(pMatrixStack, pMouseX, pMouseY);
                 }
@@ -219,9 +216,9 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
         if (pMerchantOffer.isOutOfStock()) {
-            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 256, 512);
+            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         } else {
-            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 256, 512);
+            blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 15.0F, 171.0F, 10, 9, 512, 256);
         }
     }
 
@@ -235,7 +232,7 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
             this.setBlitOffset(this.getBlitOffset() + 300);
-            blit(pPoseStack, pX + 7, pY + 12, this.getBlitOffset(), 0.0F, 176.0F, 9, 2, 256, 512);
+            blit(pPoseStack, pX + 7, pY + 12, this.getBlitOffset(), 0.0F, 176.0F, 9, 2, 512, 256);
             this.setBlitOffset(this.getBlitOffset() - 300);
         }
 
@@ -282,13 +279,12 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-
-    class TradeButton extends Button {
+    private class TradeOfferButton extends Button {
         final int index;
 
-        public TradeButton(int p_i50601_2_, int p_i50601_3_, int p_i50601_4_, Button.OnPress p_i50601_5_) {
-            super(p_i50601_2_, p_i50601_3_, 89, 20, TextComponent.EMPTY, p_i50601_5_);
-            this.index = p_i50601_4_;
+        public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, OnPress p_99208_) {
+            super(p_99205_, p_99206_, 89, 20, TextComponent.EMPTY, p_99208_);
+            this.index = p_99207_;
             this.visible = false;
         }
 
@@ -296,19 +292,20 @@ public class OrangeMerchantGui extends AbstractContainerScreen<RedMerchantContai
             return this.index;
         }
 
-        public void renderToolTip(PoseStack p_230443_1_, int p_230443_2_, int p_230443_3_) {
-            if (this.isHovered && OrangeMerchantGui.this.menu.getOffers().size() > this.index + OrangeMerchantGui.this.scrollOff) {
-                if (p_230443_2_ < this.x + 20) {
-                    ItemStack itemstack = OrangeMerchantGui.this.menu.getOffers().get(this.index + OrangeMerchantGui.this.scrollOff).getCostA();
-                    OrangeMerchantGui.this.renderTooltip(p_230443_1_, itemstack, p_230443_2_, p_230443_3_);
-                } else if (p_230443_2_ < this.x + 50 && p_230443_2_ > this.x + 30) {
-                    ItemStack itemstack2 = OrangeMerchantGui.this.menu.getOffers().get(this.index + OrangeMerchantGui.this.scrollOff).getCostB();
-                    if (!itemstack2.isEmpty()) {
-                        OrangeMerchantGui.this.renderTooltip(p_230443_1_, itemstack2, p_230443_2_, p_230443_3_);
+        public void renderToolTip(PoseStack poseStack, int x, int y) {
+            if (this.isHovered && RedMerchantGui.this.menu.getOffers().size() > this.index + RedMerchantGui.this.scrollOff) {
+                ItemStack $$5;
+                if (x < this.x + 20) {
+                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getCostA();
+                    RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
+                } else if (x < this.x + 50 && x > this.x + 30) {
+                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getCostB();
+                    if (!$$5.isEmpty()) {
+                        RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
                     }
-                } else if (p_230443_2_ > this.x + 65) {
-                    ItemStack itemstack1 = OrangeMerchantGui.this.menu.getOffers().get(this.index + OrangeMerchantGui.this.scrollOff).getResult();
-                    OrangeMerchantGui.this.renderTooltip(p_230443_1_, itemstack1, p_230443_2_, p_230443_3_);
+                } else if (x > this.x + 65) {
+                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getResult();
+                    RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
                 }
             }
 

@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.client.gui.NoticeBoardGui;
-import net.mehvahdjukaar.supplementaries.client.gui.OrangeMerchantGui;
-import net.mehvahdjukaar.supplementaries.client.gui.PulleyBlockGui;
-import net.mehvahdjukaar.supplementaries.client.gui.SackGui;
+import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
@@ -78,7 +75,7 @@ public class ClientSetup {
         GlobeTextureManager.init(Minecraft.getInstance().textureManager);
         BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
 
-        MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), OrangeMerchantGui::new);
+        MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
 
         //wind vane
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
@@ -163,7 +160,7 @@ public class ClientSetup {
         //gold gate
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         //present
-        //MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
         //gunpowder
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         //rope knot

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+
 import java.awt.*;
 import java.util.Random;
 

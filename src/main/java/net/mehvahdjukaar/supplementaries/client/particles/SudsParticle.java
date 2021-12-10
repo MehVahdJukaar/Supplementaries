@@ -26,7 +26,7 @@ public class SudsParticle extends TextureSheetParticle {
         this.speedUpWhenYMotionIsBlocked = true;
         this.sprites = pSprites;
 
-        this.quadSize = 0.1F;
+
         this.additionalSize = rand(0.08, 0.9) - 0.08;
 
         this.lifetime = (int) rand(32, 0.85);
@@ -36,6 +36,7 @@ public class SudsParticle extends TextureSheetParticle {
         this.startingColorInd = RANDOM.nextFloat();
         this.setSpriteFromAge(this.sprites);
         this.setColorForAge();
+        this.setSize(0.01F, 0.01F);
     }
 
     private static double r(double a) {

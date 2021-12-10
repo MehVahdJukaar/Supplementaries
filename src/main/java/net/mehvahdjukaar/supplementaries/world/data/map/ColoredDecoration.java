@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.world.data.map;
 import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.CustomDecorationType;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;

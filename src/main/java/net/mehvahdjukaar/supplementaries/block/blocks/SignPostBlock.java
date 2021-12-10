@@ -5,7 +5,6 @@ import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
@@ -59,77 +58,82 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        ItemStack itemstack = player.getItemInHand(handIn);
-        Item item = itemstack.getItem();
 
-        //put post on map
-        if (item instanceof MapItem) {
-            if (!level.isClientSide) {
+        if(!level.isClientSide) {
+            ItemStack itemstack = player.getItemInHand(handIn);
+            Item item = itemstack.getItem();
+
+            //put post on map
+            if (item instanceof MapItem) {
                 if (MapItem.getSavedData(itemstack, level) instanceof ExpandedMapData data) {
                     data.toggleCustomDecoration(level, pos);
                 }
+                return InteractionResult.CONSUME;
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
 
+            if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
 
-        if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
+                boolean emptyHand = itemstack.isEmpty();
+                boolean isSneaking = player.isShiftKeyDown() && emptyHand;
 
-            boolean server = !level.isClientSide();
-            boolean emptyHand = itemstack.isEmpty();
-            boolean isSneaking = player.isShiftKeyDown() && emptyHand;
+                if (hit.getDirection().getAxis() != Direction.Axis.Y) {
 
-            if (hit.getDirection().getAxis() != Direction.Axis.Y) {
+                    InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile);
+                    if (result != InteractionResult.PASS) return result;
 
-                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
-                if (result != InteractionResult.PASS) return result;
-
-                //sneak right click rotates the sign on z axis
-                if (isSneaking) {
-                    double y = hit.getLocation().y;
-                    boolean up = y % ((int) y) > 0.5d;
-                    if (up) {
-                        tile.leftUp = !tile.leftUp;
-                    } else {
-                        tile.leftDown = !tile.leftDown;
-                    }
-                    if (server) tile.setChanged();
-                    level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
-                    return InteractionResult.sidedSuccess(level.isClientSide);
-                }
-                //change direction with compass
-                else if (item instanceof CompassItem) {
-                    //itemModelProperties code
-                    BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
-                            this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
-
-                    if (pointingPos != null) {
+                    //sneak right click rotates the sign on z axis
+                    if (isSneaking) {
                         double y = hit.getLocation().y;
                         boolean up = y % ((int) y) > 0.5d;
-                        if (up && tile.up) {
-                            tile.pointToward(pointingPos, true);
-                        } else if (!up && tile.down) {
-                            tile.pointToward(pointingPos, false);
+                        if (up) {
+                            tile.leftUp = !tile.leftUp;
+                        } else {
+                            tile.leftDown = !tile.leftDown;
                         }
-                        if (server) tile.setChanged();
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        tile.setChanged();
+                        level.sendBlockUpdated(pos, state, state, 3);
+                        level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+                        return InteractionResult.CONSUME;
                     }
-                    return InteractionResult.FAIL;
-                } else if (CompatHandler.framedblocks && tile.framed) {
-                    boolean success = FramedSignPost.handleInteraction(tile, player, handIn, itemstack, level, pos);
-                    if (success) return InteractionResult.sidedSuccess(level.isClientSide);
-                } else if (item instanceof SignPostItem) {
-                    //let sign item handle this one
-                    return InteractionResult.PASS;
+                    //change direction with compass
+                    else if (item instanceof CompassItem) {
+                        //itemModelProperties code
+                        BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
+                                this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
+
+                        if (pointingPos != null) {
+                            double y = hit.getLocation().y;
+                            boolean up = y % ((int) y) > 0.5d;
+                            if (up && tile.up) {
+                                tile.pointToward(pointingPos, true);
+                            } else if (!up && tile.down) {
+                                tile.pointToward(pointingPos, false);
+                            }
+                            tile.setChanged();
+                            level.sendBlockUpdated(pos, state, state, 3);
+                            return InteractionResult.CONSUME;
+                        }
+                        return InteractionResult.FAIL;
+                    }
+                    else if (CompatHandler.framedblocks && tile.framed) {
+                        boolean success = FramedSignPost.handleInteraction(tile, player, handIn, itemstack, level, pos);
+                        if (success) return InteractionResult.CONSUME;
+                    }
+                    else if (item instanceof SignPostItem) {
+                        //let sign item handle this one
+                        return InteractionResult.PASS;
+                    }
                 }
+                // open gui (edit sign with empty hand)
+                tile.sendOpenGuiPacket(level, pos, player);
+
+                return InteractionResult.CONSUME;
             }
-            // open gui (edit sign with empty hand)
-            if (!server) {
-                tile.openScreen(level, pos, player);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        else{
+            return InteractionResult.SUCCESS;
+        }
     }
 
     @Nullable

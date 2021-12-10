@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.renderer.MultiBufferSource;

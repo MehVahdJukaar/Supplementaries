@@ -86,11 +86,10 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
                 if (up) tile.rotateUpStep(inc);
                 else {
                     if (world instanceof ServerLevel) {
-                        world.setBlock(pos, state.setValue(ROTATION, (state.getValue(ROTATION) + inc + 16) % 16), 11);
+                        world.setBlock(pos, state.setValue(ROTATION, (state.getValue(ROTATION) - inc + 16) % 16), 11);
                         //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
                     }
                 }
-
             }
 
             //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);

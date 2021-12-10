@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.items;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;

@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.CageBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FaucetBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -35,16 +32,15 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.Random;
 
 public class FaucetBlock extends WaterBlock implements EntityBlock {
@@ -114,6 +110,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
         float f = enabled ? 0.6F : 0.5F;
         worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+        worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
         this.updateBlock(state, worldIn, pos, true);
         return InteractionResult.SUCCESS;
     }
@@ -153,8 +150,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
         if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
             boolean water = tile.updateContainedFluidVisuals(level, pos, state);
-            if(state.getValue(HAS_WATER) != water){
-                level.setBlock(pos, state.setValue(HAS_WATER, water),2);
+            if (state.getValue(HAS_WATER) != water) {
+                level.setBlock(pos, state.setValue(HAS_WATER, water), 2);
             }
         }
     }

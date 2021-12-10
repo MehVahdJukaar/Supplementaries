@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.util;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.blocks.SignPostBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.VectorUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

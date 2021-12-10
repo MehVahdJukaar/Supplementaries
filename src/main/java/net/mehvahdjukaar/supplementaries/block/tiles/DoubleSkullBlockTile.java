@@ -109,7 +109,7 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     }
 
     public void rotateUpStep(int step) {
-        this.rotationUp = ((this.rotationUp + step) + 16) % 16;
+        this.rotationUp = ((this.rotationUp - step) + 16) % 16;
     }
 
     public int getUpRotation() {

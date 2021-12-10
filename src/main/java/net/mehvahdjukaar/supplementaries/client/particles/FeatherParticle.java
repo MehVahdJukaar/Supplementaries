@@ -1,16 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.particle.*;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import com.mojang.math.Quaternion;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FeatherParticle extends TextureSheetParticle {
     private final float rotSpeed;
@@ -24,7 +22,7 @@ public class FeatherParticle extends TextureSheetParticle {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.quadSize *= 1.3125F + this.random.nextFloat() * 0.15;
         this.lifetime = 120 + this.random.nextInt(20);
-        this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float)speedY-0.03f);
+        this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f);
         this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
         this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
         this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
@@ -158,7 +156,6 @@ public class FeatherParticle extends TextureSheetParticle {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 

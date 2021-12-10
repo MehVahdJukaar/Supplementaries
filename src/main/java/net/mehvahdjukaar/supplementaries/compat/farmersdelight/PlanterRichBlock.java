@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.compat.farmersdelight;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.PlanterBlock;
-import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;

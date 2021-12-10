@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,11 +11,15 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -80,6 +83,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
                 if (!gold || !ServerConfigs.cached.CONSISTENT_GATE) {
                     if (state.getValue(OPEN) != flag) {
                         world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
+                        world.gameEvent(flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
                     }
                     state = state.setValue(OPEN, flag);
                 }
@@ -124,8 +128,9 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             }
 
             openGate(state, world, pos, dir);
-
-            world.levelEvent(player, state.getValue(OPEN) ? 1036 : 1037, pos, 0);
+            boolean open = state.getValue(OPEN);
+            world.levelEvent(player, open ? 1036 : 1037, pos, 0);
+            world.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             return InteractionResult.sidedSuccess(world.isClientSide);
         }
 

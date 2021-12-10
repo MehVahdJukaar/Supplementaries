@@ -50,8 +50,8 @@ public class ServerBoundSetPresentPacket {
 
                 //updates client
                 BlockState state = world.getBlockState(pos);
-                world.sendBlockUpdated(pos, state, state, 3);
                 present.setChanged();
+                world.sendBlockUpdated(pos, state, state, 3);
             }
         });
         ctx.get().setPacketHandled(true);

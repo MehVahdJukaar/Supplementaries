@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries;
 
-import com.mrcrayfish.configured.client.screen.ConfigScreen;
-import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
@@ -9,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -18,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import vazkii.quark.base.Quark;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -39,7 +37,7 @@ public class Supplementaries {
 
 
         //TODO: fish bucket on cages a
-//TODO: shift click to pickup placed book
+        //TODO: shift click to pickup placed book
 
         //TODO: fix slingshot proj not playing sound on client (all messed up)
         //yes this is where I write crap. deal with it XD
@@ -152,6 +150,8 @@ public class Supplementaries {
         //structures
 
         //ash auto bonemeal, improve bubbles
+
+        //bundle blacklist
 
         ConfigHandler.init();
 

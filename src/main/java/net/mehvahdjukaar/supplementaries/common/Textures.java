@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Variants;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -128,8 +128,8 @@ public class Textures {
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
-            HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + Variants.getHangingSignName(type)));
-            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
+            HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + RegistryHelper.getHangingSignName(type)));
+            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + RegistryHelper.getSignPostName(type)));
         }
 
         for (BannerPattern pattern : BannerPattern.values()) {

@@ -10,8 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import xfacthd.framedblocks.api.block.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
@@ -29,7 +27,6 @@ public class FramedSignPost {
 
     public static final Item framedHammer = FBContent.itemFramedHammer.get();
 
-    @OnlyIn(Dist.CLIENT)
     public static IModelData getModelData(BlockState mimic) {
         FramedBlockData date = new FramedBlockData();
         date.setCamoState(mimic);

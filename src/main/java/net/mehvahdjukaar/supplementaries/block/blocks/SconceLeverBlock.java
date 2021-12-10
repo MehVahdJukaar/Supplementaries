@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Random;
@@ -51,8 +52,10 @@ public class SconceLeverBlock extends SconceWallBlock {
             return InteractionResult.SUCCESS;
         } else {
             BlockState blockstate = this.setPowered(state, worldIn, pos);
-            float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;
+            boolean enabled = blockstate.getValue(POWERED);
+            float f = enabled ? 0.6F : 0.5F;
             worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
             return InteractionResult.CONSUME;
         }
     }

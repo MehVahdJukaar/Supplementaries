@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -48,46 +47,47 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
+        if(!level.isClientSide) {
+            if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
 
-            ItemStack itemstack = player.getItemInHand(handIn);
-            boolean server = !level.isClientSide();
+                ItemStack itemstack = player.getItemInHand(handIn);
 
-            boolean sideHit = hit.getDirection() != Direction.UP;
-            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
-            boolean canInsert = tile.isEmpty() && sideHit;
-            if (canExtract ^ canInsert) {
-                if (!server) return InteractionResult.SUCCESS;
-                if (canExtract) {
-                    ItemStack dropStack = tile.removeItemNoUpdate(0);
-                    ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
-                    drop.setDefaultPickUpDelay();
-                    level.addFreshEntity(drop);
-                } else {
-                    ItemStack newStack = itemstack.copy();
-                    newStack.setCount(1);
-                    tile.setItems(NonNullList.withSize(1, newStack));
-                    if (!player.isCreative()) {
-                        itemstack.shrink(1);
+                boolean sideHit = hit.getDirection() != Direction.UP;
+                boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
+                boolean canInsert = tile.isEmpty() && sideHit;
+                if (canExtract ^ canInsert) {
+                    if (canExtract) {
+                        ItemStack dropStack = tile.removeItemNoUpdate(0);
+                        ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
+                        drop.setDefaultPickUpDelay();
+                        level.addFreshEntity(drop);
+                    } else {
+                        ItemStack newStack = itemstack.copy();
+                        newStack.setCount(1);
+                        tile.setItems(NonNullList.withSize(1, newStack));
+                        if (!player.isCreative()) {
+                            itemstack.shrink(1);
+                        }
                     }
+                    tile.setChanged();
+                    level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
+                            1.2f);
+                    return InteractionResult.CONSUME;
                 }
-                tile.setChanged();
-                level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
-                        1.2f);
+                //color
+                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile);
+                if (result != InteractionResult.PASS) {
+                    return result;
+                }
+                // open gui (edit sign with empty hand)
+                tile.sendOpenGuiPacket(level, pos, player);
                 return InteractionResult.CONSUME;
             }
-            //color
-            InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile::setChanged);
-            if(result != InteractionResult.PASS){
-                return result;
-            }
-            // open gui (edit sign with empty hand)
-            else if (!server) {
-                tile.openScreen(level, pos, player);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        else{
+            return InteractionResult.SUCCESS;
+        }
     }
 
     @Override

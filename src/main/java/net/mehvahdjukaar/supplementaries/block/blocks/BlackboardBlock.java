@@ -5,7 +5,6 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.ChatFormatting;
@@ -175,8 +174,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
                     //TODO: check if it's synced works in myltiplayer (might need mark dirty)
                 }
             }
-
-            if (worldIn.isClientSide()) BlackBoardGui.open(te);
+            if(!worldIn.isClientSide){
+                te.sendOpenGuiPacket(worldIn, pos, player);
+            }
         }
         return InteractionResult.sidedSuccess(worldIn.isClientSide);
     }

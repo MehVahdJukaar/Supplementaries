@@ -2,29 +2,29 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SpringLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
@@ -79,21 +79,14 @@ public class SpringLauncherBlock extends Block {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if (state.getValue(EXTENDED)) {
-            switch(state.getValue(FACING)) {
-                case DOWN:
-                    return PISTON_BASE_DOWN_AABB;
-                case UP:
-                default:
-                    return PISTON_BASE_UP_AABB;
-                case NORTH:
-                    return PISTON_BASE_NORTH_AABB;
-                case SOUTH:
-                    return PISTON_BASE_SOUTH_AABB;
-                case WEST:
-                    return PISTON_BASE_WEST_AABB;
-                case EAST:
-                    return PISTON_BASE_EAST_AABB;
-            }
+            return switch (state.getValue(FACING)) {
+                case DOWN -> PISTON_BASE_DOWN_AABB;
+                default -> PISTON_BASE_UP_AABB;
+                case NORTH -> PISTON_BASE_NORTH_AABB;
+                case SOUTH -> PISTON_BASE_SOUTH_AABB;
+                case WEST -> PISTON_BASE_WEST_AABB;
+                case EAST -> PISTON_BASE_EAST_AABB;
+            };
         } else {
             return Shapes.block();
         }
@@ -126,22 +119,22 @@ public class SpringLauncherBlock extends Block {
                  * world.addEntity(fallingblockentity); flag2=true; }
                  */
                 if (flag2) {
-                    world.setBlock(offset,
-                            ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(SpringLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)),
-                            3);
+                    world.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+                            .setValue(SpringLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)));
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
                     world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.25F + 0.45F);
+                    world.gameEvent(GameEvent.PISTON_EXTEND, pos);
                 }
             } else if (!flag && state.getValue(EXTENDED)) {
                 BlockState bs = world.getBlockState(offset);
                 if (bs.getBlock() instanceof SpringLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
                     // world.setBlockState(offset, Blocks.AIR.getDefaultState(), 3);
-                    world.setBlock(offset,
-                            ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState().setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)),
-                            3);
+                    world.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+                                    .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)));
                     world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);
+                    world.gameEvent(GameEvent.PISTON_CONTRACT, pos);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
                     if (world.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {
