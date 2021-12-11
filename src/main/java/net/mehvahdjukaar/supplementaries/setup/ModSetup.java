@@ -8,16 +8,15 @@ import net.mehvahdjukaar.supplementaries.common.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.ChickenAccessor;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.HorseAccessor;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.WeatheredMap;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -30,7 +29,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -42,10 +40,10 @@ public class ModSetup {
             try {
 
 
-               // StructureRegistry.setup();
+                // StructureRegistry.setup();
                 setupStage++;
 
-              //  StructureLocator.init();
+                //  StructureLocator.init();
                 setupStage++;
 
                 CompatHandler.init();
@@ -79,7 +77,7 @@ public class ModSetup {
 
                 LootTableStuff.init();
                 setupStage++;
-                // registerMobFoods();
+                registerMobFoods();
 
                 hasFinishedSetup = true;
 
@@ -99,18 +97,13 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
-        //TODO: this is not working. fix
-        List<ItemStack> chickenFood = new ArrayList<>();
-        Collections.addAll(chickenFood, ChickenAccessor.getFoodItems().getItems());
+        List<ItemStack> chickenFood = new ArrayList<>(List.of(Chicken.FOOD_ITEMS.getItems()));
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
-        ChickenAccessor.setFoodItems(Ingredient.of(chickenFood.stream()));
+        Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());
 
-
-        List<ItemStack> horseFood = new ArrayList<>();
-        Collections.addAll(horseFood, HorseAccessor.getFoodItems().getItems());
-        horseFood.add(new ItemStack(ModRegistry.FLAX_ITEM.get()));
-        horseFood.add(new ItemStack(ModRegistry.FLAX_BLOCK_ITEM.get()));
-        HorseAccessor.setFoodItems(Ingredient.of(horseFood.stream()));
+        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()), new ItemStack(ModRegistry.FLAX_BLOCK_ITEM.get())));
+        horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
+        AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
     }
 
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly

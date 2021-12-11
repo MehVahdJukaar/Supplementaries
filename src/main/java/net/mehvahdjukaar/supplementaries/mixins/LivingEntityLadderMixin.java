@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +31,7 @@ public abstract class LivingEntityLadderMixin extends Entity {
 
     @Inject(method = "handleOnClimbable", at = @At("HEAD"), cancellable = true)
     private void handleOnClimbable(Vec3 motion, CallbackInfoReturnable<Vec3> info) {
-        if (this.onClimbable()) {
+        if (this.onClimbable() && ServerConfigs.cached.ROPE_SLIDE) {
             BlockState b = this.getFeetBlockState();
             if (b.is(ModRegistry.ROPE.get())) {
                 this.fallDistance = 0;

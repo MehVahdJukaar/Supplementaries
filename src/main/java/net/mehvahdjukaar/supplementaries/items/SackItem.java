@@ -1,18 +1,31 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.LoomScreenFlagMixin;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -25,6 +38,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SackItem extends BlockItem {
@@ -63,17 +77,17 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        /*
+
         if(!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
-            CompoundNBT compoundnbt = stack.getTagElement("BlockEntityTag");
-            if (compoundnbt != null) {
-                if (compoundnbt.contains("LootTable", 8)) {
-                    tooltip.add(new StringTextComponent("???????").withStyle(TextFormatting.GRAY));
+            CompoundTag tag = stack.getTagElement("BlockEntityTag");
+            if (tag != null) {
+                if (tag.contains("LootTable", 8)) {
+                    tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
                 }
 
-                if (compoundnbt.contains("Items", 9)) {
+                if (tag.contains("Items", 9)) {
                     NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
-                    ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+                    ContainerHelper.loadAllItems(tag, nonnulllist);
                     int i = 0;
                     int j = 0;
 
@@ -82,19 +96,19 @@ public class SackItem extends BlockItem {
                             ++j;
                             if (i <= 4) {
                                 ++i;
-                                IFormattableTextComponent iformattabletextcomponent = itemstack.getHoverName().copy();
-                                iformattabletextcomponent.append(" x").append(String.valueOf(itemstack.getCount()));
-                                tooltip.add(iformattabletextcomponent.withStyle(TextFormatting.GRAY));
+                                MutableComponent component = itemstack.getHoverName().copy();
+                                component.append(" x").append(String.valueOf(itemstack.getCount()));
+                                tooltip.add(component.withStyle(ChatFormatting.GRAY));
                             }
                         }
                     }
                     if (j - i > 0) {
-                        tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i)).withStyle(TextFormatting.ITALIC).withStyle(TextFormatting.GRAY));
+                        tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i))
+                                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
                 }
             }
         }
-        */
 
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         tooltip.add(new TranslatableComponent("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
@@ -113,4 +127,31 @@ public class SackItem extends BlockItem {
             ItemUtils.onContainerDestroyed(pItemEntity, listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of));
         }
     }
+
+    @Override
+    public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+        if ((!CompatHandler.quark || QuarkPlugin.isDropInEnabled()) && action != ClickAction.PRIMARY) {
+            if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true) != null) {
+                ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false);
+                if (finished != null) {
+                    slot.set(finished);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
+        if (CompatHandler.quark && QuarkTooltipPlugin.canRenderTooltip()) {
+            CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
+            if (cmp != null && !cmp.contains("LootTable")) {
+                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, ServerConfigs.cached.SACK_SLOTS));
+            }
+        }
+        return Optional.empty();
+    }
+
+
 }

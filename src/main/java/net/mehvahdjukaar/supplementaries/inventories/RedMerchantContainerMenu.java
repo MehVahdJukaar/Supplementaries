@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class RedMerchantContainer extends AbstractContainerMenu {
+public class RedMerchantContainerMenu extends AbstractContainerMenu {
     private final Merchant trader;
     private final MerchantContainer tradeContainer;
 
@@ -27,11 +27,11 @@ public class RedMerchantContainer extends AbstractContainerMenu {
 
     private boolean canRestock;
 
-    public RedMerchantContainer(int i, Inventory inventory) {
+    public RedMerchantContainerMenu(int i, Inventory inventory) {
         this(i, inventory, new ClientSideMerchant(inventory.player));
     }
 
-    public RedMerchantContainer(int i1, Inventory inventory, Merchant merchant) {
+    public RedMerchantContainerMenu(int i1, Inventory inventory, Merchant merchant) {
         super(ModRegistry.RED_MERCHANT_CONTAINER.get(), i1);
         this.trader = merchant;
         this.tradeContainer = new MerchantContainer(merchant);
@@ -50,7 +50,7 @@ public class RedMerchantContainer extends AbstractContainerMenu {
         }
     }
 
-    public RedMerchantContainer(int i, Inventory playerInventory, FriendlyByteBuf buffer) {
+    public RedMerchantContainerMenu(int i, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(i, playerInventory);
     }
 

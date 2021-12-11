@@ -35,11 +35,15 @@ public class HangingSignGui extends Screen {
     private final HangingSignBlockTile tileSign;
     private final String[] cachedLines;
 
-    public HangingSignGui(HangingSignBlockTile teSign) {
+    private HangingSignGui(HangingSignBlockTile teSign) {
         super(new TranslatableComponent("sign.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
 
+    }
+
+    public static void open(HangingSignBlockTile teSign){
+        Minecraft.getInstance().setScreen(new HangingSignGui(teSign));
     }
 
     @Override

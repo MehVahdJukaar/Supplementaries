@@ -100,21 +100,21 @@ public class BambooSpikesBlockTile extends BlockEntity {
                 used = true;
             }
             if (used) {
-                this.makeParticle();
+                this.makeParticle(world);
                 return this.consumeCharge(world);
             }
         }
         return false;
     }
 
-    public void makeParticle() {
+    public void makeParticle(Level level) {
         int i = this.getColor();
         double d0 = (double) (i >> 16 & 255) / 255.0D;
         double d1 = (double) (i >> 8 & 255) / 255.0D;
         double d2 = (double) (i & 255) / 255.0D;
         BlockPos pos = this.getBlockPos();
         //TODO: fix on server side
-        this.level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getY() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getZ() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, d0, d1, d2);
+        level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getY() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getZ() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, d0, d1, d2);
     }
 
     public ItemStack getSpikeItem() {

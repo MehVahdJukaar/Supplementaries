@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IColoredBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +32,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class FlagBlock extends WaterBlock implements EntityBlock {
+public class FlagBlock extends WaterBlock implements EntityBlock, IColoredBlock {
     protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
     private static final Map<DyeColor, Block> BY_COLOR = Maps.newHashMap();
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -50,6 +51,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock {
         return world.getBlockEntity(pos) instanceof FlagBlockTile tile ? tile.getItem(state) : super.getCloneItemStack(state, target, world, pos, player);
     }
 
+    @Override
     public DyeColor getColor() {
         return this.color;
     }

@@ -128,7 +128,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof WallLanternBlockTile tile) {
-            return Collections.singletonList(new ItemStack(tile.mimic.getBlock()));
+            return tile.mimic.getDrops(builder);
         }
         return super.getDrops(state, builder);
     }

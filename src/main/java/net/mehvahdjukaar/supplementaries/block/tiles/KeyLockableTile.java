@@ -58,6 +58,7 @@ public class KeyLockableTile extends BlockEntity {
     }
 
     public static KeyStatus hasKeyInInventory(Player player, String key) {
+        if (key == null) return KeyStatus.CORRECT_KEY;
         KeyStatus found = KeyStatus.INCORRECT_KEY;
         if (CompatHandler.curios) {
             found = SupplementariesCuriosPlugin.isKeyInCurio(player, key);

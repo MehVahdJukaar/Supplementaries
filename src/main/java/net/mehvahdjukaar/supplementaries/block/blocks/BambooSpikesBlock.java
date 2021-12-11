@@ -197,7 +197,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return InteractionResult.PASS;
     }
 
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, TIPPED);
@@ -217,9 +216,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         if (0.01 > random.nextFloat() && state.getValue(TIPPED)) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BambooSpikesBlockTile) {
-                ((BambooSpikesBlockTile) te).makeParticle();
+            if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile tile) {
+                tile.makeParticle(world);
             }
         }
     }

@@ -43,7 +43,7 @@ public class FlagMarker extends NamedMapWorldMarker<ColoredDecoration> {
     @Nullable
     public static FlagMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof FlagBlockTile tile) {
-            DyeColor dyecolor = tile.getBaseColor(tile::getBlockState);
+            DyeColor dyecolor = tile.getColor();
             Component name = tile.hasCustomName() ? tile.getCustomName() : null;
             return new FlagMarker(pos, dyecolor, name);
         } else {

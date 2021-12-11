@@ -19,24 +19,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LoomMenu.class)
 public abstract class LoomMenuMixin extends AbstractContainerMenu {
 
-    @Shadow
-    public Slot bannerSlot;
-
-    @Final
-    @Shadow
-    private Container inputContainer;
-
-    protected LoomMenuMixin(@Nullable MenuType<?> p_i50105_1_, int p_i50105_2_) {
-        super(p_i50105_1_, p_i50105_2_);
+    protected LoomMenuMixin(@Nullable MenuType<?> p_38851_, int p_38852_) {
+        super(p_38851_, p_38852_);
     }
-    /*
-    @Redirect(method ="<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/util/IWorldPosCallable;)V",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/inventory/container/LoomContainer;addSlot(Lnet/minecraft/inventory/container/Slot;)Lnet/minecraft/inventory/container/Slot;",
-                    ordinal = 0))
-    public Slot LoomContainer(LoomContainer loomContainer, Slot p_75146_1_) {
-        return this.addSlot(new LoomSlot(this.inputContainer, 0, 13, 26));
-    }*/
 
     @Redirect(method ="quickMoveStack",
             at = @At(value = "INVOKE",

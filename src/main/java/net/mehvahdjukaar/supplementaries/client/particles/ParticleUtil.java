@@ -33,13 +33,13 @@ public class ParticleUtil {
         double dy;
         double dz;
         if (perpendicular) {
-            dx = i * minSpeed * level.random.nextDouble();
-            dy = j * minSpeed * level.random.nextDouble();
-            dz = k * minSpeed * level.random.nextDouble();
+            dx = i * Mth.randomBetween(level.random, minSpeed, maxSpeed);
+            dy = j * Mth.randomBetween(level.random, minSpeed, maxSpeed);
+            dz = k * Mth.randomBetween(level.random, minSpeed, maxSpeed);
         } else {
-            dx = (i == 0) ? Mth.randomBetween(level.random, minSpeed, maxSpeed) : 0.0D;
-            dy = (j == 0) ? Mth.randomBetween(level.random, minSpeed, maxSpeed) : 0.0D;
-            dz = (k == 0) ? Mth.randomBetween(level.random, minSpeed, maxSpeed) : 0.0D;
+            dx = (i == 0) ? maxSpeed * level.random.nextDouble() : 0.0D;
+            dy = (j == 0) ? maxSpeed * level.random.nextDouble() : 0.0D;
+            dz = (k == 0) ? maxSpeed * level.random.nextDouble() : 0.0D;
         }
         level.addParticle(particleOptions, d0, d1, d2, dx, dy, dz);
     }

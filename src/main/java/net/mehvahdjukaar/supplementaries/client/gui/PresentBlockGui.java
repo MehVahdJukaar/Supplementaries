@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
+import net.mehvahdjukaar.supplementaries.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ServerBoundSetPresentPacket;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> implements ContainerListener {
+public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
 
     protected EditBox recipient;
     protected EditBox sender;
@@ -35,7 +35,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> i
 
     private final PresentBlockTile tile;
 
-    public static MenuScreens.ScreenConstructor<PresentContainer, PresentBlockGui> GUI_FACTORY =
+    public static MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof PresentBlockTile) {
@@ -44,7 +44,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainer> i
                 return null;
             };
 
-    public PresentBlockGui(PresentContainer container, Inventory inventory, Component text, PresentBlockTile tile) {
+    public PresentBlockGui(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;

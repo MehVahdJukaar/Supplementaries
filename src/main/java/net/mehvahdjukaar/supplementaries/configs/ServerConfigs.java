@@ -324,6 +324,7 @@ public class ServerConfigs {
 
     public static class block {
         public static ForgeConfigSpec.BooleanValue ROPE_UNRESTRICTED;
+        public static ForgeConfigSpec.BooleanValue ROPE_SLIDE;
         public static ForgeConfigSpec.IntValue GLOBE_TRADES;
 
         public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
@@ -396,6 +397,8 @@ public class ServerConfigs {
             builder.push("rope");
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                             .define("block_side_attachment", false);
+            ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
+                    .define("slide_on_fall", true);
             builder.pop();
 
             builder.push("pedestal");
@@ -778,6 +781,8 @@ public class ServerConfigs {
         public static boolean CAGE_PERSISTENT_MOBS;
         public static boolean CRYSTAL_ENCHANTING;
         public static boolean ROPE_UNRESTRICTED;
+        public static boolean ROPE_SLIDE;
+
 
         public static boolean SERVER_PROTECTION;
 
@@ -895,6 +900,7 @@ public class ServerConfigs {
             GOBLET_DRINK = block.GOBLET_DRINK.get();
             CRYSTAL_ENCHANTING = block.CRYSTAL_ENCHANTING.get();
             ROPE_UNRESTRICTED = block.ROPE_UNRESTRICTED.get();
+            ROPE_SLIDE = block.ROPE_SLIDE.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

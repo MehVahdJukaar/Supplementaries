@@ -182,7 +182,7 @@ public class RegistryConfigs {
             CONDITIONAL_SIGN_REGISTRATIONS = builder.comment("The mod adds around 150 signs posts and hanging signs that are made with wood types from other mods (which make up the majority of registered blocks the mod adds)." +
                     "These are always registered and since they are so many could clutter up JEI and slow the game a bit. It's usually forge doesn't reccomend dynamically registering blocks but if you wish to enable such options you can here." +
                     "With this option enabled the mod will on register the signs made from wood types of the currently installed mods")
-                    .define("conditional_sign_registration", false);
+                    .define("conditional_sign_registration", true);
             builder.pop();
 
 

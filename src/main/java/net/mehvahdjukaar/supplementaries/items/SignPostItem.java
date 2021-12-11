@@ -52,8 +52,8 @@ public class SignPostItem extends Item {
     public InteractionResult useOn(UseOnContext context) {
         //if (!context.canPlace()) return ActionResultType.FAIL;
 
-        Player playerentity = context.getPlayer();
-        if (playerentity == null) return InteractionResult.PASS;
+        Player player = context.getPlayer();
+        if (player == null) return InteractionResult.PASS;
         BlockPos blockpos = context.getClickedPos();
         Level world = context.getLevel();
         ItemStack itemstack = context.getItemInHand();
@@ -78,20 +78,21 @@ public class SignPostItem extends Item {
             }
 
             boolean waterlogged = world.getFluidState(blockpos).getType() == Fluids.WATER;
-            world.setBlock(blockpos, ModRegistry.SIGN_POST.get()
-                    .getStateForPlacement(new BlockPlaceContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
-
+            if (!isSignPost) {
+                world.setBlock(blockpos, ModRegistry.SIGN_POST.get()
+                        .getStateForPlacement(new BlockPlaceContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
+            }
             boolean flag = false;
 
             if (world.getBlockEntity(blockpos) instanceof SignPostBlockTile tile) {
 
-                BlockUtils.addOptionalOwnership(playerentity, tile);
+                BlockUtils.addOptionalOwnership(player, tile);
 
                 int r = Mth.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
-                double y = context.getClickLocation().y;
+                double y = context.getClickLocation().y - (double) blockpos.getY();
 
-                boolean up = y % ((int) y) > 0.5d;
+                boolean up = y > 0.5d;
 
                 if (up) {
                     if (tile.up != up) {
@@ -110,15 +111,15 @@ public class SignPostItem extends Item {
                     if (isFence) tile.mimic = targetBlock.defaultBlockState();
                     tile.framed = framed;
                     tile.setChanged();
-                    world.sendBlockUpdated(blockpos,state,state,3);
+                    world.sendBlockUpdated(blockpos, state, state, 3);
                 }
 
             }
             if (flag) {
-                if (world.isClientSide()) {
-                    SoundType soundtype = SoundType.WOOD;
-                    world.playSound(playerentity, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                }
+
+                SoundType soundtype = SoundType.WOOD;
+                world.playSound(player, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
                 if (!context.getPlayer().isCreative()) itemstack.shrink(1);
                 return InteractionResult.SUCCESS;
             }

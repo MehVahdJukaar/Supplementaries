@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainerMenu;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
@@ -166,7 +166,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new NoticeBoardContainer(id, player, this);
+        return new NoticeBoardContainerMenu(id, player, this);
     }
 
     @Override

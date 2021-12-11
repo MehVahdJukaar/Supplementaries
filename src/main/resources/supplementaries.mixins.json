@@ -38,8 +38,6 @@
     "VillagerFrickMixin",
     "VineMixin",
     "ZombieHorseMixin",
-    "accessors.ChickenAccessor",
-    "accessors.HorseAccessor",
     "accessors.MineshaftAccessor"
   ],
   "client": [

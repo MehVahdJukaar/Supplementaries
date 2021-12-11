@@ -94,8 +94,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         for (int p = 0; p < list.size(); p++) {
 
-            Material rendermaterial = Materials.FLAG_MATERIALS.get(list.get(p).getFirst());
-            SpriteCoordinateExpander builder = (SpriteCoordinateExpander) rendermaterial.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
+            Material material = Materials.FLAG_MATERIALS.get(list.get(p).getFirst());
+            VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();
 
@@ -104,7 +104,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             float g = color[1];
             float r = color[0];
 
-            renderCurvedSegment(builder, rendermaterial.sprite(), matrixStackIn, ang, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
+            renderCurvedSegment(builder, material.sprite(), matrixStackIn, ang, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
 
             matrixStackIn.popPose();
         }

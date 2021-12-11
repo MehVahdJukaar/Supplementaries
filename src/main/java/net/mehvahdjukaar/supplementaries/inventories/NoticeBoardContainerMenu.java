@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
-import net.mehvahdjukaar.supplementaries.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -13,20 +13,25 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 
-public class PulleyBlockContainer extends AbstractContainerMenu  {
+public class NoticeBoardContainerMenu extends AbstractContainerMenu implements IContainerProvider{
     public final Container inventory;
 
-    public PulleyBlockContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+    @Override
+    public Container getContainer() {
+        return inventory;
+    }
+
+    public NoticeBoardContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id,playerInventory);
     }
 
-    public PulleyBlockContainer(int id, Inventory playerInventory) {
+    public NoticeBoardContainerMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(1));
     }
 
-    public PulleyBlockContainer(int id, Inventory playerInventory, Container inventory) {
+    public NoticeBoardContainerMenu(int id, Inventory playerInventory, Container inventory) {
 
-        super(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), id);
+        super(ModRegistry.NOTICE_BOARD_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 1);
@@ -40,7 +45,7 @@ public class PulleyBlockContainer extends AbstractContainerMenu  {
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PulleyBlockTile.getContentType(stack.getItem())!=BlockProperties.Winding.NONE;
+                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED || NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 

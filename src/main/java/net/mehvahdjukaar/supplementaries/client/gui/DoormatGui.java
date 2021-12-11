@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
@@ -36,14 +37,16 @@ public class DoormatGui extends Screen {
     private final DoormatBlockTile tileSign;
     private final String[] cachedLines;
 
-    public DoormatGui(DoormatBlockTile teSign) {
+    private DoormatGui(DoormatBlockTile teSign) {
         super(new TranslatableComponent("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES)
                 .mapToObj(teSign.textHolder::getLine)
                 .map(Component::getString).toArray(String[]::new);
+    }
 
-
+    public static void open(DoormatBlockTile teSign){
+        Minecraft.getInstance().setScreen(new DoormatGui(teSign));
     }
 
     @Override

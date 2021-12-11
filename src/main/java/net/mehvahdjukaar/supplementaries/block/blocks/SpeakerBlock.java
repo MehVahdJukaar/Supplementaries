@@ -37,10 +37,8 @@ public class SpeakerBlock extends Block implements EntityBlock{
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty ANTIQUE = BlockProperties.ANTIQUE;
 
-    public SpeakerBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
-                .strength(1f, 2f)
-                .sound(SoundType.WOOD));
+    public SpeakerBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(ANTIQUE, false).setValue(POWERED, false));
     }

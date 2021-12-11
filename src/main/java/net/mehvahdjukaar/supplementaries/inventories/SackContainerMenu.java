@@ -12,18 +12,23 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 
-public class SackContainer extends AbstractContainerMenu {
+public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider{
     public final Container inventory;
 
-    public SackContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+    @Override
+    public Container getContainer() {
+        return inventory;
+    }
+
+    public SackContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory);
     }
 
-    public SackContainer(int id, Inventory playerInventory) {
+    public SackContainerMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(27));
     }
 
-    public SackContainer(int id, Inventory playerInventory, Container inventory) {
+    public SackContainerMenu(int id, Inventory playerInventory, Container inventory) {
 
         super(ModRegistry.SACK_CONTAINER.get(), id);
         //tile inventory
@@ -33,7 +38,7 @@ public class SackContainer extends AbstractContainerMenu {
 
         int size = ServerConfigs.cached.SACK_SLOTS;
 
-        int[] dims = SackContainer.getRatio(size);
+        int[] dims = SackContainerMenu.getRatio(size);
         if (dims[0] > 9) {
             dims[0] = 9;
             dims[1] = (int) Math.ceil(size / 9f);
@@ -71,6 +76,7 @@ public class SackContainer extends AbstractContainerMenu {
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
+    @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -100,16 +106,17 @@ public class SackContainer extends AbstractContainerMenu {
     /**
      * Called when the container is closed.
      */
+    @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }
 
 
-    public static int[] getRatio(int size) {
-        int[] dims = {Math.min(size, 23), Math.max(size / 23, 1)};
+    public static int[] getRatio(int maxSize) {
+        int[] dims = {Math.min(maxSize, 23), Math.max(maxSize / 23, 1)};
         for (int[] testAgainst : TARGET_RATIOS) {
-            if (testAgainst[0] * testAgainst[1] == size) {
+            if (testAgainst[0] * testAgainst[1] == maxSize) {
                 dims = testAgainst;
                 break;
             }
@@ -121,6 +128,7 @@ public class SackContainer extends AbstractContainerMenu {
     private static final int[][] TARGET_RATIOS = new int[][]{
             {1, 1},
             {2, 2},
+            {3, 2},
             {3, 3},
             {4, 2},
             {5, 2},

@@ -68,6 +68,6 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        Minecraft.getInstance().setScreen(new DoormatGui(this));
+        DoormatGui.open(this);
     }
 }

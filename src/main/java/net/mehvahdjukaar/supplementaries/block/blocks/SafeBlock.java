@@ -87,7 +87,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            tile.barrelTick();
+            tile.recheckOpen();
         }
     }
 

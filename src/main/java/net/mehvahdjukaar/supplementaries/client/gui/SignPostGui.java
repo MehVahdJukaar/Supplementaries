@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
@@ -46,12 +47,16 @@ public class SignPostGui extends Screen {
 
     private ModelPart signModel;
 
-    public SignPostGui(SignPostBlockTile teSign) {
+    private SignPostGui(SignPostBlockTile teSign) {
         super(new TranslatableComponent("sign.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
 
         editLine = !this.tileSign.up ? 1 : 0;
+    }
+
+    public static void open(SignPostBlockTile teSign){
+        Minecraft.getInstance().setScreen(new SignPostGui(teSign));
     }
 
     @Override

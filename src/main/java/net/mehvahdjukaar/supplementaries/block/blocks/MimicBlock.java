@@ -50,10 +50,9 @@ public abstract class MimicBlock extends Block implements IForgeBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
         if (builder.getParameter(LootContextParams.BLOCK_ENTITY) instanceof IBlockHolder tile) {
-            ItemStack camo = new ItemStack(tile.getHeldBlock().getBlock());
-            if (!camo.isEmpty()) {
-                drops.add(camo);
-            }
+            List<ItemStack> newDrops = tile.getHeldBlock().getDrops(builder);
+            //ItemStack camo = new ItemStack(tile.getHeldBlock().getBlock());
+            drops.addAll(newDrops);
         }
         return drops;
     }

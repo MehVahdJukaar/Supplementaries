@@ -20,13 +20,12 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     public static Map<Integer, Integer> cachedColors0 = new HashMap<>();
     public static Map<Integer, Integer> cachedColors1 = new HashMap<>();
 
-    //TODO: figure out if this is actually faster. seems to me about the same, maybe slightly faster this way
     public static int getCachedColor(int base, int tint) {
         return switch (tint){
             default -> -1;
             case 1 -> {
                 if (!cachedColors0.containsKey(base)) {
-                    int c = getProcessedColor(base, tint);
+                    int c = getProcessedColor(base, 0);
                     cachedColors0.put(base, c);
                     yield c;
                 } else {
@@ -35,7 +34,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             }
             case 2 -> {
                 if (!cachedColors1.containsKey(base)) {
-                    int c = getProcessedColor(base, tint);
+                    int c = getProcessedColor(base, 1);
                     cachedColors1.put(base, c);
                     yield c;
                 } else {

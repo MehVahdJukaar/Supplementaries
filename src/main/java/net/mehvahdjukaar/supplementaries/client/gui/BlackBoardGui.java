@@ -19,7 +19,7 @@ public class BlackBoardGui extends Screen {
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
 
-    public BlackBoardGui(BlackboardBlockTile teBoard) {
+    private BlackBoardGui(BlackboardBlockTile teBoard) {
         super(new TranslatableComponent("gui.supplementaries.blackboard.edit"));
         this.tileBoard = teBoard;
 
@@ -28,7 +28,6 @@ public class BlackBoardGui extends Screen {
     public static void open(BlackboardBlockTile sign) {
         Minecraft.getInstance().setScreen(new BlackBoardGui(sign));
     }
-
 
     @Override
     public void tick() {

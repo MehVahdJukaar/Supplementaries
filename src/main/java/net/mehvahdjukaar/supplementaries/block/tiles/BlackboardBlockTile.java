@@ -164,6 +164,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        Minecraft.getInstance().setScreen(new BlackBoardGui(this));
+        BlackBoardGui.open(this);
     }
 }

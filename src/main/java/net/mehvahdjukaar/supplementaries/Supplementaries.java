@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -36,6 +37,7 @@ public class Supplementaries {
     public Supplementaries() {
 
 
+        //FIx spikes colors & piston movements
         //TODO: fish bucket on cages a
         //TODO: shift click to pickup placed book
 

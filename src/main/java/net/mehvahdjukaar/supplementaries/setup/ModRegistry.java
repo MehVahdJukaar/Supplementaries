@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
 import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
+import net.mehvahdjukaar.supplementaries.compat.create.SchematicCannonStuff;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.entities.*;
@@ -184,8 +185,8 @@ public class ModRegistry {
                     .sized(0.6F, 1.95F)
                     .build(RED_MERCHANT_NAME));
 
-    public static final RegistryObject<MenuType<RedMerchantContainer>> RED_MERCHANT_CONTAINER = CONTAINERS
-            .register(RED_MERCHANT_NAME, () -> IForgeMenuType.create(RedMerchantContainer::new));
+    public static final RegistryObject<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = CONTAINERS
+            .register(RED_MERCHANT_NAME, () -> IForgeMenuType.create(RedMerchantContainerMenu::new));
 
     public static final RegistryObject<Item> RED_MERCHANT_SPAWN_EGG_ITEM = ITEMS.register(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
@@ -337,12 +338,13 @@ public class ModRegistry {
 
     //sign posts
     public static final String SIGN_POST_NAME = "sign_post";
-    public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME, () -> new SignPostBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
-                    .strength(2f, 3f)
-                    .sound(SoundType.WOOD)
-                    .noOcclusion()
-    ));
+    public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME, () -> {
+        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+                        .strength(2f, 3f)
+                        .sound(SoundType.WOOD)
+                        .noOcclusion();
+        return CompatHandler.create ? SchematicCannonStuff.makeSignPost(p) : new SignPostBlock(p);
+    });
     public static final RegistryObject<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME, () -> BlockEntityType.Builder.of(
             SignPostBlockTile::new, SIGN_POST.get()).build(null));
 
@@ -377,8 +379,8 @@ public class ModRegistry {
 
     public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = RegistryHelper.makePresentsItems();
 
-    public static final RegistryObject<MenuType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
-            .register(PRESENT_NAME, () -> IForgeMenuType.create(PresentContainer::new));
+    public static final RegistryObject<MenuType<PresentContainerMenu>> PRESENT_BLOCK_CONTAINER = CONTAINERS
+            .register(PRESENT_NAME, () -> IForgeMenuType.create(PresentContainerMenu::new));
 
 
     //decoration blocks
@@ -410,8 +412,8 @@ public class ModRegistry {
     public static final RegistryObject<Item> NOTICE_BOARD_ITEM = ITEMS.register(NOTICE_BOARD_NAME, () -> new BurnableBlockItem(NOTICE_BOARD.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, NOTICE_BOARD_NAME)), 300));
 
-    public static final RegistryObject<MenuType<NoticeBoardContainer>> NOTICE_BOARD_CONTAINER = CONTAINERS
-            .register(NOTICE_BOARD_NAME, () -> IForgeMenuType.create(NoticeBoardContainer::new));
+    public static final RegistryObject<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = CONTAINERS
+            .register(NOTICE_BOARD_NAME, () -> IForgeMenuType.create(NoticeBoardContainerMenu::new));
 
     //safe
     public static final String SAFE_NAME = "safe";
@@ -474,8 +476,8 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<SackBlockTile>> SACK_TILE = TILES.register(SACK_NAME, () -> BlockEntityType.Builder.of(
             SackBlockTile::new, SACK.get()).build(null));
 
-    public static final RegistryObject<MenuType<SackContainer>> SACK_CONTAINER = CONTAINERS.register(SACK_NAME, () -> IForgeMenuType.create(
-            SackContainer::new));
+    public static final RegistryObject<MenuType<SackContainerMenu>> SACK_CONTAINER = CONTAINERS.register(SACK_NAME, () -> IForgeMenuType.create(
+            SackContainerMenu::new));
 
     public static final RegistryObject<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, SACK_NAME)).stacksTo(1)));
@@ -797,8 +799,13 @@ public class ModRegistry {
 
     //speaker Block
     public static final String SPEAKER_BLOCK_NAME = "speaker_block";
-    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () ->
-            CompatHandler.computercraft ? CCStuff.makeSpeaker() : new SpeakerBlock());
+    public static final RegistryObject<SpeakerBlock> SPEAKER_BLOCK = BLOCKS.register(SPEAKER_BLOCK_NAME, () -> {
+        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+                .strength(1f, 2f)
+                .sound(SoundType.WOOD);
+        return CompatHandler.computercraft ? CCStuff.makeSpeaker(p) : new SpeakerBlock(p);
+    });
+
     public static final RegistryObject<BlockEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 
@@ -833,8 +840,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.BARREL)));
     public static final RegistryObject<Item> PULLEY_BLOCK_ITEM = regBlockItem(PULLEY_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, PULLEY_BLOCK_NAME), 300);
 
-    public static final RegistryObject<MenuType<PulleyBlockContainer>> PULLEY_BLOCK_CONTAINER = CONTAINERS
-            .register(PULLEY_BLOCK_NAME, () -> IForgeMenuType.create(PulleyBlockContainer::new));
+    public static final RegistryObject<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK_CONTAINER = CONTAINERS
+            .register(PULLEY_BLOCK_NAME, () -> IForgeMenuType.create(PulleyBlockContainerMenu::new));
     public static final RegistryObject<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = TILES.register(PULLEY_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             PulleyBlockTile::new, PULLEY_BLOCK.get()).build(null));
 
@@ -972,20 +979,23 @@ public class ModRegistry {
 
     //wall lantern
     public static final String WALL_LANTERN_NAME = "wall_lantern";
-    public static final RegistryObject<Block> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> new WallLanternBlock(
-            BlockBehaviour.Properties.copy(Blocks.LANTERN)
-                    .lightLevel((state) -> 15)
-                    .noDrops()
-    ));
+    public static final RegistryObject<Block> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(Blocks.LANTERN)
+                .lightLevel((state) -> 15).noDrops();
+
+        return CompatHandler.create ? SchematicCannonStuff.makeWallLantern(p) : new WallLanternBlock(p);
+    });
     public static final RegistryObject<BlockEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = TILES.register(WALL_LANTERN_NAME, () -> BlockEntityType.Builder.of(
             WallLanternBlockTile::new, WALL_LANTERN.get()).build(null));
 
 
     //hanging flower pot
     public static final String HANGING_FLOWER_POT_NAME = "hanging_flower_pot";
-    public static final RegistryObject<Block> HANGING_FLOWER_POT = BLOCKS.register(HANGING_FLOWER_POT_NAME, () -> new HangingFlowerPotBlock(
-            BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)
-    ));
+    public static final RegistryObject<Block> HANGING_FLOWER_POT = BLOCKS.register(HANGING_FLOWER_POT_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(Blocks.FLOWER_POT);
+
+        return CompatHandler.create ? SchematicCannonStuff.makeFlowerPot(p) : new WallLanternBlock(p);
+    });
     public static final RegistryObject<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME, () -> BlockEntityType.Builder.of(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));
 
@@ -1167,25 +1177,28 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, DAUB_NAME))));
     //timber frame
     public static final String TIMBER_FRAME_NAME = "timber_frame";
-    public static final RegistryObject<Block> TIMBER_FRAME = BLOCKS.register(TIMBER_FRAME_NAME, () -> new FrameBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
-                    .strength(0.1f, 0f)
-                    .dynamicShape()
-                    .sound(SoundType.SCAFFOLDING), DAUB_FRAME));
+    public static final RegistryObject<Block> TIMBER_FRAME = BLOCKS.register(TIMBER_FRAME_NAME, () -> {
+        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(0.1f, 0f).dynamicShape().sound(SoundType.SCAFFOLDING);
+        return CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) : new FrameBlock(p, DAUB_FRAME);
+    });
     public static final RegistryObject<Item> TIMBER_FRAME_ITEM = ITEMS.register(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber brace
     public static final String TIMBER_BRACE_NAME = "timber_brace";
-    public static final RegistryObject<Block> TIMBER_BRACE = BLOCKS.register(TIMBER_BRACE_NAME, () -> new FrameBraceBlock(
-            BlockBehaviour.Properties.copy(TIMBER_FRAME.get()), DAUB_BRACE));
+    public static final RegistryObject<Block> TIMBER_BRACE = BLOCKS.register(TIMBER_BRACE_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
+        return CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) : new FrameBraceBlock(p, DAUB_BRACE);
+    });
     public static final RegistryObject<Item> TIMBER_BRACE_ITEM = ITEMS.register(TIMBER_BRACE_NAME, () -> new TimberFrameItem(TIMBER_BRACE.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber cross brace
     public static final String TIMBER_CROSS_BRACE_NAME = "timber_cross_brace";
-    public static final RegistryObject<Block> TIMBER_CROSS_BRACE = BLOCKS.register(TIMBER_CROSS_BRACE_NAME, () -> new FrameBlock(
-            BlockBehaviour.Properties.copy(TIMBER_FRAME.get()), DAUB_CROSS_BRACE));
+    public static final RegistryObject<Block> TIMBER_CROSS_BRACE = BLOCKS.register(TIMBER_CROSS_BRACE_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
+        return CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) : new FrameBlock(p, DAUB_CROSS_BRACE);
+    });
     public static final RegistryObject<Item> TIMBER_CROSS_BRACE_ITEM = ITEMS.register(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(TIMBER_CROSS_BRACE.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = TILES.register(TIMBER_FRAME_NAME, () -> BlockEntityType.Builder.of(
@@ -1246,11 +1259,10 @@ public class ModRegistry {
 
     //flower box
     public static final String FLOWER_BOX_NAME = "flower_box";
-    public static final RegistryObject<Block> FLOWER_BOX = BLOCKS.register(FLOWER_BOX_NAME, () -> new FlowerBoxBlock(
-            BlockBehaviour.Properties.of(Material.WOOD)
-                    .strength(0.5F)
-                    .sound(SoundType.WOOD))
-    );
+    public static final RegistryObject<Block> FLOWER_BOX = BLOCKS.register(FLOWER_BOX_NAME, () -> {
+        var p = BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F);
+        return CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : new FlowerBoxBlock(p);
+    });
 
     public static final RegistryObject<Item> FLOWER_BOX_ITEM = regBlockItem(FLOWER_BOX, getTab(CreativeModeTab.TAB_DECORATIONS, FLOWER_BOX_NAME), 300);
 
@@ -1337,8 +1349,10 @@ public class ModRegistry {
 
     //stackable skulls
     public static final String SKULL_PILE_NAME = "skull_pile";
-    public static final RegistryObject<Block> SKULL_PILE = BLOCKS.register(SKULL_PILE_NAME, () -> new DoubleSkullBlock(
-            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
+    public static final RegistryObject<Block> SKULL_PILE = BLOCKS.register(SKULL_PILE_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK);
+        return CompatHandler.create ? SchematicCannonStuff.makeDoubleSkull(p) : new DoubleSkullBlock(p);
+    });
 
 
     public static final RegistryObject<BlockEntityType<DoubleSkullBlockTile>> SKULL_PILE_TILE = TILES.register(SKULL_PILE_NAME, () ->
@@ -1347,8 +1361,10 @@ public class ModRegistry {
 
     //skulls candles
     public static final String SKULL_CANDLE_NAME = "skull_candle";
-    public static final RegistryObject<Block> SKULL_CANDLE = BLOCKS.register(SKULL_CANDLE_NAME, () -> new CandleSkullBlock(
-            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
+    public static final RegistryObject<Block> SKULL_CANDLE = BLOCKS.register(SKULL_CANDLE_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK);
+        return CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) : new CandleSkullBlock(p);
+    });
 
 
     public static final RegistryObject<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = TILES.register(SKULL_CANDLE_NAME, () ->

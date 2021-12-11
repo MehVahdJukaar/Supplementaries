@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.items.ItemsUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -9,11 +10,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
 import vazkii.quark.base.handler.GeneralConfig;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.block.WoodPostBlock;
+import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
+import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class QuarkPlugin {
     private static final ResourceLocation SACK_CAP = new ResourceLocation(Supplementaries.MOD_ID, "sack_drop_in");
@@ -51,9 +56,20 @@ public class QuarkPlugin {
         return null;
     }
 
+    public static boolean isDropInEnabled(){
+        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class);
+    }
+
+    public static boolean isEnhancedTooltipEnabled(){
+        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class);
+    }
+
     public static boolean isTome(Item item) {
         return item instanceof AncientTomeItem;
     }
 
 
+    public static void registerTooltipComponent() {
+        MinecraftForgeClient.registerTooltipComponentFactory(ItemsUtil.InventoryTooltip.class, InventoryTooltipComponent::new);
+    }
 }

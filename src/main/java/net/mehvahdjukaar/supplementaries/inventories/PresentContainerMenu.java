@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -12,38 +12,46 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Objects;
 
-public class NoticeBoardContainer extends AbstractContainerMenu  {
+
+public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider{
     public final Container inventory;
 
-    public NoticeBoardContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id,playerInventory);
+    private final BlockPos pos;
+
+    @Override
+    public Container getContainer() {
+        return inventory;
     }
 
-    public NoticeBoardContainer(int id, Inventory playerInventory) {
-        this(id, playerInventory, new SimpleContainer(1));
+    public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(id, playerInventory, null, packetBuffer.readBlockPos());
+
     }
 
-    public NoticeBoardContainer(int id, Inventory playerInventory, Container inventory) {
+    public PresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
+        super(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), id);
 
-        super(ModRegistry.NOTICE_BOARD_CONTAINER.get(), id);
+        this.pos = pos;
+
         //tile inventory
-        this.inventory = inventory;
-        checkContainerSize(inventory, 1);
-        inventory.startOpen(playerInventory.player);
-
-        this.addSlot(new Slot(inventory, 0, 79, 39) {
-            @Override
+        this.inventory = Objects.requireNonNullElseGet(inventory, () -> new SimpleContainer(1) {
             public void setChanged() {
                 super.setChanged();
-                //NoticeBoardContainer.this.slotChanged(0, 0, 0);
-            }
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED || NoticeBoardBlockTile.isPageItem(stack.getItem()));
+                PresentContainerMenu.this.slotsChanged(this);
             }
         });
 
+        checkContainerSize(this.inventory, 1);
+        this.inventory.startOpen(playerInventory.player);
+
+        this.addSlot(new Slot(this.inventory, 0, 17, 23) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return PresentBlockTile.isAcceptableItem(stack);
+            }
+        });
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
@@ -52,16 +60,20 @@ public class NoticeBoardContainer extends AbstractContainerMenu  {
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
-
+    public BlockPos getPos() {
+        return pos;
+    }
 
     @Override
     public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
+
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
+    @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -89,6 +101,7 @@ public class NoticeBoardContainer extends AbstractContainerMenu  {
     /**
      * Called when the container is closed.
      */
+    @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);

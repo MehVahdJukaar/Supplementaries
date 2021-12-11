@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainer;
+import net.mehvahdjukaar.supplementaries.inventories.NoticeBoardContainerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -11,9 +11,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
-public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer> {
+public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainerMenu> {
 
-    public NoticeBoardGui(NoticeBoardContainer container, Inventory inventory, Component text) {
+    public NoticeBoardGui(NoticeBoardContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;

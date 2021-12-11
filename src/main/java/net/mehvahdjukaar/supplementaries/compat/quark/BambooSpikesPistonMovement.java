@@ -21,20 +21,19 @@ public class BambooSpikesPistonMovement {
     public static void tick(Level world, BlockPos pos, AABB pistonBB, boolean sameDir, BlockEntity movingTile){
         List<Entity> list = world.getEntities(null, pistonBB);
         for(Entity entity : list){
-            if(entity instanceof Player && ((Player) entity).isCreative())return;
-            if(entity instanceof LivingEntity && entity.isAlive()) {
+            if(entity instanceof Player player && player.isCreative())return;
+            if(entity instanceof LivingEntity livingEntity && entity.isAlive()) {
                 AABB entityBB = entity.getBoundingBox();
                 if (pistonBB.intersects(entityBB)) {
                     //apply potions using quark moving tiles
-                    if (CompatHandler.quark && world!=null) {
+                    if (CompatHandler.quark) {
                         //get tile
-                        BlockEntity tile = QuarkPistonPlugin.getMovingTile(pos, world);
-                        if (tile instanceof BambooSpikesBlockTile) {
+                        if (QuarkPistonPlugin.getMovingTile(pos, world) instanceof BambooSpikesBlockTile tile) {
                             //apply effects
-                            if(((BambooSpikesBlockTile) tile).interactWithEntity(((LivingEntity) entity),world)){
-                                if(movingTile instanceof IBlockHolder) {
+                            if(tile.interactWithEntity(livingEntity,world)){
+                                //change blockstate if empty
+                                if(movingTile instanceof IBlockHolder te) {
                                     //remove last charge and set new blockState
-                                    IBlockHolder te = ((IBlockHolder) movingTile);
                                     BlockState state = te.getHeldBlock();
                                     if(state.getBlock() instanceof BambooSpikesBlock) {
                                         te.setHeldBlock(state.setValue(BambooSpikesBlock.TIPPED,false));

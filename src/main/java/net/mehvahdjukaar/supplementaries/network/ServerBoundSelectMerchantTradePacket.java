@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
@@ -32,9 +32,9 @@ public class ServerBoundSelectMerchantTradePacket implements NetworkHandler.Mess
 
             int i = message.item;
 
-            if (container instanceof RedMerchantContainer redMerchantContainer) {
-                redMerchantContainer.setSelectionHint(i);
-                redMerchantContainer.tryMoveItems(i);
+            if (container instanceof RedMerchantContainerMenu redMerchantContainerMenu) {
+                redMerchantContainerMenu.setSelectionHint(i);
+                redMerchantContainerMenu.tryMoveItems(i);
             }
 
         });

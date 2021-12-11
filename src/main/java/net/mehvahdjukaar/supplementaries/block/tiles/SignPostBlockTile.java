@@ -165,6 +165,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        Minecraft.getInstance().setScreen(new SignPostGui(this));
+        SignPostGui.open(this);
     }
 }

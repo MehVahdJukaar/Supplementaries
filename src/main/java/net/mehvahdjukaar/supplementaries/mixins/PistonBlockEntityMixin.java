@@ -46,9 +46,6 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
     @Shadow
     private BlockState movedState;
 
-    @Shadow
-    private boolean extending;
-
     //lastProgress
     @Shadow
     private float progressO;

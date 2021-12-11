@@ -334,7 +334,7 @@ public class BellowsBlockTile extends BlockEntity {
     public void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
         if (airType == AirType.SOAP) {
             for (int m = 0; m < (1 + world.random.nextInt(3)); m++) {
-                ParticleUtil.spawnParticleOnFace(world, pos, dir, ModRegistry.SUDS_PARTICLE.get(), 0.46f, 0.61f, true);
+                ParticleUtil.spawnParticleOnFace(world, pos, dir, ModRegistry.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);
             }
 
         } else {

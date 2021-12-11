@@ -61,8 +61,9 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        Minecraft.getInstance().setScreen(new HangingSignGui(this));
+        HangingSignGui.open(this);
     }
+
 
     @Override
     public ItemStack getMapStack() {

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.block.util.IColoredBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,27 +26,26 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FlagBlockTile extends BlockEntity implements Nameable {
+public class FlagBlockTile extends BlockEntity implements Nameable, IColoredBlock {
 
     //client side param
-    public final float offset = 3f * (Mth.sin(this.worldPosition.getX()) + Mth.sin(this.worldPosition.getZ()));
+    public final float offset;
     @Nullable
     private Component name;
-    @Nullable
-    private DyeColor baseColor;
+    private final DyeColor baseColor;
     @Nullable
     private ListTag itemPatterns;
-    private boolean receivedData;
     @Nullable
     private List<Pair<BannerPattern, DyeColor>> patterns;
 
     public FlagBlockTile(BlockPos pos, BlockState state) {
-        this(pos, state, null);
+        this(pos, state, ((IColoredBlock)state.getBlock()).getColor());
     }
 
     public FlagBlockTile(BlockPos pos, BlockState state, DyeColor color) {
         super(ModRegistry.FLAG_TILE.get(), pos, state);
         this.baseColor = color;
+        this.offset = 3f * (Mth.sin(this.worldPosition.getX()) + Mth.sin(this.worldPosition.getZ()));
     }
 
     public void setCustomName(Component p_213136_1_) {
@@ -53,15 +53,14 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
     }
 
     public List<Pair<BannerPattern, DyeColor>> getPatterns() {
-        if (this.patterns == null && this.receivedData) {
-            this.patterns = BannerBlockEntity.createPatterns(this.getBaseColor(this::getBlockState), this.itemPatterns);
+        if (this.patterns == null) {
+            this.patterns = BannerBlockEntity.createPatterns(this.baseColor, this.itemPatterns);
         }
         return this.patterns;
     }
 
-
     public ItemStack getItem(BlockState state) {
-        ItemStack itemstack = new ItemStack(FlagBlock.byColor(this.getBaseColor(() -> state)));
+        ItemStack itemstack = new ItemStack(FlagBlock.byColor(this.getColor()));
         if (this.itemPatterns != null && !this.itemPatterns.isEmpty()) {
             itemstack.getOrCreateTagElement("BlockEntityTag").put("Patterns", this.itemPatterns.copy());
         }
@@ -71,10 +70,8 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
         return itemstack;
     }
 
-    public DyeColor getBaseColor(Supplier<BlockState> state) {
-        if (this.baseColor == null) {
-            this.baseColor = ((FlagBlock) state.get().getBlock()).getColor();
-        }
+    @Override
+    public DyeColor getColor() {
         return this.baseColor;
     }
 
@@ -95,14 +92,8 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
         if (compoundNBT.contains("CustomName", 8)) {
             this.name = Component.Serializer.fromJson(compoundNBT.getString("CustomName"));
         }
-        if (this.hasLevel()) {
-            this.baseColor = ((FlagBlock) this.getBlockState().getBlock()).getColor();
-        } else {
-            this.baseColor = null;
-        }
         this.itemPatterns = compoundNBT.getList("Patterns", 10);
         this.patterns = null;
-        this.receivedData = true;
     }
 
     @Override
@@ -133,7 +124,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable {
 
     @Override
     public Component getName() {
-        return this.name != null ? this.name : new TranslatableComponent("block.supplementaries.flag_" + this.getBaseColor(this::getBlockState).getName());
+        return this.name != null ? this.name : new TranslatableComponent("block.supplementaries.flag_" + this.baseColor.getName());
     }
 
     @Nullable

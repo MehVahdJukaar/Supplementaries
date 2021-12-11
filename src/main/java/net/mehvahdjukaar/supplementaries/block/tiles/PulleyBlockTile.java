@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainer;
+import net.mehvahdjukaar.supplementaries.inventories.PulleyBlockContainerMenu;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,7 +64,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PulleyBlockContainer(id, player, this);
+        return new PulleyBlockContainerMenu(id, player, this);
     }
 
     @Override

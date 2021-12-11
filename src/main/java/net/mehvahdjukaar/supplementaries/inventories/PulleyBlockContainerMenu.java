@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.inventories;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -12,41 +12,43 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
 
-
-public class PresentContainer extends AbstractContainerMenu {
+public class PulleyBlockContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
 
-    private final BlockPos pos;
-
-    public PresentContainer(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, null, packetBuffer.readBlockPos());
-
+    @Override
+    public Container getContainer() {
+        return inventory;
     }
 
-    public PresentContainer(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
-        super(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), id);
+    public PulleyBlockContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(id,playerInventory);
+    }
 
-        this.pos = pos;
+    public PulleyBlockContainerMenu(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(1));
+    }
 
+    public PulleyBlockContainerMenu(int id, Inventory playerInventory, Container inventory) {
+
+        super(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), id);
         //tile inventory
-        this.inventory = Objects.requireNonNullElseGet(inventory, () -> new SimpleContainer(1) {
+        this.inventory = inventory;
+        checkContainerSize(inventory, 1);
+        inventory.startOpen(playerInventory.player);
+
+        this.addSlot(new Slot(inventory, 0, 79, 39) {
+            @Override
             public void setChanged() {
                 super.setChanged();
-                PresentContainer.this.slotsChanged(this);
+                //NoticeBoardContainer.this.slotChanged(0, 0, 0);
             }
-        });
-
-        checkContainerSize(this.inventory, 1);
-        this.inventory.startOpen(playerInventory.player);
-
-        this.addSlot(new Slot(this.inventory, 0, 17, 23) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PresentBlockTile.isAcceptableItem(stack);
+                return PulleyBlockTile.getContentType(stack.getItem())!=BlockProperties.Winding.NONE;
             }
         });
+
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
@@ -55,20 +57,16 @@ public class PresentContainer extends AbstractContainerMenu {
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
-    public BlockPos getPos() {
-        return pos;
-    }
+
 
     @Override
     public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
-
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -96,7 +94,6 @@ public class PresentContainer extends AbstractContainerMenu {
     /**
      * Called when the container is closed.
      */
-    @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);

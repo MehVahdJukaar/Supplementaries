@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -50,12 +50,12 @@ public class ClientBoundSyncTradesPacket {
         // client world
         ctx.get().enqueueWork(() -> {
             AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
-            if (message.containerId == container.containerId && container instanceof RedMerchantContainer) {
-                ((RedMerchantContainer) container).setOffers(new MerchantOffers(message.offers.createTag()));
-                ((RedMerchantContainer) container).setXp(message.villagerXp);
-                ((RedMerchantContainer) container).setMerchantLevel(message.villagerLevel);
-                ((RedMerchantContainer) container).setShowProgressBar(message.showProgress);
-                ((RedMerchantContainer) container).setCanRestock(message.canRestock);
+            if (message.containerId == container.containerId && container instanceof RedMerchantContainerMenu) {
+                ((RedMerchantContainerMenu) container).setOffers(new MerchantOffers(message.offers.createTag()));
+                ((RedMerchantContainerMenu) container).setXp(message.villagerXp);
+                ((RedMerchantContainerMenu) container).setMerchantLevel(message.villagerLevel);
+                ((RedMerchantContainerMenu) container).setShowProgressBar(message.showProgress);
+                ((RedMerchantContainerMenu) container).setCanRestock(message.canRestock);
             }
 
         });

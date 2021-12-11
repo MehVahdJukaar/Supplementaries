@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,10 +27,13 @@ public class CCStuff {
     }
 
 
-
-    public static SpeakerBlock makeSpeaker() {
-        //try loading this damn classloader
+    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties properties) {
+        //try loading this now, freaking classloader
         class SpeakerCC extends SpeakerBlock implements IPeripheralProvider {
+
+            public SpeakerCC(Properties properties) {
+                super(properties);
+            }
 
             @NotNull
             @Override
@@ -40,7 +44,7 @@ public class CCStuff {
                 return LazyOptional.empty();
             }
         }
-        return new SpeakerCC();
+        return new SpeakerCC(properties);
     }
 
     public static boolean checkForPrintedBook(Item item) {
@@ -50,6 +54,7 @@ public class CCStuff {
     public static int getPages(ItemStack itemstack) {
         return ItemPrintout.getPageCount(itemstack);
     }
+
     public static String[] getText(ItemStack itemstack) {
         return ItemPrintout.getText(itemstack);
     }

@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
-import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
+import net.mehvahdjukaar.supplementaries.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -114,7 +114,7 @@ public class PresentBlockTile extends ItemDisplayTile {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PresentContainer(id, player, this, this.worldPosition);
+        return new PresentContainerMenu(id, player, this, this.worldPosition);
     }
 
     public static boolean isAcceptableItem(ItemStack stack) {

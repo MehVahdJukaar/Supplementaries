@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.inventories.SackContainer;
+import net.mehvahdjukaar.supplementaries.inventories.SackContainerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -12,9 +12,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
-public class SackGui extends AbstractContainerScreen<SackContainer> {
+public class SackGui extends AbstractContainerScreen<SackContainerMenu> {
 
-    public SackGui(SackContainer container, Inventory inventory, Component text) {
+    public SackGui(SackContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -47,7 +47,7 @@ public class SackGui extends AbstractContainerScreen<SackContainer> {
         int size = ServerConfigs.cached.SACK_SLOTS;
 
 
-        int[] dims = SackContainer.getRatio(size);
+        int[] dims = SackContainerMenu.getRatio(size);
         if (dims[0] > 9) {
             dims[0] = 9;
             dims[1] = (int) Math.ceil(size / 9f);

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainer;
+import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.ServerBoundSelectMerchantTradePacket;
 import net.minecraft.ChatFormatting;
@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer> {
+public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainerMenu> {
     private static final ResourceLocation VILLAGER_LOCATION = Textures.RED_MERCHANT_GUI_TEXTURE;
     private static final Component TRADES_LABEL = new TranslatableComponent("merchant.trades");
     private static final Component LEVEL_SEPARATOR = new TextComponent(" - ");
@@ -31,7 +31,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
     private int scrollOff;
     private boolean isDragging;
 
-    public RedMerchantGui(RedMerchantContainer p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
+    public RedMerchantGui(RedMerchantContainerMenu p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
         super(p_i51080_1_, p_i51080_2_, p_i51080_3_);
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
