@@ -9,15 +9,11 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import vazkii.arl.util.TooltipHandler;
-import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
 import java.util.List;
 import java.util.Optional;
@@ -90,10 +86,9 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
-        if (!ClientConfigs.cached.CONFIG_BUTTON) return;
-        if (!CompatHandler.configured) return;
-        ConfigButton.setupConfigButton(event);
-
+        if (ClientConfigs.cached.CONFIG_BUTTON && CompatHandler.configured) {
+            ConfigButton.setupConfigButton(event);
+        }
     }
 
 

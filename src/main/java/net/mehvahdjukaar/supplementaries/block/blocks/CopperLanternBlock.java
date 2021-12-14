@@ -122,7 +122,7 @@ public class CopperLanternBlock extends EnhancedLanternBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (player.getAbilities().mayBuild && handIn == InteractionHand.MAIN_HAND) {
             ItemStack item = player.getItemInHand(handIn);
             if (!state.getValue(LIT)) {
                 if (item.getItem() instanceof FlintAndSteelItem) {

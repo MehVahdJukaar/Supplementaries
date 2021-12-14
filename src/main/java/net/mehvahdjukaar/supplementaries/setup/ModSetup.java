@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.world.generation.FeaturesRegistry;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +25,8 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,6 +44,7 @@ public class ModSetup {
 
 
                 // StructureRegistry.setup();
+                FeaturesRegistry.setup();
                 setupStage++;
 
                 //  StructureLocator.init();
@@ -55,7 +59,7 @@ public class ModSetup {
                 WeatheredMap.init();
                 setupStage++;
 
-                Spawns.registerSpawningStuff();
+                WorldGenSetup.registerMobSpawns();
                 setupStage++;
 
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
@@ -155,6 +159,12 @@ public class ModSetup {
     @SubscribeEvent
     public static void serverAboutToStart(final ServerAboutToStartEvent event) {
 
+    }
+
+    //TODO: move to ModSetup
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void registerStuffToBiomes(BiomeLoadingEvent event) {
+        WorldGenSetup.registerStuffToBiomes(event);
     }
 
 }

@@ -114,6 +114,7 @@ public class TextUtil {
                         Doiqotaq
                         stupid
                         HatchbackGuy'doscht
+                        VerdaPegasus
 
                         \u00A75Others:\u00A7r
 

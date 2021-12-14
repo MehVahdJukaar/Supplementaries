@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +38,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public boolean framed = false;
     public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
 
-    //TODO: make sing class and clean this up
     public TextHolder textHolder;
 
     public float yawUp = 0;
@@ -109,6 +109,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.down = compound.getBoolean("Down");
         this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
+
+        if(RegistryHelper.conditionalSigns()){
+            if(this.woodTypeUp.isModActive()) this.woodTypeUp = VanillaWoodTypes.OAK;
+            if(this.woodTypeDown.isModActive()) this.woodTypeDown = VanillaWoodTypes.OAK;
+        }
+
         this.loadOwner(compound);
     }
 

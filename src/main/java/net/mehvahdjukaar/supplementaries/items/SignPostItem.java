@@ -118,7 +118,7 @@ public class SignPostItem extends Item {
             if (flag) {
 
                 SoundType soundtype = SoundType.WOOD;
-                world.playSound(player, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                world.playSound(null, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 if (!context.getPlayer().isCreative()) itemstack.shrink(1);
                 return InteractionResult.SUCCESS;

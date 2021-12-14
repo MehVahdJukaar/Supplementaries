@@ -586,7 +586,13 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
 
         public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
+        public static ForgeConfigSpec.IntValue FLAX_PATCH_TRIES;
+        public static ForgeConfigSpec.IntValue FLAX_AVERAGE_EVERY;
+
         public static ForgeConfigSpec.BooleanValue URN_PILE_ENABLED;
+        public static ForgeConfigSpec.IntValue URN_PATCH_TRIES;
+        public static ForgeConfigSpec.IntValue URN_PER_CHUNK;
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Configure spawning conditions")
@@ -647,10 +653,18 @@ public class ServerConfigs {
 
             builder.push("wild_flax");
             WILD_FLAX_ENABLED = builder.define("enabled", true);
+            FLAX_AVERAGE_EVERY = builder.comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
+                            .defineInRange("rarity", 6, 1, 100);
+            FLAX_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
+                            .defineInRange("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             builder.push("cave_urns");
             URN_PILE_ENABLED = builder.define("enabled", true);
+            URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
+                    .defineInRange("attempts_per_patch", 5, 1, 100);
+            URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
+                            .defineInRange("spawn_attempts", 7, 0, 100);
             builder.pop();
 
             builder.pop();

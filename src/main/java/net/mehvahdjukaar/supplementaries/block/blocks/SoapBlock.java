@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.GlazedTerracottaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
@@ -33,7 +34,7 @@ public class SoapBlock extends Block {
             Random r = level.random;
             for (int i = 0; i < 2; i++) {
                 level.addParticle(ModRegistry.SUDS_PARTICLE.get(), pos.getX() + r.nextFloat(), pos.getY() + 1.1, pos.getZ() + r.nextFloat(),
-                        (0.5 - r.nextFloat()) * 0.1f, (r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.1f);
+                        (0.5 - r.nextFloat()) * 0.13f, (r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.13f);
             }
             return true;
         }
@@ -64,6 +65,7 @@ public class SoapBlock extends Block {
         }
         super.stepOn(level, pos, state, entity);
     }
+
 /*
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {

@@ -70,12 +70,17 @@ public class RegistryHelper {
         return !ModList.get().isLoaded(wood.getNamespace());
     }
 
+    public static boolean conditionalSigns(){
+        //RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get()
+        return true;
+    }
+
     //hanging signs
     public static Map<IWoodType, RegistryObject<Block>> makeHangingSingsBlocks() {
         Map<IWoodType, RegistryObject<Block>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (conditionalSigns() && !wood.isModActive()) continue;
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.BLOCKS.register(name, () -> new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.getMaterial(), wood.getColor())
@@ -92,7 +97,7 @@ public class RegistryHelper {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (conditionalSigns() && !wood.isModActive()) continue;
             String name = getHangingSignName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
@@ -111,7 +116,7 @@ public class RegistryHelper {
         Map<IWoodType, RegistryObject<Item>> map = new HashMap<>();
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
-            if (RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get() && !wood.isModActive()) continue;
+            if (conditionalSigns() && !wood.isModActive()) continue;
             String name = getSignPostName(wood);
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new SignPostItem(
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :

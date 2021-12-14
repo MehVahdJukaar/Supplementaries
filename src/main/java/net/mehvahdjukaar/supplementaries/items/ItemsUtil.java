@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.items;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
@@ -23,6 +26,19 @@ import javax.annotation.Nullable;
 public class ItemsUtil {
 
     public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {
+    }
+
+    public static boolean tryAddingItemInContainerItem(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player){
+        if ((!CompatHandler.quark || QuarkPlugin.isDropInEnabled()) && action != ClickAction.PRIMARY) {
+            if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true) != null) {
+                ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false);
+                if (finished != null) {
+                    slot.set(finished);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static ItemStack interactWithItemHandler(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate) {

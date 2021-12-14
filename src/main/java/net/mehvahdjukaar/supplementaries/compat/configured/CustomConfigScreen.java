@@ -28,10 +28,12 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.WeatheringCopperSlabBlock;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
+import vazkii.quark.content.world.block.CorundumBlock;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -381,7 +383,13 @@ public class CustomConfigScreen extends ConfigScreen {
             boolean on = this.holder.getValue();
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
-            int light = on ? LightTexture.FULL_BRIGHT : 0;
+            int light = LightTexture.FULL_BRIGHT;
+            if(!on){
+
+                //int sky = LightTexture.sky(light);
+                //int block = 0;//LightTexture.block(light);
+                light = 0;//LightTexture.pack(block, sky);
+            }
             int center = (int) (this.button.x + this.button.getWidth() / 2f);
             ItemRenderer renderer = CustomConfigScreen.this.itemRenderer;
 

@@ -621,7 +621,6 @@ public class ModRegistry {
                     .lightLevel((state) -> state.getValue(CopperLanternBlock.LIT) ? 15 : 0)
                     //TODO: add custom sound mixed
                     .sound(SoundType.COPPER)
-                    .noOcclusion()
     ));
     public static final RegistryObject<Item> COPPER_LANTERN_ITEM = regBlockItem(COPPER_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, COPPER_LANTERN_NAME));
 

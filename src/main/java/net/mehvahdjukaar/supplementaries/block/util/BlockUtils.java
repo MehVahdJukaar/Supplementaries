@@ -40,6 +40,16 @@ public class BlockUtils {
         return to;
     }
 
+    public static <T extends Comparable<T>, A extends Property<T>> BlockState copyProperties(BlockState from, BlockState to) {
+        BlockState temp = to;
+        for(var property : from.getProperties()){
+            if(to.hasProperty(property)) {
+                temp = replaceProperty(from, temp, property);
+            }
+        }
+        return temp;
+    }
+
     public static <T extends BlockEntity & IOwnerProtected> void addOptionalOwnership(LivingEntity placer, T tileEntity) {
         if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof Player) {
             tileEntity.setOwner(placer.getUUID());

@@ -128,7 +128,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
-        public static ForgeConfigSpec.BooleanValue CONDITIONAL_SIGN_REGISTRATIONS;
+        //public static ForgeConfigSpec.BooleanValue CONDITIONAL_SIGN_REGISTRATIONS;
 
         public static Lazy<Boolean> HAS_BRASS = Lazy.of(() -> ModList.get().isLoaded("create"));
 
@@ -178,11 +178,14 @@ public class RegistryConfigs {
                     .define("jar_tab", false);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
-
-            CONDITIONAL_SIGN_REGISTRATIONS = builder.comment("The mod adds around 150 signs posts and hanging signs that are made with wood types from other mods (which make up the majority of registered blocks the mod adds)." +
-                    "These are always registered and since they are so many could clutter up JEI and slow the game a bit. It's usually forge doesn't reccomend dynamically registering blocks but if you wish to enable such options you can here." +
+/*
+            CONDITIONAL_SIGN_REGISTRATIONS = builder.comment("WARNING: THIS DUE TO HOW REGISTRATION WORKS THIS VALUE MUST BE KEPT THE SAME BETWEEN SERVER AND CLIENTS THAT WANT TO CONNECT TO IT." +
+                            "The mod adds around 150 signs posts and hanging signs that are made with wood types from other mods (which make up the majority of registered blocks the mod adds)." +
+                    "These are always registered and since they are so many could clutter up JEI and slow the game a bit. It's usually forge doesn't recommend dynamically registering blocks but if you wish to enable such options you can here." +
                     "With this option enabled the mod will on register the signs made from wood types of the currently installed mods")
-                    .define("conditional_sign_registration", true);
+                    .define("conditional_sign_registration", false);
+            */
+
             builder.pop();
 
 

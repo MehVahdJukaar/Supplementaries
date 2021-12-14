@@ -1,16 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.world.generation.FeaturesRegistry;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID)
-public class Spawns {
+public class WorldGenSetup {
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void addSpawn(BiomeLoadingEvent event) {
+    public static void registerStuffToBiomes(BiomeLoadingEvent event) {
 //        if(!RegistryConfigs.reg.FIREFLY_ENABLED.get())return;
 //        if (event.getName() != null) {
 //            Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
@@ -33,9 +34,17 @@ public class Spawns {
 //                }
 //            }
 //        }
+
+        Biome.BiomeCategory category = event.getCategory();
+        if(category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
+            event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, FeaturesRegistry.PLACED_CAVE_URNS);
+            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, FeaturesRegistry.PLACED_WILD_FLAX_PATCH);
+        }
     }
 
-    public static void registerSpawningStuff() {
+
+
+    public static void registerMobSpawns() {
 
 //        if(RegistryConfigs.reg.FIREFLY_ENABLED.get()) {
 //            SpawnPlacements.register(ModRegistry.FIREFLY_TYPE.get(), SpawnPlacements.Type.NO_RESTRICTIONS,

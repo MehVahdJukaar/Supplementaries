@@ -41,16 +41,12 @@ public class SafeItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-        if ((!CompatHandler.quark || QuarkPlugin.isDropInEnabled()) && action != ClickAction.PRIMARY) {
-            if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true) != null) {
-                ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false);
-                if (finished != null) {
-                    slot.set(finished);
-                    return true;
-                }
-            }
-        }
-        return false;
+        return ItemsUtil.tryAddingItemInContainerItem(stack, incoming, slot, action, player);
+    }
+
+    @Override
+    public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+        return ItemsUtil.tryAddingItemInContainerItem(stack, slot.getItem(), slot, action, player);
     }
 
     @Override

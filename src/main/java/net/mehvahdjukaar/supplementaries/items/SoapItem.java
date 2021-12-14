@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.items;
 
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.network.ClientBoundSpawnBlockParticlePacket;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,8 +18,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -42,6 +46,20 @@ public class SoapItem extends Item {
         Block b = state.getBlock();
 
         ItemStack temp = new ItemStack(Items.IRON_AXE);
+
+        ResourceLocation r = state.getBlock().getRegistryName();
+        //hardcoding goes brr. This is needed and I can't just use forge event since I only want to react to axe scrape, not stripping
+        if(r.getNamespace().equals("quark")){
+            String name = r.getPath();
+            if(name.contains("waxed")){
+                Block bb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(r.getNamespace(),
+                        name.replace("waxed_","")));
+                if(bb != null && bb != Blocks.AIR){
+                    state = BlockUtils.copyProperties(state, bb.defaultBlockState());
+                }
+            }
+        }
+
         Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, temp, ToolActions.AXE_WAX_OFF));
         if (optional.isPresent()) {
             state = optional.get();

@@ -6,6 +6,7 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PedestalBlockTile;
+import net.mehvahdjukaar.supplementaries.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
@@ -59,7 +60,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         int j = (int) (f1 * 255.0F) << 24;
 
         float f2 = (float) (-font.width(displayNameIn) / 2);
-        //drawInBatch == renderTextComponent
+
         font.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
         matrixStackIn.popPose();
 

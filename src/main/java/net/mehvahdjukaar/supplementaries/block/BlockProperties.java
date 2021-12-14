@@ -119,7 +119,6 @@ public class BlockProperties {
         }
     }
 
-
     public enum Topping implements StringRepresentable {
         NONE("none"),
         HONEY("honey"),

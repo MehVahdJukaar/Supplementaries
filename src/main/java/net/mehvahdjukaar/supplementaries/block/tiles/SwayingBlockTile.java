@@ -41,7 +41,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+        return null;
     }
 
     @Override

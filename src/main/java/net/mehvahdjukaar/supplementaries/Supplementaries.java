@@ -3,11 +3,12 @@ package net.mehvahdjukaar.supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.mehvahdjukaar.supplementaries.setup.WorldGenSetup;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -17,7 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
+import vazkii.quark.content.client.module.ImprovedTooltipsModule;
+import vazkii.quark.content.world.gen.MonsterBoxGenerator;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -170,7 +172,6 @@ public class Supplementaries {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
-
 
     }
 
