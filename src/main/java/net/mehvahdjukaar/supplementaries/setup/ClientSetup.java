@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.*;
@@ -63,14 +64,11 @@ public class ClientSetup {
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
 
-        //tooltips
-        MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
-        if(CompatHandler.quark){
-            QuarkPlugin.registerTooltipComponent();
-        }
-
         //compat
         CompatHandlerClient.init(event);
+
+        //tooltips
+        MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
         //map markers
         CMDclient.init(event);

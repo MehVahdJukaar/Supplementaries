@@ -157,6 +157,9 @@ public class Supplementaries {
 
         //bundle blacklist
 
+        //how the turn tables
+        //redo achievement rendering
+
         ConfigHandler.init();
 
         CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));

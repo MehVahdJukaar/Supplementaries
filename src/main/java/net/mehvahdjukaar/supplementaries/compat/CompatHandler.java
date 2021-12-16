@@ -43,6 +43,7 @@ public class CompatHandler {
     public static final boolean computercraft;
     public static final boolean customvillagertrades;
     public static final boolean nethersdelight;
+    public static final boolean doubledoors;
 
     static {
         ModList ml = ModList.get();
@@ -76,6 +77,7 @@ public class CompatHandler {
         customvillagertrades = ml.isLoaded("customvillagertrades");
         computercraft = ml.isLoaded("computercraft");
         nethersdelight = ml.isLoaded("nethers_delight");
+        doubledoors = ml.isLoaded("doubledoors");
     }
 
     public static void init() {

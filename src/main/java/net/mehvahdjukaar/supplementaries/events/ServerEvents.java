@@ -104,9 +104,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        if (CompatHandler.quark) {
-            QuarkPlugin.attachCapabilities(event);
-        }
+
     }
 
     @SubscribeEvent

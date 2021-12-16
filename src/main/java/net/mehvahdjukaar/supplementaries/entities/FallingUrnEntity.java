@@ -27,10 +27,10 @@ public class FallingUrnEntity extends FallingBlockEntity {
     public FallingUrnEntity(EntityType<FallingUrnEntity> type, Level level) {
         super(type, level);
     }
+
     public FallingUrnEntity(Level level) {
         super(ModRegistry.FALLING_URN.get(), level);
     }
-    private static Field CANCEL_DROP = null;
 
     public FallingUrnEntity(Level level, BlockPos pos, BlockState blockState) {
         this(level);
@@ -70,11 +70,7 @@ public class FallingUrnEntity extends FallingBlockEntity {
         boolean r = super.causeFallDamage(height, amount, source);
         if (this.getDeltaMovement().lengthSqr() > 0.5*0.5) {
             this.shatter();
-            try {
-                if(CANCEL_DROP == null)CANCEL_DROP = ObfuscationReflectionHelper.findField(FallingBlockEntity.class, "cancelDrop");
-                CANCEL_DROP.setAccessible(true);
-                CANCEL_DROP.set(this, true);
-            } catch (IllegalAccessException ignored) {}
+            this.cancelDrop = true;
             this.discard();
         } else {
             if (!this.isSilent()) {

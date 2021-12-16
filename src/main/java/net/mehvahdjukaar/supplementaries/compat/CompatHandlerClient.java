@@ -5,12 +5,17 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
 import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CompatHandlerClient {
 
     public static void init(final FMLClientSetupEvent event) {
+
+        if(CompatHandler.quark){
+            QuarkPlugin.registerTooltipComponent();
+        }
 
         if (CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();
         //registers custom screen instead of default configured one

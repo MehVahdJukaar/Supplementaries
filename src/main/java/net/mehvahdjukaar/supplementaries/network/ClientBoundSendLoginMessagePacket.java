@@ -30,29 +30,13 @@ public class ClientBoundSendLoginMessagePacket {
 
     public static void handler(ClientBoundSendLoginMessagePacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
-        ctx.get().enqueueWork(() -> {
-
-            if (ClientConfigs.general.ANTI_REPOST_WARNING.get()) {
-                try {
-                    String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
-                    if (fileName.contains(".jar")) {
-                        if (!fileName.toLowerCase().contains("supplementaries-1") || fileName.toLowerCase().contains("supplementaries-mod") || fileName.contains("supplementaries-1.16.53")) {
-                            LocalPlayer player = Minecraft.getInstance().player;
-                            MutableComponent link = new TranslatableComponent("message.supplementaries.anti_repost_link");
-                            String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
-                            ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-                            link.setStyle(link.getStyle().withClickEvent(click).setUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
-
-                            player.sendMessage(new TranslatableComponent("message.supplementaries.anti_repost", link), Util.NIL_UUID);
-                            player.sendMessage(new TranslatableComponent("message.supplementaries.anti_repost_2"), Util.NIL_UUID);
-                            //player.sendMessage(ForgeHooks.newChatWithLinks(, false), Util.DUMMY_UUID);
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSendLoginMessagePacket(message);
             }
-
         });
+
         ctx.get().setPacketHandled(true);
     }
 }

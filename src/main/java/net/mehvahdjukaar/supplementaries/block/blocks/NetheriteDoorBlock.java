@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkDoubleDoorPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -42,13 +40,13 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
         if (te instanceof KeyLockableTile keyLockableTile) {
             if (keyLockableTile.handleAction(player, handIn, "door")) {
 
-                if (CompatHandler.quark) QuarkDoubleDoorPlugin.openDoorKey(worldIn, state, pos, player, handIn);
+                GoldDoorBlock.tryOpenDoubleDoorKey(worldIn, state, pos, player, handIn);
 
                 state = state.cycle(OPEN);
                 worldIn.setBlock(pos, state, 10);
                 //TODO: replace with proper sound event
-                boolean open =  state.getValue(OPEN);
-                worldIn.levelEvent(player, open? this.getOpenSound() : this.getCloseSound(), pos, 0);
+                boolean open = state.getValue(OPEN);
+                worldIn.levelEvent(player, open ? this.getOpenSound() : this.getCloseSound(), pos, 0);
                 worldIn.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
         }
@@ -82,7 +80,7 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        if(this.hasTileEntity(pState)){
+        if (this.hasTileEntity(pState)) {
             return new KeyLockableTile(pPos, pState);
         }
         return null;

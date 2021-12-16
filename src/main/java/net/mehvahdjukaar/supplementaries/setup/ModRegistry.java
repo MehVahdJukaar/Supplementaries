@@ -1322,7 +1322,7 @@ public class ModRegistry {
 
     //ash
     public static final String ASH_NAME = "ash";
-    public static final RegistryObject<Block> ASH_BLOCK = BLOCKS.register(ASH_NAME, () -> new AshBlock(
+    public static final RegistryObject<Block> ASH_BLOCK = BLOCKS.register(ASH_NAME, () -> new AshLayerBlock(
             BlockBehaviour.Properties.of(Material.TOP_SNOW, MaterialColor.COLOR_GRAY)
                     .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()));
     public static final RegistryObject<Item> ASH_ITEM = regBlockItem(ASH_BLOCK, getTab(CreativeModeTab.TAB_DECORATIONS, ASH_NAME));

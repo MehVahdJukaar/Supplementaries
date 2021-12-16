@@ -27,9 +27,8 @@ public class ClientBoundSyncGlobeDataPacket {
     public static void handler(ClientBoundSyncGlobeDataPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
+            if (context.getDirection().getReceptionSide().isClient()) {
                 //assigns data to client
-
                 GlobeData.setClientData(message.data);
                 Supplementaries.LOGGER.info("Synced Globe data");
             }

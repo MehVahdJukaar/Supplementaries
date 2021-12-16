@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class AshBlock extends FallingBlock {
+public class AshLayerBlock extends FallingBlock {
     private static final int MAX_LAYERS = 8;
     public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS + 1];
@@ -52,7 +52,7 @@ public class AshBlock extends FallingBlock {
         SHAPE_BY_LAYER[0] = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 0.1f, 16.0D);
     }
 
-    public AshBlock(Properties properties) {
+    public AshLayerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 1));
     }
@@ -205,7 +205,7 @@ public class AshBlock extends FallingBlock {
                         (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
                         0.5D, 0.5D, 0.5D, 0.0D);
                 return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
-                        .defaultBlockState().setValue(AshBlock.LAYERS, layers), 3);
+                        .defaultBlockState().setValue(AshLayerBlock.LAYERS, layers), 3);
             }
         }
         return false;

@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
@@ -30,21 +27,14 @@ public class ClientBoundOpenScreenPacket implements NetworkHandler.Message {
     public static void handler(ClientBoundOpenScreenPacket message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
-                //assigns data to client
-                tryOpenScreen(message.pos);
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleOpenScreenPacket(message);
             }
         });
         context.setPacketHandled(true);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void tryOpenScreen(BlockPos pos) {
-        Level level = Minecraft.getInstance().level;
-        if (level != null) {
-            if (level.getBlockEntity(pos) instanceof IScreenProvider tile) {
-                tile.openScreen(level, pos, Minecraft.getInstance().player);
-            }
-        }
+    public BlockPos getPos() {
+        return pos;
     }
 }

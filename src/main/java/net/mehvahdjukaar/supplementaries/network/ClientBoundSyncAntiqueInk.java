@@ -1,13 +1,18 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 
@@ -33,16 +38,18 @@ public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
     public static void handler(ClientBoundSyncAntiqueInk message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
-                //assigns data to client
-                Level world = Objects.requireNonNull(context.getSender()).level;
-
-                BlockEntity tile = world.getBlockEntity(message.pos);
-                if (tile != null) {
-                    tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> c.setAntiqueInk(message.ink));
-                }
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSyncAntiqueInkPacket(message);
             }
         });
         context.setPacketHandled(true);
+    }
+
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    public boolean getInk() {
+        return ink;
     }
 }

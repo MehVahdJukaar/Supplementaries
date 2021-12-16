@@ -32,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -128,12 +129,12 @@ public class SackItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, incoming, slot, action, player);
+        return ItemsUtil.tryAddingItemInContainerItem(stack, incoming, slot, action, player, true);
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, slot.getItem(), slot, action, player);
+        return ItemsUtil.tryAddingItemInContainerItem(stack, slot.getItem(), slot, action, player, false);
     }
 
     @Override

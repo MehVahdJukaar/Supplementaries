@@ -55,6 +55,11 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
+    public int getBarWidth(ItemStack stack) {
+        return Math.round(13.0F - (float)stack.getDamageValue() * 13.0F / (float)this.getMaxDamage(stack));
+    }
+
+    @Override
     public int getEnchantmentValue() {
         return 0;
     }

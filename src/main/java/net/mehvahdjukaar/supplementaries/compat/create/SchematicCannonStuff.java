@@ -4,7 +4,6 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import net.mehvahdjukaar.supplementaries.block.blocks.*;
-import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -145,14 +144,14 @@ public class SchematicCannonStuff {
         return new FrameBraceBlock(p, daub);
     }
 
-    public static AshBlock makeAshPile(BlockBehaviour.Properties p) {
-        class AshBlockC extends AshBlock implements ICopyDropItemRequirement {
+    public static AshLayerBlock makeAshPile(BlockBehaviour.Properties p) {
+        class AshLayerBlockC extends AshLayerBlock implements ICopyDropItemRequirement {
 
-            public AshBlockC(Properties properties) {
+            public AshLayerBlockC(Properties properties) {
                 super(properties);
             }
         }
-        return new AshBlock(p);
+        return new AshLayerBlock(p);
     }
 
     public static DoubleCakeBlock makeDoubleCake(BlockBehaviour.Properties p) {

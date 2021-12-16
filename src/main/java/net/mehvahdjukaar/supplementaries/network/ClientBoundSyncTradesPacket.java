@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.mehvahdjukaar.supplementaries.inventories.RedMerchantContainerMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -48,17 +45,37 @@ public class ClientBoundSyncTradesPacket {
 
     public static void handler(ClientBoundSyncTradesPacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
-        ctx.get().enqueueWork(() -> {
-            AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
-            if (message.containerId == container.containerId && container instanceof RedMerchantContainerMenu) {
-                ((RedMerchantContainerMenu) container).setOffers(new MerchantOffers(message.offers.createTag()));
-                ((RedMerchantContainerMenu) container).setXp(message.villagerXp);
-                ((RedMerchantContainerMenu) container).setMerchantLevel(message.villagerLevel);
-                ((RedMerchantContainerMenu) container).setShowProgressBar(message.showProgress);
-                ((RedMerchantContainerMenu) container).setCanRestock(message.canRestock);
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSyncTradesPacket(message);
             }
-
         });
+
         ctx.get().setPacketHandled(true);
+    }
+
+    public int getContainerId() {
+        return containerId;
+    }
+
+    public int getVillagerLevel() {
+        return villagerLevel;
+    }
+
+    public int getVillagerXp() {
+        return villagerXp;
+    }
+
+    public MerchantOffers getOffers() {
+        return offers;
+    }
+
+    public boolean isCanRestock() {
+        return canRestock;
+    }
+
+    public boolean isShowProgress() {
+        return showProgress;
     }
 }

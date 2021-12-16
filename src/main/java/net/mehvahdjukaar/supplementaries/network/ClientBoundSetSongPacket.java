@@ -31,11 +31,13 @@ public class ClientBoundSetSongPacket {
 
     public static void handler(ClientBoundSetSongPacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
-        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-            ctx.get().enqueueWork(() -> {
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
                 SongsManager.setCurrentlyPlaying(message.id, message.song);
-            });
-        }
+            }
+        });
+
         ctx.get().setPacketHandled(true);
     }
 }

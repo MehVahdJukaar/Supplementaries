@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -80,7 +81,7 @@ public class FeaturesRegistry {
 
 
     public static final PlacedFeature PLACED_CAVE_URNS = CAVE_URNS_PATCH.placed(
-            HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
+            HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
             CountPlacement.of(ServerConfigs.spawn.URN_PER_CHUNK.get()),
             InSquarePlacement.spread(),
             BiomeFilter.biome());

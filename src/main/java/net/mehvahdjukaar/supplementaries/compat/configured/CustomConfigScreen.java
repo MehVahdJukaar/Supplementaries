@@ -92,6 +92,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("soap", ModRegistry.SOAP_BLOCK.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
         addIcon("conditional sign registration", Items.BARRIER);
+        addIcon("axe dispenser behavior", Items.GOLDEN_AXE);
     }
 
     private ItemStack getIcon(String name) {

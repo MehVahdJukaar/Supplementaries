@@ -664,7 +664,7 @@ public class ServerConfigs {
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .defineInRange("attempts_per_patch", 5, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                            .defineInRange("spawn_attempts", 7, 0, 100);
+                            .defineInRange("spawn_attempts", 9, 0, 100);
             builder.pop();
 
             builder.pop();

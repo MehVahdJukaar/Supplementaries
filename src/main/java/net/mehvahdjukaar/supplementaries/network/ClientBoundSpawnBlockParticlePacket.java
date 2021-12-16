@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.network;
 
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.world.songs.SongsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,21 +36,19 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
     public static void handler(ClientBoundSpawnBlockParticlePacket message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
-                //assigns data to client
-                // Level world = Objects.requireNonNull(context.getSender()).level;
-                if (message.id == 0) {
-                    spawnParticles(message.pos);
-
-                }
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSpawnBlockParticlePacket(message);
             }
         });
+
         context.setPacketHandled(true);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void spawnParticles(BlockPos pos){
-        ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, pos, ModRegistry.SUDS_PARTICLE.get(),
-                UniformInt.of(2, 4), 0.001f,0.01f, true);
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    public int getId() {
+        return id;
     }
 }

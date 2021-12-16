@@ -28,12 +28,14 @@ public class ItemsUtil {
     public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {
     }
 
-    public static boolean tryAddingItemInContainerItem(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player){
+    public static boolean tryAddingItemInContainerItem(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot){
         if ((!CompatHandler.quark || QuarkPlugin.isDropInEnabled()) && action != ClickAction.PRIMARY) {
-            if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true) != null) {
-                ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false);
+            if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true, inSlot) != null) {
+                ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false, inSlot);
                 if (finished != null) {
-                    slot.set(finished);
+                    if(inSlot) {
+                        slot.set(finished);
+                    }
                     return true;
                 }
             }
@@ -41,7 +43,7 @@ public class ItemsUtil {
         return false;
     }
 
-    public static ItemStack interactWithItemHandler(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate) {
+    public static ItemStack interactWithItemHandler(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean useCopy) {
         if (slot.mayPickup(player)) {
 
             CompoundTag tag = containerStack.getOrCreateTag();
@@ -57,7 +59,7 @@ public class ItemsUtil {
                         ItemStack result = ItemHandlerHelper.insertItem(handler, stack.copy(), simulate);
                         boolean success = result.isEmpty() || result.getCount() != stack.getCount();
                         if (success) {
-                            ItemStack newStack = containerStack.copy();
+                            ItemStack newStack = useCopy ? containerStack.copy() : containerStack;
                             if (!simulate) {
                                 stack.setCount(result.getCount());
                             }

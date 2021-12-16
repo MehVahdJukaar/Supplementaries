@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.entities;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.AshBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -142,12 +142,12 @@ public class FallingAshEntity extends FallingBlockEntity {
                             int remaining = 0;
 
                             if (onState.is(blockState.getBlock())) {
-                                int layers = blockState.getValue(AshBlock.LAYERS);
-                                int toLayers = onState.getValue(AshBlock.LAYERS);
+                                int layers = blockState.getValue(AshLayerBlock.LAYERS);
+                                int toLayers = onState.getValue(AshLayerBlock.LAYERS);
                                 int total = layers + toLayers;
                                 int target = Mth.clamp(total, 1, 8);
                                 remaining = total - target;
-                                blockState = blockState.setValue(AshBlock.LAYERS, target);
+                                blockState = blockState.setValue(AshLayerBlock.LAYERS, target);
                             }
 
                             if (this.level.setBlock(pos, blockState, 3)) {
@@ -161,7 +161,7 @@ public class FallingAshEntity extends FallingBlockEntity {
 
                                 if (remaining != 0) {
                                     BlockPos above = pos.above();
-                                    blockState = blockState.setValue(AshBlock.LAYERS, remaining);
+                                    blockState = blockState.setValue(AshLayerBlock.LAYERS, remaining);
                                     if (level.getBlockState(above).getMaterial().isReplaceable()) {
                                         if (!this.level.setBlock(above, blockState, 3)) {
                                             ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this,
@@ -190,7 +190,7 @@ public class FallingAshEntity extends FallingBlockEntity {
 
     public static boolean isFree(BlockState pState) {
         Material material = pState.getMaterial();
-        return pState.isAir() || pState.is(BlockTags.FIRE) || material.isLiquid() || (material.isReplaceable() && !(pState.getBlock() instanceof AshBlock));
+        return pState.isAir() || pState.is(BlockTags.FIRE) || material.isLiquid() || (material.isReplaceable() && !(pState.getBlock() instanceof AshLayerBlock));
     }
 
 
@@ -256,7 +256,7 @@ public class FallingAshEntity extends FallingBlockEntity {
                         BlockPlaceContext context = new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack,
                                 new BlockHitResult(this.position(), Direction.UP, myPos, false));
 
-                        int i = blockState.getValue(AshBlock.LAYERS);
+                        int i = blockState.getValue(AshLayerBlock.LAYERS);
 
 
                         boolean success = false;

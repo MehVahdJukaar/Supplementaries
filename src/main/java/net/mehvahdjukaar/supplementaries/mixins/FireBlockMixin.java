@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.AshBlock;
+import net.mehvahdjukaar.supplementaries.block.blocks.AshLayerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FireBlock;
@@ -16,7 +16,7 @@ public abstract class FireBlockMixin {
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z"))
     private boolean removeBlock(Level level, BlockPos pPos, boolean isMoving) {
-        if (!AshBlock.tryConvertToAsh(level, pPos)) level.removeBlock(pPos, isMoving);
+        if (!AshLayerBlock.tryConvertToAsh(level, pPos)) level.removeBlock(pPos, isMoving);
         return true;
     }
 
