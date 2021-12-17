@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.capabilities.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -56,7 +57,7 @@ public class JarTab extends CreativeModeTab {
         SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
 
 
-        for (Item i : CapturedMobsHelper.VALID_BUCKETS.keySet()) {
+        for (Item i : BucketHelper.getValidBuckets()) {
             CompoundTag com = new CompoundTag();
             MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
             data.saveToTag(com);

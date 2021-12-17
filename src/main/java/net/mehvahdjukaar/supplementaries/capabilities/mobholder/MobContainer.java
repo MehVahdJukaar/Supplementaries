@@ -78,6 +78,7 @@ public class MobContainer {
 
     private void setData(@Nullable MobData data) {
         this.data = data;
+        this.mobDisplayCapInstance = null;
         this.needsInitialization = true;
     }
 
@@ -178,7 +179,7 @@ public class MobContainer {
         ItemStack returnStack = ItemStack.EMPTY;
         //fill
         if (this.isEmpty()) {
-            if (CapturedMobsHelper.isFishBucket(item)) {
+            if (BucketHelper.isFishBucket(item)) {
 
                 world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
@@ -219,7 +220,7 @@ public class MobContainer {
 
     public void tick(Level pLevel, BlockPos pPos) {
         if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
-        if (this.hasDisplayMob()) {
+        if (this.hasDisplayMob() && !this.isEmpty()) {
             //TODO: maybe put inside cap
             this.mobDisplayCapInstance.getEntity().tickCount++;
             this.mobDisplayCapInstance.tickInsideContainer(pLevel, pPos, this.data.scale, this.data.mobTag);
@@ -267,7 +268,7 @@ public class MobContainer {
 
         MobData data;
         String name = mob.getName().getString();
-        if (isAquarium && CapturedMobsHelper.getType(mob).isFish()) {
+        if (isAquarium && !bucketStack.isEmpty() && CapturedMobsHelper.getType(mob).canBe2dFish()) {
             data = new MobData(name, bucketStack);
         } else {
             Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(getCap(mob), blockW, blockH, false);
@@ -429,8 +430,7 @@ public class MobContainer {
     }
 
     public void clear() {
-        this.data = null;
-        this.mobDisplayCapInstance = null;
+        this.setData(null);
     }
 
     public static class MobData {
@@ -458,14 +458,30 @@ public class MobContainer {
         }
 
         public MobData(ItemStack filledBucket) {
-            this(CapturedMobsHelper.getDefaultNameFromBucket(filledBucket.getItem()), filledBucket);
+            this(null, filledBucket);
         }
 
         public MobData(String name, ItemStack filledBucket) {
-            this(name, CapturedMobsHelper.getTypeFromBucket(filledBucket.getItem()).getFishTexture(), filledBucket);
+            this(name, 0, filledBucket);
         }
 
-        public MobData(String name, int fishIndex, ItemStack filledBucket) {
+        public MobData(@Nullable String name, @Nullable int fishIndex, @Nonnull ItemStack filledBucket) {
+            //initialize name & texture if absent
+            EntityType<?> type = null;
+            if(name == null){
+                type = BucketHelper.getEntityType(filledBucket.getItem());
+                name = type == null ? "Mob" : type.getDescriptionId();
+            }
+            if(fishIndex == 0){
+                if(type == null)type = BucketHelper.getEntityType(filledBucket.getItem());
+                fishIndex = 1;
+                if(type != null) {
+                    var t = CapturedMobsHelper.getType(type);
+                    if (t.is2DFish()) fishIndex = t.getFishTexture();
+                }
+            }
+
+
             this.isAquarium = true;
             this.fishIndex = fishIndex;
             this.filledBucket = filledBucket;

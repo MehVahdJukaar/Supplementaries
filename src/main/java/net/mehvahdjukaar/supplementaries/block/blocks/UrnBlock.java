@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.entities.FallingUrnEntity;
@@ -26,6 +27,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -122,7 +124,13 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel pLevel, BlockPos pos, Random pRand) {
         if (isFree(pLevel.getBlockState(pos.below())) && pos.getY() >= pLevel.getMinBuildHeight()) {
+
             FallingBlockEntity fallingblockentity = new FallingUrnEntity(pLevel, pos, state);
+
+            if (pLevel.getBlockEntity(pos) instanceof UrnBlockTile tile) {
+                fallingblockentity.blockData = tile.saveWithoutMetadata();
+                tile.setRemoved();
+            }
             this.falling(fallingblockentity);
             pLevel.addFreshEntity(fallingblockentity);
         }

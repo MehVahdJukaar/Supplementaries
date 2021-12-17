@@ -106,7 +106,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
 
     public static boolean canFall(BlockPos pos, LevelAccessor world) {
         return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
-                pos.getY() >= 0 && !RopeBlock.isSupportingCeiling(pos.above(), world);
+                pos.getY() >= world.getMinBuildHeight() && !RopeBlock.isSupportingCeiling(pos.above(), world);
     }
 
     //schedule block tick
@@ -127,9 +127,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
                     }
                 };
                 fallingblockentity.setHurtsEntities(1, 20);
-                CompoundTag com = new CompoundTag();
-                tile.save(com);
-                fallingblockentity.blockData = com;
+                fallingblockentity.blockData = tile.saveWithoutMetadata();
                 this.falling(fallingblockentity);
                 worldIn.addFreshEntity(fallingblockentity);
             }

@@ -6,10 +6,8 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -17,17 +15,20 @@ import java.util.*;
 public class CapturedMobsHelper {
 
     public static final List<String> COMMAND_MOBS = new ArrayList<>();
-
     public static final List<List<String>> DEFAULT_CONFIG = new ArrayList<>();
-    public static final List<String> CATCHABLE_FISHES = new ArrayList<>();
-    public static final Map<String, CapturedMobConfigProperties> TYPES = new HashMap<>();
-    //bucket item mob id. Many mods don't extend the base BucketItem class
-    public static final Map<Item, String> VALID_BUCKETS = new HashMap<>();
+
+    private static final List<String> FISHES_2D = new ArrayList<>();
+    private static final Map<String, CapturedMobConfigProperties> TYPES = new HashMap<>();
+
 
     //random ids that don't map to any actual mobs
-    public static final CapturedMobConfigProperties DEFAULT = new CapturedMobConfigProperties("69", 0, 0, 0, 0, AnimationCategory.DEFAULT);
-    public static final CapturedMobConfigProperties MODDED_FISH = new CapturedMobConfigProperties("420", 0, 0, 0, 1, AnimationCategory.DEFAULT);
+    private static final CapturedMobConfigProperties DEFAULT = new CapturedMobConfigProperties("69", 0, 0, 0, 0, AnimationCategory.DEFAULT);
+    private static final CapturedMobConfigProperties MODDED_FISH = new CapturedMobConfigProperties("420", 0, 0, 0, 1, AnimationCategory.DEFAULT);
 
+
+    public static boolean is2DFish(EntityType<?> type){
+        return FISHES_2D.contains(type.getRegistryName().toString());
+    }
 
     private static List<String> addFish(String id) {
         return addDef(id, 0, 0.125f, 0, ++fishIndex);
@@ -64,6 +65,8 @@ public class CapturedMobsHelper {
         DEFAULT_CONFIG.add(addDef("minecraft:chicken", 0.25f, 0.3125f));
         DEFAULT_CONFIG.add(addDef("minecraft:endermite", 0, 0, 5));
         DEFAULT_CONFIG.add(addDef("minecraft:fox", 0, 0.2f));
+        DEFAULT_CONFIG.add(addDef("minecraft:squid", 0.25f, 0.25f, 0, AnimationCategory.FLOATING));
+        DEFAULT_CONFIG.add(addDef("minecraft:glow_squid", 0.25f, 0.25f, 3, AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("supplementaries:firefly", 0, 0, 9, AnimationCategory.FLOATING));
 
         DEFAULT_CONFIG.add(addDef("druidcraft:lunar_moth", 0.375f, 0.1375f, 10, AnimationCategory.FLOATING));
@@ -73,6 +76,7 @@ public class CapturedMobsHelper {
         DEFAULT_CONFIG.add(addDef("feywild:summer_pixie", 0.125f, 0f, 8, AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("feywild:spring_pixie", 0.125f, 0f, 8, AnimationCategory.FLOATING));
         DEFAULT_CONFIG.add(addDef("feywild:autumn_pixie", 0.25f, 0f, 8, AnimationCategory.FLOATING));
+
 
         DEFAULT_CONFIG.add(addFish("minecraft:fish"));
         DEFAULT_CONFIG.add(addFish("minecraft:tropical_fish"));
@@ -123,50 +127,32 @@ public class CapturedMobsHelper {
         for (List<String> d : DEFAULT_CONFIG) {
             if (d.size() == 5) {
                 int f = strToInt(d.get(4));
-                if (f > 0 && !d.get(0).equals("")) CATCHABLE_FISHES.add(d.get(0));
+                if (f > 0 && !d.get(0).equals("")) FISHES_2D.add(d.get(0));
             }
         }
-
+        for(String id : FISHES_2D){
+            BucketHelper.tryAddingFromEntityId(id);
+        }
     }
 
-
-    public static String getDefaultNameFromBucket(Item bucket) {
-        String def = "Mob";
-        String mobId = VALID_BUCKETS.getOrDefault(bucket, def);
-        if (mobId.equals(def)) return def;
-        EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mobId));
-        if (en == null) return def;
-        return en.getDescription().getString();
-    }
-    //TODO: maybe simplify this to use new bucketable interface
     public static CapturedMobConfigProperties getTypeFromBucket(Item bucket) {
-        return getType(VALID_BUCKETS.getOrDefault(bucket, "minecraft:fish"));
+        EntityType<?> t = BucketHelper.getEntityType(bucket);
+        if(t != null) return getType(t);
+        return getType("minecraft:fish");
     }
 
     public static CapturedMobConfigProperties getType(Entity mob) {
-        return getType(mob.getType().getRegistryName().toString());
+        return getType(mob.getType());
+    }
+    public static CapturedMobConfigProperties getType(EntityType<?> type) {
+        return getType(type.getRegistryName().toString());
     }
 
     public static CapturedMobConfigProperties getType(String mobId) {
+        if(TYPES.containsKey(mobId)) return TYPES.get(mobId);
+        //else if(BucketHelper.isBucketableEntity(mobId)) return getType("minecraft:fish");
         return TYPES.getOrDefault(mobId, DEFAULT);
     }
-
-    public static List<String> getFishes() {
-        List<String> l = new ArrayList<>();
-        for (List<String> d : DEFAULT_CONFIG) {
-            if (d.size() == 5) {
-                int f = strToInt(d.get(4));
-                if (f > 0 && !d.get(0).equals("")) l.add(d.get(0));
-            }
-        }
-        return l;
-    }
-
-
-    public static boolean isFishBucket(Item item) {
-        return VALID_BUCKETS.containsKey(item);
-    }
-
 
     private static float strToFloat(String s) {
         if (s != null && s.matches("[0-9.]+")) {
@@ -181,7 +167,6 @@ public class CapturedMobsHelper {
         }
         return 0;
     }
-
 
     public static void refresh() {
         TYPES.clear();
@@ -225,32 +210,7 @@ public class CapturedMobsHelper {
                 Supplementaries.LOGGER.warn("failed to load captured mob configs");
             }
         }
-
-        //TODO: redo this
-        for (String id : CATCHABLE_FISHES) {
-            tryAddingValidBucket(id);
-        }
     }
-
-    //hacky. needed cause many mods don't extend the base bucket class
-    public static void tryAddingValidBucket(String mobId) {
-        ResourceLocation res = new ResourceLocation(mobId);
-        Item bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), res.getPath() + "_bucket"));
-        if (bucket != null && bucket != Items.AIR) {
-            VALID_BUCKETS.put(bucket, mobId);
-        } else {
-            bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), "bucket_" + res.getPath()));
-            if (bucket != null && bucket != Items.AIR) {
-                VALID_BUCKETS.put(bucket, mobId);
-            } else {
-                bucket = ForgeRegistries.ITEMS.getValue(new ResourceLocation(res.getNamespace(), "bucket_of_" + res.getPath()));
-                if (bucket != null && bucket != Items.AIR) {
-                    VALID_BUCKETS.put(bucket, mobId);
-                }
-            }
-        }
-    }
-
 
     public static class CapturedMobConfigProperties {
         private final String id;
@@ -274,7 +234,7 @@ public class CapturedMobsHelper {
         }
 
         public boolean canHaveWater() {
-            return this.isFlying() || this.isFish();
+            return this.isFlying() || this.is2DFish();
         }
 
         public String getId() {
@@ -297,7 +257,7 @@ public class CapturedMobsHelper {
             return lightLevel;
         }
 
-        public boolean isFish() {
+        public boolean is2DFish() {
             return this.category.isFish();
         }
 
@@ -318,6 +278,9 @@ public class CapturedMobsHelper {
             return super.toString().toLowerCase();
         }
 
+        public boolean canBe2dFish(){
+            return this == DEFAULT || this.is2DFish();
+        }
     }
 
     public enum AnimationCategory {
@@ -343,6 +306,7 @@ public class CapturedMobsHelper {
             return this == FISH;
         }
     }
+
 
 
 }

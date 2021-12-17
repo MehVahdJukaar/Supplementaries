@@ -126,7 +126,7 @@ public class ModSetup {
             }
 
             firstTagLoad = true;
-            DispenserStuff.registerBehaviors();
+            DispenserRegistry.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
         }
     }

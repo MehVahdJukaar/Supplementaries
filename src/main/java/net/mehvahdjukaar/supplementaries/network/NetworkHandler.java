@@ -65,8 +65,8 @@ public class NetworkHandler {
         register(RequestConfigReloadPacket.class, RequestConfigReloadPacket::buffer,
                 RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
 
-        //INSTANCE.registerMessage(nextID(), PicklePacket.class, PicklePacket::buffer,
-        //         PicklePacket::new, PicklePacket::handler);
+        register(PicklePacket.class, PicklePacket::buffer,
+                 PicklePacket::new, PicklePacket::handler);
 
         register(ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::buffer,
                 ClientBoundSyncTradesPacket::new, ClientBoundSyncTradesPacket::handler);

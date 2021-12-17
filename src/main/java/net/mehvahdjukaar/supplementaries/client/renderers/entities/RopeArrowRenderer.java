@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.entities.RopeArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
@@ -10,6 +11,7 @@ public class RopeArrowRenderer extends ArrowRenderer<RopeArrowEntity> {
 
     public RopeArrowRenderer(EntityRendererProvider.Context context) {
         super(context);
+        PicklePlayer.createRenderInstance(context);
     }
 
     @Override

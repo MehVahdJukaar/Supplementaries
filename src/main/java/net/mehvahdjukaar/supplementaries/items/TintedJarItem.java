@@ -17,8 +17,7 @@ public class TintedJarItem extends JarItem {
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
         if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
-        return type.is(ModTags.TINTED_JAR_CATCHABLE) ||
-                CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
+        return type.is(ModTags.TINTED_JAR_CATCHABLE) || CapturedMobsHelper.is2DFish(type);
     }
 
     @Override

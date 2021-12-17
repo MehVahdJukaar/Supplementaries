@@ -59,8 +59,7 @@ public class JarItem extends AbstractMobContainerItem {
         EntityType<?> type = e.getType();
         if (e instanceof Monster) return false;
         if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
-        return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) ||
-                CapturedMobsHelper.CATCHABLE_FISHES.contains(type.getRegistryName().toString());
+        return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
     }
 
     @Override

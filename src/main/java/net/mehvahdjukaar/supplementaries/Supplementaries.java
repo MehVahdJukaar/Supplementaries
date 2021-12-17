@@ -160,6 +160,8 @@ public class Supplementaries {
         //how the turn tables
         //redo achievement rendering
 
+        //TODO: fix sack not faling & loosing inv
+
         ConfigHandler.init();
 
         CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));

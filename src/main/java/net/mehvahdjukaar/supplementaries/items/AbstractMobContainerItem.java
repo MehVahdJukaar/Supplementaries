@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.items;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.capabilities.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -226,7 +227,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             CompoundTag com = tag.getCompound("MobHolder");
             if (com.isEmpty()) com = tag.getCompound("BucketHolder");
             if (com.contains("Name")) {
-                tooltip.add(new TextComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
+                tooltip.add(new TranslatableComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
         tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
@@ -279,6 +280,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     bucket = this.tryGettingFishBucketHackery(player, entity, hand);
                 }
             }
+            if(!bucket.isEmpty()){
+                BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
+            }
+
             if (!bucket.isEmpty() || this.canCatch(entity)) {
                 entity.revive();
                 //return for client

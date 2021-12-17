@@ -128,6 +128,7 @@ dependencies {
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3544951")
     implementation fg.deobf("curse.maven:create-328085:3564692")
     implementation fg.deobf("curse.maven:flywheel-486392:3564677")
+    implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")

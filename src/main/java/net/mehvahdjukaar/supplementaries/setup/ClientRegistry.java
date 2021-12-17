@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SkullCandleOverlay;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.JarredModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.JarredRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -31,6 +34,8 @@ public class ClientRegistry {
     public static ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
     public static ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
+    public static ModelLayerLocation JARVIS_MODEL = loc("jarvis");
+    public static ModelLayerLocation PICKLE_MODEL = loc("pickle");
 
     public static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
@@ -42,6 +47,8 @@ public class ClientRegistry {
         event.registerLayerDefinition(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.registerLayerDefinition(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.registerLayerDefinition(SKULL_CANDLE_OVERLAY, SkullCandleOverlay::createMesh);
+        event.registerLayerDefinition(JARVIS_MODEL, JarredModel::createMesh);
+        event.registerLayerDefinition(PICKLE_MODEL, PickleModel::createMesh);
     }
 
     public static void registerISTER(Consumer<IItemRenderProperties> consumer, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> factory) {
