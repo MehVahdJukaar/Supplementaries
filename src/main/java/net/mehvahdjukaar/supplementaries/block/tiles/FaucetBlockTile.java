@@ -183,7 +183,8 @@ public class FaucetBlockTile extends BlockEntity {
             //forge tanks
             else {
                 IFluidHandler handlerBack = tileBack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).orElse(null);
-                if (handlerBack != null) {
+                //TODO: fix create fluid int bug
+                if (handlerBack != null && !backBlock.getRegistryName().getPath().equals("fluid_interface")) {
                     //only works in 250 increment
                     if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
                     this.fluidHolder.copy(handlerBack);

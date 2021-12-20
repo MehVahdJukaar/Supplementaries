@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.models.*;
@@ -191,6 +192,7 @@ public class ClientSetup {
         particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new RotationTrailEmitter.Factory());
         particleManager.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
         particleManager.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
+        particleManager.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
 
     }
 
@@ -247,6 +249,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
     }
 
     @SubscribeEvent

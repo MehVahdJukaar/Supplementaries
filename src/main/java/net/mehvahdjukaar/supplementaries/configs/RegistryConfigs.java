@@ -119,7 +119,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue FLOWER_BOX_ENABLED;
         public static ForgeConfigSpec.BooleanValue BLACKSTONE_TILE_ENABLED;
         public static ForgeConfigSpec.BooleanValue SOAP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BUBBLE_BLOWER;
+        public static ForgeConfigSpec.BooleanValue BUBBLE_BLOWER_ENABLED;
         public static ForgeConfigSpec.BooleanValue GLOBE_SEPIA;
 
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -264,7 +264,7 @@ public class RegistryConfigs {
             FLOWER_BOX_ENABLED = builder.define(ModRegistry.FLOWER_BOX_NAME, true);
             BLACKSTONE_TILE_ENABLED = builder.define(ModRegistry.BLACKSTONE_TILE_NAME, true);
             SOAP_ENABLED = builder.define(ModRegistry.SOAP_NAME, true);
-            BUBBLE_BLOWER = builder.define(ModRegistry.BUBBLE_BLOWER_NAME, true);
+            BUBBLE_BLOWER_ENABLED = builder.define(ModRegistry.BUBBLE_BLOWER_NAME, true);
             GLOBE_SEPIA = builder.define(ModRegistry.GLOBE_SEPIA_NAME, true);
 
             PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME, true);

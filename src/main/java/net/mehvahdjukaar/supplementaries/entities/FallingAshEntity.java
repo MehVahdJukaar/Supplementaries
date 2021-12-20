@@ -77,6 +77,7 @@ public class FallingAshEntity extends FallingBlockEntity {
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void tick() {
         if (level.isClientSide) {
             super.tick();
@@ -193,102 +194,6 @@ public class FallingAshEntity extends FallingBlockEntity {
         return pState.isAir() || pState.is(BlockTags.FIRE) || material.isLiquid() || (material.isReplaceable() && !(pState.getBlock() instanceof AshLayerBlock));
     }
 
-
-    // @Override
-    public void tick1() {
-        BlockState blockState = this.getBlockState();
-
-        Block block = blockState.getBlock();
-        if (this.time++ == 0) {
-            BlockPos blockpos = this.blockPosition();
-            if (this.level.getBlockState(blockpos).is(block)) {
-                this.level.removeBlock(blockpos, false);
-            } else if (!this.level.isClientSide) {
-                this.discard();
-                return;
-            }
-        }
-
-        if (!this.isNoGravity()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
-        }
-
-        this.move(MoverType.SELF, this.getDeltaMovement());
-        if (!this.level.isClientSide) {
-
-            BlockPos myPos = this.blockPosition();
-            boolean isInWater = this.level.getFluidState(myPos).is(FluidTags.WATER);
-            double d0 = this.getDeltaMovement().lengthSqr();
-            if (d0 > 1.0D) {
-                BlockHitResult blockhitresult = this.level.clip(new ClipContext(new Vec3(this.xo, this.yo, this.zo), this.position(), ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, this));
-                if (blockhitresult.getType() != HitResult.Type.MISS && this.level.getFluidState(blockhitresult.getBlockPos()).is(FluidTags.WATER)) {
-                    myPos = blockhitresult.getBlockPos();
-                    isInWater = true;
-                }
-            }
-
-            if (isInWater) {
-                this.discard();
-                return;
-            }
-
-            //fall
-            if (!this.onGround) {
-                if (!this.level.isClientSide && (this.time > 100 && (myPos.getY() <= this.level.getMinBuildHeight() || myPos.getY() > this.level.getMaxBuildHeight()) || this.time > 600)) {
-                    if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                        this.spawnAtLocation(block);
-                    }
-
-                    this.discard();
-                }
-                //on ground
-            } else {
-                BlockState onState = this.level.getBlockState(myPos);
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.7D, -0.5D, 0.7D));
-                if (!onState.is(Blocks.MOVING_PISTON)) {
-
-                    this.discard();
-
-                    ItemStack stack = blockState.getBlock().asItem().getDefaultInstance();
-
-                    if (!FallingBlock.isFree(this.level.getBlockState(myPos.below()))) {
-
-                        BlockPlaceContext context = new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack,
-                                new BlockHitResult(this.position(), Direction.UP, myPos, false));
-
-                        int i = blockState.getValue(AshLayerBlock.LAYERS);
-
-
-                        boolean success = false;
-                        for (int k = 0; k < i; k++) {
-                            BlockState placementState = BlockItemUtils.getPlacementState(
-                                    context, block);
-                            if (placementState != null && this.level.setBlock(myPos, placementState, 3)) {
-                                success = true;
-                            }
-
-                        }
-                        if (success) {
-                            BlockState placed = this.level.getBlockState(myPos);
-                            ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(myPos, placed));
-                            if (block instanceof Fallable fallable) {
-                                fallable.onLand(this.level, myPos, placed, onState, this);
-                            }
-                        }
-                        return;
-                    }
-                    if (this.dropItem && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                        this.callOnBrokenAfterFall(block, myPos);
-                        this.spawnAtLocation(block);
-                    }
-
-                }
-            }
-        }
-
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
-
-    }
 
     private void dropBlockContent(BlockState state, BlockPos pos) {
         Block.dropResources(state, level, pos, null, null, ItemStack.EMPTY);

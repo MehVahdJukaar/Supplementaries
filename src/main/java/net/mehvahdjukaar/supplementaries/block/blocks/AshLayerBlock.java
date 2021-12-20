@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -162,16 +163,20 @@ public class AshLayerBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, Random pRandom) {
-        if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
-            this.removeOneLayer(pState, pPos, level);
+        if(ServerConfigs.cached.ASH_RAIN) {
+            if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
+                this.removeOneLayer(pState, pPos, level);
+            }
         }
     }
 
     @Override
     public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if (level.random.nextInt(2) == 0) {
-            this.removeOneLayer(pState, pPos, level);
+        if(ServerConfigs.cached.ASH_RAIN) {
+            if (level.random.nextInt(2) == 0) {
+                this.removeOneLayer(pState, pPos, level);
+            }
         }
     }
 
@@ -192,20 +197,22 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     public static boolean tryConvertToAsh(Level level, BlockPos pPos) {
-        BlockState state = level.getBlockState(pPos);
+        if(ServerConfigs.cached.ASH_BURN) {
+            BlockState state = level.getBlockState(pPos);
 
-        Item i = state.getBlock().asItem();
-        int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
-        if (ItemTags.LOGS_THAT_BURN.contains(i)) count += 2;
+            Item i = state.getBlock().asItem();
+            int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
+            if (ItemTags.LOGS_THAT_BURN.contains(i)) count += 2;
 
-        if (count > 0) {
-            int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
-            if (layers != 0) {
-                ((ServerLevel) level).sendParticles(ModRegistry.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
-                        (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
-                        0.5D, 0.5D, 0.5D, 0.0D);
-                return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
-                        .defaultBlockState().setValue(AshLayerBlock.LAYERS, layers), 3);
+            if (count > 0) {
+                int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
+                if (layers != 0) {
+                    ((ServerLevel) level).sendParticles(ModRegistry.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
+                            (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
+                            0.5D, 0.5D, 0.5D, 0.0D);
+                    return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
+                            .defaultBlockState().setValue(AshLayerBlock.LAYERS, layers), 3);
+                }
             }
         }
         return false;

@@ -4,11 +4,16 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.items.SackItem;
+import net.mehvahdjukaar.supplementaries.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.mehvahdjukaar.supplementaries.setup.WorldGenSetup;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -37,7 +42,6 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
-
 
         //FIx spikes colors & piston movements
         //TODO: fish bucket on cages a
@@ -148,19 +152,14 @@ public class Supplementaries {
 
         //hud mod. armor broken hud, items offhadn crafting
 
-        //bubble blowing with bellows
-
         //TODO: readd achievements
         //structures
 
         //ash auto bonemeal, improve bubbles
 
-        //bundle blacklist
-
         //how the turn tables
         //redo achievement rendering
-
-        //TODO: fix sack not faling & loosing inv
+        //better badlands kindling gunpowder compat (whenevr it updates lol)
 
         ConfigHandler.init();
 

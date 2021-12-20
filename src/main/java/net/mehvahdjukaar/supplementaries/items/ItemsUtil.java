@@ -29,7 +29,7 @@ public class ItemsUtil {
     }
 
     public static boolean tryAddingItemInContainerItem(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot){
-        if ((!CompatHandler.quark || QuarkPlugin.isDropInEnabled()) && action != ClickAction.PRIMARY) {
+        if (action != ClickAction.PRIMARY) {
             if (!incoming.isEmpty() && ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, true, inSlot) != null) {
                 ItemStack finished = ItemsUtil.interactWithItemHandler(player, stack, incoming, slot, false, inSlot);
                 if (finished != null) {

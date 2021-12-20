@@ -158,6 +158,7 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> ROTATION_TRAIL_EMITTER = regParticle("rotation_trail_emitter");
     public static final RegistryObject<SimpleParticleType> SUDS_PARTICLE = regParticle("suds");
     public static final RegistryObject<SimpleParticleType> ASH_PARTICLE = regParticle("ash");
+    public static final RegistryObject<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = regParticle("bubble_block");
 
     //recipes
     public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
@@ -168,6 +169,8 @@ public class ModRegistry {
             new SimpleRecipeSerializer<>(RopeArrowCreateRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add_recipe", () ->
             new SimpleRecipeSerializer<>(RopeArrowAddRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> BUBBLE_BLOWER_REPAIR_RECIPE = RECIPES.register("bubble_blower_charge_recipe", () ->
+            new SimpleRecipeSerializer<>(RepairBubbleBlowerRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", () ->
             new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map_recipe", () ->
@@ -1369,6 +1372,19 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = TILES.register(SKULL_CANDLE_NAME, () ->
             BlockEntityType.Builder.of(CandleSkullBlockTile::new, SKULL_CANDLE.get()).build(null));
 
+    //bubble
+    public static final String BUBBLE_BLOCK_NAME = "bubble_block";
+    public static final RegistryObject<Block> BUBBLE_BLOCK = BLOCKS.register(BUBBLE_BLOCK_NAME, () ->
+            new BubbleBlock(BlockBehaviour.Properties.of(Material.DECORATION, MaterialColor.COLOR_PINK)
+                    .noOcclusion()
+                    .isSuffocating((a,b,c)->false)
+                    .isViewBlocking((a,b,c)->false)
+                    .isRedstoneConductor((a,b,c)->false)
+                    .instabreak().sound(SoundType.HONEY_BLOCK))
+    );
+
+    public static final RegistryObject<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = TILES.register(BUBBLE_BLOCK_NAME, () ->
+            BlockEntityType.Builder.of(BubbleBlockTile::new, BUBBLE_BLOCK.get()).build(null));
     /*
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
     public static final RegistryObject<Block> REDSTONE_DRIVER = BLOCKS.register(REDSTONE_DRIVER_NAME,()-> new RedstoneDriverBlock(

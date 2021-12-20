@@ -64,9 +64,15 @@ public class ServerConfigs {
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_DECELERATION;
         public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
         public static ForgeConfigSpec.EnumValue<Hands> WRENCH_BYPASS;
+        public static ForgeConfigSpec.IntValue BUBBLE_BLOWER_COST;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.push("items");
+
+            builder.push("bubble_blower");
+            BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
+                    .defineInRange("stasis_cost", 5,1, 25);
+            builder.pop();
 
             builder.push("wrench");
             WRENCH_BYPASS = builder.comment("Allows wrenches to bypass a block interaction action prioritizing their own when on said hand")
@@ -388,11 +394,21 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue STICK_POLE;
         public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
 
+        public static ForgeConfigSpec.BooleanValue ASH_BURN;
+        public static ForgeConfigSpec.BooleanValue ASH_RAIN;
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
+
+            builder.push("ash");
+            ASH_BURN = builder.comment("Burnable blocks will have a chance to create ash layers when burned")
+                            .define("ash_from_fire", true);
+            ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
+                    .define("rain_wash_ash", true);
+            builder.pop();
 
             builder.push("rope");
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
@@ -702,6 +718,7 @@ public class ServerConfigs {
     //maybe not need but hey
     public static class cached {
 
+
         //items
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
@@ -717,6 +734,7 @@ public class ServerConfigs {
         public static float SLINGSHOT_DECELERATION;
         public static boolean UNRESTRICTED_SLINGSHOT;
         public static Hands WRENCH_BYPASS;
+        public static int BUBBLE_BLOWER_COST;
         //tweaks
         public static int ZOMBIE_HORSE_COST;
         public static boolean ZOMBIE_HORSE;
@@ -759,6 +777,8 @@ public class ServerConfigs {
         //blocks
         public static int SPEAKER_RANGE;
         public static boolean SPEAKER_NARRATOR;
+        public static boolean ASH_BURN;
+        public static boolean ASH_RAIN;
         public static int BELLOWS_BASE_PERIOD;
         public static int BELLOWS_POWER_SCALING;
         public static double BELLOWS_MAX_VEL;
@@ -836,6 +856,7 @@ public class ServerConfigs {
             SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
             SKULL_CANDLES_MULTIPLE = tweaks.SKULL_CANDLES_MULTIPLE.get();
 
+            BUBBLE_BLOWER_COST = item.BUBBLE_BLOWER_COST.get();
             WRENCH_BYPASS = item.WRENCH_BYPASS.get();
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
@@ -915,6 +936,8 @@ public class ServerConfigs {
             CRYSTAL_ENCHANTING = block.CRYSTAL_ENCHANTING.get();
             ROPE_UNRESTRICTED = block.ROPE_UNRESTRICTED.get();
             ROPE_SLIDE = block.ROPE_SLIDE.get();
+            ASH_BURN = block.ASH_BURN.get();
+            ASH_RAIN = block.ASH_RAIN.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

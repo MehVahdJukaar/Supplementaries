@@ -91,7 +91,7 @@ public class MobContainer {
         if (data != null && level != null && pos != null && !data.isAquarium) {
             Entity entity = createStaticMob(data, level, pos);
 
-            if(entity != null) {
+            if (entity != null) {
                 //visual entity stored in capability
                 this.mobDisplayCapInstance = getCap(entity);
                 this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
@@ -161,7 +161,7 @@ public class MobContainer {
             Entity entity = EntityType.loadEntityRecursive(tag, world, o -> o);
             if (id != null && entity != null) {
                 entity.setUUID(id);
-                if(entity.hasCustomName())entity.setCustomName(entity.getCustomName());
+                if (entity.hasCustomName()) entity.setCustomName(entity.getCustomName());
             }
             return entity;
         }
@@ -313,10 +313,10 @@ public class MobContainer {
         if (entity.isPassenger()) {
             entity.getVehicle().ejectPassengers();
         }
-        if(entity instanceof Mob mob){
+        if (entity instanceof Mob mob) {
             mob.setPersistenceRequired();
         }
-        if(entity instanceof Bucketable bucketable){
+        if (entity instanceof Bucketable bucketable) {
             bucketable.setFromBucket(true);
         }
 
@@ -468,14 +468,14 @@ public class MobContainer {
         public MobData(@Nullable String name, @Nullable int fishIndex, @Nonnull ItemStack filledBucket) {
             //initialize name & texture if absent
             EntityType<?> type = null;
-            if(name == null){
+            if (name == null) {
                 type = BucketHelper.getEntityType(filledBucket.getItem());
                 name = type == null ? "Mob" : type.getDescriptionId();
             }
-            if(fishIndex == 0){
-                if(type == null)type = BucketHelper.getEntityType(filledBucket.getItem());
-                fishIndex = 1;
-                if(type != null) {
+            if (fishIndex == 0) {
+                if (type == null) type = BucketHelper.getEntityType(filledBucket.getItem());
+                fishIndex = 0;
+                if (type != null) {
                     var t = CapturedMobsHelper.getType(type);
                     if (t.is2DFish()) fishIndex = t.getFishTexture();
                 }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.items;
 
 
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
+import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -18,6 +19,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +34,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -49,7 +50,7 @@ public class SackItem extends BlockItem {
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if (!ServerConfigs.cached.SACK_PENALTY) return;
-        if (entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator() && worldIn.getGameTime() % 20L == 0L) {
+        if (worldIn.getGameTime() % 20L == 0L && entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator()) {
             Collection<MobEffectInstance> effects = player.getActiveEffects();
             for (MobEffectInstance effect : effects) {
                 if (effect.getEffect() == MobEffects.MOVEMENT_SLOWDOWN)
@@ -59,11 +60,18 @@ public class SackItem extends BlockItem {
             int i = 0;
             AtomicReference<IItemHandler> reference = new AtomicReference<>();
             entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
+            boolean firstSack = false;
             if (reference.get() != null) {
                 for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
-                    if (reference.get().getStackInSlot(_idx).getItem() instanceof SackItem) {
+                    ItemStack slotItem = reference.get().getStackInSlot(_idx);
+                    if (slotItem.getItem() instanceof SackItem) {
                         i++;
                     }
+                }
+
+                if (CompatHandler.quark) {
+                    ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
+                    i += QuarkPlugin.getSacksInBackpack(backpack);
                 }
             }
             int inc = ServerConfigs.cached.SACK_INCREMENT;
@@ -77,7 +85,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if(!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
+        if (!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (tag.contains("LootTable", 8)) {

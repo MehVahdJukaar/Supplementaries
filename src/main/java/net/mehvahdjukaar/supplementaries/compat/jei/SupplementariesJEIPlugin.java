@@ -52,6 +52,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createRopeArrowAddRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createFlagFromBanner(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createAntiqueMaoRecipe(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createBubbleBlowerChargeRecipe(), VanillaRecipeCategoryUid.CRAFTING);
     }
 
 
@@ -133,6 +134,26 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
         return recipes;
     }
+
+
+    public static List<Recipe<?>> createBubbleBlowerChargeRecipe() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.bubble_blower";
+
+        ItemStack ropeArrow = new ItemStack(ModRegistry.BUBBLE_BLOWER.get());
+        ItemStack empty = ropeArrow.copy();
+        empty.setDamageValue(empty.getMaxDamage());
+
+        Ingredient base = Ingredient.of(empty);
+        Ingredient soap = Ingredient.of(ModRegistry.SOAP.get());//.fromStacks(new ItemStack(Registry.ROPE_ITEM.get()));
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, soap);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_bubble_blower_charge");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
 
     public static List<Recipe<?>> createTippedBambooSpikesRecipes() {
         List<Recipe<?>> recipes = new ArrayList<>();

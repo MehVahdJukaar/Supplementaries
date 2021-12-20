@@ -8,6 +8,7 @@
   "mixins": [
     "AbstractSkullBlockMixin",
     "AbstractVillagersMixin",
+    "BeeGoalMixin",
     "BellMixin",
     "BellTileEntityMixin",
     "BrewingStandMixin",

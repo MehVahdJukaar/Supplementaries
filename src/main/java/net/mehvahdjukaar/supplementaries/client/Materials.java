@@ -25,23 +25,25 @@ public class Materials {
     public static final Material BOOK_TOME_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_AND_QUILL_TEXTURES);
+    public static final Material BUBBLE_BLOCK_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BUBBLE_BLOCK_TEXTURE);
 
 
     public static final Map<IWoodType, Material> HANGING_SIGNS_MATERIALS = new HashMap<>();
     public static final Map<IWoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
+
     static {
-        for(IWoodType type : WoodTypes.TYPES.values()){
+        for (IWoodType type : WoodTypes.TYPES.values()) {
             //HANGING_SIGNS_MATERIALS.put(type, new RenderMaterial(Atlases.SIGN_SHEET, Textures.HANGING_SIGNS_TEXTURES.get(type)));
             SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Textures.SIGN_POSTS_TEXTURES.get(type)));
         }
 
-        for(BannerPattern pattern : BannerPattern.values()){
+        for (BannerPattern pattern : BannerPattern.values()) {
             FLAG_MATERIALS.put(pattern, new Material(Sheets.BANNER_SHEET, Textures.FLAG_TEXTURES.get(pattern)));
         }
 
-        for(BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()){
-            BOOK_MATERIALS.put(color, new Material(Sheets.SHULKER_SHEET,Textures.BOOK_TEXTURES.get(color)));
+        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
+            BOOK_MATERIALS.put(color, new Material(Sheets.SHULKER_SHEET, Textures.BOOK_TEXTURES.get(color)));
         }
     }
 

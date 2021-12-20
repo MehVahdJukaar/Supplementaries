@@ -11,6 +11,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -181,6 +182,11 @@ public class FlaxBlock extends CropBlock {
             worldIn.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 3);
         }
         worldIn.setBlock(pos, getStateForAge(newAge), 2);
+    }
+
+    @Override
+    public boolean isMaxAge(BlockState state) {
+        return super.isMaxAge(state);
     }
 
     @Override

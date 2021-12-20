@@ -4,25 +4,33 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import vazkii.quark.base.handler.RayTraceHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,9 +42,45 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         super(properties);
     }
 
+    //bubble block
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return false;
+    }
+
+    public InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
+
+        HitResult result = player.getAbilities().instabuild ? RayTraceHandler.rayTrace(player, level, player, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
+                RayTraceHandler.rayTrace(player, level, player, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.5);
+
+        if (result instanceof BlockHitResult hitResult) {
+            BlockPos pos = hitResult.getBlockPos();
+            BlockState first = level.getBlockState(pos);
+            if (!first.getMaterial().isReplaceable()) {
+                pos = pos.relative(hitResult.getDirection());
+            }
+            first = level.getBlockState(pos);
+            if (first.getMaterial().isReplaceable()) {
+                if (!level.isClientSide) {
+                    level.setBlockAndUpdate(pos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
+                }
+                if (!(player.getAbilities().instabuild)) {
+                    int max = this.getMaxDamage(stack);
+                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + ServerConfigs.cached.BUBBLE_BLOWER_COST));
+                }
+
+                //player.getCooldowns().addCooldown(this, 10);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            }
+        }
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+    }
+
+
     @Override
     public boolean isEnchantable(ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Override
@@ -66,7 +110,10 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
+        ListTag enchantments = EnchantedBookItem.getEnchantments(book);
+        return enchantments.size() == 1 &&
+                EnchantmentHelper.getEnchantmentId(enchantments.getCompound(0)).equals(
+                        EnchantmentHelper.getEnchantmentId(ModRegistry.STASIS_ENCHANTMENT.get()));
     }
 
     @Override
@@ -98,12 +145,16 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         int charges = this.getCharges(itemstack);
 
         if (charges > 0) {
+
+            int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
+            if (ench > 0) return this.deployBubbleBlock(itemstack, world, player, hand);
+
             player.startUsingItem(hand);
+
             return InteractionResultHolder.consume(itemstack);
         }
         return InteractionResultHolder.fail(itemstack);
     }
-
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {

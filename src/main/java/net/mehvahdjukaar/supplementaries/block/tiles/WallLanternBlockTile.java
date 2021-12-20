@@ -22,7 +22,7 @@ import java.util.Objects;
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder {
 
-    public BlockState mimic = Blocks.LANTERN.defaultBlockState();
+    private BlockState mimic = Blocks.LANTERN.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
     public static final ModelProperty<Boolean> FANCY = BlockProperties.FANCY;
 

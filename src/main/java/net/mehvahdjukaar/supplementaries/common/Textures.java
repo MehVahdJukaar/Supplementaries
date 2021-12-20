@@ -121,6 +121,7 @@ public class Textures {
     public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
     public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("entity/books/book_and_quill");
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
+    public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("blocks/bubble_block");
 
     public static final Map<DyeColor, ResourceLocation> SKULL_CANDLES_TEXTURES = new HashMap<>();
 
@@ -150,7 +151,7 @@ public class Textures {
         ArrayList<ResourceLocation> blocks = new ArrayList<>(Arrays.asList(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, LASER_BEAM_TEXTURE, LASER_BEAM_END_TEXTURE, LASER_OVERLAY_TEXTURE,
                 SUGAR_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE, HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
-                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID));
+                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
 
         ResourceLocation loc = event.getAtlas().location();
 

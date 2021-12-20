@@ -85,7 +85,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             hsl[0] = (h + i) % 1f;
         }
 
-        hsl = ColorHelper.postProcess(hsl);
+        hsl = ColorHelper.prettyfyColor(hsl);
         float h = hsl[0];
         float s = hsl[1];
         float l = hsl[2];

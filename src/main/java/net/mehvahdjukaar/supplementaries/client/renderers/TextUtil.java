@@ -67,6 +67,7 @@ public class TextUtil {
                         DrPineapple
                         Colleen Cleland
                         Astralis
+                        NotHypherionSA
                         Toffanelly
                         Elijah
 

@@ -78,7 +78,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
-            return new ItemStack(te.mimic.getBlock());
+            return new ItemStack(te.getHeldBlock().getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);
     }
@@ -100,8 +100,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         if (worldIn.getBlockEntity(pos) instanceof WallLanternBlockTile te && te.isRedstoneLantern) {
             if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
-                if (te.mimic.hasProperty(LIT))
-                    te.mimic = te.mimic.cycle(LIT);
+                if (te.getHeldBlock().hasProperty(LIT))
+                    te.setHeldBlock(te.getHeldBlock().cycle(LIT));
             }
         }
     }
@@ -117,8 +117,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
                         world.scheduleTick(pos, this, 4);
                     } else {
                         world.setBlock(pos, state.cycle(LIT), 2);
-                        if (tile.mimic.hasProperty(LIT))
-                            tile.mimic = tile.mimic.cycle(LIT);
+                        if (tile.getHeldBlock().hasProperty(LIT))
+                            tile.setHeldBlock(tile.getHeldBlock().cycle(LIT));
                     }
                 }
             }
@@ -128,9 +128,18 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof WallLanternBlockTile tile) {
-            return tile.mimic.getDrops(builder);
+            return tile.getHeldBlock().getDrops(builder);
         }
         return super.getDrops(state, builder);
+    }
+
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
+        if (level.getBlockEntity(pos) instanceof WallLanternBlockTile tile) {
+            BlockState s = tile.getHeldBlock();
+            s.getBlock().animateTick(s, level, pos, random);
+        }
     }
 
     @Nullable

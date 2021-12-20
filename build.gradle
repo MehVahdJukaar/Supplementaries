@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18-1.0.7'
+version = '1.18.1-1.0.7'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -36,7 +36,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
 
-    mappings channel: 'official', version: '1.18'
+    mappings channel: 'official', version: '1.18.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -115,7 +115,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.18-38.0.14'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.5'
 
 
     implementation fg.deobf("curse.maven:configured-457570:3546349")
@@ -125,7 +125,7 @@ dependencies {
     implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
     //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
-    implementation fg.deobf("curse.maven:cc-tweaked-282001:3544951")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
     implementation fg.deobf("curse.maven:create-328085:3564692")
     implementation fg.deobf("curse.maven:flywheel-486392:3564677")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")

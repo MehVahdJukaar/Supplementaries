@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.items.enchantment;
 
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.items.BubbleBlower;
 import net.mehvahdjukaar.supplementaries.items.SlingshotItem;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -14,7 +16,7 @@ public class StasisEnchantment extends Enchantment {
 
     public StasisEnchantment(Rarity rarity, EnchantmentCategory type, EquipmentSlot... slotTypes) {
         super(rarity, type, slotTypes);
-        enabled = RegistryConfigs.reg.SLINGSHOT_ENABLED.get();
+        enabled = RegistryConfigs.reg.SLINGSHOT_ENABLED.get() && RegistryConfigs.reg.BUBBLE_BLOWER_ENABLED.get();
     }
 
     @Override
@@ -59,6 +61,7 @@ public class StasisEnchantment extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return stack.getItem() instanceof SlingshotItem;
+        Item i = stack.getItem();
+        return i instanceof SlingshotItem || i instanceof BubbleBlower;
     }
 }

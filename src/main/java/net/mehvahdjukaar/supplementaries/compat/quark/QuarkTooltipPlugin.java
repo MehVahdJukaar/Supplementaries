@@ -14,7 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
+import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +24,13 @@ import java.util.List;
 // credits to Vazkii and Quark
 public class QuarkTooltipPlugin {
 
-    //private static final SackBlockTile DUMMY_SACK_TILE = new SackBlockTile();
-    private static final BlockState DEFAULT_SACK = ModRegistry.SACK.get().defaultBlockState();
-
     private static final BlockState DEFAULT_SAFE = ModRegistry.SAFE.get().defaultBlockState();
     private static final SafeBlockTile DUMMY_SAFE_TILE = new SafeBlockTile(BlockPos.ZERO, DEFAULT_SAFE);
 
 
     public static boolean canRenderTooltip() {
-        return (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
+        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class) &&
+                (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
     }
 
     public static void onItemTooltipEvent(ItemTooltipEvent event) {

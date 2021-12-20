@@ -23,7 +23,7 @@ public class WallLanternBlockTileRenderer extends EnhancedLanternBlockTileRender
                        int combinedOverlayIn) {
 
         if(tile.shouldRenderFancy()) {
-            this.renderLantern(tile, tile.mimic, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+            this.renderLantern(tile, tile.getHeldBlock(), partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
         }
 
         LOD lod = new LOD(camera,tile.getBlockPos());

@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SkullCandleOverlay;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.JarredModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.JarredRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.minecraft.client.Minecraft;

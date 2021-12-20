@@ -1,0 +1,110 @@
+package net.mehvahdjukaar.supplementaries.block.blocks;
+
+import net.mehvahdjukaar.supplementaries.block.tiles.BubbleBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
+
+public class BubbleBlock extends Block implements EntityBlock {
+    public BubbleBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext placeContext) {
+        return !placeContext.isSecondaryUseActive();
+    }
+
+    @Override
+    public boolean isPossibleToRespawnInThis() {
+        return true;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter blockGetter, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos p_60557_, CollisionContext collisionContext) {
+        return Shapes.block();
+    }    //TODO: replace sounds
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext collisionContext) {
+        if (collisionContext.isAbove(Shapes.block(), pos, false)
+                && collisionContext instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity)
+            return Shapes.block();
+        else return Shapes.empty();
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if((level instanceof ServerLevel serverLevel)){
+            breakBubble(serverLevel, pos);
+        }
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+        makeParticle(pos, level);
+    }
+
+    public static void makeParticle(BlockPos pos, Level level) {
+        level.addParticle(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
+    }
+
+    public static void sendParticles(BlockPos pos, ServerLevel level) {
+        level.sendParticles(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                1, 0, 0, 0, 0);
+    }
+
+    public static void breakBubble(ServerLevel level, BlockPos pos){
+        level.removeBlock(pos, false);
+        sendParticles(pos, level);
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        level.scheduleTick(pos, this, 5);
+        super.stepOn(level, pos, state, entity);
+    }
+
+
+    @Override
+    public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, Random random) {
+        breakBubble(serverLevel, pos);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BubbleBlockTile(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState state, BlockEntityType<T> tBlockEntityType) {
+        return BlockUtils.getTicker(tBlockEntityType, ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTile::tick);
+    }
+}

@@ -2,17 +2,22 @@ package net.mehvahdjukaar.supplementaries.compat.quark;
 
 
 import net.mehvahdjukaar.supplementaries.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.items.SackItem;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.block.WoodPostBlock;
-import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
@@ -36,14 +41,6 @@ public class QuarkPlugin {
         return null;
     }
 
-    public static boolean isDropInEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class);
-    }
-
-    public static boolean isEnhancedTooltipEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class);
-    }
-
     public static boolean isTome(Item item) {
         return item instanceof AncientTomeItem;
     }
@@ -55,5 +52,22 @@ public class QuarkPlugin {
 
     public static boolean isDoubleDoorEnabled() {
         return ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class);
+    }
+
+    public static int getSacksInBackpack(ItemStack stack) {
+        int j = 0;
+        if (stack.getItem() instanceof BackpackItem) {
+            LazyOptional<IItemHandler> handlerOpt = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            if (handlerOpt.isPresent()) {
+                IItemHandler handler = handlerOpt.orElse(null);
+                for (int i = 0; i < handler.getSlots(); ++i) {
+                    ItemStack slotItem = handler.getStackInSlot(i);
+                    if (slotItem.getItem() instanceof SackItem) {
+                        j++;
+                    }
+                }
+            }
+        }
+        return j;
     }
 }

@@ -3,18 +3,27 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
-import java.awt.*;
 import java.util.Random;
 
 public class ColorHelper {
+    private static final float[][] COLORS;
 
-    public static int pack(float[] rgb) {
-        return FastColor.ARGB32.color(255, (int)(rgb[0]*255), (int)(rgb[1]*255), (int)(rgb[2]*255));
+    static {
+        int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
+        float[][] temp = new float[c.length][];
+        for (int i = 0; i < c.length; i++) {
+            int j = c[i];
+            temp[i] = new float[]{FastColor.ARGB32.red(j) / 255f,
+                    FastColor.ARGB32.green(j) / 255f, FastColor.ARGB32.blue(j) / 255f};
+        }
+        COLORS = temp;
     }
 
-    Color c = new Color(0);
+    public static int pack(float[] rgb) {
+        return FastColor.ARGB32.color(255, (int) (rgb[0] * 255), (int) (rgb[1] * 255), (int) (rgb[2] * 255));
+    }
 
-    public static float oneToOneSaturation(float saturation, float lightness){
+    public static float oneToOneSaturation(float saturation, float lightness) {
         float c = 1 - Math.abs((2 * lightness) - 1);
         return Math.min(saturation, c);
     }
@@ -22,13 +31,13 @@ public class ColorHelper {
     public static int getRainbowColorPost(float division) {
         float scale = 3600f / division;
         float h = (((int) ((System.currentTimeMillis()) % (int) scale) / scale));
-        float[] hsl = postProcess(new float[]{h, 0.6f, 0.5f});
+        float[] hsl = prettyfyColor(new float[]{h, 0.6f, 0.5f});
         return hslToRgb(hsl[0], hsl[1], hsl[2]);
     }
 
     public static int getRandomBrightColor(Random random) {
         float h = random.nextFloat();
-        float[] hsl = postProcess(new float[]{h, 0.62f + random.nextFloat() * 0.3f, 0.43f + random.nextFloat() * 0.15f});
+        float[] hsl = prettyfyColor(new float[]{h, 0.62f + random.nextFloat() * 0.3f, 0.43f + random.nextFloat() * 0.15f});
         return hslToRgb(hsl[0], hsl[1], hsl[2]);
     }
 
@@ -38,8 +47,23 @@ public class ColorHelper {
         return hslToRgb(h, 0.6f, 0.5f);
     }
 
+    public static float[] getBubbleColor(float phase) {
+        int n = COLORS.length;
+        int ind = (int) Math.floor(n * phase);
 
-    public static float[] postProcess(float[] hsl) {
+        float delta = n * phase % 1;
+
+        float[] start = COLORS[ind];
+        float[] end = COLORS[(ind + 1) % n];
+
+        float red = Mth.lerp(delta, start[0], end[0]);
+        float green = Mth.lerp(delta, start[1], end[1]);
+        float blue = Mth.lerp(delta, start[2], end[2]);
+        return new float[]{red, green, blue};
+    }
+
+
+    public static float[] prettyfyColor(float[] hsl) {
         float h = hsl[0];
         float s = hsl[1];
         float l = hsl[2];
