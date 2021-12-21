@@ -40,8 +40,8 @@ import java.util.Optional;
 public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWaterLoggable, EntityBlock {
     public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
 
-    public NetheriteTrapdoorBlock(Properties builder) {
-        super(builder);
+    public NetheriteTrapdoorBlock(Properties properties) {
+        super(properties.lightLevel(state->state.getValue(LAVALOGGED) ? 15 : 0));
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(OPEN, false).setValue(HALF, Half.BOTTOM).setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
@@ -109,11 +109,6 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(LAVALOGGED) ? Fluids.LAVA.getSource(false) : super.getFluidState(state);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LAVALOGGED) ? 15 : 0;
     }
 
     @Override

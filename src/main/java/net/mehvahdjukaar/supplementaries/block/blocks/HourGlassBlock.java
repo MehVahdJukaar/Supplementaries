@@ -49,7 +49,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public HourGlassBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
     }
@@ -57,11 +57,6 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override

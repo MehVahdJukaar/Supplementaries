@@ -170,11 +170,6 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIGHT_LEVEL);
-    }
-
-    @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }

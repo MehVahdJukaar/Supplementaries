@@ -73,7 +73,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     public SafeBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(state->state.getValue(LAVALOGGED) ? 15 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false)
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
     }
@@ -372,11 +372,6 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         if (state.getValue(LAVALOGGED)) return Fluids.LAVA.getSource(false);
         else if (state.getValue(WATERLOGGED)) return Fluids.WATER.getSource(false);
         return super.getFluidState(state);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LAVALOGGED) ? 15 : 0;
     }
 
 }

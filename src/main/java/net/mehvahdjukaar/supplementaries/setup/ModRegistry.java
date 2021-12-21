@@ -448,6 +448,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
                     .strength(1f, 1f)
                     .sound(SoundType.GLASS)
+                    .lightLevel(state -> state.getValue(JarBlock.LIGHT_LEVEL))
                     .noOcclusion()
     ));
 
@@ -558,8 +559,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.DECORATION)
                     .noCollission()
                     .instabreak()
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-                    .sound(SoundType.LANTERN), () -> ParticleTypes.FLAME));
+                    .sound(SoundType.LANTERN),
+            14, () -> ParticleTypes.FLAME));
     public static final RegistryObject<Block> SCONCE_WALL = BLOCKS.register("sconce_wall", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE.get()), () -> ParticleTypes.FLAME));
@@ -569,8 +570,7 @@ public class ModRegistry {
     //soul
     public static final String SCONCE_NAME_SOUL = "sconce_soul";
     public static final RegistryObject<Block> SCONCE_SOUL = BLOCKS.register(SCONCE_NAME_SOUL, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 10 : 0),
+            BlockBehaviour.Properties.copy(SCONCE.get()),10,
             () -> ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_SOUL = BLOCKS.register("sconce_wall_soul", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_SOUL.get())
@@ -582,8 +582,7 @@ public class ModRegistry {
     //optional: endergetic
     public static final String SCONCE_NAME_ENDER = "sconce_ender";
     public static final RegistryObject<Block> SCONCE_ENDER = BLOCKS.register(SCONCE_NAME_ENDER, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 13 : 0),
+            BlockBehaviour.Properties.copy(SCONCE.get()),13,
             CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_ENDER = BLOCKS.register("sconce_wall_ender", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
@@ -595,8 +594,7 @@ public class ModRegistry {
     //optional: infernal expansion
     public static final String SCONCE_NAME_GLOW = "sconce_glow";
     public static final RegistryObject<Block> SCONCE_GLOW = BLOCKS.register(SCONCE_NAME_GLOW, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 13 : 0),
+            BlockBehaviour.Properties.copy(SCONCE.get()), 13,
             CompatObjects.GLOW_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_GLOW = BLOCKS.register("sconce_wall_glow", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE.get())
@@ -608,7 +606,7 @@ public class ModRegistry {
     //green
     public static final String SCONCE_NAME_GREEN = "sconce_green";
     public static final RegistryObject<Block> SCONCE_GREEN = BLOCKS.register(SCONCE_NAME_GREEN, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), GREEN_FLAME));
+            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14, GREEN_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_GREEN = BLOCKS.register("sconce_wall_green", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_GREEN.get()), GREEN_FLAME));
@@ -832,7 +830,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.QUARTZ)
                     .strength(0.3f, 0.3f)
                     .sound(SoundType.GLASS)
-                    .lightLevel((state) -> 15)
     ));
     public static final RegistryObject<Item> REDSTONE_ILLUMINATOR_ITEM = regBlockItem(REDSTONE_ILLUMINATOR, getTab(CreativeModeTab.TAB_REDSTONE, REDSTONE_ILLUMINATOR_NAME));
 
@@ -1100,7 +1097,7 @@ public class ModRegistry {
     //boat in a jar
     public static final String JAR_BOAT_NAME = "jar_boat";
     public static final RegistryObject<Block> JAR_BOAT = BLOCKS.register(JAR_BOAT_NAME, () -> new JarBoatBlock(
-            BlockBehaviour.Properties.copy(ModRegistry.JAR.get())));
+            BlockBehaviour.Properties.copy(Blocks.GLASS)));
     public static final RegistryObject<BlockEntityType<JarBoatTile>> JAR_BOAT_TILE = TILES.register(JAR_BOAT_NAME, () -> BlockEntityType.Builder.of(
             JarBoatTile::new, JAR_BOAT.get()).build(null));
     public static final RegistryObject<Item> JAR_BOAT_ITEM = ITEMS.register(JAR_BOAT_NAME, () -> new BlockItem(JAR_BOAT.get(),
@@ -1353,6 +1350,7 @@ public class ModRegistry {
     public static final String SKULL_PILE_NAME = "skull_pile";
     public static final RegistryObject<Block> SKULL_PILE = BLOCKS.register(SKULL_PILE_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK);
+
         return CompatHandler.create ? SchematicCannonStuff.makeDoubleSkull(p) : new DoubleSkullBlock(p);
     });
 
@@ -1382,6 +1380,8 @@ public class ModRegistry {
                     .isRedstoneConductor((a,b,c)->false)
                     .instabreak().sound(SoundType.HONEY_BLOCK))
     );
+    public static final RegistryObject<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BubbleBlockItem(
+            BUBBLE_BLOCK.get(),(new Item.Properties()).tab(null)));
 
     public static final RegistryObject<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = TILES.register(BUBBLE_BLOCK_NAME, () ->
             BlockEntityType.Builder.of(BubbleBlockTile::new, BUBBLE_BLOCK.get()).build(null));

@@ -71,7 +71,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;
 
     public CandleSkullBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(CandleBlock.LIGHT_EMISSION));
         this.registerDefaultState(this.defaultBlockState().setValue(CANDLES, 1)
                 .setValue(ROTATION, 0).setValue(LIT, false));
     }
@@ -115,11 +115,6 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
             return up ? tile.getCandle().getBlock().getCloneItemStack(state, hitResult, world, pos, player) : tile.getSkullItem();
         }
         return super.getCloneItemStack(state, hitResult, world, pos, player);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return CandleBlock.LIGHT_EMISSION.applyAsInt(state);
     }
 
     @Override

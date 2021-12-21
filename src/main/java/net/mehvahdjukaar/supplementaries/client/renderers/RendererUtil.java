@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -180,7 +181,7 @@ public class RendererUtil {
         float maxV = minV + atlasScaleV * w;
         float maxV2 = minV + atlasScaleV * w;
 
-        long t = level == null ? 0 : level.getGameTime();
+        long t = level == null ? System.currentTimeMillis()/50 : level.getGameTime();
         float time = ((float) Math.floorMod((long) (pos.getX() * 7 + pos.getY() * 9 + pos.getZ() * 13) + t, 100L) + partialTicks) / 100.0F;
 
         // w = (1-Mth.sin((float) (time*Math.PI*2)));
@@ -197,7 +198,7 @@ public class RendererUtil {
         int cDsw = setColorForAge(time, 0.65f);;
 
 
-        float amp = 0.02f;
+        float amp = ClientConfigs.cached.BUBBLE_BLOCK_WOBBLE;
         w = w - 2 * amp;
         //long time = System.currentTimeMillis();
         float unw = amp * Mth.cos(((float) Math.PI * 2F) * (time + 0));

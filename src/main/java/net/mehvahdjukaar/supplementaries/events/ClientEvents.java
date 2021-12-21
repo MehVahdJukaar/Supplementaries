@@ -2,15 +2,19 @@ package net.mehvahdjukaar.supplementaries.events;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -88,6 +92,27 @@ public class ClientEvents {
     public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
         if (ClientConfigs.cached.CONFIG_BUTTON && CompatHandler.configured) {
             ConfigButton.setupConfigButton(event);
+        }
+    }
+
+    private static float partialTicks;
+
+    public static float getPartialTicks() {
+        return partialTicks;
+    }
+
+    @SubscribeEvent
+    public static void renderTick(TickEvent.RenderTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            partialTicks = event.renderTickTime;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null){
+            CapturedMobCache.tickCrystal();
+
         }
     }
 

@@ -18,13 +18,8 @@ public class RedstoneIlluminatorBlock extends Block implements IForgeBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
     public RedstoneIlluminatorBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel((state) -> 15 - state.getValue(POWER)));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0));
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return 15 - state.getValue(POWER);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     public final Supplier<Block> daub;
 
     public FrameBlock(Properties properties, Supplier<Block> daub) {
-        super(properties);
+        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
         this.daub = daub;
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
@@ -61,11 +61,6 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new FrameBlockTile(pPos, pState, daub);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override

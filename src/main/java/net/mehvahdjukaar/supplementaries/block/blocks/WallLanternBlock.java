@@ -36,7 +36,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -46,7 +45,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public WallLanternBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(s -> s.getValue(LIT) ? s.getValue(LIGHT_LEVEL) : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
@@ -65,14 +64,6 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        if (state.getValue(LIT)) {
-            return state.getValue(LIGHT_LEVEL);
-        }
-        return 0;
     }
 
     @Override

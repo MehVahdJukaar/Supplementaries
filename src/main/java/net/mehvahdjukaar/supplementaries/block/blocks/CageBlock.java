@@ -45,7 +45,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public CageBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
@@ -120,11 +120,6 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new CageBlockTile(pPos, pState);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIGHT_LEVEL);
     }
 
     @Override

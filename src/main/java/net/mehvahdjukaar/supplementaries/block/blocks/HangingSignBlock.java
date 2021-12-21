@@ -68,10 +68,10 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
                     //remove
                     if (!tile.isEmpty() && handItem.isEmpty()) {
                         ItemStack it = tile.removeStackFromSlot(0);
-                        if (!level.isClientSide()) {
-                            player.setItemInHand(handIn, it);
-                            tile.setChanged();
-                        }
+
+                        player.setItemInHand(handIn, it);
+                        tile.setChanged();
+
                         return InteractionResult.CONSUME;
                     }
                     //place
@@ -85,8 +85,8 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
                         }
 
                         level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
-                        tile.setChanged();
 
+                        tile.setChanged();
                         return InteractionResult.CONSUME;
                     }
 

@@ -27,6 +27,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -144,12 +145,15 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
                 success = true;
             }
-            if (!success && item instanceof BlockItem) {
+            if (!success && item instanceof BlockItem blockItem) {
                 BlockPlaceContext ctx = new BlockPlaceContext(this.level, player, InteractionHand.MAIN_HAND, this.getItem(), hit);
-                success = ((BlockItem) item).place(ctx).consumesAction();
+                success = blockItem.place(ctx).consumesAction();
+
                 //TODO: sound isn't working that well
             }
-            if (success) this.remove(RemovalReason.DISCARDED);
+            if (success){
+                this.remove(RemovalReason.DISCARDED);
+            }
 
         }
     }

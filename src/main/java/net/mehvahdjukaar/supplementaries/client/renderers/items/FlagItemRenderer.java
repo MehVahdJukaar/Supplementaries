@@ -36,7 +36,7 @@ public class FlagItemRenderer extends BlockEntityWithoutLevelRenderer {
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        matrixStackIn.translate(-0.71875,0,0);
+        matrixStackIn.translate(-0.71875, 0, 0);
 
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         CompoundTag com = stack.getTagElement("BlockEntityTag");
@@ -44,8 +44,8 @@ public class FlagItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (com != null && com.contains("Patterns")) {
             listnbt = com.getList("Patterns", 10);
         }
-        List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem)stack.getItem()).getColor(), listnbt);
-        matrixStackIn.translate(0.5+0.0625,0,0.5);
+        List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
+        matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
         matrixStackIn.mulPose(Const.Y90);
         FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);
 

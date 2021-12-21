@@ -12,7 +12,8 @@ import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.world.data.map.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.world.generation.FeaturesRegistry;
+import net.mehvahdjukaar.supplementaries.world.generation.WorldGenHandler;
+import net.mehvahdjukaar.supplementaries.world.generation.structure.StructureLocator;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
@@ -22,11 +23,8 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -43,11 +41,11 @@ public class ModSetup {
             try {
 
 
-                // StructureRegistry.setup();
-                FeaturesRegistry.setup();
+                WorldGenHandler.setup(event);
+
                 setupStage++;
 
-                //  StructureLocator.init();
+                StructureLocator.init();
                 setupStage++;
 
                 CompatHandler.init();
@@ -59,7 +57,7 @@ public class ModSetup {
                 WeatheredMap.init();
                 setupStage++;
 
-                WorldGenSetup.registerMobSpawns();
+                //WorldGenSetup.registerMobSpawns();
                 setupStage++;
 
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
@@ -95,7 +93,9 @@ public class ModSetup {
 
     private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
-        IllegalStateException e = new IllegalStateException("Mod setup has failed to complete (stage = " + setupStage + "). This might be due to some mod incompatibility. Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0");
+        IllegalStateException e = new IllegalStateException("Mod setup has failed to complete (stage = " + setupStage + ").\n" +
+                " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
+                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0");
         Supplementaries.LOGGER.throwing(e);
         throw e;
     }
@@ -156,15 +156,5 @@ public class ModSetup {
         LootTableStuff.injectLootTables(e);
     }
 
-    @SubscribeEvent
-    public static void serverAboutToStart(final ServerAboutToStartEvent event) {
-
-    }
-
-    //TODO: move to ModSetup
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void registerStuffToBiomes(BiomeLoadingEvent event) {
-        WorldGenSetup.registerStuffToBiomes(event);
-    }
 
 }

@@ -77,7 +77,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
-
     @Override
     public boolean isEnchantable(ItemStack stack) {
         return true;
@@ -161,17 +160,11 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         Level level = entity.level;
         int damage = this.getDamage(stack) + 1;
         if (damage > this.getMaxDamage(stack)) {
-            if (level.isClientSide && entity == Minecraft.getInstance().player) {
-                CURRENT_LOCAL_PLAYER_USE_ITEM = null;
-            }
             entity.stopUsingItem();
             return;
         }
         if (!(entity instanceof Player player) || !(player.getAbilities().instabuild)) {
             this.setDamage(stack, damage);
-        }
-        if (level.isClientSide && entity == Minecraft.getInstance().player) {
-            CURRENT_LOCAL_PLAYER_USE_ITEM = stack;
         }
 
         //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
@@ -188,33 +181,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
             level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
         }
-    }
-
-    private static ItemStack CURRENT_LOCAL_PLAYER_USE_ITEM = null;
-
-    //hacky. needed cause it glitches out since i'm changing its nbt constantly
-    public static float isBeingUsed(ItemStack stack, Level level, LivingEntity entity, int i) {
-        //if (level != null && level.isClientSide && entity == Minecraft.getInstance().player) {
-        //    InteractionHand hand = entity.get
-        //    return IS_LOCAL_PLAYER_USING ? 1 : 0;
-        //}&& entity.isUsingItem()
-
-        if (entity != null && entity.isUsingItem()) {
-            boolean local = false; //entity == Minecraft.getInstance().player;
-            boolean check = entity.getUseItem().equals(stack, true);
-
-            //local ? CURRENT_LOCAL_PLAYER_USE_ITEM == stack : entity.getUseItem().getItem() == stack.getItem();
-            return check ? 1.0F : 0.0F;
-        }
-        return 0;
-    }
-
-    @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int pTimeCharged) {
-        if (level.isClientSide && entity == Minecraft.getInstance().player) {
-            CURRENT_LOCAL_PLAYER_USE_ITEM = null;
-        }
-        super.releaseUsing(stack, level, entity, pTimeCharged);
     }
 
     @Override

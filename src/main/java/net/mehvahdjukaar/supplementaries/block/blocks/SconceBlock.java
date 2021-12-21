@@ -12,6 +12,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -33,6 +34,9 @@ public class SconceBlock extends LightUpWaterBlock {
             return data;
         });
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, true));
+    }
+    public <T extends ParticleType<?>> SconceBlock(Properties properties, int lightLevel, Supplier<T> particleData) {
+        this(properties.lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? lightLevel : 0), particleData);
     }
 
     @Override

@@ -118,6 +118,8 @@ public class ClientConfigs {
 
     public static class block {
 
+        public static ForgeConfigSpec.DoubleValue BUBBLE_BLOCK_WOBBLE;
+        public static ForgeConfigSpec.DoubleValue BUBBLE_BLOCK_GROW_SPEED;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPECIAL;
         public static ForgeConfigSpec.DoubleValue PEDESTAL_SPEED;
@@ -146,33 +148,35 @@ public class ClientConfigs {
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
-            builder.comment("Tweak and change the various block animations.\n" +
-                    "Only cosmetic stuff in here so to leave default if not interested.\n"+
-                    "Remember to delete this and server configs and let it refresh every once in a while since I might have tweaked it")
+            builder.comment("""
+                            Tweak and change the various block animations.
+                            Only cosmetic stuff in here so to leave default if not interested.
+                            Remember to delete this and server configs and let it refresh every once in a while since I might have tweaked it""")
                     .push("blocks");
 
             builder.push("globe");
             GLOBE_RANDOM = builder.comment("Enable a random globe texture for each world").define("random_world", true);
 
-            GLOBE_COLORS = builder.comment("Here you can put custom colors that will be assigned to each globe depending on the dimension where its placed:\n" +
-                    "To do so you'll have to make a list for one entry for every dimension you want to recolor as follows:\n"+
-                    "[[<id>,<c1>,...,<c12>],[<id>,<c1>,...,<c12>],...]\n"+
-                    "With the following description:\n"+
-                    " - <id> being the dimension id (ie: minecraft:the_nether)\n"+
-                    " - <c1> to <c12> will have to be 12 hex colors (without the #) that will represent each of the 17 globe own 'virtual biome'\n"+
-                    "Following are the virtual biomes that each index is associated with:\n"+
-                    " - 1: water light\n"+
-                    " - 2: water medium\n"+"" +
-                    " - 3: water dark\n"+
-                    " - 4: coast/taiga\n"+
-                    " - 5: forest\n"+
-                    " - 6: plains\n"+
-                    " - 7: savanna\n"+
-                    " - 8: desert\n"+
-                    " - 9: snow\n"+
-                    " - 10: ice\n"+
-                    " - 11: iceberg/island\n"+
-                    " - 12: mushroom island")
+            GLOBE_COLORS = builder.comment("""
+                            Here you can put custom colors that will be assigned to each globe depending on the dimension where its placed:
+                            To do so you'll have to make a list for one entry for every dimension you want to recolor as follows:
+                            [[<id>,<c1>,...,<c12>],[<id>,<c1>,...,<c12>],...]
+                            With the following description:
+                             - <id> being the dimension id (ie: minecraft:the_nether)
+                             - <c1> to <c12> will have to be 12 hex colors (without the #) that will represent each of the 17 globe own 'virtual biome'
+                            Following are the virtual biomes that each index is associated with:
+                             - 1: water light
+                             - 2: water medium
+                             - 3: water dark
+                             - 4: coast/taiga
+                             - 5: forest
+                             - 6: plains
+                             - 7: savanna
+                             - 8: desert
+                             - 9: snow
+                             - 10: ice
+                             - 11: iceberg/island
+                             - 12: mushroom island""")
                     .defineList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), LIST_STRING_CHECK);
 
             builder.pop();
@@ -185,9 +189,16 @@ public class ClientConfigs {
             PEDESTAL_SPIN = builder.comment("Enable displayed item spin")
                     .define("spin",true);
             PEDESTAL_SPEED = builder.comment("Spin speed")
-                    .defineInRange("speed",2f,0f,100f);
+                    .defineInRange("speed",2.0,0,100);
             PEDESTAL_SPECIAL = builder.comment("Enable special display types for items like swords, tridents or end crystals")
                     .define("fancy_renderers",true);
+            builder.pop();
+
+            builder.push("bubble_block");
+            BUBBLE_BLOCK_WOBBLE = builder.comment("Wobbling intensity. set to 0 to disable")
+                            .defineInRange("wobble", 0.2, 0, 1);
+            BUBBLE_BLOCK_GROW_SPEED = builder.comment("How fast it grows when created. 1 to be instant")
+                            .defineInRange("grow_speed", 0.4, 0,1);
             builder.pop();
 
             builder.push("item_shelf");
@@ -197,14 +208,15 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("wind_vane");
-            WIND_VANE_POWER_SCALING = builder.comment("Wind vane animation swings according to this equation: \n"+
-                    "angle(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)\n"+
-                    "where:\n"+
-                    " - pow = max(1,redstone_power*<power_scaling>)\n"+
-                    " - time = time in ticks\n"+
-                    " - redstone_power = block redstone power\n"+
-                    "<power_scaling> = how much frequency changes depending on power. 2 means it spins twice as fast each power level (2* for rain, 4* for thunder)\n" +
-                    "increase to have more distinct indication when weather changes")
+            WIND_VANE_POWER_SCALING = builder.comment("""
+                            Wind vane animation swings according to this equation:\s
+                            angle(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)
+                            where:
+                             - pow = max(1,redstone_power*<power_scaling>)
+                             - time = time in ticks
+                             - redstone_power = block redstone power
+                            <power_scaling> = how much frequency changes depending on power. 2 means it spins twice as fast each power level (2* for rain, 4* for thunder)
+                            increase to have more distinct indication when weather changes""")
                     .defineInRange("power_scaling", 3.0, 1.0, 100.0);
             WIND_VANE_ANGLE_1 = builder.comment("Amplitude (maximum angle) of first sine wave")
                     .defineInRange("max_angle_1", 30.0, 0, 360);
@@ -341,7 +353,7 @@ public class ClientConfigs {
         public static int TURN_PARTICLE_FADE_COLOR;
         public static int TURN_PARTICLE_COLOR;
         public static boolean COLORED_ARROWS;
-        public static boolean COLORED_BWERING_STAND;
+        public static boolean COLORED_BREWING_STAND;
         public static boolean CLOCK_CLICK;
         public static boolean TOOLTIP_HINTS;
         public static int FIREFLY_PAR_MAXAGE;
@@ -376,10 +388,12 @@ public class ClientConfigs {
         public static boolean WRENCH_PARTICLES;
         public static boolean FLUTE_PARTICLES;
         public static boolean SPEAKER_BLOCK_MUTE;
+        public static float BUBBLE_BLOCK_WOBBLE;
+        public static float BUBBLE_BLOCK_GROW_SPEED;
 
         public static void refresh(){
             //tweaks
-            COLORED_BWERING_STAND = tweaks.COLORED_BREWING_STAND.get();
+            COLORED_BREWING_STAND = tweaks.COLORED_BREWING_STAND.get();
             COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
             CLOCK_CLICK = tweaks.CLOCK_CLICK.get();
             BOOK_GLINT = tweaks.BOOK_GLINT.get();
@@ -393,6 +407,8 @@ public class ClientConfigs {
             FIREFLY_INTENSITY = entity.FIREFLY_INTENSITY.get();
             FIREFLY_EXPONENT = entity.FIREFLY_EXPONENT.get();
             //blocks
+            BUBBLE_BLOCK_WOBBLE = (float)(double)block.BUBBLE_BLOCK_WOBBLE.get()/10f;
+            BUBBLE_BLOCK_GROW_SPEED = (float)(double)block.BUBBLE_BLOCK_GROW_SPEED.get();
             PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
             PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
             PEDESTAL_SPECIAL = block.PEDESTAL_SPECIAL.get();

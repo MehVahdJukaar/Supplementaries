@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class CapturedMobCache {
 
     public static LoadingCache<UUID, Entity> cachedMobs = CacheBuilder.newBuilder()
@@ -61,9 +60,8 @@ public class CapturedMobCache {
         return e;
     }
 
-    @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null) pedestalCrystal.get().time++;
-    }
 
+    public static void tickCrystal() {
+        pedestalCrystal.get().time++;
+    }
 }

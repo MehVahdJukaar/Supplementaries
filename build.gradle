@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.0.7'
+version = '1.18.1-1.0.8'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 

@@ -46,7 +46,7 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public StatueBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(state->state.getValue(LIT) ? 7 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
@@ -134,11 +134,6 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
             return tile.isEmpty() ? 0 : 15;
         else
             return 0;
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return state.getValue(LIT) ? 7 : 0;
     }
 
     @Override

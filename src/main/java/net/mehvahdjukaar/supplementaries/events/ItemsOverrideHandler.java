@@ -56,6 +56,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.quark.content.tweaks.module.SignEditingModule;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -95,6 +96,7 @@ public class ItemsOverrideHandler {
         itemAction.add(new ClockItemBehavior());
 
         HPItemActionOnBlock.add(new WallLanternBehavior());
+        HPItemActionOnBlock.add(new AntiqueInkBehavior());
 
         itemActionOnBlock.add(new WrenchBehavior());
         itemActionOnBlock.add(new WallLanternBehavior());
@@ -108,7 +110,6 @@ public class ItemsOverrideHandler {
         itemActionOnBlock.add(new BookPileHorizontalBehavior());
         itemActionOnBlock.add(new PlaceableRodsBehavior());
         itemActionOnBlock.add(new PlaceableSticksBehavior<>(ModRegistry.STICK_BLOCK, Items.STICK));
-        itemActionOnBlock.add(new AntiqueInkBehavior());
         itemActionOnBlock.add(new SkullPileBehavior());
         itemActionOnBlock.add(new SkullCandlesBehavior());
 

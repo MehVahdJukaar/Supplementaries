@@ -178,17 +178,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(hw, 0, 0);
 
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, pV, r, g, b, 1, lu, lv, 0, 1, 0);
         matrixStack.translate(-w, 0, 0);
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, u, maxV, r, g, b, 1, lu, lv, 0, 1, 0);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, 1, 0);
         matrixStack.mulPose(rotation2);
         matrixStack.translate(w, 0, 0);
-        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        RendererUtil.addVert(builder, matrixStack, 0, h, 0, maxU, pV, r, g, b, 1, lu, lv, 0, 1, 0);
 
         matrixStack.popPose();
 

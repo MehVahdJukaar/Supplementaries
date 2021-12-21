@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -70,6 +71,11 @@ public class BubbleBlock extends Block implements EntityBlock {
         makeParticle(pos, level);
     }
 
+    @Override
+    public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
+        return true;
+    }
+
     public static void makeParticle(BlockPos pos, Level level) {
         level.addParticle(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
@@ -90,6 +96,16 @@ public class BubbleBlock extends Block implements EntityBlock {
         super.stepOn(level, pos, state, entity);
     }
 
+    @Override
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity p_152429_, float v) {
+        super.fallOn(level, state, pos, p_152429_, v);
+        if(!level.isClientSide){
+            if(v>3) breakBubble((ServerLevel) level,pos);
+            else level.scheduleTick(pos, this, (int) Mth.clamp(7-v/2,1, 5));
+
+        }
+
+    }
 
     @Override
     public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, Random random) {

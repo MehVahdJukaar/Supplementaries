@@ -148,7 +148,8 @@ public class ClientSetup {
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
-        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"), BubbleBlower::isBeingUsed);
+        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
 
 
         ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),

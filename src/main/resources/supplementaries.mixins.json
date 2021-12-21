@@ -39,6 +39,7 @@
     "VillagerFrickMixin",
     "VineMixin",
     "ZombieHorseMixin",
+    "accessors.ChunkGeneratorAccessor",
     "accessors.MineshaftAccessor"
   ],
   "client": [
