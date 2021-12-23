@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:story/smelt_iron",
+  "display": {
+    "icon": {
+      "item": "supplementaries:wrench"
+    },
+    "title": {
+      "translate": "advancements.story.wrench.title"
+    },
+    "description": {
+      "translate": "advancements.story.wrench.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "wrench": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "item": {
+          "items": [
+            "supplementaries:wrench"
+          ]
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "wrench"
+    ]
+  ]
+}

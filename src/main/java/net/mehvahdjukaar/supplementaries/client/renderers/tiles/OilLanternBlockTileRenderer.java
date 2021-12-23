@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.OilLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CopperLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.OilLanternBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;

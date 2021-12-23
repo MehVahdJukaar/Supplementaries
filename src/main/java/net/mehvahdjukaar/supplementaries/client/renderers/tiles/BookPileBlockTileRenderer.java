@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.BookPileHorizontalBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.VisualBook;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.VisualBook;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;

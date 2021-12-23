@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.capabilities.mobholder.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

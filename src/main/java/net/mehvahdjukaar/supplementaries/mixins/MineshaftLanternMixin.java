@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.CopperLanternBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CopperLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MineshaftAccessor;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.Direction;

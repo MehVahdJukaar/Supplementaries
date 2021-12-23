@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.minecraft.client.renderer.Sheets;

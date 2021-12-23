@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.CatSitOnBlockGoal;

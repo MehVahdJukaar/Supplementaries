@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;

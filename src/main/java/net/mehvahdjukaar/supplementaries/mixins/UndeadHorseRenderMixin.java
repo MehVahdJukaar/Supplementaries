@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.common.block.util.ICustomDataHolder;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

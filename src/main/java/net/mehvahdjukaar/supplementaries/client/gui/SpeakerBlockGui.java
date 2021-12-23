@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.ServerBoundSetSpeakerBlockPacket;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;

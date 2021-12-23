@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.ServerBoundSetBlackboardPacket;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;

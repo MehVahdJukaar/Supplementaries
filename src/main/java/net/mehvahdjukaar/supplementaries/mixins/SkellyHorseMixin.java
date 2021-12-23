@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.util.ICustomDataHolder;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.util.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

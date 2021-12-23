@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.CogBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CogBlock;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;

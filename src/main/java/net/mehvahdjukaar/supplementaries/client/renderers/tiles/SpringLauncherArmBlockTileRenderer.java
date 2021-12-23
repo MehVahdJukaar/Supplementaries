@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.blocks.SpringLauncherHeadBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.SpringLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;

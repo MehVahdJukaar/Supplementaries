@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.BambooSpikesBlock;
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.block.util.IInstanceTick;
-import net.mehvahdjukaar.supplementaries.compat.quark.BambooSpikesPistonMovement;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.util.IInstanceTick;
+import net.mehvahdjukaar.supplementaries.integration.quark.BambooSpikesPistonMovement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

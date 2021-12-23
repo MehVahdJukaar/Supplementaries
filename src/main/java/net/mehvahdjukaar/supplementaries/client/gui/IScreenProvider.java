@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
-import net.mehvahdjukaar.supplementaries.network.ClientBoundOpenScreenPacket;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundOpenScreenPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

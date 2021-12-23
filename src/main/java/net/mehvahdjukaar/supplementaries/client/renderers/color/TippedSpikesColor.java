@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.quark.QuarkPistonPlugin;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;

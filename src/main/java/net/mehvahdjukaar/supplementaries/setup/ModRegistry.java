@@ -1,21 +1,21 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.block.blocks.*;
-import net.mehvahdjukaar.supplementaries.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.CompatObjects;
-import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
-import net.mehvahdjukaar.supplementaries.compat.create.SchematicCannonStuff;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
+import net.mehvahdjukaar.supplementaries.integration.create.SchematicCannonStuff;
+import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.entities.*;
-import net.mehvahdjukaar.supplementaries.inventories.*;
-import net.mehvahdjukaar.supplementaries.items.*;
-import net.mehvahdjukaar.supplementaries.items.crafting.*;
-import net.mehvahdjukaar.supplementaries.items.enchantment.StasisEnchantment;
-import net.mehvahdjukaar.supplementaries.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.items.tabs.SupplementariesTab;
+import net.mehvahdjukaar.supplementaries.common.entities.*;
+import net.mehvahdjukaar.supplementaries.common.inventories.*;
+import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
+import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantment;
+import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
+import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,7 +35,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
@@ -82,6 +81,8 @@ public class ModRegistry {
         RECIPES.register(bus);
         PAINTINGS.register(bus);
         ENCHANTMENTS.register(bus);
+
+        CompatHandler.registerOptionalStuff();
     }
 
     //creative tab
@@ -101,13 +102,6 @@ public class ModRegistry {
     public static final RegistryObject<SoundEvent> GUNPOWDER_IGNITE = makeSoundEvent("block.gunpowder.ignite");
 
 
-    //dynamic registration so I can use their classes
-    //TODO: use deferred regiries
-    @SubscribeEvent
-    public static void registerCompatBlocks(final RegistryEvent.Register<Block> event) {
-        //CompatHandler.registerOptionalBlocks(event);
-    }
-
     @SubscribeEvent
     public static void registerCompatItems(final RegistryEvent.Register<Item> event) {
         //CompatHandler.registerOptionalItems(event);
@@ -118,11 +112,6 @@ public class ModRegistry {
                     .stacksTo(64)
                     .tab(CreativeModeTab.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
         }
-    }
-
-    @SubscribeEvent
-    public static void registerCompatRecipes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
-        CompatHandler.registerOptionalRecipes(event);
     }
 
     //entities

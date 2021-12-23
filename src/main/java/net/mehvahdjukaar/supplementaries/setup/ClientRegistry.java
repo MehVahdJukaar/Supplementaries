@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.SkullCandleOverlay;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
@@ -45,7 +45,7 @@ public class ClientRegistry {
         event.registerLayerDefinition(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.registerLayerDefinition(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.registerLayerDefinition(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
-        event.registerLayerDefinition(SKULL_CANDLE_OVERLAY, SkullCandleOverlay::createMesh);
+        event.registerLayerDefinition(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.registerLayerDefinition(JARVIS_MODEL, JarredModel::createMesh);
         event.registerLayerDefinition(PICKLE_MODEL, PickleModel::createMesh);
     }

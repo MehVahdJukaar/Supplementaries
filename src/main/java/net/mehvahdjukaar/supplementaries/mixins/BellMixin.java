@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.block.util.IBellConnections;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.IBellConnections;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;

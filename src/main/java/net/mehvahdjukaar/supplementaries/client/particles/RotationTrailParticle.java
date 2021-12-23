@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.common.VectorUtils;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.VectorUtils;
+import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

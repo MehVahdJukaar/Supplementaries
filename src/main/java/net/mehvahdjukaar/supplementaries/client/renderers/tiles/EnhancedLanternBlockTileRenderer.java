@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.block.tiles.EnhancedLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.minecraft.client.renderer.MultiBufferSource;

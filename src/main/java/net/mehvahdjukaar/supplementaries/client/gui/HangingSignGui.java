@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.ServerBoundSetTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;

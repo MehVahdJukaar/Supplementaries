@@ -2,10 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
-import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.PicklePacket;
-import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -19,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -39,6 +39,11 @@ public class PicklePlayer {
     }
 
     @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        PickleData.onPlayerLogin(event.getPlayer());
+    }
+
+    @SubscribeEvent
     public static void chat(ClientChatEvent event) {
 
         String m = event.getOriginalMessage();
@@ -49,7 +54,7 @@ public class PicklePlayer {
             if (jarvis)
                 Minecraft.getInstance().player.sendMessage(
                         new TextComponent("I am Jarman"), Util.NIL_UUID);
-        } else if (true || PickleData.isDev(id)) {
+        } else if (PickleData.isDev(id)) {
             if (m.startsWith("/pickle")) {
 
                 event.setCanceled(true);

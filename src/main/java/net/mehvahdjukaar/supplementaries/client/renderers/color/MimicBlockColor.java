@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;

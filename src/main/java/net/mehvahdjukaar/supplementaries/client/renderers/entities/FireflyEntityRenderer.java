@@ -6,7 +6,7 @@
 //import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 //import net.mehvahdjukaar.supplementaries.common.CommonUtil;
 //import net.mehvahdjukaar.supplementaries.common.Textures;
-//import net.mehvahdjukaar.supplementaries.entities.FireflyEntity;
+//import net.mehvahdjukaar.supplementaries.common.entities.FireflyEntity;
 //import net.minecraft.client.renderer.MultiBufferSource;
 //import net.minecraft.client.renderer.RenderType;
 //import net.minecraft.client.renderer.entity.EntityRenderer;

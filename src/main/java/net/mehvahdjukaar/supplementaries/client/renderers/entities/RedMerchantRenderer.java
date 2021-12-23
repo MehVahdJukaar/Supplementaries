@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.entities.RedMerchantEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.Textures;
+import net.mehvahdjukaar.supplementaries.common.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.PartPose;
@@ -25,7 +26,7 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
 
     @Override
     public ResourceLocation getTextureLocation(RedMerchantEntity entity) {
-        return Textures.RED_MERCHANT;
+        return CommonUtil.FESTIVITY.isChristmas() ? Textures.RED_MERCHANT_CHRISTMAS : Textures.RED_MERCHANT;
     }
 
     @Override

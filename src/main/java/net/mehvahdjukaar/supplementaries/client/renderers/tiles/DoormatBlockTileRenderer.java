@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.block.tiles.DoormatBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;

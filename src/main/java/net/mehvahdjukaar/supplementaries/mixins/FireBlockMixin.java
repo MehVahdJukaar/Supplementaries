@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.block.blocks.AshLayerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FireBlock;

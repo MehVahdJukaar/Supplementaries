@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.block.tiles.EnhancedSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.SkullModel;

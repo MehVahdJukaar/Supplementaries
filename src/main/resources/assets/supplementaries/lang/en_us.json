@@ -279,6 +279,12 @@
   "block.supplementaries.globe_sepia": "Sepia Globe",
   "message.supplementaries.present": "To: %s",
   "block.supplementaries.bubble_block": "Bubble Block",
+  "advancements.nether.goblet.title": "Consume the Concoction Chalice",
+  "advancements.nether.goblet.description": "Drink from a Chalice",
+  "advancements.story.turn_table.title": "How the Turn Tables",
+  "advancements.story.turn_table.description": "Use a Turn Table to rotate yourself",
+  "gui.supplementaries.present": "Gift",
+
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
