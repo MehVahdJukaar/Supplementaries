@@ -140,8 +140,6 @@ public class RegistryConfigs {
         //oh god what have I done
         public static boolean isEnabled(String path) {
 
-            if(path.equals(ModRegistry.PRESENT_NAME)) return false;
-
             switch (path) {
                 case ModRegistry.GLOBE_SEPIA_NAME:
                     return reg.GLOBE_SEPIA.get() && reg.ANTIQUE_INK_ENABLED.get();
@@ -266,8 +264,7 @@ public class RegistryConfigs {
             SOAP_ENABLED = builder.define(ModRegistry.SOAP_NAME, true);
             BUBBLE_BLOWER_ENABLED = builder.define(ModRegistry.BUBBLE_BLOWER_NAME, true);
             GLOBE_SEPIA = builder.define(ModRegistry.GLOBE_SEPIA_NAME, true);
-
-            PRESENT_ENABLED = builder.comment("WIP").define(ModRegistry.PRESENT_NAME, true);
+            PRESENT_ENABLED = builder.define(ModRegistry.PRESENT_NAME, true);
 
 
             builder.pop();

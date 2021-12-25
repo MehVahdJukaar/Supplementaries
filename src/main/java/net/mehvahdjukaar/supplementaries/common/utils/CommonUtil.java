@@ -95,7 +95,7 @@ public class CommonUtil {
             if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
             if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
             if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
-            if (month == Calendar.DECEMBER && date >= 24 && date <= 26) return CHRISTMAS;
+            if (month == Calendar.DECEMBER && date >= 23 && date <= 27) return CHRISTMAS;
             if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
             if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
             return NONE;

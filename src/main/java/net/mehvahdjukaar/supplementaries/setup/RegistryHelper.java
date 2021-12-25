@@ -220,11 +220,11 @@ public class RegistryHelper {
             //ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)
             var p = ModRegistry.PRESENTS.get(color);
             map.put(color, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
-                    (new Item.Properties()).tab(getTab(null, ModRegistry.PRESENT_NAME)))));
+                    (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)))));
         }
         var p = ModRegistry.PRESENTS.get(null);
         map.put(null, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
-                (new Item.Properties()).tab(getTab(null, ModRegistry.PRESENT_NAME)))));
+                (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)))));
 
         return map;
     }

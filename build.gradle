@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.0.8'
+version = '1.18.1-1.1.0'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -127,7 +127,7 @@ dependencies {
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
     implementation fg.deobf("curse.maven:create-328085:3564692")
-    implementation fg.deobf("curse.maven:flywheel-486392:3564677")
+    implementation fg.deobf("curse.maven:flywheel-486392:3568139")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")

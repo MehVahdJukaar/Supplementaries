@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -31,7 +32,14 @@ public class PresentItem extends BlockItem {
         if (tag != null) {
             CompoundTag t = tag.getCompound("BlockEntityTag");
             if(!t.isEmpty()){
-                components.add(new TranslatableComponent("message.supplementaries.present", t.get("Recipient")));
+                if(t.contains("Sender")){
+                    var c = PresentBlockTile.getSenderMessage(t.getString("Sender"));
+                    if(c != null) components.add(c);
+                }
+                if(t.contains("Recipient")){
+                    var c = PresentBlockTile.getRecipientMessage(t.getString("Recipient"));
+                    if(c != null) components.add(c);
+                }
             }
         }
     }

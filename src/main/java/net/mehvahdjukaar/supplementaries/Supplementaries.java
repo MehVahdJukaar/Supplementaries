@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vazkii.quark.content.tweaks.module.DragonScalesModule;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -153,6 +154,7 @@ public class Supplementaries {
         //redo achievement rendering
         //better badlands kindling gunpowder compat (whenevr it updates lol)
         //better fodder pathfinding
+        //TODO fix randomium recipe jei extensin
 
         ConfigHandler.init();
 

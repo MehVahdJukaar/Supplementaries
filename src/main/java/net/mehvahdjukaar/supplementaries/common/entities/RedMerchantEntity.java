@@ -129,7 +129,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     @Override
     public void updateTrades() {
         MerchantOffers merchantoffers = this.getOffers();
-        this.addOffersFromItemListings(merchantoffers, VillagerTradesHandler.TRADES, 7);
+        this.addOffersFromItemListings(merchantoffers, VillagerTradesHandler.getRedMerchantTrades(), 7);
     }
 
     @Override

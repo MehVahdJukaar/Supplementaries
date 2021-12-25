@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -42,7 +44,7 @@ import java.util.List;
 
 public class PresentBlock extends WaterBlock implements EntityBlock {
 
-    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty PACKED = BlockProperties.PACKED;
 
     private final DyeColor color;
 
@@ -52,12 +54,12 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     public PresentBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
-        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PACKED, false).setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(OPEN, WATERLOGGED);
+        builder.add(PACKED, WATERLOGGED);
     }
 
     @Override
@@ -79,29 +81,10 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
             return InteractionResult.CONSUME;
         } else {
             if (worldIn.getBlockEntity(pos) instanceof PresentBlockTile tile) {
-                if (true || tile.isUnused()) {
-                    NetworkHooks.openGui((ServerPlayer) player, tile, pos);
-                    PiglinAi.angerNearbyPiglins(player, true);
-                    return InteractionResult.CONSUME;
-                }
+                return tile.interact((ServerPlayer) player, pos);
             }
         }
         return InteractionResult.PASS;
-    }
-
-
-    public ItemStack getPresentItem(PresentBlockTile te) {
-        CompoundTag compoundTag = new CompoundTag();
-        te.saveAdditional(compoundTag);
-        ItemStack itemstack = new ItemStack(this);
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (te.hasCustomName()) {
-            itemstack.setHoverName(te.getCustomName());
-        }
-        return itemstack;
     }
 
     //overrides creative drop
@@ -109,7 +92,7 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof PresentBlockTile tile) {
             if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                ItemStack itemstack = this.getPresentItem(tile);
+                ItemStack itemstack = tile.getPresentItem(this);
 
                 ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
@@ -125,7 +108,7 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof PresentBlockTile tile) {
-            ItemStack itemstack = this.getPresentItem(tile);
+            ItemStack itemstack = tile.getPresentItem(this);
 
             return Collections.singletonList(itemstack);
         }
@@ -136,7 +119,7 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
         if (world.getBlockEntity(pos) instanceof PresentBlockTile tile) {
-            return getPresentItem(tile);
+            return tile.getPresentItem(this);
         }
         return itemstack;
     }
@@ -157,9 +140,9 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if (state.getValue(OPEN))
-            return SHAPE_OPEN;
-        return SHAPE_CLOSED;
+        if (state.getValue(PACKED))
+            return SHAPE_CLOSED;
+        return SHAPE_OPEN;
     }
 
     @Override
@@ -184,5 +167,16 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
         BlockEntity blockEntity = worldIn.getBlockEntity(pos);
         return blockEntity instanceof MenuProvider ? (MenuProvider) blockEntity : null;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state =  super.getStateForPlacement(context);
+        CompoundTag tag = context.getItemInHand().getTag();
+        if(tag != null && tag.contains("BlockEntityTag")){
+            CompoundTag t = tag.getCompound("BlockEntityTag");
+            if(t.contains("Items")) state = state.setValue(PACKED, true);
+        }
+        return state;
     }
 }

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -41,17 +42,24 @@ public class ServerBoundSetPresentPacket {
 
     public static void handler(ServerBoundSetPresentPacket message, Supplier<NetworkEvent.Context> ctx) {
         // server world
-        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
+        ServerPlayer player = Objects.requireNonNull(ctx.get().getSender());
+        Level world = player.level;
         ctx.get().enqueueWork(() -> {
             BlockPos pos = message.pos;
             if (world.getBlockEntity(message.pos) instanceof PresentBlockTile present) {
-                world.playSound(null, message.pos, SoundEvents.VILLAGER_WORK_LEATHERWORKER, SoundSource.BLOCKS, 1, 1.3f);
-                present.pack(message.recipient, message.sender, message.packed);
+                //TODO: sound here
 
-                //updates client
+                present.updateState(message.recipient, message.sender, message.packed);
+
                 BlockState state = world.getBlockState(pos);
                 present.setChanged();
+                //also sends new block to clients
                 world.sendBlockUpdated(pos, state, state, 3);
+
+                //if I'm packing also closes the gui
+                if (message.packed) {
+                    player.doCloseContainer();
+                }
             }
         });
         ctx.get().setPacketHandled(true);

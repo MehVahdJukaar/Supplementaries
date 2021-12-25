@@ -8,6 +8,12 @@
       "item": "supplementaries:ash_bricks"
     }
   },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
   "result": {
     "item": "supplementaries:ash_bricks_slab",
     "count": 6

@@ -50,8 +50,10 @@ public class BlockProperties {
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
+    public static final BooleanProperty PACKED = BooleanProperty.create("packed");
     public static final IntegerProperty ROTATION_16_UP = IntegerProperty.create("rotation_up", 0, 15);
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
+
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -59,6 +61,7 @@ public class BlockProperties {
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
+
 
     public enum PostType implements StringRepresentable {
         POST("post", 4),

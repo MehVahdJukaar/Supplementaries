@@ -4,10 +4,11 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPacket;
+import net.mehvahdjukaar.supplementaries.common.utils.Textures;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -15,44 +16,52 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
+
+    private static final Component SEND_TO = (new TranslatableComponent("gui.supplementaries.present.send"))
+            .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC);
+    private static final Component PACK = (new TranslatableComponent("gui.supplementaries.present.pack"));
 
     private static final int SUGGESTION_BOX_H = 12;
     private static final int MAX_SUGGESTIONS = 3;
     private static final int SUGGESTION_LIST_H = SUGGESTION_BOX_H * MAX_SUGGESTIONS;
-    private static final int SCROLL_BAR_TOP_POS_Y = 33;
+    private static final int SUGGESTION_LIST_Y = 33;
     private static final int SCROLL_BAR_START_X = 153;
+    private static final int SUGGESTION_LIST_X = 51;
+    private static final int SUGGESTION_BOX_W = 101;
     private static final int SCROLLER_W = 6;
     private static final int SCROLLER_H = 17;
 
-    protected EditBox recipient;
+
+    protected PresentTextFieldWidget recipient;
     private PackButton packButton;
     private final PresentBlockTile tile;
-    private int scrollOff;
-    private boolean isDragging;
 
-    private final List<String> suggestions = new ArrayList<>();
+    private FilteredPlayerListWidget playerList;
+
+    private boolean packed;
+    //hasn't received items yet
+    private boolean needsInitialization = true;
 
     public static MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
-                if (te instanceof PresentBlockTile) {
-                    return new PresentBlockGui(container, inventory, title, (PresentBlockTile) te);
-                }
+                if (te instanceof PresentBlockTile presentBlockTile)
+                    return new PresentBlockGui(container, inventory, title, presentBlockTile);
                 return null;
             };
 
@@ -64,76 +73,84 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         this.tile = tile;
     }
 
-    public void addPlayer(){
-
-    }
-
-    public void removePlayer(){
-
-    }
-
     @Override
     public void init() {
         super.init();
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-
-
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        this.packButton = this.addRenderableWidget(new PackButton(i + 14, j + 48));
-
-        this.recipient = new PresentTextFieldWidget(this.font, i + 53, j + 18,
-                99, 12, new TranslatableComponent("container.repair"));
-        this.recipient.setCanLoseFocus(true);
-        this.recipient.setTextColor(-1);
-        this.recipient.setTextColorUneditable(-1);
-        this.recipient.setBordered(false);
-        this.recipient.setMaxLength(35);
-        String rec = this.tile.getRecipient();
-        if (!rec.isEmpty()) this.recipient.setValue(rec);
-
-        this.addRenderableWidget(recipient);
-
-        this.recipient.active = false;
-        this.recipient.setEditable(false);
-
         this.menu.addSlotListener(this);
 
-        if (!tile.getDisplayedItem().isEmpty()) {
-            this.recipient.setFocus(true);
-        }
-        if (tile.isPacked()) this.setPacked();
+        this.playerList = this.addRenderableWidget(new FilteredPlayerListWidget(this.minecraft,
+                i + SUGGESTION_LIST_X, j + SUGGESTION_LIST_Y, this::setRecipient));
+
+        this.packButton = this.addRenderableWidget(new PackButton(i + 14, j + 45));
+
+        this.recipient = this.addRenderableWidget(new PresentTextFieldWidget(this.font, i + 53, j + 18,
+                99, 12, new TranslatableComponent("container.repair")));
+        this.recipient.setValue(this.tile.getRecipient());
 
 
+        this.setFocused(this.recipient);
+
+        this.packed = this.tile.isPacked();
+        this.updateState();
     }
 
+    public void onAddPlayer(PlayerInfo info) {
+        this.playerList.addPlayer(info);
+    }
 
-    private void setPacked() {
-        this.packButton.active = false;
-        this.recipient.active = false;
-        this.recipient.setFocus(false);
-        this.recipient.setEditable(false);
-        this.setFocused(null);
+    public void onRemovePlayer(UUID uuid) {
+        this.playerList.removePlayer(uuid);
+    }
+
+    protected void setRecipient(String recipient) {
+        this.recipient.setValue(recipient);
+    }
+
+    private void pack() {
+        this.updateStateAndTryToPack(true);
+    }
+
+    private void updateState() {
+        this.updateStateAndTryToPack(false);
+    }
+
+    private void updateStateAndTryToPack(boolean tryToPack) {
+        boolean hasItem = this.needsInitialization ? this.packed : this.menu.getSlot(0).hasItem();
+        //pack
+        boolean hasChanged = false;
+        //truth table shit. idk, could be written more readable
+        if (this.packed && !hasItem) {
+            this.packed = false;
+            hasChanged = true;
+        } else if (tryToPack && !this.packed && hasItem) {
+            this.packed = true;
+            hasChanged = true;
+        }
+
+        if (hasChanged) {
+            String sender = Minecraft.getInstance().player.getName().getString();
+            NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
+                    this.packed, this.recipient.getValue(), sender));
+            this.tile.updateState(this.recipient.getValue(), sender, this.packed);
+
+            //close on client when packed. server side is handled by packet when it arrives
+            if(this.packed) this.minecraft.player.clientSideCloseContainer();
+        }
+
+        this.recipient.setState(hasItem, this.packed);
+        this.packButton.setState(hasItem, this.packed);
+        this.playerList.setState(hasItem, this.packed);
     }
 
     @Override
     public void slotChanged(AbstractContainerMenu container, int slot, ItemStack stack) {
         if (slot == 0) {
-            if (stack.isEmpty()) {
-                this.setFocused(null);
-                this.recipient.active = false;
-                this.recipient.setEditable(false);
-                this.packButton.active = true;
-                this.recipient.setValue("");
-
-            } else {
-                this.setFocused(recipient);
-                this.recipient.setFocus(true);
-                this.recipient.active = true;
-                this.recipient.setEditable(true);
-            }
+            updateState();
         }
     }
 
@@ -142,61 +159,39 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         this.slotChanged(container, 0, container.getSlot(0).getItem());
     }
 
-
-    private boolean canWrite() {
-        return !tile.isPacked() && this.menu.getSlot(0).hasItem();
-    }
-
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+        this.renderBackground(matrixStack);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
-
-        this.blit(matrixStack, k + 50, l + 14, 0, this.imageHeight + (this.canWrite() ? 0 : 16), 110, 16);
-
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.recipient.render(poseStack, mouseX, mouseY, partialTicks);
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
-        this.renderScroller(poseStack, x, y, 3);
-        this.renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    private void renderScroller(PoseStack poseStack, int x, int y, int playerListSize) {
-        RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        int currentIndex = playerListSize + 1 - MAX_SUGGESTIONS;
-        if (currentIndex > 1) {
-            int a = SUGGESTION_LIST_H - (SCROLLER_H + (currentIndex - 1) * SUGGESTION_LIST_H / currentIndex);
-            int b = 1 + a / currentIndex + SUGGESTION_LIST_H / currentIndex;
-            int scroll = Math.min(SUGGESTION_LIST_H - SCROLLER_H, this.scrollOff * b);
-            if (this.scrollOff == currentIndex - 1) {
-                scroll = SUGGESTION_LIST_H - SCROLLER_H;
+        if (this.packed) {
+            Component c = tile.getSenderMessage();
+            if (c != null) {
+                drawString(poseStack, this.font, c, this.playerList.x + 3, this.playerList.y + 3, -1);
             }
+            int k = (this.width - this.imageWidth) / 2;
+            int l = (this.height - this.imageHeight) / 2;
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
+            Slot slot = this.menu.getSlot(0);
 
-            blit(poseStack, x + SCROLL_BAR_START_X, y + SCROLL_BAR_TOP_POS_Y + scroll, this.getBlitOffset(), 0.0F, 232, SCROLLER_W, SCROLLER_H, 256, 256);
-        } else {
-            blit(poseStack, x + SCROLL_BAR_START_X, y + SCROLL_BAR_TOP_POS_Y, this.getBlitOffset(), SCROLLER_W, 232, SCROLLER_W, SCROLLER_H, 256, 256);
+            this.blit(poseStack, k + slot.x, l + slot.y, 12, 232, 16, 16);
         }
-
+        this.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(PoseStack poseStack, int x, int y) {
         super.renderLabels(poseStack, x, y);
-
-        if (packButton.isHoveredOrFocused()) {
-            packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
-        }
-
+        packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
     }
 
     @Override
@@ -204,120 +199,77 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         if (key == 256) {
             this.minecraft.player.closeContainer();
         }
-        //up arrow
-        if (key == 265) {
-            //this.switchFocus();
+        //, enter
+        else if (key == 257 || key == 335) {
+            this.pack();
             return true;
         }
-        // down arrow, enter
-        else if (key == 264 || key == 257 || key == 335) {
-            //this.switchFocus();
-            return true;
-        }
-        return this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput() || super.keyPressed(key, a, b);
-    }
-
-    private void updateSuggestionList() {
-
-    }
-
-    private boolean canScroll(int i) {
-        return i > MAX_SUGGESTIONS;
+        return this.playerList.keyPressed(key, a, b) ||
+                this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput() ||
+                super.keyPressed(key, a, b);
     }
 
     @Override
-    public boolean mouseScrolled(double a, double b, double c) {
-        int i = this.suggestions.size();
-        if (this.canScroll(i)) {
-            int j = i - MAX_SUGGESTIONS;
-            this.scrollOff = (int) ((double) this.scrollOff - c);
-            this.scrollOff = Mth.clamp(this.scrollOff, 0, j);
+    public boolean mouseDragged(double dx, double dy, int key, double mouseX, double mouseY) {
+        if (key == 0) {
+            if (this.playerList.mouseDragged(dx, dy, key, mouseX, mouseY)) return true;
         }
-
-        return true;
+        return super.mouseDragged(dx, dy, key, mouseX, mouseY);
     }
 
     @Override
-    public boolean mouseDragged(double dx, double dy, int key, double x, double y) {
-        int i = this.suggestions.size();
-        if (this.isDragging) {
-            int j = this.topPos + SCROLL_BAR_TOP_POS_Y;
-            int k = j + SUGGESTION_LIST_H;
-            int l = i - MAX_SUGGESTIONS;
-            float f = ((float) dy - (float) j - 13.5F) / ((float) (k - j) - SCROLLER_H);
-            f = f * (float) l + 0.5F;
-            this.scrollOff = Mth.clamp((int) f, 0, l);
-            return true;
-        } else {
-            return super.mouseDragged(dx, dy, key, x, y);
-        }
-    }
-
-    @Override
-    public boolean mouseClicked(double x, double y, int key) {
-        this.isDragging = false;
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        if (this.canScroll(this.suggestions.size()) && x > (double) (i + SCROLL_BAR_START_X) && x < (double) (i + SCROLL_BAR_START_X + SCROLLER_W) &&
-                y > (double) (j + SCROLL_BAR_TOP_POS_Y) && y <= (double) (j + SCROLL_BAR_TOP_POS_Y + SUGGESTION_LIST_H + 1)) {
-            this.isDragging = true;
-        }
-
-        return super.mouseClicked(x, y, key);
+    public void containerTick() {
+        this.needsInitialization = false;
+        super.containerTick();
+        this.recipient.tick();
     }
 
     @Override
     public void removed() {
         super.removed();
+        this.menu.removeSlotListener(this);
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
-        String sender = Minecraft.getInstance().player.getName().getString();
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
-                !this.packButton.active, this.recipient.getValue(), sender));
-        //update client immediately
-        this.tile.pack(this.recipient.getValue(), sender, !this.packButton.active);
     }
 
     public class PackButton extends AbstractButton {
-        private boolean selected;
+        private boolean packed;
 
         protected PackButton(int x, int y) {
             super(x, y, 22, 22, TextComponent.EMPTY);
         }
 
         @Override
-        public void renderButton(PoseStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(PoseStack poseStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
             RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
             int j = 0;
             if (!this.active) {
                 j += this.width * 2;
-            } else if (this.selected) {
+            } else if (this.packed) {
                 j += this.width * 1;
             } else if (this.isHovered) {
                 j += this.width * 3;
             }
 
-            this.blit(p_230431_1_, this.x, this.y, j, i, this.width, this.height);
+            this.blit(poseStack, this.x, this.y, j, i, this.width, this.height);
         }
 
-
-        public boolean isSelected() {
-            return this.selected;
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected = selected;
+        public void setState(boolean hasItem, boolean packed) {
+            this.packed = packed;
+            this.active = hasItem;
         }
 
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
-            PresentBlockGui.this.renderTooltip(matrixStack, CommonComponents.GUI_DONE, x, y);
+            if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
+                PresentBlockGui.this.renderTooltip(matrixStack, PACK, x, y);
+            }
         }
 
         @Override
         public void onPress() {
-            PresentBlockGui.this.setPacked();
+            PresentBlockGui.this.pack();
         }
 
         @Override
@@ -327,9 +279,18 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
     }
 
     private class PresentTextFieldWidget extends EditBox {
+        private final Font font;
+        private String fullSuggestion = "";
 
         public PresentTextFieldWidget(Font fontRenderer, int x, int y, int width, int height, Component text) {
             super(fontRenderer, x, y, width, height, text);
+            this.font = fontRenderer;
+            this.setResponder(this::onValueChanged);
+            this.setTextColor(-1);
+            this.setTextColorUneditable(-1);
+            this.setBordered(false);
+            this.setMaxLength(15);
+            this.setCanLoseFocus(false);
         }
 
         @Override
@@ -339,6 +300,56 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
                 return super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
             }
             return false;
+        }
+
+        @Override
+        public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+            this.blit(poseStack, this.x - 3, this.y - 4, 0,
+                    166 + (this.active ? 0 : 16), 110, 16);
+            super.render(poseStack, mouseX, mouseY, partialTicks);
+            if (this.getValue().isEmpty() && this.isFocused()) {
+                drawString(poseStack, this.font, SEND_TO, this.x, this.y, 0);
+            }
+        }
+
+        @Override
+        public boolean keyPressed(int key, int p_94133_, int p_94134_) {
+            //fill in suggestion
+            if (key == 258 && this.canConsumeInput()) {
+                if (!this.fullSuggestion.isEmpty()) {
+                    this.setValue(this.fullSuggestion);
+                }
+                return true;
+            }
+            return super.keyPressed(key, p_94133_, p_94134_);
+        }
+
+        private void onValueChanged(String newValue) {
+            List<String> list = PresentBlockGui.this.playerList.setFilter(newValue);
+            String suggestion = "";
+            this.fullSuggestion = "";
+            if (!newValue.isEmpty()) {
+                for (String s : list) {
+                    suggestion = s.substring(newValue.length());
+                    this.fullSuggestion = s;
+                    break;
+                }
+            }
+            this.setSuggestion(suggestion);
+        }
+
+        //editble/ non editable
+        public void setState(boolean hasItem, boolean packed) {
+            this.setSuggestion(null);
+            if (packed) {
+                this.setFocus(false);
+                this.active = true;
+            } else {
+                this.setFocus(hasItem);
+                this.setEditable(hasItem);
+                this.active = hasItem;
+                if (!hasItem) this.setValue("");
+            }
         }
     }
 

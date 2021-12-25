@@ -51,7 +51,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
         int k = j + 16 + 2;
 
         for (int l = 0; l < 7; ++l) {
-            this.tradeOfferButtons[l] = this.addWidget(new RedMerchantGui.TradeOfferButton(i + 5, k, l, (p_214132_1_) -> {
+            this.tradeOfferButtons[l] = this.addRenderableWidget(new RedMerchantGui.TradeOfferButton(i + 5, k, l, (p_214132_1_) -> {
                 if (p_214132_1_ instanceof RedMerchantGui.TradeOfferButton) {
                     this.shopItem = ((RedMerchantGui.TradeOfferButton) p_214132_1_).getIndex() + this.scrollOff;
                     this.postButtonClick();

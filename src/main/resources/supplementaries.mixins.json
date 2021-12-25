@@ -49,6 +49,7 @@
     "LevelRendererMixin",
     "LoomScreenFlagMixin",
     "ParrotMixin",
+    "PlayerSocialManagerMixin",
     "UndeadHorseRenderMixin",
     "VillagerModelMixin"
   ],

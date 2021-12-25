@@ -33,7 +33,7 @@
     {
       "conditions": [
         {
-          "flag": "stone_tile",
+          "flag": "ash_bricks",
           "type": "supplementaries:flag"
         },
         {

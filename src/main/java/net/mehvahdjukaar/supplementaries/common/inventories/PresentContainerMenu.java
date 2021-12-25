@@ -15,9 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Objects;
 
 
-public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider{
-    public final Container inventory;
+public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
+    private final Container inventory;
     private final BlockPos pos;
 
     @Override
@@ -25,9 +25,9 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return inventory;
     }
 
+    //client container factory
     public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory, null, packetBuffer.readBlockPos());
-
     }
 
     public PresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
@@ -46,7 +46,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(this.inventory, 0, 17, 18) {
+        this.addSlot(new Slot(this.inventory, 0, 17, 20) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return PresentBlockTile.isAcceptableItem(stack);
@@ -69,10 +69,6 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return this.inventory.stillValid(playerIn);
     }
 
-    /**
-     * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
-     * inventory and the other inventory(s).
-     */
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -98,13 +94,14 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return itemstack;
     }
 
-    /**
-     * Called when the container is closed.
-     */
     @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
+        if (playerIn.level.getBlockEntity(this.pos) instanceof PresentBlockTile tile && !tile.isPacked()) {
+            this.clearContainer(playerIn, this.inventory);
+        }
+
     }
 
 }
