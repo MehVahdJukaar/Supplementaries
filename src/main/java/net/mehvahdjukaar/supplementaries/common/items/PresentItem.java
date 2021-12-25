@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;

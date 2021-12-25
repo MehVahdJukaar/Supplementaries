@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.ModList;
 
 import java.util.*;

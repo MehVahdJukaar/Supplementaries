@@ -1,27 +1,33 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.tetra.TetraToolHelper;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
@@ -31,6 +37,7 @@ public class CommonUtil {
     public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
     public static DamageSource BOTTLING_DAMAGE = (new DamageSource("supplementaries.xp_extracting"));
     public static DamageSource AMETHYST_SHARD_DAMAGE = (new DamageSource("supplementaries.amethyst_shard"));
+
 
     //public static DamageSource getAmethystDamageSource(AbstractArrowEntity arrowEntity, @Nullable Entity shooter) {
     //    return (new IndirectEntityDamageSource("amethyst_shard", arrowEntity, shooter)).setProjectile();
@@ -235,5 +242,17 @@ public class CommonUtil {
         return Minecraft.getInstance().player;
     }
 
+
+    public static HitResult rayTrace(LivingEntity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
+        return rayTrace(entity, world, blockMode, fluidMode, entity.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue());
+    }
+
+    public static HitResult rayTrace(Entity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
+        Vec3 startPos = entity.getEyePosition();;
+        Vec3 ray = entity.getViewVector(1).scale(range);
+        Vec3 endPos = startPos.add(ray);
+        ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);
+        return world.clip(context);
+    }
 
 }

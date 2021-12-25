@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
+import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;

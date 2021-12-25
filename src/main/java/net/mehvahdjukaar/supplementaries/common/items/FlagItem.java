@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BannerItem;

@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -39,8 +38,12 @@ public class SudsParticle extends BubbleBlockParticle {
     @Override
     public void tick() {
         if (this.age > 6) this.hasPhysics = true;
-
         super.tick();
+        this.setColorForAge();
+    }
+
+    @Override
+    public void updateSprite() {
         int i = this.lifetime - this.age;
         int s = 2;
         if (i < 3 * s) {
@@ -48,12 +51,7 @@ public class SudsParticle extends BubbleBlockParticle {
             int j = Math.max(i, 0) / s;
             this.setSprite(this.sprites.get((int) (30 * (3f - j) / (length - 1f)), 30));
         }
-
-
-        this.setColorForAge();
     }
-
-
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
 

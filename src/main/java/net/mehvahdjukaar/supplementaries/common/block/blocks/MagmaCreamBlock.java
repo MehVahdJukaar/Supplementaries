@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,12 +20,11 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import vazkii.quark.api.IConditionalSticky;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MagmaCreamBlock extends HalfTransparentBlock implements IConditionalSticky {
+public class MagmaCreamBlock extends HalfTransparentBlock {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
 
     public MagmaCreamBlock(Properties properties) {
@@ -100,7 +99,7 @@ public class MagmaCreamBlock extends HalfTransparentBlock implements IConditiona
         super.stepOn(worldIn, pos, state, entityIn);
     }
 
-    @Override
+
     public boolean canStickToBlock(Level world, BlockPos pistonPos, BlockPos fromPos, BlockPos toPos, BlockState fromState, BlockState toState, Direction moveDir) {
         if (fromState.getBlock() == this) {
             Direction stickDir = fromState.getValue(FACING);

@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
-import static net.minecraftforge.common.BiomeDictionary.Type.RIVER;
 
 public class WorldGenHandler {
 

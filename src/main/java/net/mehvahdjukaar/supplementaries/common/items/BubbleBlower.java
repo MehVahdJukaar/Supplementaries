@@ -5,6 +5,7 @@ import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
@@ -29,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import vazkii.quark.base.handler.RayTraceHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,9 +49,8 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     public InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
-
-        HitResult result = player.getAbilities().instabuild ? RayTraceHandler.rayTrace(player, level, player, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
-                RayTraceHandler.rayTrace(player, level, player, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
+        HitResult result = player.getAbilities().instabuild ? CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
+                CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
 
         if (result instanceof BlockHitResult hitResult) {
             BlockPos pos = hitResult.getBlockPos();

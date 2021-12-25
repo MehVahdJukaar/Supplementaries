@@ -36,8 +36,12 @@ public class BubbleBlockParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
-        this.setSpriteFromAge(this.sprites);
+        this.updateSprite();
         this.setAlpha(Mth.lerp(0.05F, this.alpha, 1.0F));
+    }
+
+    public void updateSprite(){
+        this.setSpriteFromAge(this.sprites);
     }
 
     protected static double rand(double min, double variation) {

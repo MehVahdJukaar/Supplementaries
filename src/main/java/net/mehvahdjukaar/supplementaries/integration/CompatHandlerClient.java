@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatClient;
 import net.mehvahdjukaar.supplementaries.integration.flywheel.FlywheelPlugin;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CompatHandlerClient {

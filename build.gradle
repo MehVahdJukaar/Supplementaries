@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.0'
+version = '1.18.1-1.1.1'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -120,24 +120,26 @@ dependencies {
 
     implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
-    //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
     implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
     implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
-    //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
     implementation fg.deobf("curse.maven:create-328085:3564692")
     implementation fg.deobf("curse.maven:flywheel-486392:3568139")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
+    implementation fg.deobf("curse.maven:quark-243121:3545695")
+    implementation fg.deobf("curse.maven:jei-238222:3550020")
+    implementation fg.deobf("curse.maven:malum-484064:3579643")
+    //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
+    //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
+    //implementation fg.deobf("curse.maven:tetra-289712:3371803")
+    //implementation fg.deobf("curse.maven:mgui-351914:3291267")
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")
     //implementation fg.deobf("curse.maven:mantle-250363:3326041")
     //implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
     //implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
-    implementation fg.deobf("curse.maven:jei-238222:3550020")
-    //implementation fg.deobf("curse.maven:tetra-289712:3371803")
-    //implementation fg.deobf("curse.maven:mgui-351914:3291267")
 
 
     //mixin stuff fore gradle 5+

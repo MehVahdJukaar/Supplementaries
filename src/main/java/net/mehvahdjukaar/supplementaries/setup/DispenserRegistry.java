@@ -11,14 +11,14 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.ILightable;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
-import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -55,6 +55,10 @@ public class DispenserRegistry {
         //fodder
         if (RegistryConfigs.reg.FODDER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        }
+        //bubble
+        if (RegistryConfigs.reg.BUBBLE_BLOWER_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
 
         //jar

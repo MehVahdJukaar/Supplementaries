@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

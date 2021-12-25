@@ -31,7 +31,6 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     private DyeColor baseColor;
     @Nullable
     private ListTag itemPatterns;
-    private boolean receivedData;
     @Nullable
     private List<Pair<BannerPattern, DyeColor>> patterns;
 
@@ -85,7 +84,6 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
 
         this.itemPatterns = pTag.getList("Patterns", 10);
         this.patterns = null;
-        this.receivedData = true;
     }
 
     @Nullable
@@ -93,6 +91,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
@@ -103,10 +102,9 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     }
 
     public List<Pair<BannerPattern, DyeColor>> getPatterns() {
-        if (this.patterns == null && this.receivedData) {
-            this.patterns = BannerBlockEntity.createPatterns(this.getBaseColor(this::getBlockState), this.itemPatterns);
+        if (this.patterns == null) {
+            this.patterns = BannerBlockEntity.createPatterns(this.baseColor, this.itemPatterns);
         }
-
         return this.patterns;
     }
 

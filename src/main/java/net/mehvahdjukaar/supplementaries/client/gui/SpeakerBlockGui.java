@@ -126,8 +126,7 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0)
-            this.volume.onRelease(mouseX, mouseY);
+        if (button == 0) this.volume.onRelease(mouseX, mouseY);
         return false;
     }
 
