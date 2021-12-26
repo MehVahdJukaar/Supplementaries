@@ -7,6 +7,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 
@@ -45,6 +46,9 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> DUSTS = itemTag("hourglass_dusts");
     public static final Tags.IOptionalNamedTag<Item> SANDS = itemTag("hourglass_sands");
     public static final Tags.IOptionalNamedTag<Item> KEY = itemTag("key");
+    public static final Tags.IOptionalNamedTag<Item> FLAGS = itemTag("flags");
+    public static final Tags.IOptionalNamedTag<Item> PRESENTS = itemTag("presents");
+    public static final Tags.IOptionalNamedTag<Item> SHULKER_BOXES = ItemTags.createOptional(new ResourceLocation("forge", "shulker_boxes"));
     //entity tags
     public static final Tags.IOptionalNamedTag<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> TINTED_JAR_CATCHABLE = entityTag("jar_tinted_catchable");
@@ -52,6 +56,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<EntityType<?>> CAGE_BABY_CATCHABLE = entityTag("cage_baby_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final Tags.IOptionalNamedTag<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
+
 
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
         return ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));

@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.mixins.MixinConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -141,6 +143,8 @@ public class RegistryConfigs {
         public static boolean isEnabled(String path) {
 
             switch (path) {
+                case "vertical_slab":
+                    return CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
                 case ModRegistry.GLOBE_SEPIA_NAME:
                     return reg.GLOBE_SEPIA.get() && reg.ANTIQUE_INK_ENABLED.get();
                 case ModRegistry.FLAX_WILD_NAME:

@@ -4,7 +4,10 @@ package net.mehvahdjukaar.supplementaries.integration;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraftforge.fml.ModList;
+import vazkii.quark.base.handler.GeneralConfig;
+import vazkii.quark.content.building.module.VerticalSlabsModule;
 
 public class CompatHandler {
 

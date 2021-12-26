@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

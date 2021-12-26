@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;

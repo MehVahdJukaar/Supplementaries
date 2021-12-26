@@ -1,19 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
-public class PresentItem extends BlockItem {
-
+public class PresentItem extends BlockItem implements IColored {
 
     public PresentItem(Block block, Properties properties) {
         super(block, properties);
@@ -43,4 +46,19 @@ public class PresentItem extends BlockItem {
         }
     }
 
+    @Override
+    public DyeColor getColor() {
+        return ((PresentBlock) this.getBlock()).getColor();
+    }
+
+    @Nullable
+    @Override
+    public  Map<DyeColor, RegistryObject<Item>> getItemColorMap() {
+        return ModRegistry.PRESENTS_ITEMS;
+    }
+
+    @Override
+    public boolean supportsBlankColor() {
+        return true;
+    }
 }

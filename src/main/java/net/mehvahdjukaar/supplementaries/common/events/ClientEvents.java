@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.gui.ConfigButton;
+import net.mehvahdjukaar.supplementaries.client.gui.widgets.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

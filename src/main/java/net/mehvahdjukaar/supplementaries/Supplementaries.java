@@ -3,10 +3,11 @@ package net.mehvahdjukaar.supplementaries;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
-import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -119,13 +120,13 @@ public class Supplementaries {
 
         //golden carrots to breed baby pignis
 
-        //directiona books fixed
+        //directional books fixed
         //particles for randomium
         //data driven fluid system :0
         //TODO: credist screen
 
         //TODO: way signs as villages pieces
-
+        //slime balls
 
         //small honey slime in cage
 
@@ -139,19 +140,15 @@ public class Supplementaries {
 
         //idea: Increase range of enchantment table
 
-        //TODO: FIX ALL ADVANCEMENTS
-
         //TODO: fix faucet water is completely bugged
         //IRON gate connected model
 
         //hud mod. armor broken hud, items offhadn crafting
 
-        //TODO: readd achievements
         //structures
 
         //ash auto bonemeal, improve bubbles
 
-        //how the turn tables
         //redo achievement rendering
         //better badlands kindling gunpowder compat (whenevr it updates lol)
         //better fodder pathfinding
@@ -159,7 +156,7 @@ public class Supplementaries {
 
         ConfigHandler.init();
 
-        CraftingHelper.register(new RecipeCondition.Serializer(RecipeCondition.MY_FLAG));
+        CraftingHelper.register(new RecipeCondition.Serializer("flag"));
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

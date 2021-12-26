@@ -29,6 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockTile> {
@@ -49,22 +50,25 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
     private boolean slim = false;
 
-    private ResourceLocation getSkin(GameProfile gameProfile) {
+    public static ResourceLocation getPlayerSkin(GameProfile gameProfile) {
+        return getPlayerSkinAndSlim(gameProfile, s->{});
+    }
+    public static ResourceLocation getPlayerSkinAndSlim(GameProfile gameProfile, Consumer<Boolean> slimSkinSetter) {
         if (!gameProfile.isComplete()) {
             return new ResourceLocation("minecraft:textures/entity/steve.png");
         } else {
-            Minecraft minecraft = Minecraft.getInstance();
-            SkinManager skinManager = minecraft.getSkinManager();
+            SkinManager skinManager = Minecraft.getInstance().getSkinManager();
 
-            Map<Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
-            if (loadSkinFromCache.containsKey(Type.SKIN)) {
-                MinecraftProfileTexture texture = loadSkinFromCache.get(Type.SKIN);
+            Map<Type, MinecraftProfileTexture> skinCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
+            if (skinCache.containsKey(Type.SKIN)) {
+                MinecraftProfileTexture texture = skinCache.get(Type.SKIN);
                 String s = texture.getMetadata("model");
-                this.slim = s != null && !s.equals("default");
+                boolean slim = s != null && !s.equals("default");
+                slimSkinSetter.accept(slim);
 
                 return skinManager.registerTexture(texture, Type.SKIN);
             } else {
-                this.slim = false;
+                slimSkinSetter.accept(false);
                 return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
             }
         }
@@ -80,7 +84,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         matrixStackIn.pushPose();
         GameProfile playerInfo = tile.owner;
-        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getSkin(playerInfo);
+        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
         matrixStackIn.translate(0.5, 0.5, 0.5);
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(Const.rot(dir));
@@ -153,6 +157,5 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         matrixStackIn.popPose();
     }
-
 
 }

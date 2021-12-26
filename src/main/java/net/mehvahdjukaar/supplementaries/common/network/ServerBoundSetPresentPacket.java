@@ -16,19 +16,22 @@ public class ServerBoundSetPresentPacket {
     private final boolean packed;
     private final String sender;
     private final String recipient;
+    private final String description;
 
     public ServerBoundSetPresentPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.packed = buf.readBoolean();
         this.recipient = buf.readUtf();
         this.sender = buf.readUtf();
+        this.description = buf.readUtf();
     }
 
-    public ServerBoundSetPresentPacket(BlockPos pos, boolean packed, String recipient, String sender) {
+    public ServerBoundSetPresentPacket(BlockPos pos, boolean packed, String recipient, String sender, String description) {
         this.pos = pos;
         this.packed = packed;
         this.recipient = recipient;
         this.sender = sender;
+        this.description = description;
     }
 
     public static void buffer(ServerBoundSetPresentPacket message, FriendlyByteBuf buf) {
@@ -36,6 +39,7 @@ public class ServerBoundSetPresentPacket {
         buf.writeBoolean(message.packed);
         buf.writeUtf(message.recipient);
         buf.writeUtf(message.sender);
+        buf.writeUtf(message.description);
     }
 
     public static void handler(ServerBoundSetPresentPacket message, Supplier<NetworkEvent.Context> ctx) {
@@ -47,11 +51,11 @@ public class ServerBoundSetPresentPacket {
             if (world.getBlockEntity(message.pos) instanceof PresentBlockTile present) {
                 //TODO: sound here
 
-                present.updateState(message.recipient, message.sender, message.packed);
+                present.updateState(message.packed, message.recipient, message.sender, message.description);
 
                 BlockState state = world.getBlockState(pos);
                 present.setChanged();
-                //also sends new block to clients
+                //also sends new block to clients. maybe not needed since blockstate changes
                 world.sendBlockUpdated(pos, state, state, 3);
 
                 //if I'm packing also closes the gui

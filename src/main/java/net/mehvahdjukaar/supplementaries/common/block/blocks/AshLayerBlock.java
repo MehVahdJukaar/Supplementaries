@@ -266,6 +266,7 @@ public class AshLayerBlock extends FallingBlock {
         return false;
     }
 
+    //TODO: add this
     public static final int GRASS_SPREAD_WIDTH = 3;
     public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
         BlockPos blockpos = pos.above();

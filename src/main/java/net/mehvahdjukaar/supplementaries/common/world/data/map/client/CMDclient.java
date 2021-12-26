@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.client;
 
+import net.mehvahdjukaar.selene.map.client.DecorationRenderer;
 import net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
@@ -18,6 +19,8 @@ public class CMDclient {
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.BEACON_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.CONDUIT_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.SIGN_POST_DECORATION_TYPE);
+        MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.CHEST_DECORATION_TYPE);
+
 
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.VILLAGE_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.JUNGLE_TEMPLE_TYPE);

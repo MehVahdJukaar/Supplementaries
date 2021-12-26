@@ -2,25 +2,29 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
-public class FlagItem extends BurnableBlockItem {
+public class FlagItem extends BurnableBlockItem implements IColored {
+
+
     public FlagItem(Block block, Properties properties) {
         super(block, properties, 300);
     }
 
+    @Override
     public DyeColor getColor() {
         return ((FlagBlock) this.getBlock()).getColor();
     }
@@ -69,4 +73,8 @@ public class FlagItem extends BurnableBlockItem {
         ClientRegistry.registerISTER(consumer, FlagItemRenderer::new);
     }
 
+    @Override
+    public @Nullable Map<DyeColor, RegistryObject<Item>> getItemColorMap() {
+        return ModRegistry.FLAGS_ITEMS;
+    }
 }

@@ -329,6 +329,9 @@ public class ServerConfigs {
     }
 
     public static class block {
+
+        public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ALTERNATIVE;
+
         public static ForgeConfigSpec.IntValue BUBBLE_LIFETIME;
         public static ForgeConfigSpec.BooleanValue BUBBLE_BREAK;
 
@@ -405,6 +408,11 @@ public class ServerConfigs {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
+
+            builder.push("bamboo_spikes");
+            BAMBOO_SPIKES_ALTERNATIVE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
+                    .define("alternative_mode", true);
+            builder.pop();
 
             builder.push("bubble_block");
             BUBBLE_LIFETIME = builder.comment("Max lifetime of bubble blocks. Set to 10000 to have it infinite")
@@ -828,6 +836,7 @@ public class ServerConfigs {
         public static boolean CRYSTAL_ENCHANTING;
         public static boolean ROPE_UNRESTRICTED;
         public static boolean ROPE_SLIDE;
+        public static boolean BAMBOO_SPIKES_ALTERNATIVE;
 
 
         public static boolean SERVER_PROTECTION;
@@ -952,6 +961,7 @@ public class ServerConfigs {
             ASH_RAIN = block.ASH_RAIN.get();
             BUBBLE_LIFETIME = block.BUBBLE_LIFETIME.get();
             BUBBLE_BREAK = block.BUBBLE_BREAK.get();
+            BAMBOO_SPIKES_ALTERNATIVE = block.BAMBOO_SPIKES_ALTERNATIVE.get();
 
             FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
             FIREFLY_SPEED = entity.FIREFLY_SPEED.get();

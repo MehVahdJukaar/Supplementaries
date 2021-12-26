@@ -2,11 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -46,6 +48,15 @@ public class BambooSpikesTippedItem extends BurnableBlockItem implements SimpleW
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
+        return !ServerConfigs.cached.BAMBOO_SPIKES_ALTERNATIVE;
+    }
+
+    public static boolean areEffectsValid(List<MobEffectInstance> effects){
+        if(ServerConfigs.cached.BAMBOO_SPIKES_ALTERNATIVE){
+            for(var e: effects){
+                if(e.getEffect().isBeneficial()) return false;
+            }
+        }
         return true;
     }
 
@@ -74,7 +85,7 @@ public class BambooSpikesTippedItem extends BurnableBlockItem implements SimpleW
                 for (Potion potion : net.minecraft.core.Registry.POTION) {
                     if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
                         continue;
-                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY) {
+                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && areEffectsValid(potion.getEffects())) {
                         items.add(makeSpikeItem(potion));
                     }
                 }

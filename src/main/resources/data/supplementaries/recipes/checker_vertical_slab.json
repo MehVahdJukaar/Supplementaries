@@ -8,6 +8,10 @@
           "flag": "checker_block"
         },
         {
+          "flag": "vertical_slabs",
+          "type": "supplementaries:flag"
+        },
+        {
           "modid": "quark",
           "type": "forge:mod_loaded"
         }

@@ -88,13 +88,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
         BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile) {
+        if (te instanceof BambooSpikesBlockTile tile) {
             CompoundTag com = stack.getTag();
             if (com != null) {
                 Potion p = PotionUtils.getPotion(stack);
                 if (p != Potions.EMPTY && com.contains("Damage")) {
-                    ((BambooSpikesBlockTile) te).potion = p;
-                    ((BambooSpikesBlockTile) te).setMissingCharges(com.getInt("Damage"));
+                    tile.potion = p;
+                    tile.setMissingCharges(com.getInt("Damage"));
                 }
             }
         }
@@ -151,7 +151,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             entityIn.makeStuckInBlock(state, new Vec3(0.95D, vy, 0.95D));
             if (!worldIn.isClientSide) {
                 if (up && entityIn instanceof Player && entityIn.isShiftKeyDown()) return;
-                float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 2 : 1;
+                float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 3 : 1.5f;
                 entityIn.hurt(CommonUtil.SPIKE_DAMAGE, damage);
                 if (state.getValue(TIPPED)) {
                     BlockEntity te = worldIn.getBlockEntity(pos);
@@ -172,8 +172,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile) {
-            if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(stack))) {
+        if (te instanceof BambooSpikesBlockTile bambooSpikesBlockTile) {
+            if (bambooSpikesBlockTile.tryApplyPotion(PotionUtils.getPotion(stack))) {
                 world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
                 world.setBlock(pos, state.setValue(TIPPED, true), 3);
                 return true;

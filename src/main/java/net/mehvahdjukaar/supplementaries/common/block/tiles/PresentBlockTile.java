@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -22,22 +23,29 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class PresentBlockTile extends OpeneableContainerBlockEntity {
+public class PresentBlockTile extends OpeneableContainerBlockEntity implements IColored {
 
     //"" means not packed. this is used for packed but can be opened by everybody
     public static final String PUBLIC_KEY = "@e";
 
     private String recipient = "";
     private String sender = "";
+    private String description = "";
 
     public PresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PRESENT_TILE.get(), pos, state);
+    }
+
+    @Override
+    public @Nullable DyeColor getColor() {
+        return ((PresentBlock)this.getBlockState().getBlock()).getColor();
     }
 
     public static boolean isPacked(ItemStack stack) {
@@ -57,6 +65,10 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity {
         return sender;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getRecipient() {
         if (this.recipient.equalsIgnoreCase(PUBLIC_KEY)) return "";
         return recipient;
@@ -74,14 +86,16 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity {
         this.setRecipient(PUBLIC_KEY);
     }
 
-    public void updateState(String newRecipient, String sender, boolean shouldPack) {
+    public void updateState(boolean shouldPack, String newRecipient, String sender, String description) {
         if (shouldPack) {
             if (newRecipient.isEmpty()) newRecipient = PUBLIC_KEY;
             this.recipient = newRecipient;
             this.sender = sender;
+            this.description = description;
         } else {
             this.recipient = "";
             this.sender = "";
+            this.description = "";
         }
 
         if (!this.level.isClientSide && this.isPacked() != shouldPack)
@@ -144,8 +158,10 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity {
         super.load(tag);
         this.recipient = "";
         this.sender = "";
+        this.description = "";
         if (tag.contains("Recipient")) this.recipient = tag.getString("Recipient");
         if (tag.contains("Sender")) this.sender = tag.getString("Sender");
+        if (tag.contains("Description")) this.description = tag.getString("Description");
     }
 
     @Override
@@ -153,6 +169,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity {
         super.saveAdditional(tag);
         if (!this.recipient.isEmpty()) tag.putString("Recipient", this.recipient);
         if (!this.sender.isEmpty()) tag.putString("Sender", this.sender);
+        if (!this.description.isEmpty()) tag.putString("Description", this.description);
     }
 
     @Override

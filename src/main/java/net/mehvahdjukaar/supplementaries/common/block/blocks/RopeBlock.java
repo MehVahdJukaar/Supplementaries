@@ -37,6 +37,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -491,7 +492,7 @@ public class RopeBlock extends WaterBlock {
     private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
         if (toPos.getY() < 0 || toPos.getY() > 255) return false;
         BlockState state = world.getBlockState(fromPos);
-        Block block = state.getBlock();
+
         PushReaction push = state.getPistonPushReaction();
 
         if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || state.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
@@ -533,9 +534,10 @@ public class RopeBlock extends WaterBlock {
             BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
             world.setBlockAndUpdate(toPos, newState);
             if (tile != null) {
-                BlockEntity target = BlockEntity.loadStatic(toPos, newState, tile.save(new CompoundTag()));
-                if (target != null) {
-                    world.setBlockEntity(target);
+                CompoundTag tag = tile.saveWithoutMetadata();
+                BlockEntity te = world.getBlockEntity(toPos);
+                if(te != null){
+                    te.load(tag);
                 }
             }
             //world.notifyNeighborsOfStateChange(toPos, state.getBlock());

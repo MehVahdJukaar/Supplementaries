@@ -53,6 +53,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -432,7 +433,7 @@ public class ItemsOverrideHandler {
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             BlockPos pos = hit.getBlockPos();
             Block b = world.getBlockState(pos).getBlock();
-            if (b instanceof BedBlock || BLOCK_MARKERS.contains(b) ||
+            if (b instanceof BedBlock || BLOCK_MARKERS.contains(b) || Tags.Blocks.CHESTS.contains(b) ||
                     world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
                 if (!world.isClientSide) {
                     if (MapItem.getSavedData(stack, world) instanceof ExpandedMapData data) {

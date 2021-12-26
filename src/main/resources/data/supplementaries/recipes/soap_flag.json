@@ -7,9 +7,10 @@
     {
       "item": "supplementaries:soap"
     }
+
   ],
   "result": {
-    "item": "supplementaries:flag_white",
+    "item": "supplementaries:white_flag",
     "count": 1
   },
   "conditions": [

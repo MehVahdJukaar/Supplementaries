@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.datagen;
+package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -8,8 +8,6 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 public class RecipeCondition implements ICondition {
-
-    public static final ResourceLocation MY_FLAG = new ResourceLocation(Supplementaries.MOD_ID, "flag");
 
     private final ResourceLocation res;
     private final String flag;
@@ -31,19 +29,21 @@ public class RecipeCondition implements ICondition {
 
     public static class Serializer implements IConditionSerializer<RecipeCondition> {
         private final ResourceLocation location;
+        private final String name;
 
-        public Serializer(ResourceLocation location) {
-            this.location = location;
+        public Serializer(String name) {
+            this.location = Supplementaries.res(name);
+            this.name = name;
         }
 
         @Override
         public void write(JsonObject json, RecipeCondition value) {
-            json.addProperty("flag", value.flag);
+            json.addProperty(name, value.flag);
         }
 
         @Override
         public RecipeCondition read(JsonObject json) {
-            return new RecipeCondition(json.getAsJsonPrimitive("flag").getAsString(), location);
+            return new RecipeCondition(json.getAsJsonPrimitive(name).getAsString(), location);
         }
 
         @Override

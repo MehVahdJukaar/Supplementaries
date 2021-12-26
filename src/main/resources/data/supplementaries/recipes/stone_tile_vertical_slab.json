@@ -4,7 +4,11 @@
     {
       "conditions": [
         {
-          "flag": "stone_tile",
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        },
+        {
+          "flag": "vertical_slabs",
           "type": "supplementaries:flag"
         },
         {

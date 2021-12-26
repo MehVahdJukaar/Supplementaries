@@ -8,6 +8,10 @@
           "type": "supplementaries:flag"
         },
         {
+          "flag": "vertical_slabs",
+          "type": "supplementaries:flag"
+        },
+        {
           "modid": "quark",
           "type": "forge:mod_loaded"
         }

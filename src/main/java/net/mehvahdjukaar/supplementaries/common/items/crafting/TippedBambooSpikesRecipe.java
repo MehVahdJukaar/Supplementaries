@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
@@ -20,49 +21,48 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
         super(idIn);
     }
 
-    private boolean isEmptySpike(ItemStack stack){
+    private boolean isEmptySpike(ItemStack stack) {
         if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
             CompoundTag tag = stack.getTag();
-            return tag != null && tag.getInt("Damage")!=0;
-        }
-        else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
+            return tag != null && tag.getInt("Damage") != 0;
+        } else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
     }
 
     @Override
     public boolean matches(CraftingContainer inv, Level worldIn) {
 
         ItemStack itemstack = null;
-        ItemStack itemstack1 = null;
+        ItemStack stack1 = null;
 
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isEmptySpike(stack)) {
                 if (itemstack != null) {
                     return false;
                 }
                 itemstack = stack;
-            }
-            else if(stack.getItem() == Items.LINGERING_POTION) {
+            } else if (stack.getItem() == Items.LINGERING_POTION) {
+                var effects = PotionUtils.getPotion(stack).getEffects();
+                if (effects.isEmpty()) return false;
+                if (!BambooSpikesTippedItem.areEffectsValid(effects)) return false;
 
-                if (itemstack1 != null) {
+                if (stack1 != null) {
                     return false;
                 }
-                itemstack1 = stack;
-            }
-            else if(!stack.isEmpty())return false;
+                stack1 = stack;
+            } else if (!stack.isEmpty()) return false;
         }
-        return itemstack != null && itemstack1 != null;
+        return itemstack != null && stack1 != null;
     }
-
 
 
     @Override
     public ItemStack assemble(CraftingContainer inv) {
         Potion potion = Potions.EMPTY;
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
             Potion p = PotionUtils.getPotion(inv.getItem(i));
-            if(p!=Potions.EMPTY){
-                potion=p;
+            if (p != Potions.EMPTY) {
+                potion = p;
                 break;
             }
         }

@@ -7,6 +7,7 @@ import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.plugins.vanilla.crafting.replacers.ShulkerBoxColoringRecipeMaker;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
@@ -17,21 +18,22 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.BannerPatternItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @JeiPlugin
 public class SupplementariesJEIPlugin implements IModPlugin {
@@ -53,6 +55,9 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createFlagFromBanner(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createAntiqueMaoRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBubbleBlowerChargeRecipe(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(makePresentCloringRecipes(), VanillaRecipeCategoryUid.CRAFTING);
     }
 
 
@@ -135,6 +140,51 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
+    public static List<Recipe<?>> createSoapCleanPresentRecipe() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.soap";
+
+        ItemStack output = new ItemStack(ModRegistry.PRESENTS.get(null).get());
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
+                Ingredient.of(ModTags.PRESENTS), Ingredient.of(ModRegistry.SOAP.get()));
+        ResourceLocation id = Supplementaries.res("jei_soap_clean_present");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
+    public static List<Recipe<?>> createSoapCleanShulkerRecipe() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.soap";
+
+        ItemStack output = new ItemStack(Items.SHULKER_BOX);
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
+                Ingredient.of(ModTags.SHULKER_BOXES), Ingredient.of(ModRegistry.SOAP.get()));
+        ResourceLocation id = Supplementaries.res("jei_soap_clean_shulker");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
+    public static List<Recipe<?>> makePresentCloringRecipes() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.presents";
+        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
+        for(DyeColor color : DyeColor.values()){
+            DyeItem dye = DyeItem.byColor(color);
+            ItemStack output = ModRegistry.PRESENTS_ITEMS.get(color).get().getDefaultInstance();
+
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(dye));
+
+            ResourceLocation id = Supplementaries.res("jei_present_" + color.getName());
+            recipes.add(new ShapelessRecipe(id, group, output, inputs));
+        }
+        return recipes;
+    }
 
     public static List<Recipe<?>> createBubbleBlowerChargeRecipe() {
         List<Recipe<?>> recipes = new ArrayList<>();
@@ -160,7 +210,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.tipped_spikes";
 
         for (Potion potionType : ForgeRegistries.POTIONS.getValues()) {
-            if (!potionType.getEffects().isEmpty()) {
+            if (!potionType.getEffects().isEmpty() && BambooSpikesTippedItem.areEffectsValid(potionType.getEffects())) {
                 recipes.add(makeSpikeRecipe(potionType, group));
             }
         }

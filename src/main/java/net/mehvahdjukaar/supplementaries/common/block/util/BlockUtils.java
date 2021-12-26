@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -286,9 +287,9 @@ public class BlockUtils {
 
                     BlockEntity tile = level.getBlockEntity(oldPos);
                     if (tile != null) {
-                        BlockEntity target = BlockEntity.loadStatic(targetPos, connectedNewState, tile.save(new CompoundTag()));
-                        if (target != null) {
-                            level.setBlockEntity(target);
+                        CompoundTag tag = tile.saveWithoutMetadata();
+                        if(level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile){
+                            newChestTile.load(tag);
                         }
                         tile.setRemoved();
                     }

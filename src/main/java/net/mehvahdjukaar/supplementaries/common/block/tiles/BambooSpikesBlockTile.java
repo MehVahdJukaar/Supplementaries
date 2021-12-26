@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,9 @@ public class BambooSpikesBlockTile extends BlockEntity {
         return world.getGameTime() - this.lastTicked < 20;
     }
 
+    //true if has run out of charges
     public boolean consumeCharge(Level world) {
+        if (ServerConfigs.cached.BAMBOO_SPIKES_ALTERNATIVE && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
         this.lastTicked = world.getGameTime();
         this.charges -= 1;
         this.setChanged();
@@ -69,13 +72,16 @@ public class BambooSpikesBlockTile extends BlockEntity {
     }
 
     public boolean tryApplyPotion(Potion p) {
-        if (this.charges == 0 || this.potion == Potions.EMPTY || (this.potion.equals(p) && this.charges != MAX_CHARGES)) {
-            this.potion = p;
-            this.charges = MAX_CHARGES;
-            this.setChanged();
-            //needed for buggy white tipped state. aparently not enough
-            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
-            return true;
+
+        if (this.charges == 0 || this.potion == Potions.EMPTY || this.potion.equals(p) && this.charges != MAX_CHARGES) {
+            if(BambooSpikesTippedItem.areEffectsValid(potion.getEffects())) {
+                this.potion = p;
+                this.charges = MAX_CHARGES;
+                this.setChanged();
+                //needed for buggy white tipped state. aparently not enough
+                this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+                return true;
+            }
         }
         return false;
     }

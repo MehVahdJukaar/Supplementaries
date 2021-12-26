@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.client.gui.widgets.BlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
@@ -18,11 +19,9 @@ public class BlackBoardGui extends Screen {
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
-
     private BlackBoardGui(BlackboardBlockTile teBoard) {
         super(new TranslatableComponent("gui.supplementaries.blackboard.edit"));
         this.tileBoard = teBoard;
-
     }
 
     public static void open(BlackboardBlockTile sign) {

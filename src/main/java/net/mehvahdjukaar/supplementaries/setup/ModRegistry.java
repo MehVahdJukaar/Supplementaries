@@ -164,6 +164,10 @@ public class ModRegistry {
             new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map_recipe", () ->
             new SimpleRecipeSerializer<>(TreasureMapRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> SOAP_CLEARING_RECIPE = RECIPES.register("soap_clearing_recipe", () ->
+            new SimpleRecipeSerializer<>(SoapClearRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> PRESENT_DYE_RECIPE = RECIPES.register("present_dye_recipe", () ->
+            new SimpleRecipeSerializer<>(PresentDyeRecipe::new));
 
 
     //orange trader
@@ -982,7 +986,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> HANGING_FLOWER_POT = BLOCKS.register(HANGING_FLOWER_POT_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.FLOWER_POT);
 
-        return CompatHandler.create ? SchematicCannonStuff.makeFlowerPot(p) : new WallLanternBlock(p);
+        return CompatHandler.create ? SchematicCannonStuff.makeFlowerPot(p) : new HangingFlowerPotBlock(p);
     });
     public static final RegistryObject<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME, () -> BlockEntityType.Builder.of(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));

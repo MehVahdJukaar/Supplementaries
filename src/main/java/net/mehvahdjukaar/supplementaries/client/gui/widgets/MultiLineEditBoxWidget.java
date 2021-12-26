@@ -1,5 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
-
+package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -7,89 +6,89 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 
-public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
-    private static final int TEXT_WIDTH = 114;
-    private static final int TEXT_HEIGHT = 128;
-    private static final int DOUBLECLICK_SPEED = 250;
-    private static final int IMAGE_WIDTH = 192;
-    private static final int IMAGE_HEIGHT = 192;
-    private static final Component EDIT_TITLE_LABEL = new TranslatableComponent("book.editTitle");
-    private static final Component FINALIZE_WARNING_LABEL = new TranslatableComponent("book.finalizeWarning");
-    private static final FormattedCharSequence BLACK_CURSOR = FormattedCharSequence.forward("_", Style.EMPTY.withColor(ChatFormatting.BLACK));
-    private static final FormattedCharSequence GRAY_CURSOR = FormattedCharSequence.forward("_", Style.EMPTY.withColor(ChatFormatting.GRAY));
+public class MultiLineEditBoxWidget extends AbstractWidget {
 
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
+    protected final int x1;
+    protected final int y1;
 
-    private final Minecraft minecraft;
-    private final Font font;
-    private final Player owner;
-    private boolean isModified;
+    protected final Minecraft minecraft;
+    protected final Font font;
+    protected final TextFieldHelper pageEdit;
+
+    @Nullable
+    private Consumer<Boolean> onOutOfBounds = null;
+    @Nonnull
+    private String text = "";
+
     private int frameTick;
-
-    private final TextFieldHelper pageEdit = new TextFieldHelper(
-            this::getText, this::setText,
-            this::getClipboard, this::setClipboard, this::isStringValid);
-
-    private String text;
-
     private long lastClickTime;
     private int lastIndex = -1;
 
     @Nullable
     private DisplayCache displayCache = DisplayCache.EMPTY;
 
-    public MultiLineEditableBoxWidget(Minecraft mc, Player player, String startValue) {
+    public MultiLineEditBoxWidget(Minecraft mc, int x, int y, int width, int height) {
+        super(x, y, width, height, new TextComponent("hhhhh"));
         this.minecraft = mc;
         this.font = mc.font;
-        this.owner = player;
+        this.x1 = x + width;
+        this.y1 = y + height;
 
-        if (this.text.isEmpty()) {
-            this.text = ("");
-        } else this.text = startValue;
+        this.pageEdit = new TextFieldHelper(this::getText, this::setText,
+                this::getClipboard, this::setClipboard, this::isStringValid);
 
         this.clearDisplayCache();
+    }
 
+    public void setOutOfBoundResponder(Consumer<Boolean> onOutOfBounds) {
+        this.onOutOfBounds = onOutOfBounds;
+    }
 
-        this.x = 0;
-        this.y = 0;
-        this.width = TEXT_WIDTH;
-        this.height = TEXT_HEIGHT;
+    public void setState(boolean hasItem, boolean packed) {
+        this.setFocused(false);
+        if (packed) {
+            this.active = false;
+        } else {
+            this.active = hasItem;
+            if (!hasItem){
+                this.setText("");
+            }
+        }
     }
 
     private boolean isStringValid(String s) {
-        return s.length() < 1024 && this.font.wordWrapHeight(s, 114) <= 128;
+        if (s != null && s.length() < 256) {
+            if (s.endsWith("\n")) s = s + "-";
+            return this.font.wordWrapHeight(s, this.width) <= this.height;
+        }
+        return false;
     }
 
     private void setClipboard(String p_98148_) {
@@ -109,19 +108,27 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
 
     @Override
     public boolean charTyped(char c, int key) {
-        if (SharedConstants.isAllowedChatCharacter(c)) {
-            this.pageEdit.insertText(Character.toString(c));
-            this.clearDisplayCache();
-            return true;
+        if (this.canConsumeInput()) {
+            if (SharedConstants.isAllowedChatCharacter(c)) {
+                this.pageEdit.insertText(Character.toString(c));
+                this.clearDisplayCache();
+                return true;
+            }
         }
         return false;
     }
 
+    public boolean canConsumeInput() {
+        return this.isFocused() && this.isActive();
+    }
+
     @Override
     public boolean keyPressed(int key, int alt, int ctrl) {
-        if (this.bookKeyPressed(key, alt, ctrl)) {
-            this.clearDisplayCache();
-            return true;
+        if (this.canConsumeInput()) {
+            if (this.bookKeyPressed(key, alt, ctrl)) {
+                this.clearDisplayCache();
+                return true;
+            }
         }
         return false;
     }
@@ -143,7 +150,11 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
             switch (key) {
                 case 257:
                 case 335:
+                    var p = this.pageEdit.getCursorPos();
                     this.pageEdit.insertText("\n");
+                    if (p == this.pageEdit.getCursorPos()) {
+                        this.callOutOfBounds(false);
+                    }
                     return true;
                 case 259:
                     this.pageEdit.removeCharsFromCursor(-1);
@@ -167,11 +178,34 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
                     this.keyHome();
                     return true;
                 case 269:
-                    this.keyEnd();
+                    this.moveCursorToEnd();
                     return true;
                 default:
                     return false;
             }
+        }
+    }
+
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (this.canConsumeInput() && this.visible) {
+            if (amount >= 1) {
+                this.keyUp();
+                this.clearDisplayCache();
+                return true;
+            } else if (amount <= -1) {
+                this.keyDown();
+                this.clearDisplayCache();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void callOutOfBounds(boolean up) {
+        if (this.onOutOfBounds != null) {
+            this.onOutOfBounds.accept(up);
         }
     }
 
@@ -183,10 +217,13 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
         this.changeLine(1);
     }
 
-    private void changeLine(int p_98098_) {
+    private void changeLine(int amount) {
         int i = this.pageEdit.getCursorPos();
-        int j = this.getDisplayCache().changeLine(i, p_98098_);
+        int j = this.getDisplayCache().changeLine(i, amount);
         this.pageEdit.setCursorPos(j, Screen.hasShiftDown());
+        if (i == j) {
+            this.callOutOfBounds(amount < 0);
+        }
     }
 
     private void keyHome() {
@@ -195,41 +232,40 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
         this.pageEdit.setCursorPos(j, Screen.hasShiftDown());
     }
 
-    private void keyEnd() {
+    public void moveCursorToEnd() {
         DisplayCache displayCache = this.getDisplayCache();
         int i = this.pageEdit.getCursorPos();
         int j = displayCache.findLineEnd(i);
         this.pageEdit.setCursorPos(j, Screen.hasShiftDown());
     }
 
-    private String getText() {
+    public String getText() {
         return this.text;
     }
 
-    private void setText(String text) {
+    public void setText(String text) {
         this.text = text;
-        this.isModified = true;
         this.clearDisplayCache();
+        this.onValueChanged();
+    }
+
+    public void onValueChanged() {
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int museY, float partialTicks) {
+        if (this.visible) {
+            DisplayCache displayCache = this.getDisplayCache();
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, BookViewScreen.BOOK_LOCATION);
-        int i = (this.width - 192) / 2;
+            for (LineInfo lineInfo : displayCache.lines) {
+                this.font.draw(poseStack, lineInfo.asComponent, (float) lineInfo.x, (float) lineInfo.y, -16777216);
+            }
 
-        GuiComponent.blit(poseStack, i, 2, 0, 0, 0, 192, 192, 256, 256);
-
-        DisplayCache displayCache = this.getDisplayCache();
-
-        for (LineInfo lineInfo : displayCache.lines) {
-            this.font.draw(poseStack, lineInfo.asComponent, (float) lineInfo.x, (float) lineInfo.y, -16777216);
+            if (this.isFocused()) {
+                this.renderHighlight(displayCache.selection);
+                this.renderCursor(poseStack, displayCache.cursor, displayCache.cursorAtEnd);
+            }
         }
-
-        this.renderHighlight(displayCache.selection);
-        this.renderCursor(poseStack, displayCache.cursor, displayCache.cursorAtEnd);
     }
 
     private void renderCursor(PoseStack poseStack, Pos2i pos2i, boolean p_98111_) {
@@ -270,16 +306,32 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
     }
 
     private Pos2i convertScreenToLocal(Pos2i pos2i) {
-        return new Pos2i(pos2i.x - (this.width - 192) / 2 - 36, pos2i.y - 32);
+        return new Pos2i(pos2i.x - this.x, pos2i.y - this.y);
     }
 
     private Pos2i convertLocalToScreen(Pos2i pos2i) {
-        return new Pos2i(pos2i.x + (this.width - 192) / 2 + 36, pos2i.y + 32);
+        return new Pos2i(pos2i.x + this.x, pos2i.y + this.y);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int key) {
-        if (key == 0) {
+    public void playDownSound(SoundManager soundManager) {
+    }
+
+    @Override
+    public void setFocused(boolean b) {
+        super.setFocused(b);
+    }
+
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        this.setFocused(true);
+        //this. parent. setfocus this
+    }
+
+    @Override
+    public boolean clicked(double mouseX, double mouseY) {
+
+        if (this.isMouseOver(mouseX, mouseY)) {
             long i = Util.getMillis();
             DisplayCache displayCache = this.getDisplayCache();
             int j = displayCache.getIndexAtPosition(this.font, this.convertScreenToLocal(new Pos2i((int) mouseX, (int) mouseY)));
@@ -309,25 +361,21 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int key, double dx, double dy) {
-        if (key == 0) {
-            DisplayCache displayCache = this.getDisplayCache();
-            int i = displayCache.getIndexAtPosition(this.font, this.convertScreenToLocal(new Pos2i((int) mouseX, (int) mouseY)));
-            this.pageEdit.setCursorPos(i, true);
-            this.clearDisplayCache();
-            return true;
-        }
-        return false;
+    public void onDrag(double mouseX, double mouseY, double dx, double dy) {
+        DisplayCache displayCache = this.getDisplayCache();
+        int i = displayCache.getIndexAtPosition(this.font, this.convertScreenToLocal(new Pos2i((int) mouseX, (int) mouseY)));
+        this.pageEdit.setCursorPos(i, true);
+        this.clearDisplayCache();
     }
 
-    private DisplayCache getDisplayCache() {
+    protected DisplayCache getDisplayCache() {
         if (this.displayCache == null) {
             this.displayCache = this.rebuildDisplayCache();
         }
         return this.displayCache;
     }
 
-    private void clearDisplayCache() {
+    protected void clearDisplayCache() {
         this.displayCache = null;
     }
 
@@ -343,7 +391,7 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
             MutableInt mutableint = new MutableInt();
             MutableBoolean mutableboolean = new MutableBoolean();
             StringSplitter stringsplitter = this.font.getSplitter();
-            stringsplitter.splitLines(s, 114, Style.EMPTY, true, (p_98132_, p_98133_, p_98134_) -> {
+            stringsplitter.splitLines(s, this.width, Style.EMPTY, true, (lineInfo, p_98133_, p_98134_) -> {
                 int k3 = mutableint.getAndIncrement();
                 String s2 = s.substring(p_98133_, p_98134_);
                 mutableboolean.setValue(s2.endsWith("\n"));
@@ -351,7 +399,7 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
                 int l3 = k3 * 9;
                 Pos2i pos2i = this.convertLocalToScreen(new Pos2i(0, l3));
                 intlist.add(p_98133_);
-                list.add(new LineInfo(p_98132_, s3, pos2i.x, pos2i.y));
+                list.add(new LineInfo(lineInfo, s3, pos2i.x, pos2i.y));
             });
             int[] toIntArray = intlist.toIntArray();
             boolean flag = i == s.length();
@@ -414,6 +462,16 @@ public class MultiLineEditableBoxWidget implements Widget, GuiEventListener {
         int k = Math.min(pos2i.y, pos2i1.y);
         int l = Math.max(pos2i.y, pos2i1.y);
         return new Rect2i(i, k, j - i, l - k);
+    }
+
+    @Override
+    public NarrationPriority narrationPriority() {
+        return NarrationPriority.NONE;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput p_169152_) {
+
     }
 
     static class DisplayCache {

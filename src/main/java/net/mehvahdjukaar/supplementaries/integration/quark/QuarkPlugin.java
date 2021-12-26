@@ -18,6 +18,7 @@ import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.building.block.WoodPostBlock;
+import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.tools.item.AncientTomeItem;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
@@ -69,5 +70,9 @@ public class QuarkPlugin {
             }
         }
         return j;
+    }
+
+    public static boolean isVerticalSlabEnabled() {
+        return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
     }
 }

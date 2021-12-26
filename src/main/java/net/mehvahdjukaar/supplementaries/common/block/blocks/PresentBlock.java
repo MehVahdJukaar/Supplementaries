@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class PresentBlock extends WaterBlock implements EntityBlock {
+public class PresentBlock extends WaterBlock implements EntityBlock, IColored {
 
     public static final BooleanProperty PACKED = BlockProperties.PACKED;
 
@@ -52,6 +53,12 @@ public class PresentBlock extends WaterBlock implements EntityBlock {
         super(properties);
         this.color = color;
         this.registerDefaultState(this.stateDefinition.any().setValue(PACKED, false).setValue(WATERLOGGED, false));
+    }
+
+    @Nullable
+    @Override
+    public DyeColor getColor() {
+        return color;
     }
 
     @Override

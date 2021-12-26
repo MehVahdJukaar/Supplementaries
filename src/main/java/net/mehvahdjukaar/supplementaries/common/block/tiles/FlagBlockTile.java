@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IColoredBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.AABB;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FlagBlockTile extends BlockEntity implements Nameable, IColoredBlock {
+public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
 
     //client side param
     public final float offset;
@@ -38,7 +38,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColoredBloc
     private List<Pair<BannerPattern, DyeColor>> patterns;
 
     public FlagBlockTile(BlockPos pos, BlockState state) {
-        this(pos, state, ((IColoredBlock)state.getBlock()).getColor());
+        this(pos, state, ((IColored)state.getBlock()).getColor());
     }
 
     public FlagBlockTile(BlockPos pos, BlockState state, DyeColor color) {

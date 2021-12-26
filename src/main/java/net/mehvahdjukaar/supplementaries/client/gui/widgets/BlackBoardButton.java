@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 
 
 import com.mojang.blaze3d.platform.NativeImage;
@@ -92,7 +92,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     }
 
     //set
-    protected void onDrag(double mouseX, double mouseY, boolean on) {
+    public void onDrag(double mouseX, double mouseY, boolean on) {
         this.color = (byte) (on ? 1 : 0);
         this.onPress.onPress(this.u, this.v, this.color != 0);
     }
@@ -128,7 +128,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
 
         if (this.isValidClickButton(button)) {
-            this.onDragged.onPress(mouseX, mouseY, this.color != 0);
+            this.onDragged.onDragged(mouseX, mouseY, this.color != 0);
             return true;
         } else {
             return false;
@@ -172,7 +172,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
 
     public interface IDraggable {
-        void onPress(double mouseX, double mouseY, boolean on);
+        void onDragged(double mouseX, double mouseY, boolean on);
     }
 
 }
