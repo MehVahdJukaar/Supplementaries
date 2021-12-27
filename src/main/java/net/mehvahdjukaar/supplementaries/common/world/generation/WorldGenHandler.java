@@ -47,7 +47,7 @@ public class WorldGenHandler {
 
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(EventPriority.NORMAL, WorldGenHandler::addDimensionalSpacing);
-        bus.addListener(EventPriority.NORMAL, WorldGenHandler::registerStuffToBiomes);
+        bus.addListener(EventPriority.NORMAL, WorldGenHandler::addStuffToBiomes);
     }
 
     /**
@@ -149,7 +149,7 @@ public class WorldGenHandler {
         }
     }
 
-    public static void registerStuffToBiomes(BiomeLoadingEvent event) {
+    public static void addStuffToBiomes(BiomeLoadingEvent event) {
 //        if(!RegistryConfigs.reg.FIREFLY_ENABLED.get())return;
 //        if (event.getName() != null) {
 //            Biome biome = ForgeRegistries.BIOMES.getValue(event.getName());
@@ -177,7 +177,9 @@ public class WorldGenHandler {
         if(category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
 
             if(ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
-                event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ConfiguredFeaturesRegistry.PLACED_CAVE_URNS);
+                if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
+                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ConfiguredFeaturesRegistry.PLACED_CAVE_URNS);
+                }
             }
 
             if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {

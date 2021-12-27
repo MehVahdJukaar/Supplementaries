@@ -154,6 +154,9 @@ public class Supplementaries {
         //better fodder pathfinding
         //TODO fix randomium recipe jei extensin
 
+        //TODO: add dispenser like interaction registry for faucet
+
+
         ConfigHandler.init();
 
         CraftingHelper.register(new RecipeCondition.Serializer("flag"));

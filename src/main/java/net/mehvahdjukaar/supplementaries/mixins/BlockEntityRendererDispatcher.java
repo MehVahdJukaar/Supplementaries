@@ -19,21 +19,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockEntityRenderDispatcher.class)
 public abstract class BlockEntityRendererDispatcher {
 
-
-    @Final
-    @Shadow
-    public Font font;
-
-
     private static boolean antiqueFontActive;
-    //private static final IAntiqueTextProvider FONT = (IAntiqueTextProvider) (Minecraft.getInstance().font);
-
 
     @Inject(method = "setupAndRender", at = @At("HEAD"))
     private static <T extends BlockEntity> void setupAndRenderPre(BlockEntityRenderer<T> renderer, T tile, float partialTicks,
                                                                   PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
-        CapabilityHandler.doStuff(tile, () -> antiqueFontActive = true);
-
+        tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> {
+            if (c.hasAntiqueInk()) {
+                IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
+                font.setAntiqueInk(true);
+                antiqueFontActive = true;
+            }
+        });
     }
 
     @Inject(method = "setupAndRender", at = @At("RETURN"))

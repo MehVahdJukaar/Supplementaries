@@ -18,6 +18,16 @@
       }
     ]
   },
+  "block.present.pack": {
+    "category": "block",
+    "subtitle": "subtitle.supplementaries.present.pack",
+    "sounds": [
+      {
+        "name": "supplementaries:block/present_pack",
+        "stream": false
+      }
+    ]
+  },
   "block.tom": {
     "category": "block",
     "sounds": [

@@ -31,6 +31,7 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
+    //TODO: merge with common. Recipe condition is loaded client side so they need to be synced
     public static void load() {
         CommentedFileConfig replacementConfig = CommentedFileConfig
                 .builder(FMLPaths.CONFIGDIR.get().resolve(FILE_NAME))
@@ -143,7 +144,7 @@ public class RegistryConfigs {
         public static boolean isEnabled(String path) {
 
             switch (path) {
-                case "vertical_slab":
+                case "vertical_slabs":
                     return CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
                 case ModRegistry.GLOBE_SEPIA_NAME:
                     return reg.GLOBE_SEPIA.get() && reg.ANTIQUE_INK_ENABLED.get();

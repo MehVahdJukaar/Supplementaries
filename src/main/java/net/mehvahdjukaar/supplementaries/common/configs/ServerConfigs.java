@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -626,6 +627,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue URN_PILE_ENABLED;
         public static ForgeConfigSpec.IntValue URN_PATCH_TRIES;
         public static ForgeConfigSpec.IntValue URN_PER_CHUNK;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> URN_BIOME_BLACKLIST;
 
 
         private static void init(ForgeConfigSpec.Builder builder) {
@@ -696,9 +698,12 @@ public class ServerConfigs {
             builder.push("cave_urns");
             URN_PILE_ENABLED = builder.define("enabled", true);
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-                    .defineInRange("attempts_per_patch", 5, 1, 100);
+                    .defineInRange("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                            .defineInRange("spawn_attempts", 9, 0, 100);
+                            .defineInRange("spawn_attempts", 7, 0, 100);
+            List<String> urnBlacklist = List.of(Biomes.DRIPSTONE_CAVES.toString(), Biomes.LUSH_CAVES.toString());
+            URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
+                    .defineList("biome_blacklist", urnBlacklist, LIST_STRING_CHECK);
             builder.pop();
 
             builder.pop();

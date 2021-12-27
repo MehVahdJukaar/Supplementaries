@@ -51,15 +51,11 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
         }
         var offlinePlayers = UsernameCache.getMap();
         for(var entry : offlinePlayers.entrySet()){
-            if(!offlinePlayers.containsKey(entry.getKey())){
+            if(!onlinePlayers.contains(entry.getKey())){
                 this.allPlayers.add(new SimplePlayerEntry(entry.getKey(), entry.getValue()));
             }
         }
-        for(var p : SpecialPlayers.STATUES.values()){
-            if(!offlinePlayers.containsKey( p.getFirst())){
-                this.allPlayers.add(new SimplePlayerEntry(p.getFirst(), p.getSecond()));
-            }
-        }
+
         this.filtered.addAll(allPlayers);
     }
 

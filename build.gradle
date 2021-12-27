@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.1'
+version = '1.18.1-1.1.2'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 

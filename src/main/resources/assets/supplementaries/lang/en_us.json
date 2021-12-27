@@ -289,6 +289,7 @@
   "message.supplementaries.present.to": "To: %s",
   "message.supplementaries.present.public": "Packed",
   "message.supplementaries.present.info": "This present is addressed to: %s",
+  "subtitle.supplementaries.present.pack": "Present Pack",
 
 
   "block.supplementaries.laser_block": "Ender Beamer",

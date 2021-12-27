@@ -100,6 +100,7 @@ public class ModRegistry {
     public static final RegistryObject<SoundEvent> BOMB_SOUND = makeSoundEvent("item.bomb");
     public static final RegistryObject<SoundEvent> PANCAKE_MUSIC = makeSoundEvent("music.pancake");
     public static final RegistryObject<SoundEvent> GUNPOWDER_IGNITE = makeSoundEvent("block.gunpowder.ignite");
+    public static final RegistryObject<SoundEvent> PRESENT_PACK_SOUND = makeSoundEvent("block.present.pack");
 
 
     @SubscribeEvent

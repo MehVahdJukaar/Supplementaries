@@ -165,7 +165,7 @@ public class RendererUtil {
     public static int setColorForAge(float age, float phase) {
         float a = (age + phase) % 1;
         float[] col = ColorHelper.getBubbleColor(a);
-        return FastColor.ARGB32.color(255,(int) (col[0]*255), (int) (col[1]*255), (int) (col[2]*255));
+        return FastColor.ARGB32.color(255, (int) (col[0] * 255), (int) (col[1] * 255), (int) (col[2] * 255));
     }
 
     public static void renderBubble(VertexConsumer builder, PoseStack matrixStackIn, float w,
@@ -181,7 +181,7 @@ public class RendererUtil {
         float maxV = minV + atlasScaleV * w;
         float maxV2 = minV + atlasScaleV * w;
 
-        long t = level == null ? System.currentTimeMillis()/50 : level.getGameTime();
+        long t = level == null ? System.currentTimeMillis() / 50 : level.getGameTime();
         float time = ((float) Math.floorMod((long) (pos.getX() * 7 + pos.getY() * 9 + pos.getZ() * 13) + t, 100L) + partialTicks) / 100.0F;
 
         // w = (1-Mth.sin((float) (time*Math.PI*2)));
@@ -189,13 +189,20 @@ public class RendererUtil {
         int cUnw = setColorForAge(time, 0);
         int cUne = setColorForAge(time, 0.15f);
         int cUse = setColorForAge(time, 0.55f);
-        int cUsw = setColorForAge(time, 0.35f);;
+        int cUsw = setColorForAge(time, 0.35f);
+        ;
 
 
-        int cDnw = setColorForAge(time, 0.45f);;;
-        int cDne = setColorForAge(time, 0.85f);;;
-        int cDse = setColorForAge(time, 1);;
-        int cDsw = setColorForAge(time, 0.65f);;
+        int cDnw = setColorForAge(time, 0.45f);
+        ;
+        ;
+        int cDne = setColorForAge(time, 0.85f);
+        ;
+        ;
+        int cDse = setColorForAge(time, 1);
+        ;
+        int cDsw = setColorForAge(time, 0.65f);
+        ;
 
 
         float amp = ClientConfigs.cached.BUBBLE_BLOCK_WOBBLE;

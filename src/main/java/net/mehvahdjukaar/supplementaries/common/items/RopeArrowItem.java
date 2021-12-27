@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -80,8 +81,8 @@ public class RopeArrowItem extends ArrowItem {
         tooltip.add(new TranslatableComponent("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
-        String override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName().getNamespace();
-        if (!override.equals(Supplementaries.MOD_ID)) {
+        var override = ServerConfigs.cached.ROPE_ARROW_BLOCK.getRegistryName();
+        if (!override.equals(ModRegistry.ROPE.getId())) {
             tooltip.add(new TranslatableComponent("message.supplementaries.rope_arrow", override).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }

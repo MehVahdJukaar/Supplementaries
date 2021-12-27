@@ -26,6 +26,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -101,8 +102,11 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         if (!this.level.isClientSide && this.isPacked() != shouldPack)
             if (shouldPack) {
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F,
-                        level.random.nextFloat() * 0.1F + 1.2F);
+                        ModRegistry.PRESENT_PACK_SOUND.get(), SoundSource.BLOCKS, 1,
+                        level.random.nextFloat() * 0.1F + 0.95F);
+                //this.level.playSound(null, this.worldPosition,
+                //        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F,
+                //        level.random.nextFloat() * 0.1F + 1.2F);
             } else {
                 this.level.playSound(null, this.worldPosition,
                         SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F,

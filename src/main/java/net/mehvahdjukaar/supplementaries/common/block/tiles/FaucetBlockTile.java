@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.sammy.malum.common.block.SapFilledLogBlock;
 import net.mehvahdjukaar.selene.fluids.*;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.inspirations.CauldronPlugin;
+import net.mehvahdjukaar.supplementaries.integration.malum.MalumPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.core.BlockPos;
@@ -141,9 +144,15 @@ public class FaucetBlockTile extends BlockEntity {
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy", "stripped")));
                 if (log != null) {
-                    level.setBlock(behind, log.defaultBlockState().setValue(BlockStateProperties.AXIS,
-                            backState.getValue(BlockStateProperties.AXIS)), 3);
+
+                    level.setBlock(behind, BlockUtils.copyProperties(backState,log.defaultBlockState()), 3);
                 }
+                return true;
+            }
+        } else if (CompatHandler.malum && MalumPlugin.isSappyLog(backBlock)) {
+            this.fluidHolder.fill(MalumPlugin.getSap(backBlock));
+            if (doTransfer && tryFillingBlockBelow(level, pos)) {
+                MalumPlugin.extractSap(level, backState, behind);
                 return true;
             }
         }

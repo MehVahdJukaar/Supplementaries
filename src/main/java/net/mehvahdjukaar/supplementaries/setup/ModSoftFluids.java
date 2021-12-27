@@ -12,6 +12,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +26,9 @@ public class ModSoftFluids {
     public static final SoftFluid DIRT;
     public static final SoftFluid SAP;
     public static final SoftFluid POWDERED_SNOW;
+    public static final SoftFluid UNHOLY_SAP;
+    public static final SoftFluid HOLY_SAP;
+    //TODO: improve and move to compat handler
 
     //mod compat fluids
     //TODO: move to data
@@ -47,6 +51,18 @@ public class ModSoftFluids {
                 .drink("autumnity:sap_bottle")
                 .bucket("thermal:sap_bucket")
                 .translationKey("fluid.supplementaries.sap"));
+
+        HOLY_SAP = makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE, Textures.POTION_TEXTURE_FLOW, "holy_sap")
+                .fromMod("malum")
+                .color(0xDB8F47)
+                .translationKey("item.malum:holy_sap")
+                .bottle("malum:holy_sap"));
+
+        UNHOLY_SAP = makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE, Textures.POTION_TEXTURE_FLOW, "unholy_sap")
+                .fromMod("malum")
+                .color(0x762550)
+                .translationKey("item.malum:unholy_sap")
+                .drink("malum:unholy_sap"));
     }
 
 
@@ -55,6 +71,8 @@ public class ModSoftFluids {
         SoftFluidRegistry.register(SAP);
         SoftFluidRegistry.register(DIRT);
         SoftFluidRegistry.register(POWDERED_SNOW);
+        SoftFluidRegistry.register(UNHOLY_SAP);
+        SoftFluidRegistry.register(HOLY_SAP);
 
         List<SoftFluid> custom = new ArrayList<>(Collections.emptyList());
 
@@ -353,6 +371,20 @@ public class ModSoftFluids {
                 .color(0xBBDF62)
                 .translationKey("item.bayou_blues:gooseberry_juice_bottle")
                 .drink("gooseberry_jam:gooseberry_juice_bottle")));
+
+
+
+        custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE, Textures.HONEY_TEXTURE, "holy_syrup")
+                .fromMod("malum")
+                .color(0xCC9A51)
+                .translationKey("item.malum:holy_syrup")
+                .drink("malum:holy_syrup")));
+
+        custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE, Textures.HONEY_TEXTURE, "unholy_syrup")
+                .fromMod("malum")
+                .color(0x902454)
+                .translationKey("item.malum:holy_syrup")
+                .drink("malum:unholy_syrup")));
 
 
         //inspirations dye bottles. not adding nbt mixed ones

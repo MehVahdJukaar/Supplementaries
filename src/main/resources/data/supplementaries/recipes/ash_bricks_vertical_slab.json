@@ -4,12 +4,16 @@
     {
       "conditions": [
         {
-          "flag": "stone_tile",
+          "flag": "ash_bricks",
           "type": "supplementaries:flag"
         },
         {
           "modid": "quark",
           "type": "forge:mod_loaded"
+        },
+        {
+          "flag": "vertical_slabs",
+          "type": "supplementaries:flag"
         }
       ],
       "recipe": {

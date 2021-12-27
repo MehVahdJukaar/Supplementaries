@@ -35,7 +35,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
     private static final int DESCRIPTION_BOX_Y = 33;
     private static final int DESCRIPTION_BOX_H = 36;
     private static final int DESCRIPTION_BOX_W = 105;
-    private static final int SUGGESTION_BOX_Y = 18;
+    private static final int SUGGESTION_BOX_Y = 19;
     private static final int SUGGESTION_BOX_W = 99;
     private static final int SUGGESTION_BOX_H = 12;
 
@@ -187,7 +187,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
             RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
-            this.blit(poseStack, k + slot.x, l + slot.y, 12, 232, 16, 16);
+            blit(poseStack, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
         }
         this.renderTooltip(poseStack, mouseX, mouseY);
     }
