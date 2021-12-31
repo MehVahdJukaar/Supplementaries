@@ -701,9 +701,9 @@ public class ServerConfigs {
                     .defineInRange("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
                             .defineInRange("spawn_attempts", 7, 0, 100);
-            List<String> urnBlacklist = List.of(Biomes.DRIPSTONE_CAVES.toString(), Biomes.LUSH_CAVES.toString());
+            List<String> urnBlacklist = List.of("minecraft:lush_caves","minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
-                    .defineList("biome_blacklist", urnBlacklist, LIST_STRING_CHECK);
+                    .defineList("biome_blacklist", urnBlacklist, STRING_CHECK);
             builder.pop();
 
             builder.pop();

@@ -80,7 +80,16 @@ public class ConfigHandler {
 
     public static final Predicate<Object> STRING_CHECK = o -> o instanceof String;
 
-    public static final Predicate<Object> LIST_STRING_CHECK = o -> o instanceof List<?> && ((Collection<?>) o).stream().allMatch(s -> s instanceof String);
+    public static final Predicate<Object> LIST_STRING_CHECK = (s)->{
+        if(s instanceof List<?>){
+            boolean b = ((Collection<?>) s).stream().allMatch(o -> o instanceof String);
+            if(!b){
+                int a = 0;
+            }
+            return b;
+        }
+        return false;
+    };
 
     public static final Predicate<Object> COLOR_CHECK = s -> {
         try {

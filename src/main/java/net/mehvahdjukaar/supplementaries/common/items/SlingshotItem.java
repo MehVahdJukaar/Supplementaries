@@ -162,7 +162,11 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return s -> s.getItem() instanceof BlockItem || ItemsOverrideHandler.hasBlockPlacementAssociated(s.getItem());
+        return s ->{
+            Item i = s.getItem();
+            return !(i instanceof DispensibleContainerItem) && i instanceof BlockItem ||
+                    ItemsOverrideHandler.hasBlockPlacementAssociated(i);
+        };
     }
 
     @Override

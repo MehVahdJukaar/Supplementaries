@@ -44,6 +44,7 @@
     {"id":"cookielicious:vanilla_cookie","required":false},
     {"id":"croptopia:raisin_oatmeal_cookie","required":false},
     {"id":"croptopia:nutty_cookie","required":false},
+    {"id":"croptopia:snicker_doodle","required":false},
     {"id":"cspirit:sugar_cookie_santa","required":false},
     {"id":"cspirit:sugar_cookie_circle","required":false},
     {"id":"cspirit:sugar_cookie_ornament","required":false},

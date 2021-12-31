@@ -120,7 +120,7 @@ public class FrameBlockTile extends MimicBlockTile {
         if (b instanceof EntityBlock) {
             return false;
         }
-        return Block.isShapeFullBlock(state.getCollisionShape(world,pos));//state.isSolidRender(world, pos);
+        return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world,pos));
     }
 
 }

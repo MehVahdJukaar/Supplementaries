@@ -123,10 +123,11 @@ public class FeatherBlock extends Block {
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
-        Random random = level.random;
+        Random r = level.random;
         for (int i = 0; i < 10; i++) {
-            level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + random.nextFloat(),
-                    pos.getY() + random.nextFloat(), pos.getZ() +  random.nextFloat(), 0, 0, 0);
+            level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + r.nextFloat(),
+                    pos.getY() + r.nextFloat(), pos.getZ() +  r.nextFloat(),
+                    (0.5-r.nextFloat())*0.01, (0.5-r.nextFloat())*0.01, (0.5-r.nextFloat())*0.01);
         }
     }
 
