@@ -1,27 +1,25 @@
 {
   "replace": false,
   "values": [
-    "#forge:ingots/nether_brick",
-    "#forge:ingots/brick"
-  ],
-  "optional": [
-    "unnamedanimalmod:dried_mud_brick",
-    "unnamedanimalmod:mud_brick",
-    "architects_palette:algal_brick",
-    "architects_palette:sunmetal_brick",
-    "ars_nouveau:arcane_brick",
-    "biomesoplenty:mud_brick",
-    "byg:yellow_nether_brick",
-    "byg:blue_nether_brick",
-    "endergetic:eumus_brick",
-    "extcaves:brick_half",
-    "extcaves:half_brick",
-    "environmental:mud_brick",
-    "createdeco:red_brick",
-    "createdeco:worn_brick",
-    "createdeco:dean_brick",
-    "createdeco:blue_brick",
-    "createdeco:dusk_brick",
-    "createdeco:pearl_brick"
+    {"id":"#forge:ingots/nether_brick","required":false},
+    {"id":"#forge:ingots/brick","required":false},
+    {"id":"unnamedanimalmod:dried_mud_brick","required":false},
+    {"id":"unnamedanimalmod:mud_brick","required":false},
+    {"id":"architects_palette:algal_brick","required":false},
+    {"id":"architects_palette:sunmetal_brick","required":false},
+    {"id":"ars_nouveau:arcane_brick","required":false},
+    {"id":"biomesoplenty:mud_brick","required":false},
+    {"id":"byg:yellow_nether_brick","required":false},
+    {"id":"byg:blue_nether_brick","required":false},
+    {"id":"endergetic:eumus_brick","required":false},
+    {"id":"extcaves:brick_half","required":false},
+    {"id":"extcaves:half_brick","required":false},
+    {"id":"environmental:mud_brick","required":false},
+    {"id":"createdeco:red_brick","required":false},
+    {"id":"createdeco:worn_brick","required":false},
+    {"id":"createdeco:dean_brick","required":false},
+    {"id":"createdeco:blue_brick","required":false},
+    {"id":"createdeco:dusk_brick","required":false},
+    {"id":"createdeco:pearl_brick","required":false}
   ]
 }

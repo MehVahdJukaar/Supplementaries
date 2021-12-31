@@ -1,17 +1,15 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:rope",
-    "supplementaries:sack",
-    "supplementaries:hanging_flower_pot"
-  ],
-  "optional": [
-    "supplementaries:rope_chandelier",
-    "supplementaries:rope_soul_chandelier",
-    "farmersdelight:rope",
-    "inspirations:rope",
-    "inspirations:vine",
-    "druidcraft:rope",
-    "xercamod:rope"
+    {"id":"supplementaries:rope","required":false},
+    {"id":"supplementaries:sack","required":false},
+    {"id":"supplementaries:hanging_flower_pot","required":false},
+    {"id":"supplementaries:rope_chandelier","required":false},
+    {"id":"supplementaries:rope_soul_chandelier","required":false},
+    {"id":"farmersdelight:rope","required":false},
+    {"id":"inspirations:rope","required":false},
+    {"id":"inspirations:vine","required":false},
+    {"id":"druidcraft:rope","required":false},
+    {"id":"xercamod:rope","required":false}
   ]
 }

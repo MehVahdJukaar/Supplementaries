@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.goals;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -40,13 +41,14 @@ public class EatFodderGoal extends MoveToBlockGoal {
     @Override
     public boolean canUse() {
         if (!this.animal.canFallInLove() || this.animal.getAge() > 0) return false;
-        if (!ForgeHooks.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
-            return false;
-        } else if (this.nextStartTick > 0) {
+        if (this.nextStartTick > 0) {
             --this.nextStartTick;
             return false;
-        } else if (this.tryFindBlock()) {
-            //cooldown between attempts
+        } else if (this.blockPos != BlockPos.ZERO && !ForgeHooks.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
+            return false;
+        }
+        else if (this.tryFindBlock()) {
+            //cooldown between attempts if blocks are around
             this.nextStartTick = 600;
             return true;
         } else {
@@ -56,7 +58,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
         }
     }
 
-    //TODO: finish this. still buggy
+    //TODO: finish this. still buggy. improve
     @Override
     public boolean canContinueToUse() {
         //try is low so they dont get stuck
@@ -64,19 +66,20 @@ public class EatFodderGoal extends MoveToBlockGoal {
     }
 
     private boolean tryFindBlock() {
-        return this.blockPos != null && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
+        return this.blockPos != BlockPos.ZERO && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
     }
 
 
     @Override
-    protected int nextStartTick(PathfinderMob p_203109_1_) {
-        return 800 + p_203109_1_.getRandom().nextInt(400);
+    protected int nextStartTick(PathfinderMob pCreature) {
+        return 800 + pCreature.getRandom().nextInt(400);
     }
 
     @Override
     public void stop() {
         super.stop();
         this.animal.fallDistance = 1.0F;
+        this.blockPos = BlockPos.ZERO;
     }
 
     @Override
@@ -159,11 +162,12 @@ public class EatFodderGoal extends MoveToBlockGoal {
 
     @Override
     protected boolean isValidTarget(LevelReader world, BlockPos pos) {
-        ChunkAccess chunk = world.getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, false);
+        ChunkAccess chunk = world.getChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()), ChunkStatus.FULL, false);
         if (chunk == null) {
             return false;
         } else {
             return chunk.getBlockState(pos).is(ModRegistry.FODDER.get()) && chunk.getBlockState(pos.above()).isAir();
         }
     }
+
 }

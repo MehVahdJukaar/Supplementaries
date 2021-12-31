@@ -3,14 +3,18 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.*;
 
@@ -115,6 +119,15 @@ public class FeatherBlock extends Block {
             }
         }
         return Shapes.block();
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+        Random random = level.random;
+        for (int i = 0; i < 10; i++) {
+            level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + random.nextFloat(),
+                    pos.getY() + random.nextFloat(), pos.getZ() +  random.nextFloat(), 0, 0, 0);
+        }
     }
 
 

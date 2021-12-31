@@ -62,7 +62,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
 
     public FaucetBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(s->s.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
                 .setValue(ENABLED, false).setValue(EXTENDED, false).setValue(POWERED, false)
                 .setValue(HAS_WATER, false).setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, 0));

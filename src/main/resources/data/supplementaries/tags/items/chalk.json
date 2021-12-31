@@ -1,9 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:quartz"
-  ],
-  "optional": [
-    "chalk:white_chalk"
+  {"id":"minecraft:quartz","required":false},
+  {"id":"chalk:white_chalk","required":false}
   ]
 }

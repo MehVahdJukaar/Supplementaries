@@ -992,7 +992,6 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME, () -> BlockEntityType.Builder.of(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));
 
-
     //double cake
     public static final String DOUBLE_CAKE_NAME = "double_cake";
     public static final RegistryObject<Block> DOUBLE_CAKE = BLOCKS.register(DOUBLE_CAKE_NAME, () -> new DoubleCakeBlock(
@@ -1379,6 +1378,10 @@ public class ModRegistry {
 
     public static final RegistryObject<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = TILES.register(BUBBLE_BLOCK_NAME, () ->
             BlockEntityType.Builder.of(BubbleBlockTile::new, BUBBLE_BLOCK.get()).build(null));
+
+    //public static final String CREATIVE_WAND = "creative_wand";
+    //public static final RegistryObject<Item> TELEPORT_WAND = regItem(CREATIVE_WAND, () ->
+    //        new TeleportWand((new Item.Properties()).tab(null)));
     /*
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
     public static final RegistryObject<Block> REDSTONE_DRIVER = BLOCKS.register(REDSTONE_DRIVER_NAME,()-> new RedstoneDriverBlock(

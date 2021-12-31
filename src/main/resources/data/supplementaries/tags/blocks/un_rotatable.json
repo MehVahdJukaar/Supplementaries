@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:end_portal_frame"
+    {"id":"minecraft:end_portal_frame","required":false}
   ]
 }

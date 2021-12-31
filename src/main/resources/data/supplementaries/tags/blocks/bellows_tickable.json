@@ -1,14 +1,12 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:campfires",
-    "minecraft:furnace",
-    "minecraft:blast_furnace",
-    "minecraft:smoker"
-  ],
-  "optional": [
-    "charm:kiln",
-    "environmental:kiln",
-    "atum:kiln"
+    {"id":"#minecraft:campfires","required":false},
+    {"id":"minecraft:furnace","required":false},
+    {"id":"minecraft:blast_furnace","required":false},
+    {"id":"minecraft:smoker","required":false},
+    {"id":"charm:kiln","required":false},
+    {"id":"environmental:kiln","required":false},
+    {"id":"atum:kiln","required":false}
   ]
 }

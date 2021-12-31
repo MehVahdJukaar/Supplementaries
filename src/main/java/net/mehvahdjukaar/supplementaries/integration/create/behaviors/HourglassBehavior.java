@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
 
+import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
@@ -63,7 +63,7 @@ public class HourglassBehavior extends MovementBehaviour {
     }
 
     @Override
-    public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
 
         CompoundTag com = context.tileData;
         HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];

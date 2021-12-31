@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
+import me.thonk.croptopia.blocks.CroptopiaCropBlock;
+import me.thonk.croptopia.items.CroptopiaSaplingItem;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
@@ -9,8 +11,10 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -36,9 +40,11 @@ public class Supplementaries {
 
     public Supplementaries() {
 
+        //all optional tags are broken
+        //ash jei plugin
         //bundle sound for sacks
         //bellows bubble
-        //FIx spikes colors & piston movements
+        //FIx spikes piston movements
         //TODO: fish bucket on cages a
         //TODO: shift click to pickup placed book
 

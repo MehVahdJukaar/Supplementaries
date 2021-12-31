@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#forge:shulker_boxes",
-	"supplementaries:safe",
-	"supplementaries:sack"
+    {"id":"#forge:shulker_boxes","required":false},
+    {"id":"supplementaries:safe","required":false},
+    {"id":"supplementaries:sack","required":false}
   ]
 }

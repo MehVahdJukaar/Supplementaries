@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -71,11 +72,11 @@ public class BambooSpikesBlockTile extends BlockEntity {
         this.charges = Math.max(MAX_CHARGES - missing, 0);
     }
 
-    public boolean tryApplyPotion(Potion p) {
+    public boolean tryApplyPotion(Potion newPotion) {
 
-        if (this.charges == 0 || this.potion == Potions.EMPTY || this.potion.equals(p) && this.charges != MAX_CHARGES) {
-            if(BambooSpikesTippedItem.areEffectsValid(potion.getEffects())) {
-                this.potion = p;
+        if (this.charges == 0 || this.potion == Potions.EMPTY || this.potion.equals(newPotion) && this.charges != MAX_CHARGES) {
+            if(BambooSpikesTippedItem.areEffectsValid(newPotion.getEffects())) {
+                this.potion = newPotion;
                 this.charges = MAX_CHARGES;
                 this.setChanged();
                 //needed for buggy white tipped state. aparently not enough

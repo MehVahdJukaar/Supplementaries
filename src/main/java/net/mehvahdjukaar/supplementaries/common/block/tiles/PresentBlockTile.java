@@ -9,7 +9,9 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -28,6 +30,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +47,12 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
 
     public PresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PRESENT_TILE.get(), pos, state);
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @org.jetbrains.annotations.Nullable Direction facing) {
+        if( capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        return super.getCapability(capability, facing);
     }
 
     @Override
@@ -116,6 +127,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
     }
 
+    @Override
     public boolean canOpen(Player player) {
         return this.recipient.isEmpty() || this.recipient.equalsIgnoreCase(PUBLIC_KEY) ||
                 this.recipient.equalsIgnoreCase(player.getName().getString()) ||

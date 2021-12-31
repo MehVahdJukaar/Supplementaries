@@ -1,15 +1,13 @@
 {
   "replace": false,
   "values": [
-    "minecraft:chain"
-  ],
-  "optional": [
-    "decorative_blocks:chain",
-    "muchmoremodcompat:ice_chain",
-    "muchmoremodcompat:gold_chain",
-    "charm:gold_chain",
-    "forbidden_arcanus:iron_chain",
-    "decorative_winter:festive_chain",
-    "forbidden_arcanus:arcane_golden_chain"
+    {"id":"minecraft:chain","required":false},
+    {"id":"decorative_blocks:chain","required":false},
+    {"id":"muchmoremodcompat:ice_chain","required":false},
+    {"id":"muchmoremodcompat:gold_chain","required":false},
+    {"id":"charm:gold_chain","required":false},
+    {"id":"forbidden_arcanus:iron_chain","required":false},
+    {"id":"decorative_winter:festive_chain","required":false},
+    {"id":"forbidden_arcanus:arcane_golden_chain","required":false}
   ]
 }

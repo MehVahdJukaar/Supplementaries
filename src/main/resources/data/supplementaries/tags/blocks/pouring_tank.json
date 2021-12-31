@@ -1,62 +1,62 @@
 {
   "replace": false,
   "values": [
-    "minecraft:sponge",
-    "minecraft:wet_sponge",
+    {"id":"minecraft:sponge","required":false},
+    {"id":"minecraft:wet_sponge","required":false},
     {
-      "id": "tconstruct:channel",
+      "id":"tconstruct:channel",
       "required": false
     },
     {
-      "id": "tconstruct:scorched_channel",
+      "id":"tconstruct:scorched_channel",
       "required": false
     },
     {
-      "id": "ceramics:porcelain_channel",
+      "id":"ceramics:porcelain_channel",
       "required": false
     },
     {
-      "id": "ceramics:unfired_channel",
+      "id":"ceramics:unfired_channel",
       "required": false
     },
     {
-      "id": "ceramics:clay_channel",
+      "id":"ceramics:clay_channel",
       "required": false
     },
     {
-      "id": "ceramics:terracotta_channel",
+      "id":"ceramics:terracotta_channel",
       "required": false
     },
     {
-      "id": "tconstruct:seared_channel",
+      "id":"tconstruct:seared_channel",
       "required": false
     },
     {
-      "id": "tconstruct:casting_basin",
+      "id":"tconstruct:casting_basin",
       "required": false
     },
     {
-      "id": "tconstrust:casting_table",
+      "id":"tconstrust:casting_table",
       "required": false
     },
     {
-      "id": "tconstrust:seared_basin",
+      "id":"tconstrust:seared_basin",
       "required": false
     },
     {
-      "id": "tconstrust:scorched_basin",
+      "id":"tconstrust:scorched_basin",
       "required": false
     },
     {
-      "id": "create:basin",
+      "id":"create:basin",
       "required": false
     },
     {
-      "id": "#ceramics:terracotta_cisterns",
+      "id":"#ceramics:terracotta_cisterns",
       "required": false
     },
     {
-      "id": "#ceramics:porcelain_cistern",
+      "id":"#ceramics:porcelain_cistern",
       "required": false
     }
   ]

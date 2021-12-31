@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
+import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
 import java.util.Random;
 
 public class ColorHelper {
-    private static final float[][] COLORS;
+    private static final float[][] SOAP_COLORS;
 
     static {
         int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
@@ -16,7 +17,7 @@ public class ColorHelper {
             temp[i] = new float[]{FastColor.ARGB32.red(j) / 255f,
                     FastColor.ARGB32.green(j) / 255f, FastColor.ARGB32.blue(j) / 255f};
         }
-        COLORS = temp;
+        SOAP_COLORS = temp;
     }
 
     public static int pack(float[] rgb) {
@@ -48,13 +49,13 @@ public class ColorHelper {
     }
 
     public static float[] getBubbleColor(float phase) {
-        int n = COLORS.length;
+        int n = SOAP_COLORS.length;
         int ind = (int) Math.floor(n * phase);
 
         float delta = n * phase % 1;
 
-        float[] start = COLORS[ind];
-        float[] end = COLORS[(ind + 1) % n];
+        float[] start = SOAP_COLORS[ind];
+        float[] end = SOAP_COLORS[(ind + 1) % n];
 
         float red = Mth.lerp(delta, start[0], end[0]);
         float green = Mth.lerp(delta, start[1], end[1]);
@@ -67,7 +68,8 @@ public class ColorHelper {
         float h = hsl[0];
         float s = hsl[1];
         float l = hsl[2];
-        //map one to one. no effect on its own
+        //map one to one. no effect on its own (false...)
+        //s = s + (float)((1-s)*ClientConfigs.general.TEST3.get());
         s = oneToOneSaturation(s, l);
 
         //remove darker colors
@@ -76,7 +78,8 @@ public class ColorHelper {
 
         //saturate dark colors
         float j = (1 - l);
-        //if(s<j)s=j;
+        float ratio = 0.35f;
+        if(s<j)s=(ratio*j + (1-ratio)*s);
 
 
         //desaturate blue

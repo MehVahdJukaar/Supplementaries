@@ -1,10 +1,8 @@
 {
   "replace": false,
-  "optional": [
-    "farmersdelight:basket",
-    "#adorn:kitchen_sinks"
-  ],
   "values": [
-    "minecraft:composter"
+    {"id":"farmersdelight:basket","required":false},
+    {"id":"#adorn:kitchen_sinks","required":false},
+    {"id":"minecraft:composter","required":false}
   ]
 }

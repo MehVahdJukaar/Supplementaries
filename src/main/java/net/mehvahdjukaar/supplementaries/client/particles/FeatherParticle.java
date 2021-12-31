@@ -21,7 +21,7 @@ public class FeatherParticle extends TextureSheetParticle {
     private FeatherParticle(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double speedX, double speedY, double speedZ) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.quadSize *= 1.3125F + this.random.nextFloat() * 0.15;
-        this.lifetime = 120 + this.random.nextInt(20);
+        this.lifetime = 360 + this.random.nextInt(60);
         this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f);
         this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
         this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
@@ -55,7 +55,7 @@ public class FeatherParticle extends TextureSheetParticle {
 
             this.zd *= 0.98F;
 
-            this.yd -= 0.002F;
+            this.yd -= 0.0022F;
             this.yd = Math.max(this.yd, -0.008F); //0.008
 
 

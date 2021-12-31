@@ -62,7 +62,7 @@ public class ModSoftFluids {
                 .fromMod("malum")
                 .color(0x762550)
                 .translationKey("item.malum:unholy_sap")
-                .drink("malum:unholy_sap"));
+                .bottle("malum:unholy_sap"));
     }
 
 
@@ -364,12 +364,12 @@ public class ModSoftFluids {
         custom.add(makeSF(new SoftFluid.Builder(Textures.SOUP_TEXTURE, Textures.POTION_TEXTURE_FLOW, "gooseberry_jam")
                 .fromMod("bayou_blues")
                 .color(0xF3BF40)
-                .translationKey("item.bayou_blues:gooseberry_jam_bottle")
+                .translationKey("item.bayou_blues.gooseberry_jam_bottle")
                 .drink("gooseberry_jam:gooseberry_jam_bottle")));
         custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE, Textures.POTION_TEXTURE_FLOW, "gooseberry_juice")
                 .fromMod("bayou_blues")
                 .color(0xBBDF62)
-                .translationKey("item.bayou_blues:gooseberry_juice_bottle")
+                .translationKey("item.bayou_blues.gooseberry_juice_bottle")
                 .drink("gooseberry_jam:gooseberry_juice_bottle")));
 
 
@@ -377,14 +377,14 @@ public class ModSoftFluids {
         custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE, Textures.HONEY_TEXTURE, "holy_syrup")
                 .fromMod("malum")
                 .color(0xCC9A51)
-                .translationKey("item.malum:holy_syrup")
-                .drink("malum:holy_syrup")));
+                .translationKey("item.malum.holy_syrup")
+                .bottle("malum:holy_syrup")));
 
         custom.add(makeSF(new SoftFluid.Builder(Textures.HONEY_TEXTURE, Textures.HONEY_TEXTURE, "unholy_syrup")
                 .fromMod("malum")
                 .color(0x902454)
-                .translationKey("item.malum:holy_syrup")
-                .drink("malum:unholy_syrup")));
+                .translationKey("item.malum.holy_syrup")
+                .bottle("malum:unholy_syrup")));
 
 
         //inspirations dye bottles. not adding nbt mixed ones

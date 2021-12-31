@@ -29,7 +29,6 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
     private final ContainerOpenersCounter openersCounter = new ContainerCounter();
     protected NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
 
-
     protected OpeneableContainerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
     }

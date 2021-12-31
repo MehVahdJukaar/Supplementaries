@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:urn",
-    "minecraft:tnt"
+    {"id":"supplementaries:urn","required":false},
+    {"id":"minecraft:tnt","required":false}
   ]
 }

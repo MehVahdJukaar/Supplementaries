@@ -3,9 +3,7 @@
   "values": [
     "minecraft:cow",
     "minecraft:sheep",
-    "minecraft:pig"
-  ],
-  "optional": [
+    "minecraft:pig",
     "alexsmobs:crocodile",
     "alexsmobs:endergrade",
     "alexsmobs:gazelle",

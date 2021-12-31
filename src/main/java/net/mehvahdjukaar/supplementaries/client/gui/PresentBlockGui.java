@@ -19,6 +19,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -276,7 +277,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
             if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                PresentBlockGui.this.renderTooltip(matrixStack, CommonComponents.GUI_DONE, x, y);
+                PresentBlockGui.this.renderTooltip(matrixStack, new TranslatableComponent("gui.supplementaries.present.pack"), x, y);
             }
         }
 

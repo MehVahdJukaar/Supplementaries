@@ -16,7 +16,7 @@ public class MalumPlugin {
 
     public static SoftFluid getSap(Block block) {
 
-        return block.getRegistryName().getPath().contains("unholy") ? ModSoftFluids.UNHOLY_SAP : ModSoftFluids.HOLY_SAP;
+        return block.getRegistryName().getPath().contains("revealed") ? ModSoftFluids.UNHOLY_SAP : ModSoftFluids.HOLY_SAP;
     }
 
     public static void extractSap(Level level, BlockState backState, BlockPos pos) {

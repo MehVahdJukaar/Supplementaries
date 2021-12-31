@@ -110,8 +110,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
 
         if(RegistryHelper.conditionalSigns()){
-            if(this.woodTypeUp.isModActive()) this.woodTypeUp = VanillaWoodTypes.OAK;
-            if(this.woodTypeDown.isModActive()) this.woodTypeDown = VanillaWoodTypes.OAK;
+            if(!this.woodTypeUp.isModActive()) this.woodTypeUp = VanillaWoodTypes.OAK;
+            if(!this.woodTypeDown.isModActive()) this.woodTypeDown = VanillaWoodTypes.OAK;
         }
 
         this.loadOwner(compound);

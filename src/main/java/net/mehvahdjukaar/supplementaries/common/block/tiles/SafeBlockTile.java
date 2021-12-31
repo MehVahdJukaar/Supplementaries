@@ -22,6 +22,9 @@ import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -36,6 +39,12 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         super(ModRegistry.SAFE_TILE.get(), pos, state);
     }
 
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @org.jetbrains.annotations.Nullable Direction facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        return super.getCapability(capability, facing);
+    }
+
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
         if (ServerConfigs.cached.SAFE_SIMPLE) {
@@ -48,6 +57,13 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             return KeyLockableTile.doesPlayerHaveKeyToOpen(player, this.password, feedbackMessage, "safe");
         }
         return true;
+    }
+
+    //TODO: use vanilla system??
+    //default lockable tile method. just used for compat
+    @Override
+    public boolean canOpen(Player pPlayer) {
+        return canPlayerOpen(pPlayer, false);
     }
 
     @Nullable

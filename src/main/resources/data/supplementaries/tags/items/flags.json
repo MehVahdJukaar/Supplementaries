@@ -1,21 +1,21 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flag_white",
-    "supplementaries:flag_orange",
-    "supplementaries:flag_yellow",
-    "supplementaries:flag_red",
-    "supplementaries:flag_blue",
-    "supplementaries:flag_cyan",
-    "supplementaries:flag_light_blue",
-    "supplementaries:flag_lime",
-    "supplementaries:flag_green",
-    "supplementaries:flag_magenta",
-    "supplementaries:flag_pink",
-    "supplementaries:flag_purple",
-    "supplementaries:flag_black",
-    "supplementaries:flag_gray",
-    "supplementaries:flag_light_gray",
-    "supplementaries:flag_brown"
+    {"id":"supplementaries:flag_white","required":false},
+    {"id":"supplementaries:flag_orange","required":false},
+    {"id":"supplementaries:flag_yellow","required":false},
+    {"id":"supplementaries:flag_red","required":false},
+    {"id":"supplementaries:flag_blue","required":false},
+    {"id":"supplementaries:flag_cyan","required":false},
+    {"id":"supplementaries:flag_light_blue","required":false},
+    {"id":"supplementaries:flag_lime","required":false},
+    {"id":"supplementaries:flag_green","required":false},
+    {"id":"supplementaries:flag_magenta","required":false},
+    {"id":"supplementaries:flag_pink","required":false},
+    {"id":"supplementaries:flag_purple","required":false},
+    {"id":"supplementaries:flag_black","required":false},
+    {"id":"supplementaries:flag_gray","required":false},
+    {"id":"supplementaries:flag_light_gray","required":false},
+    {"id":"supplementaries:flag_brown","required":false}
   ]
 }

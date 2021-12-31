@@ -26,7 +26,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             case 1 -> {
                 if (!cachedColors0.containsKey(base)) {
                     int c = getProcessedColor(base, 0);
-                    cachedColors0.put(base, c);
+                    //cachedColors0.put(base, c);
                     yield c;
                 } else {
                     yield cachedColors0.get(base);
@@ -35,7 +35,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             case 2 -> {
                 if (!cachedColors1.containsKey(base)) {
                     int c = getProcessedColor(base, 1);
-                    cachedColors1.put(base, c);
+                   // cachedColors1.put(base, c);
                     yield c;
                 } else {
                     yield cachedColors1.get(base);

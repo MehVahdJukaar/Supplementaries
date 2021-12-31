@@ -1,24 +1,22 @@
 {
   "replace": false,
-  "optional": [
-    "betternether:cincinnasite_pedestal",
-    "terrestria:small_oak_log",
-    "terrestria:stripped_sakura_log",
-    "terrestria:stripped_small_oak_log",
-    "terrestria:stripped_yucca_palm_log",
-    "terrestria:yucca_palm_log",
-
-    "#valhelsia_structures:posts",
-    "valhelsia_structures:oak_post",
-    "valhelsia_structures:spruce_post",
-    "valhelsia_structures:birch_post",
-    "valhelsia_structures:jungle_post",
-    "valhelsia_structures:acacia_post",
-    "valhelsia_structures:dark_oak_post",
-    "valhelsia_structures:warped_post",
-    "valhelsia_structures:crimson_post"
-  ],
   "values": [
+    {"id":"betternether:cincinnasite_pedestal","required":false},
+    {"id":"terrestria:small_oak_log","required":false},
+    {"id":"terrestria:stripped_sakura_log","required":false},
+    {"id":"terrestria:stripped_small_oak_log","required":false},
+    {"id":"terrestria:stripped_yucca_palm_log","required":false},
+    {"id":"terrestria:yucca_palm_log","required":false},
+
+    {"id":"#valhelsia_structures:posts","required":false},
+    {"id":"valhelsia_structures:oak_post","required":false},
+    {"id":"valhelsia_structures:spruce_post","required":false},
+    {"id":"valhelsia_structures:birch_post","required":false},
+    {"id":"valhelsia_structures:jungle_post","required":false},
+    {"id":"valhelsia_structures:acacia_post","required":false},
+    {"id":"valhelsia_structures:dark_oak_post","required":false},
+    {"id":"valhelsia_structures:warped_post","required":false},
+    {"id":"valhelsia_structures:crimson_post","required":false}
   ]
 }
 

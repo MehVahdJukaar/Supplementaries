@@ -6,11 +6,9 @@
       "id":"#forge:sand",
       "required":false
     },
-    "#minecraft:sand"
-  ],
-  "optional": [
-    "thermal:sawdust_block",
-    "infernalexp:glowdust_sand",
-    "create:limesand"
+  {"id":"#minecraft:sand","required":false},
+  {"id":"thermal:sawdust_block","required":false},
+  {"id":"infernalexp:glowdust_sand","required":false},
+  {"id":"create:limesand","required":false}
   ]
 }
