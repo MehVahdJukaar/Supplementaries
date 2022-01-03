@@ -37,12 +37,11 @@ import java.util.List;
 public class WindVaneBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 16, 14);
 
-    public static final BooleanProperty TILE = BlockProperties.TILE; // is it rooster only?
     public static final IntegerProperty WIND_STRENGTH = BlockProperties.WIND_STRENGTH;
 
     public WindVaneBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TILE, false).setValue(WIND_STRENGTH, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(WIND_STRENGTH, 0));
     }
 
     @Override
@@ -99,7 +98,7 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WIND_STRENGTH, TILE);
+        builder.add(WIND_STRENGTH);
     }
 
     @Override

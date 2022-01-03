@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
+import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraftforge.fml.ModList;
@@ -86,7 +87,7 @@ public class CompatHandler {
     }
 
     public static void registerOptionalStuff() {
-        //if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
+        if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
         if (farmers_delight) FDCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
         //if (botania) BotaniaCompatRegistry.registerStuff();

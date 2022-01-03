@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingFlowerPotBlockTile;
@@ -29,7 +30,6 @@ public class HangingFlowerPotBlockTileRenderer implements BlockEntityRenderer<Ha
                        int combinedOverlayIn) {
 
         BlockState state = CommonUtil.FESTIVITY.isAprilsFool() ? FlowerPotHandler.getAprilPot() : tile.getHeldBlock();
-        BlockState state2 = tile.getBlockState().setValue(HangingFlowerPotBlock.TILE, true);
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -37,11 +37,11 @@ public class HangingFlowerPotBlockTileRenderer implements BlockEntityRenderer<Ha
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
-        // render block
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        //blockRenderer.renderBlock(state2, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        RendererUtil.renderBlockModel(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
-        RendererUtil.renderBlockModel(state2, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos(), RenderType.cutout());
+        RendererUtil.renderBlockState(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+
+        RendererUtil.renderBlockModel(Materials.HANGING_POT_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,
+                combinedLightIn, combinedOverlayIn, true);
+
 
         matrixStackIn.popPose();
 

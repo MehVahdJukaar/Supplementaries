@@ -36,7 +36,9 @@ public class ClientRegistry {
     public static ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static ModelLayerLocation PICKLE_MODEL = loc("pickle");
 
-    public static void register(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    //TODO: merge with materials and client setup
+
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
         //event.registerLayerDefinition(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
         event.registerLayerDefinition(BOOK_MODEL, BookPileBlockTileRenderer::createMesh);

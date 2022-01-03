@@ -11,6 +11,7 @@
     {"id":"supplementaries:hanging_sign_warped","required":false},
     {"id":"supplementaries:hanging_sign_palm","required":false},
     {"id":"supplementaries:hanging_sign_mahogany_bop","required":false},
+		{"id":"supplementaries:hanging_sign_netherwood_mc","required":false},
     {"id":"supplementaries:hanging_sign_sythian","required":false},
     {"id":"supplementaries:hanging_sign_bulbis","required":false},
     {"id":"supplementaries:hanging_sign_bamboo","required":false},

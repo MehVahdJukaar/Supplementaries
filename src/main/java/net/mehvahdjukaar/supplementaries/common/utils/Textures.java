@@ -130,8 +130,7 @@ public class Textures {
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
-            HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + RegistryHelper.getHangingSignName(type)));
-            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + RegistryHelper.getSignPostName(type)));
+            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation(type.getSignPostName())));
         }
 
         for (BannerPattern pattern : BannerPattern.values()) {

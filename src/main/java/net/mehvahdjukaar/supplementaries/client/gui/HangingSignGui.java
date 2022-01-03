@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
@@ -147,8 +149,9 @@ public class HangingSignGui extends Screen {
         poseStack.mulPose(Const.Y90);
         poseStack.translate(0, -0.5 + 0.1875, -0.5);
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
-        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(this.tileSign.woodType), poseStack, bufferSource, blockRenderer,
+                15728880, OverlayTexture.NO_OVERLAY, true);
+
         poseStack.popPose();
 
         //renders text

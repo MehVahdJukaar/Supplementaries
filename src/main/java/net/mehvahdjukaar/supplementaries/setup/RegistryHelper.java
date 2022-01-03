@@ -81,13 +81,14 @@ public class RegistryHelper {
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             if (conditionalSigns() && !wood.isModActive()) continue;
-            String name = getHangingSignName(wood);
+            String name = wood.getHangingSignName();
             map.put(wood, ModRegistry.BLOCKS.register(name, () -> new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.getMaterial(), wood.getColor())
                             .strength(2f, 3f)
                             .sound(SoundType.WOOD)
                             .noOcclusion()
-                            .noCollission()
+                            .noCollission(),
+                    wood
             )));
         }
         return map;
@@ -98,7 +99,7 @@ public class RegistryHelper {
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             if (conditionalSigns() && !wood.isModActive()) continue;
-            String name = getHangingSignName(wood);
+            String name = wood.getHangingSignName();
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
                             getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), 200
@@ -107,9 +108,6 @@ public class RegistryHelper {
         return map;
     }
 
-    public static String getHangingSignName(IWoodType type) {
-        return ModRegistry.HANGING_SIGN_NAME + "_" + type.getRegName();
-    }
 
     //sign posts
     public static Map<IWoodType, RegistryObject<Item>> makeSignPostItems() {
@@ -117,17 +115,13 @@ public class RegistryHelper {
 
         for (IWoodType wood : WoodTypes.TYPES.values()) {
             if (conditionalSigns() && !wood.isModActive()) continue;
-            String name = getSignPostName(wood);
+            String name = wood.getSignPostName();
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new SignPostItem(
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
                             getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)), wood
             )));
         }
         return map;
-    }
-
-    public static String getSignPostName(IWoodType type) {
-        return ModRegistry.SIGN_POST_NAME + "_" + type.getRegName();
     }
 
     //flags

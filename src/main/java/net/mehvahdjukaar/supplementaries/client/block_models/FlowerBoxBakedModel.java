@@ -111,7 +111,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
                 //dont render double plants
                 return;
             }
-            model = blockModelShaper.getModelManager().getModel(new ModelResourceLocation(res.toString()));
+            model = blockModelShaper.getModelManager().getModel(res);
         } else {
             model = blockModelShaper.getBlockModel(state);
         }

@@ -12,6 +12,7 @@
     {"id":"supplementaries:sign_post_palm","required":false},
     {"id":"supplementaries:sign_post_mahogany_bop","required":false},
     {"id":"supplementaries:sign_post_sythian","required":false},
+		{"id":"supplementaries:sign_post_netherwood_mc","required":false},
     {"id":"supplementaries:sign_post_bulbis","required":false},
     {"id":"supplementaries:sign_post_bamboo","required":false},
     {"id":"supplementaries:sign_post_cika","required":false},

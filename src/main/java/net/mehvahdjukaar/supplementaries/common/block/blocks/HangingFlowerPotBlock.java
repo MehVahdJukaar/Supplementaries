@@ -42,11 +42,10 @@ import java.util.List;
 public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
-    public static final BooleanProperty TILE = BlockProperties.TILE; // is it tile only. used for rendering to store model
 
     public HangingFlowerPotBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(TILE, false));
+        this.registerDefaultState(this.stateDefinition.any());
     }
 
     @Override
@@ -63,18 +62,13 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     @Override
     public MutableComponent getName() {
-        return new TranslatableComponent("minecraft:flower_pot");
+        return new TranslatableComponent("block.minecraft.flower_pot");
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return context.getClickedFace() == Direction.DOWN ? super.getStateForPlacement(context) : null;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(TILE);
     }
 
     @Override
@@ -122,7 +116,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return state.getValue(TILE) ? RenderShape.MODEL : RenderShape.INVISIBLE;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

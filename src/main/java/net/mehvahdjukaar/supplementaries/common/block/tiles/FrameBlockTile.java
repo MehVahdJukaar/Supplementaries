@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -120,7 +121,8 @@ public class FrameBlockTile extends MimicBlockTile {
         if (b instanceof EntityBlock) {
             return false;
         }
-        return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world,pos));
+        if (b instanceof FeatherBlock) return true;
+        return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world, pos));
     }
 
 }

@@ -40,7 +40,7 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        //all optional tags are broken
+        //add option for soul jar
         //ash jei plugin
         //bundle sound for sacks
         //bellows bubble

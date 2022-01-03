@@ -4,19 +4,20 @@
     "minecraft:cow",
     "minecraft:sheep",
     "minecraft:pig",
-    "alexsmobs:crocodile",
-    "alexsmobs:endergrade",
-    "alexsmobs:gazelle",
-    "alexsmobs:gorilla",
-    "alexsmobs:komodo_dragon",
-    "alexsmobs:raccoon",
-    "alexsmobs:seal",
-    "alexsmobs:warped_toad",
-    "eanimod:enhanced_sheep",
-    "eanimod:enhanced_cow",
-    "eanimod:enhanced_llama",
-    "eanimod:enhanced_pig",
-    "eanimod:enhanced_mooshroom"
+    "minecraft:goat",
+    {"id":"alexsmobs:crocodile","required":false},
+    {"id":"alexsmobs:endergrade","required":false},
+    {"id":"alexsmobs:gazelle","required":false},
+    {"id":"alexsmobs:gorilla","required":false},
+    {"id":"alexsmobs:komodo_dragon","required":false},
+    {"id":"alexsmobs:raccoon","required":false},
+    {"id":"alexsmobs:seal","required":false},
+    {"id":"alexsmobs:warped_toad","required":false},
+    {"id":"eanimod:enhanced_sheep","required":false},
+    {"id":"eanimod:enhanced_cow","required":false},
+    {"id":"eanimod:enhanced_llama","required":false},
+    {"id":"eanimod:enhanced_pig","required":false},
+    {"id":"eanimod:enhanced_mooshroom","required":false}
   ]
 }
 

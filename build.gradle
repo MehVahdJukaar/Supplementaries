@@ -12,6 +12,7 @@ buildscript {
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
         classpath 'org.parchmentmc:librarian:1.+'
+
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -27,7 +28,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.3'
+version = '1.18.1-1.1.5'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -118,6 +119,11 @@ dependencies {
 
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.5'
 
+    afterEvaluate {
+        minecraft('cpw.mods:modlauncher:9.0.7') {
+            force = true
+        }
+    }
 
     implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
@@ -133,10 +139,11 @@ dependencies {
     implementation fg.deobf("curse.maven:malum-484064:3579643")
     implementation fg.deobf("curse.maven:croptopia-fabric-415438:3569895")
     implementation fg.deobf("curse.maven:jade-324717:3564963")
-    //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
+    implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
     //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
-    //implementation fg.deobf("curse.maven:tetra-289712:3371803")
-    //implementation fg.deobf("curse.maven:mgui-351914:3291267")
+    implementation fg.deobf("curse.maven:tetra-289712:3586368")
+    implementation fg.deobf("curse.maven:mgui-351914:3573121")
+    implementation fg.deobf("curse.maven:progression-revamp-503154:3585189")
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")
@@ -280,5 +287,6 @@ dependencies {
     }
 
     // Other standard gradle dependencies
+
 
 }

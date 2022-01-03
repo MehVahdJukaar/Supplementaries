@@ -43,8 +43,8 @@ public enum VanillaWoodTypes implements IWoodType {
     }
 
     @Override
-    public String getLocation() {
-        return "";
+    public String getLocation(String name) {
+        return ""+name;
     }
 
     @Override

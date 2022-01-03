@@ -2,9 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -30,6 +33,8 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     public TextHolder textHolder;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
+    public IWoodType woodType = VanillaWoodTypes.OAK;
+
     static {
         maxSwingAngle = 45f;
         minSwingAngle = 2.5f;
@@ -41,6 +46,9 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     public HangingSignBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.HANGING_SIGN_TILE.get(), pos, state);
         this.textHolder = new TextHolder(MAX_LINES);
+        if(this.getBlockState().getBlock() instanceof HangingSignBlock block){
+            this.woodType = block.woodType;
+        }
     }
 
     @Nullable
@@ -63,7 +71,6 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     public void openScreen(Level level, BlockPos pos, Player player) {
         HangingSignGui.open(this);
     }
-
 
     @Override
     public ItemStack getMapStack() {

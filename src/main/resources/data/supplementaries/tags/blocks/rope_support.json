@@ -11,6 +11,7 @@
     {"id":"inspirations:vine","required":false},
     {"id":"farmersdelight:rope","required":false},
     {"id":"xercamod:rope","required":false},
-    {"id":"druidcraft:rope","required":false}
+    {"id":"druidcraft:rope","required":false},
+    {"id":"#decorative_blocks:seats","required":false}
   ]
 }

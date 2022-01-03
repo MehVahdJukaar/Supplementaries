@@ -1,93 +1,48 @@
 {
   "variants": {
-    "extension=0,facing=north,tile=false": {
+    "extension=0,facing=north": {
       "model": "supplementaries:block/hs/hanging_sign_0_jacaranda_bop"
     },
-    "extension=1,facing=north,tile=false": {
+    "extension=1,facing=north": {
       "model": "supplementaries:block/hs/hanging_sign_1_jacaranda_bop"
     },
-    "extension=2,facing=north,tile=false": {
+    "extension=2,facing=north": {
       "model": "supplementaries:block/hs/hanging_sign_2_jacaranda_bop"
     },
-    "extension=0,facing=south,tile=false": {
+    "extension=0,facing=south": {
       "model": "supplementaries:block/hs/hanging_sign_0_jacaranda_bop",
       "y": 180
     },
-    "extension=1,facing=south,tile=false": {
+    "extension=1,facing=south": {
       "model": "supplementaries:block/hs/hanging_sign_1_jacaranda_bop",
       "y": 180
     },
-    "extension=2,facing=south,tile=false": {
+    "extension=2,facing=south": {
       "model": "supplementaries:block/hs/hanging_sign_2_jacaranda_bop",
       "y": 180
     },
-    "extension=0,facing=west,tile=false": {
+    "extension=0,facing=west": {
       "model": "supplementaries:block/hs/hanging_sign_0_jacaranda_bop",
       "y": 270
     },
-    "extension=1,facing=west,tile=false": {
+    "extension=1,facing=west": {
       "model": "supplementaries:block/hs/hanging_sign_1_jacaranda_bop",
       "y": 270
     },
-    "extension=2,facing=west,tile=false": {
+    "extension=2,facing=west": {
       "model": "supplementaries:block/hs/hanging_sign_2_jacaranda_bop",
       "y": 270
     },
-    "extension=0,facing=east,tile=false": {
+    "extension=0,facing=east": {
       "model": "supplementaries:block/hs/hanging_sign_0_jacaranda_bop",
       "y": 90
     },
-    "extension=1,facing=east,tile=false": {
+    "extension=1,facing=east": {
       "model": "supplementaries:block/hs/hanging_sign_1_jacaranda_bop",
       "y": 90
     },
-    "extension=2,facing=east,tile=false": {
+    "extension=2,facing=east": {
       "model": "supplementaries:block/hs/hanging_sign_2_jacaranda_bop",
-      "y": 90
-    },
-    "extension=0,facing=north,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop"
-    },
-    "extension=1,facing=north,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop"
-    },
-    "extension=2,facing=north,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop"
-    },
-    "extension=0,facing=south,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 180
-    },
-    "extension=1,facing=south,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 180
-    },
-    "extension=2,facing=south,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 180
-    },
-    "extension=0,facing=west,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 270
-    },
-    "extension=1,facing=west,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 270
-    },
-    "extension=2,facing=west,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 270
-    },
-    "extension=0,facing=east,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 90
-    },
-    "extension=1,facing=east,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
-      "y": 90
-    },
-    "extension=2,facing=east,tile=true": {
-      "model": "supplementaries:block/hs/hanging_sign_tile_jacaranda_bop",
       "y": 90
     }
   }

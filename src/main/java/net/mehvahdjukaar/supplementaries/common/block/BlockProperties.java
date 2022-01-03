@@ -19,7 +19,6 @@ public class BlockProperties {
     //BlockState properties
     public static final BooleanProperty EXTENDING = BooleanProperty.create("extending");
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
-    public static final BooleanProperty TILE = BooleanProperty.create("tile");
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
     // it's detecting incoming laser and its distance

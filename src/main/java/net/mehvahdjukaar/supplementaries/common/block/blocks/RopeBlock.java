@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.Util;
@@ -202,8 +203,7 @@ public class RopeBlock extends WaterBlock {
 
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
-            //TODO: readd
-            //RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
+            RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
         }
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -230,8 +230,7 @@ public class RopeBlock extends WaterBlock {
             worldIn.scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
                 BlockPos down = pos.below();
-                //TODO: readd
-                //RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
+                RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
             }
         }
     }

@@ -1,10 +1,7 @@
 {
   "variants": {
-    "tile=false": {
+    "": {
       "model": "supplementaries:block/wind_vane_down"
-    },
-    "tile=true": {
-      "model": "supplementaries:block/wind_vane_up"
     }
   }
 }

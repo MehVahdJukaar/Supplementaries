@@ -28,9 +28,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
     public static final int LINE_MAX_WIDTH = 75;
@@ -71,9 +69,10 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         }
         poseStack.translate(-0.5, -0.875, -0.5);
         //render block
-        BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
+        RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
 
-        blockRenderer.renderSingleBlock(state, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
+        //blockRenderer.renderSingleBlock(state, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         //RendererUtil.renderBlockPlus(state, poseStack, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
 
         if (lod.isMedium()) {

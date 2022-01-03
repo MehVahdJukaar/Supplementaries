@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashMap;
@@ -32,10 +35,21 @@ public class Materials {
     public static final Map<IWoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
 
+    public static final Map<IWoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
+    public static final ResourceLocation WIND_VANE_BLOCK_MODEL = new ResourceLocation(
+            Supplementaries.MOD_ID+":block/"+ ModRegistry.WIND_VANE_NAME+"_up");
+    public static final ResourceLocation HANGING_POT_BLOCK_MODEL = new ResourceLocation(
+            Supplementaries.MOD_ID+":block/"+ ModRegistry.HANGING_FLOWER_POT_NAME);
+
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
-            //HANGING_SIGNS_MATERIALS.put(type, new RenderMaterial(Atlases.SIGN_SHEET, Textures.HANGING_SIGNS_TEXTURES.get(type)));
-            SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Textures.SIGN_POSTS_TEXTURES.get(type)));
+            if(type.isModActive()) {
+                HANGING_SIGNS_BLOCK_MODELS.put(type, new ResourceLocation(Supplementaries.MOD_ID + ":block/hs/" +
+                        ModRegistry.HANGING_SIGN_NAME + "_tile_" + type.getRegName()));
+
+                //HANGING_SIGNS_MATERIALS.put(type, new RenderMaterial(Atlases.SIGN_SHEET, Textures.HANGING_SIGNS_TEXTURES.get(type)));
+                SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Textures.SIGN_POSTS_TEXTURES.get(type)));
+            }
         }
 
         for (BannerPattern pattern : BannerPattern.values()) {

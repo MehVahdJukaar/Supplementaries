@@ -149,6 +149,9 @@ public class WoodTypes {
         for (IWoodType w : EidolonWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
+        for (IWoodType w : MorecraftWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
 
 
     }

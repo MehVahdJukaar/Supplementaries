@@ -160,7 +160,7 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
 
     @Override
     public MutableComponent getName() {
-        return new TranslatableComponent("minecraft:cake");
+        return new TranslatableComponent("block.minecraft.cake");
     }
 
 

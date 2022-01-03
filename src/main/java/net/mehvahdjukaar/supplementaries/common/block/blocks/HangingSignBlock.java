@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -44,12 +46,14 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_X = Block.box(0, 0, 7, 16, 16, 9);
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
-    public static final BooleanProperty TILE = BlockProperties.TILE; // is it renderer by tile entity? animated part
 
-    public HangingSignBlock(Properties properties) {
+    public final IWoodType woodType;
+
+    public HangingSignBlock(Properties properties, IWoodType woodType) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
-                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(TILE, false).setValue(HANGING, false));
+                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(HANGING, false));
+        this.woodType = woodType;
     }
 
     @Override
@@ -144,7 +148,7 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HANGING, TILE);
+        builder.add(HANGING);
     }
 
     //TODO: merge with lantern

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -28,8 +29,8 @@ public interface IWoodType {
 
     String getNamespace();
 
-    default String getLocation(){
-        return this.getNamespace()+"/";
+    default String getLocation(String name){
+        return this.getNamespace()+"/"+name;
     }
 
     default String getPlankRegName() {
@@ -38,6 +39,14 @@ public interface IWoodType {
 
     default String getSignRegName(){
         return this.getNamespace()+":"+ this +"_sign";
+    }
+
+    default String getHangingSignName(){
+        return ModRegistry.HANGING_SIGN_NAME + "_" + this.getRegName();
+    }
+
+    default String getSignPostName(){
+        return ModRegistry.SIGN_POST_NAME + "_" + this.getRegName();
     }
 
     default String getTranslationName(){

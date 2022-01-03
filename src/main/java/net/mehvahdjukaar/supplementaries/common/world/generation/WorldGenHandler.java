@@ -4,12 +4,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingFlowerPotBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChunkGeneratorAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -29,6 +31,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.quark.content.world.module.BigDungeonModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +67,6 @@ public class WorldGenHandler {
         ConfiguredFeaturesRegistry.registerFeatures();
     }
 
-
     /**
      * Tells the chunkgenerator which biomes our structure can spawn in.
      * Will go into the world's chunkgenerator and manually add our structure spacing.
@@ -76,7 +78,6 @@ public class WorldGenHandler {
      * <p>
      * Basically use this to make absolutely sure the chunkgenerator can or cannot spawn your structure.
      */
-
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel serverLevel) {
             ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
@@ -109,6 +110,7 @@ public class WorldGenHandler {
                     Biome.BiomeCategory biomeCategory = biomeEntry.getValue().getBiomeCategory();
                     if (biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND &&
                             biomeCategory != Biome.BiomeCategory.RIVER &&
+                            biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
                             biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
                         associateBiomeToConfiguredStructure(STStructureToMultiMap, ConfiguredFeaturesRegistry.CONFIGURED_WAY_SIGN_STRUCTURE, biomeEntry.getKey());
                     }
@@ -122,6 +124,12 @@ public class WorldGenHandler {
             STStructureToMultiMap.forEach((key, value) -> tempStructureToMultiMap.put(key, ImmutableMultimap.copyOf(value)));
 
             worldStructureSettings.configuredStructures = tempStructureToMultiMap.build();
+
+
+            //dont forget this part
+            Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureSettings.structureConfig());
+            tempMap.putIfAbsent(StructuresRegistry.WAY_SIGN.get(), StructureSettings.DEFAULTS.get(StructuresRegistry.WAY_SIGN.get()));
+            worldStructureSettings.structureConfig = tempMap;
         }
     }
 
@@ -185,7 +193,7 @@ public class WorldGenHandler {
             if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {
 
                 ResourceLocation res = event.getName();
-                if (res != null) {
+                if (res != null && category != Biome.BiomeCategory.UNDERGROUND) {
 
                     ResourceKey<Biome> key = ResourceKey.create(ForgeRegistries.Keys.BIOMES, res);
                     Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);

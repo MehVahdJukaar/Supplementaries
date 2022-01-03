@@ -69,7 +69,7 @@ public class FlowerPotHandler {
      * for mods: use this or #Link(IFlowerModelProvider) to register plants that go into a flower box and have a custom model
      *
      * @param item  target item
-     * @param model resource location of the block model to be used. You can use ModelResourceLocation
+     * @param model resource location of the block model to be used
      */
     public static void registerCustomFlower(Item item, ResourceLocation model) {
         SPECIAL_FLOWER_BOX_FLOWERS.put(item, model);
@@ -78,14 +78,14 @@ public class FlowerPotHandler {
     private static void registerCompatFlower(String itemRes) {
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
         if (item != null && item != Items.AIR) {
-            ResourceLocation res = Supplementaries.res("plants/" + item.getRegistryName().getPath());
+            ResourceLocation res = Supplementaries.res("block/plants/" + item.getRegistryName().getPath());
             CUSTOM_MODELS.add(res);
             registerCustomFlower(item, res);
 
         }
     }
 
-    private static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
+    public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
     //static init for client and server sync
     static{
@@ -168,21 +168,16 @@ public class FlowerPotHandler {
 
     }
 
-    public static void registerCustomModels(Consumer<String> registerFunction){
-        CUSTOM_MODELS.stream().map(ResourceLocation::toString).forEach(registerFunction);
-    }
-
-
     @Nullable
     public static ResourceLocation getSpecialFlowerModel(Item i) {
         ResourceLocation res = SPECIAL_FLOWER_BOX_FLOWERS.get(i);
 
         if (res != null) return res;
 
-        if (i instanceof IFlowerModelProvider) {
-            return ((IFlowerModelProvider) i).getModel();
-        } else if (i instanceof BlockItem && ((BlockItem) i).getBlock() instanceof IFlowerModelProvider) {
-            return ((IFlowerModelProvider) ((BlockItem) i).getBlock()).getModel();
+        if (i instanceof IFlowerModelProvider flowerModelProvider) {
+            return flowerModelProvider.getModel();
+        } else if (i instanceof BlockItem blockItem && blockItem.getBlock() instanceof IFlowerModelProvider flowerModelProvider) {
+            return flowerModelProvider.getModel();
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -59,6 +60,7 @@ public class ConfiguredFeaturesRegistry {
             BlockPredicate.ONLY_IN_AIR_PREDICATE,
             BlockPredicate.solid(BlockPos.ZERO.below())
     );
+    HangingFlowerPotBlock
 
     //configured features
     public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN = FeaturesRegistry.ROAD_SIGN.get()

@@ -12,13 +12,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 
 public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
 
-    public static final ModelResourceLocation BOAT_MODEL = new ModelResourceLocation(Supplementaries.MOD_ID+":jar_boat_ship", "");
+    public static final ResourceLocation BOAT_MODEL = new ResourceLocation(Supplementaries.MOD_ID+":block/jar_boat_ship");
 
     private final BlockRenderDispatcher blockRenderer;
 

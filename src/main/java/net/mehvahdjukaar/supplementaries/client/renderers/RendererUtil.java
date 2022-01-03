@@ -40,19 +40,19 @@ public class RendererUtil {
     //centered on x,z. aligned on y=0
 
     //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
-    public static void renderBlockModel(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
+    public static void renderBlockState(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, Level world, BlockPos pos) {
         try {
             for (RenderType type : RenderType.chunkBufferLayers()) {
                 if (ItemBlockRenderTypes.canRenderInLayer(state, type)) {
-                    renderBlockModel(state, matrixStack, buffer, blockRenderer, world, pos, type);
+                    renderBlockState(state, matrixStack, buffer, blockRenderer, world, pos, type);
                 }
             }
         } catch (Exception ignored) {
         }
     }
 
-    public static void renderBlockModel(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
+    public static void renderBlockState(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, Level world, BlockPos pos, RenderType type) {
 
         ForgeHooksClient.setRenderType(type);
@@ -63,6 +63,7 @@ public class RendererUtil {
         ForgeHooksClient.setRenderType(null);
     }
 
+    //from resource location
     public static void renderBlockModel(ResourceLocation modelLocation, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, int light, int overlay, boolean cutout) {
 

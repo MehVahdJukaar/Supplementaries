@@ -124,8 +124,8 @@ public class CommonUtil {
 
     //TODO: move to tag
     public static boolean isLantern(Item i) {
-        if (i instanceof BlockItem) {
-            Block b = ((BlockItem) i).getBlock();
+        if (i instanceof BlockItem blockItem) {
+            Block b = blockItem.getBlock();
             String namespace = b.getRegistryName().getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
             if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {

@@ -15,6 +15,7 @@
     {"id":"supplementaries:hanging_sign_bulbis","required":false},
     {"id":"supplementaries:hanging_sign_bamboo","required":false},
     {"id":"supplementaries:hanging_sign_cika","required":false},
+	{"id":"supplementaries:hanging_sign_netherwood_mc","required":false},
     {"id":"supplementaries:hanging_sign_charred_lotr","required":false},
     {"id":"supplementaries:hanging_sign_cypress_lotr","required":false},
     {"id":"supplementaries:hanging_sign_azure","required":false},

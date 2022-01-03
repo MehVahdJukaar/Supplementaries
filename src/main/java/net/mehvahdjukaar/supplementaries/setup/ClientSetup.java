@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -14,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProj
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -33,7 +35,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -273,7 +274,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void layerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        ClientRegistry.register(event);
+        ClientRegistry.registerLayerDefinitions(event);
     }
 
     //textures
@@ -296,7 +297,12 @@ public class ClientSetup {
 
         //fake models & blockstates
 
-        //registerStaticBlockState(Supplementaries.res("jar_boat_ship"), Blocks.AIR);
+        //TODO: merge with materials and client registry
+        for(var r : Materials.HANGING_SIGNS_BLOCK_MODELS.values()){
+            ForgeModelBakery.addSpecialModel(r);
+        }
+        ForgeModelBakery.addSpecialModel(Materials.HANGING_POT_BLOCK_MODEL);
+        ForgeModelBakery.addSpecialModel(Materials.WIND_VANE_BLOCK_MODEL);
 
         ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_3D_MODEL);
         ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_2D_MODEL);
@@ -304,7 +310,8 @@ public class ClientSetup {
 
         //registerStaticItemModel(new ModelResourceLocation("supplementaries:flute_in_hand#inventory"));
 
-        FlowerPotHandler.registerCustomModels(n -> ForgeModelBakery.addSpecialModel(new ModelResourceLocation(n, "")));
+
+        FlowerPotHandler.CUSTOM_MODELS.forEach(ForgeModelBakery::addSpecialModel);
     }
 
 }
