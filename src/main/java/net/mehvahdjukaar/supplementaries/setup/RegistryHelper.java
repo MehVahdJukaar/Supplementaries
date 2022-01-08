@@ -25,6 +25,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -70,7 +71,7 @@ public class RegistryHelper {
         return !ModList.get().isLoaded(wood.getNamespace());
     }
 
-    public static boolean conditionalSigns(){
+    public static boolean conditionalSigns() {
         //RegistryConfigs.reg.CONDITIONAL_SIGN_REGISTRATIONS.get()
         return true;
     }
@@ -248,7 +249,7 @@ public class RegistryHelper {
         EnumMap<VariantType, RegistryObject<Block>> map = new EnumMap<>(VariantType.class);
         for (VariantType type : VariantType.values()) {
             String name = baseName;
-            if (!type.equals(VariantType.BLOCK)) name += "_" + type.name().toLowerCase();
+            if (!type.equals(VariantType.BLOCK)) name += "_" + type.name().toLowerCase(Locale.ROOT);
             RegistryObject<Block> block = ModRegistry.BLOCKS.register(name, () -> type.create(parentBlock));
             CreativeModeTab tab = switch (type) {
                 case VERTICAL_SLAB -> getTab("quark", CreativeModeTab.TAB_BUILDING_BLOCKS, baseName);

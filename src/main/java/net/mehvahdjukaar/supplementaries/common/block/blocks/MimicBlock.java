@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -50,9 +51,17 @@ public abstract class MimicBlock extends Block implements IForgeBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
         if (builder.getParameter(LootContextParams.BLOCK_ENTITY) instanceof IBlockHolder tile) {
-            List<ItemStack> newDrops = tile.getHeldBlock().getDrops(builder);
+            //checks again if the content itself can be mined
+            BlockState heldState = tile.getHeldBlock();
+            if(builder.getParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
+                if (!heldState.canHarvestBlock(builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
+                    return drops;
+                }
+            }
+            List<ItemStack> newDrops = heldState.getDrops(builder);
             //ItemStack camo = new ItemStack(tile.getHeldBlock().getBlock());
             drops.addAll(newDrops);
+
         }
         return drops;
     }

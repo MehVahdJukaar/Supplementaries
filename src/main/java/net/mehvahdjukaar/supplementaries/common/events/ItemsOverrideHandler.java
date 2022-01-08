@@ -716,6 +716,7 @@ public class ItemsOverrideHandler {
                     cap.ifPresent(c -> {
                         if (c.hasAntiqueInk() != newState) {
                             c.setAntiqueInk(newState);
+                            tile.setChanged();
                             if (world instanceof ServerLevel serverLevel) {
                                 NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
                                         new ClientBoundSyncAntiqueInk(pos, newState));

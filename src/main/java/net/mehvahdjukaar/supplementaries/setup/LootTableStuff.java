@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 
 public class LootTableStuff {
 
+    //TODO: find out how to register these so the dont throw errors or use glm
+
     private static final List<BiConsumer<LootTableLoadEvent, TableType>> LOOT_INJECTS = new ArrayList<>();
 
     //initialize so I don't have to constantly check configs for each loot table entry
@@ -128,7 +130,7 @@ public class LootTableStuff {
     }
 
     private static void injectLootPool(LootTableLoadEvent event, TableType type, String name) {
-        String id = type.toString().toLowerCase() + "_" + name;
+        String id = type.toString().toLowerCase(Locale.ROOT) + "_" + name;
         LootPool pool = LootPool.lootPool().add(
                         LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)))
                 .name("supp_" + name).build();

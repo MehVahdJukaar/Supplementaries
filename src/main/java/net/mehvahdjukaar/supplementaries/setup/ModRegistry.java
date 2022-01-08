@@ -1053,6 +1053,7 @@ public class ModRegistry {
                     .instabreak()
                     .sound(SoundType.CROP))
     );
+
     public static final RegistryObject<Item> FLAX_ITEM = ITEMS.register(FLAX_NAME, () -> new Item(
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, FLAX_NAME))));
 

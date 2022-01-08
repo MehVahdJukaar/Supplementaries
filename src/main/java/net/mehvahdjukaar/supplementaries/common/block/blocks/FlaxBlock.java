@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class FlaxBlock extends CropBlock {
-    private static final int DOUBLE_AGE = 4; //age at which it grows in block above
+    public static final int DOUBLE_AGE = 4; //age at which it grows in block above
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_BOTTOM = new VoxelShape[]{
             Block.box(4, 0, 4, 12, 6, 12),
@@ -181,11 +181,6 @@ public class FlaxBlock extends CropBlock {
             worldIn.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 3);
         }
         worldIn.setBlock(pos, getStateForAge(newAge), 2);
-    }
-
-    @Override
-    public boolean isMaxAge(BlockState state) {
-        return super.isMaxAge(state);
     }
 
     @Override

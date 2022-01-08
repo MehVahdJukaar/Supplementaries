@@ -119,12 +119,6 @@ dependencies {
 
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.5'
 
-    afterEvaluate {
-        minecraft('cpw.mods:modlauncher:9.0.7') {
-            force = true
-        }
-    }
-
     implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
     implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
@@ -140,10 +134,11 @@ dependencies {
     implementation fg.deobf("curse.maven:croptopia-fabric-415438:3569895")
     implementation fg.deobf("curse.maven:jade-324717:3564963")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
+    //implementation fg.deobf("curse.maven:just-mob-heads-293320:3561503")
     //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
     implementation fg.deobf("curse.maven:tetra-289712:3586368")
     implementation fg.deobf("curse.maven:mgui-351914:3573121")
-    implementation fg.deobf("curse.maven:progression-revamp-503154:3585189")
+
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
     //implementation fg.deobf("curse.maven:mantle-74924:3439180")

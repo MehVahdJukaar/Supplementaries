@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:planter","required":false},
+    {"id":"supplementaries:planter_rich","required":false},
+    {"id":"supplementaries:planter_rich_soul","required":false}
+  ]
+}

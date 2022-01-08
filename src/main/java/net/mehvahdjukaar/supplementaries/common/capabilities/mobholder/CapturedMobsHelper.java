@@ -185,7 +185,7 @@ public class CapturedMobsHelper {
                 if (size > 2) w = strToFloat(l.get(2));
                 if (size > 3) light = strToInt(l.get(3));
                 if (size > 4) {
-                    String type = l.get(4).toLowerCase();
+                    String type = l.get(4).toLowerCase(Locale.ROOT);
                     switch (type) {
                         case "air" -> cat = AnimationCategory.AIR;
                         case "land" -> cat = AnimationCategory.LAND;
@@ -275,7 +275,7 @@ public class CapturedMobsHelper {
 
         @Override
         public String toString() {
-            return super.toString().toLowerCase();
+            return super.toString().toLowerCase(Locale.ROOT);
         }
 
         public boolean canBe2dFish(){

@@ -37,6 +37,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -45,6 +46,7 @@ import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -88,7 +90,19 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
         //capture mob
+        if (!ServerConfigs.cached.JAR_CAPTURE) return InteractionResult.PASS;
         return super.doInteract(stack, player, entity, hand);
+    }
+
+    @Override
+    public boolean blocksPlacement() {
+        return ServerConfigs.cached.JAR_CAPTURE;
+    }
+
+    @Override
+    public void addPlacementTooltip(List<Component> tooltip) {
+        if(ServerConfigs.cached.JAR_CAPTURE)
+        super.addPlacementTooltip(tooltip);
     }
 
     //full jar stuff
@@ -115,7 +129,7 @@ public class JarItem extends AbstractMobContainerItem {
                     if (com.contains("NBT")) {
                         nbt = com.getCompound("NBT");
                         if (nbt.contains("Bottle")) {
-                            String bottle = nbt.getString("Bottle").toLowerCase();
+                            String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
                             if (!bottle.equals("regular")) add = "_" + bottle;
                         }
                     }
@@ -211,7 +225,7 @@ public class JarItem extends AbstractMobContainerItem {
         return super.use(world, playerEntity, hand);
     }
 
-    private final Lazy<JarBlockTile> DUMMY_TILE = ()->new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
+    private final Lazy<JarBlockTile> DUMMY_TILE = () -> new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
     @Override
     public int getUseDuration(ItemStack stack) {

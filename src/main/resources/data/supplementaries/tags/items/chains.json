@@ -8,6 +8,12 @@
     {"id":"charm:gold_chain","required":false},
     {"id":"forbidden_arcanus:iron_chain","required":false},
     {"id":"decorative_winter:festive_chain","required":false},
+    {"id":"buildersdelight:chain_1","required":false},
+    {"id":"buildersdelight:chain_3","required":false},
+    {"id":"buildersdelight:chain_4","required":false},
+    {"id":"dustrial_decor:gold_chain","required":false},
+    {"id":"dustrial_decor:large_gold_chain","required":false},
+    {"id":"dustrial_decor:large_chain","required":false},
     {"id":"forbidden_arcanus:arcane_golden_chain","required":false}
   ]
 }

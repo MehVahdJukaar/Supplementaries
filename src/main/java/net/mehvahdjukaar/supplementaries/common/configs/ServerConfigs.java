@@ -53,6 +53,7 @@ public class ServerConfigs {
 
     public static class item {
         public static ForgeConfigSpec.IntValue ROPE_ARROW_CAPACITY;
+        public static ForgeConfigSpec.BooleanValue ROPE_ARROW_CROSSBOW;
         public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
@@ -87,12 +88,14 @@ public class ServerConfigs {
                     .define("rope_arrow_override", "supplementaries:rope");
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
                     .defineInRange("capacity", 32, 1, 256);
+            ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
+                            .define("exclusive_to_crossbows", false);
             builder.pop();
             //flute
             builder.push("flute");
-            FLUTE_RADIUS = builder.comment("radius in which an unbound flute will search pets")
+            FLUTE_RADIUS = builder.comment("Radius in which an unbound flute will search pets")
                     .defineInRange("unbound_radius", 64, 0, 500);
-            FLUTE_DISTANCE = builder.comment("max distance at which a bound flute will allow a pet to teleport")
+            FLUTE_DISTANCE = builder.comment("Max distance at which a bound flute will allow a pet to teleport")
                     .defineInRange("bound_distance", 64, 0, 500);
 
             builder.pop();
@@ -250,7 +253,7 @@ public class ServerConfigs {
 
             builder.push("bottle_xp");
             BOTTLE_XP = builder.comment("Allow bottling up xp by using a bottle on an enchanting table")
-                    .define("enabled", true);
+                    .define("enabled", false);
             BOTTLING_COST = builder.comment("bottling health cost")
                     .defineInRange("cost", 2, 0, 20);
             builder.pop();
@@ -357,6 +360,9 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.IntValue JAR_CAPACITY;
         public static ForgeConfigSpec.BooleanValue JAR_EAT;
+        public static ForgeConfigSpec.BooleanValue JAR_CAPTURE;
+        public static ForgeConfigSpec.BooleanValue JAR_COOKIES;
+        public static ForgeConfigSpec.BooleanValue JAR_LIQUIDS;
         public static ForgeConfigSpec.BooleanValue JAR_ITEM_DRINK;
         public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
         public static ForgeConfigSpec.BooleanValue GOBLET_DRINK;
@@ -500,6 +506,12 @@ public class ServerConfigs {
                     .define("drink_from_jar_item", false);
             JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size. Tinted jars can accept hostile mbos too")
                     .define("jar_auto_detect", false);
+            JAR_CAPTURE = builder.comment("Allow Jars to capture small mobs")
+                            .define("jar_capture", true);
+            JAR_COOKIES = builder.comment("Allow Jars to hold cookies")
+                    .define("jar_cookies", true);
+            JAR_LIQUIDS = builder.comment("Allow Jars to hold liquids from bottles, buckets and bowls")
+                    .define("jar_liquids", true);
 
             builder.pop();
 
@@ -700,7 +712,7 @@ public class ServerConfigs {
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .defineInRange("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                            .defineInRange("spawn_attempts", 7, 0, 100);
+                            .defineInRange("spawn_attempts", 8, 0, 100);
             List<String> urnBlacklist = List.of("minecraft:lush_caves","minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
                     .defineList("biome_blacklist", urnBlacklist, STRING_CHECK);
@@ -746,6 +758,7 @@ public class ServerConfigs {
         public static String ROPE_ARROW_ROPE;
         public static Block ROPE_ARROW_BLOCK;
         public static int ROPE_ARROW_CAPACITY;
+        public static boolean ROPE_ARROW_CROSSBOW;
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
@@ -815,6 +828,9 @@ public class ServerConfigs {
         public static boolean TURN_TABLE_ROTATE_ENTITIES;
         public static int JAR_CAPACITY;
         public static boolean JAR_EAT;
+        public static boolean JAR_CAPTURE;
+        public static boolean JAR_COOKIES;
+        public static boolean JAR_LIQUIDS;
         public static boolean JAR_ITEM_DRINK;
         public static boolean JAR_AUTO_DETECT;
         public static boolean NOTICE_BOARDS_UNRESTRICTED;
@@ -885,6 +901,7 @@ public class ServerConfigs {
             BUBBLE_BLOWER_COST = item.BUBBLE_BLOWER_COST.get();
             WRENCH_BYPASS = item.WRENCH_BYPASS.get();
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
+            ROPE_ARROW_CROSSBOW = item.ROPE_ARROW_CROSSBOW.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
             ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
             if (ROPE_ARROW_BLOCK == Blocks.AIR) ROPE_ARROW_BLOCK = ModRegistry.ROPE.get();
@@ -926,6 +943,9 @@ public class ServerConfigs {
 
             JAR_CAPACITY = block.JAR_CAPACITY.get();
             JAR_EAT = block.JAR_EAT.get();
+            JAR_CAPTURE = block.JAR_CAPTURE.get();
+            JAR_COOKIES = block.JAR_COOKIES.get();
+            JAR_LIQUIDS = block.JAR_LIQUIDS.get();
             JAR_ITEM_DRINK = block.JAR_ITEM_DRINK.get();
             JAR_AUTO_DETECT = block.JAR_AUTO_DETECT.get();
 

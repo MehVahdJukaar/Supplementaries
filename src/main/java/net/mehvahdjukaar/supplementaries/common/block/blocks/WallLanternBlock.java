@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
@@ -54,9 +55,8 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         BlockEntity te = world.getBlockEntity(pos);
         Item i = stack.getItem();
-        if (te instanceof IBlockHolder && i instanceof BlockItem) {
-            BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
-            ((IBlockHolder) te).setHeldBlock(mimic);
+        if (te instanceof IBlockHolder blockHolder && i instanceof BlockItem blockItem) {
+            blockHolder.setHeldBlock(blockItem.getBlock().defaultBlockState());
         }
     }
 

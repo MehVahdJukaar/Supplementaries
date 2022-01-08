@@ -56,7 +56,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createAntiqueMaoRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createBubbleBlowerChargeRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(createSoapCleanPresentRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(makePresentCloringRecipes(), VanillaRecipeCategoryUid.CRAFTING);
     }
 

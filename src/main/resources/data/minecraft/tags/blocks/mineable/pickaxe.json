@@ -50,7 +50,7 @@
     "supplementaries:cage",
     "supplementaries:safe",
     "supplementaries:pedestal",
-    "supplementaries:planter",
+    "#supplementaries:planters",
     "supplementaries:globe_sepia",
 	"supplementaries:ash_bricks_vertical_slab",
     "supplementaries:ash_bricks_slab",

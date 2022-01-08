@@ -17,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
@@ -57,14 +55,13 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = BlockProperties.HAS_WATER;
-    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_7;
     public static final BooleanProperty HAS_JAR = BlockProperties.HAS_JAR;
-    public static final BooleanProperty EXTENDED = BlockStateProperties.ATTACHED; //glass extension
 
     public FaucetBlock(Properties properties) {
         super(properties.lightLevel(s->s.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
-                .setValue(ENABLED, false).setValue(EXTENDED, false).setValue(POWERED, false)
+                .setValue(ENABLED, false).setValue(POWERED, false)
                 .setValue(HAS_WATER, false).setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, 0));
     }
 
@@ -90,23 +87,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        //TODO: add item activated method for bottles
         boolean enabled = state.getValue(ENABLED);
-        if (!state.getValue(HAS_JAR) && hit.getLocation().y % 1 <= 0.4375) {
-            if (enabled && state.getValue(HAS_WATER)) {
-                Direction dir = state.getValue(FACING);
-                BlockPos backPos = pos.relative(dir.getOpposite());
-                BlockState backState = worldIn.getBlockState(backPos);
-                BlockHitResult rayTraceResult = new BlockHitResult(new Vec3(backPos.getX() + 0.5,
-                        backPos.getY() + 0.5, backPos.getZ() + 0.5), dir, backPos, false);
-                InteractionResult blockResult = backState.use(worldIn, player, handIn, rayTraceResult);
-                if (blockResult.consumesAction()) return blockResult;
-                InteractionResult itemResult = player.getItemInHand(handIn).getItem().useOn(new UseOnContext(player, handIn, rayTraceResult));
-                if (itemResult.consumesAction()) return itemResult;
-            }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
-        }
-
 
         float f = enabled ? 0.6F : 0.5F;
         worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
@@ -133,7 +114,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         }
         if (facing == stateIn.getValue(FACING).getOpposite()) {
             boolean hasWater = updateTileFluid(stateIn, currentPos, worldIn);
-            return stateIn.setValue(EXTENDED, canConnect(facingState, worldIn, facingPos, facing.getOpposite())).setValue(HAS_WATER, hasWater);
+            return stateIn.setValue(HAS_WATER, hasWater);
         }
         return stateIn;
     }
@@ -164,7 +145,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         return world instanceof Level && FluidUtil.getFluidHandler((Level) world, pos, dir).isPresent();
     }
 
-    //TODO also fix faucet glass connection shading
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
@@ -200,7 +180,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(EXTENDED, FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
+        builder.add(FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
     }
 
     //TODO: fix water faucet connecting on rotation
@@ -223,16 +203,14 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
         boolean water = world.getFluidState(pos).getType() == Fluids.WATER;
         boolean hasJar = canConnect(world.getBlockState(pos.below()), world, pos.below(), Direction.UP);
-        BlockPos backPos = pos.relative(dir.getOpposite());
-        boolean jarBehind = canConnect(world.getBlockState(backPos), world, backPos, dir.getOpposite());
+
         boolean powered = world.hasNeighborSignal(pos);
 
-        return this.defaultBlockState().setValue(FACING, dir).setValue(EXTENDED, jarBehind)
+        return this.defaultBlockState().setValue(FACING, dir)
                 .setValue(HAS_JAR, hasJar).setValue(WATERLOGGED, water).setValue(POWERED, powered);
     }
 
     //TODO: maybe remove haswater state
-    //TODO: add luminance
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
         boolean flag = this.isOpen(state);
@@ -254,7 +232,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     //only client
     public int getTileParticleColor(BlockPos pos, Level world) {
         if (world.getBlockEntity(pos) instanceof FaucetBlockTile te)
-            return te.fluidHolder.getParticleColor(world, pos);
+            return te.tempFluidHolder.getParticleColor(world, pos);
         return 0x423cf7;
     }
 

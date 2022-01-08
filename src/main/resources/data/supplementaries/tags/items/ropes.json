@@ -9,6 +9,7 @@
     {"id":"inspirations:vine","required":false},
     {"id":"inspirations:rope","required":false},
     {"id":"farmersdelight:rope","required":false},
+    {"id":"buildersdelight:chain_2","required":false},
     {"id":"darkerdepths:rope","required":false}
   ]
 }

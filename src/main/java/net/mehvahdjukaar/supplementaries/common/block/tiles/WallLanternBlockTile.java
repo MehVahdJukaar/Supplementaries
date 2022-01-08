@@ -11,6 +11,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
@@ -90,6 +91,9 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
     @Override
     public boolean setHeldBlock(BlockState state, int index) {
+        if(state.hasProperty(LanternBlock.HANGING)){
+            state = state.setValue(LanternBlock.HANGING, false);
+        }
         this.mimic = state;
 
         int light = state.getLightEmission();

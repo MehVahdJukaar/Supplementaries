@@ -86,7 +86,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
             if (ServerConfigs.cached.GOBLET_DRINK) {
                 boolean b = this.fluidHolder.tryDrinkUpFluid(player, this.level);
                 if(b && player instanceof ServerPlayer serverPlayer){
-                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries","nether/goblet"));
+                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));
                     if(advancement != null){
                         serverPlayer.getAdvancements().award(advancement, "unlock");
                     }

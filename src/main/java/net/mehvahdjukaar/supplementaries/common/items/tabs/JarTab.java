@@ -6,6 +6,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -50,45 +51,48 @@ public class JarTab extends CreativeModeTab {
         }
     }
 
-
     public static void populateTab(NonNullList<ItemStack> items) {
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
 
 
-        for (Item i : BucketHelper.getValidBuckets()) {
-            CompoundTag com = new CompoundTag();
-            MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
-            data.saveToTag(com);
-            tryAdd(items, com);
-        }
-
-
-        for (Item i : ForgeRegistries.ITEMS) {
-            ItemStack regItem = new ItemStack(i);
-            CompoundTag com = new CompoundTag();
-            if (tempTile.canPlaceItem(0, regItem)) {
-                regItem.setCount(tempTile.getMaxStackSize());
-                ContainerHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
+        if(ServerConfigs.cached.JAR_CAPTURE) {
+            for (Item i : BucketHelper.getValidBuckets()) {
+                CompoundTag com = new CompoundTag();
+                MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
+                data.saveToTag(com);
                 tryAdd(items, com);
             }
         }
-        for (SoftFluid s : SoftFluidRegistry.getFluids()) {
-            if (s == SoftFluidRegistry.POTION || s.isEmpty()) continue;
-            CompoundTag com = new CompoundTag();
-            fluidHolder.clear();
-            fluidHolder.fill(s);
-            fluidHolder.save(com);
-            tryAdd(items, com);
+        if(ServerConfigs.cached.JAR_COOKIES) {
+            for (Item i : ForgeRegistries.ITEMS) {
+                ItemStack regItem = new ItemStack(i);
+                CompoundTag com = new CompoundTag();
+                if (tempTile.canPlaceItem(0, regItem)) {
+                    regItem.setCount(tempTile.getMaxStackSize());
+                    ContainerHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
+                    tryAdd(items, com);
+                }
+            }
         }
+        if(ServerConfigs.cached.JAR_LIQUIDS) {
+            for (SoftFluid s : SoftFluidRegistry.getFluids()) {
+                if (s == SoftFluidRegistry.POTION || s.isEmpty()) continue;
+                CompoundTag com = new CompoundTag();
+                fluidHolder.clear();
+                fluidHolder.fill(s);
+                fluidHolder.save(com);
+                tryAdd(items, com);
+            }
 
-        for (ResourceLocation potion : net.minecraft.core.Registry.POTION.keySet()) {
-            CompoundTag com = new CompoundTag();
-            com.putString("Potion", potion.toString());
-            fluidHolder.fill(SoftFluidRegistry.POTION, com);
-            CompoundTag com2 = new CompoundTag();
-            fluidHolder.save(com2);
-            tryAdd(items, com2);
+            for (ResourceLocation potion : net.minecraft.core.Registry.POTION.keySet()) {
+                CompoundTag com = new CompoundTag();
+                com.putString("Potion", potion.toString());
+                fluidHolder.fill(SoftFluidRegistry.POTION, com);
+                CompoundTag com2 = new CompoundTag();
+                fluidHolder.save(com2);
+                tryAdd(items, com2);
+            }
         }
 
 

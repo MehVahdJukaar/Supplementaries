@@ -140,10 +140,10 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
     private void updateFilteredEntries() {
         String filter = this.getText();
         if (filter == null) filter = "";
-        else filter = filter.toLowerCase();
+        else filter = filter.toLowerCase(Locale.ROOT);
         this.filtered.clear();
         String finalFilter = filter;
-        this.filtered.addAll(this.allPlayers.stream().filter(s -> s.getName().toLowerCase().startsWith(finalFilter)).toList());
+        this.filtered.addAll(this.allPlayers.stream().filter(s -> s.getName().toLowerCase(Locale.ROOT).startsWith(finalFilter)).toList());
     }
 
     public void addPlayer(PlayerInfo info) {

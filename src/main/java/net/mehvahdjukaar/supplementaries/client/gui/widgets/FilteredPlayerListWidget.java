@@ -72,7 +72,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
     //set filter and return filtered values
     public List<String> setFilter(@Nullable String filter) {
         if (filter == null) filter = "";
-        this.filter = filter.toLowerCase();
+        this.filter = filter.toLowerCase(Locale.ROOT);
         this.updateFilteredEntries();
         //if a player is added it wont update suggestion
         return this.filtered.stream().map(SimplePlayerEntry::getName).toList();
@@ -80,7 +80,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
 
     private void updateFilteredEntries(){
         this.filtered.clear();
-        this.filtered.addAll(this.allPlayers.stream().filter(s -> s.getName().toLowerCase().startsWith(this.filter)).toList());
+        this.filtered.addAll(this.allPlayers.stream().filter(s -> s.getName().toLowerCase(Locale.ROOT).startsWith(this.filter)).toList());
     }
 
     public void addPlayer(PlayerInfo info) {

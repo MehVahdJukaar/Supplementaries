@@ -137,7 +137,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     return;
                 }
 
-                String bookName = tile.getItem(0).getHoverName().getString().toLowerCase();
+                String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
                 if (bookName.equals("credits")) {
                     TextUtil.renderCredits(matrixStackIn, bufferIn, frontLight, font, d0);
                     matrixStackIn.popPose();

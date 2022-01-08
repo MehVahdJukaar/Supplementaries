@@ -5,13 +5,22 @@ import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSpawnBlockParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,8 +35,42 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Optional;
 
 public class SoapItem extends Item {
+    public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
+            .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
+                    ()->new MobEffectInstance(MobEffects.POISON,120),1).build();;
+
     public SoapItem(Properties pProperties) {
-        super(pProperties);
+        super(pProperties.food(SOAP_FOOD));
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!hasBeenEatenBefore(player, level)) {
+            ItemStack itemstack = player.getItemInHand(hand);
+            if (player.canEat(true)) {
+                player.startUsingItem(hand);
+                return InteractionResultHolder.consume(itemstack);
+            } else {
+                return InteractionResultHolder.fail(itemstack);
+            }
+        } else {
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
+        }
+    }
+
+    public static boolean hasBeenEatenBefore(Player player, Level level){
+        ResourceLocation res = new ResourceLocation("supplementaries", "husbandry/soap");
+        if(level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            Advancement a = serverLevel.getServer().getAdvancements().getAdvancement(res);
+            if (a != null) {
+                return serverPlayer.getAdvancements().getOrStartProgress(a).isDone();
+            }
+        }else if(player instanceof LocalPlayer localPlayer){
+            var advancements = localPlayer.connection.getAdvancements();
+            Advancement a = advancements.getAdvancements().get(res);
+            return a != null;
+        }
+        return false;
     }
 
     @Override
@@ -39,6 +82,7 @@ public class SoapItem extends Item {
 
         return super.useOn(context);
     }
+
 
     public static boolean tryCleaning(ItemStack stack, Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);

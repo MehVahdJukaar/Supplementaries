@@ -95,7 +95,7 @@ public class CustomConfigScreen extends ConfigScreen {
 
     private ItemStack getIcon(String name) {
         if (!ICONS.containsKey(name)) {
-            String formatted = name.toLowerCase().replace(" ", "_");
+            String formatted = name.toLowerCase(Locale.ROOT).replace(" ", "_");
             var item = ForgeRegistries.ITEMS.getValue(Supplementaries.res(formatted));
             if (item != Items.AIR) {
                 addIcon(name, item);
@@ -282,7 +282,7 @@ public class CustomConfigScreen extends ConfigScreen {
                 CustomConfigScreen.this.minecraft.setScreen(new CustomConfigScreen(CustomConfigScreen.this,
                         newTitle, CustomConfigScreen.this.config, CustomConfigScreen.this.background, folderEntry));
             });
-            this.icon = getIcon(label.toLowerCase());
+            this.icon = getIcon(label.toLowerCase(Locale.ROOT));
         }
 
         @Override
@@ -373,7 +373,7 @@ public class CustomConfigScreen extends ConfigScreen {
         public BooleanWrapperItem(ValueHolder<Boolean> holder) {
             super(holder);
 
-            this.item = getIcon(label.getContents().toLowerCase());
+            this.item = getIcon(label.getContents().toLowerCase(Locale.ROOT));
             this.iconOffset = 7;
         }
 

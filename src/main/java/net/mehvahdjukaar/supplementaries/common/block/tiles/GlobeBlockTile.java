@@ -164,14 +164,14 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         public final ResourceLocation texture;
 
         public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile) {
-            String name = text.toLowerCase();
+            String name = text.toLowerCase(Locale.ROOT);
             ResourceLocation r = SpecialPlayers.GLOBES.get(name);
             //TODO: generalize this mess
             tile.isSnow = r != null && r.getPath().contains("globe_wais");
             if (r != null) return r;
             for (GlobeType n : GlobeType.values()) {
                 if (n.keyWords == null) continue;
-                if (n.transKeyWord != null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase())) {
+                if (n.transKeyWord != null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase(Locale.ROOT))) {
                     tile.isFlat = (n == FLAT);
                     return n.texture;
                 }

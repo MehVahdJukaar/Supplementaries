@@ -163,7 +163,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     //can this item be added?
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if (this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
+        if (ServerConfigs.cached.JAR_COOKIES && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
@@ -210,6 +210,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
+        if(!ServerConfigs.cached.JAR_COOKIES) return false;
         return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
@@ -238,6 +239,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public boolean canInteractWithFluidHolder() {
-        return this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
+        return ServerConfigs.cached.JAR_LIQUIDS && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 }

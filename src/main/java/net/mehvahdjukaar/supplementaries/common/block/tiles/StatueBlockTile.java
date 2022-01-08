@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.UUID;
 
 public class StatueBlockTile extends ItemDisplayTile {
@@ -65,14 +66,14 @@ public class StatueBlockTile extends ItemDisplayTile {
 
         if (this.hasCustomName()) {
 
-            String name = this.getCustomName().getString().toLowerCase();
+            String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             Pair<UUID, String> profile = SpecialPlayers.STATUES.get(name);
             if (profile != null) {
                 this.setOwner(new GameProfile(profile.getFirst(), profile.getSecond()));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
-            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase()));
+            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase(Locale.ROOT)));
         } else this.owner = null;
 
     }

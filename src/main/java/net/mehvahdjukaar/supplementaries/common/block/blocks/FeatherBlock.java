@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -14,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.*;
 
@@ -123,11 +122,16 @@ public class FeatherBlock extends Block {
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
-        Random r = level.random;
-        for (int i = 0; i < 10; i++) {
-            level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + r.nextFloat(),
-                    pos.getY() + r.nextFloat(), pos.getZ() +  r.nextFloat(),
-                    (0.5-r.nextFloat())*0.02, (0.5-r.nextFloat())*0.02, (0.5-r.nextFloat())*0.02);
+        if (level instanceof ClientLevel clientLevel) {
+            SoundType soundtype = state.getSoundType(level, pos, null);
+            clientLevel.playLocalSound(pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F, false);
+
+            Random r = level.random;
+            for (int i = 0; i < 10; i++) {
+                level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + r.nextFloat(),
+                        pos.getY() + r.nextFloat(), pos.getZ() + r.nextFloat(),
+                        (0.5 - r.nextFloat()) * 0.02, (0.5 - r.nextFloat()) * 0.02, (0.5 - r.nextFloat()) * 0.02);
+            }
         }
     }
 

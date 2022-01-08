@@ -24,6 +24,7 @@ public class BlockProperties {
     // it's detecting incoming laser and its distance
     public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
     public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
     public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
@@ -50,7 +51,6 @@ public class BlockProperties {
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");
-    public static final IntegerProperty ROTATION_16_UP = IntegerProperty.create("rotation_up", 0, 15);
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
 
 

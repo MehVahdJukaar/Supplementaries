@@ -218,6 +218,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return super.useOn(context);
     }
 
+    public boolean blocksPlacement(){
+        return true;
+    };
+
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
@@ -229,6 +233,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 tooltip.add(new TranslatableComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
+        this.addPlacementTooltip(tooltip);
+    }
+
+    public void addPlacementTooltip(List<Component> tooltip){
         tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
@@ -339,14 +347,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return bucket;
     }
 
-
     //cancel block placement when not shifting
     @Override
     public InteractionResult place(BlockPlaceContext context) {
         Player player = context.getPlayer();
-        if (player != null && player.isShiftKeyDown()) {
-            return super.place(context);
+        if ((player != null && !player.isShiftKeyDown()) && this.blocksPlacement()) {
+            return InteractionResult.PASS;
+
         }
-        return InteractionResult.PASS;
+        return super.place(context);
     }
 }

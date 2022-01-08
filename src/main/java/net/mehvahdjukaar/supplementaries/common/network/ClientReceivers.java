@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fml.ModList;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ClientReceivers {
@@ -66,7 +67,7 @@ public class ClientReceivers {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
                     if (fileName.contains(".jar")) {
-                        if (!fileName.toLowerCase().contains("supplementaries-1") || fileName.toLowerCase().contains("supplementaries-mod") || fileName.contains("supplementaries-1.16.53")) {
+                        if (!fileName.toLowerCase(Locale.ROOT).contains("supplementaries-1") || fileName.toLowerCase(Locale.ROOT).contains("supplementaries-mod") || fileName.contains("supplementaries-1.16.53")) {
                             MutableComponent link = new TranslatableComponent("message.supplementaries.anti_repost_link");
                             String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
                             ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);

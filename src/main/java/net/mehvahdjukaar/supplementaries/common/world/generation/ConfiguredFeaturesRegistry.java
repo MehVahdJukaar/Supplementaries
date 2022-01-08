@@ -60,7 +60,6 @@ public class ConfiguredFeaturesRegistry {
             BlockPredicate.ONLY_IN_AIR_PREDICATE,
             BlockPredicate.solid(BlockPos.ZERO.below())
     );
-    HangingFlowerPotBlock
 
     //configured features
     public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN = FeaturesRegistry.ROAD_SIGN.get()

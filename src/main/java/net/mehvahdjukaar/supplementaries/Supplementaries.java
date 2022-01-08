@@ -2,13 +2,16 @@ package net.mehvahdjukaar.supplementaries;
 
 import me.thonk.croptopia.blocks.CroptopiaCropBlock;
 import me.thonk.croptopia.items.CroptopiaSaplingItem;
+import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeCondition;
+import net.mehvahdjukaar.supplementaries.integration.farmersdelight.PlanterRichBlock;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -40,6 +43,7 @@ public class Supplementaries {
 
     public Supplementaries() {
 
+        //animated lantern textures
         //add option for soul jar
         //ash jei plugin
         //bundle sound for sacks
@@ -161,7 +165,7 @@ public class Supplementaries {
         //TODO fix randomium recipe jei extensin
 
         //TODO: add dispenser like interaction registry for faucet
-
+        //TODO: flax upper stage grows depending on lower
 
         ConfigHandler.init();
 
