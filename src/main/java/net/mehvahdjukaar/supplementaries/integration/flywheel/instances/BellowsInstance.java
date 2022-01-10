@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel.instances;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.hardcoded.ModelPart;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class BellowsInstance extends TileEntityInstance<BellowsBlockTile> implements IDynamicInstance {
+public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> implements DynamicInstance {
 
     private final TextureAtlasSprite texture;
     private final ModelData center;
@@ -49,7 +49,7 @@ public class BellowsInstance extends TileEntityInstance<BellowsBlockTile> implem
     @Override
     public void beginFrame() {
 
-        float dh = Mth.lerp(AnimationTickHolder.getPartialTicks(), tile.prevHeight, tile.height);
+        float dh = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevHeight, blockEntity.height);
 
         this.stack.pushPose();
 
@@ -96,22 +96,22 @@ public class BellowsInstance extends TileEntityInstance<BellowsBlockTile> implem
 
     private ModelData makeTopInstance() {
         return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("top_" + this.tile.getType(), this::makeLidModel).createInstance();
+                .model("top_" + this.blockEntity.getType(), this::makeLidModel).createInstance();
     }
 
     private ModelData makeBottomInstance() {
         return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("bottom_" + this.tile.getType(), this::makeLidModel).createInstance();
+                .model("bottom_" + this.blockEntity.getType(), this::makeLidModel).createInstance();
     }
 
     private ModelData makeLeatherInstance() {
         return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("leather_" + this.tile.getType(), this::makeLeatherModel).createInstance();
+                .model("leather_" + this.blockEntity.getType(), this::makeLeatherModel).createInstance();
     }
 
     private ModelData makeCenterInstance() {
         return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("center_" + this.tile.getType(), this::makeCenterModel).createInstance();
+                .model("center_" + this.blockEntity.getType(), this::makeCenterModel).createInstance();
     }
 
     private ModelPart makeLeatherModel() {

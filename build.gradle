@@ -126,7 +126,7 @@ dependencies {
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
     implementation fg.deobf("curse.maven:create-328085:3583784")
-    implementation fg.deobf("curse.maven:flywheel-486392:3583773")
+    implementation fg.deobf("com.jozufozu.flywheel:Flywheel-Forge:1.18-0.5.1.44")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
     implementation fg.deobf("curse.maven:quark-243121:3545695")
     implementation fg.deobf("curse.maven:jei-238222:3550020")
@@ -202,7 +202,7 @@ repositories {
         allowInsecureProtocol = true
     }
     maven {
-        //location of the maven for mixed mappings and registrate
+        //location of the maven for mixed mappings, registrate, and flywheel
         name = "tterrag maven"
         url = "https://maven.tterrag.com/"
         allowInsecureProtocol = true
