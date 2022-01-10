@@ -39,12 +39,12 @@ public class SafeItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, incoming, slot, action, player, true);
+        return ItemsUtil.tryInteractingWithContainerItem(stack, incoming, slot, action, player, true);
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, slot.getItem(), slot, action, player, false);
+        return ItemsUtil.tryInteractingWithContainerItem(stack, slot.getItem(), slot, action, player, false);
     }
 
     @Override

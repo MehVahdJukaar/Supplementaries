@@ -41,7 +41,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @org.jetbrains.annotations.Nullable Direction facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        //if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
         return super.getCapability(capability, facing);
     }
 

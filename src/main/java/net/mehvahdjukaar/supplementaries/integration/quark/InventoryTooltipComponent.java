@@ -59,7 +59,6 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
                 Minecraft mc = Minecraft.getInstance();
 
                 int currentX = tooltipX;
-                int currentY = tooltipY;
 
                 int texWidth = CORNER * 2 + EDGE * dimensions[0];
 
@@ -74,7 +73,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
 
                 int color = -1;
 
-                ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(mc, pose, currentX, currentY, dimensions[0], dimensions[1], color);
+                ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(mc, pose, currentX, tooltipY, dimensions[0], dimensions[1], color);
 
                 ItemRenderer render = mc.getItemRenderer();
 
@@ -82,7 +81,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
                     ItemStack itemstack = capability.getStackInSlot(i);
                     //fix 9->dimensions[0]
                     int xp = currentX + 6 + (i % dimensions[0]) * EDGE;
-                    int yp = currentY + 6 + (i / dimensions[0]) * EDGE;
+                    int yp = tooltipY + 6 + (i / dimensions[0]) * EDGE;
 
                     if (!itemstack.isEmpty()) {
                         render.renderAndDecorateFakeItem(itemstack, xp, yp);

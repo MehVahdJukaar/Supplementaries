@@ -22,13 +22,13 @@ apply plugin: 'maven-publish'
 
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+//apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.6'
+version = '1.18.1-1.1.7'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 

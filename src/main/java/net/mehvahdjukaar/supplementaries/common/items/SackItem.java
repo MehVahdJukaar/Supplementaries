@@ -15,6 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -133,12 +134,12 @@ public class SackItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, incoming, slot, action, player, true);
+        return ItemsUtil.tryInteractingWithContainerItem(stack, incoming, slot, action, player, true);
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
-        return ItemsUtil.tryAddingItemInContainerItem(stack, slot.getItem(), slot, action, player, false);
+        return ItemsUtil.tryInteractingWithContainerItem(stack, slot.getItem(), slot, action, player, false);
     }
 
     @Override
@@ -150,6 +151,14 @@ public class SackItem extends BlockItem {
             }
         }
         return Optional.empty();
+    }
+
+    private void playRemoveOneSound(Entity p_186343_) {
+        p_186343_.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + p_186343_.getLevel().getRandom().nextFloat() * 0.4F);
+    }
+
+    private void playInsertSound(Entity p_186352_) {
+        p_186352_.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + p_186352_.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
 

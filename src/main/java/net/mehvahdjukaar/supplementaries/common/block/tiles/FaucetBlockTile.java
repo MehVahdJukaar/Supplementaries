@@ -95,7 +95,7 @@ public class FaucetBlockTile extends BlockEntity {
         this.updateLight();
         return r;
     }
-
+//TODO: fix trasnfer to cauldrons
     @SuppressWarnings("ConstantConditions")
     private boolean tryExtract(Level level, BlockPos pos, BlockState state, boolean doTransfer) {
         Direction dir = state.getValue(FaucetBlock.FACING);
@@ -116,7 +116,7 @@ public class FaucetBlockTile extends BlockEntity {
         //beehive
         else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             if (backState.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-                this.prepareToTransferBucket(SoftFluidRegistry.HONEY);
+                this.prepareToTransferBottle(SoftFluidRegistry.HONEY);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
                             backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
@@ -129,7 +129,7 @@ public class FaucetBlockTile extends BlockEntity {
         //honey pot
         else if (CompatHandler.buzzier_bees && backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
             if (backState.getValue(BlockProperties.HONEY_LEVEL_POT) > 0) {
-                this.prepareToTransferBucket(SoftFluidRegistry.HONEY);
+                this.prepareToTransferBottle(SoftFluidRegistry.HONEY);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     level.setBlock(behind, backState.setValue(BlockProperties.HONEY_LEVEL_POT,
                             backState.getValue(BlockProperties.HONEY_LEVEL_POT) - 1), 3);
@@ -140,7 +140,7 @@ public class FaucetBlockTile extends BlockEntity {
         }
         //sap log
         else if (CompatHandler.autumnity && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
-            this.prepareToTransferBucket(ModSoftFluids.SAP);
+            this.prepareToTransferBottle(ModSoftFluids.SAP);
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy", "stripped")));
                 if (log != null) {
@@ -150,7 +150,7 @@ public class FaucetBlockTile extends BlockEntity {
                 return true;
             }
         } else if (CompatHandler.malum && MalumPlugin.isSappyLog(backBlock)) {
-            this.prepareToTransferBucket(MalumPlugin.getSap(backBlock));
+            this.prepareToTransferBottle(MalumPlugin.getSap(backBlock));
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 MalumPlugin.extractSap(level, backState, behind);
                 return true;
@@ -195,6 +195,7 @@ public class FaucetBlockTile extends BlockEntity {
             if (tileBack instanceof ISoftFluidHolder holder && holder.canInteractWithFluidHolder()) {
                 SoftFluidHolder fluidHolder = holder.getSoftFluidHolder();
                 this.tempFluidHolder.copy(fluidHolder);
+                this.tempFluidHolder.setCount(2);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     fluidHolder.shrink(1);
                     tileBack.setChanged();

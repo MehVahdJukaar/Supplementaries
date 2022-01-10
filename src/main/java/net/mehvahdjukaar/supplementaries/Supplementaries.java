@@ -153,8 +153,6 @@ public class Supplementaries {
 
         //hud mod. armor broken hud, items offhadn crafting
 
-        //structures
-
         //ash auto bonemeal, improve bubbles
 
         //redo achievement rendering
@@ -164,8 +162,8 @@ public class Supplementaries {
 
         //TODO: add dispenser like interaction registry for faucet
         //TODO: flax upper stage grows depending on lower
-        //Fix spring launcher on servers, faucet lava
-        //add sack sound & drop items capability
+        //Fix spring launcher on servers
+        //add sack sound
 
         ConfigHandler.init();
 

@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -124,6 +125,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
                         }
                         return this.spawnAtLocation(stack, (float) offset);
                     }
+
                 };
                 fallingblockentity.setHurtsEntities(1, 20);
                 fallingblockentity.blockData = tile.saveWithoutMetadata();
@@ -274,4 +276,9 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         return blockEntity instanceof MenuProvider ? (MenuProvider) blockEntity : null;
     }
 
+    @Override
+    public void onLand(Level level, BlockPos pos, BlockState p_153222_, BlockState p_153223_, FallingBlockEntity p_153224_) {
+        super.onLand(level, pos, p_153222_, p_153223_, p_153224_);
+        level.scheduleTick(pos, this, this.getDelayAfterPlace());
+    }
 }
