@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.1.5" #mandatory
+version="1.1.6" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -62,3 +62,20 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
     versionRange="[1.5.0,)"
     ordering="NONE"
     side="CLIENT"
+
+[[dependencies.supplementaries]]
+
+    modId="create"
+    mandatory=false
+    versionRange="[0.4c,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.supplementaries]]
+
+    modId="flywheel"
+    mandatory=false
+    versionRange="[0.5.1,)"
+    ordering="NONE"
+    side="BOTH"
+

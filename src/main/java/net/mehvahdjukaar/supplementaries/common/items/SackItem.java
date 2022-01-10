@@ -26,10 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -60,7 +57,6 @@ public class SackItem extends BlockItem {
             int i = 0;
             AtomicReference<IItemHandler> reference = new AtomicReference<>();
             entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
-            boolean firstSack = false;
             if (reference.get() != null) {
                 for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
                     ItemStack slotItem = reference.get().getStackInSlot(_idx);

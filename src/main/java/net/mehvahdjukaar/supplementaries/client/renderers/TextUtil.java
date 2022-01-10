@@ -117,6 +117,8 @@ public class TextUtil {
                         stupid
                         HatchbackGuy'doscht
                         VerdaPegasus
+                        ppblitto
+                        DrHesperus
 
                         \u00A75Others:\u00A7r
 

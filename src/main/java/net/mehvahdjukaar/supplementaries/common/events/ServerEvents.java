@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginMess
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
@@ -104,10 +105,6 @@ public class ServerEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-
-    }
 
     @SubscribeEvent
     public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {

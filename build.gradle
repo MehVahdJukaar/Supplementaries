@@ -28,7 +28,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.5'
+version = '1.18.1-1.1.6'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -125,13 +125,14 @@ dependencies {
     implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
-    implementation fg.deobf("curse.maven:create-328085:3583784")
-    implementation fg.deobf("curse.maven:flywheel-486392:3583773")
+    implementation fg.deobf("curse.maven:create-328085:3600402")
+    implementation fg.deobf("curse.maven:flywheel-486392:3600401")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
     implementation fg.deobf("curse.maven:quark-243121:3545695")
     implementation fg.deobf("curse.maven:jei-238222:3550020")
     implementation fg.deobf("curse.maven:malum-484064:3579643")
     implementation fg.deobf("curse.maven:croptopia-fabric-415438:3569895")
+    implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
     implementation fg.deobf("curse.maven:jade-324717:3564963")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
     //implementation fg.deobf("curse.maven:just-mob-heads-293320:3561503")

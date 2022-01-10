@@ -37,7 +37,7 @@ import java.util.Optional;
 public class SoapItem extends Item {
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
             .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
-                    ()->new MobEffectInstance(MobEffects.POISON,120),1).build();;
+                    ()->new MobEffectInstance(MobEffects.POISON,120, 2),1).build();;
 
     public SoapItem(Properties pProperties) {
         super(pProperties.food(SOAP_FOOD));

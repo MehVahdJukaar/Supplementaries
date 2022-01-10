@@ -38,7 +38,7 @@ public abstract class InstrumentItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
-        SongsManager.playRandomSong(this, entity,getUseDuration(stack) - remainingUseDuration);
+        SongsManager.playRandomSong(stack,this, entity,getUseDuration(stack) - remainingUseDuration);
     }
 
     @Override

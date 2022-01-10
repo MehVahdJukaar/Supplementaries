@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.songs;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSetSongPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.NoteBlock;
@@ -61,21 +63,33 @@ public class SongsManager {
     }
 
 
-    public static boolean playRandomSong(InstrumentItem instrument, LivingEntity entity,
+    public static boolean playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,
                                          long timeSinceStarted) {
         UUID id = entity.getUUID();
         Song song;
         if (!CURRENTLY_PAYING.containsKey(id)) {
-            //both client and server select one random. selected should be the same since random uses the same seed
 
             if (entity.level.isClientSide) return false;
-            ResourceLocation res = selectRandomSong(entity.level.random);
+
+            ResourceLocation res = null;
+            if(stack.hasCustomHoverName()){
+                String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT).replace(" ","_");
+                for(var v : SONGS.keySet()){
+                    if(v.getPath().equals(name)){
+                        res = v;
+                        break;
+                    }
+                }
+            }
+            if(res == null) res = selectRandomSong(entity.level.random);
+
             song = setCurrentlyPlaying(id, res);
 
-            if (entity instanceof ServerPlayer player) {
+            //if (entity instanceof ServerPlayer player) {
                 //player.displayClientMessage(new TextComponent("Playing: "+song.getTranslationKey()), true);
-            }
+            //}
 
+            //tells the client which song it will play
             NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ClientBoundSetSongPacket(id, res));
 
         } else {

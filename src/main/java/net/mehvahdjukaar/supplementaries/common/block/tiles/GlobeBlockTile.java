@@ -16,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Locale;
+
 import static net.mehvahdjukaar.supplementaries.common.utils.Textures.*;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {

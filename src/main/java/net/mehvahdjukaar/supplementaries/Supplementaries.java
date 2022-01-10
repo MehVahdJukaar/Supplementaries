@@ -144,8 +144,6 @@ public class Supplementaries {
         //skii mod
         //blackboard texture glitchyness (baked model)
 
-        //fix cauldron & faucet & update visual water
-
         //ender pearls dispensers
 
         //idea: Increase range of enchantment table
@@ -166,6 +164,8 @@ public class Supplementaries {
 
         //TODO: add dispenser like interaction registry for faucet
         //TODO: flax upper stage grows depending on lower
+        //Fix spring launcher on servers, faucet lava
+        //add sack sound & drop items capability
 
         ConfigHandler.init();
 
