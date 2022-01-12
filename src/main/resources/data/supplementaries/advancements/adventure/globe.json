@@ -1,14 +1,14 @@
 {
-  "parent": "minecraft:nether/brew_potion",
+  "parent": "minecraft:adventure/trade",
   "display": {
     "icon": {
-      "item": "supplementaries:goblet"
+      "item": "supplementaries:globe"
     },
     "title": {
-      "translate": "advancements.nether.goblet.title"
+      "translate": "advancements.adventure.globe.title"
     },
     "description": {
-      "translate": "advancements.nether.goblet.description"
+      "translate": "advancements.adventure.globe.description"
     },
     "frame": "task",
     "show_toast": true,

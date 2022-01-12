@@ -6,11 +6,14 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -85,8 +88,9 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
-            if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+            if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
+
                 tile.sheared = !tile.sheared;
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
@@ -94,14 +98,21 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                     Minecraft.getInstance().particleEngine.destroy(pos, state);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
-            }
-        }
 
-        if (!level.isClientSide) {
-            level.gameEvent(player,GameEvent.BLOCK_PRESS, pos);
-            level.blockEvent(pos, state.getBlock(), 1, 0);
-        } else {
-            player.displayClientMessage(new TextComponent("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+            }
+
+            if (!level.isClientSide) {
+                if (tile.yaw > 1500 && player instanceof ServerPlayer serverPlayer) {
+                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
+                    if (advancement != null) {
+                        serverPlayer.getAdvancements().award(advancement, "unlock");
+                    }
+                }
+                level.gameEvent(player, GameEvent.BLOCK_PRESS, pos);
+                level.blockEvent(pos, state.getBlock(), 1, 0);
+            } else {
+                player.displayClientMessage(new TextComponent("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+            }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> implements DynamicInstance {
-
+    //TODO: add more instances
     private final TextureAtlasSprite texture;
     private final ModelData center;
     private final ModelData top;

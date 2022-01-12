@@ -180,7 +180,7 @@ public class FaucetBlockTile extends BlockEntity {
                 this.transferCooldown += COOLDOWN*2;
                 return true;
             }
-        } else if (backBlock == Blocks.POWDER_SNOW) {
+        } else if (backBlock == Blocks.POWDER_SNOW_CAULDRON) {
             this.prepareToTransferBucket(ModSoftFluids.POWDERED_SNOW);
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);

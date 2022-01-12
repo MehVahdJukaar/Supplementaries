@@ -52,4 +52,8 @@ public enum VanillaWoodTypes implements IWoodType {
         return "minecraft";
     }
 
+    @Override
+    public boolean canBurn() {
+        return this != WARPED && this != CRIMSON;
+    }
 }

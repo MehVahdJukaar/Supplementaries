@@ -165,6 +165,10 @@ public class Supplementaries {
         //Fix spring launcher on servers
         //add sack sound
 
+        //smarter farmers not planting tomatoes & task needing to be rewritten
+        //jeed mod loaded recipe condition
+        //blackboard otline gui
+
         ConfigHandler.init();
 
         CraftingHelper.register(new RecipeCondition.Serializer("flag"));

@@ -39,7 +39,7 @@ public class SignPostItem extends Item {
 
     @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
-        return 100;
+        return type.canBurn() ? 100 : 0;
     }
 
     private boolean isFence(Block b) {

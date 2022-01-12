@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -164,10 +165,13 @@ public class ServerEvents {
         SongsManager.recordNote(event.getWorld(), event.getPos());
     }
 
+    //TODO: remove when forge PR gets approved. using mixin right now
     //antique ink sync
-    @SubscribeEvent
+    //@SubscribeEvent
     public static void onPlayerStartTracking(final ChunkWatchEvent.Watch event) {
         ServerLevel serverLevel = event.getWorld();
+
+        //TODO: this is slow af. mixin in ChunkHolder
         ChunkAccess chunk = serverLevel.getChunkSource().getChunk(event.getPos().x, event.getPos().z, ChunkStatus.FULL, false);
         if (chunk != null) {
             Set<BlockPos> positions = chunk.getBlockEntitiesPos();
@@ -180,7 +184,7 @@ public class ServerEvents {
                         MinecraftServer server = serverLevel.getServer();
                         var c = cap.orElse(null);
                         boolean a = c.hasAntiqueInk();
-                        server.tell(new TickTask(server.getTickCount() + 1, () ->
+                        server.tell(new TickTask(server.getTickCount() , () ->
                                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(event::getPlayer),
                                         new ClientBoundSyncAntiqueInk(pos, a))));
                     }

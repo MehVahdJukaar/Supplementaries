@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -22,14 +22,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
-    private final ModelPart globe;
-    private final ModelPart flat;
-    private final ModelPart sheared;
-    private final ModelPart snow;
+    private final Map<GlobeBlockTile.GlobeModel, ModelPart> models = new HashMap<>();
 
     public static LayerDefinition createBaseMesh() {
         MeshDefinition mesh = new MeshDefinition();
@@ -84,7 +85,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         snow.addOrReplaceChild("roof_r", CubeListBuilder.create()
                         .texOffs(0, 27)
                         .addBox(-2.0F, -1.0F, -1.0F, 3.0F, 1.0F, 2.0F),
-                PartPose.offsetAndRotation(0, -25.9F, 0, 0, 0,  -0.7854F));
+                PartPose.offsetAndRotation(0, -25.9F, 0, 0, 0, -0.7854F));
 
 
         return LayerDefinition.create(mesh, 32, 32);
@@ -92,11 +93,12 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
     public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart model = context.bakeLayer(ClientRegistry.GLOBE_BASE_MODEL);
-        this.globe = model.getChild("globe");
+        models.put(GlobeBlockTile.GlobeModel.GLOBE, model.getChild("globe"));
         ModelPart special = context.bakeLayer(ClientRegistry.GLOBE_SPECIAL_MODEL);
-        this.flat = special.getChild("flat");
-        this.snow = special.getChild("snow");
-        this.sheared = special.getChild("sheared");
+        models.put(GlobeBlockTile.GlobeModel.FLAT, special.getChild("flat"));
+        models.put(GlobeBlockTile.GlobeModel.SNOW, special.getChild("snow"));
+        models.put(GlobeBlockTile.GlobeModel.SHEARED, special.getChild("sheared"));
+        ClientRegistry.GLOBE_RENDERER_INSTANCE = this;
     }
 
     @Override
@@ -110,36 +112,30 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         matrixStackIn.translate(0, +0.0625, 0);
         matrixStackIn.mulPose(Const.XN22);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevYaw + tile.face, tile.yaw + tile.face)));
-        matrixStackIn.mulPose(Const.X180);
-
-        VertexConsumer builder;
-
-        ResourceLocation texture = ClientConfigs.cached.GLOBE_RANDOM ? tile.texture : GlobeBlockTile.GlobeType.EARTH.texture;
-
-        ModelPart selected;
-
-        if (tile.sheared) {
-            selected = sheared;
-            texture = Textures.GLOBE_SHEARED_TEXTURE;
-        } else if (tile.isFlat) {
-            selected = flat;
-            texture = Textures.GLOBE_FLAT_TEXTURE;
-        } else if (tile.isSnow) {
-            selected = snow;
-        } else {
-            selected = globe;
-        }
-
-        if (texture == null) {
-            builder = bufferIn.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(tile.getLevel(), tile.isSepia()));
-        } else {
-            builder = bufferIn.getBuffer(RenderType.entityCutout(texture));
-        }
 
 
-        selected.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+        this.renderGlobe(tile.renderData, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, tile.isSepia(), tile.getLevel());
 
         matrixStackIn.popPose();
+    }
+
+    public void renderGlobe(Pair<GlobeBlockTile.GlobeModel, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean isSepia, Level level) {
+        if (data == null) return;
+        poseStack.pushPose();
+        poseStack.mulPose(Const.X180);
+        ResourceLocation texture = ClientConfigs.cached.GLOBE_RANDOM ? data.getSecond() : GlobeBlockTile.GlobeType.EARTH.texture;
+
+        ModelPart model = this.models.get(data.getFirst());
+
+        VertexConsumer builder;
+        if (texture == null) {
+            builder = buffer.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(level, isSepia));
+        } else {
+            builder = buffer.getBuffer(RenderType.entityCutout(texture));
+        }
+
+        model.render(poseStack, builder, light, overlay, 1, 1, 1, 1);
+        poseStack.popPose();
     }
 
 }

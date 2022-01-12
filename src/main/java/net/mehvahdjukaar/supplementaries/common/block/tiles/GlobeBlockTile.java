@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -32,9 +34,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public boolean sheared = false;
     //client
-    public ResourceLocation texture = null;
-    public boolean isFlat = false;
-    public boolean isSnow = false;
+    public Pair<GlobeModel,@Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
@@ -52,9 +52,8 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private void updateTexture() {
         if (this.hasCustomName()) {
-            this.isFlat = false;
-            this.texture = GlobeType.getGlobeTexture(this.getCustomName().getString(), this);
-        } else this.texture = null;
+            this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
+        } else this.renderData = Pair.of(GlobeModel.GLOBE, null);
     }
 
     @Override
@@ -165,28 +164,37 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         public final TranslatableComponent transKeyWord;
         public final ResourceLocation texture;
 
-        public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile) {
+        public static Pair<GlobeModel, ResourceLocation> getGlobeTexture(String text) {
+            GlobeModel model = GlobeModel.GLOBE;
             String name = text.toLowerCase(Locale.ROOT);
             ResourceLocation r = SpecialPlayers.GLOBES.get(name);
-            //TODO: generalize this mess
-            tile.isSnow = r != null && r.getPath().contains("globe_wais");
-            if (r != null) return r;
+
+            if (r != null) {
+                if (r.getPath().contains("globe_wais")) {
+                    model = GlobeModel.SNOW;
+                }
+                return Pair.of(model, r);
+            }
             for (GlobeType n : GlobeType.values()) {
                 if (n.keyWords == null) continue;
                 if (n.transKeyWord != null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase(Locale.ROOT))) {
-                    tile.isFlat = (n == FLAT);
-                    return n.texture;
+                    if (n == FLAT) model = GlobeModel.FLAT;
+                    return Pair.of(model, n.texture);
                 }
                 for (String s : n.keyWords) {
                     if (!s.equals("") && name.equals(s)) {
-                        tile.isFlat = (n == FLAT);
-                        return n.texture;
+                        if (n == FLAT) model = GlobeModel.FLAT;
+                        return Pair.of(model, n.texture);
                     }
                 }
             }
-            return null;
+            return Pair.of(GlobeModel.GLOBE, null);
         }
 
+    }
+
+    public enum GlobeModel {
+        GLOBE, FLAT, SNOW, SHEARED;
     }
 
 }

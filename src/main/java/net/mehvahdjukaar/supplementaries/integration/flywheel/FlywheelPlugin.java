@@ -9,7 +9,7 @@ public class FlywheelPlugin {
 
     //TODO: add more tiles
     public static void registerInstances() {
-        InstancedRenderRegistry.configure(ModRegistry.BELLOWS_TILE.get()).alwaysSkipRender().factory(BellowsInstance::new);
+        InstancedRenderRegistry.configure(ModRegistry.BELLOWS_TILE.get()).alwaysSkipRender().factory(BellowsInstance::new).apply();
     }
 
     public static boolean areShadersOn(){

@@ -23,4 +23,9 @@ public enum MorecraftWoodTypes implements IWoodType {
     public String getRegName() {
         return this.name+"_mc";
     }
+
+    @Override
+    public boolean canBurn() {
+        return this != NETHERWOOD;
+    }
 }

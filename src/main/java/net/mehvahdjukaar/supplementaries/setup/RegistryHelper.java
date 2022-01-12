@@ -103,7 +103,7 @@ public class RegistryHelper {
             String name = wood.getHangingSignName();
             map.put(wood, ModRegistry.ITEMS.register(name, () -> new BurnableBlockItem(ModRegistry.HANGING_SIGNS.get(wood).get(),
                     new Item.Properties().tab(doesntHaveWoodInstalled(wood) ? null :
-                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), 200
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)), wood.canBurn() ? 200 : 0
             )));
         }
         return map;

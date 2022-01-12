@@ -20,6 +20,8 @@ import java.util.function.Consumer;
 
 public class ClientRegistry {
 
+    public static GlobeBlockTileRenderer GLOBE_RENDERER_INSTANCE = null;
+
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
     }

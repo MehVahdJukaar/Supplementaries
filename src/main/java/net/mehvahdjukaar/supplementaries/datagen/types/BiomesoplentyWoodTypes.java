@@ -43,4 +43,9 @@ public enum BiomesoplentyWoodTypes implements IWoodType {
     public String getNamespace() {
         return "biomesoplenty";
     }
+
+    @Override
+    public boolean canBurn() {
+        return this != HELLBARK;
+    }
 }

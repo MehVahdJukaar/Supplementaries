@@ -160,13 +160,14 @@ public class BlackboardTextureManager {
 
 
     private class TextureInstance implements AutoCloseable {
+        private static final int WIDTH = 16;
         private final DynamicTexture texture;
         private final RenderType renderType;
         private final ResourceLocation resourceLocation;
         //private final RenderMaterial renderMaterial;
 
         private TextureInstance(byte[][] pixels, long id) {
-            this.texture = new DynamicTexture(16, 16, false);
+            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
             this.updateTexture(pixels);
             resourceLocation = BlackboardTextureManager.this.textureManager.register("blackboard/" + Long.toHexString(id), this.texture);
             this.renderType = RenderType.entitySolid(resourceLocation);
@@ -174,8 +175,8 @@ public class BlackboardTextureManager {
         }
 
         private void updateTexture(byte[][] pixels) {
-            for (int y = 0; y < pixels.length; y++) {
-                for (int x = 0; x < pixels[y].length; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
+            for (int y = 0; y < pixels.length && y < WIDTH; y++) {
+                for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
                     this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));
                 }
             }
@@ -204,7 +205,7 @@ public class BlackboardTextureManager {
         int tintG = tint >> 8 & 255;
         int tintB = tint & 255;
 
-        int pixel = sprite.getPixelRGBA(0, x + offset, y);
+        int pixel = sprite.getPixelRGBA(0, Math.min(sprite.getWidth()-1, x + offset), Math.min(sprite.getHeight()-1, y));
 
         // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
         int totalB = pixel >> 16 & 255;

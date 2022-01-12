@@ -35,6 +35,7 @@ public class Textures {
     public static final ResourceLocation FLOWING_WATER_TEXTURE = new ResourceLocation("minecraft:block/water_flow");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
     public static final ResourceLocation BLACKBOARD_TEXTURE = new ResourceLocation(MOD_ID + ":blocks/blackboard");
+    public static final ResourceLocation BLACKBOARD_TEXTURE_BACK = new ResourceLocation(MOD_ID + ":blocks/blackboard_back");
 
     //fluids
 

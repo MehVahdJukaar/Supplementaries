@@ -28,7 +28,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.7'
+version = '1.18.1-1.1.8'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -117,7 +117,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.5'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.14'
 
     implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
@@ -135,6 +135,7 @@ dependencies {
     implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
     implementation fg.deobf("curse.maven:jade-324717:3564963")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
+    implementation fg.deobf("curse.maven:patina-pipeworks-565266:3600131")
     //implementation fg.deobf("curse.maven:just-mob-heads-293320:3561503")
     //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
     implementation fg.deobf("curse.maven:tetra-289712:3586368")

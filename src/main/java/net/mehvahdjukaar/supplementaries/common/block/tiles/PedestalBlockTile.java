@@ -29,11 +29,6 @@ public class PedestalBlockTile extends ItemDisplayTile {
         return new AABB(worldPosition, worldPosition.offset(1, 2, 1));
     }
 
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, PedestalBlockTile tile) {
-        //TODO: do it another way
-        tile.counter++;
-    }
-
     @Override
     public void updateTileOnInventoryChanged() {
 
@@ -48,14 +43,19 @@ public class PedestalBlockTile extends ItemDisplayTile {
         //doing this here since I need crystal on server too
         Item it = getDisplayedItem().getItem();
         //TODO: maybe add tag
-        if (it instanceof BlockItem) {
-            this.type = DisplayType.BLOCK;
-        } else if (CommonUtil.isSword(it) || ModTags.PEDESTAL_DOWNRIGHT.contains(it)) {
+
+       if (CommonUtil.isSword(it) || ModTags.PEDESTAL_DOWNRIGHT.contains(it)) {
             this.type = DisplayType.SWORD;
         } else if (it instanceof TridentItem || ModTags.PEDESTAL_UPRIGHT.contains(it)) {
             this.type = DisplayType.TRIDENT;
         } else if (it instanceof EndCrystalItem) {
             this.type = DisplayType.CRYSTAL;
+        } else if (it == ModRegistry.GLOBE_ITEM.get()) {
+            this.type = DisplayType.GLOBE;
+        } else if (it == ModRegistry.GLOBE_SEPIA_ITEM.get()) {
+           this.type = DisplayType.SEPIA_GLOBE;
+       } else if (it instanceof BlockItem) {
+               this.type = DisplayType.BLOCK;
         } else {
             this.type = DisplayType.ITEM;
         }
@@ -89,7 +89,13 @@ public class PedestalBlockTile extends ItemDisplayTile {
         BLOCK,
         SWORD,
         TRIDENT,
-        CRYSTAL
+        CRYSTAL,
+        GLOBE,
+        SEPIA_GLOBE;
+
+        public boolean isGlobe(){
+            return this == GLOBE || this == SEPIA_GLOBE;
+        }
     }
 
 }

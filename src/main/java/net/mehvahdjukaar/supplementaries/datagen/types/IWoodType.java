@@ -8,6 +8,8 @@ import net.minecraftforge.fml.ModList;
 
 public interface IWoodType {
 
+    default boolean canBurn(){return true;}
+
     String toString();
 
     default String getRegName(){return this.toString();}

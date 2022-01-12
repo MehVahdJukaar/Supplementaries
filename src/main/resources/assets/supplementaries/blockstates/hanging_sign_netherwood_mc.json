@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "extension=0,facing=north": {
+      "model": "supplementaries:block/hs/hanging_sign_0_netherwood_mc"
+    },
+    "extension=1,facing=north": {
+      "model": "supplementaries:block/hs/hanging_sign_1_netherwood_mc"
+    },
+    "extension=2,facing=north": {
+      "model": "supplementaries:block/hs/hanging_sign_2_netherwood_mc"
+    },
+    "extension=0,facing=south": {
+      "model": "supplementaries:block/hs/hanging_sign_0_netherwood_mc",
+      "y": 180
+    },
+    "extension=1,facing=south": {
+      "model": "supplementaries:block/hs/hanging_sign_1_netherwood_mc",
+      "y": 180
+    },
+    "extension=2,facing=south": {
+      "model": "supplementaries:block/hs/hanging_sign_2_netherwood_mc",
+      "y": 180
+    },
+    "extension=0,facing=west": {
+      "model": "supplementaries:block/hs/hanging_sign_0_netherwood_mc",
+      "y": 270
+    },
+    "extension=1,facing=west": {
+      "model": "supplementaries:block/hs/hanging_sign_1_netherwood_mc",
+      "y": 270
+    },
+    "extension=2,facing=west": {
+      "model": "supplementaries:block/hs/hanging_sign_2_netherwood_mc",
+      "y": 270
+    },
+    "extension=0,facing=east": {
+      "model": "supplementaries:block/hs/hanging_sign_0_netherwood_mc",
+      "y": 90
+    },
+    "extension=1,facing=east": {
+      "model": "supplementaries:block/hs/hanging_sign_1_netherwood_mc",
+      "y": 90
+    },
+    "extension=2,facing=east": {
+      "model": "supplementaries:block/hs/hanging_sign_2_netherwood_mc",
+      "y": 90
+    }
+  }
+}

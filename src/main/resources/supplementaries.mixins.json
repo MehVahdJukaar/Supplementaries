@@ -16,6 +16,7 @@
     "CampfireBlockMixin",
     "CatSitOnBlockGoalMixin",
     "CauldronBlockMixin",
+    "ChunkHolderMixin",
     "CrossbowItemRopeMixin",
     "FireBlockMixin",
     "GrindstoneInputSlotMixin",
