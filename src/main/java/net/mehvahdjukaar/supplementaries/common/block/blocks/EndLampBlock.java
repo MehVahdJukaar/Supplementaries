@@ -43,7 +43,8 @@ public class EndLampBlock extends Block {
                                  BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             int inc = player.isShiftKeyDown() ? -1 : 1;
-            worldIn.setBlockAndUpdate(pos, state.setValue(RUNE, Rune.values()[(state.getValue(RUNE).ordinal() + inc) % Rune.values().length]));
+            worldIn.setBlockAndUpdate(pos, state.setValue(RUNE,
+                    Rune.values()[(state.getValue(RUNE).ordinal() + inc + Rune.values().length) % Rune.values().length]));
             worldIn.playSound(null, pos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.25F, 1.7f);
 
             return InteractionResult.CONSUME;

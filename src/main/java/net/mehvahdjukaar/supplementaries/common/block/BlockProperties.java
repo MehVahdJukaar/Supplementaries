@@ -22,7 +22,6 @@ public class BlockProperties {
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
     // it's detecting incoming laser and its distance
-    public static final IntegerProperty RECEIVING = IntegerProperty.create("laser_receiving", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
     public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");

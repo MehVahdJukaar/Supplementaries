@@ -55,12 +55,6 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
     @Override
-    public boolean isFoil(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement("Enchantments");
-        return tag != null && (tag.contains("Pet") || super.isFoil(stack));
-    }
-
-    @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
         CompoundTag c = stack.getTagElement("Enchantments");
         if ((c == null || !c.contains("Pet")) && (

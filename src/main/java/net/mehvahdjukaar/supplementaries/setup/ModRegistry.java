@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantment;
+import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
@@ -92,6 +93,7 @@ public class ModRegistry {
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"),
             new LootItemFunctionType(new CurseLootFunction.Serializer()));
+
 
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.tom");

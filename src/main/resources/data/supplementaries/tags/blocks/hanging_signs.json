@@ -105,7 +105,7 @@
     {"id":"supplementaries:hanging_sign_olive","required":false},
     {"id":"supplementaries:hanging_sign_fir_lotr","required":false},
     {"id":"supplementaries:hanging_sign_mangrove_un","required":false},
-    {"id":"supplementaries:hanging_sign_cactus","required":false},
+    {"id":"supplementaries:hanging_sign_cactus_extra","required":false},
     {"id":"supplementaries:hanging_sign_cypress_bb","required":false},
     {"id":"supplementaries:hanging_sign_nanab","required":false},
     {"id":"supplementaries:hanging_sign_grongle","required":false},

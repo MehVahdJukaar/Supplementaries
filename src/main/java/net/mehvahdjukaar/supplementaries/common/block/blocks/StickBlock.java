@@ -199,10 +199,10 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
                 world.setBlockAndUpdate(pos, stick);
                 world.setBlockAndUpdate(toPos, state);
 
-                tile.setRemoved();
-                BlockEntity target = BlockEntity.loadStatic(pos, state, tile.save(new CompoundTag()));
-                if (target != null) {
-                    world.setBlockEntity(target);
+                CompoundTag tag = tile.saveWithoutMetadata();
+                BlockEntity te = world.getBlockEntity(toPos);
+                if(te != null){
+                    te.load(tag);
                 }
                 world.playSound(null, toPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1F, 1.4F);
                 return true;

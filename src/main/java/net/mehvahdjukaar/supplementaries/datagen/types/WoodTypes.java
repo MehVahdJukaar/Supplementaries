@@ -68,7 +68,7 @@ public class WoodTypes {
         for (IWoodType w : SimplyTeadWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : StructurizeWoodTypes.values()){
+        for (IWoodType w : DomumOrnamentumWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
         for (IWoodType w : RediscoveredWoodTypes.values()){

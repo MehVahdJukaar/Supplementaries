@@ -56,8 +56,10 @@ public class TextUtil {
 
                         \u00A70AdaraChristine
                         Azrod_dovahkiin
+                        NotHypherionSA
                         ThugPug43
                         MetalBox47
+                        LaughHappy                      
                         StonkManHanz
                         SylveticHearts
                         E_Y_E_
@@ -67,7 +69,7 @@ public class TextUtil {
                         DrPineapple
                         Colleen Cleland
                         Astralis
-                        NotHypherionSA
+                        Mars The Gamer
                         Toffanelly
                         Elijah
                         Spencer

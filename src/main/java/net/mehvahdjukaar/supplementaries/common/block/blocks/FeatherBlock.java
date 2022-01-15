@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -122,10 +123,10 @@ public class FeatherBlock extends Block {
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
-        if (level instanceof ClientLevel clientLevel) {
-            SoundType soundtype = state.getSoundType(level, pos, null);
-            clientLevel.playLocalSound(pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F, false);
+        SoundType soundtype = state.getSoundType(level, pos, null);
+        level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
+        if (level.isClientSide) {
             Random r = level.random;
             for (int i = 0; i < 10; i++) {
                 level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + r.nextFloat(),

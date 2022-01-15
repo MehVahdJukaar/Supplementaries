@@ -89,8 +89,10 @@ public class SongsManager {
                 //player.displayClientMessage(new TextComponent("Playing: "+song.getTranslationKey()), true);
             //}
 
+            //TODO: ditch packet and send particles from server so there are no desyncs
             //tells the client which song it will play
-            NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ClientBoundSetSongPacket(id, res));
+            if(entity instanceof ServerPlayer serverPlayer)
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSetSongPacket(id, res));
 
         } else {
             song = CURRENTLY_PAYING.get(id);

@@ -76,6 +76,12 @@ public class ModSoftFluids {
 
         List<SoftFluid> custom = new ArrayList<>(Collections.emptyList());
 
+        custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE, Textures.POTION_TEXTURE_FLOW, "eggnog")
+                .fromMod("snowyspirit")
+                .color(0xaffeedd)
+                .translationKey("item.snowyspirit.eggnog")
+                .drink("snowyspirit:eggnog")));
+
         custom.add(makeSF(new SoftFluid.Builder(Textures.POTION_TEXTURE, Textures.POTION_TEXTURE_FLOW, "komodo_spit")
                 .fromMod("alexsmobs")
                 .color(0xa8b966)

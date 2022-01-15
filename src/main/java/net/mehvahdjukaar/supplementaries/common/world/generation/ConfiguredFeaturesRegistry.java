@@ -46,14 +46,9 @@ public class ConfiguredFeaturesRegistry {
             BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, 1)),
             BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, -1)));
 
-    private static final BlockPredicate SURVIVES_PREDICATE = BlockPredicate.allOf(
-            BlockPredicate.ONLY_IN_AIR_PREDICATE,
-            BlockPredicate.wouldSurvive(ModRegistry.URN.get().defaultBlockState(), BlockPos.ZERO)
-    );
-
     private static final BlockPredicate FLAX_PLACEMENT = BlockPredicate.allOf(
-            BlockPredicate.matchesTag(BlockTags.SAND, new BlockPos(0, -1, 0)),
-            SURVIVES_PREDICATE,
+            BlockPredicate.ONLY_IN_AIR_PREDICATE,
+            BlockPredicate.wouldSurvive(ModRegistry.FLAX_WILD.get().defaultBlockState(), BlockPos.ZERO),
             HAS_WATER_PREDICATE
     );
     private static final BlockPredicate URN_PLACEMENT = BlockPredicate.allOf(

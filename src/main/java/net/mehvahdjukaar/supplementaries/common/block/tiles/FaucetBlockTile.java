@@ -210,6 +210,7 @@ public class FaucetBlockTile extends BlockEntity {
                     //only works in 250 increment
                     if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
                     this.tempFluidHolder.copy(handlerBack);
+                    this.tempFluidHolder.setCount(2);
                     if (doTransfer && tryFillingBlockBelow(level, pos)) {
                         handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
                         tileBack.setChanged();

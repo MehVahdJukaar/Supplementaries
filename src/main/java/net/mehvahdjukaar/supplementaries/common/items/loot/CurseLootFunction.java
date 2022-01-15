@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.crafting;
+package net.mehvahdjukaar.supplementaries.common.items.loot;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;

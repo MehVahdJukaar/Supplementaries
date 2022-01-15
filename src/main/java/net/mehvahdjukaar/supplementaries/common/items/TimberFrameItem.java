@@ -35,24 +35,25 @@ public class TimberFrameItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (ServerConfigs.cached.SWAP_TIMBER_FRAME && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
+        if (ServerConfigs.cached.SWAP_TIMBER_FRAME && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);
             if (FrameBlockTile.isValidBlock(clicked, pos, world)) {
                 BlockState frame = this.getBlock().getStateForPlacement(new BlockPlaceContext(context));
-                world.setBlockAndUpdate(pos, frame);
-                BlockEntity tile = world.getBlockEntity(pos);
-                if (tile instanceof FrameBlockTile) {
-                    SoundType s = frame.getSoundType(world, pos, player);
-                    ((FrameBlockTile) tile).acceptBlock(clicked);
-                    world.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
-                    if (!player.isCreative() && !world.isClientSide()) {
-                        context.getItemInHand().shrink(1);
+                if(frame != null) {
+                    world.setBlockAndUpdate(pos, frame);
+                    if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
+                        SoundType s = frame.getSoundType(world, pos, player);
+                        tile.acceptBlock(clicked);
+                        world.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
+                        if (!player.isCreative() && !world.isClientSide()) {
+                            context.getItemInHand().shrink(1);
+                        }
+                        return InteractionResult.sidedSuccess(world.isClientSide);
                     }
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.FAIL;
                 }
-                return InteractionResult.FAIL;
             }
 
         }

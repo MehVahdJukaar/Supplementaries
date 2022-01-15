@@ -6,7 +6,7 @@
           "type": "supplementaries:flag"
         },
         {
-          "modid": "structurize",
+          "modid": "domum_ornamentum",
           "type": "forge:mod_loaded"
         }
       ],
@@ -25,10 +25,10 @@
             "item": "minecraft:stick"
           },
           "2": {
-            "item": "structurize:blockcactusplank"
+            "item": "domum_ornamentum:cactus_extra"
           }
         },
         "result": {
-          "item": "supplementaries:hanging_sign_cactus",
+          "item": "supplementaries:hanging_sign_cactus_extra",
           "count": 2
 }}

@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-public enum StructurizeWoodTypes implements IWoodType {
-    CACTUS("cactus");
+public enum DomumOrnamentumWoodTypes implements IWoodType {
+    CACTUS("cactus_extra");
 
     private final String name;
 
-    StructurizeWoodTypes(String name) {
+    DomumOrnamentumWoodTypes(String name) {
         this.name = name;
     }
 
@@ -16,11 +16,11 @@ public enum StructurizeWoodTypes implements IWoodType {
 
     @Override
     public String getPlankRegName() {
-        return "blockcactusplank";
+        return "cactus_extra";
     }
 
     @Override
     public String getNamespace() {
-        return "structurize";
+        return "domum_ornamentum";
     }
 }

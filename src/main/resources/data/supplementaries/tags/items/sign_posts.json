@@ -105,7 +105,7 @@
     {"id":"supplementaries:sign_post_olive","required":false},
     {"id":"supplementaries:sign_post_fir_lotr","required":false},
     {"id":"supplementaries:sign_post_mangrove_un","required":false},
-    {"id":"supplementaries:sign_post_cactus","required":false},
+    {"id":"supplementaries:sign_post_cactus_extra","required":false},
     {"id":"supplementaries:sign_post_cypress_bb","required":false},
     {"id":"supplementaries:sign_post_nanab","required":false},
     {"id":"supplementaries:sign_post_grongle","required":false},

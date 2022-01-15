@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
@@ -167,7 +168,10 @@ public class Supplementaries {
 
         //smarter farmers not planting tomatoes & task needing to be rewritten
         //jeed mod loaded recipe condition
-        //blackboard otline gui
+        //blackboard otline gui+
+        //quiver that allows to select arrows
+        //map function & data driven map markers
+        //sled shulker and sack
 
         ConfigHandler.init();
 

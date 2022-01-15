@@ -41,7 +41,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
     }
 
     protected boolean canRenderName(PedestalBlockTile tile) {
-        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName()) {
+        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName() && !tile.type.isGlobe()) {
             double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
             return d0 < 16 * 16;
         }

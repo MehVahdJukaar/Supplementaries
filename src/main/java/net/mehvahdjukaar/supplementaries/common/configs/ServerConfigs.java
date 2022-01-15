@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -73,7 +72,7 @@ public class ServerConfigs {
 
             builder.push("bubble_blower");
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
-                    .defineInRange("stasis_cost", 5,1, 25);
+                    .defineInRange("stasis_cost", 5, 1, 25);
             builder.pop();
 
             builder.push("wrench");
@@ -89,7 +88,7 @@ public class ServerConfigs {
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
                     .defineInRange("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
-                            .define("exclusive_to_crossbows", false);
+                    .define("exclusive_to_crossbows", false);
             builder.pop();
             //flute
             builder.push("flute");
@@ -133,7 +132,7 @@ public class ServerConfigs {
 
     }
 
-    public enum Hands{
+    public enum Hands {
         MAIN_HAND, OFF_HAND, BOTH, NONE
     }
 
@@ -278,6 +277,7 @@ public class ServerConfigs {
                             example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
 
                     .defineList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
+
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
                             "Best kept disabled if you are adding custom adventurer maps with its config")
                     .define("random_adventurer_maps", true);
@@ -423,21 +423,21 @@ public class ServerConfigs {
 
             builder.push("bubble_block");
             BUBBLE_LIFETIME = builder.comment("Max lifetime of bubble blocks. Set to 10000 to have it infinite")
-                            .defineInRange("lifetime", 20*60, 1, 10000);
+                    .defineInRange("lifetime", 20 * 60, 1, 10000);
             BUBBLE_BREAK = builder.comment("Can bubble break when stepped on?")
-                            .define("break_when_touched", true);
+                    .define("break_when_touched", true);
             builder.pop();
 
             builder.push("ash");
             ASH_BURN = builder.comment("Burnable blocks will have a chance to create ash layers when burned")
-                            .define("ash_from_fire", true);
+                    .define("ash_from_fire", true);
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             builder.pop();
 
             builder.push("rope");
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
-                            .define("block_side_attachment", false);
+                    .define("block_side_attachment", false);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
             builder.pop();
@@ -507,7 +507,7 @@ public class ServerConfigs {
             JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size. Tinted jars can accept hostile mbos too")
                     .define("jar_auto_detect", false);
             JAR_CAPTURE = builder.comment("Allow Jars to capture small mobs")
-                            .define("jar_capture", true);
+                    .define("jar_capture", true);
             JAR_COOKIES = builder.comment("Allow Jars to hold cookies")
                     .define("jar_cookies", true);
             JAR_LIQUIDS = builder.comment("Allow Jars to hold liquids from bottles, buckets and bowls")
@@ -702,9 +702,9 @@ public class ServerConfigs {
             builder.push("wild_flax");
             WILD_FLAX_ENABLED = builder.define("enabled", true);
             FLAX_AVERAGE_EVERY = builder.comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
-                            .defineInRange("rarity", 6, 1, 100);
+                    .defineInRange("rarity", 6, 1, 100);
             FLAX_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-                            .defineInRange("attempts_per_patch", 35, 1, 100);
+                    .defineInRange("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             builder.push("cave_urns");
@@ -712,8 +712,8 @@ public class ServerConfigs {
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .defineInRange("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                            .defineInRange("spawn_attempts", 8, 0, 100);
-            List<String> urnBlacklist = List.of("minecraft:lush_caves","minecraft:dripstone_caves");
+                    .defineInRange("spawn_attempts", 8, 0, 100);
+            List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
                     .defineList("biome_blacklist", urnBlacklist, STRING_CHECK);
             builder.pop();
@@ -867,6 +867,8 @@ public class ServerConfigs {
         public static double FIREFLY_SPEED;
 
         public static void refresh() {
+
+
             ZOMBIE_HORSE_COST = tweaks.ZOMBIE_HORSE_COST.get();
             ZOMBIE_HORSE = tweaks.ZOMBIE_HORSE.get();
             ZOMBIE_HORSE_UNDERWATER = tweaks.ZOMBIE_HORSE_UNDERWATER.get();
