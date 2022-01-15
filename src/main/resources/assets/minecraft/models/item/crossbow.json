@@ -72,6 +72,35 @@
                 "amethyst_arrow": 1
             },
             "model": "item/crossbow_amethyst_arrow"
+        },
+
+	{
+            "predicate": {
+                "charged": 1,
+                "crossbowverhaul:bolt_tier": 2
+            },
+            "model": "item/crossbow/crossbow_bolt_iron"
+        },
+		{
+            "predicate": {
+                "charged": 1,
+                "crossbowverhaul:bolt_tier": 3
+            },
+            "model": "item/crossbow/crossbow_bolt_diamond"
+        },
+		{
+            "predicate": {
+                "charged": 1,
+                "crossbowverhaul:bolt_tier": 4
+            },
+            "model": "item/crossbow/crossbow_bolt_gold"
+        },
+		{
+            "predicate": {
+                "charged": 1,
+                "crossbowverhaul:bolt_tier": 5
+            },
+            "model": "item/crossbow/crossbow_bolt_netherite"
         }
     ]
 }
