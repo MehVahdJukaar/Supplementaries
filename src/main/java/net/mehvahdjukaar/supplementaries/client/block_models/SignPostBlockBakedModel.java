@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
@@ -43,7 +44,6 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
 
             boolean framed = CompatHandler.framedblocks && (isFramed!=null && isFramed);
 
-            //RenderType layer = MinecraftForgeClient.getRenderLayer();
             //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
             //always solid.
 

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
@@ -45,6 +46,17 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.horizontal = horizontal;
     }
 
+    @Override
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        compound.putFloat("EnchantPower", this.enchantPower);
+    }
+
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        this.enchantPower = compound.getFloat("EnchantPower");
+    }
 
     @Override
     public void updateTileOnInventoryChanged() {

@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Const {
+public class RotHlpr {
 
     public static final Quaternion Y180 = Vector3f.YP.rotationDegrees(180);
     public static final Quaternion Y90 = Vector3f.YP.rotationDegrees(90);
@@ -46,6 +46,34 @@ public class Const {
 
     public static Quaternion rot(int rot) {
         return YAW2ROT.getOrDefault(rot, def);
+    }
+
+    public static double wrapRad(double pValue) {
+        double p = Math.PI*2;
+        double d0 = pValue % p;
+        if (d0 >= Math.PI) {
+            d0 -= p;
+        }
+
+        if (d0 < -Math.PI) {
+            d0 += p;
+        }
+
+        return d0;
+    }
+
+    public static float wrapRad(float pValue) {
+        float p = (float) (Math.PI*2);
+        float d0 = pValue % p;
+        if (d0 >= Math.PI) {
+            d0 -= p;
+        }
+
+        if (d0 < -Math.PI) {
+            d0 += p;
+        }
+
+        return d0;
     }
 
 }

@@ -98,10 +98,10 @@ public class WoodTypes {
         for (IWoodType w : ToufucraftWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : BayouBluesWoodType.values()){
+        for (IWoodType w : BayouBluesWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : AbundanceWoodType.values()){
+        for (IWoodType w : AbundanceWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
         for (IWoodType w : EnvironmentalWoodTypes.values()){
@@ -125,16 +125,16 @@ public class WoodTypes {
         for (IWoodType w : LotrWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : UnnamedAnimalModWoodType.values()){
+        for (IWoodType w : UnnamedAnimalModWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : AtumWoodType.values()){
+        for (IWoodType w : AtumWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : MalumWoodType.values()){
+        for (IWoodType w : MalumWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-        for (IWoodType w : HabitatWoodType.values()){
+        for (IWoodType w : HabitatWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
         for (IWoodType w : DesolationWoodType.values()){
@@ -152,7 +152,9 @@ public class WoodTypes {
         for (IWoodType w : MorecraftWoodTypes.values()){
             TYPES.put(w.toNBT(),w);
         }
-
+        for (IWoodType w : BiomemakeoverWoodTypes.values()){
+            TYPES.put(w.toNBT(),w);
+        }
 
     }
     public static IWoodType fromNBT(String s){

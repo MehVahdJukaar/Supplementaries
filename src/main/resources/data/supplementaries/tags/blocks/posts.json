@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"#quark:hedges","required":false},
+    {"id":"#minecraft:fences","required":false},
     {"id":"betterendforge:end_lotus_stem","required":false},
     {"id":"darkerdepths:petrified_post","required":false},
     {"id":"darkerdepths:stripped_petrified_post","required":false},
@@ -109,8 +109,5 @@
     {"id":"bayou_blues:cypress_post","required":false},
     {"id":"habitat:stripped_fairy_ring_mushroom_post","required":false},
     {"id":"habitat:fairy_ring_mushroom_post","required":false}
-  ],
-  "values": [
-    {"id":"#minecraft:fences","required":false}
   ]
 }

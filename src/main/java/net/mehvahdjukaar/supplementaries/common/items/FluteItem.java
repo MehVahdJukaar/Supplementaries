@@ -6,6 +6,7 @@ import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
@@ -55,21 +56,26 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
     @Override
+    public boolean isFoil(ItemStack pStack) {
+        var tag = pStack.getTag();
+        if (tag == null) return false;
+        return tag.contains("Pet") || super.isFoil(pStack);
+    }
+
+    @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
-        CompoundTag c = stack.getTagElement("Enchantments");
-        if ((c == null || !c.contains("Pet")) && (
-                target instanceof TamableAnimal  animal && animal.isTame() && animal.getOwnerUUID().equals(playerIn.getUUID()))
+        CompoundTag c = stack.getTagElement("Pet");
+        if (c == null && (
+                target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(playerIn.getUUID()))
                 || target.getType().is(ModTags.FLUTE_PET)) {
-            if (target instanceof AbstractHorse && !((AbstractHorse) target).isTamed()) return InteractionResult.PASS;
+            if (target instanceof AbstractHorse horse && !horse.isTamed()) return InteractionResult.PASS;
             //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
             CompoundTag com = new CompoundTag();
             com.putString("Name", target.getName().getString());
             com.putUUID("UUID", target.getUUID());
             com.putInt("ID", target.getId());
-            CompoundTag com2 = new CompoundTag();
-            com2.put("Pet", com);
 
-            stack.addTagElement("Enchantments", com2);
+            stack.addTagElement("Pet", com);
             playerIn.setItemInHand(hand, stack);
             playerIn.getCooldowns().addCooldown(this, 20);
             return InteractionResult.sidedSuccess(playerIn.level.isClientSide);
@@ -79,13 +85,13 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity livingEntity){
+        if (entity instanceof LivingEntity livingEntity) {
             return this.interactLivingEntity(stack, player, livingEntity, player.getUsedItemHand()).consumesAction();
         }
         return false;
-   }
+    }
 
-   //TODO: figure out continous use
+    //TODO: figure out continous use
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         super.use(worldIn, playerIn, handIn);
@@ -96,9 +102,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             double y = playerIn.getY();
             double z = playerIn.getZ();
             int r = ServerConfigs.cached.FLUTE_RADIUS;
-            CompoundTag com1 = stack.getTagElement("Enchantments");
-            if (com1 != null && com1.contains("Pet")) {
-                CompoundTag com = com1.getCompound("Pet");
+            CompoundTag com = stack.getTagElement("Pet");
+            if (com != null) {
                 Entity entity = worldIn.getEntity(com.getInt("ID"));
                 int maxDist = ServerConfigs.cached.FLUTE_DISTANCE * ServerConfigs.cached.FLUTE_DISTANCE;
                 if (entity instanceof LivingEntity pet) {
@@ -134,16 +139,15 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag tag = stack.getTagElement("Enchantments");
-        if (tag != null && tag.contains("Pet")) {
-            CompoundTag com = tag.getCompound("Pet");
-            tooltip.add(new TextComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
+        CompoundTag tag = stack.getTagElement("Pet");
+        if (tag != null) {
+            tooltip.add(new TextComponent(tag.getString("Name")).withStyle(ChatFormatting.GRAY));
         }
     }
 
     @Override
-    public void spawnNoteParticle(ClientLevel level, LivingEntity entity, int note) {
-        if(!ClientConfigs.cached.FLUTE_PARTICLES) return;
+    public void spawnNoteParticle(Level level, LivingEntity entity, int note) {
+        if (!ClientConfigs.cached.FLUTE_PARTICLES) return;
         //default base
         Vec3 bx = new Vec3(1, 0, 0);
         Vec3 by = new Vec3(0, 1, 0);
@@ -151,7 +155,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         float toRad = (float) (Math.PI / 180f);
         float xRot = -entity.getXRot() * toRad;
-        float yRot = -entity.yHeadRot * toRad;
+        float yRot = -Mth.wrapDegrees(entity.yHeadRot) * toRad;
         //apply rotation matrix
         bx = bx.xRot(xRot).yRot(yRot);
         by = by.xRot(xRot).yRot(yRot);
@@ -225,10 +229,13 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         Vec3 by = new Vec3(0, 1, 0);
         Vec3 bz = new Vec3(0, 0, 1);
 
-        //head rot + hand offset from flute
-        float downFacingRot = Mth.clamp(model.head.xRot, 0f, 0.8f);
+        float headXRot = RotHlpr.wrapRad(model.head.xRot);
+        float headYRot = RotHlpr.wrapRad(model.head.yRot);
 
-        float xRot = getMaxHeadXRot(model.head) - (entity.isCrouching() ? 1F : 0.0F)
+        //head rot + hand offset from flute
+        float downFacingRot = Mth.clamp(headXRot, 0f, 0.8f);
+
+        float xRot = getMaxHeadXRot(headXRot) - (entity.isCrouching() ? 1F : 0.0F)
                 - 0.3f + downFacingRot * 0.5f;
 
         bx = bx.xRot(xRot);
@@ -251,17 +258,17 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         float pitch = (float) Math.asin(newV.y / len);
 
-        mainHand.yRot = (yaw + model.head.yRot * 1.4f - 0.1f * mirror) - 0.5f * downFacingRot * mirror;
+        mainHand.yRot = (yaw + headYRot * 1.4f - 0.1f * mirror) - 0.5f * downFacingRot * mirror;
         mainHand.xRot = (float) (pitch - Math.PI / 2f);
 
 
-        offHand.yRot = (float) Mth.clamp((mainHand.yRot - 1 * mirror) * 0.2, -0.15, 0.15) + 1.1f * mirror;
-        offHand.xRot = mainHand.xRot - 0.06f;
+        offHand.yRot = (float) Mth.clamp((RotHlpr.wrapRad(mainHand.yRot) - 1 * mirror) * 0.2, -0.15, 0.15) + 1.1f * mirror;
+        offHand.xRot = RotHlpr.wrapRad(mainHand.xRot - 0.06f) ;
 
 
         //shoulder joint hackery
-        float offset = leftHand ? -Mth.clamp(model.head.yRot, -1, 0) :
-                Mth.clamp(model.head.yRot, 0, 1);
+        float offset = leftHand ? -Mth.clamp(headYRot, -1, 0) :
+                Mth.clamp(headYRot, 0, 1);
 
         // model.rightArm.x = -5.0F + offset * 2f;
         mainHand.z = -offset * 0.95f;
@@ -274,8 +281,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         AnimationUtils.bobModelPart(model.rightArm, entity.tickCount, -1.0F);
     }
 
-    public static float getMaxHeadXRot(ModelPart head) {
-        return Mth.clamp(head.xRot, (-(float) Math.PI / 2.5F), ((float) Math.PI / 2F));
+    public static float getMaxHeadXRot(float xRot) {
+        return Mth.clamp(xRot, (-(float) Math.PI / 2.5F), ((float) Math.PI / 2F));
     }
 
     @Override
@@ -296,7 +303,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
                 //hax
                 float oldRot = head.xRot;
-                head.xRot = getMaxHeadXRot(head);
+                head.xRot = getMaxHeadXRot(RotHlpr.wrapRad(oldRot));
                 head.translateAndRotate(poseStack);
                 head.xRot = oldRot;
 

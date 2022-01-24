@@ -6,9 +6,102 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.Random;
 
 public class ParticleUtil {
+
+    //call with packet
+
+    public static void spawnParticleOnBlockShape(Level level, BlockPos pos, ParticleOptions particleOptions,
+                                                  UniformInt uniformInt, float maxSpeed) {
+        spawnParticleOnBoundingBox(level.getBlockState(pos).getShape(level, pos).bounds(), level, pos,
+                particleOptions, uniformInt, maxSpeed);
+    }
+
+    public static void spawnParticleOnBoundingBox(AABB bb, Level level, BlockPos pos, ParticleOptions particleOptions,
+                                                  UniformInt uniformInt, float maxSpeed) {
+
+        Random random = level.random;
+
+        //north
+        int i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double x = random.nextDouble();
+            double y = random.nextDouble();
+            if (x > bb.minX && x < bb.maxX && y > bb.minY && y < bb.maxY) {
+                double dx = maxSpeed * level.random.nextDouble();
+                double dy = maxSpeed * level.random.nextDouble();
+                double dz = 0;
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.minZ, dx, dy, dz);
+            }
+        }
+        //south
+        i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double x = random.nextDouble();
+            double y = random.nextDouble();
+            if (x > bb.minX && x < bb.maxX && y > bb.minY && y < bb.maxY) {
+                double dx = maxSpeed * level.random.nextDouble();
+                double dy = maxSpeed * level.random.nextDouble();
+                double dz = 0;
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.maxZ, dx, dy, dz);
+            }
+        }
+        //west
+        i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double z = random.nextDouble();
+            double y = random.nextDouble();
+            if (z > bb.minZ && z < bb.maxZ && y > bb.minY && y < bb.maxY) {
+                double dx = 0;
+                double dy = maxSpeed * level.random.nextDouble();
+                double dz = maxSpeed * level.random.nextDouble();
+                level.addParticle(particleOptions, pos.getX() + bb.minX, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
+            }
+        }
+        //east
+        i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double z = random.nextDouble();
+            double y = random.nextDouble();
+            if (z > bb.minZ && z < bb.maxZ && y > bb.minY && y < bb.maxY) {
+                double dx = 0;
+                double dy = maxSpeed * level.random.nextDouble();
+                double dz = maxSpeed * level.random.nextDouble();
+                level.addParticle(particleOptions, pos.getX() + bb.maxX, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
+            }
+        }
+        //down
+        i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double x = random.nextDouble();
+            double z = random.nextDouble();
+            if (x > bb.minX && x < bb.maxX && z > bb.minZ && z < bb.maxZ) {
+                double dx = maxSpeed * level.random.nextDouble();
+                double dy = 0;
+                double dz = maxSpeed * level.random.nextDouble();
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.minY, pos.getZ() + z, dx, dy, dz);
+            }
+        }
+        //up
+        i = uniformInt.sample(random);
+        for (int j = 0; j < i; ++j) {
+            double x = random.nextDouble();
+            double z = random.nextDouble();
+            if (x > bb.minX && x < bb.maxX && z > bb.minZ && z < bb.maxZ) {
+                double dx = maxSpeed * level.random.nextDouble();
+                double dy = 0;
+                double dz = maxSpeed * level.random.nextDouble();
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.maxY, pos.getZ() + z, dx, dy, dz);
+            }
+        }
+    }
+
+
     public static void spawnParticlesOnBlockFaces(Level level, BlockPos pos, ParticleOptions particleOptions,
                                                   UniformInt uniformInt, float minSpeed, float maxSpeed, boolean perpendicular) {
         for (Direction direction : Direction.values()) {
@@ -42,5 +135,10 @@ public class ParticleUtil {
             dz = (k == 0) ? maxSpeed * level.random.nextDouble() : 0.0D;
         }
         level.addParticle(particleOptions, d0, d1, d2, dx, dy, dz);
+    }
+
+    public enum EventType {
+        BUBBLE_BLOW,
+        BUBBLE_CLEAN
     }
 }

@@ -191,7 +191,7 @@
 //        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.bat.death"));
 //    }
 //
-//    //TODO: test this
+//    //TODO: spawnParticleOnBoundingBox this
 //    protected void jumpInLiquid(Tag<Fluid> fluidTag) {
 //        this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.01D, 0.0D));
 //    }

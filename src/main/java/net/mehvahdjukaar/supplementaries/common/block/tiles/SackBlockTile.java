@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     public SackBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.SACK_TILE.get(), pos, state);
+        super(ModRegistry.SACK_TILE.get(), pos, state, 27);
     }
 
     @Override

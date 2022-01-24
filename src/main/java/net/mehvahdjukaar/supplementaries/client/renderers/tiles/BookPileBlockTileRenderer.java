@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -70,8 +70,8 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         int books = Math.min(state.getValue(BookPileBlock.BOOKS), visualBooks.size());
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
-        matrixStack.mulPose(Const.rot(dir));
-        matrixStack.mulPose(Const.X90);
+        matrixStack.mulPose(RotHlpr.rot(dir));
+        matrixStack.mulPose(RotHlpr.X90);
 
         matrixStack.translate(0, 3 / 16f, 0);
 

@@ -112,6 +112,7 @@ public class WrenchItem extends Item {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, itemstack);
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 } else {
+                    //only plays them on local client. might want to change this
                     playTurningEffects(pos, shiftDown, dir, level, player);
                 }
                 itemstack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));

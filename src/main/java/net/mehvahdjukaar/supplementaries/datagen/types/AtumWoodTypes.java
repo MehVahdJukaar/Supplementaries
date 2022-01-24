@@ -2,18 +2,19 @@ package net.mehvahdjukaar.supplementaries.datagen.types;
 
 import net.minecraft.world.level.material.MaterialColor;
 
-public enum HabitatWoodType implements IWoodType {
-    FAIRY_RING_MUSHROOM("fairy_ring_mushroom");
+public enum AtumWoodTypes implements IWoodType {
+    PALM("palm"),
+    DEADWOOD("deadwood");
 
     private final String name;
 
-    HabitatWoodType(String name) {
+    AtumWoodTypes(String name) {
         this.name = name;
     }
 
     @Override
     public MaterialColor getColor() {
-        return MaterialColor.COLOR_YELLOW;
+        return this==PALM?MaterialColor.WOOD:MaterialColor.PODZOL;
     }
 
     @Override
@@ -23,11 +24,11 @@ public enum HabitatWoodType implements IWoodType {
 
     @Override
     public String getRegName() {
-        return this.name+"_hbt";
+        return this.name+"_atum";
     }
 
     @Override
     public String getNamespace() {
-        return "habitat";
+        return "atum";
     }
 }

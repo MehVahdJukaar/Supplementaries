@@ -106,7 +106,7 @@ public class StatueEntityModel extends Model {
                 this.rightArm.xRot = (float) (Math.PI / 10 * -3);
                 this.rightArm.yRot = (float) (-Math.PI / 10 * 1.5);
             }
-            case HOLDING -> {
+            case HOLDING, GLOBE, SEPIA_GLOBE -> {
                 this.leftLeg.xRot = 0f;
                 this.rightLeg.xRot = 0f;
                 this.leftArm.xRot = (float) -(Math.PI / 4f);

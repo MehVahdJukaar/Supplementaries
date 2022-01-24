@@ -6,7 +6,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
@@ -86,7 +86,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             matrixStackIn.translate(0, 0.25, 0);
 
             if (tile.getBlockState().getValue(PedestalBlock.AXIS) == Direction.Axis.X) {
-                matrixStackIn.mulPose(Const.Y90);
+                matrixStackIn.mulPose(RotHlpr.Y90);
             }
 
             ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
@@ -97,12 +97,12 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                     case SWORD -> {
                         matrixStackIn.translate(0, -0.03125, 0);
                         matrixStackIn.scale(1.5f, 1.5f, 1.5f);
-                        matrixStackIn.mulPose(Const.Z135);
+                        matrixStackIn.mulPose(RotHlpr.Z135);
                     }
                     case TRIDENT -> {
                         matrixStackIn.translate(0, 0.03125, 0);
                         matrixStackIn.scale(1.5f, 1.5f, 1.5f);
-                        matrixStackIn.mulPose(Const.ZN45);
+                        matrixStackIn.mulPose(RotHlpr.ZN45);
                     }
                     case CRYSTAL -> {
                         entityRenderer.render(CapturedMobCache.pedestalCrystal.get(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
@@ -119,12 +119,14 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             //long blockoffset = (long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13);
 
                             //long time = System.currentTimeMillis();
-                            float tt = tile.getLevel().getGameTime()+ partialTicks;
+
+                            //float tt = tile.getLevel().getGameTime() +partialTicks;
                             //float tt = tile.counter + partialTicks;
 
+                            //float tt = ((float)Math.floorMod(tile.getLevel().getGameTime(), 1000L) + partialTicks) / 1000.0F;
 
                             //long t = blockoffset + time;
-                            float angle = (tt * (float) ClientConfigs.cached.PEDESTAL_SPEED) % 360f;
+                            float angle = (tile.getLevel().getGameTime() % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;
                             Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
 
                             matrixStackIn.mulPose(rotation);

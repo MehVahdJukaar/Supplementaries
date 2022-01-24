@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -64,8 +64,8 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
             matrixStack.translate(i + 139, j + 52, 0.0D);
             matrixStack.scale(24.0F, -24.0F, 1.0F);
             matrixStack.translate(0.5D, 0.5D, 0.5D);
-            matrixStack.mulPose(Const.Y90);
-            matrixStack.mulPose(Const.X90);
+            matrixStack.mulPose(RotHlpr.Y90);
+            matrixStack.mulPose(RotHlpr.X90);
             matrixStack.scale(1.125F, 1.125F, 1.125F);
             matrixStack.translate(-1, -0.5, -1.1875);
 

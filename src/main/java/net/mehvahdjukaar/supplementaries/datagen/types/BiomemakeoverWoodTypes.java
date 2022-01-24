@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
-public enum AbundanceWoodType implements IWoodType {
-    JACARANDA("jacaranda"),
-    REDBUD("redbud");
+public enum BiomemakeoverWoodTypes implements IWoodType {
+    ANCIENT_OAK("ancient_oak"),
+    SWAMP_CYPRESS("swamp_cypress"),
+    WILLOW("willow"),
+    BLIGHTED_BALSA("blighted_balsa");
 
     private final String name;
 
-    AbundanceWoodType(String name) {
+    BiomemakeoverWoodTypes(String name) {
         this.name = name;
     }
 
@@ -17,11 +19,11 @@ public enum AbundanceWoodType implements IWoodType {
 
     @Override
     public String getRegName() {
-        return this.name+"_ab";
+        return this.name+"_bm";
     }
 
     @Override
     public String getNamespace() {
-        return "abundance";
+        return "biomemakeover";
     }
 }

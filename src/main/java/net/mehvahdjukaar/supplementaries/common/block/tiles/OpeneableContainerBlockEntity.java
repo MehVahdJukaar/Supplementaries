@@ -27,10 +27,11 @@ import java.util.stream.IntStream;
 public abstract class OpeneableContainerBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
 
     private final ContainerOpenersCounter openersCounter = new ContainerCounter();
-    protected NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> items;
 
-    protected OpeneableContainerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+    protected OpeneableContainerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, int size) {
         super(blockEntityType, pos, state);
+        this.items = NonNullList.withSize(size, ItemStack.EMPTY);
     }
 
     @Override

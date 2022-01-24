@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -95,7 +95,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.pushPose();
 
                 if (!left) {
-                    matrixStackIn.mulPose(Const.YN180);
+                    matrixStackIn.mulPose(RotHlpr.YN180);
                     matrixStackIn.translate(0, 0, -0.3125);
                 }
 
@@ -132,7 +132,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.pushPose();
 
                 if (!left) {
-                    matrixStackIn.mulPose(Const.YN180);
+                    matrixStackIn.mulPose(RotHlpr.YN180);
                     matrixStackIn.translate(0, 0, -0.3125);
                 }
 

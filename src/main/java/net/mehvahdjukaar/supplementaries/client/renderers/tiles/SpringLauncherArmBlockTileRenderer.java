@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -34,8 +34,8 @@ public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<S
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
-        matrixStackIn.mulPose(Const.X180);
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        matrixStackIn.mulPose(RotHlpr.X180);
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, Mth.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
         boolean flag1 = tile.getExtending() == tile.age < 2;

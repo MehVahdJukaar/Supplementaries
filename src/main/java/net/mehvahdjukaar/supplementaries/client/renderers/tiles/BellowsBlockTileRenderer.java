@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -76,9 +76,9 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(Const.rot(dir.getOpposite()));
-        matrixStackIn.mulPose(Const.XN90);
-        matrixStackIn.mulPose(Const.Z180);
+        matrixStackIn.mulPose(RotHlpr.rot(dir.getOpposite()));
+        matrixStackIn.mulPose(RotHlpr.XN90);
+        matrixStackIn.mulPose(RotHlpr.Z180);
         //TODO: figure out why models are always flipped
 
         center.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);

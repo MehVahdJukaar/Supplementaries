@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.datagen.types;
 
 
-public enum BayouBluesWoodType implements IWoodType {
-    CYPRESS("cypress");
+public enum UnnamedAnimalModWoodTypes implements IWoodType {
+    MANGROVE("mangrove");
 
     private final String name;
 
-    BayouBluesWoodType(String name) {
+    UnnamedAnimalModWoodTypes(String name) {
         this.name = name;
     }
 
@@ -17,11 +17,11 @@ public enum BayouBluesWoodType implements IWoodType {
 
     @Override
     public String getRegName() {
-        return this.name+"_bb";
+        return this.name+"_un";
     }
 
     @Override
     public String getNamespace() {
-        return "bayou_blues";
+        return "unnamedanimalmod";
     }
 }

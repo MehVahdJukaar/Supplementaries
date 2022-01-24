@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
@@ -59,9 +59,9 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5d, 0.5d, 0.5d);
-        matrixStackIn.mulPose(Const.rot(tile.getDirection()));
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
 
-        matrixStackIn.mulPose(Const.X90);
+        matrixStackIn.mulPose(RotHlpr.X90);
 
         //hours
         matrixStackIn.pushPose();

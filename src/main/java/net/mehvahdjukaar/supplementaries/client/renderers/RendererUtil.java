@@ -361,7 +361,7 @@ public class RendererUtil {
                 addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
                 addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
                 addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-                matrixStackIn.mulPose(Const.Y180);
+                matrixStackIn.mulPose(RotHlpr.Y180);
                 float temp = minu;
                 minu = maxu;
                 maxu = temp;

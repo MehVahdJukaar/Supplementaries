@@ -106,8 +106,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
         int currentPower = state.getValue(POWER);
         // on-off
         if (bestNeighborSignal != currentPower) {
-            if (bestNeighborSignal != 0) state = state.setValue(ROTATING, true);
-            world.setBlock(pos, state.setValue(POWER, bestNeighborSignal), 2 | 4);
+            world.setBlock(pos, state.setValue(POWER, bestNeighborSignal).setValue(ROTATING, bestNeighborSignal!=0), 2 | 4);
             return true;
             //returns if state changed
         }

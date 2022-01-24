@@ -56,8 +56,8 @@ public class NetworkHandler {
         register(SyncConfigsPacket.class, SyncConfigsPacket::buffer,
                 SyncConfigsPacket::new, SyncConfigsPacket::handler);
 
-        register(ClientBoundSendLoginMessagePacket.class, ClientBoundSendLoginMessagePacket::buffer,
-                ClientBoundSendLoginMessagePacket::new, ClientBoundSendLoginMessagePacket::handler);
+        register(ClientBoundSendLoginPacket.class, ClientBoundSendLoginPacket::buffer,
+                ClientBoundSendLoginPacket::new, ClientBoundSendLoginPacket::handler);
 
         register(OpenConfigsPacket.class, OpenConfigsPacket::buffer,
                 OpenConfigsPacket::new, OpenConfigsPacket::handler);
@@ -96,6 +96,8 @@ public class NetworkHandler {
         register(ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::buffer,
                 ClientBoundOpenScreenPacket::new, ClientBoundOpenScreenPacket::handler);
 
+        register(ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::buffer,
+                ClientBoundPlaySongNotesPacket::new, ClientBoundPlaySongNotesPacket::handler);
 
     }
 

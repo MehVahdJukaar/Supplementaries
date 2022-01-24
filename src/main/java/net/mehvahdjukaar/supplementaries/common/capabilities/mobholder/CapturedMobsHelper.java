@@ -121,6 +121,8 @@ public class CapturedMobsHelper {
         DEFAULT_CONFIG.add(addFish("betteranimalsplus:piranha"));
         DEFAULT_CONFIG.add(addFish("betteranimalsplus:barracuda"));
         DEFAULT_CONFIG.add(addFish("rediscovered:fish", 1));
+        DEFAULT_CONFIG.add(addFish("biomemakeover:glowfish"));
+        DEFAULT_CONFIG.add(addFish("biomemakeover:tadpoles"));
         //DEFAULT_VALUES.add(addDef("----"));
 
 

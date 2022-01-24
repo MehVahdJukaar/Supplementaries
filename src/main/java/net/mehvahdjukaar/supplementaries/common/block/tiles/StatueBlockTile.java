@@ -80,7 +80,6 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     @Override
     public void updateClientVisualsOnLoad() {
-        super.updateClientVisualsOnLoad();
         this.updateName();
         ItemStack stack = this.getDisplayedItem();
         this.pose = StatuePose.getPose(stack);
@@ -116,14 +115,21 @@ public class StatueBlockTile extends ItemDisplayTile {
         HOLDING,
         CANDLE,
         SWORD,
-        TOOL;
+        TOOL,
+        GLOBE,
+        SEPIA_GLOBE;
 
         public static StatuePose getPose(ItemStack stack) {
             if (stack.isEmpty()) return StatuePose.STANDING;
             Item i = stack.getItem();
             if (CommonUtil.isSword(i)) return SWORD;
-            if (CommonUtil.isTool(i)) return TOOL;
+            if (i == ModRegistry.GLOBE_ITEM.get()) return GLOBE;
+            if (i == ModRegistry.GLOBE_SEPIA_ITEM.get()) return SEPIA_GLOBE;
             return (stack.is(ItemTags.CANDLES)) ? StatuePose.CANDLE : StatuePose.HOLDING;
+        }
+
+        public boolean isGlobe(){
+            return this == GLOBE || this == SEPIA_GLOBE;
         }
     }
 }

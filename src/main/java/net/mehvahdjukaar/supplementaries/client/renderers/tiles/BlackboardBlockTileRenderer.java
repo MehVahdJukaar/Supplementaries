@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -61,8 +61,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(Const.rot(dir));
-        matrixStackIn.mulPose(Const.XN90);
+        matrixStackIn.mulPose(RotHlpr.rot(dir));
+        matrixStackIn.mulPose(RotHlpr.XN90);
         matrixStackIn.translate(-0.5, -0.5, -0.1875);
 
 

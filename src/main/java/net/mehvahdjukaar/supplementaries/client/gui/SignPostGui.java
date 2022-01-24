@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -170,7 +170,7 @@ public class SignPostGui extends Screen {
 
             poseStack.pushPose();
             if (!leftUp) {
-                poseStack.mulPose(Const.YN180);
+                poseStack.mulPose(RotHlpr.YN180);
                 poseStack.translate(0, 0, -0.3125);
             }
             poseStack.scale(1, -1, -1);
@@ -185,7 +185,7 @@ public class SignPostGui extends Screen {
 
             poseStack.pushPose();
             if (!leftDown) {
-                poseStack.mulPose(Const.YN180);
+                poseStack.mulPose(RotHlpr.YN180);
                 poseStack.translate(0, 0, -0.3125);
             }
             poseStack.translate(0, -0.5, 0);

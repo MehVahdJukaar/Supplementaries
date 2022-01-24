@@ -64,13 +64,9 @@ public class DispenserRegistry {
         //jar
         boolean jar = RegistryConfigs.reg.JAR_ENABLED.get();
         if (jar) {
-
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_TINTED.get());
-
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
-
-
         }
 
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
@@ -197,7 +193,7 @@ public class DispenserRegistry {
                 ServerLevel level = source.getLevel();
                 BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
 
-                if (SoapItem.tryCleaning(stack, level, pos)) {
+                if (SoapItem.tryCleaning(stack, level, pos, null)) {
                     return InteractionResultHolder.success(stack);
                 }
 

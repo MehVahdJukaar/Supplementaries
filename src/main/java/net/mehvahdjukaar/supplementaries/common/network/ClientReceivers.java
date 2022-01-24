@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
+import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -14,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -21,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fml.ModList;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ClientReceivers {
@@ -47,8 +49,8 @@ public class ClientReceivers {
 
     public static void handlePlaySpeakerMessagePacket(ClientBoundPlaySpeakerMessagePacket message) {
         //TODO: add @p command support
-        boolean narrator = message.getNarrator();
-        Component str = message.getStr();
+        boolean narrator = message.narrator;
+        Component str = message.str;
         if (narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
             Narrator.getNarrator().say(str.getString(), true);
         } else {
@@ -61,14 +63,16 @@ public class ClientReceivers {
                 .add(message.getKnockbackX(), message.getKnockbackY(), message.getKnockbackZ())));
     }
 
-    public static void handleSendLoginMessagePacket(ClientBoundSendLoginMessagePacket message) {
+    public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
         withPlayerDo(p -> {
+            PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache;
             if (ClientConfigs.general.ANTI_REPOST_WARNING.get()) {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
                     if (fileName.contains(".jar")) {
-                        if (!fileName.toLowerCase(Locale.ROOT).contains("supplementaries-1") || fileName.toLowerCase(Locale.ROOT).contains("supplementaries-mod") || fileName.contains("supplementaries-1.16.53")) {
+                        if (fileName.contains("-Mod-1")) {
                             MutableComponent link = new TranslatableComponent("message.supplementaries.anti_repost_link");
+
                             String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
                             ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
                             link.setStyle(link.getStyle().withClickEvent(click).setUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
@@ -86,11 +90,18 @@ public class ClientReceivers {
 
     public static void handleSpawnBlockParticlePacket(ClientBoundSpawnBlockParticlePacket message) {
         withLevelDo(l -> {
-            if (message.getId() == 0) {
-                ParticleUtil.spawnParticlesOnBlockFaces(l, message.getPos(),
-                        ModRegistry.SUDS_PARTICLE.get(),
-                        UniformInt.of(2, 4), 0.001f, 0.01f, true);
-
+            //bubble blow
+            switch (message.id) {
+                case BUBBLE_BLOW -> {
+                    ParticleUtil.spawnParticlesOnBlockFaces(l, message.pos,
+                            ModRegistry.SUDS_PARTICLE.get(),
+                            UniformInt.of(2, 4), 0.001f, 0.01f, true);
+                }
+                case BUBBLE_CLEAN -> {
+                    ParticleUtil.spawnParticleOnBlockShape(l, message.pos,
+                            ModRegistry.SUDS_PARTICLE.get(),
+                            UniformInt.of(2, 4), 0.01f);
+                }
             }
         });
     }
@@ -115,5 +126,15 @@ public class ClientReceivers {
                 containerMenu.setCanRestock(message.isCanRestock());
             }
         });
+    }
+
+    public static void handlePlaySongNotesPacket(ClientBoundPlaySongNotesPacket message) {
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.entityID);
+            if (e instanceof Player p && p.getUseItem().getItem() instanceof InstrumentItem instrumentItem) {
+                instrumentItem.playSongNotesOnClient(message.notes, p);
+            }
+        });
+
     }
 }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
@@ -52,7 +52,7 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
 
         matrixStack.translate(x, y, z);
 
-        matrixStack.mulPose(Const.rot(-(int) rot));
+        matrixStack.mulPose(RotHlpr.rot(-(int) rot));
 
         matrixStack.scale(scale, scale, scale);
 

@@ -18,6 +18,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.WaterAnimal;
@@ -34,6 +36,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class AbstractMobContainerItem extends BlockItem {
@@ -102,10 +105,18 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, Player player) {
-        if (!e.isAlive() || (e instanceof LivingEntity living && living.isDeadOrDying())) return false;
+        if(!e.isAlive())return false;
+        if(e instanceof LivingEntity living){
+            if(living.isDeadOrDying())return false;
 
-        if (e instanceof TamableAnimal pet) {
-            return !pet.isTame() || pet.isOwnedBy(player);
+            if (e instanceof TamableAnimal pet) {
+                return !pet.isTame() || pet.isOwnedBy(player);
+            }
+
+            int p = ServerConfigs.cached.CAGE_HEALTH_THRESHOLD;
+            if(p!=100){
+                return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
+            }
         }
         return true;
     }
@@ -113,7 +124,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //2
     private <T extends Entity> boolean canCatch(T e) {
         String name = e.getType().getRegistryName().toString();
-
         if (ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }
@@ -135,7 +145,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      * @param bucketStack  optional filled bucket item
      * @return full item stack
      */
-    public ItemStack captureEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucketStack) {
+    public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucketStack) {
         ItemStack returnStack = new ItemStack(this);
         if (currentStack.hasCustomHoverName()) returnStack.setHoverName(currentStack.getHoverName());
 
@@ -256,7 +266,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             entity.hurt(DamageSource.playerAttack(player), 0);
         }
         if (entity instanceof Villager villager && player.level instanceof ServerLevel serverLevel) {
-            serverLevel.onReputationEvent(ReputationEventType.VILLAGER_HURT, player, villager);
+            Optional<NearestVisibleLivingEntities> optional = villager.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
+            optional.ifPresent(entities -> entities.findAll(ReputationEventHandler.class::isInstance).forEach((e) ->
+                    serverLevel.onReputationEvent(ReputationEventType.VILLAGER_HURT, player, (ReputationEventHandler) e)));
         }
     }
 
@@ -307,7 +319,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     mob.dropLeash(true, !player.getAbilities().instabuild);
                 }
 
-                Utils.swapItemNBT(player, hand, stack, this.captureEntityInItem(entity, stack, bucket));
+                Utils.swapItemNBT(player, hand, stack, this.saveEntityInItem(entity, stack, bucket));
 
 
                 entity.remove(Entity.RemovalReason.DISCARDED);

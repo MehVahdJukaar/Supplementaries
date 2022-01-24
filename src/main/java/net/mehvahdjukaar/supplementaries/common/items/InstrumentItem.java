@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
-import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,7 +39,9 @@ public abstract class InstrumentItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
-        SongsManager.playRandomSong(stack,this, entity,getUseDuration(stack) - remainingUseDuration);
+        if (!level.isClientSide) {
+            SongsManager.playRandomSong(stack, this, entity, getUseDuration(stack) - remainingUseDuration);
+        }
     }
 
     @Override
@@ -48,34 +51,33 @@ public abstract class InstrumentItem extends Item {
 
     public float getPitch(int note) {
         //noteblocks logic
-        return (float)Math.pow(2.0D, (double)(note-1 - 12) / 12.0D);
+        return (float) Math.pow(2.0D, (double) (note - 1 - 12) / 12.0D);
     }
 
     public float getVolume() {
         return 1;
     }
 
-    public void spawnNoteParticle(ClientLevel level, LivingEntity entity, int note) {
-    }
 
     public SoundEvent getSound() {
         return SoundEvents.NOTE_BLOCK_FLUTE;
     }
 
-    public final void playNoteAtEntity(LivingEntity entity, int note){
-        Level level = entity.level;
-        if(level.isClientSide) {
-            this.spawnNoteParticle((ClientLevel) level, entity, note);
+    //client stuff
+    public void spawnNoteParticle(Level level, LivingEntity entity, int note) {
+    }
+
+    public final void playSongNotesOnClient(IntList notes, Player player) {
+        for (int note : notes) {
+            if (note > 0) {
+                //always plays a sound for local player. this is becasue this method is calld on client side for other clients aswell
+                //and playsound only plays if the given player is the local one
+                player.level.playSound(Minecraft.getInstance().player, player.getX(), player.getY(), player.getZ(),
+                        this.getSound(), SoundSource.PLAYERS, this.getVolume(), this.getPitch(note));
+
+                this.spawnNoteParticle(player.level, player, note);
+            }
         }
-        playNoteAt(entity.getX(), entity.getEyeY(), entity.getZ(), level, note, entity.getSoundSource());
     }
 
-    public final void playNoteAt(double x, double y, double z, Level level, int note, SoundSource source) {
-        //Random rand = level.random;
-        //double sX = x + 0*(rand.nextDouble() - 0.5D) * 0.15D;
-        //double sY = y + 0*0.15D;
-        //double sZ = z + 0*(rand.nextDouble() - 0.5D) * 0.15D;
-
-        level.playSound(null, x, y, z, this.getSound(), source, this.getVolume(), this.getPitch(note));
-    }
 }

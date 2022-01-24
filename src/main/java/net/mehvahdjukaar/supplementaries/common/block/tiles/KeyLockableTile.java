@@ -144,13 +144,10 @@ public class KeyLockableTile extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
-    }
+    //TODO: check if needed on the client
+    //@Override
+    //public CompoundTag getUpdateTag() {
+    //    return this.saveWithoutMetadata();
+    //}
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
 }

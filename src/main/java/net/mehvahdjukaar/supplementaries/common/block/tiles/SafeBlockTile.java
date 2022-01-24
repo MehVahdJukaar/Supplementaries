@@ -36,7 +36,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     public UUID owner = null;
 
     public SafeBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.SAFE_TILE.get(), pos, state);
+        super(ModRegistry.SAFE_TILE.get(), pos, state, 27);
     }
 
     @Override

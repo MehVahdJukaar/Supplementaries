@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
@@ -107,10 +107,10 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(Const.rot(tile.getDirection()));
-        matrixStackIn.mulPose(Const.XN90);
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
+        matrixStackIn.mulPose(RotHlpr.XN90);
         matrixStackIn.translate(0, +0.0625, 0);
-        matrixStackIn.mulPose(Const.XN22);
+        matrixStackIn.mulPose(RotHlpr.XN22);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevYaw + tile.face, tile.yaw + tile.face)));
 
 
@@ -122,7 +122,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
     public void renderGlobe(Pair<GlobeBlockTile.GlobeModel, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean isSepia, Level level) {
         if (data == null) return;
         poseStack.pushPose();
-        poseStack.mulPose(Const.X180);
+        poseStack.mulPose(RotHlpr.X180);
         ResourceLocation texture = ClientConfigs.cached.GLOBE_RANDOM ? data.getSecond() : GlobeBlockTile.GlobeType.EARTH.texture;
 
         ModelPart model = this.models.get(data.getFirst());

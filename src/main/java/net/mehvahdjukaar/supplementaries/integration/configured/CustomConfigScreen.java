@@ -458,7 +458,7 @@ public class CustomConfigScreen extends ConfigScreen {
             this.textField.setValue((holder.getValue()));
             this.textField.setResponder((s) -> {
                 try {
-                    if (holder.valueSpec.test(s)) {
+                    if (holder.valueSpec.spawnParticleOnBoundingBox(s)) {
                         this.textField.setTextColor(14737632);
                         holder.setValue(s);
                         CustomConfigScreen.this.updateButtons();

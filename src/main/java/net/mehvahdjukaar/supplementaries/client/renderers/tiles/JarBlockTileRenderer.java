@@ -6,7 +6,7 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
@@ -60,7 +60,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             int height = tile.getDisplayedItem().getCount();
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(Const.XN90);
+            matrixStackIn.mulPose(RotHlpr.XN90);
             matrixStackIn.translate(0, 0, -0.5);
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);

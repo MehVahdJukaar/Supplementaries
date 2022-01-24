@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -46,7 +46,7 @@ public class FlagItemRenderer extends BlockEntityWithoutLevelRenderer {
         }
         List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
         matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
-        matrixStackIn.mulPose(Const.Y90);
+        matrixStackIn.mulPose(RotHlpr.Y90);
         FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);
 
         matrixStackIn.popPose();

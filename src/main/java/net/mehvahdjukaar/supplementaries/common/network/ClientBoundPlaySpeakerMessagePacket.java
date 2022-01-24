@@ -8,8 +8,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ClientBoundPlaySpeakerMessagePacket implements NetworkHandler.Message {
-    private final Component str;
-    private final boolean narrator;
+    public final Component str;
+    public final boolean narrator;
 
     public ClientBoundPlaySpeakerMessagePacket(FriendlyByteBuf buf) {
         this.str = buf.readComponent();
@@ -35,13 +35,5 @@ public class ClientBoundPlaySpeakerMessagePacket implements NetworkHandler.Messa
             }
         });
         ctx.get().setPacketHandled(true);
-    }
-
-    public boolean getNarrator() {
-        return narrator;
-    }
-
-    public Component getStr() {
-        return str;
     }
 }

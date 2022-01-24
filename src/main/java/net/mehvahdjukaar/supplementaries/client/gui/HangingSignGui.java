@@ -4,11 +4,10 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -23,8 +22,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
 
@@ -146,7 +143,7 @@ public class HangingSignGui extends Screen {
         // renders sign
         poseStack.pushPose();
 
-        poseStack.mulPose(Const.Y90);
+        poseStack.mulPose(RotHlpr.Y90);
         poseStack.translate(0, -0.5 + 0.1875, -0.5);
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(this.tileSign.woodType), poseStack, bufferSource, blockRenderer,

@@ -37,7 +37,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -75,11 +74,11 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     @Override
-    public ItemStack captureEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucket) {
+    public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucket) {
         if (this.isBoat(entity)) {
             return new ItemStack(ModRegistry.JAR_BOAT_ITEM.get());
         } else {
-            return super.captureEntityInItem(entity, currentStack, bucket);
+            return super.saveEntityInItem(entity, currentStack, bucket);
         }
     }
 

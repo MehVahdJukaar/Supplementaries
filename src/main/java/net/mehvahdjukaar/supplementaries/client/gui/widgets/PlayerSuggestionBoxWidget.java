@@ -22,6 +22,8 @@ import java.util.function.Supplier;
 
 public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
+    public static Map<UUID, String> USERNAME_CACHE = new HashMap<>();
+
     private static final Component EMPTY_SEARCH = (new TranslatableComponent("gui.supplementaries.present.send"))
             .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC);
 
@@ -35,7 +37,6 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
     private String suggestion;
     //basically value + suggestion but formatted
     private String fullSuggestion = "";
-    private Consumer<PlayerSuggestionBoxWidget> onClick;
 
 
     public PlayerSuggestionBoxWidget(Minecraft mc, int x, int y, int width, int height) {
@@ -49,8 +50,9 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
                 this.allPlayers.add(new SimplePlayerEntry(playerinfo));
             }
         }
-        var offlinePlayers = UsernameCache.getMap();
-        for(var entry : offlinePlayers.entrySet()){
+
+        //offline players
+        for(var entry : USERNAME_CACHE.entrySet()){
             if(!onlinePlayers.contains(entry.getKey())){
                 this.allPlayers.add(new SimplePlayerEntry(entry.getKey(), entry.getValue()));
             }

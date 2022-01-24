@@ -43,7 +43,8 @@ public class TurnTableBlockTile extends BlockEntity {
             BlockPos targetPos = pos.relative(dir);
             boolean success = BlockUtils.tryRotatingBlock(dir,ccw, targetPos, level, null).isPresent();
             if(success){
-                level.blockEvent(targetPos, state.getBlock(),0,0);
+                //play particle with block event
+                level.blockEvent(pos, state.getBlock(),0,0);
                 level.gameEvent(GameEvent.BLOCK_CHANGE, targetPos);
                 level.playSound(null, targetPos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
             }

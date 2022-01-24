@@ -193,7 +193,26 @@ public class TextHolder implements IAntiqueTextProvider {
         }
     }
 
+    //unused
     public boolean isEngraved() {
         return engraved;
+    }
+
+    //TODO: finish notice boards dye thing
+    public void clearEffects() {
+        this.setTextColor(DyeColor.BLACK);
+        this.setAntiqueInk(false);
+        this.setGlowingText(false);
+    }
+
+    public boolean isEmpty() {
+        return Arrays.stream(this.signText).allMatch(s-> s.getContents().isEmpty());
+    }
+
+    public void clear(){
+        Arrays.fill(this.signText, TextComponent.EMPTY);
+        this.setTextColor(DyeColor.BLACK);
+        this.setAntiqueInk(false);
+        this.setGlowingText(false);
     }
 }

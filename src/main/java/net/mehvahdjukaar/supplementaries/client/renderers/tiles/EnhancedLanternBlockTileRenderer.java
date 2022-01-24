@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,8 +25,8 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.pushPose();
         // rotate towards direction
         matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
-        matrixStackIn.mulPose(Const.XN90);
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        matrixStackIn.mulPose(RotHlpr.XN90);
         // animation
         if (ceiling) {
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));

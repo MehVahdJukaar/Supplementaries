@@ -294,6 +294,7 @@
   "subtitle.supplementaries.present.pack": "Present Pack",
   "advancements.adventure.globe.title": "You spin me right round baby",
   "advancements.adventure.globe.description": "Spin a globe at ludicrous speed",
+  "entity.supplementaries.slingshot_projectile": "Slingshot Projectile",
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",

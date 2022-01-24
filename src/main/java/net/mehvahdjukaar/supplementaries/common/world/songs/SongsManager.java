@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.world.songs;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSetSongPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -63,13 +65,12 @@ public class SongsManager {
     }
 
 
-    public static boolean playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,
+    //called on server only
+    public static void playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,
                                          long timeSinceStarted) {
         UUID id = entity.getUUID();
         Song song;
         if (!CURRENTLY_PAYING.containsKey(id)) {
-
-            if (entity.level.isClientSide) return false;
 
             ResourceLocation res = null;
             if(stack.hasCustomHoverName()){
@@ -85,19 +86,11 @@ public class SongsManager {
 
             song = setCurrentlyPlaying(id, res);
 
-            //if (entity instanceof ServerPlayer player) {
-                //player.displayClientMessage(new TextComponent("Playing: "+song.getTranslationKey()), true);
-            //}
-
-            //TODO: ditch packet and send particles from server so there are no desyncs
-            //tells the client which song it will play
-            if(entity instanceof ServerPlayer serverPlayer)
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSetSongPacket(id, res));
-
         } else {
             song = CURRENTLY_PAYING.get(id);
         }
-        return playSong(instrument, entity, song, timeSinceStarted);
+
+        playSong(instrument, entity, song, timeSinceStarted);
     }
 
     public static boolean playSong(InstrumentItem instrumentItem, LivingEntity entity, ResourceLocation sandstorm,
@@ -105,18 +98,17 @@ public class SongsManager {
         return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm, Song.EMPTY), timeSinceStarted);
     }
 
+    //servers controls everything here
     public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song,
                                    long timeSinceStarted) {
         boolean played = false;
         if (timeSinceStarted % song.getTempo() == 0) {
-            List<Integer> notes = song.getNoteToPlay(timeSinceStarted);
-            //0 are blank
+            IntList notes = song.getNoteToPlay(timeSinceStarted);
+            if(notes.size()>0 && notes.getInt(0)>0){
+                NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity),
+                        new ClientBoundPlaySongNotesPacket(notes, entity));
 
-            for (int note : notes) {
-                if (note > 0) {
-                    instrument.playNoteAtEntity(entity, note);
-                    played = true;
-                }
+                played = true;
             }
         }
         return played;

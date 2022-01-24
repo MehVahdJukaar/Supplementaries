@@ -5,11 +5,14 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.client.block_models.StatueEntityModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -87,8 +90,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
         matrixStackIn.translate(0.5, 0.5, 0.5);
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(Const.rot(dir));
-        matrixStackIn.mulPose(Const.X90);
+        matrixStackIn.mulPose(RotHlpr.rot(dir));
+        matrixStackIn.mulPose(RotHlpr.X90);
 
         matrixStackIn.translate(0, -0.25, 0);
 
@@ -137,20 +140,37 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
                 break;
             default:
+                //holding
                 matrixStackIn.scale(-0.5f, -0.5f, 0.5f);
                 BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
 
                 if (pose == StatueBlockTile.StatuePose.SWORD) {
                     matrixStackIn.translate(-0.35, -1.0625, 0.0);
-                    matrixStackIn.mulPose(Const.Z135);
+                    matrixStackIn.mulPose(RotHlpr.Z135);
                 } else if (pose == StatueBlockTile.StatuePose.TOOL) {
                     matrixStackIn.translate(-0.4, -1.25, 0.0);
-                    matrixStackIn.mulPose(Const.Z135);
+                    matrixStackIn.mulPose(RotHlpr.Z135);
                 }
 
                 matrixStackIn.translate(0, -0.5, -0.5);
-                itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                        combinedOverlayIn, model);
+                if(pose.isGlobe()){
+                    if(ClientRegistry.GLOBE_RENDERER_INSTANCE != null){
+
+                        boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
+                        Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
+                                stack.hasCustomHoverName() ?
+                                        GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :
+                                        Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
+
+                        ClientRegistry.GLOBE_RENDERER_INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
+                                combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
+                    }
+                }
+                else {
+                    this.itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                            combinedOverlayIn, model);
+
+                }
 
         }
 

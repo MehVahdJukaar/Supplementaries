@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
@@ -58,8 +58,8 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         //rotate towards direction
         if (tile.getBlockState().getValue(HangingSignBlock.HANGING)) poseStack.translate(0, 0.125, 0);
         poseStack.translate(0.5, 0.875, 0.5);
-        poseStack.mulPose(Const.rot(tile.getDirection().getOpposite()));
-        poseStack.mulPose(Const.XN90);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        poseStack.mulPose(RotHlpr.XN90);
 
         LOD lod = new LOD(camera, tile.getBlockPos());
 
@@ -77,7 +77,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
         if (lod.isMedium()) {
             poseStack.translate(0.5, 0.5 - 0.1875, 0.5);
-            poseStack.mulPose(Const.YN90);
+            poseStack.mulPose(RotHlpr.YN90);
             // render item
             if (!tile.isEmpty()) {
                 ItemStack stack = tile.getStackInSlot(0);
@@ -96,7 +96,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                             mapRenderer.render(poseStack, bufferIn, mapId, mapData, true, combinedLightIn);
                             poseStack.popPose();
 
-                            poseStack.mulPose(Const.Y180);
+                            poseStack.mulPose(RotHlpr.Y180);
                         }
                     } else {
                         //request map data from server
@@ -120,7 +120,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                         RendererUtil.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
                                 0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
-                        poseStack.mulPose(Const.Y180);
+                        poseStack.mulPose(RotHlpr.Y180);
                     }
                 }
                 //render item
@@ -135,7 +135,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                                 combinedOverlayIn, model);
                         poseStack.popPose();
 
-                        poseStack.mulPose(Const.Y180);
+                        poseStack.mulPose(RotHlpr.Y180);
                         poseStack.scale(0.9995f, 0.9995f, 0.9995f);
                     }
                 }
@@ -155,7 +155,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                             poseStack, bufferIn, textProperties);
 
                     poseStack.popPose();
-                    poseStack.mulPose(Const.Y180);
+                    poseStack.mulPose(RotHlpr.Y180);
                 }
             }
         }

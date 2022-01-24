@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBoatTile;
@@ -33,7 +33,7 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
         matrixStackIn.pushPose();
 
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(Const.rot((int) -tile.getBlockState().getValue(JarBlock.FACING).getOpposite().toYRot()));
+        matrixStackIn.mulPose(RotHlpr.rot((int) -tile.getBlockState().getValue(JarBlock.FACING).getOpposite().toYRot()));
 
         matrixStackIn.translate(0, -3/16f, 0);
         float t = ((System.currentTimeMillis() % 360000) / 1000f);

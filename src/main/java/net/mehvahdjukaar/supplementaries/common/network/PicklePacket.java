@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 public class PicklePacket {
 
     private UUID playerID;
-    private boolean on;
+    private final boolean on;
 
     public PicklePacket(UUID appliesTo, boolean on) {
         this.playerID = appliesTo;

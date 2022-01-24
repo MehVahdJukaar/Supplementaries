@@ -31,16 +31,15 @@ public class RopeArrowAddRecipe extends CustomRecipe {
                     return false;
                 }
                 arrow = stack;
-                missingRopes = arrow.getDamageValue();
+                missingRopes += arrow.getDamageValue();
             }
             else if(stack.is(ModTags.ROPES)) {
-                if (missingRopes <= 0) return false;
                 rope = stack;
                 missingRopes--;
             }
             else if(!stack.isEmpty())return false;
         }
-        return arrow != null && rope != null;
+        return arrow != null && rope != null && missingRopes>=0;
     }
 
     @Override

@@ -23,10 +23,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractCauldronBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CauldronBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -145,7 +142,7 @@ public class FaucetBlockTile extends BlockEntity {
                 Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy", "stripped")));
                 if (log != null) {
 
-                    level.setBlock(behind, BlockUtils.copyProperties(backState, log.defaultBlockState()), 3);
+                    level.setBlock(behind, log.withPropertiesOf(backState), 3);
                 }
                 return true;
             }
@@ -177,15 +174,18 @@ public class FaucetBlockTile extends BlockEntity {
             this.prepareToTransferBucket(SoftFluidRegistry.LAVA);
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
-                this.transferCooldown += COOLDOWN*2;
+                this.transferCooldown += COOLDOWN * 3;
                 return true;
             }
         } else if (backBlock == Blocks.POWDER_SNOW_CAULDRON) {
-            this.prepareToTransferBucket(ModSoftFluids.POWDERED_SNOW);
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
-                this.transferCooldown += COOLDOWN*2;
-                return true;
+            int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
+            if (waterLevel == 3) {
+                this.prepareToTransferBucket(ModSoftFluids.POWDERED_SNOW);
+                if (doTransfer && tryFillingBlockBelow(level, pos)) {
+                    level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
+                    this.transferCooldown += COOLDOWN * 3;
+                    return true;
+                }
             }
         }
 
@@ -313,7 +313,8 @@ public class FaucetBlockTile extends BlockEntity {
             }
             else if(softFluid == ModSoftFluids.POWDERED_SNOW){
                 if (belowBlock instanceof CauldronBlock && this.tempFluidHolder.getCount() == 5) {
-                    level.setBlock(below, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState(),3);
+                    level.setBlock(below, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
+                            .setValue(PowderSnowCauldronBlock.LEVEL, 3),3);
                     return true;
                 }
             }

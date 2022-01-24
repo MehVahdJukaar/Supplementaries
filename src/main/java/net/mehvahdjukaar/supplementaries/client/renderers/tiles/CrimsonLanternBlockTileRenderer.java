@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CopperLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.OilLanternBlockTile;
@@ -66,8 +66,8 @@ public class CrimsonLanternBlockTileRenderer extends EnhancedLanternBlockTileRen
         matrixStackIn.translate(0.5, 0.875, 0.5);
 
 
-        matrixStackIn.mulPose(Const.rot(tile.getDirection().getOpposite()));
-        matrixStackIn.mulPose(Const.XN90);
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        matrixStackIn.mulPose(RotHlpr.XN90);
 
 
         // animation

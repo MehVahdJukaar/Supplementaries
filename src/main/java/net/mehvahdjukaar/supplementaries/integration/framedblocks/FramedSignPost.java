@@ -4,6 +4,8 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +32,7 @@ public class FramedSignPost {
     public static IModelData getModelData(BlockState mimic) {
         FramedBlockData date = new FramedBlockData();
         date.setCamoState(mimic);
+
         return date;
     }
 

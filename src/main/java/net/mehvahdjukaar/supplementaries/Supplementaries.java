@@ -1,24 +1,15 @@
 package net.mehvahdjukaar.supplementaries;
 
-import me.thonk.croptopia.blocks.CroptopiaCropBlock;
-import me.thonk.croptopia.items.CroptopiaSaplingItem;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeCondition;
-import net.mehvahdjukaar.supplementaries.integration.farmersdelight.PlanterRichBlock;
+import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -43,18 +34,18 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
-
+        //yes this is where I write crap. deal with it XD
         //animated lantern textures
         //add option for soul jar
         //ash jei plugin
         //bundle sound for sacks
-        //bellows bubble
+
         //FIx spikes piston movements
         //TODO: fish bucket on cages a
         //TODO: shift click to pickup placed book
 
         //TODO: fix slingshot proj not playing sound on client (all messed up)
-        //yes this is where I write crap. deal with it XD
+
 
         //todo: fix projectile hitbox being a single point on y = 0
 
@@ -75,13 +66,9 @@ public class Supplementaries {
 
         //TODO: fix JER loot tables percentages
 
-        //zipline mod ropewalk
-
         //GLOBE inv model
         //TODO: goblet & jars dynamic baked model
         //ghast fireball mob griefing
-
-        //Bamboo spikes damage fall
 
         //TODO: fireflies deflect arrows
 
@@ -114,7 +101,7 @@ public class Supplementaries {
 
         //animated pulley texture
 
-        //TODO: add support for new game events
+        //TODO: add more support for new game events
 
         //TODO: faucets create sprout
 
@@ -141,8 +128,6 @@ public class Supplementaries {
 
         //small honey slime in cage
 
-
-        //skii mod
         //blackboard texture glitchyness (baked model)
 
         //ender pearls dispensers
@@ -163,7 +148,6 @@ public class Supplementaries {
 
         //TODO: add dispenser like interaction registry for faucet
         //TODO: flax upper stage grows depending on lower
-        //Fix spring launcher on servers
         //add sack sound
 
         //smarter farmers not planting tomatoes & task needing to be rewritten
@@ -171,7 +155,13 @@ public class Supplementaries {
         //blackboard otline gui+
         //quiver that allows to select arrows
         //map function & data driven map markers
-        //sled shulker and sack
+
+        //soap signs & finish notice board dye (add dye interface)
+        //snow real magic compat
+        //bugs: spring launcher broken on servers
+        //possible bug with flax growing, caused by other mods
+        //flute animations not working
+        //add new cauldron stuff to cauldron interaction map
 
         ConfigHandler.init();
 

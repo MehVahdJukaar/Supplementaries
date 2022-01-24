@@ -18,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 public class PedestalBlockTile extends ItemDisplayTile {
     //needed on servers for crystals
     public DisplayType type = DisplayType.ITEM;
-    public int counter = 0;
 
     public PedestalBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PEDESTAL_TILE.get(), pos, state);

@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.datagen.types;
 
 import net.minecraft.world.level.material.MaterialColor;
 
-public enum MalumWoodType implements IWoodType {
+public enum MalumWoodTypes implements IWoodType {
     RUNEWOOD("runewood");
 
     private final String name;
 
-    MalumWoodType(String name) {
+    MalumWoodTypes(String name) {
         this.name = name;
     }
 

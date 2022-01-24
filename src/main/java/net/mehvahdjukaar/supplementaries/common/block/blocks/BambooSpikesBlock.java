@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
@@ -55,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock, EntityBlock {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock, EntityBlock, ISoapWashable {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -210,7 +211,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new BambooSpikesBlockTile(pPos, pState);
+        return pState.getValue(TIPPED) ? new BambooSpikesBlockTile(pPos, pState) : null;
     }
 
     @Override
@@ -228,14 +229,26 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
         if (!tippedEnabled.get()) return false;
         if (f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
-            BlockEntity te = world.getBlockEntity(pos);
-            if (te instanceof BambooSpikesBlockTile) {
-                if (((BambooSpikesBlockTile) te).tryApplyPotion(PotionUtils.getPotion(nbt))) {
+            if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
+                if (te.tryApplyPotion(PotionUtils.getPotion(nbt))) {
                     world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
                     world.setBlock(pos, state.setValue(TIPPED, true), 3);
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+        if(state.getValue(TIPPED)){
+            if(!level.isClientSide){
+                var te = level.getBlockEntity(pos);
+                if(te != null) te.setRemoved();
+                level.setBlock(pos, state.setValue(TIPPED, false), 3);
+            }
+            return true;
         }
         return false;
     }

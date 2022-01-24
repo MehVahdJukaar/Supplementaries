@@ -372,6 +372,7 @@
     {"id":"quark:red_blossom_hedge","required":false},
     {"id":"quark:spruce_hedge","required":false},
     {"id":"quark:yellow_blossom_hedge","required":false},
+    {"id":"#quark:hedges","required":false},
     {"id":"undergarden:ashen_deepturf","required":false},
     {"id":"undergarden:blisterberry","required":false},
     {"id":"undergarden:blood_mushroom","required":false},

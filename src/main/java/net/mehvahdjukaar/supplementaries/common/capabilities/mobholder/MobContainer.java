@@ -5,10 +5,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.integration.optifrick.OptiFrickHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -92,6 +94,7 @@ public class MobContainer {
             Entity entity = createStaticMob(data, level, pos);
 
             if (entity != null) {
+
                 //visual entity stored in capability
                 this.mobDisplayCapInstance = getCap(entity);
                 this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
@@ -545,6 +548,8 @@ public class MobContainer {
                 if (uuid != null) cmp.putUUID("UUID", uuid);
 
                 tag.put("MobHolder", cmp);
+
+
             }
         }
 

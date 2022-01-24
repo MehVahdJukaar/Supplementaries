@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.math.Quaternion;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,7 +33,7 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
         Quaternion rotation = this.getDirection().getRotation();
         this.stack = new MatrixTransformStack();
         this.stack.translate(this.getInstancePosition()).scale(0.9995F).translateAll(2.5E-4D).centre()
-                .multiply(rotation).multiply(Const.X90);
+                .multiply(rotation).multiply(RotHlpr.X90);
 
         this.center = this.makeCenterInstance().setTransform(this.stack.unwrap());
         this.stack.unCentre();

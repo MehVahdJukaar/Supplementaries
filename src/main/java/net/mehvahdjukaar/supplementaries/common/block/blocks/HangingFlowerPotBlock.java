@@ -52,8 +52,8 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         Item i = stack.getItem();
         if (world.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile) {
-            if (i instanceof BlockItem) {
-                BlockState mimic = ((BlockItem) i).getBlock().defaultBlockState();
+            if (i instanceof BlockItem blockItem) {
+                BlockState mimic = blockItem.getBlock().defaultBlockState();
                 tile.setHeldBlock(mimic);
             }
             BlockUtils.addOptionalOwnership(entity, tile);
@@ -75,11 +75,11 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
             Block pot = tile.getHeldBlock().getBlock();
-            if (pot instanceof FlowerPotBlock && FlowerPotHandler.isEmptyPot(((FlowerPotBlock) pot).getEmptyPot())) {
+            if (pot instanceof FlowerPotBlock flowerPot && FlowerPotHandler.isEmptyPot(flowerPot)) {
                 ItemStack itemstack = player.getItemInHand(handIn);
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
-                Block newPot = item instanceof BlockItem ? FlowerPotHandler.getFullPot((FlowerPotBlock) pot, ((BlockItem) item).getBlock()) : Blocks.AIR;
+                Block newPot = item instanceof BlockItem bi ? FlowerPotHandler.getFullPot(flowerPot, bi.getBlock()) : Blocks.AIR;
                 /*Block newPot = item instanceof BlockItem ? FlowerPotHelper.FULL_POTS.get(((FlowerPotBlock) pot).getEmptyPot())
                         .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;*/
 

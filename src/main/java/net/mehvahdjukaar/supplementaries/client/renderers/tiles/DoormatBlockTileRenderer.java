@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
@@ -34,7 +34,7 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
         poseStack.pushPose();
 
         poseStack.translate(0.5, 0, 0.5);
-        poseStack.mulPose(Const.rot(tile.getDirection().getOpposite()));
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
 
         // render text
         poseStack.translate(0, -0.010416667F * 19, -0.0625 - 0.005);

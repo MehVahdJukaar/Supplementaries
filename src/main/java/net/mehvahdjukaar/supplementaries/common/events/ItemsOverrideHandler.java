@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -14,6 +15,8 @@ import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
+import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
@@ -692,6 +695,55 @@ public class ItemsOverrideHandler {
         }
     }
 
+    private static class SoapClearBehavior extends ItemUseOnBlockOverride {
+
+        boolean enabled = RegistryConfigs.reg.SOAP_ENABLED.get();
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == ModRegistry.SOAP.get();
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (player.getAbilities().mayBuild) {
+
+                boolean newState = !stack.is(Items.INK_SAC);
+                BlockPos pos = hit.getBlockPos();
+                BlockEntity tile = world.getBlockEntity(pos);
+                if (tile != null) {
+                    var cap = tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+                    AtomicBoolean success = new AtomicBoolean(false);
+                    cap.ifPresent(c -> {
+                        if (c.hasAntiqueInk() != newState) {
+                            c.setAntiqueInk(newState);
+                            tile.setChanged();
+                            if (world instanceof ServerLevel serverLevel) {
+                                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
+                                        new ClientBoundSyncAntiqueInk(pos, newState));
+                            }
+                            success.set(true);
+                        }
+                    });
+                    if (success.get()) {
+                        if (newState) {
+                            world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        } else {
+                            world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        }
+                        if (!player.isCreative()) stack.shrink(1);
+                        return InteractionResult.sidedSuccess(world.isClientSide);
+                    }
+                }
+            }
+            return InteractionResult.PASS;
+        }
+    }
+
     private static class AntiqueInkBehavior extends ItemUseOnBlockOverride {
 
         @Override
@@ -710,7 +762,7 @@ public class ItemsOverrideHandler {
                 boolean newState = !stack.is(Items.INK_SAC);
                 BlockPos pos = hit.getBlockPos();
                 BlockEntity tile = world.getBlockEntity(pos);
-                if (tile != null) {
+                if (tile != null && (!(tile instanceof IOwnerProtected op) || op.isAccessibleBy(player))) {
                     var cap = tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
                     AtomicBoolean success = new AtomicBoolean(false);
                     cap.ifPresent(c -> {

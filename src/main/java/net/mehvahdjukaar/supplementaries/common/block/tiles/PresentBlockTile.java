@@ -43,7 +43,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     private String description = "";
 
     public PresentBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.PRESENT_TILE.get(), pos, state);
+        super(ModRegistry.PRESENT_TILE.get(), pos, state, 1);
     }
 
     @Override

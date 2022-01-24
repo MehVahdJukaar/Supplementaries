@@ -142,6 +142,7 @@ public class ClientSetup {
                         return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
                     }
                 });
+
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
@@ -191,7 +192,6 @@ public class ClientSetup {
         particleManager.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
         particleManager.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
         particleManager.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
-
     }
 
     public static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -256,8 +256,9 @@ public class ClientSetup {
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
-        colors.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(), ModRegistry.TIMBER_FRAME.get(),
-                ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(), ModRegistry.ROPE_KNOT.get());
+        colors.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
+                ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(),
+                ModRegistry.ROPE_KNOT.get());
         colors.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         colors.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         colors.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());

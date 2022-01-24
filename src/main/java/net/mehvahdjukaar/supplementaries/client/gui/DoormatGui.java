@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
@@ -146,9 +146,9 @@ public class DoormatGui extends Screen {
         // renders sign
         poseStack.pushPose();
 
-        poseStack.mulPose(Const.Y90);
+        poseStack.mulPose(RotHlpr.Y90);
         poseStack.translate(0, - 0.5, -0.5);
-        poseStack.mulPose(Const.Z90);
+        poseStack.mulPose(RotHlpr.Z90);
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);

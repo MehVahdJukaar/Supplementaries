@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -161,7 +162,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             entity.stopUsingItem();
             return;
         }
-        if (!(entity instanceof Player player) || !(player.getAbilities().instabuild)) {
+        if (!(entity instanceof Player player) || !(player.isCreative())) {
             this.setDamage(stack, damage);
         }
 
@@ -211,11 +212,14 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
         float cr = (entity.isCrouching() ? 0.3F : 0.0F);
 
-        float pitch = Mth.clamp(model.head.xRot, -1.6f, 0.8f) + 0.55f - cr;
-        mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f * model.head.yRot;
+        float headXRot = RotHlpr.wrapRad(model.head.xRot);
+        float headYRot = RotHlpr.wrapRad(model.head.yRot);
+
+        float pitch = Mth.clamp(headXRot, -1.6f, 0.8f) + 0.55f - cr;
+        mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f *headYRot;
 
         float yaw = 0.7f * dir;
-        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch + cr) + model.head.yRot, -1.1f, 1.1f);//yaw;
+        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch + cr) +headYRot, -1.1f, 1.1f);//yaw;
         mainHand.zRot = -yaw * Mth.sin(pitch + cr);
 
         AnimationUtils.bobModelPart(mainHand, entity.tickCount, -dir);

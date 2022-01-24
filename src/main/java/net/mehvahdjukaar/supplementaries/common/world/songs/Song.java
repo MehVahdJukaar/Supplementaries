@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.songs;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
@@ -91,8 +93,8 @@ public class Song {
         return new Song(name, tempo, n, credits);
     }
 
-    public List<Integer> getNoteToPlay(long timeSinceStarted) {
-        List<Integer> toPlay = new ArrayList<>();
+    public IntList getNoteToPlay(long timeSinceStarted) {
+        IntList toPlay = new IntArrayList();
 
         try {
             int currentIndex = (int) (timeSinceStarted / this.getTempo()) % this.notes.length;

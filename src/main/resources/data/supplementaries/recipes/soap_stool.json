@@ -1,0 +1,32 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "quark",
+          "type": "forge:mod_loaded"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "tag": "quark:stools"
+          },
+          {
+            "item": "supplementaries:soap"
+          }
+        ],
+        "result": {
+          "item": "quark:white_stool",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

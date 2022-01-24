@@ -62,6 +62,7 @@ public class ModSetup {
 
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
+                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD_ITEM.get(), 0.65F);
                 ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
                 setupStage++;
 

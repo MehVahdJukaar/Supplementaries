@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.api.IBeeGrowable;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +27,7 @@ import net.minecraftforge.common.ForgeHooks;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class FlaxBlock extends CropBlock {
+public class FlaxBlock extends CropBlock implements IBeeGrowable {
     public static final int DOUBLE_AGE = 4; //age at which it grows in block above
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_BOTTOM = new VoxelShape[]{
@@ -173,14 +175,24 @@ public class FlaxBlock extends CropBlock {
 
     //here I'm assuming canGrow has already been called
     @Override
-    public void growCrops(Level worldIn, BlockPos pos, BlockState state) {
-        int newAge = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
-        newAge = Math.min(newAge, this.getMaxAge());
-        if (newAge >= DOUBLE_AGE) {
-            if (!this.canGrowUp(worldIn, pos)) return;
-            worldIn.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 3);
+    public void growCrops(Level level, BlockPos pos, BlockState state) {
+        growCropBy(level, pos, state, this.getBonemealAgeIncrease(level));
+    }
+
+    public void growCropBy(Level level, BlockPos pos, BlockState state, int increment){
+        if(state.getValue(HALF) == DoubleBlockHalf.UPPER){
+            //as if it was called on lower
+            pos = pos.below();
         }
-        worldIn.setBlock(pos, getStateForAge(newAge), 2);
+        int newAge = this.getAge(state) +increment;
+        newAge = Math.min(newAge, this.getMaxAge());
+
+        if (newAge >= DOUBLE_AGE) {
+            if (!this.canGrowUp(level, pos)) return;
+            level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
+        }
+        level.setBlock(pos, getStateForAge(newAge), 2);
+
     }
 
     @Override
@@ -191,5 +203,11 @@ public class FlaxBlock extends CropBlock {
     @Override
     protected ItemLike getBaseSeedId() {
         return ModRegistry.FLAX_SEEDS_ITEM.get();
+    }
+
+    @Override
+    public boolean getPollinated(Level level, BlockPos pos, BlockState state) {
+        growCropBy(level, pos, state, 1);
+        return true;
     }
 }

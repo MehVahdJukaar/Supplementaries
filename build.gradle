@@ -28,7 +28,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.9'
+version = '1.18.1-1.1.10'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -137,9 +137,11 @@ dependencies {
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
     implementation fg.deobf("curse.maven:patina-pipeworks-565266:3600131")
     //implementation fg.deobf("curse.maven:just-mob-heads-293320:3561503")
-    //implementation fg.deobf("curse.maven:patchouli-306770:3528319")
+    implementation fg.deobf("curse.maven:patchouli-306770:3594394")
     implementation fg.deobf("curse.maven:tetra-289712:3586368")
     implementation fg.deobf("curse.maven:mgui-351914:3573121")
+    implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
+    implementation fg.deobf("curse.maven:kiwi-303657:3577626")
 
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")

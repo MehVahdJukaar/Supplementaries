@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.Const;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     matrixStackIn.pushPose();
                     VertexConsumer builder1 = bufferIn.getBuffer(RenderType.cutout());
                     matrixStackIn.translate(0.5, 0.3125, 0.5);
-                    matrixStackIn.mulPose(Const.YN45);
+                    matrixStackIn.mulPose(RotHlpr.YN45);
                     matrixStackIn.scale(1.5f, 1.5f, 1.5f);
                     RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn);
                     matrixStackIn.popPose();
@@ -75,7 +75,7 @@ public class JarItemRenderer extends CageItemRenderer {
                 RAND.setSeed(420);
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.5, 0.5);
-                matrixStackIn.mulPose(Const.XN90);
+                matrixStackIn.mulPose(RotHlpr.XN90);
                 matrixStackIn.translate(0, 0, -0.5);
                 float scale = 8f / 14f;
                 matrixStackIn.scale(scale, scale, scale);

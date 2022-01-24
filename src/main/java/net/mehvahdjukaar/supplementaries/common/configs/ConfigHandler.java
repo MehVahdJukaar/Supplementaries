@@ -8,6 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.ai.gossip.GossipContainer;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -82,11 +85,7 @@ public class ConfigHandler {
 
     public static final Predicate<Object> LIST_STRING_CHECK = (s)->{
         if(s instanceof List<?>){
-            boolean b = ((Collection<?>) s).stream().allMatch(o -> o instanceof String);
-            if(!b){
-                int a = 0;
-            }
-            return b;
+            return ((Collection<?>) s).stream().allMatch(o -> o instanceof String);
         }
         return false;
     };

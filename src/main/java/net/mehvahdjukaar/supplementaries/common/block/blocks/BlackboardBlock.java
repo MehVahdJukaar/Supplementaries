@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -43,7 +44,7 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlackboardBlock extends WaterBlock implements EntityBlock {
+public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWashable {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
     public static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
     public static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
@@ -152,7 +153,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
 
             if (hit.getDirection() == state.getValue(FACING)) {
                 ItemStack stack = player.getItemInHand(handIn);
-                Item item = stack.getItem();
 
                 Pair<Integer, Integer> pair = getHitSubPixel(hit);
                 int x = pair.getFirst();
@@ -167,11 +167,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
                         return InteractionResult.sidedSuccess(worldIn.isClientSide);
                     }
                     return InteractionResult.PASS;
-                } else if (item == Items.SPONGE || item == Items.WET_SPONGE) {
-                    te.pixels = new byte[16][16];
-                    te.setChanged();
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                    //TODO: check if it's synced works in myltiplayer (might need mark dirty)
                 }
             }
             if(!worldIn.isClientSide){
@@ -210,9 +205,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
         ItemStack itemstack = new ItemStack(this);
         if (!te.isEmpty()) {
-            CompoundTag compoundnbt = te.savePixels(new CompoundTag());
-            if (!compoundnbt.isEmpty()) {
-                itemstack.addTagElement("BlockEntityTag", compoundnbt);
+            CompoundTag tag = te.savePixels(new CompoundTag());
+            if (!tag.isEmpty()) {
+                itemstack.addTagElement("BlockEntityTag", tag);
             }
         }
         return itemstack;
@@ -234,4 +229,16 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock {
         }
     }
 
+    @Override
+    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+        if(state.getValue(WRITTEN)){
+            if(!level.isClientSide){
+                var te = level.getBlockEntity(pos);
+                if(te != null) te.setRemoved();
+                level.setBlock(pos, state.setValue(WRITTEN, false), 3);
+            }
+            return true;
+        }
+        return false;
+    }
 }

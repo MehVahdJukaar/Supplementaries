@@ -7,6 +7,7 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
@@ -184,8 +185,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
-            model.leftArm.yRot = 0.1F + model.head.yRot;
-            model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            model.leftArm.yRot = RotHlpr.wrapRad(0.1F + model.head.yRot);
+            model.leftArm.xRot = RotHlpr.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
             return true;
         }
         return false;
@@ -196,9 +197,9 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
-            model.rightArm.yRot = -0.1F + model.head.yRot;
+            model.rightArm.yRot = RotHlpr.wrapRad(-0.1F + model.head.yRot);
             //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
-            model.rightArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
+            model.rightArm.xRot = RotHlpr.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
             //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
 
             /*
