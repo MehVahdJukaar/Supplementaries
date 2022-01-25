@@ -22,6 +22,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.UUID;
 
 public class StatueBlockTile extends ItemDisplayTile {
@@ -60,14 +61,14 @@ public class StatueBlockTile extends ItemDisplayTile {
 
         if (this.hasCustomName()) {
 
-            String name = this.getCustomName().getString().toLowerCase();
+            String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             UUID id = SpecialPlayers.STATUES.get(name);
             if (id != null) {
                 this.playerProfile = this.updateGameProfile(new GameProfile(id, name));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
-            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase()));
+            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase(Locale.ROOT)));
         } else this.playerProfile = null;
 
     }

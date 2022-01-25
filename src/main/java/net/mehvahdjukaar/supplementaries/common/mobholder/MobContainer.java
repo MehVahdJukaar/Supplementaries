@@ -114,6 +114,7 @@ public class MobContainer {
 
     private void setData(@Nullable MobData data){
         this.data = data;
+        this.mobDisplayCapInstance = null;
         this.needsInitialization = true;
     }
 

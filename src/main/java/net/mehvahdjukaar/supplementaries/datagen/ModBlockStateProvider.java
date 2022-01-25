@@ -57,7 +57,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         getVariantBuilder(ModRegistry.PRESENTS.get(color).get()).forAllStatesExcept(state -> {
             String baseName = ModRegistry.PRESENT_NAME;
 
-            ModelFile model = presentModel(color, baseName,state.getValue(PresentBlock.OPEN)?"opened": "closed");
+            ModelFile model = presentModel(color, baseName,state.getValue(PresentBlock.PACKED)?"opened": "closed");
 
             return ConfiguredModel.builder().modelFile(model)
                     .build();

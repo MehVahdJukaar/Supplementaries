@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.block.util.IColored;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
@@ -13,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -21,7 +24,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -35,28 +37,35 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-public class PresentBlock extends WaterBlock {
+public class PresentBlock extends WaterBlock implements IColored {
 
-    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty PACKED = BlockProperties.PACKED;
 
     private final DyeColor color;
 
-    public static final VoxelShape SHAPE_OPEN = Block.box(2,0,2,14,10,14);
-    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(SHAPE_OPEN, Block.box(1,10,1,15,14,15));
+    @Nullable
+    @Override
+    public DyeColor getColor() {
+        return color;
+    }
+
+    public static final VoxelShape SHAPE_OPEN = Block.box(2, 0, 2, 14, 10, 14);
+    public static final VoxelShape SHAPE_CLOSED = VoxelShapes.or(SHAPE_OPEN, Block.box(1, 10, 1, 15, 14, 15));
 
     public PresentBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
-        this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED,false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PACKED, false).setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(OPEN,WATERLOGGED);
+        builder.add(PACKED, WATERLOGGED);
     }
 
     @Override
@@ -84,13 +93,13 @@ public class PresentBlock extends WaterBlock {
             TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof PresentBlockTile) {
 
-                if (((PresentBlockTile) tileentity).isUnused()) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileentity, tileentity.getBlockPos());
-                    //player.openMenu((INamedContainerProvider) tileentity);
-                    PiglinTasks.angerNearbyPiglins(player, true);
 
-                    return ActionResultType.CONSUME;
-                }
+                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileentity, tileentity.getBlockPos());
+                //player.openMenu((INamedContainerProvider) tileentity);
+                PiglinTasks.angerNearbyPiglins(player, true);
+
+                return ActionResultType.CONSUME;
+
             }
         }
         return ActionResultType.PASS;
@@ -115,7 +124,7 @@ public class PresentBlock extends WaterBlock {
     public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof PresentBlockTile) {
-            PresentBlockTile te = (PresentBlockTile)tileentity;
+            PresentBlockTile te = (PresentBlockTile) tileentity;
             if (!worldIn.isClientSide && player.isCreative() && !te.isEmpty()) {
                 ItemStack itemstack = this.getPresentItem(te);
 
@@ -134,7 +143,7 @@ public class PresentBlock extends WaterBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         TileEntity tileentity = builder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
         if (tileentity instanceof PresentBlockTile) {
-            PresentBlockTile te = (PresentBlockTile)tileentity;
+            PresentBlockTile te = (PresentBlockTile) tileentity;
             ItemStack itemstack = this.getPresentItem(te);
 
             return Collections.singletonList(itemstack);
@@ -147,7 +156,7 @@ public class PresentBlock extends WaterBlock {
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         ItemStack itemstack = super.getPickBlock(state, target, world, pos, player);
         TileEntity te = world.getBlockEntity(pos);
-        if (te instanceof PresentBlockTile){
+        if (te instanceof PresentBlockTile) {
             return getPresentItem((PresentBlockTile) te);
         }
         return itemstack;
@@ -170,9 +179,9 @@ public class PresentBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if(state.getValue(OPEN))
-            return SHAPE_OPEN;
-        return SHAPE_CLOSED;
+        if (state.getValue(PACKED))
+            return SHAPE_CLOSED;
+        return SHAPE_OPEN;
     }
 
     @Override
@@ -200,6 +209,17 @@ public class PresentBlock extends WaterBlock {
     @Override
     public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getBlockEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
+        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        CompoundNBT tag = context.getItemInHand().getTag();
+        if (tag != null && tag.contains("BlockEntityTag")) {
+            CompoundNBT t = tag.getCompound("BlockEntityTag");
+            if (t.contains("Items")) state = state.setValue(PACKED, true);
+        }
+        return state;
     }
 }

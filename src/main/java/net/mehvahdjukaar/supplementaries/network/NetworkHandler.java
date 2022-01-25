@@ -63,8 +63,8 @@ public class NetworkHandler {
         INSTANCE.registerMessage(nextID(), NosePacket.class, NosePacket::buffer,
                 NosePacket::new, NosePacket::handler);
 
-        INSTANCE.registerMessage(nextID(), UpdateServerPresentPacket.class, UpdateServerPresentPacket::buffer,
-                UpdateServerPresentPacket::new, UpdateServerPresentPacket::handler);
+        INSTANCE.registerMessage(nextID(), ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::buffer,
+                ServerBoundSetPresentPacket::new, ServerBoundSetPresentPacket::handler);
 
         INSTANCE.registerMessage(nextID(), BombExplosionKnockbackPacket.class, BombExplosionKnockbackPacket::buffer,
                 BombExplosionKnockbackPacket::new, BombExplosionKnockbackPacket::handler);

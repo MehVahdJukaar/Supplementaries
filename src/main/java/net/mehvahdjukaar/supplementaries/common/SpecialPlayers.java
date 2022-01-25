@@ -32,7 +32,7 @@ public class SpecialPlayers {
     }
 
     private static void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {
-        name = name.toLowerCase();
+        name = name.toLowerCase(Locale.ROOT);
         UUID onlineId;
         if (id == null) {
             onlineId = null;
@@ -48,13 +48,13 @@ public class SpecialPlayers {
             ResourceLocation texture = new ResourceLocation(Supplementaries.MOD_ID, "textures/entity/globes/globe_" + name + ".png");
             GLOBES.put(name, texture);
             for (String n : alias) {
-                GLOBES.put(n.toLowerCase(), texture);
+                GLOBES.put(n.toLowerCase(Locale.ROOT), texture);
             }
         }
         if (hasStatue) {
             STATUES.put(name, onlineId);
             for (String n : alias) {
-                STATUES.put(n.toLowerCase(), onlineId);
+                STATUES.put(n.toLowerCase(Locale.ROOT), onlineId);
             }
         }
     }

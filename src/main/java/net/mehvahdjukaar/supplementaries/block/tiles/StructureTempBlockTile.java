@@ -11,7 +11,7 @@ public class StructureTempBlockTile extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-        if(this.level.getBlockState(this.worldPosition).getBlock()== ModRegistry.STRUCTURE_TEMP.get())
-        this.level.removeBlock(this.worldPosition,false);
+        if (this.level.getBlockState(this.worldPosition).getBlock() == ModRegistry.STRUCTURE_TEMP.get())
+            this.level.removeBlock(this.worldPosition, false);
     }
 }

@@ -27,6 +27,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile> {
@@ -40,6 +41,30 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
     }
 
     private boolean slim = false;
+
+    public static ResourceLocation getPlayerSkin(GameProfile gameProfile) {
+        return getPlayerSkinAndSlim(gameProfile, s->{});
+    }
+    public static ResourceLocation getPlayerSkinAndSlim(GameProfile gameProfile, Consumer<Boolean> slimSkinSetter) {
+        if (!gameProfile.isComplete()) {
+            return new ResourceLocation("minecraft:textures/entity/steve.png");
+        } else {
+            SkinManager skinManager = Minecraft.getInstance().getSkinManager();
+
+            Map<Type, MinecraftProfileTexture> skinCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
+            if (skinCache.containsKey(Type.SKIN)) {
+                MinecraftProfileTexture texture = skinCache.get(Type.SKIN);
+                String s = texture.getMetadata("model");
+                boolean slim = s != null && !s.equals("default");
+                slimSkinSetter.accept(slim);
+
+                return skinManager.registerTexture(texture, Type.SKIN);
+            } else {
+                slimSkinSetter.accept(false);
+                return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
+            }
+        }
+    }
 
     private ResourceLocation getSkin(GameProfile gameProfile) {
         if (!gameProfile.isComplete()) {

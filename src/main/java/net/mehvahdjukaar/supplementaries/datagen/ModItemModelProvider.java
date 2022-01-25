@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.datagen;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Variants;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -27,14 +27,14 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 
     private void makeSignPostItem(IWoodType wood){
-        getBuilder(Variants.getSignPostName(wood)).parent(new ModelFile.UncheckedModelFile(
+        getBuilder(RegistryHelper.getSignPostName(wood)).parent(new ModelFile.UncheckedModelFile(
                 modLoc("item/sign_post_template")))
                 .texture("0", Textures.SIGN_POSTS_TEXTURES.get(wood));
 
     }
 
     private void makeHangingSignItem(IWoodType wood){
-        getBuilder(Variants.getHangingSignName(wood)).parent(new ModelFile.UncheckedModelFile(
+        getBuilder(RegistryHelper.getHangingSignName(wood)).parent(new ModelFile.UncheckedModelFile(
                 modLoc("item/hanging_sign_template")))
                 .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.getRegName())
                 .texture("2", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.getRegName());

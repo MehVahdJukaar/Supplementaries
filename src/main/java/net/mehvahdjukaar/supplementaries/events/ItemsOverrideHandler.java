@@ -42,7 +42,6 @@ import net.minecraft.world.storage.MapData;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.content.tweaks.module.ReacharoundPlacingModule;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -71,6 +70,7 @@ public class ItemsOverrideHandler {
         HPBlockBehaviors.add(new WallLanternBehavior());
 
         blockBehaviors.add(new WallLanternBehavior());
+        blockBehaviors.add(new WrenchBehavior());
         blockBehaviors.add(new MapMarkerBehavior());
         blockBehaviors.add(new CeilingBannersBehavior());
         blockBehaviors.add(new HangingPotBehavior());
@@ -239,6 +239,30 @@ public class ItemsOverrideHandler {
                     }
                 }
                 return ActionResultType.sidedSuccess(world.isClientSide);
+            }
+            return ActionResultType.PASS;
+        }
+    }
+
+    private static class WrenchBehavior extends ItemUseOnBlockOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == ModRegistry.WRENCH.get();
+        }
+
+        @Override
+        public ActionResultType tryPerformingAction(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult hit, boolean isRanged) {
+            if (player.abilities.mayBuild) {
+
+
+                    return stack.useOn(new ItemUseContext(player, hand, hit));
+
             }
             return ActionResultType.PASS;
         }

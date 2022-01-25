@@ -37,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
 import java.util.List;
+import java.util.Locale;
 
 
 public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoardBlockTile> {
@@ -135,7 +136,7 @@ public class NoticeBoardBlockTileRenderer extends TileEntityRenderer<NoticeBoard
                     return;
                 }
 
-                String bookName = tile.getItem(0).getHoverName().getString().toLowerCase();
+                String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
                 if(bookName.equals("credits")){
                     TextUtil.renderCredits(matrixStackIn,bufferIn,frontLight,fontrenderer,d0);
                     matrixStackIn.popPose();

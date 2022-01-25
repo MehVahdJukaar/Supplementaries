@@ -37,7 +37,6 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-
         //redstone bypass block
         //TODO: fish bucket on cages
 
@@ -111,11 +110,10 @@ public class Supplementaries {
 
         //TODO: make dummy not show numbers at a distance
 
-        //baby villagers trick or treat
+
 
         //simple mode for doors and trapdoors
 
-        //JEI painting plugin
 
         //data driven fluid system
 

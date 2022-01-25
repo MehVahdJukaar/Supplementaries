@@ -52,7 +52,6 @@ public class DoormatBlock extends WaterBlock {
             if (tileentity instanceof DoormatBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
                 DoormatBlockTile te = (DoormatBlockTile) tileentity;
                 ItemStack itemstack = player.getItemInHand(handIn);
-                boolean server = !worldIn.isClientSide();
                 boolean flag = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
                 boolean sideHit = hit.getDirection() != Direction.UP;
                 boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
@@ -72,6 +71,7 @@ public class DoormatBlock extends WaterBlock {
                         }
                     }
                     te.setChanged();
+                    worldIn.sendBlockUpdated(pos, state, state, 3);
                     worldIn.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundCategory.BLOCKS, 1.0F,
                             1.2f);
                     return ActionResultType.CONSUME;
@@ -83,7 +83,8 @@ public class DoormatBlock extends WaterBlock {
                         if (!player.isCreative()) {
                             itemstack.shrink(1);
                         }
-                        if (server) te.setChanged();
+                        te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
                     }
                 }
                 // open gui (edit sign with empty hand)

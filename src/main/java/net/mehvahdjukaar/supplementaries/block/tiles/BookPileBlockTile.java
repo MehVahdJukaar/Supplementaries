@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.compat.enchantedbooks.EnchantedBookRede
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.RenderMaterial;
@@ -18,6 +19,7 @@ import net.minecraft.item.BookItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -230,5 +232,18 @@ public class BookPileBlockTile extends ItemDisplayTile {
         public String getName() {
             return name;
         }
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        compound.putFloat("EnchantPower", this.enchantPower);
+        return compound;
+    }
+
+    @Override
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        this.enchantPower = compound.getFloat("EnchantPower");
     }
 }

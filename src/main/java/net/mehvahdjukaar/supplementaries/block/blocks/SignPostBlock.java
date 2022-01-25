@@ -70,8 +70,6 @@ public class SignPostBlock extends FenceMimicBlock{
                     return ActionResultType.CONSUME;
                 }
 
-
-                boolean server = !worldIn.isClientSide();
                 boolean emptyhand = itemstack.isEmpty();
                 boolean isDye = item instanceof DyeItem && player.abilities.mayBuild;
                 boolean isSneaking = player.isShiftKeyDown() && emptyhand;
@@ -83,7 +81,8 @@ public class SignPostBlock extends FenceMimicBlock{
                         if (!player.isCreative()) {
                             itemstack.shrink(1);
                         }
-                        if (server) te.setChanged();
+                        te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
                         return ActionResultType.CONSUME;
                     }
                     return ActionResultType.FAIL;
@@ -97,7 +96,8 @@ public class SignPostBlock extends FenceMimicBlock{
                     } else {
                         te.leftDown = !te.leftDown;
                     }
-                    if (server) te.setChanged();
+                    te.setChanged();
+                    worldIn.sendBlockUpdated(pos, state, state, 3);
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundCategory.BLOCKS, 1.0F, 0.6F);
                     return ActionResultType.CONSUME;
                 }
@@ -115,7 +115,8 @@ public class SignPostBlock extends FenceMimicBlock{
                         } else if (!up && te.down) {
                             te.pointToward(pointingPos, false);
                         }
-                        if (server) te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
+                        te.setChanged();
                         return ActionResultType.CONSUME;
                     }
                     return ActionResultType.FAIL;

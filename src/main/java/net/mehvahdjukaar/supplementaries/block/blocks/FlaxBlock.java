@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.api.IBeeGrowable;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -24,7 +26,7 @@ import net.minecraftforge.common.ForgeHooks;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class FlaxBlock extends CropsBlock {
+public class FlaxBlock extends CropsBlock implements IBeeGrowable {
     private static final int DOUBLE_AGE = 4; //age at which it grows in block above
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_BOTTOM = new VoxelShape[]{
@@ -167,20 +169,41 @@ public class FlaxBlock extends CropsBlock {
         return state.getValue(HALF)==DoubleBlockHalf.LOWER&&(!this.isMaxAge(state) && (this.canGrowUp(worldIn,pos)||this.getAge(state)<DOUBLE_AGE-1));
     }
 
-    //here I'm assuming canGrow has already been called
-    @Override
-    public void growCrops(World worldIn, BlockPos pos, BlockState state) {
-        int newAge = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
-        newAge = Math.min(newAge, this.getMaxAge());
-        if (newAge >= DOUBLE_AGE) {
-            if(!this.canGrowUp(worldIn,pos))return;
-            worldIn.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 3);
-        }
-        worldIn.setBlock(pos, getStateForAge(newAge), 2);
-    }
-
     @Override
     protected IItemProvider getBaseSeedId() {
         return ModRegistry.FLAX_SEEDS_ITEM.get();
+    }
+
+    //here I'm assuming canGrow has already been called
+    @Override
+    public void growCrops(World level, BlockPos pos, BlockState state) {
+        growCropBy(level, pos, state, this.getBonemealAgeIncrease(level));
+    }
+
+    public void growCropBy(World level, BlockPos pos, BlockState state, int increment){
+        if(state.getValue(HALF) == DoubleBlockHalf.UPPER){
+            //as if it was called on lower
+            pos = pos.below();
+        }
+        int newAge = this.getAge(state) +increment;
+        newAge = Math.min(newAge, this.getMaxAge());
+
+        if (newAge >= DOUBLE_AGE) {
+            if (!this.canGrowUp(level, pos)) return;
+            level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
+        }
+        level.setBlock(pos, getStateForAge(newAge), 2);
+
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
+        return false;
+    }
+
+    @Override
+    public boolean getPollinated(World level, BlockPos pos, BlockState state) {
+        growCropBy(level, pos, state, 1);
+        return true;
     }
 }

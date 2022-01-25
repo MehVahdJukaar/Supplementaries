@@ -54,7 +54,6 @@ public class HangingSignBlock extends SwayingBlock {
             if (tileentity instanceof HangingSignBlockTile && ((IOwnerProtected) tileentity).isAccessibleBy(player)) {
                 HangingSignBlockTile te = (HangingSignBlockTile) tileentity;
                 ItemStack handItem = player.getItemInHand(handIn);
-                boolean server = !worldIn.isClientSide();
                 boolean isDye = handItem.getItem() instanceof DyeItem && player.abilities.mayBuild;
                 //color
                 if (isDye) {
@@ -62,7 +61,8 @@ public class HangingSignBlock extends SwayingBlock {
                         if (!player.isCreative()) {
                             handItem.shrink(1);
                         }
-                        if (server) te.setChanged();
+                        te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
                         return ActionResultType.CONSUME;
                     }
                 }
@@ -73,10 +73,11 @@ public class HangingSignBlock extends SwayingBlock {
                     //remove
                     if (!te.isEmpty() && handItem.isEmpty()) {
                         ItemStack it = te.removeStackFromSlot(0);
-                        if (!worldIn.isClientSide()) {
-                            player.setItemInHand(handIn, it);
-                            te.setChanged();
-                        }
+
+                        player.setItemInHand(handIn, it);
+                        te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
+
                         return ActionResultType.CONSUME;
                     }
                     //place
@@ -88,23 +89,23 @@ public class HangingSignBlock extends SwayingBlock {
                         if (!player.isCreative()) {
                             handItem.shrink(1);
                         }
-                        if (!worldIn.isClientSide()) {
-                            worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
-                            te.setChanged();
-                        }
+
+                        worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
+                        te.setChanged();
+                        worldIn.sendBlockUpdated(pos, state, state, 3);
+
                         return ActionResultType.CONSUME;
                     }
 
                     // open gui (edit sign with empty hand)
-                    else{
+                    else {
                         te.sendOpenTextEditScreenPacket(worldIn, pos, (ServerPlayerEntity) player);
                         return ActionResultType.CONSUME;
                     }
                 }
             }
             return ActionResultType.PASS;
-        }
-        else {
+        } else {
             return ActionResultType.SUCCESS;
         }
 

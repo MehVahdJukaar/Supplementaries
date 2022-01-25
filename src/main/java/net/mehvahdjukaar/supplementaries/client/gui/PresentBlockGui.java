@@ -1,23 +1,22 @@
 package net.mehvahdjukaar.supplementaries.client.gui;
 
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.inventories.PresentContainer;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.network.UpdateServerPresentPacket;
+import net.mehvahdjukaar.supplementaries.network.ServerBoundSetPresentPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.AbstractButton;
+import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
@@ -25,15 +24,28 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.UUID;
 
 public class PresentBlockGui extends ContainerScreen<PresentContainer> implements IContainerListener {
 
-    protected TextFieldWidget recipient;
-    protected TextFieldWidget sender;
 
-    private PackButton packButton;
+    private static final int DESCRIPTION_BOX_X = 53;
+    private static final int DESCRIPTION_BOX_Y = 33;
+    private static final int DESCRIPTION_BOX_H = 36;
+    private static final int DESCRIPTION_BOX_W = 105;
+    private static final int SUGGESTION_BOX_Y = 19;
+    private static final int SUGGESTION_BOX_W = 99;
+    private static final int SUGGESTION_BOX_H = 12;
 
     private final PresentBlockTile tile;
+
+    private PackButton packButton;
+    private PlayerSuggestionBoxWidget recipient;
+    private MultiLineEditBoxWidget descriptionBox;
+
+    private boolean packed;
+    //hasn't received items yet
+    private boolean needsInitialization = true;
 
     public static ScreenManager.IScreenFactory<PresentContainer, PresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
@@ -53,62 +65,92 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     }
 
     @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-
-        minecraft.keyboardHandler.setSendRepeatsToGui(true);
+    public void init() {
+        super.init();
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-
-
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        this.packButton = this.addButton(new PackButton(i + 14, j + 46));
+        this.packButton = this.addButton(new PackButton(i + 14, j + 45));
 
-        this.recipient = new PresentTextFieldWidget(this.font, i + 53, j + 27,
-                99, 12, new TranslationTextComponent("container.repair"));
-        this.recipient.setCanLoseFocus(true);
-        this.recipient.setTextColor(-1);
-        this.recipient.setTextColorUneditable(-1);
-        this.recipient.setBordered(false);
-        this.recipient.setMaxLength(35);
-        String rec = this.tile.getRecipient();
-        if(!rec.isEmpty()) this.recipient.setValue(rec);
-        this.children.add(this.recipient);
+        this.recipient = this.addButton(new PlayerSuggestionBoxWidget(this.minecraft,
+                i + DESCRIPTION_BOX_X, j + SUGGESTION_BOX_Y, SUGGESTION_BOX_W, SUGGESTION_BOX_H));
 
-        this.sender = new PresentTextFieldWidget(this.font, i + 53, j + 53,
-                99, 12, new TranslationTextComponent("container.repair"));
-        this.sender.setCanLoseFocus(true);
-        this.sender.setTextColor(-1);
-        this.sender.setTextColorUneditable(-1);
-        this.sender.setBordered(false);
-        this.sender.setMaxLength(35);
-        String send = this.tile.getSender();
-        if(!send.isEmpty()) this.sender.setValue(send);
-        this.children.add(this.sender);
+        this.recipient.setOutOfBoundResponder(up -> {
+            if (!up) {
+                this.setFocused(descriptionBox);
+                this.recipient.setFocused(false);
+                this.descriptionBox.setFocused(true);
+            }
+        });
 
-        this.sender.active = false;
-        this.sender.setEditable(false);
-        this.recipient.active = false;
-        this.recipient.setEditable(false);
+        this.descriptionBox = this.addButton(new MultiLineEditBoxWidget(this.minecraft,
+                i + DESCRIPTION_BOX_X, j + DESCRIPTION_BOX_Y, DESCRIPTION_BOX_W, DESCRIPTION_BOX_H));
+
+        this.descriptionBox.setOutOfBoundResponder(up -> {
+            if (up) {
+                this.setFocused(recipient);
+                this.recipient.setFocused(true);
+                this.descriptionBox.setFocused(false);
+            }
+        });
+
+        this.setFocused(this.recipient);
+
+        this.recipient.setText(this.tile.getRecipient());
+        this.descriptionBox.setText(this.tile.getDescription());
+        this.packed = tile.isPacked();
+
+        this.updateState();
 
         this.menu.addSlotListener(this);
-
-        if(!tile.getDisplayedItem().isEmpty()){
-            this.recipient.setFocus(true);
-        }
-        if(tile.isPacked()) this.setPacked();
-
-
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.recipient != null)
-            this.recipient.tick();
-        if (this.sender != null)
-            this.sender.tick();
+    public void onAddPlayer(NetworkPlayerInfo info) {
+        this.recipient.addPlayer(info);
+    }
+
+    public void onRemovePlayer(UUID uuid) {
+        this.recipient.removePlayer(uuid);
+    }
+
+    private void pack() {
+        this.updateStateAndTryToPack(true);
+    }
+
+    private void updateState() {
+        this.updateStateAndTryToPack(false);
+    }
+
+    private void updateStateAndTryToPack(boolean tryToPack) {
+        boolean hasItem = this.needsInitialization ? this.packed : this.menu.getSlot(0).hasItem();
+        //pack
+        boolean hasChanged = false;
+        //truth table shit. idk, could be written more readable
+        if (this.packed && !hasItem) {
+            this.packed = false;
+            hasChanged = true;
+        } else if (tryToPack && !this.packed && hasItem) {
+            this.packed = true;
+            hasChanged = true;
+        }
+
+        if (hasChanged) {
+            String sender = Minecraft.getInstance().player.getName().getString();
+            String recipient = this.recipient.getText();
+            String description = this.descriptionBox.getText();
+            NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
+                    this.packed, recipient, sender, description));
+            this.tile.updateState(this.packed, recipient, sender, description);
+
+            //close on client when packed. server side is handled by packet when it arrives
+            if (this.packed) this.minecraft.player.clientSideCloseContainer();
+        }
+
+        this.recipient.setState(hasItem, this.packed);
+        this.packButton.setState(hasItem, this.packed);
+        this.descriptionBox.setState(hasItem, this.packed);
     }
 
     @Override
@@ -120,76 +162,56 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
     public void setContainerData(Container p_71112_1_, int p_71112_2_, int p_71112_3_) {
     }
 
-    private void setPacked(){
-        this.packButton.active = false;
-        this.recipient.active = false;
-        this.recipient.setFocus(false);
-        this.recipient.setEditable(false);
-        this.sender.active = false;
-        this.sender.setFocus(false);
-        this.sender.setEditable(false);
-        this.setFocused(null);
-    }
-
     @Override
     public void slotChanged(Container container, int slot, ItemStack stack) {
         if (slot == 0) {
-            if (stack.isEmpty()) {
-                this.setFocused(null);
-                this.recipient.active = false;
-                this.sender.active = false;
-                this.sender.setEditable(false);
-                this.recipient.setEditable(false);
-                this.packButton.active = true;
-                this.sender.setValue("");
-                this.recipient.setValue("");
-
-            } else {
-                this.setFocused(recipient);
-                this.recipient.active = true;
-                this.sender.active = true;
-                this.sender.setEditable(true);
-                this.recipient.setEditable(true);
-            }
+            updateState();
         }
-    }
-
-
-    private boolean canWrite() {
-        return !tile.isPacked() && this.menu.getSlot(0).hasItem();
     }
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.renderBackground(matrixStack);
+        RenderSystem.color4f(1.0F, 1, 1, 1.0F);
         Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
+
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
-
-        this.blit(matrixStack, k + 50, l + 23, 0, this.imageHeight + (this.canWrite() ? 0 : 16), 110, 16);
-
-        this.blit(matrixStack, k + 50, l + 49, 0, this.imageHeight + (this.canWrite() ? 0 : 16), 110, 16);
-
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.sender.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.recipient.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
-    }
+    public void render(MatrixStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+        if (this.packed) {
+            int k = (this.width - this.imageWidth) / 2;
+            int l = (this.height - this.imageHeight) / 2;
+            RenderSystem.color4f(1.0F, 1, 1, 1.0F);
+            Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
+            Slot slot = this.menu.getSlot(0);
 
-    @Override
-    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-        super.renderLabels(p_230451_1_, p_230451_2_, p_230451_3_);
-
-        if (packButton.isHovered()) {
-            packButton.renderToolTip(p_230451_1_, p_230451_2_ - this.leftPos, p_230451_3_ - this.topPos);
+            blit(poseStack, k + slot.x, l + slot.y, 400, 12, 232, 16, 16, 256, 256);
         }
+        this.renderTooltip(poseStack, mouseX, mouseY);
+    }
 
+    @Override
+    protected void renderLabels(MatrixStack poseStack, int x, int y) {
+        super.renderLabels(poseStack, x, y);
+        packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int key) {
+        this.recipient.setFocused(false);
+        this.descriptionBox.setFocused(false);
+        return super.mouseClicked(mouseX, mouseY, key);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return this.recipient.mouseScrolled(mouseX, mouseY, amount) ||
+                this.descriptionBox.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
@@ -197,116 +219,78 @@ public class PresentBlockGui extends ContainerScreen<PresentContainer> implement
         if (key == 256) {
             this.minecraft.player.closeContainer();
         }
-        //up arrow
-        if (key == 265) {
-            this.switchFocus();
-            return true;
-        }
-        // down arrow, enter
-        else if (key == 264 || key == 257 || key == 335) {
-            this.switchFocus();
-            return true;
-        }
-
-        return this.sender.keyPressed(key, a, b) || this.sender.canConsumeInput() ||
-                this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput()
+        return this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput() ||
+                this.descriptionBox.keyPressed(key, a, b) || this.descriptionBox.canConsumeInput()
                 || super.keyPressed(key, a, b);
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (((int) delta) % 2 != 0) this.switchFocus();
-        return true;
+    public boolean mouseDragged(double dx, double dy, int key, double mouseX, double mouseY) {
+        if (key == 0) {
+            if (this.descriptionBox.mouseDragged(dx, dy, key, mouseX, mouseY)) return true;
+        }
+        return super.mouseDragged(dx, dy, key, mouseX, mouseY);
     }
 
-    public void switchFocus() {
-        IGuiEventListener focus = this.getFocused();
-        if(focus == sender){
-            this.sender.setFocus(false);
-            this.recipient.setFocus(true);
-            this.setFocused(recipient);
-        }
-        else if(focus == recipient){
-            this.recipient.setFocus(false);
-            this.sender.setFocus(true);
-            this.setFocused(sender);
-        }
-    }
+    @Override
+    public void tick() {
+        super.tick();
+        this.needsInitialization = false;
 
+        this.recipient.tick();
+        this.descriptionBox.tick();
+    }
 
     @Override
     public void removed() {
         super.removed();
+        this.menu.removeSlotListener(this);
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
-        NetworkHandler.INSTANCE.sendToServer(new UpdateServerPresentPacket(this.tile.getBlockPos(),
-                !this.packButton.active, this.recipient.getValue(), this.sender.getValue()));
     }
 
     public class PackButton extends AbstractButton {
-        private boolean selected;
+        private boolean packed;
 
         protected PackButton(int x, int y) {
             super(x, y, 22, 22, StringTextComponent.EMPTY);
         }
 
         @Override
-        public void renderButton(MatrixStack p_230431_1_, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(MatrixStack poseStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+            RenderSystem.color4f(1.0F, 1, 1, 1.0F);
             Minecraft.getInstance().getTextureManager().bind(Textures.PRESENT_BLOCK_GUI_TEXTURE);
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
             int j = 0;
             if (!this.active) {
                 j += this.width * 2;
-            } else if (this.selected) {
+            } else if (this.packed) {
                 j += this.width * 1;
-            } else if (this.isHovered()) {
+            } else if (this.isHovered) {
                 j += this.width * 3;
             }
 
-            this.blit(p_230431_1_, this.x, this.y, j, i, this.width, this.height);
+            this.blit(poseStack, this.x, this.y, j, i, this.width, this.height);
         }
 
-
-        public boolean isSelected() {
-            return this.selected;
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected = selected;
+        public void setState(boolean hasItem, boolean packed) {
+            this.packed = packed;
+            this.active = hasItem;
         }
 
         @Override
         public void renderToolTip(MatrixStack matrixStack, int x, int y) {
-            PresentBlockGui.this.renderTooltip(matrixStack, DialogTexts.GUI_DONE, x, y);
+            if (this.active && this.isHovered && !this.packed) {
+                PresentBlockGui.this.renderTooltip(matrixStack, new TranslationTextComponent("gui.supplementaries.present.pack"), x, y);
+
+            }
         }
 
         @Override
         public void onPress() {
-            PresentBlockGui.this.setPacked();
-
-            //BeaconScreen.this.minecraft.getConnection().send(new CUpdateBeaconPacket(Effect.getId(BeaconScreen.this.primary), Effect.getId(BeaconScreen.this.secondary)));
-            //BeaconScreen.this.minecraft.player.connection.send(new CCloseWindowPacket(BeaconScreen.this.minecraft.player.containerMenu.containerId));
-            //BeaconScreen.this.minecraft.setScreen((Screen)null);
+            PresentBlockGui.this.pack();
         }
+
+
     }
-
-    private class PresentTextFieldWidget extends TextFieldWidget {
-
-        public PresentTextFieldWidget(FontRenderer fontRenderer, int x, int y, int width, int height, ITextComponent text) {
-            super(fontRenderer, x, y, width, height, text);
-        }
-
-        @Override
-        public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
-            if (this.active) {
-                PresentBlockGui.this.setFocused(this);
-                PresentBlockGui.this.sender.setFocus(false);
-                PresentBlockGui.this.recipient.setFocus(false);
-                return super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
-            }
-            return false;
-        }
-    }
-
 
 }

@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 
 public class JarItem extends AbstractMobContainerItem {
 
@@ -73,7 +74,7 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     public boolean isFirefly(Entity e) {
-        return e.getType().getRegistryName().getPath().toLowerCase().contains("firefl");
+        return e.getType().getRegistryName().getPath().toLowerCase(Locale.ROOT).contains("firefl");
     }
 
     public boolean isBoat(Entity e) {
@@ -110,7 +111,7 @@ public class JarItem extends AbstractMobContainerItem {
                     if (com.contains("NBT")) {
                         nbt = com.getCompound("NBT");
                         if (nbt.contains("Bottle")) {
-                            String bottle = nbt.getString("Bottle").toLowerCase();
+                            String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
                             if (!bottle.equals("regular")) add = "_" + bottle;
                         }
                     }

@@ -99,11 +99,20 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, PlayerEntity player) {
-        if (!e.isAlive() || (e instanceof LivingEntity && ((LivingEntity) e).isDeadOrDying())) return false;
+        if (!e.isAlive()) return false;
+        if (e instanceof LivingEntity) {
+            LivingEntity living = ((LivingEntity) e);
+            if (living.isDeadOrDying()) return false;
 
-        if (e instanceof TameableEntity) {
-            TameableEntity pet = ((TameableEntity) e);
-            return !pet.isTame() || pet.isOwnedBy(player);
+            if (e instanceof TameableEntity) {
+                TameableEntity pet = ((TameableEntity) e);
+                return !pet.isTame() || pet.isOwnedBy(player);
+            }
+
+            int p = ServerConfigs.cached.CAGE_HEALTH_THRESHOLD;
+            if (p != 100) {
+                return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
+            }
         }
         return true;
     }
@@ -270,10 +279,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 this.angerNearbyEntities(entity, player);
 
 
-
                 if (entity instanceof MobEntity) {
-                    ((MobEntity)entity).setPersistenceRequired();
-                    ((MobEntity)entity).dropLeash(true, !player.abilities.instabuild);
+                    ((MobEntity) entity).setPersistenceRequired();
+                    ((MobEntity) entity).dropLeash(true, !player.abilities.instabuild);
                 }
 
 

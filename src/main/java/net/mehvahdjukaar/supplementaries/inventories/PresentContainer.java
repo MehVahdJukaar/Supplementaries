@@ -10,6 +10,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 
@@ -41,7 +42,7 @@ public class PresentContainer extends Container {
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(this.inventory, 0, 17, 23) {
+        this.addSlot(new Slot(this.inventory, 0, 17, 20) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return PresentBlockTile.isAcceptableItem(stack);
@@ -100,6 +101,10 @@ public class PresentContainer extends Container {
     public void removed(PlayerEntity playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
-    }
+        TileEntity te = playerIn.level.getBlockEntity(this.pos);
+        if (te instanceof PresentBlockTile) {
+            if (!((PresentBlockTile) te).isPacked()) this.clearContainer(playerIn, playerIn.level, this.inventory);
+        }
 
+    }
 }

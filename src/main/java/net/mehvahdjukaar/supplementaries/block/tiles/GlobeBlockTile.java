@@ -15,6 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.Locale;
+
 import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, INameable {
@@ -41,11 +43,11 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         this.updateTexture();
     }
 
-    private void updateTexture(){
-        if(this.hasCustomName()) {
+    private void updateTexture() {
+        if (this.hasCustomName()) {
             this.isFlat = false;
-            this.texture = GlobeType.getGlobeTexture(this.getCustomName().getString(),this);
-        }else this.texture = null;
+            this.texture = GlobeType.getGlobeTexture(this.getCustomName().getString(), this);
+        } else this.texture = null;
     }
 
     @Override
@@ -85,18 +87,18 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         if (this.customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(this.customName));
         }
-        compound.putInt("Face",this.face);
-        compound.putFloat("Yaw",this.yaw);
-        compound.putBoolean("Sheared",this.sheared);
+        compound.putInt("Face", this.face);
+        compound.putFloat("Yaw", this.yaw);
+        compound.putBoolean("Sheared", this.sheared);
         return compound;
     }
 
-    public void spin(){
+    public void spin() {
         int spin = 360;
         int inc = 90;
-        this.face=(this.face-=inc)%360;
-        this.yaw=(this.yaw+spin+inc);
-        this.prevYaw=(this.prevYaw+spin+inc);
+        this.face = (this.face -= inc) % 360;
+        this.yaw = (this.yaw + spin + inc);
+        this.prevYaw = (this.prevYaw + spin + inc);
         this.setChanged();
     }
 
@@ -127,34 +129,33 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
     @Override
     public void tick() {
-        this.prevYaw=this.yaw;
-        if(this.yaw!=0){
-            if(this.yaw<0){
-                this.yaw=0;
+        this.prevYaw = this.yaw;
+        if (this.yaw != 0) {
+            if (this.yaw < 0) {
+                this.yaw = 0;
                 this.level.updateNeighbourForOutputSignal(this.worldPosition, this.getBlockState().getBlock());
-            }
-            else {
+            } else {
                 this.yaw = (this.yaw * 0.94f) - 0.7f;
             }
         }
 
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return this.getBlockState().getValue(GlobeBlock.FACING);
     }
 
     //TODO: improve
     public enum GlobeType {
-        FLAT(new String[]{"flat","flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
-        MOON(new String[]{"moon","luna","selene","cynthia"},
-                new TranslationTextComponent("globe.supplementaries.moon"),GLOBE_MOON_TEXTURE),
-        EARTH(new String[]{"earth","terra","gaia","gaea","tierra","tellus","terre"},
-                new TranslationTextComponent("globe.supplementaries.earth"),GLOBE_TEXTURE),
-        SUN(new String[]{"sun","sol","helios"},
-                new TranslationTextComponent("globe.supplementaries.sun"),GLOBE_SUN_TEXTURE);
+        FLAT(new String[]{"flat", "flat earth"}, new TranslationTextComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        MOON(new String[]{"moon", "luna", "selene", "cynthia"},
+                new TranslationTextComponent("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
+        EARTH(new String[]{"earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"},
+                new TranslationTextComponent("globe.supplementaries.earth"), GLOBE_TEXTURE),
+        SUN(new String[]{"sun", "sol", "helios"},
+                new TranslationTextComponent("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
 
-        GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res){
+        GlobeType(String[] key, TranslationTextComponent tr, ResourceLocation res) {
             this.keyWords = key;
             this.transKeyWord = tr;
             this.texture = res;
@@ -164,28 +165,28 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
         public final TranslationTextComponent transKeyWord;
         public final ResourceLocation texture;
 
-        public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile){
-            String name = text.toLowerCase();
+        public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile) {
+            String name = text.toLowerCase(Locale.ROOT);
             ResourceLocation r = SpecialPlayers.GLOBES.get(name);
             //TODO: generalize this mess
-            tile.isSnow = r!=null && r.getPath().contains("globe_wais");
-            if(r != null)return r;
+            tile.isSnow = r != null && r.getPath().contains("globe_wais");
+            if (r != null) return r;
             for (GlobeType n : GlobeType.values()) {
-                if(n.keyWords==null)continue;
-                if(n.transKeyWord!=null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase())){
-                    tile.isFlat = (n==FLAT);
+                if (n.keyWords == null) continue;
+                if (n.transKeyWord != null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase(Locale.ROOT))) {
+                    tile.isFlat = (n == FLAT);
                     return n.texture;
                 }
                 for (String s : n.keyWords) {
                     if (!s.equals("") && name.equals(s)) {
-                        tile.isFlat = (n==FLAT);
+                        tile.isFlat = (n == FLAT);
                         return n.texture;
                     }
                 }
             }
             return null;
         }
-        
+
     }
 
 }

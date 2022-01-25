@@ -55,6 +55,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
+
 @SuppressWarnings({"unused", "ConstantConditions", "EmptyClassInitializer"})
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRegistry {
@@ -186,6 +187,8 @@ public class ModRegistry {
             new SpecialRecipeSerializer<>(RopeArrowAddRecipe::new));
     public static final RegistryObject<IRecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", () ->
             new SpecialRecipeSerializer<>(FlagFromBannerRecipe::new));
+    public static final RegistryObject<IRecipeSerializer<?>> PRESENT_DYE_RECIPE = RECIPES.register("present_dye_recipe", () ->
+            new SpecialRecipeSerializer<>(PresentDyeRecipe::new));
 
 
     //orange trader
@@ -325,8 +328,8 @@ public class ModRegistry {
 
     //hanging signs
     public static final String HANGING_SIGN_NAME = "hanging_sign";
-    public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = Variants.makeHangingSingsBlocks();
-    public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = Variants.makeHangingSignsItems();
+    public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = RegistryHelper.makeHangingSingsBlocks();
+    public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = RegistryHelper.makeHangingSignsItems();
 
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
     public static final RegistryObject<TileEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES
@@ -345,12 +348,12 @@ public class ModRegistry {
     public static final RegistryObject<TileEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME, () -> TileEntityType.Builder.of(
             SignPostBlockTile::new, SIGN_POST.get()).build(null));
 
-    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = Variants.makeSignPostItems();
+    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = RegistryHelper.makeSignPostItems();
 
     //flags
     public static final String FLAG_NAME = "flag";
-    public static final Map<DyeColor, RegistryObject<Block>> FLAGS = Variants.makeFlagBlocks(FLAG_NAME);
-    public static final Map<DyeColor, RegistryObject<Item>> FLAGS_ITEMS = Variants.makeFlagItems(FLAG_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> FLAGS = RegistryHelper.makeFlagBlocks(FLAG_NAME);
+    public static final Map<DyeColor, RegistryObject<Item>> FLAGS_ITEMS = RegistryHelper.makeFlagItems(FLAG_NAME);
 
     public static final RegistryObject<TileEntityType<FlagBlockTile>> FLAG_TILE = TILES
             .register(FLAG_NAME, () -> TileEntityType.Builder.of(FlagBlockTile::new,
@@ -358,7 +361,7 @@ public class ModRegistry {
 
     //ceiling banner
     public static final String CEILING_BANNER_NAME = "ceiling_banner";
-    public static final Map<DyeColor, RegistryObject<Block>> CEILING_BANNERS = Variants.makeCeilingBanners(CEILING_BANNER_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> CEILING_BANNERS = RegistryHelper.makeCeilingBanners(CEILING_BANNER_NAME);
 
     public static final RegistryObject<TileEntityType<CeilingBannerBlockTile>> CEILING_BANNER_TILE = TILES
             .register(CEILING_BANNER_NAME, () -> TileEntityType.Builder.of(CeilingBannerBlockTile::new,
@@ -367,13 +370,13 @@ public class ModRegistry {
     //presents
     public static final String PRESENT_NAME = "present";
 
-    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = Variants.makePresents(PRESENT_NAME);
+    public static final Map<DyeColor, RegistryObject<Block>> PRESENTS = RegistryHelper.makePresents(PRESENT_NAME);
 
     public static final RegistryObject<TileEntityType<PresentBlockTile>> PRESENT_TILE = TILES
             .register(PRESENT_NAME, () -> TileEntityType.Builder.of(PresentBlockTile::new,
                     PRESENTS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = Variants.makePresentsItems();
+    public static final Map<DyeColor, RegistryObject<Item>> PRESENTS_ITEMS = RegistryHelper.makePresentsItems();
 
     public static final RegistryObject<ContainerType<PresentContainer>> PRESENT_BLOCK_CONTAINER = CONTAINERS
             .register(PRESENT_NAME, () -> IForgeContainerType.create(PresentContainer::new));
@@ -392,6 +395,11 @@ public class ModRegistry {
     public static final String CANDY_NAME = "candy";
     public static final RegistryObject<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
             .tab(getTab(ItemGroup.TAB_FOOD, CANDY_NAME))));
+
+    //wrench
+    public static final String WRENCH_NAME = "wrench";
+    public static final RegistryObject<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
+            .tab(getTab(ItemGroup.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
 
     //antique ink
     public static final String ANTIQUE_INK_NAME = "antique_ink";

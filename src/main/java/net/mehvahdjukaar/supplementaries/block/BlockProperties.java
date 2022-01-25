@@ -48,6 +48,7 @@ public class BlockProperties {
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
+    public static final BooleanProperty PACKED = BooleanProperty.create("packed");
     public static final IntegerProperty LAYERS = IntegerProperty.create("layers", 1, 16);
 
     //model properties
@@ -56,6 +57,7 @@ public class BlockProperties {
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
+
 
     public enum PostType implements IStringSerializable {
         POST("post", 4),

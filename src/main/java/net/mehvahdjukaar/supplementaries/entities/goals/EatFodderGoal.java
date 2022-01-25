@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -39,10 +40,10 @@ public class EatFodderGoal extends MoveToBlockGoal {
     @Override
     public boolean canUse() {
         if (!this.animal.canFallInLove() || this.animal.getAge() > 0) return false;
-        if (!net.minecraftforge.common.ForgeHooks.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
-            return false;
-        } else if (this.nextStartTick > 0) {
+        if (this.nextStartTick > 0) {
             --this.nextStartTick;
+            return false;
+        } else if (!ForgeHooks.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
             return false;
         } else if (this.tryFindBlock()) {
             //cooldown between attempts
@@ -114,8 +115,8 @@ public class EatFodderGoal extends MoveToBlockGoal {
                             ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, 0.15F);
                 }
             }
-            if(this.ticksSinceReachedGoal == 1 && this.animal instanceof SheepEntity){
-                world.broadcastEntityEvent(this.mob, (byte)10);
+            if (this.ticksSinceReachedGoal == 1 && this.animal instanceof SheepEntity) {
+                world.broadcastEntityEvent(this.mob, (byte) 10);
             }
 
             //breaking animation
@@ -134,15 +135,15 @@ public class EatFodderGoal extends MoveToBlockGoal {
                 } else {
                     world.destroyBlock(targetPos, false);
                 }
-                if(!world.isClientSide) {
+                if (!world.isClientSide) {
                     ((ServerWorld) world).sendParticles(ParticleTypes.HAPPY_VILLAGER,
                             this.animal.getX(), this.animal.getY(), this.animal.getZ(), 5,
-                            this.animal.getBbWidth()/2f, this.animal.getBbHeight()/2f, this.animal.getBbWidth()/2f, 0);
+                            this.animal.getBbWidth() / 2f, this.animal.getBbHeight() / 2f, this.animal.getBbWidth() / 2f, 0);
                 }
                 //so it stops
                 this.nextStartTick = this.nextStartTick(this.mob);
                 this.tryTicks = 800;
-                if(!this.animal.isBaby()) this.animal.setInLove(null);
+                if (!this.animal.isBaby()) this.animal.setInLove(null);
                 this.animal.ate();
             }
 

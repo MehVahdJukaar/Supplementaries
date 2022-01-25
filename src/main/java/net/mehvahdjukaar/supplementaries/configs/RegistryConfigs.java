@@ -114,6 +114,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_ENABLED;
         public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
         public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
+        public static ForgeConfigSpec.BooleanValue WRENCH_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue AMETHYST_ARROW_ENABLED;
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
@@ -214,6 +215,7 @@ public class RegistryConfigs {
             SACK_ENABLED = builder.define(ModRegistry.SACK_NAME, true);
             BLACKBOARD_ENABLED = builder.define(ModRegistry.BLACKBOARD_NAME, true);
             SAFE_ENABLED = builder.define(ModRegistry.SAFE_NAME, true);
+            SAFE_ENABLED = builder.define(ModRegistry.WRENCH_NAME, true);
             COPPER_LANTERN_ENABLED = builder.define(ModRegistry.COPPER_LANTERN_NAME, true);
             FLUTE_ENABLED = builder.define(ModRegistry.FLUTE_NAME, true);
             GOLD_TRAPDOOR_ENABLED = builder.define(ModRegistry.GOLD_TRAPDOOR_NAME, true);

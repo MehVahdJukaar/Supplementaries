@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.items.BurnableBlockItem;
 import net.mehvahdjukaar.supplementaries.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.items.SignPostItem;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BannerBlock;
@@ -29,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class Variants {
+public class RegistryHelper {
 
     public static boolean hasWoodInstalled(IWoodType wood){
         return ModList.get().isLoaded(wood.getNamespace());
@@ -179,19 +180,24 @@ public class Variants {
     }
 
 
-    //presents
-    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems(){
+    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems() {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
-        /*
-        for(DyeColor color : DyeColor.values()){
+
+        for (DyeColor color : DyeColor.values()) {
             //ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)
-            map.put(color, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(color), ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)));
+            RegistryObject<Block> p = ModRegistry.PRESENTS.get(color);
+            map.put(color, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
+                    (new Item.Properties()).tab(ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)))));
         }
-        */
-        map.put(null, ModRegistry.regBlockItem(ModRegistry.PRESENTS.get(null), null));
+        RegistryObject<Block>  p = ModRegistry.PRESENTS.get(null);
+        map.put(null, ModRegistry.ITEMS.register(p.getId().getPath(), () -> new PresentItem(p.get(),
+                (new Item.Properties()).tab(ModRegistry.getTab(ItemGroup.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)))));
 
         return map;
     }
 
+    public static boolean conditionalSigns() {
+        return true;
+    }
 }

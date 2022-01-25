@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundNBT;
@@ -120,6 +121,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.down = compound.getBoolean("Down");
         this.woodTypeUp = WoodTypes.fromNBT(compound.getString("TypeUp"));
         this.woodTypeDown = WoodTypes.fromNBT(compound.getString("TypeDown"));
+
+        if(RegistryHelper.conditionalSigns()){
+            if(!this.woodTypeUp.isModActive()) this.woodTypeUp = VanillaWoodTypes.OAK;
+            if(!this.woodTypeDown.isModActive()) this.woodTypeDown = VanillaWoodTypes.OAK;
+        }
+
         this.loadOwner(compound);
     }
 

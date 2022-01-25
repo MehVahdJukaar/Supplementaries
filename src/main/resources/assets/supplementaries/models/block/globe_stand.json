@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "supplementaries:blocks/globe_stand",
-		"particle": "supplementaries:entity/globes/globe_the_world"
+		"particle": "supplementaries:blocks/globe_stand"
 	},
 	"elements": [
 		{

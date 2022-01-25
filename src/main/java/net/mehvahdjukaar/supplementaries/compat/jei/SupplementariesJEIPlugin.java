@@ -12,10 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BannerBlock;
-import net.minecraft.item.BannerPatternItem;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
@@ -49,6 +46,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createRopeArrowCreateRecipe(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createRopeArrowAddRecipe(),VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createFlagFromBanner(),VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(makePresentCloringRecipes(),VanillaRecipeCategoryUid.CRAFTING);
     }
 
 
@@ -80,7 +78,21 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
 
 
+    public static List<IRecipe<?>> makePresentCloringRecipes() {
+        List<IRecipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.presents";
+        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
+        for(DyeColor color : DyeColor.values()){
+            DyeItem dye = DyeItem.byColor(color);
+            ItemStack output = ModRegistry.PRESENTS_ITEMS.get(color).get().getDefaultInstance();
 
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(dye));
+
+            ResourceLocation id = Supplementaries.res("jei_present_" + color.getName());
+            recipes.add(new ShapelessRecipe(id, group, output, inputs));
+        }
+        return recipes;
+    }
     //TODO: fix ropes
     public static List<IRecipe<?>> createRopeArrowCreateRecipe() {
         List<IRecipe<?>> recipes = new ArrayList<>();

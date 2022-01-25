@@ -318,6 +318,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
         public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
         public static ForgeConfigSpec.BooleanValue CAGE_AUTO_DETECT;
+        public static ForgeConfigSpec.IntValue CAGE_HEALTH_THRESHOLD;
 
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
 
@@ -432,6 +433,8 @@ public class ServerConfigs {
                     .define("cage_allow_all_babies", false);
             CAGE_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside cages depending on their hitbox size")
                     .define("cage_auto_detect", false);
+            CAGE_HEALTH_THRESHOLD = builder.comment("Health percentage under which mobs will be allowed to be captured by cages and jars. Leave at 100 to accept any health level")
+                    .defineInRange("health_threshold", 100, 1, 100);
             builder.pop();
 
             //notice boards
@@ -697,6 +700,7 @@ public class ServerConfigs {
         public static boolean CAGE_ALL_MOBS;
         public static boolean CAGE_ALL_BABIES;
         public static boolean CAGE_AUTO_DETECT;
+        public static int CAGE_HEALTH_THRESHOLD;
         public static int SACK_INCREMENT;
         public static boolean SACK_PENALTY;
         public static int SACK_SLOTS;
@@ -800,6 +804,7 @@ public class ServerConfigs {
             CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
             CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
             CAGE_AUTO_DETECT = block.CAGE_AUTO_DETECT.get();
+            CAGE_HEALTH_THRESHOLD = block.CAGE_HEALTH_THRESHOLD.get();
 
             SACK_INCREMENT = block.SACK_INCREMENT.get();
             SACK_PENALTY = block.SACK_PENALTY.get();

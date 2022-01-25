@@ -13,6 +13,7 @@ import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -108,7 +109,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void makeFlagRecipe(DyeColor color, Consumer<IFinishedRecipe> consumer) {
 
-        Item wool = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", color.name().toLowerCase()+"_wool"));
+        Item wool = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", color.name().toLowerCase(Locale.ROOT)+"_wool"));
         if (wool == null || wool == Items.AIR){
             return;
         }

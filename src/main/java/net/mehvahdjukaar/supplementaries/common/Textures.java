@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.block.tiles.BookPileBlockTile.BookColor;
 import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
-import net.mehvahdjukaar.supplementaries.setup.Variants;
+import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
@@ -125,8 +125,8 @@ public class Textures {
 
     static {
         for (IWoodType type : WoodTypes.TYPES.values()) {
-            HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + Variants.getHangingSignName(type)));
-            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + Variants.getSignPostName(type)));
+            HANGING_SIGNS_TEXTURES.put(type, Supplementaries.res("entity/hanging_signs/" + type.getLocation() + RegistryHelper.getHangingSignName(type)));
+            SIGN_POSTS_TEXTURES.put(type, Supplementaries.res("entity/sign_posts/" + type.getLocation() + RegistryHelper.getSignPostName(type)));
         }
         Field f = ObfuscationReflectionHelper.findField(BannerPattern.class, "field_191014_N");
         for (BannerPattern pattern : BannerPattern.values()) {

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public class FullJarItem extends FullCageItem {
@@ -41,7 +42,7 @@ public class FullJarItem extends FullCageItem {
                     if (com.contains("NBT")){
                         nbt = com.getCompound("NBT");
                         if(nbt.contains("Bottle")){
-                            String bottle = nbt.getString("Bottle").toLowerCase();
+                            String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
                             if(!bottle.equals("regular")) add = "_"+bottle;
                         }
                     }

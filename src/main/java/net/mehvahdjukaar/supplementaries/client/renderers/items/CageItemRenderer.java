@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
+import net.mehvahdjukaar.supplementaries.client.renderers.Const;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.mobholder.MobContainer;
 import net.minecraft.block.BlockState;
@@ -51,16 +52,22 @@ public class CageItemRenderer extends ItemStackTileEntityRenderer {
                     EntityRendererManager entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
 
                     //TODO: remove
-                    if(cmp2.contains("YOffset")){
+                    if (cmp2.contains("YOffset")) {
                         float y = cmp2.getFloat("YOffset");
                         matrixStackIn.translate(0.5, y, 0.5);
                         matrixStackIn.scale(-s, s, -s);
                         entityRenderer.setRenderShadow(false);
                         entityRenderer.render(e, 0.0D, 0.0D, 0.0D, 0.0F, 0, matrixStackIn, bufferIn, combinedLightIn);
                         entityRenderer.setRenderShadow(true);
-                    }
-                    else {
+                    } else {
                         //matrixStackIn.scale(-1, 1, -1);
+
+
+                        matrixStackIn.translate(0.5, 0.5, 0.5);
+                        matrixStackIn.mulPose(Const.Y180);
+                        matrixStackIn.translate(-0.5, -0.5, -0.5);
+
+
                         CageBlockTileRenderer.renderMobStatic(e, s, entityRenderer, matrixStackIn, 1, bufferIn, combinedLightIn, -90);
                     }
                     matrixStackIn.popPose();
