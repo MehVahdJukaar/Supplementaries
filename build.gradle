@@ -128,7 +128,8 @@ dependencies {
     implementation fg.deobf("curse.maven:create-328085:3600402")
     implementation fg.deobf("curse.maven:flywheel-486392:3600401")
     implementation fg.deobf("curse.maven:aquaculture-60028:3545695")
-    implementation fg.deobf("curse.maven:quark-243121:3545695")
+    implementation fg.deobf("curse.maven:quark-243121:3578106")
+    implementation fg.deobf("curse.maven:arl-250363:3575622")
     implementation fg.deobf("curse.maven:jei-238222:3550020")
     implementation fg.deobf("curse.maven:malum-484064:3579643")
     implementation fg.deobf("curse.maven:croptopia-fabric-415438:3569895")
@@ -142,6 +143,7 @@ dependencies {
     implementation fg.deobf("curse.maven:mgui-351914:3573121")
     implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
     implementation fg.deobf("curse.maven:kiwi-303657:3577626")
+    implementation fg.deobf("curse.maven:selene-499980:3604965")
 
     //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
