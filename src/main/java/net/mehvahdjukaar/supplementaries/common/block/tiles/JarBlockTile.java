@@ -155,7 +155,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         //hahaha, funy pony jar meme
         if (this.hasCustomName()) {
             Component c = this.getCustomName();
-            return (c != null && c.getString().contains("cum"));
+            return (c != null && c.getString().toLowerCase().contains("cum"));
         }
         return false;
     }
