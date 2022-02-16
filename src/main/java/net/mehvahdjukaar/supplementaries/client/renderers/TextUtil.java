@@ -33,7 +33,9 @@ public class TextUtil {
                         "\n\n\u00A74Artist:\u00A7r\n\n\u00A70" +
                         "Plantkillable" +
                         "\n\n\n\u00A74Donators:\u00A7r\n\n\u00A70" +
-                        "AdaraChristine" +
+                        "NotHypherionSA"+
+                        "\nAdaraChristine" +
+                        "\nFishSuckerSupreme" +
                         "\nThugPug43" +
                         "\nMetalBox47" +
                         "\nStonkManHanz" +
@@ -46,6 +48,12 @@ public class TextUtil {
                         "\nAstralis" +
                         "\nToffanelly" +
                         "\nAzrod_dovahkiin" +
+                        "\nEudes Gerodez" +
+                        "\nElijah"+
+                        "\nSpencer G"+
+                        "\nLyon M"+
+                        "\nMars The Gamer"+
+                        "\nLittle Pianist" +
                         "\n\n\n\u00A74Credits:" +
                         "\n\n\u00A75Other Textures:\u00A7r\n\n\u00A70" +
                         "\nYaBoiCinn" +

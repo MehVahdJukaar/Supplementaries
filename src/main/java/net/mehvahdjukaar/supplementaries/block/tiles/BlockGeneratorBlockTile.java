@@ -37,7 +37,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Executors;
 
 public class BlockGeneratorBlockTile extends TileEntity implements ITickableTileEntity {
 
@@ -87,6 +86,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
 
 
             //lets hope world is thread safe
+            /*
             try {
                 Executors.newSingleThreadExecutor()
                         .submit(() -> threadResult = StructureLocator.find(world, posX, posZ, 2));
@@ -94,9 +94,9 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 this.level.removeBlock(this.worldPosition, false);
                 Supplementaries.LOGGER.warn("failed to generate road sign at " + this.worldPosition.toString() + ": " + e);
             }
+            */
 
 
-            /*
             Thread thread = new Thread(() -> {
                 try {
                     threadResult = StructureLocator.find(world, posX, posZ, 2);
@@ -106,7 +106,7 @@ public class BlockGeneratorBlockTile extends TileEntity implements ITickableTile
                 }
             });
             thread.start();
-            */
+
 
         }
 

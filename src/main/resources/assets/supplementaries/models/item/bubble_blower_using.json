@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "supplementaries:items/bubble_blower_using"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -35, 45],
+			"translation": [0, 3.25, 1.25],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, -35, -45],
+			"translation": [0, 3.25, 1.25],
+			"scale": [0.55, 0.55, 0.55]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -180, 0],
+			"translation": [-7.25, 2.75, -2],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"firstperson_lefthand": {
+			"translation": [-7.25, 2.75, -2],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"head": {
+			"translation": [0, 6.5, 0]
+		}
+	}
+}

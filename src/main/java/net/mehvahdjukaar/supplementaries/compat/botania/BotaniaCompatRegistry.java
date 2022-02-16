@@ -33,7 +33,6 @@ public class BotaniaCompatRegistry {
     }
 
     public static void registerStuff() {
-
     }
 
     public static ActionResultType tryCaptureTater(AbstractMobContainerItem item, ItemUseContext context) {

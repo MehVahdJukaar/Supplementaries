@@ -4,13 +4,6 @@
     {
       "conditions": [
         {
-          "type": "forge:not",
-          "value": {
-            "type": "forge:tag_empty",
-            "tag": "forge:ingots/copper"
-          }
-        },
-        {
           "type": "supplementaries:flag",
           "flag": "wrench"
         }
@@ -20,35 +13,6 @@
         "pattern": [
           "1 1",
           " 1 ",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:ingots/copper"
-          }
-        },
-        "result": {
-          "item": "supplementaries:wrench",
-          "count": 1
-        }
-      }
-    },
-    {
-      "conditions": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "wrench"
-        },
-        {
-          "type": "forge:tag_empty",
-          "tag": "forge:ingots/copper"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "1 1",
-          " 2 ",
           " 1 "
         ],
         "key": {

@@ -26,18 +26,18 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
 
-    private void makeSignPostItem(IWoodType wood){
+    private void makeSignPostItem(IWoodType wood) {
         getBuilder(RegistryHelper.getSignPostName(wood)).parent(new ModelFile.UncheckedModelFile(
-                modLoc("item/sign_post_template")))
+                        modLoc("item/sign_post_template")))
                 .texture("0", Textures.SIGN_POSTS_TEXTURES.get(wood));
 
     }
 
-    private void makeHangingSignItem(IWoodType wood){
+    private void makeHangingSignItem(IWoodType wood) {
         getBuilder(RegistryHelper.getHangingSignName(wood)).parent(new ModelFile.UncheckedModelFile(
-                modLoc("item/hanging_sign_template")))
-                .texture("0", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_front_"+wood.getRegName())
-                .texture("2", "blocks/hanging_signs/"+wood.getLocation()+"hanging_sign_details_"+wood.getRegName());
+                        modLoc("item/hanging_sign_template")))
+                .texture("0", "blocks/hanging_signs/" + wood.getLocation() + "hanging_sign_front_" + wood.getRegName())
+                .texture("2", "blocks/hanging_signs/" + wood.getLocation() + "hanging_sign_details_" + wood.getRegName());
 
     }
 

@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 //fixes, hopefully, double plant growth. should work with other mods too
 @Mixin(targets = {"net.minecraft.entity.passive.BeeEntity$FindPollinationTargetGoal"})
-public abstract class BeeGoalMixin {
+public abstract class BeePollinateGoalMixin {
 
     @Redirect(method = "tick",
             at = @At(value = "INVOKE",
-                    target = " net/minecraft/world/World.setBlockAndUpdate (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z",
+                    target = "net/minecraft/world/World.setBlockAndUpdate(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z",
                     ordinal = 0))
     public boolean tick(World level, BlockPos pos, BlockState state) {
         Block b = state.getBlock();

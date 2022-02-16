@@ -35,7 +35,12 @@ public class PresentBlockTile extends ItemDisplayTile implements IColored {
     private String description = "";
 
     public PresentBlockTile() {
-        super(ModRegistry.PRESENT_TILE.get());
+        super(ModRegistry.PRESENT_TILE.get(),1);
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 64;
     }
 
     @Override

@@ -29,6 +29,10 @@ public class SpecialPlayers {
         addSpecialPlayer("MylesTheChild", false, false, true, "ea92f2be-4bd1-4082-a9b3-e6a8fbd43063", "Wais");
         addSpecialPlayer("E_Y_E_", false, true, false, null, "Dark");
         addSpecialPlayer("Azrod_dovahkiin", false, false, true, "171ccd8a-3afe-4788-806d-ee643fe33a9c", "dragonborn");
+        addSpecialPlayer("Jacster1000", false, false, true, "d4c6b27a-68ec-4625-a324-3efbe7fdf155");
+        addSpecialPlayer("Little_pianist", false, false, true, "86045b27-09fd-478d-87d7-77fb9312dd91");
+        addSpecialPlayer("FishSupreme", false, true, true, "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34");
+
     }
 
     private static void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {

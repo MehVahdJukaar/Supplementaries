@@ -31,14 +31,14 @@ public class BlockUtils {
         return to;
     }
 
-    public static void addOptionalOwnership(LivingEntity placer, TileEntity tileEntity){
-        if(ServerConfigs.cached.SERVER_PROTECTION && placer instanceof PlayerEntity) {
+    public static void addOptionalOwnership(LivingEntity placer, TileEntity tileEntity) {
+        if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof PlayerEntity) {
             ((IOwnerProtected) tileEntity).setOwner(placer.getUUID());
         }
     }
 
-    public static void addOptionalOwnership(LivingEntity placer, World world, BlockPos pos){
-        if(ServerConfigs.cached.SERVER_PROTECTION && placer instanceof PlayerEntity) {
+    public static void addOptionalOwnership(LivingEntity placer, World world, BlockPos pos) {
+        if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof PlayerEntity) {
             TileEntity tile = world.getBlockEntity(pos);
             if (tile instanceof IOwnerProtected) {
                 ((IOwnerProtected) tile).setOwner(placer.getUUID());
@@ -51,7 +51,7 @@ public class BlockUtils {
     public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, World level, Vector3d hit) {
         BlockState state = level.getBlockState(targetPos);
         if (state.getBlock() instanceof IRotatable) {
-            return ((IRotatable)state.getBlock()).rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, face, hit);
+            return ((IRotatable) state.getBlock()).rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, face, hit);
         }
         Optional<Direction> special = tryRotatingSpecial(face, ccw, targetPos, level, state, hit);
         if (special.isPresent()) return special;
@@ -68,7 +68,7 @@ public class BlockUtils {
 
         //interface stuff
         if (state.getBlock() instanceof IRotatable) {
-            return ((IRotatable)state.getBlock()).rotateOverAxis(state, world, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
+            return ((IRotatable) state.getBlock()).rotateOverAxis(state, world, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
         }
 
         Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, world, state);
@@ -110,7 +110,32 @@ public class BlockUtils {
                         .setValue(CakeBlock.BITES, bites).rotate(world, targetPos, rot));
             }
 
-            return Optional.of(state.rotate(world, targetPos, rot));
+            BlockState rotated = state.rotate(world, targetPos, rot);
+            //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
+            //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
+            if (rotated == state) {
+                if (state.hasProperty(BlockStateProperties.FACING)) {
+                    rotated = state.setValue(BlockStateProperties.FACING,
+                            rot.rotate(state.getValue(BlockStateProperties.FACING)));
+                } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                    rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING,
+                            rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+                } else if (state.hasProperty(RotatedPillarBlock.AXIS)) {
+                    switch (rot) {
+                        case COUNTERCLOCKWISE_90:
+                        case CLOCKWISE_90:
+                            switch (state.getValue(RotatedPillarBlock.AXIS)) {
+                                case X:
+                                    rotated = state.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Z);
+                                    break;
+                                case Z:
+                                    rotated = state.setValue(RotatedPillarBlock.AXIS, Direction.Axis.X);
+                                    break;
+                            }
+                    }
+                }
+            }
+            return Optional.of(rotated);
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {

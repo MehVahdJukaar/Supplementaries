@@ -8,7 +8,7 @@
   "mixins": [
     "AbstractBlockMixin",
     "AbstractVillagerEntityMixin",
-    "BeeGoalMixin",
+    "BeePollinateGoalMixin",
     "BellBlockMixin",
     "BellTileEntityMixin",
     "BrewingStandTileMixin",

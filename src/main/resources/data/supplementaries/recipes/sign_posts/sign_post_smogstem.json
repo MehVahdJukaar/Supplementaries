@@ -1,7 +1,5 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
-    {
+  "type": "minecraft:crafting_shapeless",
       "conditions": [
         {
           "flag": "sign_post",
@@ -12,8 +10,7 @@
           "type": "forge:mod_loaded"
         }
       ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
+
         "group": "sign_post",
         "ingredients": [
           {
@@ -23,8 +20,4 @@
         "result": {
           "item": "supplementaries:sign_post_smogstem",
           "count": 2
-        }
-      }
-    }
-  ]
-}
+}}

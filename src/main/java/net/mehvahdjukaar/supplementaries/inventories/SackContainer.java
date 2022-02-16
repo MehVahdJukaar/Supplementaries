@@ -25,6 +25,7 @@ public class SackContainer extends Container  {
 
     public SackContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
 
+
         super(ModRegistry.SACK_CONTAINER.get(), id);
         //tile inventory
         this.inventory = inventory;
@@ -33,23 +34,25 @@ public class SackContainer extends Container  {
 
         int size = ServerConfigs.cached.SACK_SLOTS;
 
-        int[] dims = SackContainer.getRatio(size);
-        if(dims[0]>9){
+        int[] dims = getRatio(size);
+        if (dims[0] > 9) {
             dims[0] = 9;
-            dims[1] = (int) Math.ceil(size/9f);
+            dims[1] = (int) Math.ceil(size / 9f);
         }
 
-        int yp = 17 +(18*3)/2 - (9)*dims[1];
+        int yp = 17 + (18 * 3) / 2 - (9) * dims[1];
 
-        int dimx;
+        int dimx = 0;
+        int dimXPrev;
         int xp;
-        for(int h = 0; h < dims[1]; ++h) {
-            dimx = Math.min(dims[0],size);
-            xp = 8+ (18*9)/2 -(dimx*18)/2;
+        for (int h = 0; h < dims[1]; ++h) {
+            dimXPrev = dimx;
+            dimx = Math.min(dims[0], size);
+            xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                this.addSlot(new SackSlot(inventory, j + (h*dimx), xp + j * 18, yp+18*h));
+                this.addSlot(new SackSlot(inventory, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
             }
-            size-=dims[0];
+            size -= dims[0];
         }
 
         for (int si = 0; si < 3; ++si)
@@ -60,7 +63,6 @@ public class SackContainer extends Container  {
     }
 
 
-
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
         return this.inventory.stillValid(playerIn);
@@ -69,22 +71,23 @@ public class SackContainer extends Container  {
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
+    @Override
     public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            int activeSlots = ((ServerConfigs.cached.SACK_SLOTS));
+        if (slot.hasItem()) {
+            ItemStack item = slot.getItem();
+            itemstack = item.copy();
+            int activeSlots = ServerConfigs.cached.SACK_SLOTS;
             if (index < activeSlots) {
-                if (!this.moveItemStackTo(itemstack1, activeSlots, this.slots.size(), true)) {
+                if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, activeSlots, false)) {
+            } else if (!this.moveItemStackTo(item, 0, activeSlots, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
+            if (item.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
@@ -93,7 +96,6 @@ public class SackContainer extends Container  {
 
         return itemstack;
     }
-
 
     /**
      * Called when the container is closed.

@@ -1,41 +1,37 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
     {
-      "conditions": [
-        {
-          "flag": "hanging_sign",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "simplytea",
-          "type": "forge:mod_loaded"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "group": "hanging_sign",
-        "pattern": [
-          "010",
-          "222",
-          "222"
-        ],
-        "key": {
-          "0": {
-            "item": "minecraft:iron_nugget"
-          },
-          "1": {
-            "item": "minecraft:stick"
-          },
-          "2": {
-            "item": "simplytea:tea_stick"
-          }
-        },
-        "result": {
-          "item": "supplementaries:hanging_sign_tea",
-          "count": 2
-        }
-      }
+      "flag": "hanging_sign",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "simplytea",
+      "type": "forge:mod_loaded"
     }
-  ]
+  ],
+  "recipe": {
+    "type": "minecraft:crafting_shaped",
+    "group": "hanging_sign",
+    "pattern": [
+      "010",
+      "222",
+      "222"
+    ],
+    "key": {
+      "0": {
+        "item": "minecraft:iron_nugget"
+      },
+      "1": {
+        "item": "minecraft:stick"
+      },
+      "2": {
+        "item": "simplytea:tea_stick"
+      }
+    },
+    "result": {
+      "item": "supplementaries:hanging_sign_tea",
+      "count": 2
+    }
+  }
 }
