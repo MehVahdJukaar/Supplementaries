@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -57,6 +58,10 @@ public class CompatObjects {
     public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", ForgeRegistries.BLOCKS);
 
     public static final Supplier<Block> RICH_SOUL_SOIL = makeCompatObject("nethers_delight:rich_soul_soil", ForgeRegistries.BLOCKS);
+
+    public static final Supplier<ParticleType<?>> SHARPNEL = makeCompatObject("oreganized:lead_shrapnel", ForgeRegistries.PARTICLE_TYPES);
+
+    public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", ForgeRegistries.MOB_EFFECTS);
 
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()

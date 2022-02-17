@@ -16,7 +16,7 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
     private final ResourceLocation texture;
 
     public BlackboardTooltipComponent(BlackboardItem.BlackboardTooltip tooltip) {
-        this.texture = BlackboardTextureManager.INSTANCE.getResourceLocation(tooltip.packed());
+        this.texture = BlackboardTextureManager.INSTANCE.getBlackboardInstance(tooltip.packed()).getTextureLocation();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBombKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +52,7 @@ public class BombExplosion extends Explosion {
     private final double x;
     private final double y;
     private final double z;
-    private final boolean blue;
+    private final BombEntity.BombType bombType;
 
     private final ExplosionDamageCalculator damageCalculator;
     private final List<BlockPos> toBlow = Lists.newArrayList();
@@ -58,15 +60,17 @@ public class BombExplosion extends Explosion {
     private final BlockInteraction mode;
 
 
-    public BombExplosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource, @Nullable ExplosionDamageCalculator context, double x, double y, double z, float radius, boolean blue, BlockInteraction interaction) {
-        super(world, entity, damageSource, context, x, y, z, radius, blue, interaction);
+    public BombExplosion(Level world, @Nullable Entity entity, @Nullable DamageSource damageSource,
+                         @Nullable ExplosionDamageCalculator context, double x, double y, double z,
+                         float radius, BombEntity.BombType bombType, BlockInteraction interaction) {
+        super(world, entity, damageSource, context, x, y, z, radius, false, interaction);
         this.level = world;
         this.source = entity;
         this.radius = radius;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.blue = blue;
+        this.bombType = bombType;
         this.mode = interaction;
         this.damageCalculator = context == null ? this.makeDamageCalculator(entity) : context;
     }
@@ -80,7 +84,7 @@ public class BombExplosion extends Explosion {
 
     public void doFinalizeExplosion() {
 
-        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundSource.NEUTRAL, blue ? 5F : 3f, (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundSource.NEUTRAL, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);
@@ -186,12 +190,13 @@ public class BombExplosion extends Explosion {
         int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
         int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
         List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
-        net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
+        ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
-                double d12 = Mth.sqrt((float) entity.distanceToSqr(vector3d)) / f2;
+                double distSq = entity.distanceToSqr(vector3d);
+                double d12 = Mth.sqrt((float) distSq) / f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
                     double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
@@ -216,12 +221,11 @@ public class BombExplosion extends Explosion {
                         }
 
                         if (entity instanceof LivingEntity livingEntity) {
-                            if (blue) {
-                                if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())) {
-                                    livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
-                                    entity.setSecondsOnFire(10);
-                                }
+
+                            if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())) {
+                                bombType.applyStatusEffects(livingEntity,distSq);
                             }
+
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
                         }
 

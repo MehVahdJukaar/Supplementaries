@@ -369,7 +369,7 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
         }
         return false;
     }
-
+//TODO: invert scribble color if sign is darker than them
     /**
      * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
      */

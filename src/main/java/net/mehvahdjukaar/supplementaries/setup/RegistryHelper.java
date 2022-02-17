@@ -192,7 +192,7 @@ public class RegistryHelper {
             Item i = wood.plankBlock.asItem();
             boolean hidden = i == Items.AIR || i.getCreativeTabs().isEmpty();
             Item item = new BurnableBlockItem(block,
-                    new Item.Properties().tab(hidden ? null :
+                    new Item.Properties().stacksTo(16).tab(hidden ? null :
                             getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),
                     wood.canBurn() ? 200 : 0
             ).setRegistryName(block.getRegistryName());
@@ -211,7 +211,7 @@ public class RegistryHelper {
                 boolean hidden = i == Items.AIR || i.getCreativeTabs().isEmpty();
                 String name = wood.getVariantId(ModRegistry.SIGN_POST_NAME);
                 Item item = new SignPostItem(
-                        new Item.Properties().tab(hidden ? null :
+                        new Item.Properties().stacksTo(16).tab(hidden ? null :
                                 getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),
                         wood
                 ).setRegistryName(Supplementaries.res(name));

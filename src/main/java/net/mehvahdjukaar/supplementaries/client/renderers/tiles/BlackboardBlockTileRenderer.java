@@ -38,7 +38,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
     @Override
     public int getViewDistance() {
-        return 96;
+        return 8;
     }
 
     @Override
@@ -92,8 +92,9 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             }
         }
 
-        VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getRenderType(tile));
-        RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+
+       // VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getBlackboardInstance(tile).getRenderType());
+       // RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
         matrixStackIn.popPose();
 

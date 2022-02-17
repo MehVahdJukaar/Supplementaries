@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -38,7 +39,8 @@ public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
         if(com != null && com.contains("Pixels")) {
             packed = com.getLongArray("Pixels");
         }
-        VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getRenderType(packed));
+        VertexConsumer builder = bufferIn.getBuffer(
+                BlackboardTextureManager.INSTANCE.getBlackboardInstance(packed).getRenderType());
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok

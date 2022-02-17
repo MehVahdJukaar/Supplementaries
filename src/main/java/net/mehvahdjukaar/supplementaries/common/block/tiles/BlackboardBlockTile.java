@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,22 +16,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider {
 
+    public static final ModelProperty<BlackboardKey> BLACKBOARD = BlockProperties.BLACKBOARD;
+
     private UUID owner = null;
 
     public byte[][] pixels = new byte[16][16];
 
     //client side
-    public BlackboardKey textureKey = null;
+    private BlackboardKey textureKey = null;
+
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
-        //Arrays.fill(pixels, Arrays.fill(new boolean[], false));
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 this.pixels[x][y] = 0;
@@ -39,22 +45,36 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         }
     }
 
+    @Override
+    public IModelData getModelData() {
+        //return data;
+        return new ModelDataMap.Builder()
+                .withInitial(BLACKBOARD, getTextureKey())
+                .build();
+    }
+
+    public BlackboardKey getTextureKey() {
+        if (textureKey == null) refreshKey();
+        return textureKey;
+    }
+
+    public void refreshKey() {
+        this.textureKey = new BlackboardKey(this.pixels);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+        refreshKey();
+        ModelDataManager.requestModelDataRefresh(this);
+    }
+
     //I need this for when it's changed manually
     @Override
     public void setChanged() {
         if (this.level == null || this.level.isClientSide) return;
-        this.setCorrectBlockState(this.getBlockState(), this.worldPosition, this.level);
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         super.setChanged();
-    }
-
-    public void setCorrectBlockState(BlockState state, BlockPos pos, Level world) {
-        if (!world.isClientSide) {
-            boolean written = !this.isEmpty();
-            if (state.getValue(BlackboardBlock.WRITTEN) != written) {
-                world.setBlock(pos, state.setValue(BlackboardBlock.WRITTEN, written), 2);
-            }
-        }
     }
 
     public boolean isEmpty() {
@@ -70,19 +90,11 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         return !flag;
     }
 
-    //client
-    public void updateModelData() {
-        this.textureKey = null;
-    }
-
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         loadFromTag(compound);
         this.loadOwner(compound);
-        if (this.level != null && !this.level.isClientSide) {
-            this.setCorrectBlockState(this.getBlockState(), this.worldPosition, this.level);
-        }
     }
 
     @Override
@@ -138,10 +150,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     public Direction getDirection() {
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
-    }
-
-    public float getYaw() {
-        return -this.getDirection().toYRot();
     }
 
     @Nullable

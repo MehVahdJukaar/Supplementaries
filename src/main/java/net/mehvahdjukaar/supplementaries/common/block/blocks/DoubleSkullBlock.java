@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -52,18 +53,19 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
     @Override
     public List<ItemStack> getDrops(BlockState pState, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof DoubleSkullBlockTile tile) {
-            builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, tile);
             List<ItemStack> loot = new ArrayList<>();
             BlockEntity skullTile = tile.getSkullTile();
             if(skullTile!=null){
                 BlockState skull = skullTile.getBlockState();
                 builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTile);
+
                 loot.addAll(skull.getDrops(builder));
             }
-            BlockEntity skullTileUp = tile.getSkullTile();
+            BlockEntity skullTileUp = tile.getSkullTileUp();
             if(skullTileUp!=null){
                 BlockState skull = skullTileUp.getBlockState();
-                builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTileUp);
+                builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTileUp)
+                        .withOptionalParameter(LootContextParams.BLOCK_STATE, skull);
                 loot.addAll(skull.getDrops(builder));
             }
             return loot;

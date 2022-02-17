@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
@@ -99,7 +100,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
                             Direction dir = q.getDirection();
                             if(flipped) {
-                                RendererUtil.flipAxis(v, q.getSprite());
+                                RendererUtil.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_180);
                                 if (dir.getAxis() != Direction.Axis.Y) dir = dir.getClockWise();
                             }
                             if(ceiling){

@@ -271,6 +271,13 @@ public class ModRegistry {
     public static final RegistryObject<Item> BOMB_BLUE_ITEM_ON = ITEMS.register("bomb_blue_projectile", () -> new BombItem(new Item.Properties()
             .tab(null), true, false));
 
+    //sharpnel bomb
+    public static final String BOMB_SHARPNEL_NAME = "bomb_sharpnel";
+    public static final RegistryObject<Item> BOMB_SHARPNEL_ITEM = ITEMS.register(BOMB_SHARPNEL_NAME, () -> new BombItem(new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME))));
+    public static final RegistryObject<Item> BOMB_SHARPNEL_ITEM_ON = ITEMS.register("bomb_sharpnel_projectile", () -> new BombItem(new Item.Properties()
+            .tab(null)));
+
     //rope arrow
     public static final String ROPE_ARROW_NAME = "rope_arrow";
     public static final RegistryObject<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME, () -> (

@@ -65,10 +65,6 @@ public class BlockItemUtils {
         return tProperty.getValue(name).map((p) -> state.setValue(tProperty, p)).orElse(state);
     }
 
-    private static SoundEvent getPlaceSound(BlockState state, Level world, BlockPos pos, Player entity) {
-        return state.getSoundType(world, pos, entity).getPlaceSound();
-    }
-
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
         return place(context, blockToPlace, null);
     }
@@ -99,7 +95,7 @@ public class BlockItemUtils {
                     world.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
                 }
                 if(placeSound == null) placeSound = placedState.getSoundType(world, blockpos, context.getPlayer());
-                world.playSound(player, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (placeSound.getVolume() + 1.0F) / 2.0F, placeSound.getPitch() * 0.8F);
+                world.playSound(player, blockpos, placeSound.getPlaceSound(), SoundSource.BLOCKS, (placeSound.getVolume() + 1.0F) / 2.0F, placeSound.getPitch() * 0.8F);
                 if (player == null || !player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }

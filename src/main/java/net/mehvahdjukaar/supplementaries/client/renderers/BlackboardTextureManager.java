@@ -11,18 +11,23 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import java.security.Provider;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlackboardTextureManager {
-
-    public static final ResourceLocation BLACKBOARD_ATLAS = new ResourceLocation(Supplementaries.MOD_ID, "textures/atlas/blackboards.png");
 
     public static BlackboardTextureManager INSTANCE = null;
     //private final AtlasTexture textureAtlas;
@@ -51,36 +56,9 @@ public class BlackboardTextureManager {
 
     public BlackboardTextureManager(TextureManager textureManager) {
         this.textureManager = textureManager;
-        //this.textureAtlas = new AtlasTexture(BLACKBOARD_ATLAS);
-        //this.textureManager.register(this.textureAtlas.location(), this.textureAtlas);
     }
 
-
-    public RenderType getRenderType(BlackboardBlockTile tile) {
-        return this.getTextureInstance(tile).renderType;
-    }
-
-    public RenderType getRenderType(long[] packed) {
-        return this.getTextureInstance(packed).renderType;
-    }
-
-    public ResourceLocation getResourceLocation(long[] packed) {
-        return getTextureInstance(packed).resourceLocation;
-    }
-
-    public ResourceLocation getResourceLocation(BlackboardBlockTile tile) {
-        return this.getTextureInstance(tile).resourceLocation;
-    }
-
-    public ResourceLocation getResourceLocation(BlackboardKey key) {
-        return this.getTextureInstance(key).resourceLocation;
-    }
-
-    public RenderType getRenderType(BlackboardKey key) {
-        return this.getTextureInstance(key).renderType;
-    }
-
-    public TextureInstance getTextureInstance(BlackboardKey key) {
+    public TextureInstance getBlackboardInstance(BlackboardKey key) {
         TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
         if (textureInstance == null) {
             textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values), bindNextID());
@@ -89,40 +67,12 @@ public class BlackboardTextureManager {
         return textureInstance;
     }
 
-    public TextureInstance getTextureInstance(long[] packed) {
-        BlackboardKey key = new BlackboardKey(packed);
-        TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
-        if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(packed), bindNextID());
-            this.blackboardTextures.put(key, textureInstance);
-        }
-        return textureInstance;
+    public TextureInstance getBlackboardInstance(long[] packed) {
+        return getBlackboardInstance(new BlackboardKey(packed));
     }
 
-    private TextureInstance getTextureInstance(BlackboardBlockTile tile) {
-        BlackboardKey key = getOrCreateTextureKey(tile);
-        TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
-        if (textureInstance == null) {
-            textureInstance = new TextureInstance(tile.pixels, bindNextID());
-            this.blackboardTextures.put(key, textureInstance);
-        }
-        return textureInstance;
-    }
-
-    private BlackboardKey getOrCreateTextureKey(BlackboardBlockTile tile) {
-        if (tile.textureKey == null) {
-            tile.textureKey = new BlackboardKey(tile.pixels);
-        }
-        return tile.textureKey;
-    }
-
-
-    public BlackboardKey getUpdatedKey(BlackboardBlockTile tile) {
-        BlackboardKey key = new BlackboardKey(tile.pixels);
-        if (this.blackboardTextures.getIfPresent(key) == null) {
-            this.blackboardTextures.put(key, new TextureInstance(tile.pixels, bindNextID()));
-        }
-        return key;
+    public TextureInstance getBlackboardInstance(BlackboardBlockTile tile) {
+        return getBlackboardInstance(tile.getTextureKey());
     }
 
     public static class BlackboardKey {
@@ -135,6 +85,10 @@ public class BlackboardTextureManager {
         public BlackboardKey(byte[][] pixels) {
             values = BlackboardBlockTile.packPixels(pixels);
             ;
+        }
+
+        public byte[][] unpackValues(){
+            return BlackboardBlockTile.unpackPixels(values);
         }
 
         @Override
@@ -159,28 +113,62 @@ public class BlackboardTextureManager {
     }
 
 
-    private class TextureInstance implements AutoCloseable {
+    public class TextureInstance implements AutoCloseable {
         private static final int WIDTH = 16;
-        private final DynamicTexture texture;
-        private final RenderType renderType;
-        private final ResourceLocation resourceLocation;
+        private final byte[][] pixels;
+        private final long id;
+        //he be lazy
+        @Nullable
+        private DynamicTexture texture;
+        @Nullable
+        private RenderType renderType;
+        @Nullable
+        private ResourceLocation textureLocation;
+        @Nullable
+        private List<BakedQuad> quadList;
         //private final RenderMaterial renderMaterial;
 
         private TextureInstance(byte[][] pixels, long id) {
-            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
-            this.updateTexture(pixels);
-            resourceLocation = BlackboardTextureManager.this.textureManager.register("blackboard/" + Long.toHexString(id), this.texture);
-            this.renderType = RenderType.entitySolid(resourceLocation);
-            //this.renderMaterial = new RenderMaterial(AtlasTexture.LOCATION_BLOCKS,resourceLocation);
+            this.pixels = pixels;
+            this.id = id;
         }
 
-        private void updateTexture(byte[][] pixels) {
+        private void initializeTexture() {
+            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
+
             for (int y = 0; y < pixels.length && y < WIDTH; y++) {
                 for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
                     this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));
                 }
             }
             this.texture.upload();
+
+            this.textureLocation = BlackboardTextureManager.this.textureManager.register("blackboard/" + Long.toHexString(id), this.texture);
+            this.renderType = RenderType.entitySolid(textureLocation);
+        }
+
+        @Nonnull
+        public List<BakedQuad> getOrCreateQuads(Function<byte[][],List<BakedQuad>> quadFactory){
+            if(quadList == null){
+                this.quadList = quadFactory.apply(pixels);
+            }
+            return quadList;
+        }
+
+        @Nonnull
+        public ResourceLocation getTextureLocation() {
+            if(textureLocation == null){
+                this.initializeTexture();
+            }
+            return textureLocation;
+        }
+
+        @Nonnull
+        public RenderType getRenderType() {
+            if(renderType == null){
+                this.initializeTexture();
+            }
+            return renderType;
         }
 
         //should be called when cache expires

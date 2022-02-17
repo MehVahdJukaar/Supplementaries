@@ -51,24 +51,22 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     public static final VoxelShape SHAPE_WEST = Block.box(11.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty WRITTEN = BlockProperties.WRITTEN;
 
     public BlackboardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false).setValue(WRITTEN, true));
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, WRITTEN);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
         if (world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
-            tile.setCorrectBlockState(state, pos, world);
             BlockUtils.addOptionalOwnership(placer, tile);
         }
     }
@@ -145,10 +143,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        //create tile
-        if (!state.getValue(WRITTEN)) {
-            worldIn.setBlock(pos, state.setValue(WRITTEN, true), (1 << 1) | (1 << 2));
-        }
         if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
 
             if (hit.getDirection() == state.getValue(FACING)) {
@@ -180,17 +174,13 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        BlockState state = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
-        if (context.getItemInHand().getTagElement("BlockEntityTag") != null) {
-            state.setValue(WRITTEN, true);
-        }
-        return state;
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return pState.getValue(WRITTEN) ? new BlackboardBlockTile(pPos, pState) : null;
+        return new BlackboardBlockTile(pPos, pState);
     }
 
     @Override
@@ -222,23 +212,12 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
-        super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
-            te.setCorrectBlockState(state, pos, world);
-        }
-    }
-
-    @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
-        if(state.getValue(WRITTEN)){
-            if(!level.isClientSide){
-                var te = level.getBlockEntity(pos);
-                if(te != null) te.setRemoved();
-                level.setBlock(pos, state.setValue(WRITTEN, false), 3);
-            }
-            return true;
+
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            //TODO: finish
         }
-        return false;
+        return true;
+
     }
 }

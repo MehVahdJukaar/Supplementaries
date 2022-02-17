@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -15,8 +16,12 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
@@ -28,20 +33,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import net.minecraftforge.registries.RegistryObject;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
 
-    private boolean blue;
+    private BombType type;
 
     private boolean active = true;
 
@@ -51,17 +55,18 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
-    }
-
-    public BombEntity(Level worldIn, LivingEntity throwerIn, boolean blue) {
-        super(ModRegistry.BOMB.get(), throwerIn, worldIn);
-        this.blue = blue;
         this.maxAge = 200;
     }
 
-    public BombEntity(Level worldIn, double x, double y, double z, boolean blue) {
+    public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
+        super(ModRegistry.BOMB.get(), throwerIn, worldIn);
+        this.type = type;
+        this.maxAge = 200;
+    }
+
+    public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModRegistry.BOMB.get(), x, y, z, worldIn);
-        this.blue = blue;
+        this.type = type;
         this.maxAge = 200;
     }
 
@@ -76,7 +81,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Active", this.active);
-        compound.putBoolean("Blue", this.blue);
+        compound.putInt("Type", this.type.ordinal());
         compound.putInt("Timer", this.changeTimer);
     }
 
@@ -84,19 +89,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.active = compound.getBoolean("Active");
-        this.blue = compound.getBoolean("Blue");
+        this.type = BombType.values()[compound.getInt("Type")];
         this.changeTimer = compound.getInt("Timer");
     }
 
     //this is extra data needed when an entity creation packet is sent from server to client
     @Override
     public void readSpawnData(FriendlyByteBuf buffer) {
-        this.blue = buffer.readBoolean();
+        this.type = buffer.readEnum(BombType.class);
     }
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(this.blue);
+        buffer.writeEnum(this.type);
     }
 
     @Override
@@ -111,8 +116,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     @Override
     public ItemStack getItem() {
-        return this.blue ? new ItemStack(this.active ? ModRegistry.BOMB_BLUE_ITEM_ON.get() : ModRegistry.BOMB_BLUE_ITEM.get())
-                : new ItemStack(this.active ? ModRegistry.BOMB_ITEM_ON.get() : ModRegistry.BOMB_ITEM.get());
+        return type.getDisplayStack(this.active);
     }
 
     private void spawnBreakParticles() {
@@ -132,11 +136,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                     this.spawnParticleInASphere(ModRegistry.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 } else {
                     level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
-                            this.blue ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS, 0, 0);
+                            this.type.getRadius(), 0, 0);
                 }
-                if (blue) {
-                    this.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.55f);
-                }
+                type.spawnExtraParticles(this);
             }
             case 68 -> level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
             case 67 -> {
@@ -177,7 +179,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
         }
 
-        if (this.active && this.isInWater() && !this.blue) {
+        if (this.active && this.isInWater() && this.type != BombType.BLUE) {
             this.turnOff();
         }
 
@@ -202,8 +204,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         }
     }
 
-    public static boolean canBreakBlock(BlockState state, boolean blue) {
-        return switch (blue ? ServerConfigs.cached.BOMB_BLUE_BREAKS : ServerConfigs.cached.BOMB_BREAKS) {
+    public static boolean canBreakBlock(BlockState state, BombType type) {
+        return switch (type.breakMode()) {
             default -> false;
             case ALL -> true;
             case WEAK -> state.canBeReplaced(Fluids.WATER) ||
@@ -263,8 +265,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     protected void onHit(HitResult result) {
         super.onHit(result);
         if (!this.level.isClientSide) {
-
-            if (this.blue && this.changeTimer == -1) {
+            boolean isInstantlyActivated = this.type.isInstantlyActivated();
+            if (isInstantlyActivated && this.changeTimer == -1) {
                 this.changeTimer = 10;
                 //this.setDeltaMovement(Vector3d.ZERO);
                 this.level.broadcastEntityEvent(this, (byte) 68);
@@ -273,7 +275,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
             //normal explosion
             if (!this.isRemoved()) {
-                if (!this.blue || this.superCharged) {
+                if (!isInstantlyActivated || this.superCharged) {
                     this.reachedEndOfLife();
                 }
             }
@@ -310,11 +312,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
         BombExplosion explosion = new BombExplosion(this.level, this, null, new ExplosionDamageCalculator() {
             public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
-                return canBreakBlock(state, blue);
+                return canBreakBlock(state, type);
             }
         },
-                this.getX(), this.getY() + 0.25, this.getZ(), blue ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS,
-                this.blue, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
+                this.getX(), this.getY() + 0.25, this.getZ(), type.getRadius(),
+                this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
 
         explosion.explode();
         explosion.doFinalizeExplosion();
@@ -322,11 +324,97 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     }
 
-    public enum breakingMode {
+    public enum BreakingMode {
         ALL,
         WEAK,
         NONE
     }
+
+    public enum BombType {
+        NORMAL(ModRegistry.BOMB_ITEM, ModRegistry.BOMB_ITEM_ON),
+        BLUE(ModRegistry.BOMB_BLUE_ITEM, ModRegistry.BOMB_BLUE_ITEM_ON),
+        SHARPNEL(ModRegistry.BOMB_SHARPNEL_ITEM, ModRegistry.BOMB_SHARPNEL_ITEM_ON);
+
+        public RegistryObject<Item> item;
+        public RegistryObject<Item> item_on;
+
+        BombType(RegistryObject<Item> item, RegistryObject<Item> item_on) {
+            this.item = item;
+            this.item_on = item_on;
+        }
+
+        public ItemStack getDisplayStack(boolean active) {
+            return (active ? item_on : item).get().getDefaultInstance();
+        }
+
+        public float getRadius() {
+            return this == BLUE ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS;
+        }
+
+        public BreakingMode breakMode() {
+            return this == BLUE ? ServerConfigs.cached.BOMB_BLUE_BREAKS : ServerConfigs.cached.BOMB_BREAKS;
+        }
+
+        public float volume() {
+            return this == BLUE ? 5F : 3f;
+        }
+
+        public void applyStatusEffects(LivingEntity entity, double distSq) {
+            switch (this) {
+                case BLUE -> {
+                    entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
+                    entity.setSecondsOnFire(10);
+                }
+                case SHARPNEL -> {
+                    boolean shouldPoison = false;
+                    float random = entity.getRandom().nextInt(100);
+                    if (distSq <= 4 * 4) {
+                        shouldPoison = true;
+                    } else if (distSq <= 8 * 8) {
+                        if (random < 60) shouldPoison = true;
+                    } else if (distSq <= 15 * 15) {
+                        if (random < 30) shouldPoison = true;
+                    } else if (distSq <= 30 * 30) {
+                        if (random < 5) shouldPoison = true;
+                    }
+                    if (shouldPoison) {
+                        entity.hurt(DamageSource.MAGIC, 2);
+                        entity.addEffect(new MobEffectInstance(MobEffects.POISON, 260));
+                        var effect = CompatObjects.STUNNED_EFFECT.get();
+                        if (effect != null) {
+                            entity.addEffect(new MobEffectInstance(effect, 40 * 20));
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public boolean isInstantlyActivated() {
+            return this != BLUE;
+        }
+
+        public void spawnExtraParticles(BombEntity bomb) {
+            switch (this) {
+                case BLUE -> {
+                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.55f);
+                }
+                case SHARPNEL -> {
+                    //maybe use method above?
+                    var particle = CompatObjects.SHARPNEL.get();
+                    if (particle instanceof ParticleOptions p) {
+                        for (int i = 0; i < 100; i++) {
+                            float dx = (float) (bomb.random.nextGaussian() * 5f);
+                            float dy = (float) (bomb.random.nextGaussian() * 5f);
+                            float dz = (float) (bomb.random.nextGaussian() * 5f);
+                            bomb.level.addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
 }

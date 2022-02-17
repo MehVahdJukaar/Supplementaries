@@ -13,17 +13,17 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 
 public class BombItem extends Item {
-    private final boolean blue;
+    private final BombEntity.BombType type;
     private final boolean glint;
 
     public BombItem(Item.Properties builder) {
-        this(builder, false, false);
+        this(builder, BombEntity.BombType.NORMAL, false);
 
     }
 
-    public BombItem(Item.Properties builder, boolean blue, boolean glint) {
+    public BombItem(Item.Properties builder, BombEntity.BombType type, boolean glint) {
         super(builder);
-        this.blue = blue;
+        this.type = type;
         this.glint = glint;
     }
 
@@ -34,7 +34,7 @@ public class BombItem extends Item {
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        return blue ? Rarity.EPIC : Rarity.RARE;
+        return type== BombEntity.BombType.BLUE ? Rarity.EPIC : Rarity.RARE;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BombItem extends Item {
         worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
         playerIn.getCooldowns().addCooldown(this, 30);
         if (!worldIn.isClientSide) {
-            BombEntity bombEntity = new BombEntity(worldIn, playerIn, blue);
+            BombEntity bombEntity = new BombEntity(worldIn, playerIn, type);
             float pitch = -10;//playerIn.isSneaking()?0:-20;
             bombEntity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), pitch, 1.25F, 0.9F);
             worldIn.addFreshEntity(bombEntity);

@@ -95,7 +95,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         matrixStackIn.translate(0, -0.25, 0);
 
-        RenderType renderType = RenderType.entityCutout(resourceLocation);
+        RenderType renderType = RenderType.entityTranslucent(resourceLocation);
 
         StatueBlockTile.StatuePose pose = tile.pose;
         ItemStack stack = tile.getDisplayedItem();

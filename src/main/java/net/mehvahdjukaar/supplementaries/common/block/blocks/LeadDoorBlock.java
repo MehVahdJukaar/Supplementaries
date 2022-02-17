@@ -26,13 +26,12 @@ public class LeadDoorBlock extends DoorBlock {
 
     public LeadDoorBlock(Properties builder) {
         super(builder);
-        this.registerDefaultState(this.stateDefinition.any().setValue(OPENING_PROGRESS, 0)
-                .setValue(FACING, Direction.NORTH).setValue(OPEN, false).setValue(HINGE, DoorHingeSide.LEFT).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(HALF, FACING, OPEN, HINGE, OPENING_PROGRESS);
+        super.createBlockStateDefinition(pBuilder);
+        pBuilder.add(OPENING_PROGRESS);
     }
 
     public boolean canBeOpened(BlockState state) {

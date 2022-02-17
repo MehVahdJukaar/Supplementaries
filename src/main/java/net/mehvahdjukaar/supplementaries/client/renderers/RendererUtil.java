@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
@@ -29,7 +31,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -385,7 +389,6 @@ public class RendererUtil {
 
     public static List<BakedQuad> swapSprite(List<BakedQuad> quads, TextureAtlasSprite sprite) {
         List<BakedQuad> newList = new ArrayList<>();
-
         for (BakedQuad q : quads) {
             TextureAtlasSprite oldSprite = q.getSprite();
             int formatLength = getFormatLength(oldSprite);
@@ -401,17 +404,23 @@ public class RendererUtil {
         return newList;
     }
 
-    /**
-     * flips x and z axis
-     */
-    //TODO: add matrix multiplication here
-    public static void flipAxis(int[] v, TextureAtlasSprite sprite) {
+    public static void transformVertices(int[] v, TextureAtlasSprite sprite, Matrix3f transform) {
         int formatLength = getFormatLength(sprite);
         for (int i = 0; i < v.length / formatLength; i++) {
+            float originalX = Float.intBitsToFloat(v[i * formatLength]) - 0.5f;
+            float originalY = Float.intBitsToFloat(v[i * formatLength + 1]) - 0.5f;
             float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]) - 0.5f;
-            v[i * formatLength + 2] = v[i * formatLength];
-            v[i * formatLength] = Float.floatToIntBits(-originalZ + 0.5f);
+            Vector3f vector3f = new Vector3f(originalX, originalY, originalZ);
+            vector3f.transform(transform);
+            v[i * formatLength] = Float.floatToIntBits(vector3f.x() + 0.5f);
+            v[i * formatLength + 1] = Float.floatToIntBits(vector3f.y() + 0.5f);
+            v[i * formatLength + 2] = Float.floatToIntBits(vector3f.z() + 0.5f);
         }
+    }
+
+    public static void rotateVerticesY(int[] v, TextureAtlasSprite sprite, Rotation rot) {
+        var matrix = rot.rotation().transformation();
+        transformVertices(v, sprite, matrix);
     }
 
     /**

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBellConnections;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -63,6 +64,7 @@ public class BlockProperties {
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
     public static final ModelProperty<Boolean> FANCY = new ModelProperty<>();
     public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
+    public static final ModelProperty<BlackboardTextureManager.BlackboardKey> BLACKBOARD = new ModelProperty<>();
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 

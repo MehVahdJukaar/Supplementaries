@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Either;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,17 +15,18 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.function.Function;
 
 public class BlackboardBakedModel implements IDynamicBakedModel {
@@ -37,41 +38,22 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
     private final ItemOverrides overrides;
-    private final ResourceLocation modelLocation;
 
-    private final BlockModel unbaked;
-    private final String toRetextureName;
+    private final BakedModel back;
 
-    public BlackboardBakedModel(BlockModel unbaked, IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation, String toRetextureName) {
-        this.unbaked = unbaked;
+    public BlackboardBakedModel(BakedModel unbaked, IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
+        this.back = unbaked;
         this.owner = owner;
         this.bakery = bakery;
         this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
         this.overrides = overrides;
-        this.modelLocation = modelLocation;
-        this.toRetextureName = toRetextureName;
-    }
-
-    private BakedModel rebake(ResourceLocation replacement) {
-
-        return null;
-
-        // if we have liquid elements, add them
-        //List<BlockPart> elements = new ArrayList<>(baseElements);
-        // if no offset, copy in liquid list exactly
-
-        //elements.addAll(this.liquidElements);
-
-
-        // bake the new model
-        //return SimpleBlockModel.bakeDynamic(new RetexturedConfiguration(owner, retextured, replacementTexture), elements, transform);
     }
 
 
     @Override
     public boolean useAmbientOcclusion() {
-        return unbaked.hasAmbientOcclusion();
+        return true;
     }
 
     @Override
@@ -105,65 +87,17 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     }
 
 
-
-/*
-
-    public static IBakedModel bakeModel(IModelConfiguration owner, List<BlockPart> elements, IModelTransform transform, ItemOverrideList overrides, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, ResourceLocation location) {
-        TextureAtlasSprite particle = (TextureAtlasSprite)spriteGetter.apply(owner.resolveTexture("particle"));
-        SimpleBakedModel.Builder builder = (new SimpleBakedModel.Builder(owner, overrides)).particle(particle);
-
-        for (BlockPart part : elements) {
-
-            for (Direction direction : part.faces.keySet()) {
-                BlockPartFace face = part.faces.get(direction);
-                String texture = face.texture;
-                if (texture.charAt(0) == '#') {
-                    texture = texture.substring(1);
-                }
-
-                TextureAtlasSprite sprite = spriteGetter.apply(owner.resolveTexture(texture));
-                if (face.cullForDirection == null) {
-                    builder.addUnculledFace(BlockModel.bakeFace(part, face, sprite, direction, transform, location));
-                } else {
-                    builder.addCulledFace(Direction.rotate(transform.getRotation().getMatrix(), face.cullForDirection), BlockModel.bakeFace(part, face, sprite, direction, transform, location));
-                }
-            }
-        }
-
-        return builder.build();
-    }
-    */
-
-    public static Set<String> getAllRetextured(IModelConfiguration owner, BlockModel model, String originalSet) {
-
-        Set<String> retextured = Sets.newHashSet(originalSet);
-
-        model.textureMap.forEach((name, either) -> either.ifRight((parent) -> {
-            if (retextured.contains(parent)) retextured.add(name);
-        }));
-
-        return ImmutableSet.copyOf(retextured);
-    }
-
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, Random random, IModelData data) {
-
-
+        List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, direction, random, data));
         if (data != EmptyModelData.INSTANCE) {
-            BlackboardKey key = null;//data.getData(BlackboardBlockTile.TEXTURE);
-            if(key!=null) {
-                //Set<String> retextured = getAllRetextured(owner,unbaked,toRetextureName);
-                //ResourceLocation texture = BlackboardTextureManager.INSTANCE.getResoucelocation(key);
-                //IBakedModel baked2 = SimpleBlockModel.bakeModel(new RetexturedModelConfiguration(owner, retextured, texture),
-                //        unbaked.getElements(), modelTransform,overrides,spriteGetter,modelLocation);
-                //return baked2.getQuads(state,direction,random,data);
-                ResourceLocation texture = BlackboardTextureManager.INSTANCE.getResourceLocation(key);
-
-                this.unbaked.textureMap.replace(this.toRetextureName, Either.right(texture.toString()));
+            BlackboardKey key = data.getData(BlackboardBlockTile.BLACKBOARD);
+            if (key != null) {
+                quads.addAll(BlackboardTextureManager.INSTANCE.getBlackboardInstance(key).getOrCreateQuads(this::generateQuads));
             }
         }
-        BakedModel baked = this.unbaked.bake(bakery,unbaked,spriteGetter,modelTransform,modelLocation,true);
-        return baked.getQuads(state,direction,random,data);
+
+        return quads;
         /*
         ResourceLocation texture;
         if (data == EmptyModelData.INSTANCE) {
@@ -194,6 +128,115 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         */
 
     }
+
+    private List<BakedQuad> generateQuads(byte[][] pixels) {
+        TextureAtlasSprite black = spriteGetter.apply(owner.resolveTexture("black"));
+        TextureAtlasSprite white = spriteGetter.apply(owner.resolveTexture("white"));
+
+        List<BakedQuad> newQuads = new ArrayList<>();
+        for (int x = 0; x < pixels.length; x++) {
+            for (int y = 0; y < pixels[x].length; y++) {
+                byte b = pixels[pixels.length-x][pixels[x].length-y];
+                int tint = BlackboardBlock.colorFromByte(b);
+                TextureAtlasSprite sprite = b == 0 ? black : white;
+                newQuads.add(createPixelQuad(x / 16f, y / 16f, 0.3125f, 1 / 16f, 1 / 16f, sprite, tint));
+
+            }
+        }
+        return newQuads;
+    }
+
+    //MCjty code
+
+    private static BakedQuad createPixelQuad(float x, float y, float z, float width, float height, TextureAtlasSprite sprite, int color) {
+        Vec3 normal = new Vec3(0, 0, 1);
+        float tw = sprite.getWidth() * height;
+        float th = sprite.getHeight() * width;
+        float u0 = x * 16;
+        float v0 = y * 16;
+
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        builder.setQuadOrientation(Direction.getNearest(normal.x, normal.y, normal.z));
+        putVertex(builder, normal, x, y, z,
+                u0, v0, sprite, color);
+        putVertex(builder, normal, x, y + height, z,
+                u0, v0 + th, sprite, color);
+        putVertex(builder, normal, x + width, y + height, z,
+                u0 + tw, v0 + th, sprite, color);
+        putVertex(builder, normal, x + width, y, z,
+                u0 + tw, v0, sprite, color);
+        return builder.build();
+    }
+
+    private static void putVertex(BakedQuadBuilder builder, Vec3 normal,
+                                  float x, float y, float z, float u, float v, TextureAtlasSprite sprite, int color) {
+
+        float r = (color >> 16 & 255) / 255f;
+        float g = (color >> 8 & 255) / 255f;
+        float b = (color >> 0 & 255) / 255f;
+        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
+        for (int j = 0; j < elements.size(); j++) {
+            VertexFormatElement e = elements.get(j);
+            switch (e.getUsage()) {
+                case POSITION:
+                    builder.put(j, x, y, z, 1.0f);
+                    break;
+                case COLOR:
+                    builder.put(j, r, g, b, 1.0f);
+                    break;
+                case UV:
+                    switch (e.getIndex()) {
+                        case 0 -> {
+                            float iu = sprite.getU(u);
+                            float iv = sprite.getV(v);
+                            builder.put(j, iu, iv);
+                        }
+                        case 2 -> builder.put(j, (short) 0, (short) 0);
+                        default -> builder.put(j);
+                    }
+                    break;
+                case NORMAL:
+                    builder.put(j, (float) normal.x, (float) normal.y, (float) normal.z);
+                    break;
+                default:
+                    builder.put(j);
+                    break;
+            }
+        }
+    }
+
+    private static class Square {
+        public final byte color;
+        public final int x;
+        public final int y;
+        public int width;
+        public int height;
+
+        private Square(byte color, int x, int y) {
+            this.color = color;
+            this.x = x;
+            this.y = y;
+        }
+
+        public int area() {
+            return width * height;
+        }
+
+        public boolean isCovered(int x, int y) {
+            return x >= this.x && y >= this.y && x < this.x + width && y < this.y + height;
+        }
+
+        // public Square[] expandW(byte[][] image) {
+        //}
+    }
+
+    // public void stuff(byte[][] image, int width, int height){
+    //     Square s = new Square(image[0][0],0,0);
+//
+    //      Square[] west = s.expandW(image);
+    //  }
+
+
 }
 
 

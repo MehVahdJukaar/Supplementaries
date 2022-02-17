@@ -19,12 +19,10 @@ public class BlackboardBlockLoader implements IModelLoader<BlackboardBlockGeomet
     @Override
     public BlackboardBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
 
-        BlockModel model = null;
-        model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("model"));
         //SimpleBlockModel model = SimpleBlockModel.deserialize(context, json);
-        String retextured = GsonHelper.getAsString(json, "retexture");
-        return new BlackboardBlockGeometry(model, retextured);
+        return new BlackboardBlockGeometry(model);
     }
 
 }

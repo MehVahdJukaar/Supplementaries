@@ -57,9 +57,9 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
-        public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BREAKS;
+        public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BREAKS;
         public static ForgeConfigSpec.DoubleValue BOMB_BLUE_RADIUS;
-        public static ForgeConfigSpec.EnumValue<BombEntity.breakingMode> BOMB_BLUE_BREAKS;
+        public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
         public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_DECELERATION;
@@ -103,7 +103,7 @@ public class ServerConfigs {
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .defineInRange("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
-                    .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
+                    .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
 
             builder.pop();
 
@@ -111,7 +111,7 @@ public class ServerConfigs {
             BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .defineInRange("explosion_radius", 5.15, 0.1, 10);
             BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
-                    .defineEnum("break_blocks", BombEntity.breakingMode.WEAK);
+                    .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
 
             builder.pop();
 
@@ -176,7 +176,7 @@ public class ServerConfigs {
                     .push("tweaks");
 
             builder.push("axe_dispenser_behaviors");
-            AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation adn wax")
+            AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
                     .define("enabled", true);
             builder.pop();
 
@@ -715,7 +715,7 @@ public class ServerConfigs {
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .defineInRange("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                    .defineInRange("spawn_attempts", 8, 0, 100);
+                    .defineInRange("spawn_attempts", 7, 0, 100);
             List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
                     .defineList("biome_blacklist", urnBlacklist, STRING_CHECK);
@@ -765,9 +765,9 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
-        public static BombEntity.breakingMode BOMB_BREAKS;
+        public static BombEntity.BreakingMode BOMB_BREAKS;
         public static float BOMB_BLUE_RADIUS;
-        public static BombEntity.breakingMode BOMB_BLUE_BREAKS;
+        public static BombEntity.BreakingMode BOMB_BLUE_BREAKS;
         public static double SLINGSHOT_RANGE;
         public static int SLINGSHOT_CHARGE;
         public static float SLINGSHOT_DECELERATION;

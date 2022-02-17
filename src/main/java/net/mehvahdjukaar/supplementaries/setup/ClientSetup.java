@@ -304,7 +304,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(Supplementaries.res("wall_lantern_loader"), new WallLanternLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("flower_box_loader"), new FlowerBoxLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
-
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("blackboard_loader"), new BlackboardBlockLoader());
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 
