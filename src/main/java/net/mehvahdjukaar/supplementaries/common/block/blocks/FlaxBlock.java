@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,9 +22,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -90,6 +94,9 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            //no more mods messing with my upper stage smh
+            BlockState above = worldIn.getBlockState(pos.above());
+            if (above.getBlock() == this && this.isSingle(above)) return false;
             return super.canSurvive(state, worldIn, pos);
         } else {
             if (this.isSingle(state)) return false;
@@ -209,5 +216,21 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     public boolean getPollinated(Level level, BlockPos pos, BlockState state) {
         growCropBy(level, pos, state, 1);
         return true;
+    }
+
+    @Override
+    public boolean isMaxAge(BlockState pState) {
+        if(pState.getValue(HALF) == DoubleBlockHalf.UPPER) return false;
+        return super.isMaxAge(pState);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+        InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
+        if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
+            if (event.isCanceled()) return event.getCancellationResult();
+        }
+        return old;
     }
 }

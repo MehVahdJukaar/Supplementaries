@@ -12,11 +12,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class StasisEnchantment extends Enchantment {
 
-    private final boolean enabled;
+    public static final boolean ENABLED = RegistryConfigs.reg.STASIS_ENABLED.get() &&
+            (RegistryConfigs.reg.SLINGSHOT_ENABLED.get() || RegistryConfigs.reg.BUBBLE_BLOWER_ENABLED.get());
 
     public StasisEnchantment(Rarity rarity, EnchantmentCategory type, EquipmentSlot... slotTypes) {
         super(rarity, type, slotTypes);
-        enabled = RegistryConfigs.reg.SLINGSHOT_ENABLED.get() && RegistryConfigs.reg.BUBBLE_BLOWER_ENABLED.get();
     }
 
     @Override
@@ -36,17 +36,17 @@ public class StasisEnchantment extends Enchantment {
 
     @Override
     public boolean isTradeable() {
-        return enabled;
+        return ENABLED;
     }
 
     @Override
     public boolean isDiscoverable() {
-        return enabled;
+        return ENABLED;
     }
 
     @Override
     public boolean isAllowedOnBooks() {
-        return enabled;
+        return ENABLED;
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSpawnBlockParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.player.LocalPlayer;
@@ -18,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -29,11 +31,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.Random;
 
 public class SoapItem extends Item {
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
@@ -58,6 +62,27 @@ public class SoapItem extends Item {
         } else {
             return InteractionResultHolder.pass(player.getItemInHand(hand));
         }
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
+        //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
+        if (pLevel.isClientSide) {
+            Vec3 v = entity.getViewVector(0).normalize();
+            double x = entity.getX() + v.x;
+            double y = entity.getEyeY() + v.y - 0.12;
+            double z = entity.getZ() + v.z;
+            for(int j = 0; j<4; j++) {
+                Random r = entity.getRandom();
+                v = v.scale(0.1 + r.nextFloat() * 0.1f);
+                double dx = v.x + ((0.5 - r.nextFloat()) * 0.9);
+                double dy = v.y + ((0.5 - r.nextFloat()) * 0.06);
+                double dz = v.z + ((0.5 - r.nextFloat()) * 0.9);
+
+                pLevel.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
+            }
+        }
+        return super.finishUsingItem(pStack, pLevel, entity);
     }
 
     public static boolean hasBeenEatenBefore(Player player, Level level) {
@@ -114,11 +139,16 @@ public class SoapItem extends Item {
                 ResourceLocation r = oldState.getBlock().getRegistryName();
                 //hardcoding goes brr. This is needed and I can't just use forge event since I only want to react to axe scrape, not stripping
                 String name = r.getPath();
-                String[] keywords = new String[]{"waxed_", "weathered_", "exposed_", "oxidized_"};
+                String[] keywords = new String[]{"waxed_", "weathered_", "exposed_", "oxidized_",
+                        "_waxed", "_weathered", "_exposed", "_oxidized"};
                 for (String key : keywords) {
                     if (name.contains(key)) {
-                        Block bb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(r.getNamespace(),
-                                name.replace(key, "")));
+                        String newName = name.replace(key, "");
+                        Block bb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(r.getNamespace(), newName));
+                        if(bb == null){
+                            //tries minecraft namespace
+                            bb = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(newName));
+                        }
                         if (bb != null && bb != Blocks.AIR) {
                             newState = bb.withPropertiesOf(oldState);
                             break;

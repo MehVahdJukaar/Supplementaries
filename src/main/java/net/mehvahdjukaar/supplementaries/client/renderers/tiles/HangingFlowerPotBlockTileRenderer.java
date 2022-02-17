@@ -34,7 +34,7 @@ public class HangingFlowerPotBlockTileRenderer implements BlockEntityRenderer<Ha
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle * 1.5f, tile.angle * 1.5f)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.getSwingAngle(partialTicks) * 1.5f));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
         RendererUtil.renderBlockState(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());

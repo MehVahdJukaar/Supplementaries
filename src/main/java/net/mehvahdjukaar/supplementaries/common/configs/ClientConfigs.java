@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.datagen.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -34,17 +35,18 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue SLINGSHOT_PROJECTILE_SCALE;
         public static ForgeConfigSpec.BooleanValue WRENCH_PARTICLES;
         public static ForgeConfigSpec.BooleanValue FLUTE_PARTICLES;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Items")
                     .push("items");
             builder.push("slingshot");
 
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
-                    .define("overlay",true);
+                    .define("overlay", true);
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
-                    .define("stasis_block_outline",true);
+                    .define("stasis_block_outline", true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .define("block_outline_color","ffffff66", ConfigHandler.COLOR_CHECK);
+                    .define("block_outline_color", "ffffff66", ConfigHandler.COLOR_CHECK);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .defineInRange("projectile_scale", 0.5, 0, 1);
             builder.pop();
@@ -68,16 +70,17 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue COLORED_BREWING_STAND;
         public static ForgeConfigSpec.BooleanValue CLOCK_CLICK;
         public static ForgeConfigSpec.BooleanValue BOOK_GLINT;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Game tweaks")
                     .push("tweaks");
-            COLORED_BREWING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n"+
-                    "If using a resource pack add tint index from 0 to 3 to the 3 potion layers")
-                    .define("brewing_stand_colors",true);
+            COLORED_BREWING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n" +
+                            "If using a resource pack add tint index from 0 to 3 to the 3 potion layers")
+                    .define("brewing_stand_colors", true);
             COLORED_ARROWS = builder.comment("Makes tipped arrows show their colors when loaded with a crossbow")
-                    .define("crossbows_colors",true);
+                    .define("crossbows_colors", true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
-                    .define("clock_right_click",true);
+                    .define("clock_right_click", true);
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
                     .define("placeable_books_glint", false);
             builder.pop();
@@ -88,6 +91,8 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue CONFIG_BUTTON;
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
+        public static ForgeConfigSpec.BooleanValue RESOURCE_PACK_SUPPORT;
+        public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
 
         public static ForgeConfigSpec.DoubleValue TEST1;
         public static ForgeConfigSpec.DoubleValue TEST2;
@@ -99,13 +104,17 @@ public class ClientConfigs {
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.configured);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
-                    .define("tooltip_hints",true);
+                    .define("tooltip_hints", true);
             ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
-                    "Set to false if you have manually changed the mod jar name")
+                            "Set to false if you have manually changed the mod jar name")
                     .define("anti_reposting_warning", true);
-            TEST1 = builder.comment("ignore this").defineInRange("test1",0f,-10,10);
-            TEST2 = builder.comment("ignore this").defineInRange("test2",0f,-10,10);
-            TEST3 = builder.comment("ignore this").defineInRange("test3",0f,-10,10);
+            RESOURCE_PACK_SUPPORT = builder.comment("Allows dynamic resource generations for signs to pick textures from installed resource pack. Will only really work well if those texture pack have a similar format to vanilla otherwise it will result in glitched textures")
+                    .define("dynamic_textures_from_resource_packs", false);
+            DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
+                    .define("debug_save_dynamic_pack", false);
+            TEST1 = builder.comment("ignore this").defineInRange("test1", 0f, -10, 10);
+            TEST2 = builder.comment("ignore this").defineInRange("test2", 0f, -10, 10);
+            TEST3 = builder.comment("ignore this").defineInRange("test3", 0f, -10, 10);
             builder.pop();
         }
     }
@@ -187,23 +196,23 @@ public class ClientConfigs {
 
             builder.push("pedestal");
             PEDESTAL_SPIN = builder.comment("Enable displayed item spin")
-                    .define("spin",true);
+                    .define("spin", true);
             PEDESTAL_SPEED = builder.comment("Spin speed")
-                    .defineInRange("speed",2.0,0,100);
+                    .defineInRange("speed", 2.0, 0, 100);
             PEDESTAL_SPECIAL = builder.comment("Enable special display types for items like swords, tridents or end crystals")
-                    .define("fancy_renderers",true);
+                    .define("fancy_renderers", true);
             builder.pop();
 
             builder.push("bubble_block");
             BUBBLE_BLOCK_WOBBLE = builder.comment("Wobbling intensity. set to 0 to disable")
-                            .defineInRange("wobble", 0.2, 0, 1);
+                    .defineInRange("wobble", 0.2, 0, 1);
             BUBBLE_BLOCK_GROW_SPEED = builder.comment("How fast it grows when created. 1 to be instant")
-                            .defineInRange("grow_speed", 0.4, 0,1);
+                    .defineInRange("grow_speed", 0.4, 0, 1);
             builder.pop();
 
             builder.push("item_shelf");
-            SHELF_TRANSLATE = builder.comment("Translate down displayed 3d blocks so that they are touching the shelf.\n"+
-                    "Note that they will not be centered vertically this way")
+            SHELF_TRANSLATE = builder.comment("Translate down displayed 3d blocks so that they are touching the shelf.\n" +
+                            "Note that they will not be centered vertically this way")
                     .define("supported_blocks", true);
             builder.pop();
 
@@ -228,8 +237,8 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("flag");
-            FLAG_PERIOD = builder.comment("How slow a flag will oscillate. (Period of oscillation)\n"+
-                    "Lower value = faster oscillation")
+            FLAG_PERIOD = builder.comment("How slow a flag will oscillate. (Period of oscillation)\n" +
+                            "Lower value = faster oscillation")
                     .defineInRange("slowness", 100, 0, 10000);
             FLAG_WAVELENGTH = builder.comment("How wavy the animation will be in pixels. (Wavelength)")
                     .defineInRange("wavyness", 4d, 0.001, 100);
@@ -238,7 +247,7 @@ public class ClientConfigs {
             FLAG_AMPLITUDE_INCREMENT = builder.comment("How much the wave amplitude increases each pixel. (Amplitude increment per pixel)")
                     .defineInRange("intensity_increment", 0.3d, 0, 10);
             FLAG_FANCINESS = builder.comment("At which graphic settings flags will have a fancy renderer: 0=fast, 1=fancy, 2=fabulous")
-                    .defineEnum("fanciness",GraphicsFanciness.FABULOUS);
+                    .defineEnum("fanciness", GraphicsFanciness.FABULOUS);
             builder.pop();
             //TODO: add more(hourGlass, sawying blocks...)
 
@@ -246,7 +255,7 @@ public class ClientConfigs {
             builder.push("captured_mobs");
 
             TICKLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
-                    .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish","druidcraft:lunar_moth","alexsmobs:hummingbird"), STRING_CHECK);
+                    .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
 
             CAPTURED_MOBS_PROPERTIES = builder.comment("""
                             Here you can customize how mobs are displayed in jars and cages.
@@ -271,12 +280,12 @@ public class ClientConfigs {
 
             builder.push("wall_lantern");
             FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation. Needs texture pack reload")
-                            .define("fast_lanterns", false);
+                    .define("fast_lanterns", false);
             builder.pop();
 
             builder.push("bamboo_spikes");
-                TIPPED_BAMBOO_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
-                        .define("populate_creative_tab", true);
+            TIPPED_BAMBOO_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
+                    .define("populate_creative_tab", true);
             builder.pop();
 
             builder.push("turn_table");
@@ -286,7 +295,7 @@ public class ClientConfigs {
 
             builder.push("speaker_block");
             SPEAKER_BLOCK_MUTE = builder.comment("Mute speaker block incoming narrator messages and displays them in chat instead")
-                            .define("mute_narrator", false);
+                    .define("mute_narrator", false);
             builder.pop();
 
             builder.pop();
@@ -299,24 +308,25 @@ public class ClientConfigs {
         private static ForgeConfigSpec.ConfigValue<String> TURN_FADE_COLOR;
         public static ForgeConfigSpec.IntValue FIREFLY_PAR_MAXAGE;
         public static ForgeConfigSpec.DoubleValue FIREFLY_PAR_SCALE;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Particle parameters")
                     .push("particles");
             builder.comment("Firefly jar particle")
                     .push("firefly_glow");
             FIREFLY_PAR_SCALE = builder.comment("Scale")
-                    .defineInRange("scale", 0.075, 0,1);
+                    .defineInRange("scale", 0.075, 0, 1);
             FIREFLY_PAR_MAXAGE = builder.comment("Maximum age in ticks. Note that actual max age with be this + a random number between 0 and 10")
-                    .defineInRange("max_age", 40, 1,256);
+                    .defineInRange("max_age", 40, 1, 256);
             builder.pop();
 
             builder.comment("Rotation particle")
                     .push("turn_particle");
 
             TURN_INITIAL_COLOR = builder.comment("An RGBA color")
-                    .define("initial_color","2a77ea", ConfigHandler.COLOR_CHECK);
+                    .define("initial_color", "2a77ea", ConfigHandler.COLOR_CHECK);
             TURN_FADE_COLOR = builder.comment("An RGBA color")
-                    .define("fade_color","32befa", ConfigHandler.COLOR_CHECK);
+                    .define("fade_color", "32befa", ConfigHandler.COLOR_CHECK);
 
             builder.pop();
 
@@ -327,6 +337,7 @@ public class ClientConfigs {
     public static class entity {
         public static ForgeConfigSpec.DoubleValue FIREFLY_INTENSITY;
         public static ForgeConfigSpec.DoubleValue FIREFLY_EXPONENT;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Entities parameters")
                     .push("entities");
@@ -339,7 +350,7 @@ public class ClientConfigs {
                              - period = period of the animation. This variable is located in common configs<intensity> affects how long the pulse last, not how frequently it occurs.
                             Use 0.5 for normal sin wave. Higher and it won't turn off completely
                             """)
-                    .defineInRange("intensity", 0.2,-100,1);
+                    .defineInRange("intensity", 0.2, -100, 1);
             FIREFLY_EXPONENT = builder.comment("Affects the shape of the wave. Stay under 0.5 for sharper transitions")
                     .defineInRange("exponent", 0.5, 0, 10);
             builder.pop();
@@ -391,7 +402,7 @@ public class ClientConfigs {
         public static float BUBBLE_BLOCK_WOBBLE;
         public static float BUBBLE_BLOCK_GROW_SPEED;
 
-        public static void refresh(){
+        public static void refresh() {
             //tweaks
             COLORED_BREWING_STAND = tweaks.COLORED_BREWING_STAND.get();
             COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
@@ -407,8 +418,8 @@ public class ClientConfigs {
             FIREFLY_INTENSITY = entity.FIREFLY_INTENSITY.get();
             FIREFLY_EXPONENT = entity.FIREFLY_EXPONENT.get();
             //blocks
-            BUBBLE_BLOCK_WOBBLE = (float)(double)block.BUBBLE_BLOCK_WOBBLE.get()/10f;
-            BUBBLE_BLOCK_GROW_SPEED = (float)(double)block.BUBBLE_BLOCK_GROW_SPEED.get();
+            BUBBLE_BLOCK_WOBBLE = (float) (double) block.BUBBLE_BLOCK_WOBBLE.get() / 10f;
+            BUBBLE_BLOCK_GROW_SPEED = (float) (double) block.BUBBLE_BLOCK_GROW_SPEED.get();
             PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
             PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
             PEDESTAL_SPECIAL = block.PEDESTAL_SPECIAL.get();
@@ -432,22 +443,20 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
             SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);
             SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
-            SLINGSHOT_PROJECTILE_SCALE = (float)((double)items.SLINGSHOT_PROJECTILE_SCALE.get());
+            SLINGSHOT_PROJECTILE_SCALE = (float) ((double) items.SLINGSHOT_PROJECTILE_SCALE.get());
             WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
             FLUTE_PARTICLES = items.FLUTE_PARTICLES.get();
 
             TURN_PARTICLE_COLOR = Integer.parseUnsignedInt(particle.TURN_INITIAL_COLOR.get().replace("0x", ""), 16);
             TURN_PARTICLE_FADE_COLOR = Integer.parseUnsignedInt(particle.TURN_FADE_COLOR.get().replace("0x", ""), 16);
 
+            ClientDynamicResourcesHandler.DYNAMIC_TEXTURE_PACK.generateDebugResources = general.DEBUG_RESOURCES.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
 
         }
     }
-
-
-
 
 
 }

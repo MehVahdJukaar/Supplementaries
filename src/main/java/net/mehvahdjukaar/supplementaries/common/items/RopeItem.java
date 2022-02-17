@@ -30,7 +30,7 @@ public class RopeItem extends BlockItem {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);
-            BlockProperties.PostType type = RopeKnotBlock.getPostType(state);
+            BlockProperties.PostType type = BlockProperties.PostType.get(state);
 
             if (type != null) {
 

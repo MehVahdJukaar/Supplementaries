@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(PlayerSocialManager.class)
-public class PlayerSocialManagerMixin {
+public abstract class PlayerSocialManagerMixin {
     @Shadow
     @Final
     private Minecraft minecraft;

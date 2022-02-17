@@ -55,11 +55,12 @@ public class TextUtil {
                         \u00A74Donators:\u00A7r
 
                         \u00A70NotHypherionSA
+                        FishSuckerSupreme
                         Azrod_dovahkiin
                         AdaraChristine
                         ThugPug43
                         MetalBox47
-                        LaughHappy                      
+                        LaughHappy
                         StonkManHanz
                         SylveticHearts
                         E_Y_E_
@@ -72,7 +73,8 @@ public class TextUtil {
                         Colleen Cleland
                         Astralis
                         Mars The Gamer
-                        Eudes Gerodez       
+                        Eudes Gerodez
+                        Little Pianist
 
 
                         \u00A74Credits:

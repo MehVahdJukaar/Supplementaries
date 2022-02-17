@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.LanternBlock;
@@ -15,8 +15,9 @@ public abstract class LanternBlockPlacementMixin {
 
     @Inject(method = {"canSurvive"}, at = {@At("HEAD")}, cancellable = true)
     private void isValidPosition(BlockState state, LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-        if (state.getValue(LanternBlock.HANGING) && RopeBlock.isSupportingCeiling(pos.above(), worldIn))
+        if (state.getValue(LanternBlock.HANGING) && LightableLanternBlock.canSurviveCeiling(state, pos, worldIn)) {
             callbackInfoReturnable.setReturnValue(true);
+        }
     }
 
 }

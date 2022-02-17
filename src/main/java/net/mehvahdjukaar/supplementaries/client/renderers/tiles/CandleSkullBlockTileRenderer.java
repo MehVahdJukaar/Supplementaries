@@ -19,21 +19,19 @@ public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer
     @Override
     public void render(CandleSkullBlockTile tile, float pPartialTicks, PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, int pCombinedOverlay) {
 
-        BlockState blockstate = tile.getBlockState();
-        float yaw = 22.5F * (float) blockstate.getValue(SkullBlock.ROTATION);
+        super.render(tile, pPartialTicks, poseStack, buffer, pCombinedLight, pCombinedOverlay);
 
-        this.renderSkull(tile, poseStack, buffer, pCombinedLight, yaw);
+        BlockState blockstate = tile.getBlockState();
 
         BlockState candle = tile.getCandle();
         if (!candle.isAir()) {
             candle = candle.setValue(CandleBlock.LIT, blockstate.getValue(CandleBlock.LIT))
                     .setValue(CandleBlock.CANDLES, blockstate.getValue(CandleBlock.CANDLES));
 
-            this.renderOverlay(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()), yaw);
+            float yaw = -22.5F * (float) (blockstate.getValue(SkullBlock.ROTATION));
+            this.renderWax(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()),yaw);
 
-            poseStack.translate(0.5, 0, 0.5);
-           // poseStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
-            poseStack.translate(-0.5, 0.5, -0.5);
+            poseStack.translate(0,0.5, 0);
             blockRenderer.renderSingleBlock(candle, poseStack, buffer, pCombinedLight, pCombinedOverlay, EmptyModelData.INSTANCE);
         }
     }

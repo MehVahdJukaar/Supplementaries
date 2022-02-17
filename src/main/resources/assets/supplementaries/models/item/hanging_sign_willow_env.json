@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/environmental/hanging_sign_front_willow_env",
-    "2": "supplementaries:blocks/hanging_signs/environmental/hanging_sign_details_willow_env"
-  }
-}

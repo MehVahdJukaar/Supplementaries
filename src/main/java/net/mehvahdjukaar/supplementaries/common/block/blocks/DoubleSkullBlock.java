@@ -23,6 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,21 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
     @Override
     public List<ItemStack> getDrops(BlockState pState, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof DoubleSkullBlockTile tile) {
-            return List.of(tile.getSkullItemUp(), tile.getSkullItem());
+            builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, tile);
+            List<ItemStack> loot = new ArrayList<>();
+            BlockEntity skullTile = tile.getSkullTile();
+            if(skullTile!=null){
+                BlockState skull = skullTile.getBlockState();
+                builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTile);
+                loot.addAll(skull.getDrops(builder));
+            }
+            BlockEntity skullTileUp = tile.getSkullTile();
+            if(skullTileUp!=null){
+                BlockState skull = skullTileUp.getBlockState();
+                builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTileUp);
+                loot.addAll(skull.getDrops(builder));
+            }
+            return loot;
         }
         return super.getDrops(pState, builder);
     }

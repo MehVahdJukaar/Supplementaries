@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.TextUtil;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -16,6 +17,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
+import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -25,9 +27,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
@@ -54,26 +58,28 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                        int combinedOverlayIn) {
 
         poseStack.pushPose();
-
+        BlockState state = tile.getBlockState();
+        BlockProperties.SignAttachment attachment = state.getValue(BlockProperties.SIGN_ATTACHMENT);
         //rotate towards direction
-        if (tile.getBlockState().getValue(HangingSignBlock.HANGING)) poseStack.translate(0, 0.125, 0);
-        poseStack.translate(0.5, 0.875, 0.5);
-        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
-        poseStack.mulPose(RotHlpr.XN90);
+        double dy = attachment == BlockProperties.SignAttachment.CEILING ? 1 : 0.875;
 
-        LOD lod = new LOD(camera, tile.getBlockPos());
+        poseStack.translate(0.5, dy, 0.5);
+        if(state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X) poseStack.mulPose(RotHlpr.Y90);
 
         //animation
-        if (lod.isNear()) {
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(partialTicks, tile.prevAngle, tile.angle)));
-        }
-        poseStack.translate(-0.5, -0.875, -0.5);
-        //render block
-        RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
 
-        //BlockState state = tile.getBlockState().getBlock().defaultBlockState().setValue(HangingSignBlock.TILE, true);
-        //blockRenderer.renderSingleBlock(state, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        //RendererUtil.renderBlockPlus(state, poseStack, bufferIn, blockRenderer, tile.getWorld(), tile.getPos(), RenderType.getCutout());
+        if(tile.shouldRenderFancy()) {
+            poseStack.mulPose(Vector3f.ZP.rotationDegrees(tile.getSwingAngle(partialTicks)));
+
+            poseStack.translate(-0.5, -0.875, -0.5);
+            //render block
+            RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
+        }else{
+            poseStack.translate(-0.5, -0.875, -0.5);
+        }
+        LOD lod = new LOD(camera, tile.getBlockPos());
+
+        tile.setFancyRenderer(lod.isNear());
 
         if (lod.isMedium()) {
             poseStack.translate(0.5, 0.5 - 0.1875, 0.5);

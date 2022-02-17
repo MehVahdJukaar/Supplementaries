@@ -96,11 +96,6 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     public List<Pair<BannerPattern, DyeColor>> getPatterns() {
         if (this.patterns == null) {
             this.patterns = BannerBlockEntity.createPatterns(this.baseColor, this.itemPatterns);

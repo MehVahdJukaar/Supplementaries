@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidHolder {
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
@@ -155,7 +156,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         //hahaha, funy pony jar meme
         if (this.hasCustomName()) {
             Component c = this.getCustomName();
-            return (c != null && c.getString().toLowerCase().contains("cum"));
+            return (c != null && c.getString().toLowerCase(Locale.ROOT).contains("cum"));
         }
         return false;
     }

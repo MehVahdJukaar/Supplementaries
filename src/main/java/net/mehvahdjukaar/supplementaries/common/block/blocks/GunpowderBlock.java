@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -37,6 +37,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -385,7 +386,7 @@ public class GunpowderBlock extends LightUpBlock {
 
             if (burning == 8) {
                 world.removeBlock(pos, false);
-                explode(world, pos);
+                createMiniExplosion(world, pos, false);
             } else if (burning > 0) {
                 if (burning >= getSpreadAge()) {
                     this.lightUpNeighbouringWires(pos, state, world);
@@ -408,11 +409,11 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
 
-    public void explode(Level world, BlockPos pos) {
+    public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
         GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
-        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return;
+        if (ForgeEventFactory.onExplosionStart(world, explosion)) return;
         explosion.explode();
-        explosion.finalizeExplosion(false);
+        explosion.finalizeExplosion(alwaysFire);
     }
 
     @Override

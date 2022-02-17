@@ -1,5 +1,9 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
+import net.mehvahdjukaar.selene.util.BlockSetHandler.VariantType;
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -12,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantm
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
@@ -51,6 +54,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static net.mehvahdjukaar.supplementaries.setup.RegistryHelper.*;
@@ -84,7 +89,13 @@ public class ModRegistry {
         ENCHANTMENTS.register(bus);
 
         CompatHandler.registerOptionalStuff();
+        RegistryHelper.initDynamicRegistry();
     }
+
+    public static boolean isEnabled(String name) {
+        return RegistryConfigs.reg.isEnabled(name);
+    }
+
 
     //creative tab
     public static final CreativeModeTab MOD_TAB = !RegistryConfigs.reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
@@ -128,7 +139,8 @@ public class ModRegistry {
     public static final RegistryObject<Motive> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new Motive(32, 32));
 
     //enchantment
-    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register("stasis", () ->
+    public static final String STASIS_NAME = "stasis";
+    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register(STASIS_NAME, () ->
             new StasisEnchantment(Enchantment.Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
 
     //particles
@@ -153,23 +165,23 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = regParticle("bubble_block");
 
     //recipes
-    public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate", () ->
             new SimpleRecipeSerializer<>(BlackboardDuplicateRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RECIPES.register("bamboo_spikes_tipped", () ->
             new SimpleRecipeSerializer<>(TippedBambooSpikesRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RECIPES.register("rope_arrow_create", () ->
             new SimpleRecipeSerializer<>(RopeArrowCreateRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RECIPES.register("rope_arrow_add", () ->
             new SimpleRecipeSerializer<>(RopeArrowAddRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> BUBBLE_BLOWER_REPAIR_RECIPE = RECIPES.register("bubble_blower_charge_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> BUBBLE_BLOWER_REPAIR_RECIPE = RECIPES.register("bubble_blower_charge", () ->
             new SimpleRecipeSerializer<>(RepairBubbleBlowerRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner", () ->
             new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map", () ->
             new SimpleRecipeSerializer<>(TreasureMapRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> SOAP_CLEARING_RECIPE = RECIPES.register("soap_clearing_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> SOAP_CLEARING_RECIPE = RECIPES.register("soap_clearing", () ->
             new SimpleRecipeSerializer<>(SoapClearRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> PRESENT_DYE_RECIPE = RECIPES.register("present_dye_recipe", () ->
+    public static final RegistryObject<RecipeSerializer<?>> PRESENT_DYE_RECIPE = RECIPES.register("present_dye", () ->
             new SimpleRecipeSerializer<>(PresentDyeRecipe::new));
 
 
@@ -208,6 +220,15 @@ public class ModRegistry {
                     .clientTrackingRange(10)
                     .updateInterval(20)
                     .build(FALLING_ASH_NAME));
+
+    //ash
+    public static final String FALLING_LANTERN_NAME = "falling_lantern";
+    public static final RegistryObject<EntityType<FallingLanternEntity>> FALLING_LANTERN = ENTITIES.register(FALLING_LANTERN_NAME, () ->
+            EntityType.Builder.<FallingLanternEntity>of(FallingLanternEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20)
+                    .build(FALLING_LANTERN_NAME));
 
     //firefly
 
@@ -324,30 +345,31 @@ public class ModRegistry {
 
     //variants:
 
-    //TODO: datagen signs tags
-    //hanging signs
+    //dynamic. Handled by wood set handler
     public static final String HANGING_SIGN_NAME = "hanging_sign";
-    public static final Map<IWoodType, RegistryObject<Block>> HANGING_SIGNS = RegistryHelper.makeHangingSingsBlocks();
-    public static final Map<IWoodType, RegistryObject<Item>> HANGING_SIGNS_ITEMS = RegistryHelper.makeHangingSignsItems();
+    public static final Map<WoodSetType, HangingSignBlock> HANGING_SIGNS = new LinkedHashMap<>();
+
+    public static final Map<WoodSetType, Item> HANGING_SIGNS_ITEMS = new HashMap<>();
 
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
     public static final RegistryObject<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES
             .register(HANGING_SIGN_NAME + "_oak", () -> BlockEntityType.Builder.of(HangingSignBlockTile::new,
-                    HANGING_SIGNS.values().stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
+                    HANGING_SIGNS.values().stream().toArray(Block[]::new)).build(null));
+
 
     //sign posts
     public static final String SIGN_POST_NAME = "sign_post";
     public static final RegistryObject<Block> SIGN_POST = BLOCKS.register(SIGN_POST_NAME, () -> {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
-                        .strength(2f, 3f)
-                        .sound(SoundType.WOOD)
-                        .noOcclusion();
+                .strength(2f, 3f)
+                .sound(SoundType.WOOD)
+                .noOcclusion();
         return CompatHandler.create ? SchematicCannonStuff.makeSignPost(p) : new SignPostBlock(p);
     });
     public static final RegistryObject<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = TILES.register(SIGN_POST_NAME, () -> BlockEntityType.Builder.of(
             SignPostBlockTile::new, SIGN_POST.get()).build(null));
 
-    public static final Map<IWoodType, RegistryObject<Item>> SIGN_POST_ITEMS = RegistryHelper.makeSignPostItems();
+    public static final Map<WoodSetType, SignPostItem> SIGN_POST_ITEMS = new HashMap<>();
 
     //flags
     public static final String FLAG_NAME = "flag";
@@ -566,7 +588,7 @@ public class ModRegistry {
     //soul
     public static final String SCONCE_NAME_SOUL = "sconce_soul";
     public static final RegistryObject<Block> SCONCE_SOUL = BLOCKS.register(SCONCE_NAME_SOUL, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()),10,
+            BlockBehaviour.Properties.copy(SCONCE.get()), 10,
             () -> ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_SOUL = BLOCKS.register("sconce_wall_soul", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_SOUL.get())
@@ -578,7 +600,7 @@ public class ModRegistry {
     //optional: endergetic
     public static final String SCONCE_NAME_ENDER = "sconce_ender";
     public static final RegistryObject<Block> SCONCE_ENDER = BLOCKS.register(SCONCE_NAME_ENDER, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()),13,
+            BlockBehaviour.Properties.copy(SCONCE.get()), 13,
             CompatObjects.ENDER_FLAME));
     public static final RegistryObject<Block> SCONCE_WALL_ENDER = BLOCKS.register("sconce_wall_ender", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
@@ -615,7 +637,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
                     .strength(3.5f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel((state) -> state.getValue(CopperLanternBlock.LIT) ? 15 : 0)
+                    .lightLevel((state) -> state.getValue(LightableLanternBlock.LIT) ? 15 : 0)
                     //TODO: add custom sound mixed
                     .sound(SoundType.COPPER)
     ));
@@ -628,8 +650,8 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME));
 
-    public static final RegistryObject<BlockEntityType<OilLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME, () -> BlockEntityType.Builder.of(
-            OilLanternBlockTile::new, COPPER_LANTERN.get(), BRASS_LANTERN.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LightableLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME, () -> BlockEntityType.Builder.of(
+            LightableLanternBlockTile::new, COPPER_LANTERN.get(), BRASS_LANTERN.get()).build(null));
 
     //crimson lantern
     public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
@@ -640,8 +662,8 @@ public class ModRegistry {
                     .lightLevel((state) -> 15)
                     .noOcclusion()
     ));
-    public static final RegistryObject<BlockEntityType<OilLanternBlockTile>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME, () -> BlockEntityType.Builder.of(
-            OilLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LightableLanternBlockTile>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME, () -> BlockEntityType.Builder.of(
+            LightableLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
     public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = regBlockItem(CRIMSON_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, CRIMSON_LANTERN_NAME));
 
 
@@ -930,24 +952,55 @@ public class ModRegistry {
     //gold trapdoor
     public static final String GOLD_TRAPDOOR_NAME = "gold_trapdoor";
     public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
-                    .noOcclusion()
+            BlockBehaviour.Properties.copy(GOLD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
     public static final RegistryObject<Item> GOLD_TRAPDOOR_ITEM = regBlockItem(GOLD_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, GOLD_TRAPDOOR_NAME));
+
+    //silver door
+    public static final String SILVER_DOOR_NAME = "silver_door";
+    public static final RegistryObject<Block> SILVER_DOOR = BLOCKS.register(SILVER_DOOR_NAME, () -> new SilverDoorBlock(
+            BlockBehaviour.Properties.of(Material.METAL)
+                    .strength(4.0F, 5.0F)
+                    .sound(SoundType.METAL)
+                    .noOcclusion()));
+    public static final RegistryObject<Item> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR, getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME));
+
+    //silver trapdoor
+    public static final String SILVER_TRAPDOOR_NAME = "silver_trapdoor";
+    public static final RegistryObject<Block> SILVER_TRAPDOOR = BLOCKS.register(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
+            BlockBehaviour.Properties.copy(SILVER_DOOR.get())
+                    .isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Item> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME));
+
+    //lead door
+    public static final String LEAD_DOOR_NAME = "lead_door";
+    public static final RegistryObject<Block> LEAD_DOOR = BLOCKS.register(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
+            BlockBehaviour.Properties.of(Material.METAL)
+                    .strength(5.0f, 6.0f)
+                    .sound(SoundType.METAL)
+                    .noOcclusion()));
+    public static final RegistryObject<Item> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR, getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME));
+
+    //lead trapdoor
+    public static final String LEAD_TRAPDOOR_NAME = "lead_trapdoor";
+    public static final RegistryObject<Block> LEAD_TRAPDOOR = BLOCKS.register(LEAD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
+            BlockBehaviour.Properties.copy(LEAD_DOOR.get())
+                    .isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME));
+
 
     //netherite doors
     public static final String NETHERITE_DOOR_NAME = "netherite_door";
     public static final RegistryObject<Block> NETHERITE_DOOR = BLOCKS.register(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
-                    .noOcclusion()
     ));
     public static final RegistryObject<Item> NETHERITE_DOOR_ITEM = ITEMS.register(NETHERITE_DOOR_NAME, () -> new BlockItem(NETHERITE_DOOR.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_DOOR_NAME)).fireResistant()));
 
     //netherite trapdoor
-    public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor";
+    public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor" ;
     public static final RegistryObject<Block> NETHERITE_TRAPDOOR = BLOCKS.register(NETHERITE_TRAPDOOR_NAME, () -> new NetheriteTrapdoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+            BlockBehaviour.Properties.copy(NETHERITE_DOOR.get())
                     .noOcclusion()
                     .isValidSpawn((a, b, c, d) -> false)
     ));
@@ -974,7 +1027,7 @@ public class ModRegistry {
 
     //wall lantern
     public static final String WALL_LANTERN_NAME = "wall_lantern";
-    public static final RegistryObject<Block> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> {
+    public static final RegistryObject<WallLanternBlock> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.LANTERN)
                 .lightLevel((state) -> 15).noDrops();
 
@@ -1202,21 +1255,21 @@ public class ModRegistry {
     //ashen bricks
     public static final String ASH_BRICKS_NAME = "ash_bricks";
 
-    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
-            RegistryHelper.registerFullBlockSet(ASH_BRICKS_NAME, Blocks.STONE_BRICKS);
+    public static EnumMap<BlockSetHandler.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, ASH_BRICKS_NAME, Blocks.STONE_BRICKS, isEnabled(ASH_BRICKS_NAME));
 
 
     //stone tile
     public static final String STONE_TILE_NAME = "stone_tile";
 
-    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
-            RegistryHelper.registerFullBlockSet(STONE_TILE_NAME, Blocks.STONE_BRICKS);
+    public static EnumMap<VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, STONE_TILE_NAME, Blocks.STONE_BRICKS, isEnabled(STONE_TILE_NAME));
 
     //blackstone tile
     public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
 
-    public static EnumMap<RegistryHelper.VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
-            RegistryHelper.registerFullBlockSet(BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE);
+    public static EnumMap<VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE, isEnabled(BLACKSTONE_TILE_NAME));
 
     //stone lamp
     public static final String STONE_LAMP_NAME = "stone_lamp";
@@ -1371,13 +1424,13 @@ public class ModRegistry {
     public static final RegistryObject<Block> BUBBLE_BLOCK = BLOCKS.register(BUBBLE_BLOCK_NAME, () ->
             new BubbleBlock(BlockBehaviour.Properties.of(Material.DECORATION, MaterialColor.COLOR_PINK)
                     .noOcclusion()
-                    .isSuffocating((a,b,c)->false)
-                    .isViewBlocking((a,b,c)->false)
-                    .isRedstoneConductor((a,b,c)->false)
+                    .isSuffocating((a, b, c) -> false)
+                    .isViewBlocking((a, b, c) -> false)
+                    .isRedstoneConductor((a, b, c) -> false)
                     .instabreak().sound(SoundType.HONEY_BLOCK))
     );
     public static final RegistryObject<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BubbleBlockItem(
-            BUBBLE_BLOCK.get(),(new Item.Properties()).tab(null)));
+            BUBBLE_BLOCK.get(), (new Item.Properties()).tab(null)));
 
     public static final RegistryObject<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = TILES.register(BUBBLE_BLOCK_NAME, () ->
             BlockEntityType.Builder.of(BubbleBlockTile::new, BUBBLE_BLOCK.get()).build(null));

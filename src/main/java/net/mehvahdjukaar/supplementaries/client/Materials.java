@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.WoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
@@ -18,37 +18,33 @@ import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS
 
 public class Materials {
 
+    //TODO: clean & reorganize this, textures, client init and client setup
     public static final Material BLACKBOARD_OUTLINE = new Material(LOCATION_BLOCKS, Textures.BLACKBOARD_GRID);
-
-
     public static final Material BELLOWS_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
-
-    public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
+    public static final Material BUBBLE_BLOCK_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BUBBLE_BLOCK_TEXTURE);
     public static final Material BOOK_ENCHANTED_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_ENCHANTED_TEXTURES);
     public static final Material BOOK_TOME_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_AND_QUILL_TEXTURES);
-    public static final Material BUBBLE_BLOCK_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BUBBLE_BLOCK_TEXTURE);
+    public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
 
-
-    public static final Map<IWoodType, Material> HANGING_SIGNS_MATERIALS = new HashMap<>();
-    public static final Map<IWoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
+    public static final Map<WoodSetType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
 
-    public static final Map<IWoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
+    public static final Map<WoodSetType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = new ResourceLocation(
-            Supplementaries.MOD_ID+":block/"+ ModRegistry.WIND_VANE_NAME+"_up");
+            Supplementaries.MOD_ID + ":block/" + ModRegistry.WIND_VANE_NAME + "_up");
     public static final ResourceLocation HANGING_POT_BLOCK_MODEL = new ResourceLocation(
-            Supplementaries.MOD_ID+":block/"+ ModRegistry.HANGING_FLOWER_POT_NAME);
+            Supplementaries.MOD_ID + ":block/" + ModRegistry.HANGING_FLOWER_POT_NAME);
 
     static {
-        for (IWoodType type : WoodTypes.TYPES.values()) {
-            if(type.isModActive()) {
-                HANGING_SIGNS_BLOCK_MODELS.put(type, new ResourceLocation(Supplementaries.MOD_ID + ":block/hs/" +
-                        ModRegistry.HANGING_SIGN_NAME + "_tile_" + type.getRegName()));
+        for (WoodSetType type : BlockSetHandler.WOOD_TYPES.values()) {
+            if (type.shouldHaveBlockSet()) {
+                HANGING_SIGNS_BLOCK_MODELS.put(type, Supplementaries.res("block/hanging_signs/" +
+                        type.getVariantId("hanging_sign")));
 
-                //HANGING_SIGNS_MATERIALS.put(type, new RenderMaterial(Atlases.SIGN_SHEET, Textures.HANGING_SIGNS_TEXTURES.get(type)));
-                SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Textures.SIGN_POSTS_TEXTURES.get(type)));
+                SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" +
+                        type.getVariantId("sign_post"))));
             }
         }
 

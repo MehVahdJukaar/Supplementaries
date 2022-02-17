@@ -47,6 +47,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -193,22 +194,19 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         BlockUtils.addOptionalOwnership(entity, world, pos);
     }
 
-    //TODO: figure out what this does
-    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
-
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
-            builder = builder.withDynamicDrop(CONTENTS, (context, stackConsumer) -> {
-                for (int i = 0; i < tile.getContainerSize(); ++i) {
-                    stackConsumer.accept(tile.getItem(i));
-                }
-            });
+            List<ItemStack> l = new ArrayList<>();
+            for (int i = 0; i < tile.getContainerSize(); ++i) {
+                l.add(tile.getItem(i));
+            }
+            return l;
         }
         //hax
         ResourceLocation resourcelocation = this.getLootTable();
         if (resourcelocation == BuiltInLootTables.EMPTY) {
-            return Collections.emptyList();
+            return super.getDrops(state, builder);
         } else {
             LootContext lootcontext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
             float oldLuck = lootcontext.getLuck();

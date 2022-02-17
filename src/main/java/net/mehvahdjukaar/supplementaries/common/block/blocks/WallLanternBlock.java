@@ -1,47 +1,56 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
 
-public class WallLanternBlock extends EnhancedLanternBlock {
+public class WallLanternBlock extends WaterBlock implements EntityBlock {
+    public static final VoxelShape SHAPE_SOUTH = Block.box(5, 2, 0, 11, 15.99, 10);
+    public static final VoxelShape SHAPE_NORTH = Block.box(5, 2, 6, 11, 15.99, 16);
+    public static final VoxelShape SHAPE_WEST = Block.box(6, 2, 5, 16, 15.99, 11);
+    public static final VoxelShape SHAPE_EAST = Block.box(0, 2, 5, 10, 15.99, 11);
 
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<BlockProperties.BlockAttachment> ATTACHMENT = BlockProperties.BLOCK_ATTACHMENT;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
@@ -49,6 +58,36 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         super(properties.lightLevel(s -> s.getValue(LIT) ? s.getValue(LIGHT_LEVEL) : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false).setValue(LIT, true));
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pLevel.getBlockEntity(pPos) instanceof WallLanternBlockTile te) {
+            BlockState lantern = te.getHeldBlock();
+            if(lantern.getBlock() instanceof LightableLanternBlock){
+                var opt = LightableLanternBlock.toggleLight(lantern, pLevel, pPos, pPlayer, pHand);
+                if(opt.isPresent()){
+                    te.setHeldBlock(opt.get());
+                    return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        if (context.getClickedFace() == Direction.UP || context.getClickedFace() == Direction.DOWN) return null;
+        BlockState state = super.getStateForPlacement(context);
+
+        BlockPos blockpos = context.getClickedPos();
+        Level world = context.getLevel();
+        Direction dir = context.getClickedFace();
+        BlockPos relative = blockpos.relative(dir.getOpposite());
+        BlockState facingState = world.getBlockState(relative);
+
+        return getConnectedState(state, facingState, world, relative, dir).setValue(FACING, context.getClickedFace());
     }
 
     @Override
@@ -61,9 +100,55 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
+                                  BlockPos facingPos) {
+        super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return facing == stateIn.getValue(FACING).getOpposite() ? !stateIn.canSurvive(worldIn, currentPos)
+                ? Blocks.AIR.defaultBlockState()
+                : getConnectedState(stateIn, facingState, worldIn, facingPos, facing) : stateIn;
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockpos = pos.relative(direction.getOpposite());
+        BlockState blockstate = level.getBlockState(blockpos);
+        return BlockProperties.BlockAttachment.get(blockstate, blockpos, level, direction) != null;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    }
+
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
+    }
+
+
+    public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction dir) {
+        BlockProperties.BlockAttachment attachment = BlockProperties.BlockAttachment.get(facingState, pos, world, dir);
+        if(attachment == null){
+            return state;
+        }
+        return state.setValue(ATTACHMENT, attachment);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            default -> SHAPE_SOUTH;
+            case NORTH -> SHAPE_NORTH;
+            case WEST -> SHAPE_WEST;
+            case EAST -> SHAPE_EAST;
+        };
     }
 
     @Override
@@ -82,7 +167,7 @@ public class WallLanternBlock extends EnhancedLanternBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(LIGHT_LEVEL, LIT);
+        builder.add(LIGHT_LEVEL, LIT, FACING, ATTACHMENT);
     }
 
     @Override
@@ -139,9 +224,27 @@ public class WallLanternBlock extends EnhancedLanternBlock {
         return new WallLanternBlockTile(pPos, pState);
     }
 
+    @Override
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        super.entityInside(state, world, pos, entity);
+        if (world.getBlockEntity(pos) instanceof SwayingBlockTile tile) {
+            tile.hitByEntity(entity, state);
+        }
+    }
+
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return BlockUtils.getTicker(pBlockEntityType, ModRegistry.WALL_LANTERN_TILE.get(), pLevel.isClientSide ? SwayingBlockTile::clientTick : null);
+    }
+
+    public void placeOn(BlockState lantern, BlockPos onPos, Direction face, Level world) {
+        BlockState state = getConnectedState(this.defaultBlockState(), world.getBlockState(onPos), world, onPos, face)
+                .setValue(FACING, face);
+        BlockPos newPos = onPos.relative(face);
+        world.setBlock(newPos, state, 3);
+        if (world.getBlockEntity(newPos) instanceof IBlockHolder tile) {
+            tile.setHeldBlock(lantern);
+        }
     }
 }

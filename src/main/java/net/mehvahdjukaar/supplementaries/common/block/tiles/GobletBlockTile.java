@@ -68,11 +68,6 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     // does all the calculation for handling player interaction.
     public boolean handleInteraction(Player player, InteractionHand hand) {
 

@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/good_nights_sleep/hanging_sign_front_blood",
-    "2": "supplementaries:blocks/hanging_signs/good_nights_sleep/hanging_sign_details_blood"
-  }
-}

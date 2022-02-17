@@ -13,8 +13,8 @@
               "function": "minecraft:enchant_with_levels",
               "levels": {
                 "type": "minecraft:uniform",
-                "min": 20.0,
-                "max": 37.0
+                "min": 15.0,
+                "max": 35.0
               },
               "treasure": true
             },
@@ -41,8 +41,8 @@
               "function": "minecraft:enchant_with_levels",
               "levels": {
                 "type": "minecraft:uniform",
-                "min": 20.0,
-                "max": 37.0
+                "min": 15.0,
+                "max": 35.0
               },
               "treasure": true
             },

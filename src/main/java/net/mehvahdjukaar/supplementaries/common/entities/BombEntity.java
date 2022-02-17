@@ -284,7 +284,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     protected void updateRotation() {
     }
 
-    //explode
+    //createMiniExplosion
     @Override
     public void reachedEndOfLife() {
         if (this.active) {

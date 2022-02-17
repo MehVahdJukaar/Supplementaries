@@ -51,7 +51,7 @@ public class StructureLocator {
         if (world.getServer().getWorldData().worldGenSettings().generateFeatures()) {
 
             ChunkGenerator gen = world.getChunkSource().getGenerator();
-            BiomeSource biomeSource = gen.getBiomeSource();
+            //BiomeSource biomeSource = gen.getBiomeSource();
 
             List<StructureFeature<?>> possibleTargets = new ArrayList<>();
             List<StructureFeatureConfiguration> sepSettings = new ArrayList<>();

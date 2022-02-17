@@ -29,6 +29,7 @@ public class SlingshotParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
+        //crazy hyperbole instead of normal parabula. idk
         float x = this.age / (float) this.lifetime;
         final float a = 1 + (Mth.sqrt(5f) - 1f) / 2f;
         this.alpha = a + 1 / (x - a);

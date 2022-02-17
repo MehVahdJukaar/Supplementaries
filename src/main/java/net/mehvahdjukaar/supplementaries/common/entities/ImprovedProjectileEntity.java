@@ -80,7 +80,7 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
     @Override
     public void tick() {
         //base tick stuff
-        //this.baseTick();
+        this.baseTick();
 
         if (!this.hasBeenShot) {
             this.gameEvent(GameEvent.PROJECTILE_SHOOT, this.getOwner(), this.blockPosition());

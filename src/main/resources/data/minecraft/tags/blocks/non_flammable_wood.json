@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:hanging_sign_warped",
-	"supplementaries:hanging_sign_crimson"
+    {"id":"supplementaries:hanging_sign_warped","required":false},
+    {"id":"supplementaries:hanging_sign_crimson","required":false}
   ]
 }

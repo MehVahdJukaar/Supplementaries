@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:block/hs/hanging_sign_2_template",
-  "textures": {
-    "particle": "supplementaries:blocks/hanging_signs/environmental/hanging_sign_front_wisteria_env",
-    "0": "supplementaries:blocks/hanging_signs/environmental/hanging_sign_front_wisteria_env",
-    "1": "supplementaries:blocks/hanging_signs/environmental/hanging_sign_details_wisteria_env"
-  }
-}

@@ -15,6 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -132,7 +133,17 @@ public class ClientReceivers {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.entityID);
             if (e instanceof Player p && p.getUseItem().getItem() instanceof InstrumentItem instrumentItem) {
-                instrumentItem.playSongNotesOnClient(message.notes, p);
+                for (int note : message.notes) {
+                    if (note > 0) {
+                        //always plays a sound for local player. this is becasue this method is calld on client side for other clients aswell
+                        //and playsound only plays if the given player is the local one
+                        l.playSound(Minecraft.getInstance().player, p.getX(), p.getY(), p.getZ(),
+                                instrumentItem.getSound(), SoundSource.PLAYERS,
+                                instrumentItem.getVolume(), instrumentItem.getPitch(note));
+
+                        instrumentItem.spawnNoteParticle(l, p, note);
+                    }
+                }
             }
         });
 

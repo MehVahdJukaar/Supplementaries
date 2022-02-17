@@ -9,26 +9,25 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 
 public class BombExplosionEmitterParticle extends NoRenderParticle {
-    private int timeSinceStart;
     private final int maximumTime = 8;
-
-    private double radius;
+    private final double radius;
 
     private BombExplosionEmitterParticle(ClientLevel world, double x, double y, double z, double radius) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.radius = radius;
     }
 
+    @Override
     public void tick() {
         for (int i = 0; i < 3 + (radius - 2) * 3; ++i) {
             double d0 = this.x + (this.random.nextDouble() - this.random.nextDouble()) * radius;
             double d1 = this.y + (this.random.nextDouble() - this.random.nextDouble()) * radius;
             double d2 = this.z + (this.random.nextDouble() - this.random.nextDouble()) * radius;
-            this.level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float) this.timeSinceStart / (float) this.maximumTime, 0.0D, 0.0D);
+            this.level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float) this.age / (float) this.maximumTime, 0.0D, 0.0D);
         }
 
-        ++this.timeSinceStart;
-        if (this.timeSinceStart == this.maximumTime) {
+        ++this.age;
+        if (this.age >= this.maximumTime) {
             this.remove();
         }
     }

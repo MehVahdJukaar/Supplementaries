@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.1.9" #mandatory
+version="1.2.0" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -51,8 +51,8 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.18-1.11,]"
-    ordering="NONE"
+    versionRange="[1.18-1.13,]"
+    ordering="AFTER"
     side="BOTH"
 
 [[dependencies.supplementaries]]
@@ -77,5 +77,6 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
     mandatory=false
     versionRange="[0.5.1,)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
+
 

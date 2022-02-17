@@ -19,7 +19,7 @@ public abstract class BlockBehaviourPlanterMixin {
             cancellable = true)
     public void getOffset(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Vec3> cir) {
         //null check for world since some mods like to throw a null world here...
-        if (world != null && cir.getReturnValue() != Vec3.ZERO  && world.getBlockState(pos.below()).is(ModRegistry.PLANTER.get())) {
+        if (world != null && cir.getReturnValue() != Vec3.ZERO && world.getBlockState(pos.below()).is(ModRegistry.PLANTER.get())) {
             cir.setReturnValue(Vec3.ZERO);
         }
     }

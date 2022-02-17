@@ -36,7 +36,6 @@
     "SkellyHorseMixin",
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
-    "VillagerFrickMixin",
     "VineMixin",
     "ZombieHorseMixin",
     "accessors.ChunkGeneratorAccessor",
@@ -52,8 +51,7 @@
     "LoomScreenFlagMixin",
     "ParrotMixin",
     "PlayerSocialManagerMixin",
-    "UndeadHorseRenderMixin",
-    "VillagerModelMixin"
+    "UndeadHorseRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

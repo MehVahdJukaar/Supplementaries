@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.google.common.reflect.ClassPath;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -32,6 +33,8 @@ public class MixinConfigs implements IMixinConfigPlugin {
         }
     }
 
+
+
     /**
      * Scans all classes accessible from the context class loader which belong to the given package and subpackages.
      *
@@ -45,7 +48,17 @@ public class MixinConfigs implements IMixinConfigPlugin {
         String path = packageName.replaceAll("[.]", "/");
 
         Enumeration<URL> resources = classLoader.getResources(path);
+
         List<File> dirs = new ArrayList<>();
+
+        try {
+            URL classLoaderResource = classLoader.getResource(path);
+            assert classLoaderResource != null;
+            File dir = new File(classLoaderResource.toURI().toURL().getFile());
+            dirs.add(dir);
+        }catch (Exception exception){};
+
+
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             //dirs.add(new File(resource.toURI()));
@@ -85,6 +98,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
      * @return fully qualified class name strings
      * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      */
+    //TODO: this is not working anymore
     private static List<String> findClasses(File directory, String packageName) {
         List<String> classes = new ArrayList<>();
         if (!directory.exists()) {

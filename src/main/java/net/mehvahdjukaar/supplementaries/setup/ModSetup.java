@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
+import net.mehvahdjukaar.supplementaries.datagen.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -40,7 +41,11 @@ public class ModSetup {
         event.enqueueWork(() -> {
             try {
 
+                long mills = System.currentTimeMillis();
 
+                ServerDynamicResourcesHandler.init();
+
+                setupStage++;
                 WorldGenHandler.setup(event);
 
                 setupStage++;
@@ -84,6 +89,9 @@ public class ModSetup {
 
                 hasFinishedSetup = true;
 
+                long elapsed = System.currentTimeMillis() - mills;
+                Supplementaries.LOGGER.info("Finished mod setup in: {} seconds", elapsed/1000f);
+
             } catch (Exception e) {
                 Supplementaries.LOGGER.throwing(new Exception("Exception during mod setup:" + e + ". This is a big bug"));
                 terminateWhenSetupFails();
@@ -94,11 +102,10 @@ public class ModSetup {
 
     private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
-        IllegalStateException e = new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
+        //Supplementaries.LOGGER.throwing(e);
+        throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0");
-        Supplementaries.LOGGER.throwing(e);
-        throw e;
     }
 
     private static void registerMobFoods() {
@@ -120,7 +127,7 @@ public class ModSetup {
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         if (!firstTagLoad) {
-
+            long mills = System.currentTimeMillis();
             //using this as a post setup event
             if (!hasFinishedSetup) {
                 terminateWhenSetupFails();
@@ -129,6 +136,9 @@ public class ModSetup {
             firstTagLoad = true;
             DispenserRegistry.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
+
+            long elapsed = System.currentTimeMillis() - mills;
+            Supplementaries.LOGGER.info("Finished additional setup in {} seconds", elapsed/1000f);
         }
     }
 

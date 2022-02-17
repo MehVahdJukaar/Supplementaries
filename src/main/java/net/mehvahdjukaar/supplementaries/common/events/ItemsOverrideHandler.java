@@ -966,7 +966,7 @@ public class ItemsOverrideHandler {
 
                         if (result.consumesAction()) {
                             if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
-                                tile.initialize(oldTile, skullBlock, copy, player);
+                                tile.initialize(oldTile, skullBlock, copy, player, hand);
                             }
                         }
                         return result;
@@ -1007,7 +1007,7 @@ public class ItemsOverrideHandler {
 
                         if (result.consumesAction()) {
                             if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
-                                tile.initialize(oldTile, skullBlock, copy, player);
+                                tile.initialize(oldTile, skullBlock, copy, player, hand);
                             }
                         }
                         return result;
@@ -1117,11 +1117,15 @@ public class ItemsOverrideHandler {
 
             //place block
             BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
+            SoundType placeSound = null;
+            if(heldStack.getItem() instanceof BlockItem bi){
+                placeSound = bi.getBlock().defaultBlockState().getSoundType(world, pos, player);
+            }
 
-            result = BlockItemUtils.place(ctx, blockOverride);
+            result = BlockItemUtils.place(ctx, blockOverride, placeSound);
         }
-        if (result.consumesAction() && player instanceof ServerPlayer && !isRanged) {
-            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
+        if (result.consumesAction() && player instanceof ServerPlayer  serverPlayer && !isRanged) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, heldStack);
         }
         if (result == InteractionResult.FAIL) return InteractionResult.PASS;
         return result;

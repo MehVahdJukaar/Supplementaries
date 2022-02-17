@@ -27,8 +27,7 @@ public class FeatherParticle extends TextureSheetParticle {
         this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
         this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
         this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
-
-
+        this.gravity = 0.007F;
     }
 
     public void setRotOffset(int spriteIndex) {
@@ -49,15 +48,14 @@ public class FeatherParticle extends TextureSheetParticle {
         if (++this.age >= this.lifetime || this.groundTime > 20) {
             this.remove();
         } else {
+            this.yd -= 0.04D * (double)this.gravity;
             this.move(this.xd, this.yd, this.zd);
 
-            this.xd *= 0.98F;
+            this.xd *= this.friction;
+            this.yd *= this.friction;
+            this.zd *= this.friction;
 
-            this.zd *= 0.98F;
-
-            this.yd -= 0.0022F;
-            this.yd = Math.max(this.yd, -0.008F); //0.008
-
+            //this.yd = Math.max(this.yd, -0.02F); //0.008
 
             if (this.onGround && this.yd > 0) {
                 this.onGround = false;
@@ -167,7 +165,7 @@ public class FeatherParticle extends TextureSheetParticle {
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             FeatherParticle particle = new FeatherParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             particle.setColor(1, 1, 1);
-            int i = particle.random.nextInt(3); //hard coding sprite set size. ugly
+            int i = particle.random.nextInt(3); //hard coding sprite set size (3). ugly
             particle.setRotOffset(i);
             particle.setSprite(spriteSet.get(i, 2));
             return particle;

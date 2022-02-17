@@ -23,6 +23,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.material.Fluids;
+import vectorwing.farmersdelight.common.block.WildCropBlock;
+import vectorwing.farmersdelight.common.block.WildRiceBlock;
 
 import java.util.List;
 

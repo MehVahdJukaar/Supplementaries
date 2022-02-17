@@ -48,8 +48,8 @@ public abstract class BellMixin extends Block {
         try {
             if (facing == Direction.DOWN) {
                 if (this.tryConnect(currentPos, facingState, worldIn)) {
-                    if (worldIn instanceof Level)
-                        ((Level) worldIn).sendBlockUpdated(currentPos, stateIn, stateIn, Block.UPDATE_CLIENTS);
+                    if (worldIn instanceof Level level)
+                        level.sendBlockUpdated(currentPos, stateIn, stateIn, Block.UPDATE_CLIENTS);
                 }
             }
         } catch (Exception ignored) {

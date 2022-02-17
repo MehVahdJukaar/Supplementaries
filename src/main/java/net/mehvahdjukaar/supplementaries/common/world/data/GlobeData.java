@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class GlobeData extends SavedData {
     private static final int TEXTURE_H = 16;
     private static final int TEXTURE_W = 32;
-    public static final String DATA_NAME = "supplementariesGlobeData";
+    public static final String DATA_NAME = "globe_data";
 
     public final byte[][] globePixels;
     public final long seed;

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_rh",
+  "textures": {
+    "top": "supplementaries:blocks/silver_door_top",
+    "bottom": "supplementaries:blocks/silver_door_bottom"
+  }
+}

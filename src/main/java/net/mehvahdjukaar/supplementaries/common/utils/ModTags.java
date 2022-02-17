@@ -46,6 +46,8 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<Item> DUSTS = itemTag("hourglass_dusts");
     public static final Tags.IOptionalNamedTag<Item> SANDS = itemTag("hourglass_sands");
     public static final Tags.IOptionalNamedTag<Item> KEY = itemTag("key");
+    public static final Tags.IOptionalNamedTag<Item> STATUE_SWORDS = itemTag("statue_swords");
+    public static final Tags.IOptionalNamedTag<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final Tags.IOptionalNamedTag<Item> FLAGS = itemTag("flags");
     public static final Tags.IOptionalNamedTag<Item> PRESENTS = itemTag("presents");
     public static final Tags.IOptionalNamedTag<Item> SHULKER_BOXES = ItemTags.createOptional(new ResourceLocation("forge", "shulker_boxes"));
@@ -56,6 +58,7 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<EntityType<?>> CAGE_BABY_CATCHABLE = entityTag("cage_baby_catchable");
     public static final Tags.IOptionalNamedTag<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final Tags.IOptionalNamedTag<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
+
 
 
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {

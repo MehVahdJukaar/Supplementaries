@@ -32,6 +32,7 @@ public class RegistryConfigs {
     }
 
     //TODO: merge with common. Recipe condition is loaded client side so they need to be synced
+    //called from mixin config so they can be accessed super early
     public static void load() {
         CommentedFileConfig replacementConfig = CommentedFileConfig
                 .builder(FMLPaths.CONFIGDIR.get().resolve(FILE_NAME))
@@ -124,8 +125,12 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SOAP_ENABLED;
         public static ForgeConfigSpec.BooleanValue BUBBLE_BLOWER_ENABLED;
         public static ForgeConfigSpec.BooleanValue GLOBE_SEPIA;
-
         public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
+        public static ForgeConfigSpec.BooleanValue STASIS_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SILVER_TRAPDOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SILVER_DOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue LEAD_TRAPDOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue LEAD_DOOR_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -181,13 +186,6 @@ public class RegistryConfigs {
                     .define("jar_tab", false);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
-/*
-            CONDITIONAL_SIGN_REGISTRATIONS = builder.comment("WARNING: THIS DUE TO HOW REGISTRATION WORKS THIS VALUE MUST BE KEPT THE SAME BETWEEN SERVER AND CLIENTS THAT WANT TO CONNECT TO IT." +
-                            "The mod adds around 150 signs posts and hanging signs that are made with wood types from other mods (which make up the majority of registered blocks the mod adds)." +
-                    "These are always registered and since they are so many could clutter up JEI and slow the game a bit. It's usually forge doesn't recommend dynamically registering blocks but if you wish to enable such options you can here." +
-                    "With this option enabled the mod will on register the signs made from wood types of the currently installed mods")
-                    .define("conditional_sign_registration", false);
-            */
 
             builder.pop();
 
@@ -270,7 +268,13 @@ public class RegistryConfigs {
             BUBBLE_BLOWER_ENABLED = builder.define(ModRegistry.BUBBLE_BLOWER_NAME, true);
             GLOBE_SEPIA = builder.define(ModRegistry.GLOBE_SEPIA_NAME, true);
             PRESENT_ENABLED = builder.define(ModRegistry.PRESENT_NAME, true);
+            PRESENT_ENABLED = builder.define(ModRegistry.STATUE_NAME, true);
+            STASIS_ENABLED = builder.define(ModRegistry.STASIS_NAME, true);
 
+            SILVER_TRAPDOOR_ENABLED = builder.define(ModRegistry.SILVER_TRAPDOOR_NAME, true);
+            SILVER_DOOR_ENABLED = builder.define(ModRegistry.SILVER_DOOR_NAME, true);
+            LEAD_TRAPDOOR_ENABLED = builder.define(ModRegistry.LEAD_TRAPDOOR_NAME, true);
+            LEAD_DOOR_ENABLED = builder.define(ModRegistry.LEAD_DOOR_NAME, true);
 
             builder.pop();
 

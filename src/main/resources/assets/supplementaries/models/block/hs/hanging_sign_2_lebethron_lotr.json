@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:block/hs/hanging_sign_2_template",
-  "textures": {
-    "particle": "supplementaries:blocks/hanging_signs/lotr/hanging_sign_front_lebethron_lotr",
-    "0": "supplementaries:blocks/hanging_signs/lotr/hanging_sign_front_lebethron_lotr",
-    "1": "supplementaries:blocks/hanging_signs/lotr/hanging_sign_details_lebethron_lotr"
-  }
-}

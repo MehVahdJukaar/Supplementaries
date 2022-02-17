@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.world.explosion;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -129,7 +129,7 @@ public class GunpowderExplosion extends Explosion {
 
     //needed cause toBlow is private
     @Override
-    public void finalizeExplosion(boolean flag) {
+    public void finalizeExplosion(boolean spawnFire) {
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);
@@ -157,6 +157,13 @@ public class GunpowderExplosion extends Explosion {
 
         for (Pair<ItemStack, BlockPos> pair : drops) {
             Block.popResource(this.level, pair.getSecond(), pair.getFirst());
+        }
+
+        if (spawnFire) {
+            BlockPos pos = new BlockPos(this.getPosition());
+            if (this.level.getBlockState(pos).isAir() && this.level.getBlockState(pos.below()).isSolidRender(this.level, pos.below())) {
+                this.level.setBlockAndUpdate(pos, BaseFireBlock.getState(this.level, pos));
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -36,20 +37,6 @@ public class CommonUtil {
 
     public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
     public static DamageSource BOTTLING_DAMAGE = (new DamageSource("supplementaries.xp_extracting"));
-    public static DamageSource AMETHYST_SHARD_DAMAGE = (new DamageSource("supplementaries.amethyst_shard"));
-
-
-    //public static DamageSource getAmethystDamageSource(AbstractArrowEntity arrowEntity, @Nullable Entity shooter) {
-    //    return (new IndirectEntityDamageSource("amethyst_shard", arrowEntity, shooter)).setProjectile();
-    //}
-    //public static DamageSource getBombExplosionDamage(@Nullable BombExplosion p_94539_0_) {
-    //    return getBombExplosionDamage(p_94539_0_ != null ? p_94539_0_.getSourceMob() : null);
-    //}
-
-
-    //public static DamageSource getBombExplosionDamage(@Nullable LivingEntity p_188405_0_) {
-    //    return p_188405_0_ != null ? (new EntityDamageSource("explosion.player", p_188405_0_)).setScalesWithDifficulty().setExplosion() : (new DamageSource("explosion")).setScalesWithDifficulty().setExplosion();
-    //}
 
     public enum Festivity {
         NONE,
@@ -113,11 +100,13 @@ public class CommonUtil {
 
 
     public static boolean isSword(Item i) {
+        if(ModTags.STATUE_SWORDS.contains(i)) return true;
         if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
         return i instanceof SwordItem;
     }
 
     public static boolean isTool(Item i) {
+        if(ModTags.STATUE_TOOLS.contains(i)) return true;
         if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
@@ -129,7 +118,7 @@ public class CommonUtil {
             String namespace = b.getRegistryName().getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
             if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
-                return !b.defaultBlockState().hasBlockEntity();
+                return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
             }
         }
         return false;
@@ -178,46 +167,6 @@ public class CommonUtil {
         return new AABB(pos, endPos);
     }
 
-
-    //equals is not working...
-    public static boolean isShapeEqual(AABB s1, AABB s2) {
-        return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
-    }
-
-    public static final AABB FENCE_SHAPE = Block.box(6, 0, 6, 10, 16, 10).bounds();
-    public static final AABB POST_SHAPE = Block.box(5, 0, 5, 11, 16, 11).bounds();
-    public static final AABB WALL_SHAPE = Block.box(7, 0, 7, 12, 16, 12).bounds();
-
-    //0 normal, 1 fence, 2 walls TODO: change 1 with 2
-    public static int getPostSize(BlockState state, BlockPos pos, LevelReader world) {
-        Block block = state.getBlock();
-
-        VoxelShape shape = state.getShape(world, pos);
-        if (shape != Shapes.empty()) {
-            AABB s = shape.bounds();
-            if (block instanceof FenceBlock || block instanceof SignPostBlock || state.is(Tags.Blocks.FENCES) || isShapeEqual(FENCE_SHAPE, s))
-                return 1;
-            if (block instanceof WallBlock || state.is(BlockTags.WALLS) ||
-                    (isShapeEqual(WALL_SHAPE, s))) return 2;
-            if (isShapeEqual(POST_SHAPE, s)) return 1;
-        }
-
-        return 0;
-    }
-
-    public static boolean isVertical(BlockState state) {
-        if (state.hasProperty(BlockStateProperties.AXIS)) {
-            return state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y;
-        }
-        return true;
-    }
-
-
-    //TODO: unify this with rope knot, hanging sings and wall lanterns
-    public static boolean isPost(BlockState state) {
-        return isVertical(state) && state.is(ModTags.POSTS);
-    }
-
     //this is how you do it :D
     private static final ShulkerBoxBlockEntity SHULKER_TILE = new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState());
 
@@ -234,12 +183,6 @@ public class CommonUtil {
         double dz = vector.z() - ((double) pos.getZ() + 0.5);
         double mydistW = (dx * dx + dz * dz);
         return (mydistW < (distW * distW) && (dy < distW && dy > -distDown));
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public static Player getClientPlayer() {
-        return Minecraft.getInstance().player;
     }
 
 

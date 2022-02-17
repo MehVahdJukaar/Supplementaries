@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -30,16 +30,16 @@ import net.minecraft.world.level.material.Fluids;
 import javax.annotation.Nullable;
 
 public class SignPostItem extends Item {
-    public final IWoodType type;
+    public final WoodSetType woodType;
 
-    public SignPostItem(Properties properties, IWoodType wood) {
+    public SignPostItem(Properties properties, WoodSetType wood) {
         super(properties);
-        type = wood;
+        woodType = wood;
     }
 
     @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
-        return type.canBurn() ? 100 : 0;
+        return woodType.canBurn() ? 100 : 0;
     }
 
     private boolean isFence(Block b) {
@@ -97,13 +97,13 @@ public class SignPostItem extends Item {
                 if (up) {
                     if (tile.up != up) {
                         tile.up = true;
-                        tile.woodTypeUp = this.type;
+                        tile.woodTypeUp = this.woodType;
                         tile.yawUp = 90 + r * -22.5f;
                         flag = true;
                     }
                 } else if (tile.down == up) {
                     tile.down = true;
-                    tile.woodTypeDown = this.type;
+                    tile.woodTypeDown = this.woodType;
                     tile.yawDown = 90 + r * -22.5f;
                     flag = true;
                 }

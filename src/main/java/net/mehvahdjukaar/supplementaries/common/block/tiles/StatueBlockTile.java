@@ -123,6 +123,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             if (stack.isEmpty()) return StatuePose.STANDING;
             Item i = stack.getItem();
             if (CommonUtil.isSword(i)) return SWORD;
+            if (CommonUtil.isTool(i)) return TOOL;
             if (i == ModRegistry.GLOBE_ITEM.get()) return GLOBE;
             if (i == ModRegistry.GLOBE_SEPIA_ITEM.get()) return SEPIA_GLOBE;
             return (stack.is(ItemTags.CANDLES)) ? StatuePose.CANDLE : StatuePose.HOLDING;

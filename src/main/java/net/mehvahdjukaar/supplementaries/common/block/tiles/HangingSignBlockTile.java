@@ -1,16 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
@@ -24,16 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-//TODO: make swaying tile an interface
 public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolderProvider, IOwnerProtected {
     public static final int MAX_LINES = 7;
+
+    public final WoodSetType woodType;
 
     private UUID owner = null;
 
     public TextHolder textHolder;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-
-    public IWoodType woodType = VanillaWoodTypes.OAK;
 
     static {
         maxSwingAngle = 45f;
@@ -46,9 +47,14 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     public HangingSignBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.HANGING_SIGN_TILE.get(), pos, state);
         this.textHolder = new TextHolder(MAX_LINES);
-        if(this.getBlockState().getBlock() instanceof HangingSignBlock block){
+        if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
-        }
+        } else this.woodType = BlockSetHandler.OAK_WOOD_TYPE;
+    }
+
+    @Override
+    public boolean isFlipped() {
+        return this.getBlockState().getValue(HangingSignBlock.AXIS) != Direction.Axis.Z;
     }
 
     @Nullable
@@ -104,7 +110,6 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         this.saveOwner(tag);
     }
 
-
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -136,6 +141,11 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     public ItemStack getStackInSlot(int index) {
         return this.getItems().get(index);
+    }
+
+    @Override
+    public Vec3i getNormalRotationAxis(BlockState state) {
+        return state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X ? new Vec3i(0, 0, -1) : new Vec3i(1, 0, 0);
     }
 
     /*

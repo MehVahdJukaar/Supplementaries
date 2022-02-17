@@ -3,16 +3,22 @@ package net.mehvahdjukaar.supplementaries.common.block;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBellConnections;
+import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraftforge.client.model.data.ModelProperty;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class BlockProperties {
 
@@ -21,11 +27,9 @@ public class BlockProperties {
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
-    // it's detecting incoming laser and its distance
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
     public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
-    public static final IntegerProperty EXTENSION = IntegerProperty.create("extension", 0, 2);
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
@@ -51,7 +55,9 @@ public class BlockProperties {
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
-
+    public static final IntegerProperty OPENING_PROGRESS = IntegerProperty.create("opening_progress", 0, 2);
+    public static final EnumProperty<SignAttachment> SIGN_ATTACHMENT = EnumProperty.create("sign_attachment", SignAttachment.class);
+    public static final EnumProperty<BlockAttachment> BLOCK_ATTACHMENT = EnumProperty.create("attachment", BlockAttachment.class);
 
     //model properties
     public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
@@ -91,9 +97,45 @@ public class BlockProperties {
         public String getName() {
             return this.name;
         }
+
+        @Nullable
+        public static PostType get(BlockState state) {
+            return get(state, false);
+        }
+
+        @Nullable
+        public static PostType get(BlockState state, boolean needsFullHeight) {
+
+            PostType type = null;
+            //if (state.getBlock().hasTileEntity(state)) return type;
+            if (state.is(ModTags.POSTS)) {
+                type = PostType.POST;
+            } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isPalisade(state))) {
+                type = PostType.PALISADE;
+            } else if (state.is(ModTags.WALLS)) {
+                if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {
+                    //ignoring not full height ones. might use hitbox here instead
+                    if(needsFullHeight && (state.getValue(WallBlock.NORTH_WALL) == WallSide.LOW ||
+                            state.getValue(WallBlock.WEST_WALL) == WallSide.LOW)) return null;
+                    type = PostType.PALISADE;
+                } else {
+                    type = PostType.WALL;
+                }
+            } else if (state.is(ModTags.BEAMS)) {
+                if (state.hasProperty(BlockStateProperties.ATTACHED) && state.getValue(BlockStateProperties.ATTACHED)) {
+                    //idk why this was here
+                    type = null;
+                } else {
+                    type = PostType.BEAM;
+                }
+            }
+
+            return type;
+        }
     }
 
-    public enum Attachment implements StringRepresentable {
+    //for wall lanterns
+    public enum BlockAttachment implements StringRepresentable {
         BLOCK("block"),
         BEAM("beam"),
         WALL("wall"),
@@ -102,7 +144,7 @@ public class BlockProperties {
 
         private final String name;
 
-        Attachment(String name) {
+        BlockAttachment(String name) {
             this.name = name;
         }
 
@@ -117,6 +159,19 @@ public class BlockProperties {
 
         public String getName() {
             return this.name;
+        }
+
+        @Nullable
+        public static BlockAttachment get(BlockState state, BlockPos pos, LevelReader level, Direction facing) {
+            if (state.isFaceSturdy(level, pos, facing)) return BLOCK;
+            PostType postType = PostType.get(state, true);
+            if (postType == null) return null;
+            return switch (postType) {
+                case BEAM -> BEAM;
+                case WALL -> WALL;
+                case PALISADE -> PALISADE;
+                case POST -> POST;
+            };
         }
     }
 
@@ -256,6 +311,73 @@ public class BlockProperties {
         public String getSerializedName() {
             return this.name;
         }
+    }
+
+
+    public enum SignAttachment implements StringRepresentable {
+        CEILING("ceiling"),
+        BLOCK_BLOCK(BlockAttachment.BLOCK, BlockAttachment.BLOCK),
+        BLOCK_BEAM(BlockAttachment.BLOCK, BlockAttachment.BEAM),
+        BLOCK_WALL(BlockAttachment.BLOCK, BlockAttachment.WALL),
+        BLOCK_PALISADE(BlockAttachment.BLOCK, BlockAttachment.PALISADE),
+        BLOCK_POST(BlockAttachment.BLOCK, BlockAttachment.POST),
+
+        BEAM_BLOCK(BlockAttachment.BEAM, BlockAttachment.BLOCK),
+        BEAM_BEAM(BlockAttachment.BEAM, BlockAttachment.BEAM),
+        BEAM_WALL(BlockAttachment.BEAM, BlockAttachment.WALL),
+        BEAM_PALISADE(BlockAttachment.BEAM, BlockAttachment.PALISADE),
+        BEAM_POST(BlockAttachment.BEAM, BlockAttachment.POST),
+
+        WALL_BLOCK(BlockAttachment.WALL, BlockAttachment.BLOCK),
+        WALL_BEAM(BlockAttachment.WALL, BlockAttachment.BEAM),
+        WALL_WALL(BlockAttachment.WALL, BlockAttachment.WALL),
+        WALL_PALISADE(BlockAttachment.WALL, BlockAttachment.PALISADE),
+        WALL_POST(BlockAttachment.WALL, BlockAttachment.POST),
+
+        PALISADE_BLOCK(BlockAttachment.PALISADE, BlockAttachment.BLOCK),
+        PALISADE_BEAM(BlockAttachment.PALISADE, BlockAttachment.BEAM),
+        PALISADE_WALL(BlockAttachment.PALISADE, BlockAttachment.WALL),
+        PALISADE_PALISADE(BlockAttachment.PALISADE, BlockAttachment.PALISADE),
+        PALISADE_POST(BlockAttachment.PALISADE, BlockAttachment.POST),
+
+        POST_BLOCK(BlockAttachment.POST, BlockAttachment.BLOCK),
+        POST_BEAM(BlockAttachment.POST, BlockAttachment.BEAM),
+        POST_WALL(BlockAttachment.POST, BlockAttachment.WALL),
+        POST_PALISADE(BlockAttachment.POST, BlockAttachment.PALISADE),
+        POST_POST(BlockAttachment.POST, BlockAttachment.POST);
+
+        public final BlockAttachment left;
+        public final BlockAttachment right;
+        private final String name;
+
+        SignAttachment(BlockAttachment left, BlockAttachment right) {
+            this.name = left.name + "_" + right.name;
+            this.left = left;
+            this.right = right;
+        }
+
+        SignAttachment(String name) {
+            this.name = name;
+            this.left = BlockAttachment.BLOCK;
+            this.right = BlockAttachment.BLOCK;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public SignAttachment withAttachment(boolean left, @Nullable BlockAttachment attachment) {
+            if(attachment == null) attachment = BlockAttachment.BLOCK;
+            String s = left ? attachment.name + "_" + this.right : this.left + "_" + attachment.name;
+            return SignAttachment.valueOf(s.toUpperCase(Locale.ROOT));
+        }
+
     }
 
 

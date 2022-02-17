@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.ILightable;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.minecraft.Util;
@@ -101,7 +101,13 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CandleSkullBlockTile tile) {
             List<ItemStack> loot = tile.getCandle().getDrops(builder);
-            loot.add(tile.getSkullItem());
+            BlockEntity skullTile = tile.getSkullTile();
+            if(skullTile!=null){
+                BlockState skull = skullTile.getBlockState();
+                builder = builder.withOptionalParameter(LootContextParams.BLOCK_ENTITY, skullTile);
+                loot.addAll(skull.getDrops(builder));
+            }
+
             return loot;
         }
         return super.getDrops(state, builder);

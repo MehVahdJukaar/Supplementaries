@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/abundance/hanging_sign_front_redbud_ab",
-    "2": "supplementaries:blocks/hanging_signs/abundance/hanging_sign_details_redbud_ab"
-  }
-}

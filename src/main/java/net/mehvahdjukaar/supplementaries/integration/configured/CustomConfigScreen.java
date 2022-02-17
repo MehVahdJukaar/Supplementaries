@@ -7,11 +7,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
+
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -57,7 +58,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
         addIcon("hanging flower pots", Items.FLOWER_POT);
@@ -76,13 +77,13 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("mixins", Items.HOPPER);
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
-        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE));
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
         addIcon("shulker shell", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(VanillaWoodTypes.OAK).get());
+        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN_ITEM.get());

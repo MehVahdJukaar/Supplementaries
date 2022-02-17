@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/lotr/hanging_sign_front_aspen_lotr",
-    "2": "supplementaries:blocks/hanging_signs/lotr/hanging_sign_details_aspen_lotr"
-  }
-}

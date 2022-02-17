@@ -386,11 +386,6 @@ public class BellowsBlockTile extends BlockEntity {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     public void onSteppedOn(Entity entityIn) {
         if (this.isPressed) return;
         double b = entityIn.getBoundingBox().getSize();

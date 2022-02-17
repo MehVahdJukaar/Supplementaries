@@ -1,8 +1,0 @@
-{
-  "parent": "supplementaries:block/hs/hanging_sign_1_template",
-  "textures": {
-    "particle": "supplementaries:blocks/hanging_signs/betterendforge/hanging_sign_front_helix_tree",
-    "0": "supplementaries:blocks/hanging_signs/betterendforge/hanging_sign_front_helix_tree",
-    "1": "supplementaries:blocks/hanging_signs/betterendforge/hanging_sign_details_helix_tree"
-  }
-}

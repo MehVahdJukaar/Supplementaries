@@ -59,11 +59,6 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
-    @Override
     public MobContainer getMobContainer() {
         return this.mobContainer;
     }

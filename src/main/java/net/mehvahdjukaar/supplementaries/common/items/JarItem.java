@@ -41,7 +41,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -100,8 +99,8 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public void addPlacementTooltip(List<Component> tooltip) {
-        if(ServerConfigs.cached.JAR_CAPTURE)
-        super.addPlacementTooltip(tooltip);
+        if (ServerConfigs.cached.JAR_CAPTURE)
+            super.addPlacementTooltip(tooltip);
     }
 
     //full jar stuff
@@ -207,7 +206,7 @@ public class JarItem extends AbstractMobContainerItem {
             if (fh.containsFood()) {
                 if (fh.tryDrinkUpFluid((Player) entity, world)) {
                     CompoundTag newTag = new CompoundTag();
-                    temp.save(newTag);
+                    temp.saveAdditional(newTag);
                     stack.addTagElement("BlockEntityTag", newTag);
                     return stack;
                 }
@@ -224,15 +223,17 @@ public class JarItem extends AbstractMobContainerItem {
         return super.use(world, playerEntity, hand);
     }
 
-    private final Lazy<JarBlockTile> DUMMY_TILE = () -> new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
+    private JarBlockTile DUMMY_TILE = null;
 
     @Override
     public int getUseDuration(ItemStack stack) {
         if (ServerConfigs.cached.JAR_ITEM_DRINK) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-                DUMMY_TILE.get().load(tag);
-                SoftFluidHolder fh = DUMMY_TILE.get().getSoftFluidHolder();
+                if (DUMMY_TILE == null)
+                    DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
+                DUMMY_TILE.load(tag);
+                SoftFluidHolder fh = DUMMY_TILE.getSoftFluidHolder();
                 SoftFluid sf = fh.getFluid();
                 Item food = sf.getFoodItem();
                 return food.getUseDuration(food.getDefaultInstance()) / sf.getFoodDivider();

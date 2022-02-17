@@ -105,7 +105,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, Player player) {
-        if(!e.isAlive())return false;
+        if(!e.isAlive() || e.isMultipartEntity())return false;
         if(e instanceof LivingEntity living){
             if(living.isDeadOrDying())return false;
 
@@ -124,6 +124,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //2
     private <T extends Entity> boolean canCatch(T e) {
         String name = e.getType().getRegistryName().toString();
+        if(name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
         if (ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }

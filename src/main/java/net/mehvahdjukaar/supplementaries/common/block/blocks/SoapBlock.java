@@ -40,7 +40,7 @@ public class SoapBlock extends Block {
         return super.triggerEvent(pState, level, pos, pId, pParam);
     }
 
-
+/*
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         Random rand = entity.level.random;
@@ -65,6 +65,29 @@ public class SoapBlock extends Block {
         super.stepOn(level, pos, state, entity);
     }
 
+*/
+
+    @Override
+    public void stepOn(Level pLevel, BlockPos pPos, BlockState state, Entity entity) {
+        Random rand = entity.level.random;
+        if ((!pLevel.isClientSide || entity instanceof LocalPlayer) && !entity.isSteppingCarefully()) {
+            if (rand.nextFloat() < 0.14) {
+                var m = entity.getDeltaMovement();
+                m.subtract(0, m.y, 0);
+                if (m.lengthSqr() > 0.0008) {
+                    m = m.normalize().scale(0.10 + rand.nextFloat() * 0.13F);
+                    float min = 22;
+                    float max = 95;
+                    float angle = 20 + rand.nextFloat()*(max-min);
+                    angle *= rand.nextBoolean() ? -1 :1;
+                    m = m.yRot((float) (angle*Math.PI/180f));
+                    //PACKET HERE
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
+                    pLevel.blockEvent(pPos, state.getBlock(), 0, 0);
+                }
+            }
+        }
+    }
 /*
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
@@ -75,7 +98,7 @@ public class SoapBlock extends Block {
             double d1 = Math.abs(entity.getZ() - entity.zOld);
             if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
                 Random rand = entity.level.random;
-                if (rand.nextFloat()  < 0.15 && !entity.isSteppingCarefully()) {
+                if (rand.nextFloat()  < 0.14 && !entity.isSteppingCarefully()) {
                     Vec3 m = entity.getDeltaMovement();
                     m = m.normalize().scale(0.12 + rand.nextFloat() * 0.15F);
                     float min = 22;

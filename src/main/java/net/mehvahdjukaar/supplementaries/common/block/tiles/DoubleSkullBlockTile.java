@@ -1,35 +1,33 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
-import net.minecraft.util.StringUtil;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SkullBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.lang3.StringUtils;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
-    private int rotationUp;
     @Nullable
-    private GameProfile ownerUp;
-    private SkullBlock.Types typeUp = SkullBlock.Types.SKELETON;
+    protected SkullBlockEntity innerTileUp = null;
 
     private int waxColorInd = -1;
     private ResourceLocation waxTexture = null;
@@ -41,21 +39,18 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        this.saveInnerTile("SkullUp", this.innerTileUp, tag);
+
         if (waxColorInd != -1) {
             tag.putInt("WaxColor", waxColorInd);
-        }
-        tag.putInt("RotationUp", this.rotationUp);
-        tag.putInt("TypeUp", this.typeUp.ordinal());
-        if (this.ownerUp != null) {
-            CompoundTag compoundtag = new CompoundTag();
-            NbtUtils.writeGameProfile(compoundtag, this.ownerUp);
-            tag.put("SkullOwnerUp", compoundtag);
         }
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.innerTileUp = this.loadInnerTile("Skull", this.innerTileUp, tag);
+
         if (tag.contains("WaxColor")) {
             this.waxColorInd = tag.getInt("WaxColor");
             DyeColor d = waxColorInd == 17 ? null : DyeColor.byId(waxColorInd);
@@ -63,80 +58,48 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
         } else {
             waxTexture = null;
         }
-        this.rotationUp = tag.getInt("RotationUp");
-        this.typeUp = SkullBlock.Types.values()[tag.getInt("TypeUp")];
-        if (tag.contains("SkullOwnerUp", 10)) {
-            this.setOwnerUp(NbtUtils.readGameProfile(tag.getCompound("SkullOwnerUp")));
-        } else if (tag.contains("ExtraTypeUp", 8)) {
-            String s = tag.getString("ExtraTypeUp");
-            if (!StringUtil.isNullOrEmpty(s)) {
-                this.setOwnerUp(new GameProfile((UUID) null, s));
-            }
-        }
-
-    }
-
-    @Nullable
-    public GameProfile getOwnerProfileUp() {
-        return this.ownerUp;
-    }
-
-    public void setOwnerUp(@Nullable GameProfile ownerUp) {
-        synchronized (this) {
-            this.ownerUp = ownerUp;
-        }
-        SkullBlockEntity.updateGameprofile(this.ownerUp, (gameProfile) -> {
-            this.ownerUp = gameProfile;
-            this.setChanged();
-        });
-    }
-
-
-    public SkullBlock.Type getSkullTypeUp() {
-        return this.typeUp;
-    }
-
-    public void setSkullTypeUp(SkullBlock.Types type) {
-        this.typeUp = type;
-    }
-
-    public void setRotationUp(float yaw) {
-        this.rotationUp = (Mth.floor((double) (yaw * 16.0F / 360.0F) + 0.5D) & 15);
-    }
-
-    public void rotateUp(Rotation rotation) {
-        this.rotationUp = rotation.rotate(this.rotationUp, 16);
-    }
-
-    public void rotateUpStep(int step) {
-        this.rotationUp = ((this.rotationUp - step) + 16) % 16;
-    }
-
-    public int getUpRotation() {
-        return rotationUp;
     }
 
     public ItemStack getSkullItemUp() {
-        return getSkullItem(this.typeUp, this.ownerUp);
+        if (this.innerTileUp != null) {
+            return new ItemStack(innerTileUp.getBlockState().getBlock());
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public void rotateUp(Rotation rotation) {
+        if (this.innerTileUp != null) {
+            BlockState state = this.innerTileUp.getBlockState();
+            int r = this.innerTileUp.getBlockState().getValue(SkullBlock.ROTATION);
+            this.innerTileUp.setBlockState(state.setValue(SkullBlock.ROTATION,
+                    rotation.rotate(r, 16)));
+        }
+    }
+
+    public void rotateUpStep(int step) {
+        if (this.innerTileUp != null) {
+            BlockState state = this.innerTileUp.getBlockState();
+            int r = this.innerTileUp.getBlockState().getValue(SkullBlock.ROTATION);
+            this.innerTileUp.setBlockState(state.setValue(SkullBlock.ROTATION,
+                    ((r - step) + 16) % 16));
+        }
     }
 
     @Override
-    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack skullStack, Player player) {
-        super.initialize(oldTile, skullBlock, skullStack, player);
-        this.setRotationUp(player.getYRot());
+    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack skullStack, Player player, InteractionHand hand) {
+        super.initialize(oldTile, skullBlock, skullStack, player, hand);
         if (skullStack.getItem() instanceof BlockItem bi) {
-            if (bi.getBlock() instanceof SkullBlock up) {
-                this.setSkullTypeUp((SkullBlock.Types) up.getType());
-                GameProfile gameprofile = null;
-                if (skullStack.hasTag()) {
-                    CompoundTag compoundtag = skullStack.getTag();
-                    if (compoundtag.contains("SkullOwner", 10)) {
-                        gameprofile = NbtUtils.readGameProfile(compoundtag.getCompound("SkullOwner"));
-                    } else if (compoundtag.contains("SkullOwner", 8) && !StringUtils.isBlank(compoundtag.getString("SkullOwner"))) {
-                        gameprofile = new GameProfile(null, compoundtag.getString("SkullOwner"));
-                    }
+            if (bi.getBlock() instanceof SkullBlock upSkull) {
+                var context = new BlockPlaceContext(player, hand, skullStack,
+                        new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, this.getBlockPos(), false));
+                BlockState state = upSkull.getStateForPlacement(context);
+                if (state == null) {
+                    state = upSkull.defaultBlockState();
                 }
-                this.setOwnerUp(gameprofile);
+                BlockEntity entity = upSkull.newBlockEntity(this.getBlockPos(), state);
+                if (entity instanceof SkullBlockEntity blockEntity) {
+                    this.innerTileUp = blockEntity;
+                }
             }
         }
     }
@@ -161,5 +124,18 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
     public ResourceLocation getWaxTexture() {
         return waxTexture;
+    }
+
+    @Nullable
+    public BlockState getSkullUp() {
+        if (this.innerTileUp != null) {
+            return this.innerTileUp.getBlockState();
+        }
+        return null;
+    }
+
+    @Nullable
+    public BlockEntity getSkullTileUp() {
+        return this.innerTileUp;
     }
 }

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     {"id":"minecraft:cookie","required":false},
+    {"id":"snowyspirit:gingerbread_cookie","required":false},
     {"id":"supplementaries:candy","required":false},
     {"id":"farmersdelight:honey_cookie","required":false},
     {"id":"farmersdelight:sweet_berry_cookie","required":false},

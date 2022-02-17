@@ -432,8 +432,4 @@ public class FaucetBlockTile extends BlockEntity {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
 }

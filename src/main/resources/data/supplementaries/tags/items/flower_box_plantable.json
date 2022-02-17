@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    {"id":"snowyspirit:ginger_flower","required":false},
     {"id":"#forge:mushrooms","required":false},
     {"id":"#forge:bushes","required":false},
     {"id":"#pokecube:berries","required":false},

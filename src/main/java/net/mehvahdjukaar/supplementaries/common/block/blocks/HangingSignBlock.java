@@ -1,17 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.BlockAttachment;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.SignAttachment;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.datagen.types.IWoodType;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -22,44 +27,42 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 
-public class HangingSignBlock extends SwayingBlock implements EntityBlock {
+public class HangingSignBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_Z = Block.box(7, 0, 0, 9, 16, 16);
     protected static final VoxelShape SHAPE_X = Block.box(0, 0, 7, 16, 16, 9);
 
-    public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
+    public static final EnumProperty<SignAttachment> ATTACHMENT = BlockProperties.SIGN_ATTACHMENT;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-    public final IWoodType woodType;
+    public final WoodSetType woodType;
 
-    public HangingSignBlock(Properties properties, IWoodType woodType) {
+    public HangingSignBlock(Properties properties, WoodSetType woodType) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
-                .setValue(EXTENSION, 0).setValue(FACING, Direction.NORTH).setValue(HANGING, false));
+                .setValue(ATTACHMENT, SignAttachment.BLOCK_BLOCK).
+                setValue(AXIS, Direction.Axis.Z));
         this.woodType = woodType;
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             if (level.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
                 ItemStack handItem = player.getItemInHand(handIn);
 
@@ -70,104 +73,139 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
                 //TODO: fix left hand(shield)
                 if (handIn == InteractionHand.MAIN_HAND) {
                     //remove
-                    if (!tile.isEmpty() && handItem.isEmpty()) {
-                        ItemStack it = tile.removeStackFromSlot(0);
+                    if(!tile.isEmpty()){
+                        if( handItem.isEmpty()) {
+                            ItemStack it = tile.removeStackFromSlot(0);
 
-                        player.setItemInHand(handIn, it);
-                        tile.setChanged();
+                            player.setItemInHand(handIn, it);
+                            tile.setChanged();
 
-                        return InteractionResult.CONSUME;
+                            return InteractionResult.CONSUME;
+                        }
                     }
-                    //place
-                    else if (!handItem.isEmpty() && tile.isEmpty()) {
-                        ItemStack it = handItem.copy();
-                        it.setCount(1);
-                        tile.setItems(NonNullList.withSize(1, it));
+                    //place or interact
+                    else {
+                        //place
+                        if (!handItem.isEmpty()) {
+                            ItemStack it = handItem.copy();
+                            it.setCount(1);
+                            tile.setItems(NonNullList.withSize(1, it));
 
-                        if (!player.isCreative()) {
-                            handItem.shrink(1);
+                            if (!player.isCreative()) {
+                                handItem.shrink(1);
+                            }
+                            level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
+
+                            tile.setChanged();
                         }
 
-                        level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
-
-                        tile.setChanged();
-                        return InteractionResult.CONSUME;
-                    }
-
-                    // open gui (edit sign with empty hand)
-                    else {
-                        tile.sendOpenGuiPacket(level, pos, player);
+                        // open gui (edit sign with empty hand)
+                        else {
+                            tile.sendOpenGuiPacket(level, pos, player);
+                        }
                         return InteractionResult.CONSUME;
                     }
                 }
             }
             return InteractionResult.PASS;
-        }
-        else{
+        } else {
             return InteractionResult.SUCCESS;
         }
     }
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        if (state.getValue(HANGING)) {
+        SignAttachment attachment = state.getValue(ATTACHMENT);
+        if (attachment == SignAttachment.CEILING) {
             return worldIn.getBlockState(pos.above()).isFaceSturdy(worldIn, pos.above(), Direction.DOWN);
         } else {
-            return worldIn.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).getMaterial().isSolid();
+            Direction.Axis axis = state.getValue(AXIS);
+            if (axis == Direction.Axis.X) {
+                return worldIn.getBlockState(pos.relative(Direction.EAST)).getMaterial().isSolid() ||
+                        worldIn.getBlockState(pos.relative(Direction.WEST)).getMaterial().isSolid();
+            } else {
+                return worldIn.getBlockState(pos.relative(Direction.NORTH)).getMaterial().isSolid() ||
+                        worldIn.getBlockState(pos.relative(Direction.SOUTH)).getMaterial().isSolid();
+            }
         }
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
-                                  BlockPos facingPos) {
-        if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-
-        if (facing == Direction.UP) {
-            return !stateIn.canSurvive(worldIn, currentPos)
-                    ? Blocks.AIR.defaultBlockState()
-                    : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
+                                  BlockPos currentPos, BlockPos facingPos) {
+        super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        if (facing == Direction.DOWN) return stateIn;
+        var attachment = stateIn.getValue(ATTACHMENT);
+        if (attachment == SignAttachment.CEILING) {
+            if (facing == Direction.UP) {
+                return !stateIn.canSurvive(worldIn, currentPos)
+                        ? Blocks.AIR.defaultBlockState()
+                        : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            }
+            return stateIn;
         } else {
-            return facing == stateIn.getValue(FACING).getOpposite() ? !stateIn.canSurvive(worldIn, currentPos)
+            return facing.getAxis() == stateIn.getValue(AXIS) ? !stateIn.canSurvive(worldIn, currentPos)
                     ? Blocks.AIR.defaultBlockState()
-                    : getConnectedState(stateIn, facingState, worldIn, facingPos) : stateIn;
+                    : getConnectedState(stateIn, facingState, worldIn, facingPos, facing.getOpposite()) : stateIn;
         }
+    }
+
+    //always returns a not null blockstate.
+    public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction clickedFace) {
+        BlockAttachment attachment = BlockAttachment.get(facingState, pos, world, clickedFace);
+        SignAttachment old = state.getValue(ATTACHMENT);
+        return state.setValue(ATTACHMENT, old.withAttachment(
+                clickedFace.getAxisDirection() == Direction.AxisDirection.NEGATIVE, attachment));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return state.getValue(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
+        return state.getValue(AXIS) == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return state.getValue(HANGING) ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.MODEL;
+        //always model cause I need dynamic thingie
+        return RenderShape.MODEL;
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HANGING);
+        builder.add(ATTACHMENT);
+        builder.add(AXIS);
     }
 
-    //TODO: merge with lantern
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        if (context.getClickedFace() == Direction.DOWN || context.getClickedFace() == Direction.UP) {
-            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getCounterClockWise())
-                    .setValue(HANGING, context.getClickedFace() == Direction.DOWN).setValue(WATERLOGGED, water);
-        }
+
+        BlockState s = super.getStateForPlacement(context);
+        if (s == null) return null;
+        Direction clickedFace = context.getClickedFace();
+        // Direction[] lookingDirections = new Direction[]{clickedFace, clickedFace.getOpposite(), Direction.UP, Direction.DOWN};
+        Direction.Axis axis = clickedFace.getAxis();
+        if (clickedFace.getAxis() == Direction.Axis.Y) {
+            axis = context.getHorizontalDirection().getCounterClockWise().getAxis();
+            s = s.setValue(AXIS, axis);
+            if (clickedFace == Direction.DOWN) {
+                s = s.setValue(ATTACHMENT, SignAttachment.CEILING);
+                return s;
+            }
+        } else s = s.setValue(AXIS, axis);
+
         BlockPos blockpos = context.getClickedPos();
         Level world = context.getLevel();
-        BlockPos relative = blockpos.relative(context.getClickedFace().getOpposite());
-        BlockState facingState = world.getBlockState(relative);
 
-        return getConnectedState(this.defaultBlockState(), facingState, world, relative).setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, water);
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (dir.getAxis() == axis) {
+                BlockPos relative = blockpos.relative(dir.getOpposite());
+                BlockState facingState = world.getBlockState(relative);
+                s = getConnectedState(s, facingState, world, relative, dir);
+            }
+        }
+        return s;
     }
 
-    //for player bed spawn
     @Override
     public boolean isPossibleToRespawnInThis() {
         return true;
@@ -200,15 +238,31 @@ public class HangingSignBlock extends SwayingBlock implements EntityBlock {
         return new HangingSignBlockTile(pPos, pState);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ? HangingSignBlockTile::clientTick : null);
+    }
+
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlockUtils.addOptionalOwnership(placer, worldIn, pos);
     }
 
+    @Override
+    public BlockState rotate(BlockState pState, Rotation pRot) {
+        if (pRot != Rotation.CLOCKWISE_180) {
+            return pState.cycle(AXIS);
+        }
+        return pState;
+    }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
-        return List.of(new ItemStack(this));
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        super.entityInside(state, world, pos, entity);
+        if (world.getBlockEntity(pos) instanceof SwayingBlockTile tile) {
+            tile.hitByEntity(entity, state);
+        }
     }
 }
 

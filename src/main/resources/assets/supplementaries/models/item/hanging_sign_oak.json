@@ -1,7 +1,6 @@
 {
-  "parent": "supplementaries:item/hanging_sign_template",
+  "parent": "item/generated",
   "textures": {
-    "0": "supplementaries:blocks/hanging_signs/hanging_sign_front_oak",
-    "2": "supplementaries:blocks/hanging_signs/hanging_sign_details_oak"
+    "layer0": "supplementaries:items/hanging_signs/hanging_sign_oak"
   }
 }

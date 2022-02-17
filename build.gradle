@@ -5,7 +5,6 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://repo.spongepowered.org/maven' }
         maven { url = 'https://maven.parchmentmc.org' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -27,7 +26,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.1.11'
+version = '1.18.1-1.2.0'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -154,12 +153,12 @@ dependencies {
 
     implementation fg.deobf("curse.maven:configured-457570:3546349")
     implementation fg.deobf("curse.maven:curios-309927:3551144")
-    implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
+    //implementation fg.deobf("curse.maven:farmersdelight-398521:3615366")
     implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
-    implementation fg.deobf("curse.maven:create-328085:3600402")
-    implementation fg.deobf("curse.maven:flywheel-486392:3600401")
+    implementation fg.deobf("curse.maven:create-328085:3623348")
+    implementation fg.deobf("curse.maven:flywheel-486392:3623314")
     implementation fg.deobf("curse.maven:quark-243121:3545695")
     implementation fg.deobf("curse.maven:jei-238222:3550020")
     implementation fg.deobf("curse.maven:malum-484064:3579643")
@@ -169,6 +168,8 @@ dependencies {
     implementation fg.deobf("curse.maven:patchouli-306770:3594394")
     implementation fg.deobf("curse.maven:tetra-289712:3586368")
     implementation fg.deobf("curse.maven:mgui-351914:3573121")
+    implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
+    implementation fg.deobf("curse.maven:kitteh6660s-morecraft-59648:3609216")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
     //implementation fg.deobf("curse.maven:kiwi-303657:3577626")
 

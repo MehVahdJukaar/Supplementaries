@@ -1,0 +1,66 @@
+{
+	"loader": "supplementaries:hanging_sign_loader",
+	"stick": {
+		"parent": "supplementaries:block/hanging_signs/stick_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"left_post": {
+		"parent": "supplementaries:block/hanging_signs/left_post_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"left_palisade": {
+		"parent": "supplementaries:block/hanging_signs/left_palisade_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"left_wall": {
+		"parent": "supplementaries:block/hanging_signs/left_wall_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"left_beam": {
+		"parent": "supplementaries:block/hanging_signs/left_beam_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"right_post": {
+		"parent": "supplementaries:block/hanging_signs/right_post_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"right_palisade": {
+		"parent": "supplementaries:block/hanging_signs/right_post_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"right_wall": {
+		"parent": "supplementaries:block/hanging_signs/right_wall_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	},
+	"right_beam": {
+		"parent": "supplementaries:block/hanging_signs/right_beam_template",
+		"textures": {
+			"1": "supplementaries:blocks/hanging_signs/wood_type",
+			"2": "log_texture"
+		}
+	}
+}

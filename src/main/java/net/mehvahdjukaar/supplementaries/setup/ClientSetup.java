@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
@@ -15,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProj
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -23,6 +23,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
+import net.mehvahdjukaar.supplementaries.datagen.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -32,6 +33,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
@@ -53,11 +55,16 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
+    @SubscribeEvent
+    public static void onClientInit(FMLConstructModEvent event) {
+        event.enqueueWork(() -> ClientDynamicResourcesHandler.afterClientInit(event));
+    }
 
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
@@ -80,7 +87,7 @@ public class ClientSetup {
         MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
         MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
         MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
-        ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s.get(), RenderType.cutout()));
+        ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s, RenderType.cutout()));
 
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
@@ -128,7 +135,10 @@ public class ClientSetup {
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
-
+        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
 
 
         ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
@@ -215,8 +225,9 @@ public class ClientSetup {
         event.registerEntityRenderer(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.registerEntityRenderer(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
         event.registerEntityRenderer(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
-        event.registerEntityRenderer(ModRegistry.FALLING_URN.get(), FallingBlockRendererGeneric::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
         event.registerEntityRenderer(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
 
         //tiles
         event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
@@ -237,8 +248,8 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.COPPER_LANTERN_TILE.get(), OilLanternBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.CRIMSON_LANTERN_TILE.get(), CrimsonLanternBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.COPPER_LANTERN_TILE.get(), LightableLanternBlockTileRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.CRIMSON_LANTERN_TILE.get(), LightableLanternBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
@@ -292,6 +303,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(Supplementaries.res("rope_knot_loader"), new RopeKnotBlockLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("wall_lantern_loader"), new WallLanternLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("flower_box_loader"), new FlowerBoxLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
 
 
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
@@ -299,8 +311,11 @@ public class ClientSetup {
         //fake models & blockstates
 
         //TODO: merge with materials and client registry
-        for(var r : Materials.HANGING_SIGNS_BLOCK_MODELS.values()){
+        for (var r : Materials.HANGING_SIGNS_BLOCK_MODELS.values()) {
             ForgeModelBakery.addSpecialModel(r);
+        }
+        for(var m : WallLanternStuff.SPECIAL_TEXTURES.values()){
+            ForgeModelBakery.addSpecialModel(m);
         }
         ForgeModelBakery.addSpecialModel(Materials.HANGING_POT_BLOCK_MODEL);
         ForgeModelBakery.addSpecialModel(Materials.WIND_VANE_BLOCK_MODEL);

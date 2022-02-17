@@ -20,19 +20,27 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
         super(properties);
     }
 
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (state.getValue(POWERED)) return InteractionResult.PASS;
-        state = state.cycle(OPEN);
-        worldIn.setBlock(pos, state, 2);
-        if (state.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
 
-        this.playSound(player, worldIn, pos, state.getValue(OPEN));
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
-
+    public boolean canBeOpened(BlockState state) {
+        return !state.getValue(POWERED);
     }
 
+    @Override
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (this.canBeOpened(state)) {
+            state = state.cycle(OPEN);
+            worldIn.setBlock(pos, state, 2);
+            if (state.getValue(WATERLOGGED)) {
+                worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            }
+
+            this.playSound(player, worldIn, pos, state.getValue(OPEN));
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (!worldIn.isClientSide) {
             boolean hasPower = worldIn.hasNeighborSignal(pos);

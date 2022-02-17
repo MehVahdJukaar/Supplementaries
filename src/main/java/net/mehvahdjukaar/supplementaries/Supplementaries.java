@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeCondition;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.setup.ClientSetup;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -34,7 +35,9 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
+
         //yes this is where I write crap. deal with it XD
+
         //animated lantern textures
         //add option for soul jar
         //ash jei plugin
@@ -48,7 +51,7 @@ public class Supplementaries {
 
 
         //todo: fix projectile hitbox being a single point on y = 0
-
+        //divining rod
         //add chain knot
 
         //elytra acrobatics mod
@@ -159,13 +162,15 @@ public class Supplementaries {
         //soap signs & finish notice board dye (add dye interface)
         //snow real magic compat
         //bugs: spring launcher broken on servers
-        //possible bug with flax growing, caused by other mods
-        //flute animations not working
+
         //add new cauldron stuff to cauldron interaction map
+
+        //TODO: map atlas support for markers
+
 
         ConfigHandler.init();
 
-        CraftingHelper.register(new RecipeCondition.Serializer("flag"));
+        CraftingHelper.register(new OptionalRecipeCondition.Serializer());
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -178,6 +183,7 @@ public class Supplementaries {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
+
 
     }
 

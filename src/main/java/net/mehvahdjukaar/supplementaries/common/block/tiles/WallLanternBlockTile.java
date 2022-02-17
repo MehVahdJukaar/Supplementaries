@@ -25,7 +25,6 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
-    public static final ModelProperty<Boolean> FANCY = BlockProperties.FANCY;
 
     //for charm compat
     public boolean isRedstoneLantern = false;
@@ -43,16 +42,11 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     }
 
     @Override
-    public boolean hasAnimation() {
-        return this.oldRendererState;
-    }
-
-    @Override
     public IModelData getModelData() {
         //return data;
         return new ModelDataMap.Builder()
                 .withInitial(MIMIC, this.getHeldBlock())
-                .withInitial(FANCY, this.fancyRenderer)
+                .withInitial(FANCY, this.shouldHaveTESR)
                 .build();
     }
 
@@ -109,6 +103,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
         return true;
     }
+
 
 
 }

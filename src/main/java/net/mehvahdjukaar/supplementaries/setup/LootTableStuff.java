@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
@@ -28,7 +30,7 @@ public class LootTableStuff {
         if (RegistryConfigs.reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
-        if (RegistryConfigs.reg.SLINGSHOT_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
+        if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
         if (RegistryConfigs.reg.BAMBOO_SPIKES_ENABLED.get() &&
                 RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
     }

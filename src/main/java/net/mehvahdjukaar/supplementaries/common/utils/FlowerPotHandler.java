@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -94,6 +95,10 @@ public class FlowerPotHandler {
         toAdd.add(Items.FLOWERING_AZALEA.getRegistryName().toString());
         toAdd.add(Items.AZALEA.getRegistryName().toString());
         toAdd.add(ModRegistry.FLAX_SEEDS_ITEM.get().getRegistryName().toString());
+        if(ModList.get().isLoaded("snowyspirit")){
+            toAdd.add("snowyspirit:ginger_flower");
+        }
+
         if(CompatHandler.quark) {
             Item[] items = new Item[]{
                     Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,

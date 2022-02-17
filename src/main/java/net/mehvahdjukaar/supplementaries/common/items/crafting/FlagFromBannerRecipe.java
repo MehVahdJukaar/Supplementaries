@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -85,6 +86,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         return withPatterns != null && empty != null;
     }
 
+    @Override
     public ItemStack assemble(CraftingContainer inv) {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack withPatterns = inv.getItem(i);
@@ -115,6 +117,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         return ItemStack.EMPTY;
     }
 
+    @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
@@ -134,10 +137,12 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         return stacks;
     }
 
+    @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializer.BANNER_DUPLICATE;
+        return ModRegistry.FLAG_FROM_BANNER_RECIPE.get();
     }
 
+    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }

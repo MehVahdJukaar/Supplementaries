@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -80,8 +81,8 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
 
     @Override
-    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player) {
-        super.initialize(oldTile, skullBlock, stack, player);
+    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player, InteractionHand hand) {
+        super.initialize(oldTile, skullBlock, stack, player, hand);
         if (stack.getItem() instanceof BlockItem blockItem) {
             tryAddingCandle(blockItem.getBlock());
         }

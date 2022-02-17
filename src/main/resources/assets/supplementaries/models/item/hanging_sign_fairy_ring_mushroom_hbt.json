@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/habitat/hanging_sign_front_fairy_ring_mushroom_hbt",
-    "2": "supplementaries:blocks/hanging_signs/habitat/hanging_sign_details_fairy_ring_mushroom_hbt"
-  }
-}

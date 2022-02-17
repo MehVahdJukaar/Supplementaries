@@ -216,7 +216,7 @@ public class WaySignStructure extends StructureFeature<JigsawConfiguration> {
          * structure will spawn at terrain height instead. Set that parameter to false to
          * force the structure to spawn at blockpos's Y value instead. You got options here!
          */
-        BlockPos blockpos = new BlockPos(x, y, z);
+        BlockPos blockpos = new BlockPos(x, y+1, z);
 
 
         /*

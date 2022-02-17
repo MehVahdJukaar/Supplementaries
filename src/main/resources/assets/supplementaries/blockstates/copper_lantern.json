@@ -1,94 +1,25 @@
 {
   "variants": {
-    "face=wall,facing=north,extension=0": {
-      "model": "supplementaries:block/copper_lantern_wall"
-    },
-    "face=wall,facing=east,extension=0": {
-      "model": "supplementaries:block/copper_lantern_wall",
-      "y": 90
-    },
-    "face=wall,facing=south,extension=0": {
-      "model": "supplementaries:block/copper_lantern_wall",
-      "y": 180
-    },
-    "face=wall,facing=west,extension=0": {
-      "model": "supplementaries:block/copper_lantern_wall",
-      "y": 270
-    },
-    "face=wall,facing=north,extension=1": {
-      "model": "supplementaries:block/copper_lantern_wall_long"
-    },
-    "face=wall,facing=east,extension=1": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 90
-    },
-    "face=wall,facing=south,extension=1": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 180
-    },
-    "face=wall,facing=west,extension=1": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 270
-    },
-    "face=wall,facing=north,extension=2": {
-      "model": "supplementaries:block/copper_lantern_wall_long"
-    },
-    "face=wall,facing=east,extension=2": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 90
-    },
-    "face=wall,facing=south,extension=2": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 180
-    },
-    "face=wall,facing=west,extension=2": {
-      "model": "supplementaries:block/copper_lantern_wall_long",
-      "y": 270
-    },
-    "face=floor,facing=north,lit=true": {
+    "hanging=false,axis=z,lit=true": {
       "model": "supplementaries:block/copper_lantern"
     },
-    "face=floor,facing=east,lit=true": {
+    "hanging=false,axis=x,lit=true": {
       "model": "supplementaries:block/copper_lantern",
       "y": 90
     },
-    "face=floor,facing=south,lit=true": {
-      "model": "supplementaries:block/copper_lantern",
-      "y": 180
-    },
-    "face=floor,facing=west,lit=true": {
-      "model": "supplementaries:block/copper_lantern",
-      "y": 270
-    },
-    "face=floor,facing=north,lit=false": {
+    "hanging=false,axis=z,lit=false": {
       "model": "supplementaries:block/copper_lantern_off"
     },
-    "face=floor,facing=east,lit=false": {
+    "hanging=false,axis=x,lit=false": {
       "model": "supplementaries:block/copper_lantern_off",
       "y": 90
     },
-    "face=floor,facing=south,lit=false": {
-      "model": "supplementaries:block/copper_lantern_off",
-      "y": 180
-    },
-    "face=floor,facing=west,lit=false": {
-      "model": "supplementaries:block/copper_lantern_off",
-      "y": 270
-    },
-    "face=ceiling,facing=north": {
+    "hanging=true,axis=z": {
       "model": "supplementaries:block/copper_lantern_hanging"
     },
-    "face=ceiling,facing=east": {
+    "hanging=true,axis=x": {
       "model": "supplementaries:block/copper_lantern_hanging",
       "y": 90
-    },
-    "face=ceiling,facing=south": {
-      "model": "supplementaries:block/copper_lantern_hanging",
-      "y": 180
-    },
-    "face=ceiling,facing=west": {
-      "model": "supplementaries:block/copper_lantern_hanging",
-      "y": 270
     }
   }
 }

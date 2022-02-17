@@ -116,7 +116,7 @@ public class RopeArrowEntity extends AbstractArrow {
 
                 //knot blocks
                 if (ServerConfigs.cached.ROPE_ARROW_BLOCK == ModRegistry.ROPE.get()) {
-                    BlockProperties.PostType knotType = RopeKnotBlock.getPostType(hitState);
+                    BlockProperties.PostType knotType = BlockProperties.PostType.get(hitState);
                     if (knotType != null) {
                         BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
                         if (knotState != null) {

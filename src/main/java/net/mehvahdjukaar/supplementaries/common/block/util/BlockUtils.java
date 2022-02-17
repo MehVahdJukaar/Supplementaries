@@ -131,7 +131,25 @@ public class BlockUtils {
                         .setValue(CakeBlock.BITES, bites).rotate(world, targetPos, rot));
             }
 
-            return Optional.of(state.rotate(world, targetPos, rot));
+            BlockState rotated = state.rotate(world, targetPos, rot);
+            //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
+            //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
+            if(rotated == state){
+                if(state.hasProperty(BlockStateProperties.FACING)) {
+                    rotated = state.setValue(BlockStateProperties.FACING,
+                            rot.rotate(state.getValue(BlockStateProperties.FACING)));
+                }
+                else if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                    rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING,
+                            rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+                }
+                else if(state.hasProperty(RotatedPillarBlock.AXIS)){
+                    rotated = RotatedPillarBlock.rotatePillar(state, rot);
+                }else if(state.hasProperty(BlockStateProperties.HORIZONTAL_AXIS)){
+                    rotated = state.cycle(BlockStateProperties.HORIZONTAL_AXIS);
+                }
+            }
+            return Optional.of(rotated);
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {

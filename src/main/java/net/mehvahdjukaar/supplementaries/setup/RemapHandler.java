@@ -1,18 +1,22 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
+import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,32 +30,8 @@ public class RemapHandler {
 
     static {
 
-        fullReMap.put("orange_trader", ModRegistry.RED_MERCHANT.getId());
-
-        fullReMap.put("piston_launcher", ModRegistry.SPRING_LAUNCHER.getId());
-        fullReMap.put("piston_launcher_arm", ModRegistry.SPRING_LAUNCHER_ARM.getId());
-        fullReMap.put("piston_launcher_head", ModRegistry.SPRING_LAUNCHER_HEAD.getId());
-
-        itemReMap.put("jar_full", ModRegistry.JAR_ITEM.getId());
-        itemReMap.put("jar_full_tinted", ModRegistry.JAR_ITEM_TINTED.getId());
-        itemReMap.put("cage_full", ModRegistry.CAGE_ITEM.getId());
-
-
-        itemReMap.put(ModRegistry.WALL_LANTERN_NAME, Items.LANTERN.getRegistryName());
-        itemReMap.put(ModRegistry.STICK_NAME, Items.STICK.getRegistryName());
-        itemReMap.put(ModRegistry.BLAZE_ROD_NAME, Items.BLAZE_ROD.getRegistryName());
-        itemReMap.put(ModRegistry.HANGING_FLOWER_POT_NAME, Items.FLOWER_POT.getRegistryName());
-        itemReMap.put(ModRegistry.GUNPOWDER_BLOCK_NAME, Items.GUNPOWDER.getRegistryName());
-        for (RegistryObject<Block> banner : ModRegistry.CEILING_BANNERS.values()) {
-            itemReMap.put(banner.getId().getPath(), new ResourceLocation("minecraft",
-                    banner.getId().getPath().replace("ceiling_banner_", "") + "_banner"));
-        }
-        itemReMap.put(ModRegistry.DIRECTIONAL_CAKE_NAME, Items.CAKE.getRegistryName());
-
-        itemReMap.putAll(fullReMap);
 
     }
-
     @SubscribeEvent
     public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
         for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(Supplementaries.MOD_ID)) {
@@ -66,14 +46,20 @@ public class RemapHandler {
                 }
             } else if (k.contains("hanging_sign")) {
                 try {
-                    mapping.remap(ModRegistry.HANGING_SIGNS.get(VanillaWoodTypes.OAK).get());
-                } catch (Exception ignored) {
+                    Block newBlock = getNewBlock(ModRegistry.HANGING_SIGNS, k);
+                    if(newBlock == null){
+                        newBlock = ModRegistry.HANGING_SIGNS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                    }
+                    mapping.remap(newBlock);
+                } catch (Exception ex) {
+                    Supplementaries.LOGGER.warn("Remapping block '{}' failed: {}", mapping.key, ex);
                 }
             }
         }
     }
 
-    @SubscribeEvent
+
+    //@SubscribeEvent
     public static void onRemapTiles(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
         for (RegistryEvent.MissingMappings.Mapping<BlockEntityType<?>> mapping : event.getMappings(Supplementaries.MOD_ID)) {
             String k = mapping.key.getPath();
@@ -103,19 +89,29 @@ public class RemapHandler {
                 }
             } else if (k.contains("hanging_sign")) {
                 try {
-                    mapping.remap(ModRegistry.HANGING_SIGNS_ITEMS.get(VanillaWoodTypes.OAK).get());
-                } catch (Exception ignored) {
+                    Item newBlock = getNewBlock(ModRegistry.HANGING_SIGNS_ITEMS, k);
+                    if(newBlock == null){
+                        newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                    }
+                    mapping.remap(newBlock);
+                } catch (Exception ex) {
+                    Supplementaries.LOGGER.warn("Remapping block '{}' failed: {}", mapping.key, ex);
                 }
             } else if (k.contains("sign_post")) {
                 try {
-                    mapping.remap(ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
-                } catch (Exception ignored) {
+                    Item newBlock = getNewBlock(ModRegistry.SIGN_POST_ITEMS, k);
+                    if(newBlock == null){
+                        newBlock = ModRegistry.SIGN_POST_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                    }
+                    mapping.remap(newBlock);
+                } catch (Exception ex) {
+                    Supplementaries.LOGGER.warn("Remapping block '{}' failed: {}", mapping.key, ex);
                 }
             }
         }
     }
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public static void onRemapEntityTypes(RegistryEvent.MissingMappings<EntityType<?>> event) {
         for (RegistryEvent.MissingMappings.Mapping<EntityType<?>> mapping : event.getMappings(Supplementaries.MOD_ID)) {
             if (fullReMap.containsKey(mapping.key.getPath())) {
@@ -129,4 +125,60 @@ public class RemapHandler {
             }
         }
     }
+
+    @Deprecated
+    public static String getLegacyWoodTypeAppendableID(WoodSetType wood) {
+        String l = getLegacyAbbreviation(wood.getNamespace());
+        return l != null ? "_" + wood.getWoodName() + l : "_" + wood.getAppendableId();
+    }
+
+    //T_T
+    @Nullable
+    public static String getLegacyAbbreviation(String modName) {
+        return switch (modName) {
+            default -> null;
+            case "minecraft", "tofucraft", "betterendforge", "malum", "mowziesmobs", "ars_nouveau", "the_bumblezone",
+                    "undergarden", "endergetic", "omni", "byg", "mysticalworld", "bamboo_blocks", "good_nights_sleep",
+                    "pokecube", "simplytea", "outer_end", "upgrade_aquatic", "atmospheric", "domum_ornamentum",
+                    "architects_palette", "botania", "enhanced_mushrooms", "druidcraft", "silentgear", "eidolon",
+                    "greekfantasy", "forbidden_arcanus", "pokecube_legends" -> "";
+            case "habitat" -> "_hbt";
+            case "abundance" -> "_ab";
+            case "biomesoplenty" -> "_bop";
+            case "biomemakeover" -> "_bm";
+            case "terraincognita" -> "_te";
+            case "bayou_blues" -> "_bb";
+            case "extendedmushrooms" -> "_em";
+            case "rediscovered" -> "_red";
+            case "autumnity" -> "_aut";
+            case "unnamedanimalmod" -> "_un";
+            case "premium_wood" -> "_pw";
+            case "environmental" -> "_env";
+            case "desolation" -> "_de";
+            case "morecraft" -> "_mc";
+            case "atum" -> "_atum";
+            case "traverse" -> "_tr";
+            case "lotr" -> "_lotr";
+            case "terraqueous" -> "_ter";
+            case "twilightforest" -> "_tf";
+        };
+    }
+
+    @Nullable
+    private static <T extends ForgeRegistryEntry<?>> T getNewBlock(Map<WoodSetType,T> newEntries, String oldPath) {
+
+        for(var b : newEntries.values()){
+            String path = b.getRegistryName().getPath();
+            String[] modId = path.split("/");
+            if(modId.length==2){
+                String abb = getLegacyAbbreviation(modId[0]);
+                String match = modId[1]+abb;
+                if(oldPath.equals(match)){
+                    return b;
+                }
+            }
+        }
+        return null;
+    }
+
 }

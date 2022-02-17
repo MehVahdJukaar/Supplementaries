@@ -122,11 +122,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {
         tile.prevYaw = tile.yaw;
         if (tile.yaw != 0) {

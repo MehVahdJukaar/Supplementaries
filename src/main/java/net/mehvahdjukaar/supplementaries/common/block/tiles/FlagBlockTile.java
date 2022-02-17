@@ -106,11 +106,6 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
-    @Override
     public AABB getRenderBoundingBox() {
         Direction dir = this.getDirection();
         return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(

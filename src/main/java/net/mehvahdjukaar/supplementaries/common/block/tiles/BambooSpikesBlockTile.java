@@ -160,9 +160,4 @@ public class BambooSpikesBlockTile extends BlockEntity {
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
 }

@@ -243,7 +243,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             //BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
             // world.setBlockAndUpdate(toPos, newState);
 
-            PostType type = getPostType(newHeld);
+            PostType type = PostType.get(newHeld);
 
             if (newHeld != oldHeld) {
                 tile.setHeldBlock(newHeld);
@@ -311,30 +311,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return super.getCloneItemStack(state, target, world, pos, player);
     }
 
-    public static @Nullable PostType getPostType(BlockState state) {
 
-        PostType type = null;
-        //if (state.getBlock().hasTileEntity(state)) return type;
-        if (state.is(ModTags.POSTS)) {
-            type = PostType.POST;
-        } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isPalisade(state))) {
-            type = PostType.PALISADE;
-        } else if (state.is(ModTags.WALLS)) {
-            if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {
-                type = PostType.PALISADE;
-            } else {
-                type = PostType.WALL;
-            }
-        } else if (state.is(ModTags.BEAMS)) {
-            if (state.hasProperty(BlockStateProperties.ATTACHED) && state.getValue(BlockStateProperties.ATTACHED)) {
-                type = null;
-            } else {
-                type = PostType.BEAM;
-            }
-        }
-
-        return type;
-    }
 
     public static @Nullable BlockState convertToRopeKnot(BlockProperties.PostType type, BlockState state, Level world, BlockPos pos) {
         Direction.Axis axis = Direction.Axis.Y;

@@ -1,47 +1,65 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SwayingBlock;
+import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.Random;
 
 public abstract class SwayingBlockTile extends BlockEntity {
-    public float angle = 0;
-    public float prevAngle = 0;
-    // lower counter is used by hitting animation
-    public int counter = 800 + new Random().nextInt(80);
-    public boolean inv = false;
 
+    public static final ModelProperty<Boolean> FANCY = BlockProperties.FANCY;
+
+    //maximum allowed swing
     protected static float maxSwingAngle = 45f;
+    //minimum static swing
     protected static float minSwingAngle = 2.5f;
+    //max swing period
     protected static float maxPeriod = 25f;
+
     protected static float angleDamping = 150f;
     protected static float periodDamping = 100f;
 
-    //lod stuff
-    //protected boolean TESRCalled = false;
-    public boolean fancyRenderer = false;
-    protected boolean oldRendererState = false;
+    //all client stuff
+    private float angle = 0;
+    private float prevAngle = 0;
+
+    // lower counter is used by hitting animation
+    private int animationCounter = 800 + new Random().nextInt(80);
+    private boolean inv = false;
+
+    // lod stuff
+    protected boolean shouldHaveTESR = !ClientConfigs.cached.FAST_LANTERNS; // current
+    protected boolean currentlyHasTESR = !ClientConfigs.cached.FAST_LANTERNS; // old
+    private int ticksToSwitchMode = 0;
 
     public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
+    //called when data is actually refreshed
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return null;
+    public IModelData getModelData() {
+        this.ticksToSwitchMode = 2;
+        return new ModelDataMap.Builder()
+                .withInitial(FANCY, this.shouldHaveTESR)
+                .build();
     }
 
     @Override
@@ -49,64 +67,92 @@ public abstract class SwayingBlockTile extends BlockEntity {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
-    public Direction getDirection() {
-        return this.getBlockState().getValue(SwayingBlock.FACING);
-    }
-
     public void setFancyRenderer(boolean fancy) {
         if (ClientConfigs.cached.FAST_LANTERNS) fancy = false;
-        if (fancy != this.fancyRenderer) {
-            this.oldRendererState = this.fancyRenderer;
-            this.fancyRenderer = fancy;
+        if (fancy != this.shouldHaveTESR) {
+            this.currentlyHasTESR = this.shouldHaveTESR;
+            this.shouldHaveTESR = fancy;
             //model data doesn't like other levels. linked to crashes with other mods
             if (this.level == Minecraft.getInstance().level) {
                 this.requestModelDataUpdate();
-                //TODO: replace hardcoded int with const.blockFlags
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_IMMEDIATE);
-
             }
+            if (!fancy) this.animationCounter = 800;
         }
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public boolean shouldRenderFancy() {
-        if (oldRendererState != fancyRenderer) {
-            //makes tesr wait 1 render cycle,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        so it's in sync with model data refresh
-            this.oldRendererState = this.fancyRenderer;
-            return oldRendererState;
+        if (this.currentlyHasTESR != this.shouldHaveTESR && !this.currentlyHasTESR) {
+            //makes tesr wait 1 render cycle,
+            // so it's in sync with model data refresh
+            this.currentlyHasTESR = true;
         }
-        return fancyRenderer;
-    }
-
-    public boolean hasAnimation() {
-        return true;
+        return currentlyHasTESR;
     }
 
     public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, SwayingBlockTile tile) {
-        if (tile.hasAnimation()) {
+        if (tile.currentlyHasTESR != tile.shouldHaveTESR && tile.currentlyHasTESR && tile.ticksToSwitchMode > 0) {
+            tile.ticksToSwitchMode--;
+            if (tile.ticksToSwitchMode == 0) {
+                //makes tesr wait 1 render cycle,
+                // so it's in sync with model data refresh
+                tile.currentlyHasTESR = false;
+            }
+        }
 
-            //TODO: improve physics
-            tile.counter++;
+        if (tile.shouldRenderFancy()) {
+
+            //TODO: improve physics (water, swaying when it's not exposed to wind)
+
+            tile.animationCounter++;
+
+            double timer = tile.animationCounter;
+            if (pState.getValue(WaterBlock.WATERLOGGED)) timer /= 2d;
 
             tile.prevAngle = tile.angle;
             //actually they are the inverse of damping. increase them to have less damping
 
             float a = minSwingAngle;
             float k = 0.01f;
-            if (tile.counter < 800) {
-                a = (float) Math.max(maxSwingAngle * Math.pow(Math.E, -(tile.counter / angleDamping)), minSwingAngle);
-                k = (float) Math.max(Math.PI * 2 * (float) Math.pow(Math.E, -(tile.counter / periodDamping)), 0.01f);
+            if (timer < 800) {
+                a = (float) Math.max(maxSwingAngle * Math.exp(-(timer / angleDamping)), minSwingAngle);
+                k = (float) Math.max(Math.PI * 2 * (float) Math.exp(-(timer / periodDamping)), 0.01f);
             }
 
-            tile.angle = a * Mth.cos((tile.counter / maxPeriod) - k);
+            tile.angle = a * Mth.cos((float) ((timer / maxPeriod) - k));
             tile.angle *= tile.inv ? -1 : 1;
             // this.angle = 90*(float)
             // Math.cos((float)counter/40f)/((float)this.counter/20f);;
         }
     }
 
+    public float getSwingAngle(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevAngle, this.angle);
+    }
+
+    //rotation axis rotate 90 deg
+    public abstract Vec3i getNormalRotationAxis(BlockState state);
+
+    public void hitByEntity(Entity entity, BlockState state) {
+        Vec3 mot = entity.getDeltaMovement();
+        if (mot.length() > 0.05) {
+            Vec3 norm = new Vec3(mot.x, 0, mot.z).normalize();
+            Vec3i dv = this.getNormalRotationAxis(state);
+            Vec3 vec = new Vec3(dv.getX(), 0, dv.getZ()).normalize();
+            double dot = norm.dot(vec);
+            if (dot != 0) {
+                this.inv = dot < 0;
+            }
+            if (Math.abs(dot) > 0.4) this.animationCounter = 0;
+        }
+    }
+
+    public boolean isFlipped(){
+        return false;
+    };
 }

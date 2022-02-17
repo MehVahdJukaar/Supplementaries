@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
+
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -164,12 +164,12 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             double y = target.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;
             if (up && tile.up) {
-                return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());
+                return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeUp));
             } else if (!up && tile.down) {
-                return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeDown).get());
+                return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeDown));
             } else return new ItemStack(tile.mimic.getBlock());
         }
-        return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(VanillaWoodTypes.OAK).get());
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     @Override
@@ -179,11 +179,11 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             list.add(new ItemStack(tile.mimic.getBlock()));
 
             if (tile.up) {
-                ItemStack s = new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeUp).get());
+                ItemStack s = new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeUp));
                 list.add(s);
             }
             if (tile.down) {
-                ItemStack s = new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeDown).get());
+                ItemStack s = new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeDown));
                 list.add(s);
             }
             return list;

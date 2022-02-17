@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/ars_nouveau/hanging_sign_front_archwood",
-    "2": "supplementaries:blocks/hanging_signs/ars_nouveau/hanging_sign_details_archwood"
-  }
-}

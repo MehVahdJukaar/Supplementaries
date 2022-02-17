@@ -23,16 +23,21 @@ public class GoldDoorBlock extends DoorBlock {
         super(builder);
     }
 
+    public boolean canBeOpened(BlockState state) {
+        return !state.getValue(POWERED);
+    }
+
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (state.getValue(POWERED)) return InteractionResult.PASS;
+        if (this.canBeOpened(state)) {
+            tryOpenDoubleDoor(worldIn, state, pos);
 
-        tryOpenDoubleDoor(worldIn, state, pos);
-
-        state = state.cycle(OPEN);
-        worldIn.setBlock(pos, state, 10);
-        worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            state = state.cycle(OPEN);
+            worldIn.setBlock(pos, state, 10);
+            worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -47,8 +52,8 @@ public class GoldDoorBlock extends DoorBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        if (state == null) return state;
-        return state.setValue(OPEN, false);
+        if (state != null) state.setValue(OPEN, false);
+        return state;
     }
 
     private int getCloseSound() {

@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -33,6 +34,9 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
@@ -376,6 +380,38 @@ public class RendererUtil {
     private static int getFormatLength(TextureAtlasSprite sprite) {
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         return builder.getVertexFormat().getIntegerSize();
+    }
+
+
+    public static List<BakedQuad> swapSprite(List<BakedQuad> quads, TextureAtlasSprite sprite) {
+        List<BakedQuad> newList = new ArrayList<>();
+
+        for (BakedQuad q : quads) {
+            TextureAtlasSprite oldSprite = q.getSprite();
+            int formatLength = getFormatLength(oldSprite);
+            int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
+            for (int i = 0; i < v.length / formatLength; i++) {
+                float originalU = Float.intBitsToFloat(v[i * formatLength + 4]);
+                float originalV = Float.intBitsToFloat(v[i * formatLength + 5]);
+                v[i * formatLength + 4] = Float.floatToIntBits(originalU - oldSprite.getU0() + sprite.getU0());
+                v[i * formatLength + 5] = Float.floatToIntBits(originalV - oldSprite.getV0() + sprite.getV0());
+            }
+            newList.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), sprite, q.isShade()));
+        }
+        return newList;
+    }
+
+    /**
+     * flips x and z axis
+     */
+    //TODO: add matrix multiplication here
+    public static void flipAxis(int[] v, TextureAtlasSprite sprite) {
+        int formatLength = getFormatLength(sprite);
+        for (int i = 0; i < v.length / formatLength; i++) {
+            float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]) - 0.5f;
+            v[i * formatLength + 2] = v[i * formatLength];
+            v[i * formatLength] = Float.floatToIntBits(-originalZ + 0.5f);
+        }
     }
 
     /**

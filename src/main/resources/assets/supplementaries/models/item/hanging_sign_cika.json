@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:item/hanging_sign_template",
-  "textures": {
-    "0": "supplementaries:blocks/hanging_signs/byg/hanging_sign_front_cika",
-    "2": "supplementaries:blocks/hanging_signs/byg/hanging_sign_details_cika"
-  }
-}

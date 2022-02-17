@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -83,17 +84,8 @@ public class FallingUrnEntity extends FallingBlockEntity {
         BlockEntity tile = null;
         BlockPos pos = this.blockPosition();
         if (tag != null && !tag.isEmpty()) {
-            CompoundTag newTag = new CompoundTag();
-            for (String s : tag.getAllKeys()) {
-                Tag t = tag.get(s);
-                if (t != null) {
-                    if (!"x".equals(s) && !"y".equals(s) && !"z".equals(s)) {
-                        newTag.put(s, t.copy());
-                    }
-                }
-            }
-            tile = BlockEntity.loadStatic(pos, state, newTag);
-
+            tile = new UrnBlockTile(pos, state);
+            tile.load(tag);
         }
         Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);
 

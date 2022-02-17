@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.EnhancedLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
@@ -35,7 +35,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Executors;
 
 public class BlockGeneratorBlockTile extends BlockEntity {
 
@@ -82,7 +81,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
             final int posX = pos.getX();
             final int posZ = pos.getZ();
 
-
+            /*
             //lets hope world is thread safe
             try {
                 Executors.newSingleThreadExecutor()
@@ -90,19 +89,18 @@ public class BlockGeneratorBlockTile extends BlockEntity {
             } catch (Exception e) {
                 tile.failAndRemove(pLevel, pPos, e);
             }
+            */
 
 
-            /*
             Thread thread = new Thread(() -> {
                 try {
-                    threadResult = StructureLocator.find(world, posX, posZ, 2);
+                    tile.threadResult = StructureLocator.find(world, posX, posZ, 2);
                 } catch (Exception e) {
-                    this.level.removeBlock(this.worldPosition, false);
-                    Supplementaries.LOGGER.warn("failed to generate road sign at " + this.worldPosition.toString() + ": " + e);
+                    tile.failAndRemove(pLevel, pPos, e);
                 }
             });
             thread.start();
-            */
+
 
         }
 
@@ -253,7 +251,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                             if (0.32 > rand.nextFloat()) {
                                 topState = 0.32 > rand.nextFloat() ? trapdoor : air;
 
-                                EnhancedLanternBlock wl = ((EnhancedLanternBlock) ModRegistry.WALL_LANTERN.get());
+                                WallLanternBlock wl = ModRegistry.WALL_LANTERN.get();
                                 wl.placeOn(lanternDown, pos.below(), dir, world);
 
                                 //double

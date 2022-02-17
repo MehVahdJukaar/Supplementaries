@@ -61,11 +61,6 @@ public class ClockBlockTile extends BlockEntity {
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
     public void updateInitialTime(Level level, BlockState state, BlockPos pos) {
         int time = (int) (level.getDayTime() % 24000);
         this.updateTime(time, level, state, pos);

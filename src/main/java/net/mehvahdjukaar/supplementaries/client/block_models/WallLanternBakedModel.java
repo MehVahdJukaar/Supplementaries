@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -25,14 +26,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class WallLanternBakedModel implements IDynamicBakedModel {
     private final BakedModel support;
     private final BlockModelShaper blockModelShaper;
+
+    //private static final Map<Block,List<BakedQuad>> MODEL_CACHE = new HashMap<>();
 
     public WallLanternBakedModel(BakedModel support) {
         this.support = support;
@@ -45,9 +45,26 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> quads = new ArrayList<>();
 
+        BlockState mimic = null;
+        try {
+            mimic = extraData.getData(BlockProperties.MIMIC);
+        } catch (Exception ignored) {
+        }
+
         //support
         try {
-            quads.addAll(support.getQuads(state, side, rand, EmptyModelData.INSTANCE));
+
+            var supportQuads = support.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+            if(!supportQuads.isEmpty()){
+                if (mimic != null) {
+                    var sprite = WallLanternStuff.getTextureForLantern(mimic.getBlock());
+                    if (sprite != null) {
+                        supportQuads = RendererUtil.swapSprite(supportQuads, sprite);
+                    }
+                }
+                quads.addAll(supportQuads);
+            }
+
         } catch (Exception ignored) {
         }
 
@@ -56,9 +73,6 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
             boolean fancy = Boolean.TRUE.equals(extraData.getData(BlockProperties.FANCY));
 
             if (!fancy) {
-
-                BlockState mimic = extraData.getData(BlockProperties.MIMIC);
-
                 if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir() && state != null) {
                     Direction dir = state.getValue(WallLanternBlock.FACING);
                     if (mimic.hasProperty(BlockStateProperties.FACING)) {

@@ -62,11 +62,6 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-
-    @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
     }

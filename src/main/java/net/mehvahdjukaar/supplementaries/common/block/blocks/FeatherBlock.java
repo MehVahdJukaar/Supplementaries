@@ -59,13 +59,14 @@ public class FeatherBlock extends Block {
                 Random random = world.getRandom();
                 double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055);
                 world.addParticle(ModRegistry.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.35),
-                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy, r(random, 0.007));
+                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy*0.5, r(random, 0.007));
             }
         }
     }
 
     @Override
     public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
+        entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0D, 0.4D, 1.0D));
     }
 
 
@@ -86,7 +87,7 @@ public class FeatherBlock extends Block {
                 Random random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextInt(10) == 0) {
-                    double dy = 0.04;
+                    double dy = 0.005;
                     level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.15), entity.getY(), entity.getZ() + r(random, 0.15), 0, dy, 0);
                 }
             }

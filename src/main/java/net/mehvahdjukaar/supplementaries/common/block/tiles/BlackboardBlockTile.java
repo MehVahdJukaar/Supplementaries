@@ -136,13 +136,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         return this.saveWithoutMetadata();
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-        this.updateModelData();
-    }
-
-
     public Direction getDirection() {
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }

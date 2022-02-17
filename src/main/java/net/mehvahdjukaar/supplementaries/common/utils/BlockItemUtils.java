@@ -70,7 +70,11 @@ public class BlockItemUtils {
     }
 
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
-        if (!context.canPlace() || context == null) {
+        return place(context, blockToPlace, null);
+    }
+
+    public static InteractionResult place(BlockPlaceContext context, Block blockToPlace, @Nullable SoundType placeSound) {
+        if (!context.canPlace()) {
             return InteractionResult.FAIL;
         } else {
             BlockState blockstate = getPlacementState(context, blockToPlace);
@@ -94,9 +98,8 @@ public class BlockItemUtils {
                     }
                     world.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
                 }
-
-                SoundType soundtype = placedState.getSoundType(world, blockpos, context.getPlayer());
-                world.playSound(player, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                if(placeSound == null) placeSound = placedState.getSoundType(world, blockpos, context.getPlayer());
+                world.playSound(player, blockpos, getPlaceSound(placedState, world, blockpos, context.getPlayer()), SoundSource.BLOCKS, (placeSound.getVolume() + 1.0F) / 2.0F, placeSound.getPitch() * 0.8F);
                 if (player == null || !player.getAbilities().instabuild) {
                     itemstack.shrink(1);
                 }

@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.selene.util.BlockSetHandler;
+import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
-import net.mehvahdjukaar.supplementaries.datagen.types.VanillaWoodTypes;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,6 +31,6 @@ public class SignPostBlockGeometry implements IModelGeometry<SignPostBlockGeomet
 
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, Textures.SIGN_POSTS_TEXTURES.get(VanillaWoodTypes.OAK)));
+        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, Materials.SIGN_POSTS_MATERIALS.get(BlockSetHandler.OAK_WOOD_TYPE).texture()));
     }
 }
