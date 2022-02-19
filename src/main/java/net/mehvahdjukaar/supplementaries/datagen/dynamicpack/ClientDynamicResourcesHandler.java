@@ -98,8 +98,8 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                         String logTexture;
                         try {
                             logTexture = RPUtils.findFirstBlockTextureLocation(manager, Objects.requireNonNull(wood.logBlock), s -> !s.contains("top"));
-                        }catch (Exception e1){
-                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.plankBlock, s->true);
+                        } catch (Exception e1) {
+                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.plankBlock, s -> true);
                             LOGGER.error("Could not properly generate Hanging Sign model for {}. Falling back to planks texture : {}", v, e1);
                         }
                         addHangingSignLoaderModel(Objects.requireNonNull(hsLoader), id, logTexture);
@@ -166,7 +166,7 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
         if (!this.firstLoad) {
             this.firstLoad = true;
             generateStaticResources(manager);
-            if(!resourcePackSupport){
+            if (!resourcePackSupport) {
                 VanillaResourceManager vanillaManager = new VanillaResourceManager();
                 this.generateDynamicTextures(vanillaManager);
                 vanillaManager.close();
@@ -174,7 +174,7 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
         }
 
         //generate textures
-        if(resourcePackSupport){
+        if (resourcePackSupport) {
             this.generateDynamicTextures(manager);
         }
 
@@ -202,7 +202,7 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                 //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res(
                         String.format("blocks/hanging_signs/%s", wood.getVariantId("hanging_sign")));
-                if(hasHandmadeTexture(manager, textureRes))continue;
+                if (hasHandmadeTexture(manager, textureRes)) continue;
                 var v = e.getValue();
                 try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
 
@@ -232,12 +232,12 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                 WoodSetType wood = e.getKey();
                 //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res(String.format("items/hanging_signs/%s", wood.getVariantId("hanging_sign")));
-                if(hasHandmadeTexture(manager, textureRes))continue;
+                if (hasHandmadeTexture(manager, textureRes)) continue;
                 var v = e.getValue();
 
                 NativeImage newImage = null;
                 if (wood.signItem != null) {
-                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem);
+                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
                          NativeImage signMask = readImage(manager, Supplementaries.res(
                                  "textures/items/hanging_signs/sign_board_mask.png"))) {
 
@@ -265,11 +265,11 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                     }
                 }
                 //if it failed use plank one
-                if(newImage == null){
+                if (newImage == null) {
                     try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
                         Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
                         newImage = respriter.recolorImage(targetPalette);
-                    }catch (Exception ex) {
+                    } catch (Exception ex) {
                         LOGGER.error("Failed to generate Hanging Sign item texture for for {} : {}", v, ex);
                     }
                 }
@@ -292,12 +292,12 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                 //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res(
                         String.format("items/sign_posts/%s", wood.getVariantId("sign_post")));
-                if(hasHandmadeTexture(manager, textureRes))continue;
+                if (hasHandmadeTexture(manager, textureRes)) continue;
                 var v = e.getValue();
 
                 NativeImage newImage = null;
                 if (wood.signItem != null) {
-                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem);
+                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
                          NativeImage signMask = readImage(manager, Supplementaries.res(
                                  "textures/items/hanging_signs/sign_board_mask.png"))) {
 
@@ -317,12 +317,12 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
                     }
                 }
                 //if it failed use plank one
-                if(newImage == null){
+                if (newImage == null) {
                     try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
                         Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
                         newImage = respriter.recolorImage(targetPalette);
 
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         LOGGER.error("Failed to generate Sign Post item texture for for {} : {}", v, ex);
                     }
                 }
@@ -343,14 +343,16 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
 
             for (var e : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
                 WoodSetType wood = e.getKey();
+                var textureRes = Supplementaries.res(String.format("entity/sign_posts/%s", wood.getVariantId("sign_post")));
+                if (hasHandmadeTexture(manager, textureRes)) continue;
                 //if (wood.isVanilla()) continue;
                 var v = e.getValue();
 
                 try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
-                    NativeImage newImage = respriter.recolorImage(plankPalette,null);
-                    String textureRes = String.format("entity/sign_posts/%s", wood.getVariantId("sign_post"));
-                    DYNAMIC_TEXTURE_PACK.addTexture(Supplementaries.res(textureRes), newImage);
-                }catch (Exception ex){
+                    NativeImage newImage = respriter.recolorImage(plankPalette, null);
+
+                    DYNAMIC_TEXTURE_PACK.addTexture(textureRes, newImage);
+                } catch (Exception ex) {
                     LOGGER.error("Failed to generate Sign Post block texture for for {} : {}", v, ex);
                 }
             }
@@ -359,17 +361,19 @@ public class ClientDynamicResourcesHandler implements PreparableReloadListener {
         }
     }
 
-    private boolean hasHandmadeTexture(ResourceManager manager, ResourceLocation res){
+    private boolean hasHandmadeTexture(ResourceManager manager, ResourceLocation res) {
         ResourceLocation fullRes = RPUtils.resPath(res, ResType.TEXTURES);
-        if(manager.hasResource(fullRes)){
+        if (manager.hasResource(fullRes)) {
             try {
                 var r = manager.getResource(fullRes);
                 return !r.getSourceName().equals(DYNAMIC_TEXTURE_PACK.getName());
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
         return false;
     }
 //TODO: invert scribble color if sign is darker than them
+
     /**
      * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
      */

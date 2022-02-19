@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "supplementaries:blocks/bamboo_spikes_base_tipped",
+		"0": "supplementaries:blocks/bamboo_spikes_base",
 		"1": "supplementaries:blocks/bamboo_spikes",
-		"particle": "supplementaries:blocks/bamboo_spikes_base_tipped"
+		"particle": "supplementaries:blocks/bamboo_spikes_base"
 	},
 	"elements": [
 		{

@@ -170,6 +170,9 @@ dependencies {
     implementation fg.deobf("curse.maven:mgui-351914:3573121")
     implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
     implementation fg.deobf("curse.maven:kitteh6660s-morecraft-59648:3609216")
+    implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
+    implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
+    implementation fg.deobf("curse.maven:kiwi-303657:3577626")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
     //implementation fg.deobf("curse.maven:kiwi-303657:3577626")
 

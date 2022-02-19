@@ -52,7 +52,7 @@ public class FallingLanternEntity extends FallingBlockEntity {
 
             BlockPos pos = this.blockPosition();
             level.levelEvent(null, 2001, pos, Block.getId(state));
-            if(!state.hasProperty(LightableLanternBlock.LIT)||state.getValue(LightableLanternBlock.LIT)) {
+            if(state.getLightEmission()!=0) {
                 GunpowderBlock.createMiniExplosion(level, pos, true);
                 this.cancelDrop = true;
             }
