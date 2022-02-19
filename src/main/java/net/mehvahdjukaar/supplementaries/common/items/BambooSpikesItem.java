@@ -6,7 +6,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class BambooSpikesItem extends BurnableBlockItem {
+public class BambooSpikesItem extends WoodBasedBlockItem {
     public BambooSpikesItem(Block blockIn, Properties builder) {
         super(blockIn, builder, 150);
     }

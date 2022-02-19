@@ -82,10 +82,12 @@ public class DispenserRegistry {
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             //default behaviors for modded items
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(false));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(true));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(false));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior(true));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.NORMAL));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.NORMAL));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.BLUE));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.BLUE));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.SPIKY));
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.SPIKY));
         }
         //gunpowder
         if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
@@ -267,15 +269,15 @@ public class DispenserRegistry {
 
         private static class BombsDispenserBehavior extends AbstractProjectileDispenseBehavior {
 
-            private final boolean blue;
+            private final BombEntity.BombType type;
 
-            public BombsDispenserBehavior(boolean blue) {
-                this.blue = blue;
+            public BombsDispenserBehavior(BombEntity.BombType blue) {
+                this.type = blue;
             }
 
             @Override
             protected Projectile getProjectile(Level worldIn, Position position, ItemStack stackIn) {
-                return new BombEntity(worldIn, position.x(), position.y(), position.z(), blue);
+                return new BombEntity(worldIn, position.x(), position.y(), position.z(), type);
             }
 
             @Override

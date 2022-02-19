@@ -158,6 +158,11 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
             double posY = newPos.y;
             double posZ = newPos.z;
 
+
+            if (!this.isNoGravity() && !noPhysics) {
+                this.setDeltaMovement(velX, velY - this.getGravity(), velZ);
+            }
+
             float deceleration = this.getDeceleration();
 
             if (this.isInWater()) {
@@ -170,11 +175,8 @@ public abstract class ImprovedProjectileEntity extends ThrowableItemProjectile {
                 deceleration = this.waterDeceleration;
             }
 
-            this.setDeltaMovement(movement.scale(deceleration));
+            this.setDeltaMovement(this.getDeltaMovement().scale(deceleration));
 
-            if (!this.isNoGravity() && !noPhysics) {
-                this.setDeltaMovement(velX, velY - this.getGravity(), velZ);
-            }
             //first sets correct position, then call hit
             this.setPos(posX, posY, posZ);
             this.checkInsideBlocks();

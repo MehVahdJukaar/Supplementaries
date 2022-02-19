@@ -217,7 +217,7 @@ public class ServerConfigs {
             WALL_LANTERN_HIGH_PRIORITY = builder.comment("Gives high priority to wall lantern placement. Enable to override other wall lanterns placements, disable if it causes issues with other mods that use lower priority block click events")
                     .define("high_priority", true);
 
-            List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct");
+            List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct","enigmaticlegacy");
             WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist, STRING_CHECK);
             builder.pop();
@@ -629,8 +629,6 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
-
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> SIGNS_VILLAGES;
         public static ForgeConfigSpec.BooleanValue DISTANCE_TEXT;
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_MIN;
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
@@ -685,20 +683,8 @@ public class ServerConfigs {
             ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
                     .defineInRange("minimum_distance", 10, 0, 1001);
 
-
             DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
-
-
-            List<String> villages = Arrays.asList("minecraft:village", "repurposed_structures:village_badlands", "repurposed_structures:village_dark_oak", "repurposed_structures:village_birch",
-                    "repurposed_structures:village_giant_taiga", "repurposed_structures:village_jungle", "repurposed_structures:village_mountains", "repurposed_structures:village_oak",
-                    "repurposed_structures:village_swamp", "pokecube:village", "pokecube_legends:village", "pokecube_legends:village/ocean",
-                    "valhelsia_structures:castle", "valhelsia_structures:castle_ruin", "valhelsia_structures:small_castle", "valhelsia_structures:tower_ruin",
-                    "stoneholm:underground_village", "blue_skies:gatekeeper_house",
-                    "feywild:library", "feywild:blacksmith");
-
-            SIGNS_VILLAGES = builder.comment("list of structure that a sign can point to. Note that they will only spawn in dimensions where vanilla villages can")
-                    .defineList("villages", villages, STRING_CHECK);
 
             builder.pop();
 

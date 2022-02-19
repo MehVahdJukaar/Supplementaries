@@ -13,6 +13,8 @@ import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
@@ -37,6 +39,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -259,5 +262,15 @@ public class JarItem extends AbstractMobContainerItem {
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         ClientRegistry.registerISTER(consumer, JarItemRenderer::new);
     }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
+            InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
+            if (r.consumesAction()) return r;
+        }
+        return super.useOn(context);
+    }
+
 
 }

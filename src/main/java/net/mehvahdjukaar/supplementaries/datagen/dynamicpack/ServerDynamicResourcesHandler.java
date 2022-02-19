@@ -17,6 +17,8 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -27,7 +29,6 @@ public class ServerDynamicResourcesHandler {
 
     public static final DynamicDataPack DYNAMIC_DATA_PACK =
             new DynamicDataPack(Supplementaries.res("virtual_resourcepack"));
-
 
     //fired on mod setup
     public static void init() {

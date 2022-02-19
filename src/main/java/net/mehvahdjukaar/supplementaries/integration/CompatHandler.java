@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraftforge.fml.ModList;
-import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.content.building.module.VerticalSlabsModule;
 
 public class CompatHandler {
 
@@ -44,6 +42,7 @@ public class CompatHandler {
     public static final boolean nethersdelight;
     public static final boolean doubledoors;
     public static final boolean malum;
+    public static final boolean botania;
 
     static {
         ModList ml = ModList.get();
@@ -79,6 +78,7 @@ public class CompatHandler {
         nethersdelight = ml.isLoaded("nethers_delight");
         doubledoors = ml.isLoaded("doubledoors");
         malum = ml.isLoaded("malum");
+        botania = ml.isLoaded("botania");
     }
 
     public static void init() {
@@ -89,8 +89,8 @@ public class CompatHandler {
     public static void registerOptionalStuff() {
         if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
         if (farmers_delight) FDCompatRegistry.registerStuff();
+        if (botania) BotaniaCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
-        //if (botania) BotaniaCompatRegistry.registerStuff();
     }
 
 

@@ -1,16 +1,21 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
+
+import java.util.Collection;
 
 public class BombItem extends Item {
     private final BombEntity.BombType type;
@@ -25,6 +30,11 @@ public class BombItem extends Item {
         super(builder);
         this.type = type;
         this.glint = glint;
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+        super.fillItemCategory(pCategory, pItems);
     }
 
     @Override
@@ -59,5 +69,7 @@ public class BombItem extends Item {
 
         return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
     }
+
+
 }
 

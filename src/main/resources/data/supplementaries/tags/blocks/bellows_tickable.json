@@ -7,6 +7,7 @@
     {"id":"minecraft:smoker","required":false},
     {"id":"charm:kiln","required":false},
     {"id":"environmental:kiln","required":false},
-    {"id":"atum:kiln","required":false}
+    {"id":"atum:kiln","required":false},
+    {"id":"morecraft:kiln","required":false}
   ]
 }

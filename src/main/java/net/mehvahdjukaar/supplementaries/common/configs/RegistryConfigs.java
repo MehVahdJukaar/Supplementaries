@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,6 @@ public class RegistryConfigs {
     public static class reg {
         public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
         public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
-        //public static ForgeConfigSpec.BooleanValue FIREFLY_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_ENABLED;
@@ -136,9 +136,13 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
-        //public static ForgeConfigSpec.BooleanValue CONDITIONAL_SIGN_REGISTRATIONS;
 
-        public static Lazy<Boolean> HAS_BRASS = Lazy.of(() -> ModList.get().isLoaded("create"));
+        //TODO: use fill item category instead and access the tag
+        public static final Lazy<Boolean> HAS_LEAD = Lazy.of(()->hasMod("oreganized","immersiveengineering", "thermal",
+                "mekanism","silents_mechanisms"));
+        public static final Lazy<Boolean> HAS_BRASS = Lazy.of(()->hasMod("create"));
+        public static final Lazy<Boolean> HAS_SILVER = Lazy.of(()->hasMod("oreganized","mysticalworld","immersiveengineering",
+                "bluepower","silents_mechanisms","thermal","iceandfire","silentgems","occultism"));
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
@@ -151,14 +155,24 @@ public class RegistryConfigs {
             switch (path) {
                 case "vertical_slabs":
                     return CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
+                case ModRegistry.BOMB_SPIKY_NAME:
+                    return BOMB_ENABLED.get() && HAS_LEAD.get();
+                case ModRegistry.SILVER_DOOR_NAME:
+                    return SILVER_DOOR_ENABLED.get() && HAS_SILVER.get();
+                case ModRegistry.SILVER_TRAPDOOR_NAME:
+                    return SILVER_TRAPDOOR_ENABLED.get() && HAS_SILVER.get();
+                case ModRegistry.LEAD_DOOR_NAME:
+                    return LEAD_DOOR_ENABLED.get() && HAS_SILVER.get();
+                case ModRegistry.LEAD_TRAPDOOR_NAME:
+                    return LEAD_TRAPDOOR_ENABLED.get() && HAS_SILVER.get();
                 case ModRegistry.GLOBE_SEPIA_NAME:
-                    return reg.GLOBE_SEPIA.get() && reg.ANTIQUE_INK_ENABLED.get();
+                    return GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
                 case ModRegistry.FLAX_WILD_NAME:
-                    return reg.FLAX_ENABLED.get();
+                    return FLAX_ENABLED.get();
                 case ModRegistry.BRASS_LANTERN_NAME:
-                    return reg.HAS_BRASS.get();
+                    return HAS_BRASS.get() && COPPER_LANTERN_ENABLED.get();
                 case ModRegistry.KEY_NAME:
-                    return reg.NETHERITE_DOOR_ENABLED.get() || reg.NETHERITE_TRAPDOOR_ENABLED.get() || reg.SAFE_ENABLED.get();
+                    return NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
             }
             for (Field f : reg.class.getDeclaredFields()) {
                 try {
@@ -293,6 +307,10 @@ public class RegistryConfigs {
         }
 
 
+    }
+
+    private static boolean hasMod(String... modIds){
+       return Arrays.stream(modIds).anyMatch(ModList.get()::isLoaded);
     }
 
 }

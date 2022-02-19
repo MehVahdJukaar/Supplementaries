@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
@@ -31,7 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -155,15 +153,14 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                 DyeColor color = getStackChalkColor(stack);
                 if (color != null) {
                     byte newColor = colorToByte(color);
-                    if (te.pixels[x][y] != newColor) {
-                        te.pixels[x][y] = newColor;
+                    if (te.getPixel(x, y) != newColor) {
+                        te.setPixel(x, y, newColor);
                         te.setChanged();
-                        return InteractionResult.sidedSuccess(worldIn.isClientSide);
                     }
-                    return InteractionResult.PASS;
+                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
             }
-            if(!worldIn.isClientSide){
+            if (!worldIn.isClientSide) {
                 te.sendOpenGuiPacket(worldIn, pos, player);
             }
         }
@@ -208,16 +205,16 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
         if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
             return this.getBlackboardItem(te);
         }
-        return super.getCloneItemStack(state,target,world, pos, player);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
 
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
-            //TODO: finish
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && !te.isEmpty()) {
+            te.clear();
+            return true;
         }
-        return true;
-
+        return false;
     }
 }

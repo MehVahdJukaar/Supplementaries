@@ -48,7 +48,7 @@ public class RemapHandler {
                 try {
                     Block newBlock = getNewBlock(ModRegistry.HANGING_SIGNS, k);
                     if(newBlock == null){
-                        newBlock = ModRegistry.HANGING_SIGNS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.HANGING_SIGNS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
@@ -91,7 +91,7 @@ public class RemapHandler {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.HANGING_SIGNS_ITEMS, k);
                     if(newBlock == null){
-                        newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
@@ -101,7 +101,7 @@ public class RemapHandler {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.SIGN_POST_ITEMS, k);
                     if(newBlock == null){
-                        newBlock = ModRegistry.SIGN_POST_ITEMS.get(BlockSetHandler.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {

@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.Textures;
@@ -16,16 +15,17 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.security.Provider;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class BlackboardTextureManager {
 
@@ -124,8 +124,7 @@ public class BlackboardTextureManager {
         private RenderType renderType;
         @Nullable
         private ResourceLocation textureLocation;
-        @Nullable
-        private List<BakedQuad> quadList;
+        private Map<Direction, List<BakedQuad>> models = new HashMap<>();
         //private final RenderMaterial renderMaterial;
 
         private TextureInstance(byte[][] pixels, long id) {
@@ -148,11 +147,11 @@ public class BlackboardTextureManager {
         }
 
         @Nonnull
-        public List<BakedQuad> getOrCreateQuads(Function<byte[][],List<BakedQuad>> quadFactory){
-            if(quadList == null){
-                this.quadList = quadFactory.apply(pixels);
+        public List<BakedQuad> getModel(Direction dir, Function<byte[][],List<BakedQuad>> modelFactory){
+            if(!models.containsKey(dir)){
+                this.models.put(dir, modelFactory.apply(pixels));
             }
-            return quadList;
+            return models.get(dir);
         }
 
         @Nonnull

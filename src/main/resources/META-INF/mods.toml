@@ -1,7 +1,7 @@
 
 modLoader="javafml" #mandatory
 
-loaderVersion="[38,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion="[39,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
 license="All rights reserved"
 
@@ -11,7 +11,7 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="1.2.0" #mandatory
+version="1.2.1" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -35,7 +35,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[38.0.14,)" #mandatory
+    versionRange="[39.0.78,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.18-1.13,]"
+    versionRange="[1.18-1.13.1,]"
     ordering="AFTER"
     side="BOTH"
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation.structure;
 
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
@@ -26,16 +27,6 @@ import java.util.List;
 
 public class StructureLocator {
 
-    private static final List<StructureFeature<?>> TARGETS = new ArrayList<>();
-
-    public static void init() {
-        for (String name : ServerConfigs.spawn.SIGNS_VILLAGES.get()) {
-            ResourceLocation res = new ResourceLocation(name);
-            if (ForgeRegistries.STRUCTURE_FEATURES.containsKey(res))
-                TARGETS.add(ForgeRegistries.STRUCTURE_FEATURES.getValue(res));
-        }
-    }
-
     private static int dist(BlockPos pos1, BlockPos pos2) {
         int i = pos2.getX() - pos1.getX();
         int j = pos2.getZ() - pos1.getZ();
@@ -58,7 +49,7 @@ public class StructureLocator {
 
 
             //TODO: cache some of this
-            for (StructureFeature<?> str : TARGETS) {
+            for (StructureFeature<?> str : ModTags.VILLAGES.getValues()) {
                 if (true) { //biomeSource.canGenerateStructure(str)
                     StructureFeatureConfiguration sep = gen.getSettings().getConfig(str);
                     if (sep != null) {

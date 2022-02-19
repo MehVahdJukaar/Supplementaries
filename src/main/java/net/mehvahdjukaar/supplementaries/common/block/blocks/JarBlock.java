@@ -45,14 +45,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class JarBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 14, 13),
+    public static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 3, 13, 14, 13),
             Block.box(5, 14, 5, 11, 16, 11));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public JarBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel(state -> state.getValue(JarBlock.LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 

@@ -267,16 +267,16 @@ public class ModRegistry {
 
     public static final String BOMB_BLUE_NAME = "bomb_blue";
     public static final RegistryObject<Item> BOMB_BLUE_ITEM = ITEMS.register(BOMB_BLUE_NAME, () -> new BombItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME)), true, true));
+            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME)), BombEntity.BombType.BLUE, true));
     public static final RegistryObject<Item> BOMB_BLUE_ITEM_ON = ITEMS.register("bomb_blue_projectile", () -> new BombItem(new Item.Properties()
-            .tab(null), true, false));
+            .tab(null), BombEntity.BombType.BLUE, false));
 
     //sharpnel bomb
-    public static final String BOMB_SHARPNEL_NAME = "bomb_sharpnel";
-    public static final RegistryObject<Item> BOMB_SHARPNEL_ITEM = ITEMS.register(BOMB_SHARPNEL_NAME, () -> new BombItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME))));
-    public static final RegistryObject<Item> BOMB_SHARPNEL_ITEM_ON = ITEMS.register("bomb_sharpnel_projectile", () -> new BombItem(new Item.Properties()
-            .tab(null)));
+    public static final String BOMB_SPIKY_NAME = "bomb_spiky";
+    public static final RegistryObject<Item> BOMB_SPIKY_ITEM = ITEMS.register(BOMB_SPIKY_NAME, () -> new BombItem(new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_SPIKY_NAME)), BombEntity.BombType.SPIKY, false));
+    public static final RegistryObject<Item> BOMB_SPIKY_ITEM_ON = ITEMS.register("bomb_spiky_projectile", () -> new BombItem(new Item.Properties()
+            .tab(null), BombEntity.BombType.SPIKY, false));
 
     //rope arrow
     public static final String ROPE_ARROW_NAME = "rope_arrow";
@@ -437,7 +437,7 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = TILES.register(NOTICE_BOARD_NAME, () -> BlockEntityType.Builder.of(
             NoticeBoardBlockTile::new, NOTICE_BOARD.get()).build(null));
 
-    public static final RegistryObject<Item> NOTICE_BOARD_ITEM = ITEMS.register(NOTICE_BOARD_NAME, () -> new BurnableBlockItem(NOTICE_BOARD.get(),
+    public static final RegistryObject<Item> NOTICE_BOARD_ITEM = ITEMS.register(NOTICE_BOARD_NAME, () -> new WoodBasedBlockItem(NOTICE_BOARD.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, NOTICE_BOARD_NAME)), 300));
 
     public static final RegistryObject<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = CONTAINERS
@@ -473,7 +473,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
                     .strength(1f, 1f)
                     .sound(SoundType.GLASS)
-                    .lightLevel(state -> state.getValue(JarBlock.LIGHT_LEVEL))
                     .noOcclusion()
     ));
 
@@ -652,7 +651,7 @@ public class ModRegistry {
 
     //brass lantern
     public static final String BRASS_LANTERN_NAME = "brass_lantern";
-    public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME, () -> new CopperLanternBlock(
+    public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME, () -> new BrassLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get())));
 
     public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME));
@@ -744,7 +743,7 @@ public class ModRegistry {
     ));
     public static final RegistryObject<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = TILES.register(ITEM_SHELF_NAME, () -> BlockEntityType.Builder.of(
             ItemShelfBlockTile::new, ITEM_SHELF.get()).build(null));
-    public static final RegistryObject<Item> ITEM_SHELF_ITEM = ITEMS.register(ITEM_SHELF_NAME, () -> new BurnableBlockItem(ITEM_SHELF.get(),
+    public static final RegistryObject<Item> ITEM_SHELF_ITEM = ITEMS.register(ITEM_SHELF_NAME, () -> new WoodBasedBlockItem(ITEM_SHELF.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, ITEM_SHELF_NAME)), 100));
 
     //doormat
@@ -757,7 +756,7 @@ public class ModRegistry {
     ));
     public static final RegistryObject<BlockEntityType<DoormatBlockTile>> DOORMAT_TILE = TILES.register(DOORMAT_NAME, () -> BlockEntityType.Builder.of(
             DoormatBlockTile::new, DOORMAT.get()).build(null));
-    public static final RegistryObject<Item> DOORMAT_ITEM = ITEMS.register(DOORMAT_NAME, () -> new BurnableBlockItem(DOORMAT.get(),
+    public static final RegistryObject<Item> DOORMAT_ITEM = ITEMS.register(DOORMAT_NAME, () -> new WoodBasedBlockItem(DOORMAT.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, DOORMAT_NAME)), 134));
 
     //magma cream block
@@ -834,7 +833,7 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> BlockEntityType.Builder.of(
             SpeakerBlockTile::new, SPEAKER_BLOCK.get()).build(null));
 
-    public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME, () -> new BurnableBlockItem(SPEAKER_BLOCK.get(),
+    public static final RegistryObject<Item> SPEAKER_BLOCK_ITEM = ITEMS.register(SPEAKER_BLOCK_NAME, () -> new WoodBasedBlockItem(SPEAKER_BLOCK.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_REDSTONE, SPEAKER_BLOCK_NAME)), 300));
 
     //turn table
@@ -889,7 +888,7 @@ public class ModRegistry {
     ));
     public static final RegistryObject<BlockEntityType<BellowsBlockTile>> BELLOWS_TILE = TILES.register(BELLOWS_NAME, () -> BlockEntityType.Builder.of(
             BellowsBlockTile::new, BELLOWS.get()).build(null));
-    public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME, () -> new BurnableBlockItem(BELLOWS.get(),
+    public static final RegistryObject<Item> BELLOWS_ITEM = ITEMS.register(BELLOWS_NAME, () -> new WoodBasedBlockItem(BELLOWS.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_REDSTONE, BELLOWS_NAME)), 300));
 
     //clock
@@ -990,7 +989,7 @@ public class ModRegistry {
 
     //lead trapdoor
     public static final String LEAD_TRAPDOOR_NAME = "lead_trapdoor";
-    public static final RegistryObject<Block> LEAD_TRAPDOOR = BLOCKS.register(LEAD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
+    public static final RegistryObject<Block> LEAD_TRAPDOOR = BLOCKS.register(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
             BlockBehaviour.Properties.copy(LEAD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
     public static final RegistryObject<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME));

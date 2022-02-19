@@ -5,11 +5,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ForgeRegistryTagsProvider;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.GameData;
 
 public class ModTags {
 
@@ -59,16 +65,19 @@ public class ModTags {
     public static final Tags.IOptionalNamedTag<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final Tags.IOptionalNamedTag<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
 
+    public static final Tag.Named<StructureFeature<?>> VILLAGES = structureTag("villages");
 
-
+    private static Tags.IOptionalNamedTag<StructureFeature<?>> structureTag(String name) {
+        return ForgeTagHandler.createOptionalTag(ForgeRegistries.STRUCTURE_FEATURES,Supplementaries.res( name));
+    }
     private static Tags.IOptionalNamedTag<Item> itemTag(String name) {
-        return ItemTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return ItemTags.createOptional(Supplementaries.res( name));
     }
     private static Tags.IOptionalNamedTag<Block> blockTag(String name) {
-        return BlockTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return BlockTags.createOptional(Supplementaries.res( name));
     }
     private static Tags.IOptionalNamedTag<EntityType<?>> entityTag(String name) {
-        return EntityTypeTags.createOptional(new ResourceLocation(Supplementaries.MOD_ID, name));
+        return EntityTypeTags.createOptional(Supplementaries.res( name));
     }
 
 }

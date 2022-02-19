@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,10 +15,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.Random;
 
 public class LeadDoorBlock extends DoorBlock {
     public static IntegerProperty OPENING_PROGRESS = BlockProperties.OPENING_PROGRESS;
@@ -43,14 +43,32 @@ public class LeadDoorBlock extends DoorBlock {
         if (this.canBeOpened(state)) {
             GoldDoorBlock.tryOpenDoubleDoor(worldIn, state, pos);
 
-            state = state.cycle(OPEN);
+            state = state.cycle(OPEN).setValue(OPENING_PROGRESS, 0);
             worldIn.setBlock(pos, state, 10);
             worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         } else {
             //sound here
-            worldIn.setBlock(pos, state.setValue(OPENING_PROGRESS, state.getValue(OPENING_PROGRESS) + 1), 10);
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            int p = state.getValue(OPENING_PROGRESS) + 1;
+            if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+                worldIn.setBlock(pos.below(), worldIn.getBlockState(pos.below()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+            } else {
+                worldIn.setBlock(pos.above(), worldIn.getBlockState(pos.above()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+            }
+            worldIn.setBlock(pos, state.setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+
+            worldIn.playSound(player, pos, SoundEvents.NETHERITE_BLOCK_STEP, SoundSource.BLOCKS, 1, 1);
+            worldIn.scheduleTick(pos, this, 20);
+        }
+        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random pRandom) {
+        level.setBlock(pos, state.setValue(OPENING_PROGRESS, 0), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            level.setBlock(pos.below(), level.getBlockState(pos.below()).setValue(OPENING_PROGRESS, 0), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+        } else {
+            level.setBlock(pos.above(), level.getBlockState(pos.above()).setValue(OPENING_PROGRESS, 0), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
         }
     }
 
@@ -62,7 +80,7 @@ public class LeadDoorBlock extends DoorBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        if (state != null) state.setValue(OPEN, false);
+        if (state != null) state.setValue(OPEN, false).setValue(POWERED, false);
         return state;
     }
 

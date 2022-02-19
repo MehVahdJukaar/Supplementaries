@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.BurnableBlockItem;
+import net.mehvahdjukaar.supplementaries.common.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
@@ -64,7 +64,7 @@ public class RegistryHelper {
     }
 
     public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group, int burnTime) {
-        return regItem(blockSup.getId().getPath(), () -> new BurnableBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
+        return regItem(blockSup.getId().getPath(), () -> new WoodBasedBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
     }
 
     public static RegistryObject<SimpleParticleType> regParticle(String name) {
@@ -189,12 +189,10 @@ public class RegistryHelper {
             WoodSetType wood = entry.getKey();
             //should be there already since this is fired after block reg
             Block block = entry.getValue();
-            Item i = wood.plankBlock.asItem();
-            boolean hidden = i == Items.AIR || i.getCreativeTabs().isEmpty();
-            Item item = new BurnableBlockItem(block,
-                    new Item.Properties().stacksTo(16).tab(hidden ? null :
+            Item item = new WoodBasedBlockItem(block,
+                    new Item.Properties().stacksTo(16).tab(
                             getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),
-                    wood.canBurn() ? 200 : 0
+                    200,wood
             ).setRegistryName(block.getRegistryName());
             registry.register(item);
             ModRegistry.HANGING_SIGNS_ITEMS.put(wood, item);
@@ -207,11 +205,9 @@ public class RegistryHelper {
         IForgeRegistry<Item> registry = event.getRegistry();
         for (WoodSetType wood : woodTypes) {
             if (wood.shouldHaveBlockSet()) {
-                Item i = wood.plankBlock.asItem();
-                boolean hidden = i == Items.AIR || i.getCreativeTabs().isEmpty();
                 String name = wood.getVariantId(ModRegistry.SIGN_POST_NAME);
                 Item item = new SignPostItem(
-                        new Item.Properties().stacksTo(16).tab(hidden ? null :
+                        new Item.Properties().stacksTo(16).tab(
                                 getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),
                         wood
                 ).setRegistryName(Supplementaries.res(name));

@@ -43,10 +43,9 @@ public class ServerBoundSetBlackboardPacket {
             BlockPos pos = message.pos;
             if (world.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
                 world.playSound(null, message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
-                board.pixels = message.pixels;
+                board.setPixels(message.pixels);
                 //updates client
-                BlockState state = world.getBlockState(pos);
-                world.sendBlockUpdated(pos, state, state, 3);
+                //set changed also sends a block update
                 board.setChanged();
             }
         });

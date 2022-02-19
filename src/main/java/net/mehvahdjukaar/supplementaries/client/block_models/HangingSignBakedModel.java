@@ -100,7 +100,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
                             Direction dir = q.getDirection();
                             if(flipped) {
-                                RendererUtil.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_180);
+                                RendererUtil.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_90);
                                 if (dir.getAxis() != Direction.Axis.Y) dir = dir.getClockWise();
                             }
                             if(ceiling){

@@ -1,19 +1,19 @@
 {
-	"loader": "supplementaries:blackboard_loader",
-	"model": {
-		"parent": "supplementaries:block/blackboard_frame",
-		"textures": {
-		"0": "supplementaries:blocks/blackboard_side",
-		"1": "supplementaries:blocks/blackboard_back",
-		"2": "supplementaries:blocks/blackboard_black",
-		"particle": "supplementaries:blocks/blackboard_side",
-				"black": "supplementaries:blocks/blackboard_black",
-		"white": "supplementaries:blocks/blackboard_white"
-		}
-	},
-	"textures": {
-		"particle": "supplementaries:blocks/blackboard_side",
-		"black": "supplementaries:blocks/blackboard_black",
-		"white": "supplementaries:blocks/blackboard_white"
-	}
+  "loader": "supplementaries:blackboard_loader",
+  "model": {
+    "parent": "supplementaries:block/blackboard_frame",
+    "textures": {
+      "0": "supplementaries:blocks/blackboard_side",
+      "1": "supplementaries:blocks/blackboard_back",
+      "2": "supplementaries:blocks/blackboard",
+      "particle": "supplementaries:blocks/blackboard_side",
+      "black": "supplementaries:blocks/blackboard_black",
+      "white": "supplementaries:blocks/blackboard_white"
+    }
+  },
+  "textures": {
+    "particle": "supplementaries:blocks/blackboard_side",
+    "black": "supplementaries:blocks/blackboard_black",
+    "white": "supplementaries:blocks/blackboard_white"
+  }
 }

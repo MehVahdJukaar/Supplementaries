@@ -219,6 +219,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        CompatHandlerClient.registerEntityRenderers(event);
         //entities
         event.registerEntityRenderer(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.registerEntityRenderer(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));

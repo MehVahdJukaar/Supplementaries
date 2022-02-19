@@ -61,7 +61,7 @@ public class BlackBoardGui extends Screen {
 
     //dynamic update for client
     public void setPixel(int x, int y, boolean on) {
-        this.tileBoard.pixels[x][y] = (byte) (on ? 1 : 0);
+        this.tileBoard.setPixel(x,y,(byte) (on ? 1 : 0));
     }
 
     //calls drag for other buttons
@@ -89,7 +89,7 @@ public class BlackBoardGui extends Screen {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].color = this.tileBoard.pixels[xx][yy];
+                this.buttons[xx][yy].color = this.tileBoard.getPixel(xx,yy);
             }
         }
 

@@ -50,9 +50,6 @@ public class ModSetup {
 
                 setupStage++;
 
-                StructureLocator.init();
-                setupStage++;
-
                 CompatHandler.init();
                 setupStage++;
 

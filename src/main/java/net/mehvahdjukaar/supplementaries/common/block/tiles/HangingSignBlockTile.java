@@ -49,7 +49,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         this.textHolder = new TextHolder(MAX_LINES);
         if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
-        } else this.woodType = BlockSetHandler.OAK_WOOD_TYPE;
+        } else this.woodType = WoodSetType.OAK_WOOD_TYPE;
     }
 
     @Override

@@ -18,10 +18,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
@@ -40,17 +38,13 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.RegistryObject;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
 
     private BombType type;
-
     private boolean active = true;
-
     private int changeTimer = -1;
-
     private boolean superCharged = false;
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
@@ -266,7 +260,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         super.onHit(result);
         if (!this.level.isClientSide) {
             boolean isInstantlyActivated = this.type.isInstantlyActivated();
-            if (isInstantlyActivated && this.changeTimer == -1) {
+            if (!isInstantlyActivated && this.changeTimer == -1) {
                 this.changeTimer = 10;
                 //this.setDeltaMovement(Vector3d.ZERO);
                 this.level.broadcastEntityEvent(this, (byte) 68);
@@ -275,7 +269,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
             //normal explosion
             if (!this.isRemoved()) {
-                if (!isInstantlyActivated || this.superCharged) {
+                if (isInstantlyActivated || this.superCharged) {
                     this.reachedEndOfLife();
                 }
             }
@@ -333,7 +327,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     public enum BombType {
         NORMAL(ModRegistry.BOMB_ITEM, ModRegistry.BOMB_ITEM_ON),
         BLUE(ModRegistry.BOMB_BLUE_ITEM, ModRegistry.BOMB_BLUE_ITEM_ON),
-        SHARPNEL(ModRegistry.BOMB_SHARPNEL_ITEM, ModRegistry.BOMB_SHARPNEL_ITEM_ON);
+        SPIKY(ModRegistry.BOMB_SPIKY_ITEM, ModRegistry.BOMB_SPIKY_ITEM_ON);
 
         public RegistryObject<Item> item;
         public RegistryObject<Item> item_on;
@@ -365,7 +359,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                     entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
                     entity.setSecondsOnFire(10);
                 }
-                case SHARPNEL -> {
+                case SPIKY -> {
                     boolean shouldPoison = false;
                     float random = entity.getRandom().nextInt(100);
                     if (distSq <= 4 * 4) {
@@ -387,7 +381,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                     }
                 }
             }
-
         }
 
         public boolean isInstantlyActivated() {
@@ -397,18 +390,20 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         public void spawnExtraParticles(BombEntity bomb) {
             switch (this) {
                 case BLUE -> {
-                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.55f);
+                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.6f);
                 }
-                case SHARPNEL -> {
+                case SPIKY -> {
                     //maybe use method above?
                     var particle = CompatObjects.SHARPNEL.get();
                     if (particle instanceof ParticleOptions p) {
                         for (int i = 0; i < 100; i++) {
-                            float dx = (float) (bomb.random.nextGaussian() * 5f);
-                            float dy = (float) (bomb.random.nextGaussian() * 5f);
-                            float dz = (float) (bomb.random.nextGaussian() * 5f);
+                            float dx = (float) (bomb.random.nextGaussian() * 4f);
+                            float dy = (float) (bomb.random.nextGaussian() * 4f);
+                            float dz = (float) (bomb.random.nextGaussian() * 4f);
                             bomb.level.addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
                         }
+                    }else{
+                        bomb.spawnParticleInASphere(ParticleTypes.CRIT, 100, 5f);
                     }
                 }
             }

@@ -26,7 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class LightableLanternBlock extends LanternBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-       // if (state.getValue(HANGING)) return RenderShape.ENTITYBLOCK_ANIMATED;
+        // if (state.getValue(HANGING)) return RenderShape.ENTITYBLOCK_ANIMATED;
         return RenderShape.MODEL;
     }
 
@@ -64,8 +63,8 @@ public class LightableLanternBlock extends LanternBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         var optional = toggleLight(state, worldIn, pos, player, handIn);
-        if(optional.isPresent()){
-            if(!worldIn.isClientSide){
+        if (optional.isPresent()) {
+            if (!worldIn.isClientSide) {
                 worldIn.setBlockAndUpdate(pos, optional.get());
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide);
@@ -79,25 +78,25 @@ public class LightableLanternBlock extends LanternBlock {
             ItemStack item = player.getItemInHand(handIn);
             if (!state.getValue(LIT)) {
                 if (item.getItem() instanceof FlintAndSteelItem) {
-                    if (!worldIn.isClientSide) {
-                        worldIn.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.4F + 0.8F);
-                        state = state.setValue(LIT, true);
-                    }
+
+                    worldIn.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.4F + 0.8F);
+                    state = state.setValue(LIT, true);
+
                     item.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
-                   return Optional.of(state);
+                    return Optional.of(state);
                 } else if (item.getItem() instanceof FireChargeItem) {
-                    if (!worldIn.isClientSide) {
-                        worldIn.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, (worldIn.getRandom().nextFloat() - worldIn.getRandom().nextFloat()) * 0.2F + 1.0F);
-                        state = state.setValue(LIT, true);
-                    }
+
+                    worldIn.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, (worldIn.getRandom().nextFloat() - worldIn.getRandom().nextFloat()) * 0.2F + 1.0F);
+                    state = state.setValue(LIT, true);
+
                     if (!player.isCreative()) item.shrink(1);
                     return Optional.of(state);
                 }
             } else if (item.isEmpty()) {
-                if (!worldIn.isClientSide) {
-                    worldIn.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
-                    state = state.setValue(LIT, false);
-                }
+
+                worldIn.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
+                state = state.setValue(LIT, false);
+
                 return Optional.of(state);
             }
         }

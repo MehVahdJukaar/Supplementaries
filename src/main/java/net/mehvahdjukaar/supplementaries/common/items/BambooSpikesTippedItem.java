@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BambooSpikesTippedItem extends BurnableBlockItem implements SimpleWaterloggedBlock {
+public class BambooSpikesTippedItem extends WoodBasedBlockItem implements SimpleWaterloggedBlock {
 
 
     public BambooSpikesTippedItem(Block blockIn, Properties builder) {

@@ -15,11 +15,12 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class SilverTrapdoorBlock extends TrapDoorBlock {
+public class SilverTrapdoorBlock extends GoldTrapdoorBlock {
     public SilverTrapdoorBlock(Properties properties) {
         super(properties);
     }
 
+    @Override
     public boolean canBeOpened(BlockState state) {
         return state.getValue(POWERED);
     }

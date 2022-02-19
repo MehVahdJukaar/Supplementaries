@@ -100,9 +100,10 @@ public class ItemsOverrideHandler {
 
         HPItemActionOnBlock.add(new WallLanternBehavior());
         HPItemActionOnBlock.add(new AntiqueInkBehavior());
+        HPItemActionOnBlock.add(new WrenchBehavior());
 
-        itemActionOnBlock.add(new WrenchBehavior());
-        itemActionOnBlock.add(new WallLanternBehavior());
+        //itemActionOnBlock.add(new WallLanternBehavior());
+
         itemActionOnBlock.add(new MapMarkerBehavior());
         itemActionOnBlock.add(new CeilingBannersBehavior());
         itemActionOnBlock.add(new HangingPotBehavior());

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class FlagItem extends BurnableBlockItem implements IColored {
+public class FlagItem extends WoodBasedBlockItem implements IColored {
 
 
     public FlagItem(Block block, Properties properties) {

@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,6 +36,12 @@ public class SignPostItem extends Item {
     public SignPostItem(Properties properties, WoodSetType wood) {
         super(properties);
         woodType = wood;
+    }
+
+    @Override
+    protected boolean allowdedIn(CreativeModeTab pCategory) {
+        if (woodType.plankBlock.asItem().getItemCategory() == null) return false;
+        return super.allowdedIn(pCategory);
     }
 
     @Override

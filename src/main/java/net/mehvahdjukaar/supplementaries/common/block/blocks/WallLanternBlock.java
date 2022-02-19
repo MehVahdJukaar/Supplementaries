@@ -68,6 +68,8 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
                 var opt = LightableLanternBlock.toggleLight(lantern, pLevel, pPos, pPlayer, pHand);
                 if(opt.isPresent()){
                     te.setHeldBlock(opt.get());
+                    int light = opt.get().getLightEmission();
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL,light));
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }

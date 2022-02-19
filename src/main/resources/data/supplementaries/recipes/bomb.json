@@ -1,7 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
+  "group": "bomb",
   "pattern": [
-    " 1 ",
+    " 12",
     "101",
     " 1 "
   ],
@@ -11,6 +12,9 @@
     },
     "1": {
       "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "item": "minecraft:string"
     }
   },
   "result": {

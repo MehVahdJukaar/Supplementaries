@@ -253,7 +253,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         double d2 = target.getZ() + vector3d.z - this.getZ();
         float f = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 
-        BombEntity bomb = new BombEntity(this.level, this, false);
+        BombEntity bomb = new BombEntity(this.level, this, BombEntity.BombType.NORMAL);
         //bomb.xRot -= -90F;
         bomb.shoot(d0, d1 + (double) (f * 0.24F), d2, 1.25F, 0.9F);
 
