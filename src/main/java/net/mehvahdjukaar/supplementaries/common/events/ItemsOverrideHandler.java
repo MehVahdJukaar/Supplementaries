@@ -15,13 +15,12 @@ import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
-import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.mapatlas.MapAtlasPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -54,6 +53,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
@@ -427,7 +427,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof MapItem;
+            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item));
         }
 
         private final List<Block> BLOCK_MARKERS = Arrays.asList(Blocks.LODESTONE, Blocks.NETHER_PORTAL, Blocks.BEACON,
@@ -440,8 +440,12 @@ public class ItemsOverrideHandler {
             if (b instanceof BedBlock || BLOCK_MARKERS.contains(b) || Tags.Blocks.CHESTS.contains(b) ||
                     world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
                 if (!world.isClientSide) {
-                    if (MapItem.getSavedData(stack, world) instanceof ExpandedMapData data) {
-                        data.toggleCustomDecoration(world, pos);
+                    MapItemSavedData data = null;
+                    if (stack.getItem() instanceof MapItem) data = MapItem.getSavedData(stack, world);
+                    else if (CompatHandler.mapatlas) data = MapAtlasPlugin.getSavedDataFromAtlas(stack, world, player);
+
+                    if (data instanceof ExpandedMapData expandedMapData) {
+                        expandedMapData.toggleCustomDecoration(world, pos);
                     }
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
@@ -699,6 +703,7 @@ public class ItemsOverrideHandler {
     private static class SoapClearBehavior extends ItemUseOnBlockOverride {
 
         boolean enabled = RegistryConfigs.reg.SOAP_ENABLED.get();
+
         @Override
         public boolean isEnabled() {
             return enabled;
@@ -1119,13 +1124,13 @@ public class ItemsOverrideHandler {
             //place block
             BlockPlaceContext ctx = new BlockPlaceContext(world, player, hand, heldStack, raytrace);
             SoundType placeSound = null;
-            if(heldStack.getItem() instanceof BlockItem bi){
+            if (heldStack.getItem() instanceof BlockItem bi) {
                 placeSound = bi.getBlock().defaultBlockState().getSoundType(world, pos, player);
             }
 
             result = BlockItemUtils.place(ctx, blockOverride, placeSound);
         }
-        if (result.consumesAction() && player instanceof ServerPlayer  serverPlayer && !isRanged) {
+        if (result.consumesAction() && player instanceof ServerPlayer serverPlayer && !isRanged) {
             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, heldStack);
         }
         if (result == InteractionResult.FAIL) return InteractionResult.PASS;

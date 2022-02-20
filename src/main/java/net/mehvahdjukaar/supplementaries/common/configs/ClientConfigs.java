@@ -151,6 +151,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> TICKLE_MOBS;
 
+        public static ForgeConfigSpec.BooleanValue FAST_SIGNS;
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_PARTICLES;
         public static ForgeConfigSpec.BooleanValue SPEAKER_BLOCK_MUTE;
@@ -279,8 +280,13 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("wall_lantern");
-            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation. Needs texture pack reload")
+            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation")
                     .define("fast_lanterns", false);
+            builder.pop();
+
+            builder.push("hanging_sign");
+            FAST_SIGNS = builder.comment("Makes hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation")
+                    .define("fast_signs", false);
             builder.pop();
 
             builder.push("bamboo_spikes");
@@ -390,6 +396,7 @@ public class ClientConfigs {
         public static double FLAG_AMPLITUDE_INCREMENT;
         public static GraphicsFanciness FLAG_FANCINESS;
         public static boolean FAST_LANTERNS;
+        public static boolean FAST_SIGNS;
         public static boolean SLINGSHOT_OUTLINE;
         public static int SLINGSHOT_OUTLINE_COLOR;
         public static boolean SLINGSHOT_OVERLAY;
@@ -437,6 +444,7 @@ public class ClientConfigs {
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
             FAST_LANTERNS = block.FAST_LANTERNS.get();
+            FAST_SIGNS = block.FAST_SIGNS.get();
             TURN_TABLE_PARTICLES = block.TURN_TABLE_PARTICLES.get();
             SPEAKER_BLOCK_MUTE = block.SPEAKER_BLOCK_MUTE.get();
             //items

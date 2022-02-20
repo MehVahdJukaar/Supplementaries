@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import lilypuree.mapatlases.MapAtlasesMod;
 import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
@@ -43,6 +44,7 @@ public class CompatHandler {
     public static final boolean doubledoors;
     public static final boolean malum;
     public static final boolean botania;
+    public static final boolean mapatlas;
 
     static {
         ModList ml = ModList.get();
@@ -79,6 +81,7 @@ public class CompatHandler {
         doubledoors = ml.isLoaded("doubledoors");
         malum = ml.isLoaded("malum");
         botania = ml.isLoaded("botania");
+        mapatlas = ml.isLoaded("map_atlases");
     }
 
     public static void init() {

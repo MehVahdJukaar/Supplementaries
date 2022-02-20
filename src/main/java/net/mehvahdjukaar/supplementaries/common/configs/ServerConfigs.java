@@ -385,8 +385,6 @@ public class ServerConfigs {
 
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
 
-        public static ForgeConfigSpec.IntValue CANDLE_HOLDER_LIGHT;
-
         public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
         public static ForgeConfigSpec.BooleanValue SWAP_TIMBER_FRAME;
 
@@ -560,13 +558,6 @@ public class ServerConfigs {
             builder.push("blackboard");
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
                     .define("colored_blackboard", false);
-            builder.pop();
-
-            builder.push("candle_holder");
-            CANDLE_HOLDER_LIGHT = builder.comment("Candle holder light level")
-                    .defineInRange("light_level", 12, 1, 15);
-
-
             builder.pop();
 
             builder.push("timber_frame");
@@ -833,7 +824,6 @@ public class ServerConfigs {
         public static boolean SAFE_SIMPLE;
         public static int GLOBE_TRADES;
         public static boolean BLACKBOARD_COLOR;
-        public static int CANDLE_HOLDER_LIGHT;
         public static boolean REPLACE_DAUB;
         public static boolean SWAP_TIMBER_FRAME;
         public static boolean ITEM_SHELF_LADDER;
@@ -957,8 +947,6 @@ public class ServerConfigs {
             SAFE_SIMPLE = block.SAFE_SIMPLE.get();
 
             BLACKBOARD_COLOR = block.BLACKBOARD_COLOR.get();
-
-            CANDLE_HOLDER_LIGHT = block.CANDLE_HOLDER_LIGHT.get();
 
             REPLACE_DAUB = block.REPLACE_DAUB.get();
             SWAP_TIMBER_FRAME = block.SWAP_TIMBER_FRAME.get();

@@ -151,7 +151,7 @@ public class WeatheredMap {
 
                             } else {
                                 BlockPos.MutableBlockPos mutable1 = new BlockPos.MutableBlockPos();
-                                BlockPos.MutableBlockPos mutable2 = new BlockPos.MutableBlockPos();
+                                //BlockPos.MutableBlockPos mutable2 = new BlockPos.MutableBlockPos();
 
                                 if (isWaterAt(level, isWaterMap, scale, worldX - scale, worldZ - scale))
                                     --distanceFromLand;
@@ -254,10 +254,7 @@ public class WeatheredMap {
                                     materialcolor = ANTIQUE_COLORS.getOrDefault(materialcolor, ANTIQUE_DARK);
                                 }
                             }
-
-                            if(materialcolor == MaterialColor.WATER){
-                                int aa = 1;
-                            }
+                            //if(materialcolor == MaterialColor.WATER)
 
                             somethingY = maxY;
 

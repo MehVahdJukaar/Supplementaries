@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -145,7 +146,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
             if (hit.getDirection() == state.getValue(FACING)) {
                 ItemStack stack = player.getItemInHand(handIn);
-
+                if(stack.getItem() instanceof SoapItem)return InteractionResult.PASS;
                 Pair<Integer, Integer> pair = getHitSubPixel(hit);
                 int x = pair.getFirst();
                 int y = pair.getSecond();
@@ -210,9 +211,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
-
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && !te.isEmpty()) {
             te.clear();
+            te.setChanged();
             return true;
         }
         return false;

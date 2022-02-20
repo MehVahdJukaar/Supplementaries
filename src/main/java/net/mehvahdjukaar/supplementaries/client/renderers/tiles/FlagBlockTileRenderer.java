@@ -7,17 +7,21 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -27,13 +31,26 @@ import java.util.List;
 
 public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
+    private final ModelPart flag;
 
     public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
+        this.flag = modelpart.getChild("flag");
     }
 
     @Override
     public int getViewDistance() {
         return 128;
+    }
+
+    private void renderBanner(float t, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<BannerPattern, DyeColor>> list) {
+        matrixStack.pushPose();
+        matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
+
+        this.flag.xRot = (-0.0125F + 0.01F * Mth.cos(((float) Math.PI * 2F) * t)) * (float) Math.PI;
+        this.flag.y = -32.0F;
+        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
+        matrixStack.popPose();
     }
 
     @Override
@@ -66,16 +83,22 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             //always from 0 to 1
             float t = ((float) Math.floorMod((long) (bp.getX() * 7 + bp.getZ() * 13) + time, period) + partialTicks) / ((float) period);
 
-
-            int segmentLen = (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;
-            for (int dX = 0; dX < w; dX += segmentLen) {
-
-                float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
-
-                renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
+            if (true) {
+                float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) ((((w / l) - t * 2 * (float) Math.PI)))));
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
-                matrixStackIn.translate(0, 0, segmentLen / 16f);
-                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
+                renderBanner(t, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
+            } else {
+
+                int segmentLen = (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;
+                for (int dX = 0; dX < w; dX += segmentLen) {
+
+                    float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
+
+                    renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
+                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
+                    matrixStackIn.translate(0, 0, segmentLen / 16f);
+                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
+                }
             }
 
             matrixStackIn.popPose();
@@ -125,7 +148,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         float l = length / 16f;
         float h = height / 16f;
 
-        float pU = RendererUtil.getRelativeU(sprite, maxU - (1/textW));
+        float pU = RendererUtil.getRelativeU(sprite, maxU - (1 / textW));
         float pV = RendererUtil.getRelativeV(sprite, maxV - w);
         float pV2 = RendererUtil.getRelativeV(sprite, w);
 

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,6 +51,11 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
         } else this.woodType = WoodSetType.OAK_WOOD_TYPE;
+    }
+
+    @Override
+    public boolean isAlwaysFast(){
+        return ClientConfigs.cached.FAST_SIGNS;
     }
 
     @Override

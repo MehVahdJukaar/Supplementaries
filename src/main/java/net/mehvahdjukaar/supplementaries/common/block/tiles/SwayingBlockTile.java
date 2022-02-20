@@ -45,12 +45,16 @@ public abstract class SwayingBlockTile extends BlockEntity {
     private boolean inv = false;
 
     // lod stuff
-    protected boolean shouldHaveTESR = !ClientConfigs.cached.FAST_LANTERNS; // current
-    protected boolean currentlyHasTESR = !ClientConfigs.cached.FAST_LANTERNS; // old
+    protected boolean shouldHaveTESR = !isAlwaysFast(); // current
+    protected boolean currentlyHasTESR = shouldHaveTESR; // old
     private int ticksToSwitchMode = 0;
 
     public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
+    }
+
+    public boolean isAlwaysFast(){
+        return ClientConfigs.cached.FAST_LANTERNS;
     }
 
     //called when data is actually refreshed
@@ -68,7 +72,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
     }
 
     public void setFancyRenderer(boolean fancy) {
-        if (ClientConfigs.cached.FAST_LANTERNS) fancy = false;
+        if (this.isAlwaysFast()) fancy = false;
         if (fancy != this.shouldHaveTESR) {
             this.currentlyHasTESR = this.shouldHaveTESR;
             this.shouldHaveTESR = fancy;

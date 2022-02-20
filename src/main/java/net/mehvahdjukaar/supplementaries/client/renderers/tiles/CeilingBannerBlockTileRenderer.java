@@ -33,7 +33,7 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
         this.bar = modelpart.getChild("bar");
     }
 
-    public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int p_225616_5_, int p_225616_6_) {
+    public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int light, int pPackedOverlay) {
         List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
         if (list != null) {
 
@@ -55,12 +55,12 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
             VertexConsumer buffer = ModelBakery.BANNER_BASE.buffer(p_225616_4_, RenderType::entitySolid);
 
-            this.bar.render(matrixStack, buffer, p_225616_5_, p_225616_6_);
+            this.bar.render(matrixStack, buffer, light, pPackedOverlay);
             BlockPos blockpos = tile.getBlockPos();
             float f2 = ((float) Math.floorMod((long) (blockpos.getX() * 7 + blockpos.getY() * 9 + blockpos.getZ() * 13) + i, 100L) + p_225616_2_) / 100.0F;
             this.flag.xRot = (-0.0125F + 0.01F * Mth.cos(((float) Math.PI * 2F) * f2)) * (float) Math.PI;
             this.flag.y = -32.0F;
-            BannerRenderer.renderPatterns(matrixStack, p_225616_4_, p_225616_5_, p_225616_6_, this.flag, ModelBakery.BANNER_BASE, true, list);
+            BannerRenderer.renderPatterns(matrixStack, p_225616_4_, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
             matrixStack.popPose();
             matrixStack.popPose();
         }

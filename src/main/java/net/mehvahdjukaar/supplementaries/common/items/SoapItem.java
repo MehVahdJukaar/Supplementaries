@@ -100,6 +100,7 @@ public class SoapItem extends Item {
         return false;
     }
 
+    //TODO: replace with event
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();

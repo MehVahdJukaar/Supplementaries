@@ -70,6 +70,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
                     te.setHeldBlock(opt.get());
                     int light = opt.get().getLightEmission();
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL,light));
+                    pLevel.sendBlockUpdated(pPos, pState, pState,Block.UPDATE_CLIENTS);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }

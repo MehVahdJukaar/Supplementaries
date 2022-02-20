@@ -12,10 +12,10 @@ public class BrassLanternBlock extends LightableLanternBlock{
 
     public static final VoxelShape SHAPE_DOWN = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
             Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),
-            Block.box(5.0D, 7.0D, 5.0D, 11.0D, 8.0D, 11.0D));
+            Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D));
     public static final VoxelShape SHAPE_UP = Shapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D),
             Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D),
-            Block.box(5.0D, 12, 5.0D, 11.0D, 13.0D, 11.0D));
+            Block.box(4.0D, 12, 4.0D, 12.0D, 13.0D, 12.0D));
 
     public BrassLanternBlock(Properties properties) {
         super(properties);

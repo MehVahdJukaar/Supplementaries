@@ -70,13 +70,13 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return context.getClickedFace() == Direction.DOWN ? super.getStateForPlacement(context) : null;
     }
-
+    //TODO: use dynamic block model
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
             Block pot = tile.getHeldBlock().getBlock();
-            if (pot instanceof FlowerPotBlock flowerPot && FlowerPotHandler.isEmptyPot(flowerPot)) {
-                ItemStack itemstack = player.getItemInHand(handIn);
+            if (pot instanceof FlowerPotBlock flowerPot) {
+                ItemStack itemstack = player.getItemInHand(handIn); //&& FlowerPotHandler.isEmptyPot(flowerPot)
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
                 Block newPot = item instanceof BlockItem bi ? FlowerPotHandler.getFullPot(flowerPot, bi.getBlock()) : Blocks.AIR;

@@ -36,7 +36,7 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
 
         // animation
         matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(angle));
-        matrixStackIn.translate(-0.5, -0.75, -0.375);
+        matrixStackIn.translate(-0.5, -0.75-tile.attachmentOffset, -0.375);
 
         // render block
 

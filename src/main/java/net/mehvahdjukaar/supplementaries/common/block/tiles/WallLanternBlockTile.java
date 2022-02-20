@@ -23,8 +23,9 @@ import java.util.Objects;
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder {
 
-    private BlockState mimic = Blocks.LANTERN.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
+    private BlockState mimic = Blocks.LANTERN.defaultBlockState();
+
 
     //for charm compat
     public boolean isRedstoneLantern = false;
@@ -67,7 +68,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.mimic = NbtUtils.readBlockState(compound.getCompound("Lantern"));
+        this.setHeldBlock(NbtUtils.readBlockState(compound.getCompound("Lantern")));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
 
@@ -90,6 +91,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
         }
         this.mimic = state;
 
+
         int light = state.getLightEmission();
         boolean lit = true;
         if (this.mimic.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
@@ -97,10 +99,14 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
             light = 15;
             lit = false;
         }
-        if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
-            this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT, lit)
-                    .setValue(WallLanternBlock.LIGHT_LEVEL, light), 4 | 16);
 
+        if(this.level!=null) {
+            this.attachmentOffset = (state.getShape(this.level, this.worldPosition).bounds().maxY - (9 / 16d));
+
+            if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
+                this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT, lit)
+                        .setValue(WallLanternBlock.LIGHT_LEVEL, light), 4 | 16);
+        }
         return true;
     }
 

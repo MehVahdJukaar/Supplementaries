@@ -9,6 +9,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class EnhancedLanternBlockTile extends SwayingBlockTile{
+
+    public double attachmentOffset = 0;
+
     public EnhancedLanternBlockTile(BlockPos pos, BlockState state) {
         this(ModRegistry.COPPER_LANTERN_TILE.get(), pos, state);
     }

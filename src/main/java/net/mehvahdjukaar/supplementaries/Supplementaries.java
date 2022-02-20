@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import snownee.snow.client.model.SnowConnectedModel;
+import snownee.snow.client.model.SnowVariantModel;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -36,8 +38,24 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        //yes this is where I write crap. deal with it XD
+        ConfigHandler.init();
 
+        CraftingHelper.register(new OptionalRecipeCondition.Serializer());
+
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModRegistry.init(bus);
+
+        WorldGenHandler.init();
+
+        bus.addListener(ModSetup::init);
+
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
+
+        MinecraftForge.EVENT_BUS.register(ServerEvents.class);
+
+        //yes this is where I write crap. deal with it XD
+//TODO: faceattachment blocks (grindstone)
         //animated lantern textures
         //add option for soul jar
         //ash jei plugin
@@ -168,21 +186,7 @@ public class Supplementaries {
         //TODO: map atlas support for markers
 
 
-        ConfigHandler.init();
 
-        CraftingHelper.register(new OptionalRecipeCondition.Serializer());
-
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        ModRegistry.init(bus);
-
-        WorldGenHandler.init();
-
-        bus.addListener(ModSetup::init);
-
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-
-        MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 
 
     }
