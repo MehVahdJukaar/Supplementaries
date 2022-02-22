@@ -1,17 +1,12 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.world.data.GlobeData;
+import mezz.jei.render.IngredientListBatchRenderer;
+import net.minecraft.client.Screenshot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 
@@ -37,16 +32,18 @@ public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
     public static void handler(ClientBoundSyncAntiqueInk message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
-                //assigns data to client
-                Level world = Objects.requireNonNull(context.getSender()).level;
-
-                BlockEntity tile = world.getBlockEntity(message.pos);
-                if(tile != null) {
-                    tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> c.setAntiqueInk(message.ink));
-                }
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSyncAntiqueInkPacket(message);
             }
         });
         context.setPacketHandled(true);
+    }
+
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    public boolean getInk() {
+        return ink;
     }
 }

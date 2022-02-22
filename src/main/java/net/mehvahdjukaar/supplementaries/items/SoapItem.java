@@ -60,8 +60,7 @@ public class SoapItem extends Item {
 
             } else {
                 ParticleUtil.spawnParticlesOnBlockFaces(level, pos, ModRegistry.SUDS_PARTICLE.get(),
-                        UniformInt.of(2, 4), 0.01f, true);
-            }
+                        UniformInt.of(2, 4), 0.001f,0.01f, true);      }
             stack.shrink(1);
 
             return true;

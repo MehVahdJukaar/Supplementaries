@@ -81,6 +81,7 @@ public class ModRegistry {
         RECIPES.register(bus);
         PAINTINGS.register(bus);
         ENCHANTMENTS.register(bus);
+        CompatHandler.registerOptionalStuff();
     }
 
     //creative tab

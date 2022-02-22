@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.compat;
 
 import net.mehvahdjukaar.supplementaries.compat.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.compat.create.SupplementariesCreatePlugin;
+import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.compat.inspirations.CauldronRecipes;
 import net.minecraft.world.item.Item;
@@ -52,7 +53,7 @@ public class CompatHandler {
         create = ml.isLoaded("create");
         torchslab = ml.isLoaded("torchslabmod");
         curios = ml.isLoaded("curios");
-        farmers_delight = ml.isLoaded("farmersdelight");
+        farmers_delight = false;//ml.isLoaded("farmersdelight");
         infernalexp = ml.isLoaded("infernalexp");
         inspirations = ml.isLoaded("inspirations");
         framedblocks = ml.isLoaded("framedblocks");
@@ -83,10 +84,13 @@ public class CompatHandler {
         if (computercraft) CCStuff.initialize();
     }
 
+    public static void registerOptionalStuff(){
+        if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
+    }
+
 
     //TODO: port stuff here
     public static void registerOptionalBlocks(final RegistryEvent.Register<Block> event) {
-        //if (deco_blocks) DecoBlocksCompatRegistry.registerBlocks(event);
         if (farmers_delight) FDCompatRegistry.registerBlocks(event);
     }
 

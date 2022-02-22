@@ -140,8 +140,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override

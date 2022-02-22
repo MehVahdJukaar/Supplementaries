@@ -29,6 +29,7 @@ import net.mehvahdjukaar.supplementaries.world.data.map.client.CMDclient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -301,7 +302,6 @@ public class ClientSetup {
         colors.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         colors.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         colors.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
-
     }
 
     @SubscribeEvent

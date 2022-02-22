@@ -1,10 +1,6 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import com.mojang.text2speech.Narrator;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
@@ -32,17 +28,20 @@ public class ClientBoundPlaySpeakerMessagePacket implements NetworkHandler.Messa
 
     public static void handler(ClientBoundPlaySpeakerMessagePacket message, Supplier<NetworkEvent.Context> ctx) {
         // client world
-        ctx.get().enqueueWork(() -> {
-            // PlayerEntity player = ctx.get().getSender();
-
-
-            //TODO: add @p command support
-            if (message.narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
-                Narrator.getNarrator().say(message.str.getString(), true);
-            } else {
-                Minecraft.getInstance().player.sendMessage(message.str, Util.NIL_UUID);
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handlePlaySpeakerMessagePacket(message);
             }
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    public boolean getNarrator() {
+        return narrator;
+    }
+
+    public Component getStr() {
+        return str;
     }
 }

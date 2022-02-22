@@ -5,8 +5,6 @@ import net.mehvahdjukaar.supplementaries.world.songs.SongsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.HashMap;
@@ -44,16 +42,17 @@ public class ClientBoundSyncSongsPacket {
 
     public static void handler(ClientBoundSyncSongsPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            context.enqueueWork(() -> {
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
                 SongsManager.clearSongs();
-                message.songs.keySet().forEach(k->{
+                message.songs.keySet().forEach(k -> {
                     Song s = message.songs.get(k);
                     s.processForPlaying();
                     SongsManager.addSong(k, s);
                 });
-            });
-        }
+            }
+        });
+
         context.setPacketHandled(true);
     }
 

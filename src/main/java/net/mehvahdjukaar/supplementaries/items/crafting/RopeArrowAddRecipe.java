@@ -33,10 +33,7 @@ public class RopeArrowAddRecipe extends CustomRecipe {
                 arrow = stack;
                 missingRopes = arrow.getDamageValue();
             }
-        }
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
-            ItemStack stack = inv.getItem(i);
-            if(stack.is(ModTags.ROPES)) {
+            else if(stack.is(ModTags.ROPES)) {
                 if (missingRopes <= 0) return false;
                 rope = stack;
                 missingRopes--;

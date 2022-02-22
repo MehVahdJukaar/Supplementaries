@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.17.1-1.0.0'
+version = '1.17.1-1.0.4'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -141,6 +141,12 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.103'
     //1.16.3-34.1.0   1.16.4-35.0.1
 
+    afterEvaluate {
+        minecraft('cpw.mods:modlauncher:9.0.7') {
+            force = true
+        }
+    }
+
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
@@ -160,7 +166,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     //implementation fg.deobf("curse.maven:create-328085:3384090")
-    //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
+    implementation fg.deobf("curse.maven:flywheel-486392:3556819")
 
     //curse.maven:[project name]-[project id]:[file id]
     //implementation fg.deobf("curse.maven:create-328085:3419412")
@@ -172,11 +178,10 @@ dependencies {
 
     implementation fg.deobf("curse.maven:configured-457570:3537614")
     implementation fg.deobf("curse.maven:curios-309927:3457073")
-    //implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
+    implementation fg.deobf("curse.maven:decorativeblocks-362528:3590979")
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3418719")
     implementation fg.deobf("curse.maven:framedblocks-441647:3499686")
     implementation fg.deobf("curse.maven:patchouli-306770:3528319")
-    implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3400077")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3540987")
     implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
     //implementation fg.deobf("curse.maven:inspirations-284007:3414517")

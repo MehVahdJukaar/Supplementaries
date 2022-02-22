@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.items.RopeArrowItem;
+import net.mehvahdjukaar.supplementaries.items.crafting.RopeArrowAddRecipe;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -145,21 +147,16 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         Item item = context.getItemInHand().getItem();
-        //TODO: fix as item not working
-        if(item == this.getItemOverride()){
+        if(item == this.getStickItem()){
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if(!state.getValue(axis))return true;
         }
         return super.canBeReplaced(state, context);
     }
 
-    public Item getItemOverride(){
-        return Item.byBlock(this);
-    }
-
     @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(this.getItemOverride());
+        return new ItemStack(this.getStickItem());
     }
 
     @Override
@@ -172,7 +169,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
-                if(this.getItemOverride() != Items.STICK) return InteractionResult.PASS;
+                if(this.getStickItem() != Items.STICK) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;

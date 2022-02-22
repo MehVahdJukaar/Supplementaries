@@ -1,13 +1,7 @@
 package net.mehvahdjukaar.supplementaries.network;
 
-import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -35,21 +29,19 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
     public static void handler(ClientBoundSpawnBlockParticlePacket message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
-            if (!context.getDirection().getReceptionSide().isServer()) {
-                //assigns data to client
-                // Level world = Objects.requireNonNull(context.getSender()).level;
-                spawnParticles(message.pos, message.id);
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSpawnBlockParticlePacket(message);
             }
         });
+
         context.setPacketHandled(true);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void spawnParticles(BlockPos pos, int id) {
-        if (id == 0) {
+    public BlockPos getPos() {
+        return pos;
+    }
 
-            ParticleUtil.spawnParticlesOnBlockFaces(Minecraft.getInstance().level, pos, ModRegistry.SUDS_PARTICLE.get(),
-                    UniformInt.of(2, 4), 0.01f, true);
-        }
+    public int getId() {
+        return id;
     }
 }

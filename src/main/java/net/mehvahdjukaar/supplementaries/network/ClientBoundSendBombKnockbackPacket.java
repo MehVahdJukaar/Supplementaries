@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.network;
 
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -36,12 +34,27 @@ public class ClientBoundSendBombKnockbackPacket implements NetworkHandler.Messag
 
 
     public static void handler(ClientBoundSendBombKnockbackPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-            ctx.get().enqueueWork(() -> Minecraft.getInstance().player.setDeltaMovement(
-                    Minecraft.getInstance().player.getDeltaMovement().add(msg.knockbackX, msg.knockbackY, msg.knockbackZ)));
-        }
+        // client world
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            if (context.getDirection().getReceptionSide().isClient()) {
+                ClientReceivers.handleSendBombKnockbackPacket(msg);
+            }
+        });
 
         ctx.get().setPacketHandled(true);
+    }
+
+    public double getKnockbackX() {
+        return knockbackX;
+    }
+
+    public double getKnockbackY() {
+        return knockbackY;
+    }
+
+    public double getKnockbackZ() {
+        return knockbackZ;
     }
 }
 
