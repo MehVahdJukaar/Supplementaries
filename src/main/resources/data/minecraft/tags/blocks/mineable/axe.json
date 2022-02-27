@@ -10,6 +10,11 @@
     "supplementaries:bamboo_spikes",
     "supplementaries:notice_board",
     "supplementaries:sign_post",
-    "#supplementaries:hanging_signs"
+    "#supplementaries:hanging_signs",
+    "supplementaries:stick",
+    "supplementaries:edelwood_stick",
+    "supplementaries:prismarine_rod",
+    "supplementaries:edelwood_stick",
+    "supplementaries:propelplant_cane"
   ]
 }
