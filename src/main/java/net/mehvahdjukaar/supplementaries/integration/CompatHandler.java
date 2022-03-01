@@ -1,13 +1,17 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import lilypuree.mapatlases.MapAtlasesMod;
+import net.mehvahdjukaar.supplementaries.common.items.IPlaceableItem;
 import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
 import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CompatHandler {
 
@@ -45,6 +49,7 @@ public class CompatHandler {
     public static final boolean malum;
     public static final boolean botania;
     public static final boolean mapatlas;
+    public static final boolean waystones;
 
     static {
         ModList ml = ModList.get();
@@ -82,11 +87,15 @@ public class CompatHandler {
         malum = ml.isLoaded("malum");
         botania = ml.isLoaded("botania");
         mapatlas = ml.isLoaded("map_atlases");
+        waystones = ml.isLoaded("waystones");
     }
 
     public static void init() {
         if (create) SupplementariesCreatePlugin.initialize();
         if (computercraft) CCStuff.initialize();
+
+        var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
+       // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
     }
 
     public static void registerOptionalStuff() {

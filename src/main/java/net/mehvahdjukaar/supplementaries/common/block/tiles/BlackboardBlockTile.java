@@ -23,8 +23,6 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider {
@@ -32,7 +30,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     public static final ModelProperty<BlackboardKey> BLACKBOARD = BlockProperties.BLACKBOARD;
 
     private UUID owner = null;
-
+    private boolean waxed = false;
     private byte[][] pixels = new byte[16][16];
 
     //client side
@@ -92,11 +90,13 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public CompoundTag savePixels(CompoundTag compound) {
+        if (this.waxed) compound.putBoolean("Waxed", true);
         compound.putLongArray("Pixels", packPixels(pixels));
         return compound;
     }
 
     public void loadFromTag(CompoundTag compound) {
+        this.waxed = compound.contains("Waxed") && compound.getBoolean("Waxed");
         this.pixels = new byte[16][16];
         if (compound.contains("Pixels")) {
             this.pixels = unpackPixels(compound.getLongArray("Pixels"));
@@ -125,7 +125,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         return bytes;
     }
 
-    public void clear(){
+    public void clear() {
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
                 this.pixels[x][y] = 0;
@@ -147,7 +147,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public void setPixel(int x, int y, byte b) {
-       this.pixels[x][y] = b;
+        this.pixels[x][y] = b;
     }
 
     public byte getPixel(int xx, int yy) {
@@ -189,4 +189,11 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
 
+    public void setWaxed(boolean b) {
+        this.waxed = b;
+    }
+
+    public boolean isWaxed() {
+        return this.waxed;
+    }
 }

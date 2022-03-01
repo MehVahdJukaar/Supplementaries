@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBombKnockbackPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -15,8 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -45,7 +43,6 @@ import java.util.*;
 
 public class BombExplosion extends Explosion {
 
-    private final Entity source;
     private final float radius;
 
     private final Level level;
@@ -65,7 +62,6 @@ public class BombExplosion extends Explosion {
                          float radius, BombEntity.BombType bombType, BlockInteraction interaction) {
         super(world, entity, damageSource, context, x, y, z, radius, false, interaction);
         this.level = world;
-        this.source = entity;
         this.radius = radius;
         this.x = x;
         this.y = y;
@@ -97,7 +93,7 @@ public class BombExplosion extends Explosion {
                 this.level.getProfiler().push("explosion_blocks");
                 if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerLevel) {
                     BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
+                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.getExploder());
 
                     if (this.mode == BlockInteraction.DESTROY) {
                         builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
@@ -137,7 +133,7 @@ public class BombExplosion extends Explosion {
 
     @Override
     public void explode() {
-        this.level.gameEvent(this.source, GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
+        this.level.gameEvent(this.getExploder(), GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
         int i = 16;
 
@@ -189,7 +185,7 @@ public class BombExplosion extends Explosion {
         int i1 = Mth.floor(this.y + (double) f2 + 1.0D);
         int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
         int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
-        List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
+        List<Entity> list = this.level.getEntities(this.getExploder(), new AABB(k1, i2, j2, l1, i1, j1));
         ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
@@ -241,9 +237,11 @@ public class BombExplosion extends Explosion {
         if (!level.isClientSide) {
             for (Player player : this.hitPlayers.keySet()) {
                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                        new ClientBoundSendBombKnockbackPacket(this.hitPlayers.get(player)));
+                        new ClientBoundSendKnockbackPacket(this.hitPlayers.get(player), player.getId()));
             }
         }
+
+        this.bombType.afterExploded(this, level);
 
     }
 }

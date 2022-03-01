@@ -101,8 +101,11 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
                 matrixStackIn.scale(1, -1, -1);
                 Material material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
-                VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
-                signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+                //sanity check. can happen when log detection fails across versions
+                if(material != null) {
+                    VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
+                    signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+                }
 
                 matrixStackIn.popPose();
 

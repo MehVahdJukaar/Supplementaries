@@ -4,11 +4,8 @@
     {
       "conditions": [
         {
-          "type": "forge:not",
-          "value": {
-            "type": "forge:tag_empty",
-            "tag": "forge:ingots/lead"
-          }
+          "modid": "quark",
+          "type": "forge:mod_loaded"
         },
         {
           "type": "supplementaries:flag",
@@ -26,10 +23,10 @@
         ],
         "key": {
           "0": {
-            "item": "minecraft:tnt"
+            "item": "oreganized:shrapnel_bomb"
           },
           "1": {
-            "tag": "forge:ingots/lead"
+            "item": "minecraft:iron_ingot"
           },
           "2": {
             "item": "minecraft:string"

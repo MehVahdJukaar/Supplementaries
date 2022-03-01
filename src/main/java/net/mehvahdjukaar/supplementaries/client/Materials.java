@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.NoteBlock;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS
 
 public class Materials {
 
-    //TODO: clean & reorganize this, textures, client init and client setup
+    //TODO: clean & reorganize this, textures, client registerBus and client setup
     public static final Material BLACKBOARD_OUTLINE = new Material(LOCATION_BLOCKS, Textures.BLACKBOARD_GRID);
     public static final Material BELLOWS_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BELLOWS_TEXTURE);
     public static final Material BUBBLE_BLOCK_MATERIAL = new Material(LOCATION_BLOCKS, Textures.BUBBLE_BLOCK_TEXTURE);
@@ -34,18 +36,18 @@ public class Materials {
     public static final Map<WoodSetType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = new ResourceLocation(
             Supplementaries.MOD_ID + ":block/" + ModRegistry.WIND_VANE_NAME + "_up");
+    //TODO: add this to baked model
     public static final ResourceLocation HANGING_POT_BLOCK_MODEL = new ResourceLocation(
             Supplementaries.MOD_ID + ":block/" + ModRegistry.HANGING_FLOWER_POT_NAME);
 
     static {
         for (WoodSetType type : BlockSetHandler.WOOD_TYPES.values()) {
-            if (type.shouldHaveBlockSet()) {
-                HANGING_SIGNS_BLOCK_MODELS.put(type, Supplementaries.res("block/hanging_signs/" +
-                        type.getVariantId("hanging_sign")));
 
-                SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" +
-                        type.getVariantId("sign_post"))));
-            }
+            HANGING_SIGNS_BLOCK_MODELS.put(type, Supplementaries.res("block/hanging_signs/" +
+                    type.getVariantId("hanging_sign")));
+
+            SIGN_POSTS_MATERIALS.put(type, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" +
+                    type.getVariantId("sign_post"))));
         }
 
         for (BannerPattern pattern : BannerPattern.values()) {

@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //loaded before registry
 public class RegistryConfigs {
 
@@ -136,6 +135,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
+        public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
 
         //TODO: use fill item category instead and access the tag
         public static final Lazy<Boolean> HAS_LEAD = Lazy.of(()->hasMod("oreganized","immersiveengineering", "thermal",
@@ -201,6 +201,8 @@ public class RegistryConfigs {
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
 
+            DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
+                    .define("debug_save_dynamic_pack", false);
             builder.pop();
 
 

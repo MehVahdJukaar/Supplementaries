@@ -134,22 +134,23 @@ public class BlockUtils {
             BlockState rotated = state.rotate(world, targetPos, rot);
             //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
             //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
-            if(rotated == state){
-                if(state.hasProperty(BlockStateProperties.FACING)) {
+            if (rotated == state) {
+                if (state.hasProperty(BlockStateProperties.FACING)) {
                     rotated = state.setValue(BlockStateProperties.FACING,
                             rot.rotate(state.getValue(BlockStateProperties.FACING)));
-                }
-                else if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
                     rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING,
                             rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
-                }
-                else if(state.hasProperty(RotatedPillarBlock.AXIS)){
+                } else if (state.hasProperty(RotatedPillarBlock.AXIS)) {
                     rotated = RotatedPillarBlock.rotatePillar(state, rot);
-                }else if(state.hasProperty(BlockStateProperties.HORIZONTAL_AXIS)){
+                } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_AXIS)) {
                     rotated = state.cycle(BlockStateProperties.HORIZONTAL_AXIS);
                 }
             }
             return Optional.of(rotated);
+        }
+        else if(state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
+            return Optional.of(rotateFaceBlockHorizontal(dir, ccw, state));
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {
@@ -296,7 +297,7 @@ public class BlockUtils {
                     BlockEntity tile = level.getBlockEntity(oldPos);
                     if (tile != null) {
                         CompoundTag tag = tile.saveWithoutMetadata();
-                        if(level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile){
+                        if (level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile) {
                             newChestTile.load(tag);
                         }
                         tile.setRemoved();
@@ -324,5 +325,25 @@ public class BlockUtils {
 
     //TODO: add rotation vertical slabs & doors
 
+    private static BlockState rotateFaceBlockHorizontal(Direction dir, boolean ccw, BlockState original) {
+
+        Direction facingDir = original.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        if (facingDir.getAxis() == dir.getAxis()) return original;
+
+        var face = original.getValue(BlockStateProperties.ATTACH_FACE);
+        return switch (face) {
+            case FLOOR -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, ccw ? dir.getClockWise() : dir.getCounterClockWise());
+            case CEILING -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, !ccw ? dir.getClockWise() : dir.getCounterClockWise());
+            case WALL -> {
+                ccw = ccw^(dir.getAxisDirection() != Direction.AxisDirection.POSITIVE);
+                yield original.setValue(BlockStateProperties.ATTACH_FACE,
+                        (facingDir.getAxisDirection() == Direction.AxisDirection.POSITIVE) ^ ccw ? AttachFace.CEILING : AttachFace.FLOOR);
+            }
+
+        };
+
+    }
 
 }

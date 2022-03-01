@@ -76,8 +76,6 @@ public class FaucetBlockTile extends BlockEntity {
 
     //------fluids------
 
-    //TODO: fix drinking
-
     //TODO: make it connect with pipes
     //returns true if it has water
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {

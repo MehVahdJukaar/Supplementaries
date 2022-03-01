@@ -35,6 +35,8 @@ public class CMDreg {
             Supplementaries.res("banner"), CeilingBannerMarker::new, CeilingBannerMarker::getFromWorld, ColoredDecoration::new);
     public static final CustomDecorationType<CustomDecoration, ChestMarker> CHEST_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("chest"), ChestMarker::new, ChestMarker::getFromWorld, CustomDecoration::new);
+    public static final CustomDecorationType<CustomDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = new CustomDecorationType<>(
+            Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomDecoration::new);
 
     private static CustomDecorationType<?, ?> makeSimple(String id) {
         return new CustomDecorationType<>(Supplementaries.res(id), CustomDecoration::new);
@@ -69,6 +71,7 @@ public class CMDreg {
         MapDecorationHandler.register(BEACON_DECORATION_TYPE);
         MapDecorationHandler.register(BANNER_DECORATION_TYPE);
         MapDecorationHandler.register(CHEST_DECORATION_TYPE);
+        MapDecorationHandler.register(WAYSTONE_DECORATION_TYPE);
 
 
         MapDecorationHandler.register(VILLAGE_TYPE);

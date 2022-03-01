@@ -254,11 +254,6 @@ public class JarItem extends AbstractMobContainerItem {
     }
 
     @Override
-    public void registerBlocks(Map<Block, Item> pBlockToItemMap, Item pItem) {
-        super.registerBlocks(pBlockToItemMap, pItem);
-    }
-
-    @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         ClientRegistry.registerISTER(consumer, JarItemRenderer::new);
     }

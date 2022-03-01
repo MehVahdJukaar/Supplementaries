@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 @Mixin(Font.class)
 public abstract class FontRendererMixin implements IAntiqueTextProvider {
 
+    @Unique
     private boolean antique = false;
 
     @Override

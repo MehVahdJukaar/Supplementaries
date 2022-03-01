@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.selene.map.CustomDecoration;
-import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
+import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
-public class SignPostMarker extends NamedMapWorldMarker<CustomDecoration> {
+public class SignPostMarker extends NamedMapBlockMarker<CustomDecoration> {
 
 
     public SignPostMarker() {
@@ -19,8 +19,7 @@ public class SignPostMarker extends NamedMapWorldMarker<CustomDecoration> {
     }
 
     public SignPostMarker(BlockPos pos, Component name) {
-        this();
-        this.pos = pos;
+        super(CMDreg.SIGN_POST_DECORATION_TYPE, pos);
         this.name = name;
     }
 

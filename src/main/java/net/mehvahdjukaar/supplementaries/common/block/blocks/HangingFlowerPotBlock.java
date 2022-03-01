@@ -132,12 +132,11 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof HangingFlowerPotBlockTile) {
-            Block b = ((HangingFlowerPotBlockTile) te).getHeldBlock().getBlock();
-            if (b instanceof FlowerPotBlock) {
-                Block flower = ((FlowerPotBlock) b).getContent();
-                if (flower == Blocks.AIR) return new ItemStack(((FlowerPotBlock) b).getEmptyPot());
+
+        if (world.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile te) {
+            if (te.getHeldBlock().getBlock() instanceof FlowerPotBlock b) {
+                Block flower = b.getContent();
+                if (flower == Blocks.AIR) return new ItemStack(b.getEmptyPot());
                 return new ItemStack(flower);
             }
         }

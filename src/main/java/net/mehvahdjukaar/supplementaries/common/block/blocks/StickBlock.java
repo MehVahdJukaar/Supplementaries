@@ -13,15 +13,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -33,16 +30,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -71,23 +66,17 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     private final int fireSpread;
 
-    private final Lazy<Item> item;
-
-    public StickBlock(Properties properties, int fireSpread, String itemRes) {
+    public StickBlock(Properties properties, int fireSpread) {
         super(properties);
-        this.item = Lazy.of(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes)));
 
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
         this.fireSpread = fireSpread;
     }
 
-    public StickBlock(Properties properties, String itemName) {
-        this(properties, 60, itemName);
+    public StickBlock(Properties properties) {
+        this(properties, 60);
     }
 
-    public Item getStickItem() {
-        return item.get();
-    }
 
     @Override
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
@@ -143,18 +132,11 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-        Item item = context.getItemInHand().getItem();
-        //TODO: fix as item not working
-        if (item == this.getStickItem()) {
+        if (!context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem())) {
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if (!state.getValue(axis)) return true;
         }
         return super.canBeReplaced(state, context);
-    }
-
-    @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(this.getStickItem());
     }
 
     @Override
@@ -167,7 +149,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
-                if (this.getStickItem() != Items.STICK) return InteractionResult.PASS;
+                if (this.material != Material.WOOD) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
@@ -201,7 +183,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
                 CompoundTag tag = tile.saveWithoutMetadata();
                 BlockEntity te = world.getBlockEntity(toPos);
-                if(te != null){
+                if (te != null) {
                     te.load(tag);
                 }
                 world.playSound(null, toPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1F, 1.4F);
@@ -242,6 +224,6 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
         if (state.getValue(AXIS_X)) i++;
         if (state.getValue(AXIS_Y)) i++;
         if (state.getValue(AXIS_Z)) i++;
-        return List.of(new ItemStack(this.item.get(), i));
+        return List.of(new ItemStack(this.asItem(), i));
     }
 }

@@ -116,12 +116,6 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
-        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        return blockEntity instanceof CeilingBannerBlockTile ? ((CeilingBannerBlockTile) blockEntity).getItem(pState) : super.getCloneItemStack(pLevel, pPos, pState);
-    }
-
-    @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         Item item = itemstack.getItem();

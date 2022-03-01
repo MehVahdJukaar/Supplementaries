@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -23,11 +24,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class BookPileBlock extends WaterBlock implements EntityBlock {
 
@@ -57,19 +60,19 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         return isEnchantedBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isNormalBook(i));
     }
 
-    public static boolean isEnchantedBook(Item i){
+    public static boolean isEnchantedBook(Item i) {
         return i == Items.ENCHANTED_BOOK || isQuarkTome(i);
     }
 
-    public static boolean isNormalBook(Item i){
+    public static boolean isNormalBook(Item i) {
         return ModTags.BOOKS.contains(i) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
     }
 
-    public static boolean isWrittenBook(Item i){
+    public static boolean isWrittenBook(Item i) {
         return i instanceof WrittenBookItem || i instanceof WritableBookItem;
     }
 
-    public static boolean isQuarkTome(Item i){
+    public static boolean isQuarkTome(Item i) {
         return CompatHandler.quark && QuarkPlugin.isTome(i);
     }
 
@@ -119,7 +122,8 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
-            return tile.getItem(Math.max(0, state.getValue(BOOKS) - 1));
+            double f = 5 * (target.getLocation().y - pos.getY()) / SHAPE_4.bounds().maxY;
+            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS)));
         }
         return Items.BOOK.getDefaultInstance();
     }

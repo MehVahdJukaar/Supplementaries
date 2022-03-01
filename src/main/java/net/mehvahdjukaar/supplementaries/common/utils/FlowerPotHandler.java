@@ -88,7 +88,7 @@ public class FlowerPotHandler {
 
     public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
-    //static init for client and server sync
+    //static registerBus for client and server sync
     static{
         List<String> toAdd = new ArrayList<>();
         toAdd.add(Items.CACTUS.getRegistryName().toString());

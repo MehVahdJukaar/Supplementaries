@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 @Mixin(SkeletonHorse.class)
 public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomDataHolder {
 
+    @Unique
     private static final int FLESH_NEEDED = 64;
 
     public boolean getVariable() {
@@ -40,7 +42,9 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     public void setVariable(boolean val) {
     }
 
+    @Unique
     private int fleshCount = 0;
+    @Unique
     private int conversionTime = -1;
 
     protected SkellyHorseMixin(EntityType<? extends AbstractHorse> p_i48563_1_, Level p_i48563_2_) {

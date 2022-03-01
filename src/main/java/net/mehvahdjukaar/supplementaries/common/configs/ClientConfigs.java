@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.datagen.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -92,7 +91,6 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
         public static ForgeConfigSpec.BooleanValue RESOURCE_PACK_SUPPORT;
-        public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
 
         public static ForgeConfigSpec.DoubleValue TEST1;
         public static ForgeConfigSpec.DoubleValue TEST2;
@@ -110,8 +108,7 @@ public class ClientConfigs {
                     .define("anti_reposting_warning", true);
             RESOURCE_PACK_SUPPORT = builder.comment("Allows dynamic resource generations for signs to pick textures from installed resource pack. Will only really work well if those texture pack have a similar format to vanilla otherwise it will result in glitched textures")
                     .define("dynamic_textures_from_resource_packs", false);
-            DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
-                    .define("debug_save_dynamic_pack", false);
+
             TEST1 = builder.comment("ignore this").defineInRange("test1", 0f, -10, 10);
             TEST2 = builder.comment("ignore this").defineInRange("test2", 0f, -10, 10);
             TEST3 = builder.comment("ignore this").defineInRange("test3", 0f, -10, 10);
@@ -144,6 +141,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> GLOBE_COLORS;
 
         public static ForgeConfigSpec.EnumValue<GraphicsFanciness> FLAG_FANCINESS;
+        public static ForgeConfigSpec.BooleanValue FLAG_BANNER;
         public static ForgeConfigSpec.IntValue FLAG_PERIOD;
         public static ForgeConfigSpec.DoubleValue FLAG_WAVELENGTH;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
@@ -249,6 +247,8 @@ public class ClientConfigs {
                     .defineInRange("intensity_increment", 0.3d, 0, 10);
             FLAG_FANCINESS = builder.comment("At which graphic settings flags will have a fancy renderer: 0=fast, 1=fancy, 2=fabulous")
                     .defineEnum("fanciness", GraphicsFanciness.FABULOUS);
+            FLAG_BANNER = builder.comment("Makes flags render as sideways banner. Ignores many of the previously defined configs")
+                    .define("render_as_banner", false);
             builder.pop();
             //TODO: add more(hourGlass, sawying blocks...)
 
@@ -390,6 +390,7 @@ public class ClientConfigs {
         public static boolean CLOCK_24H;
         public static boolean GLOBE_RANDOM;
         public static boolean CONFIG_BUTTON;
+        public static boolean FLAG_BANNER;
         public static int FLAG_PERIOD;
         public static double FLAG_WAVELENGTH;
         public static double FLAG_AMPLITUDE;
@@ -440,6 +441,7 @@ public class ClientConfigs {
             GLOBE_RANDOM = block.GLOBE_RANDOM.get();
             FLAG_AMPLITUDE = block.FLAG_AMPLITUDE.get();
             FLAG_AMPLITUDE_INCREMENT = block.FLAG_AMPLITUDE_INCREMENT.get();
+            FLAG_BANNER = block.FLAG_BANNER.get();
             FLAG_PERIOD = block.FLAG_PERIOD.get();
             FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
             FLAG_FANCINESS = block.FLAG_FANCINESS.get();
@@ -457,8 +459,6 @@ public class ClientConfigs {
 
             TURN_PARTICLE_COLOR = Integer.parseUnsignedInt(particle.TURN_INITIAL_COLOR.get().replace("0x", ""), 16);
             TURN_PARTICLE_FADE_COLOR = Integer.parseUnsignedInt(particle.TURN_FADE_COLOR.get().replace("0x", ""), 16);
-
-            ClientDynamicResourcesHandler.DYNAMIC_TEXTURE_PACK.generateDebugResources = general.DEBUG_RESOURCES.get();
 
             CapturedMobsHelper.refresh();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

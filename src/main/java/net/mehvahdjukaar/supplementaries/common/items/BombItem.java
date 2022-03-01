@@ -32,6 +32,10 @@ public class BombItem extends Item {
         this.glint = glint;
     }
 
+    public BombEntity.BombType getType() {
+        return type;
+    }
+
     @Override
     public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         super.fillItemCategory(pCategory, pItems);

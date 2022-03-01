@@ -7,13 +7,10 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.WoodBasedBlockItem;
-import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.BannerBlock;
@@ -24,6 +21,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -31,6 +29,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @SuppressWarnings("ConstantConditions")
@@ -43,7 +42,6 @@ public class RegistryHelper {
         BlockSetHandler.addWoodRegistrationCallback(RegistryHelper::registerSignPostItems, Item.class);
     }
 
-
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (RegistryConfigs.reg.isEnabled(regName)) {
             return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;
@@ -53,6 +51,34 @@ public class RegistryHelper {
 
     public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
         return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
+    }
+
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String ...items) {
+        Supplier<? extends Block> newSup = () -> {
+            Block block = sup.get();
+            for(String item  :items) {
+                addOptionalPlaceableItem(item, block);
+            }
+            return block;
+        };
+        return ModRegistry.BLOCKS.register(name, newSup);
+    }
+
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, Item... items) {
+        Supplier<? extends Block> newSup = () -> {
+            Block block = sup.get();
+            for (Item i : items) {
+                ((IPlaceableItem) i).addPlaceable(block);
+            }
+            return block;
+        };
+        return ModRegistry.BLOCKS.register(name, newSup);
+    }
+
+    //only call during registration otherwise will nuke registry
+    public static void addOptionalPlaceableItem(String itemLocation, Block block) {
+        var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemLocation));
+        if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(block);
     }
 
     public static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
@@ -115,31 +141,31 @@ public class RegistryHelper {
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, () -> new CeilingBannerBlock(color,
+            map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
                             BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
                                     .strength(1.0F)
                                     .noCollission()
                                     .sound(SoundType.WOOD)
                                     .lootFrom(() -> BannerBlock.byColor(color))
-                    )
+                    ), color.getName() + "_banner"
             ));
         }
         return map;
     }
 
     //presents
-    public static Map<DyeColor, RegistryObject<Block>> makePresents(String baseName) {
+    public static Map<DyeColor, RegistryObject<Block>> makePresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, RegistryObject<Block>> map = new LinkedHashMap<>();
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, () -> new PresentBlock(color,
+            map.put(color, ModRegistry.BLOCKS.register(name, () -> presentFactory.apply(color,
                     BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
                             .strength(1.0F)
                             .sound(SoundType.WOOL))
             ));
         }
-        map.put(null, ModRegistry.BLOCKS.register(baseName, () -> new PresentBlock(null,
+        map.put(null, ModRegistry.BLOCKS.register(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
                         .sound(SoundType.WOOL))
@@ -149,15 +175,16 @@ public class RegistryHelper {
 
 
     //presents
-    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems() {
+    public static Map<DyeColor, RegistryObject<Item>> makePresentsItems(Map<DyeColor, RegistryObject<Block>> presents,
+                                                                        String name, CreativeModeTab tab) {
         Map<DyeColor, RegistryObject<Item>> map = new HashMap<>();
 
-        for (var entry : ModRegistry.PRESENTS.entrySet()) {
+        for (var entry : presents.entrySet()) {
             DyeColor color = entry.getKey();
             var regObj = entry.getValue();
             map.put(color, ModRegistry.ITEMS.register(regObj.getId().getPath(),
                     () -> new PresentItem(regObj.get(), (new Item.Properties())
-                            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.PRESENT_NAME)))));
+                            .tab(getTab(tab, name)), map)));
         }
         return map;
     }
@@ -167,19 +194,17 @@ public class RegistryHelper {
     private static void registerHangingSignBlocks(RegistryEvent.Register<Block> event, Collection<WoodSetType> woodTypes) {
         IForgeRegistry<Block> registry = event.getRegistry();
         for (WoodSetType wood : woodTypes) {
-            if (wood.shouldHaveBlockSet()) {
-                String name = wood.getVariantId(ModRegistry.HANGING_SIGN_NAME);
-                Block block = new HangingSignBlock(
-                        BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
-                                .strength(2f, 3f)
-                                .sound(SoundType.WOOD)
-                                .noOcclusion()
-                                .noCollission(),
-                        wood
-                ).setRegistryName(Supplementaries.res(name));
-                registry.register(block);
-                ModRegistry.HANGING_SIGNS.put(wood, (HangingSignBlock) block);
-            }
+            String name = wood.getVariantId(ModRegistry.HANGING_SIGN_NAME);
+            Block block = new HangingSignBlock(
+                    BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
+                            .strength(2f, 3f)
+                            .sound(SoundType.WOOD)
+                            .noOcclusion()
+                            .noCollission(),
+                    wood
+            ).setRegistryName(Supplementaries.res(name));
+            registry.register(block);
+            ModRegistry.HANGING_SIGNS.put(wood, (HangingSignBlock) block);
         }
     }
 
@@ -192,7 +217,7 @@ public class RegistryHelper {
             Item item = new WoodBasedBlockItem(block,
                     new Item.Properties().stacksTo(16).tab(
                             getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),
-                    200,wood
+                    200, wood
             ).setRegistryName(block.getRegistryName());
             registry.register(item);
             ModRegistry.HANGING_SIGNS_ITEMS.put(wood, item);
@@ -204,16 +229,14 @@ public class RegistryHelper {
     public static void registerSignPostItems(RegistryEvent.Register<Item> event, Collection<WoodSetType> woodTypes) {
         IForgeRegistry<Item> registry = event.getRegistry();
         for (WoodSetType wood : woodTypes) {
-            if (wood.shouldHaveBlockSet()) {
-                String name = wood.getVariantId(ModRegistry.SIGN_POST_NAME);
-                Item item = new SignPostItem(
-                        new Item.Properties().stacksTo(16).tab(
-                                getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),
-                        wood
-                ).setRegistryName(Supplementaries.res(name));
-                registry.register(item);
-                ModRegistry.SIGN_POST_ITEMS.put(wood, (SignPostItem) item);
-            }
+            String name = wood.getVariantId(ModRegistry.SIGN_POST_NAME);
+            Item item = new SignPostItem(
+                    new Item.Properties().stacksTo(16).tab(
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),
+                    wood
+            ).setRegistryName(Supplementaries.res(name));
+            registry.register(item);
+            ModRegistry.SIGN_POST_ITEMS.put(wood, (SignPostItem) item);
         }
     }
 

@@ -58,6 +58,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(createSoapCleanPresentRecipe(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(makePresentCloringRecipes(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(makeTrappedPresentRecipes(), VanillaRecipeCategoryUid.CRAFTING);
     }
 
 
@@ -167,6 +168,29 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
         recipes.add(recipe);
 
+        return recipes;
+    }
+
+    public static List<Recipe<?>> makeTrappedPresentRecipes() {
+        List<Recipe<?>> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.presents";
+
+        for(DyeColor color : DyeColor.values()){
+            Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(color).get());
+            ItemStack output = ModRegistry.TRAPPED_PRESENTS_ITEMS.get(color).get().getDefaultInstance();
+
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
+
+            ResourceLocation id = Supplementaries.res("jei_trapped_present_" + color.getName());
+            recipes.add(new ShapelessRecipe(id, group, output, inputs));
+        }
+        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
+        ItemStack output = ModRegistry.TRAPPED_PRESENTS_ITEMS.get(null).get().getDefaultInstance();
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
+
+        ResourceLocation id = Supplementaries.res("jei_trapped_present");
+        recipes.add(new ShapelessRecipe(id, group, output, inputs));
         return recipes;
     }
 

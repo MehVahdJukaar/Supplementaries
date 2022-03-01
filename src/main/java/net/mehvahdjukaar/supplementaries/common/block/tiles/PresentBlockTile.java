@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -34,7 +34,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class PresentBlockTile extends OpeneableContainerBlockEntity implements IColored {
+public class PresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
 
     //"" means not packed. this is used for packed but can be opened by everybody
     public static final String PUBLIC_KEY = "@e";
@@ -48,13 +48,19 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     }
 
     @Override
+    public boolean canHoldItems() {
+        return this.isPacked();
+    }
+
+    @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @org.jetbrains.annotations.Nullable Direction facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public @Nullable DyeColor getColor() {
+    @Nullable
+    public DyeColor getColor() {
         return ((PresentBlock) this.getBlockState().getBlock()).getColor();
     }
 
@@ -108,7 +114,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
             this.description = "";
         }
 
-        if (!this.level.isClientSide && this.isPacked() != shouldPack)
+        if (!this.level.isClientSide && this.isPacked() != shouldPack) {
             if (shouldPack) {
                 this.level.playSound(null, this.worldPosition,
                         ModRegistry.PRESENT_PACK_SOUND.get(), SoundSource.BLOCKS, 1,
@@ -122,7 +128,8 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }
-        this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
+            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
+        }
     }
 
     @Override

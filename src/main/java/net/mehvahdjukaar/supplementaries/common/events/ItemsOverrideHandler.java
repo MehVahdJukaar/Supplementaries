@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
+import net.mehvahdjukaar.selene.map.MapDecorationHandler;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
@@ -56,7 +57,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -98,31 +98,30 @@ public class ItemsOverrideHandler {
         itemAction.add(new ThrowableBrickBehavior());
         itemAction.add(new ClockItemBehavior());
 
-        HPItemActionOnBlock.add(new WallLanternBehavior());
+
         HPItemActionOnBlock.add(new AntiqueInkBehavior());
         HPItemActionOnBlock.add(new WrenchBehavior());
+        HPItemActionOnBlock.add(new WallLanternBehavior());
 
-        //itemActionOnBlock.add(new WallLanternBehavior());
-
-        itemActionOnBlock.add(new MapMarkerBehavior());
-        itemActionOnBlock.add(new CeilingBannersBehavior());
-        itemActionOnBlock.add(new HangingPotBehavior());
-        itemActionOnBlock.add(new EnhancedCakeBehavior());
-        itemActionOnBlock.add(new XpBottlingBehavior());
-        itemActionOnBlock.add(new PlaceableGunpowderBehavior());
+        //Using a sort of hybrid system for now. Removed modded placeable sticks because I dont like them
         itemActionOnBlock.add(new BookPileBehavior());
-        itemActionOnBlock.add(new BookPileHorizontalBehavior());
-        itemActionOnBlock.add(new PlaceableRodsBehavior());
-        itemActionOnBlock.add(new PlaceableSticksBehavior<>(ModRegistry.STICK_BLOCK, Items.STICK));
+
+        //itemActionOnBlock.add(new PlaceableGunpowderBehavior());
+        //itemActionOnBlock.add(new BookPileBehavior());
+        //itemActionOnBlock.add(new BookPileHorizontalBehavior());
+        //itemActionOnBlock.add(new PlaceableRodsBehavior());
+        //itemActionOnBlock.add(new PlaceableSticksBehavior<>(ModRegistry.STICK_BLOCK, Items.STICK));
+
+        //itemActionOnBlock.add(new CeilingBannersBehavior());
+        //itemActionOnBlock.add(new HangingPotBehavior());
+
         itemActionOnBlock.add(new SkullPileBehavior());
         itemActionOnBlock.add(new SkullCandlesBehavior());
+        itemActionOnBlock.add(new EnhancedCakeBehavior());
 
-        PlaceableSticksBehavior.optional(ModRegistry.PRISMARINE_ROD_BLOCK, ModRegistry.PRISMARINE_ROD_BLOCK.get().getStickItem())
-                .ifPresent(itemActionOnBlock::add);
-        PlaceableSticksBehavior.optional(ModRegistry.PROPELPLANT_ROD_BLOCK, ModRegistry.PROPELPLANT_ROD_BLOCK.get().getStickItem())
-                .ifPresent(itemActionOnBlock::add);
-        PlaceableSticksBehavior.optional(ModRegistry.EDELWOOD_STICK_BLOCK, ModRegistry.EDELWOOD_STICK_BLOCK.get().getStickItem())
-                .ifPresent(itemActionOnBlock::add);
+        itemActionOnBlock.add(new MapMarkerBehavior());
+        itemActionOnBlock.add(new XpBottlingBehavior());
+
 
         for (Item i : ForgeRegistries.ITEMS) {
             for (ItemUseOnBlockOverride b : itemActionOnBlock) {
@@ -130,7 +129,8 @@ public class ItemsOverrideHandler {
                     if (b.appliesToItem(i)) {
                         //adds item to block item map
                         Block block = b.getPlacedBlock(i);
-                        if (block != null && b.shouldBlockMapToItem(i)) Item.BY_BLOCK.put(block, i);
+                        if (block != null && b.shouldBlockMapToItem(i))
+                            Item.BY_BLOCK.put(block, i);
                         ON_BLOCK_OVERRIDES.put(i, b);
                         break;
                     }
@@ -380,9 +380,17 @@ public class ItemsOverrideHandler {
             }
             if (!(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && stack.is(Items.CAKE))) {
                 //for candles. normal cakes have no drops
-                Block.dropResources(state, world, pos);
                 BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
-                world.setBlock(pos, newState, 4);
+                if (world instanceof ServerLevel serverLevel) {
+                    Block.dropResources(state, world, pos);
+                    Block.getDrops(state, serverLevel, pos, null).forEach((d) -> {
+                        if (d.getItem() != Items.CAKE) {
+                            Block.popResource(world, pos, d);
+                        }
+                    });
+                    state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY);
+                    world.setBlock(pos, newState, 4);
+                }
                 BlockHitResult raytrace = new BlockHitResult(
                         new Vec3(pos.getX(), pos.getY(), pos.getZ()), hit.getDirection(), pos, false);
 
@@ -430,15 +438,10 @@ public class ItemsOverrideHandler {
             return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item));
         }
 
-        private final List<Block> BLOCK_MARKERS = Arrays.asList(Blocks.LODESTONE, Blocks.NETHER_PORTAL, Blocks.BEACON,
-                Blocks.CONDUIT, Blocks.RESPAWN_ANCHOR, Blocks.END_GATEWAY, Blocks.END_PORTAL);
-
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             BlockPos pos = hit.getBlockPos();
-            Block b = world.getBlockState(pos).getBlock();
-            if (b instanceof BedBlock || BLOCK_MARKERS.contains(b) || Tags.Blocks.CHESTS.contains(b) ||
-                    world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
+            if (!MapDecorationHandler.getMarkersFromWorld(world, pos).isEmpty()) {
                 if (!world.isClientSide) {
                     MapItemSavedData data = null;
                     if (stack.getItem() instanceof MapItem) data = MapItem.getSavedData(stack, world);
@@ -917,7 +920,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return BookPileBlock.isEnchantedBook(item);
+            return BookPileBlock.isQuarkTome(item);
         }
 
         @Override

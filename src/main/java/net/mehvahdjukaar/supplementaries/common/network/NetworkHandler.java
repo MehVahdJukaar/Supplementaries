@@ -75,8 +75,11 @@ public class NetworkHandler {
         register(ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::buffer,
                 ServerBoundSetPresentPacket::new, ServerBoundSetPresentPacket::handler);
 
-        register(ClientBoundSendBombKnockbackPacket.class, ClientBoundSendBombKnockbackPacket::buffer,
-                ClientBoundSendBombKnockbackPacket::new, ClientBoundSendBombKnockbackPacket::handler);
+        register(ServerBoundSetTrappedPresentPacket.class, ServerBoundSetTrappedPresentPacket::buffer,
+                ServerBoundSetTrappedPresentPacket::new, ServerBoundSetTrappedPresentPacket::handler);
+
+        register(ClientBoundSendKnockbackPacket.class, ClientBoundSendKnockbackPacket::buffer,
+                ClientBoundSendKnockbackPacket::new, ClientBoundSendKnockbackPacket::handler);
 
         register(ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::buffer,
                 ServerBoundSelectMerchantTradePacket::new, ServerBoundSelectMerchantTradePacket::handler);

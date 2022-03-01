@@ -15,6 +15,7 @@ import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -38,7 +39,7 @@ public class ConfigHandler {
     public static ModConfig SERVER_CONFIG_OBJECT;
     public static ModConfig REGISTRY_CONFIG_OBJECT;
 
-    public static void init() {
+    public static void registerBus(IEventBus modBus) {
         ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
         CLIENT_CONFIG_OBJECT = new ModConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC, modContainer);
         SERVER_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC, modContainer);
@@ -49,7 +50,7 @@ public class ConfigHandler {
         //need to register on 2 different busses, can't use subscribe event
         MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedIn);
         MinecraftForge.EVENT_BUS.addListener(ConfigHandler::onPlayerLoggedOut);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ConfigHandler::reloadConfigsEvent);
+        modBus.addListener(ConfigHandler::reloadConfigsEvent);
     }
 
     public static void openModConfigs() {

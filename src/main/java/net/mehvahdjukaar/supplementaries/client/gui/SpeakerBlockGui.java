@@ -18,9 +18,7 @@ import net.minecraftforge.client.gui.widget.Slider;
 public class SpeakerBlockGui extends Screen {
     private static final Component NARRATOR_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.chat_message");
     private static final Component CHAT_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.narrator_message");
-
     private static final Component DISTANCE_BLOCKS = new TranslatableComponent("gui.supplementaries.speaker_block.blocks");
-
     private static final Component VOLUME_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.volume");
 
     private EditBox commandTextField;
@@ -41,6 +39,7 @@ public class SpeakerBlockGui extends Screen {
         Minecraft.getInstance().setScreen(new SpeakerBlockGui(te));
     }
 
+    @Override
     public void tick() {
         this.commandTextField.tick();
     }

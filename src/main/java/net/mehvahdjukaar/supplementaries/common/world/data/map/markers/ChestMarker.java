@@ -1,24 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.selene.map.CustomDecoration;
-import net.mehvahdjukaar.selene.map.markers.MapWorldMarker;
+import net.mehvahdjukaar.selene.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 
-public class ChestMarker extends MapWorldMarker<CustomDecoration> {
+public class ChestMarker extends MapBlockMarker<CustomDecoration> {
 
     public ChestMarker() {
         super(CMDreg.CHEST_DECORATION_TYPE);
     }
 
     public ChestMarker(BlockPos pos) {
-        this();
+        super(CMDreg.CHEST_DECORATION_TYPE, pos);
         this.setPos(pos);
     }
 

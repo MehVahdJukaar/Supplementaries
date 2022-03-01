@@ -44,7 +44,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public boolean up = false;
     public boolean down = false;
 
+    @NotNull
     public WoodSetType woodTypeUp = WoodSetType.OAK_WOOD_TYPE;
+    @NotNull
     public WoodSetType woodTypeDown = WoodSetType.OAK_WOOD_TYPE;
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {

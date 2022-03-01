@@ -59,9 +59,13 @@ public class ClientReceivers {
         }
     }
 
-    public static void handleSendBombKnockbackPacket(ClientBoundSendBombKnockbackPacket message) {
-        withPlayerDo((p) -> p.setDeltaMovement(p.getDeltaMovement()
-                .add(message.getKnockbackX(), message.getKnockbackY(), message.getKnockbackZ())));
+    public static void handleSendBombKnockbackPacket(ClientBoundSendKnockbackPacket message) {
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.id);
+            if (e != null) e.setDeltaMovement(e.getDeltaMovement()
+                    .add(message.knockbackX, message.knockbackY, message.knockbackZ));
+
+        });
     }
 
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {

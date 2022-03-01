@@ -45,8 +45,8 @@ public abstract class SwayingBlockTile extends BlockEntity {
     private boolean inv = false;
 
     // lod stuff
-    protected boolean shouldHaveTESR = !isAlwaysFast(); // current
-    protected boolean currentlyHasTESR = shouldHaveTESR; // old
+    protected boolean shouldHaveTESR = false; // current
+    protected boolean currentlyHasTESR = false; // old
     private int ticksToSwitchMode = 0;
 
     public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {

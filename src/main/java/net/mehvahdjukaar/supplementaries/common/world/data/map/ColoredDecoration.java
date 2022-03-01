@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 public class ColoredDecoration extends CustomDecoration {
     private final DyeColor color;
     private final int value;
+
     public ColoredDecoration(CustomDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @Nonnull DyeColor color) {
         super(type, x, y, rot, displayName);
         this.color = color;

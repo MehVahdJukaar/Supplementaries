@@ -19,6 +19,7 @@ public class CMDclient {
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.CONDUIT_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.SIGN_POST_DECORATION_TYPE);
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.CHEST_DECORATION_TYPE);
+        MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.WAYSTONE_DECORATION_TYPE);
 
 
         MapDecorationRenderHandler.bindSimpleRenderer(CMDreg.VILLAGE_TYPE);

@@ -44,19 +44,19 @@ public class SchematicCannonStuff {
         return new WallLanternBlockC(properties);
     }
 
-    public static StickBlock makeStick(BlockBehaviour.Properties properties, String itemRes) {
-        return makeSticks(properties, itemRes, 60);
+    public static StickBlock makeStick(BlockBehaviour.Properties properties) {
+        return makeSticks(properties, 60);
     }
 
-    public static StickBlock makeSticks(BlockBehaviour.Properties properties, String itemRes, int fireSpread) {
+    public static StickBlock makeSticks(BlockBehaviour.Properties properties, int fireSpread) {
 
         class StickBlockC extends StickBlock implements ICopyDropItemRequirement {
 
-            public StickBlockC(Properties properties, int fireSpread, String itemRes) {
-                super(properties, fireSpread, itemRes);
+            public StickBlockC(Properties properties, int fireSpread ) {
+                super(properties, fireSpread);
             }
         }
-        return new StickBlockC(properties, fireSpread, itemRes);
+        return new StickBlockC(properties, fireSpread);
     }
 
     public static HangingFlowerPotBlock makeFlowerPot(BlockBehaviour.Properties p) {

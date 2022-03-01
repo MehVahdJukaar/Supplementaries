@@ -16,14 +16,14 @@ import java.util.Random;
 public class BlazeRodBlock extends StickBlock {
 
     public BlazeRodBlock(Properties properties) {
-        super(properties, 0, "minecraft:blaze_rod");
+        super(properties, 0);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
     }
 
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
         if (!entity.fireImmune() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
-            if (!(entity instanceof Player && ((Player) entity).isCreative()))
+            if (!(entity instanceof Player p && p.isCreative()))
                 entity.setSecondsOnFire(2);
         }
         super.stepOn(world, pos, state, entity);

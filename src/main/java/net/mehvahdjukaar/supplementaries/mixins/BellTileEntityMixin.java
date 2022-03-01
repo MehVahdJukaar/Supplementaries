@@ -11,9 +11,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BellBlockEntity.class)
 public abstract class BellTileEntityMixin extends BlockEntity  implements IBellConnections {
+    @Unique
     public BellConnection connection = BellConnection.NONE;
 
     public BellTileEntityMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {

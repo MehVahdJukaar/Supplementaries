@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
 import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -14,7 +11,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,10 +24,7 @@ public class RemapHandler {
 
     private static final Map<String, ResourceLocation> fullReMap = new HashMap<>();
 
-    static {
 
-
-    }
     @SubscribeEvent
     public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
         for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(Supplementaries.MOD_ID)) {
@@ -47,7 +40,7 @@ public class RemapHandler {
             } else if (k.contains("hanging_sign")) {
                 try {
                     Block newBlock = getNewBlock(ModRegistry.HANGING_SIGNS, k);
-                    if(newBlock == null){
+                    if (newBlock == null) {
                         newBlock = ModRegistry.HANGING_SIGNS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
@@ -90,7 +83,7 @@ public class RemapHandler {
             } else if (k.contains("hanging_sign")) {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.HANGING_SIGNS_ITEMS, k);
-                    if(newBlock == null){
+                    if (newBlock == null) {
                         newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
@@ -100,7 +93,7 @@ public class RemapHandler {
             } else if (k.contains("sign_post")) {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.SIGN_POST_ITEMS, k);
-                    if(newBlock == null){
+                    if (newBlock == null) {
                         newBlock = ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
@@ -165,15 +158,15 @@ public class RemapHandler {
     }
 
     @Nullable
-    private static <T extends ForgeRegistryEntry<?>> T getNewBlock(Map<WoodSetType,T> newEntries, String oldPath) {
+    private static <T extends ForgeRegistryEntry<?>> T getNewBlock(Map<WoodSetType, T> newEntries, String oldPath) {
 
-        for(var b : newEntries.values()){
+        for (var b : newEntries.values()) {
             String path = b.getRegistryName().getPath();
             String[] modId = path.split("/");
-            if(modId.length==2){
+            if (modId.length == 2) {
                 String abb = getLegacyAbbreviation(modId[0]);
-                String match = modId[1]+abb;
-                if(oldPath.equals(match)){
+                String match = modId[1] + abb;
+                if (oldPath.equals(match)) {
                     return b;
                 }
             }

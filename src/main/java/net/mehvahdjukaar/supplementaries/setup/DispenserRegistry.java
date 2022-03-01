@@ -5,17 +5,18 @@ import net.mehvahdjukaar.selene.util.DispenserHelper;
 import net.mehvahdjukaar.selene.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.selene.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
@@ -82,12 +83,13 @@ public class DispenserRegistry {
         //bomb
         if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
             //default behaviors for modded items
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.NORMAL));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.NORMAL));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.BLUE));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.BLUE));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), new BombsDispenserBehavior(BombEntity.BombType.SPIKY));
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), new BombsDispenserBehavior(BombEntity.BombType.SPIKY));
+            var bombBehavior = new BombsDispenserBehavior();
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), bombBehavior);
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), bombBehavior);
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), bombBehavior);
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), bombBehavior);
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), bombBehavior);
+            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
         }
         //gunpowder
         if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
@@ -133,253 +135,250 @@ public class DispenserRegistry {
         }
     }
 
-        private static class AxeDispenserBehavior extends AdditionalDispenserBehavior {
+    private static class AxeDispenserBehavior extends AdditionalDispenserBehavior {
 
-            protected AxeDispenserBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel level = source.getLevel();
-                BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-                BlockState state = level.getBlockState(pos);
-                Block b = state.getBlock();
-
-
-                Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_STRIP));
-                if (optional.isPresent()) {
-                    level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    level.setBlock(pos, optional.get(), 11);
-                    if (stack.hurt(1, level.getRandom(), null)) {
-                        stack.setCount(0);
-                    }
-                    return InteractionResultHolder.success(stack);
-                }
-
-                optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_SCRAPE));
-                if (optional.isPresent()) {
-                    level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    level.levelEvent(null, 3005, pos, 0);
-                    level.setBlock(pos, optional.get(), 11);
-                    if (stack.hurt(1, level.getRandom(), null)) {
-                        stack.setCount(0);
-                    }
-                    return InteractionResultHolder.success(stack);
-                }
-                optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_WAX_OFF));
-                if (optional.isPresent()) {
-                    level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    level.levelEvent(null, 3004, pos, 0);
-                    level.setBlock(pos, optional.get(), 11);
-                    if (stack.hurt(1, level.getRandom(), null)) {
-                        stack.setCount(0);
-                    }
-                    return InteractionResultHolder.success(stack);
-                }
-
-                return InteractionResultHolder.fail(stack);
-            }
+        protected AxeDispenserBehavior(Item item) {
+            super(item);
         }
 
-        private static class SoapBehavior extends AdditionalDispenserBehavior {
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel level = source.getLevel();
+            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = level.getBlockState(pos);
+            Block b = state.getBlock();
 
-            protected SoapBehavior(Item item) {
-                super(item);
-            }
 
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel level = source.getLevel();
-                BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-
-                if (SoapItem.tryCleaning(stack, level, pos, null)) {
-                    return InteractionResultHolder.success(stack);
+            Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_STRIP));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
                 }
-
-                return InteractionResultHolder.fail(stack);
-            }
-        }
-
-
-        private static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior {
-
-            protected FlintAndSteelDispenserBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel world = source.getLevel();
-                BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-                BlockState state = world.getBlockState(blockpos);
-                if (state.getBlock() instanceof ILightable block) {
-                    if (block.lightUp(null, state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
-                        if (stack.hurt(1, world.random, null)) {
-                            stack.setCount(0);
-                        }
-                        return InteractionResultHolder.success(stack);
-                    }
-                    return InteractionResultHolder.fail(stack);
-                }
-                return InteractionResultHolder.pass(stack);
-            }
-        }
-
-        private static class ThrowableBricksDispenserBehavior extends AdditionalDispenserBehavior {
-
-            protected ThrowableBricksDispenserBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                Level world = source.getLevel();
-                Position dispensePosition = DispenserBlock.getDispensePosition(source);
-                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-                Projectile projectileEntity = this.getProjectileEntity(world, dispensePosition, stack);
-                projectileEntity.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
-                world.addFreshEntity(projectileEntity);
-                stack.shrink(1);
                 return InteractionResultHolder.success(stack);
             }
 
-            @Override
-            protected void playSound(BlockSource source, boolean success) {
-                source.getLevel().playSound(null, source.x() + 0.5, source.y() + 0.5, source.z() + 0.5, SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (source.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
-            }
-
-            protected Projectile getProjectileEntity(Level worldIn, Position position, ItemStack stackIn) {
-                return new ThrowableBrickEntity(worldIn, position.x(), position.y(), position.z());
-            }
-
-            protected float getProjectileInaccuracy() {
-                return 7.0F;
-            }
-
-            //TODO: fix throwable bricks rendering glitchyness
-            protected float getProjectileVelocity() {
-                return 0.9F;
-            }
-
-        }
-
-        private static class BombsDispenserBehavior extends AbstractProjectileDispenseBehavior {
-
-            private final BombEntity.BombType type;
-
-            public BombsDispenserBehavior(BombEntity.BombType blue) {
-                this.type = blue;
-            }
-
-            @Override
-            protected Projectile getProjectile(Level worldIn, Position position, ItemStack stackIn) {
-                return new BombEntity(worldIn, position.x(), position.y(), position.z(), type);
-            }
-
-            @Override
-            protected float getUncertainty() {
-                return 11.0F;
-            }
-
-            @Override
-            protected float getPower() {
-                return 1.3F;
-            }
-        }
-
-        private static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior {
-
-            protected BambooSpikesDispenserBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel world = source.getLevel();
-                BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-                BlockState state = world.getBlockState(blockpos);
-                if (state.getBlock() instanceof BambooSpikesBlock) {
-                    if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, stack)) {
-                        return InteractionResultHolder.success(new ItemStack(Items.GLASS_BOTTLE));
-                    }
-                    return InteractionResultHolder.fail(stack);
+            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_SCRAPE));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.levelEvent(null, 3005, pos, 0);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
                 }
-
-                return InteractionResultHolder.pass(stack);
+                return InteractionResultHolder.success(stack);
             }
-        }
-
-        //TODO: generalize for fluid consumer & put into library
-        private static class PancakesDispenserBehavior extends AdditionalDispenserBehavior {
-
-            protected PancakesDispenserBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel world = source.getLevel();
-                BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-                BlockState state = world.getBlockState(blockpos);
-                if (state.getBlock() instanceof PancakeBlock block) {
-                    if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY, null, 1)) {
-                        return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
-                    }
-                    return InteractionResultHolder.fail(stack);
+            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_WAX_OFF));
+            if (optional.isPresent()) {
+                level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.levelEvent(null, 3004, pos, 0);
+                level.setBlock(pos, optional.get(), 11);
+                if (stack.hurt(1, level.getRandom(), null)) {
+                    stack.setCount(0);
                 }
-                return InteractionResultHolder.pass(stack);
+                return InteractionResultHolder.success(stack);
             }
+
+            return InteractionResultHolder.fail(stack);
+        }
+    }
+
+    private static class SoapBehavior extends AdditionalDispenserBehavior {
+
+        protected SoapBehavior(Item item) {
+            super(item);
         }
 
-        private static class FishBucketJarDispenserBehavior extends AdditionalDispenserBehavior {
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel level = source.getLevel();
+            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
 
-            protected FishBucketJarDispenserBehavior(Item item) {
-                super(item);
+            if (SoapItem.tryCleaning(stack, level, pos, null)) {
+                return InteractionResultHolder.success(stack);
             }
 
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-                //this.setSuccessful(false);
-                ServerLevel world = source.getLevel();
-                BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-                if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
-                    //TODO: add fish buckets
-                    if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
-                        if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
-                            tile.setChanged();
-                            return InteractionResultHolder.success(new ItemStack(Items.BUCKET));
-                        }
+            return InteractionResultHolder.fail(stack);
+        }
+    }
+
+
+    private static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected FlintAndSteelDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            if (state.getBlock() instanceof ILightable block) {
+                if (block.lightUp(null, state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
+                    if (stack.hurt(1, world.random, null)) {
+                        stack.setCount(0);
                     }
-                    return InteractionResultHolder.fail(stack);
+                    return InteractionResultHolder.success(stack);
                 }
-                return InteractionResultHolder.pass(stack);
-            }
-        }
-
-        public static class GunpowderBehavior extends AdditionalDispenserBehavior {
-
-            protected GunpowderBehavior(Item item) {
-                super(item);
-            }
-
-            @Override
-            protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-
-                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-                BlockPos blockpos = source.getPos().relative(direction);
-                Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
-                InteractionResult result = BlockItemUtils.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
-                        ModRegistry.GUNPOWDER_BLOCK.get());
-                if (result.consumesAction()) return InteractionResultHolder.success(stack);
-
                 return InteractionResultHolder.fail(stack);
             }
+            return InteractionResultHolder.pass(stack);
+        }
+    }
+
+    private static class ThrowableBricksDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected ThrowableBricksDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            Level world = source.getLevel();
+            Position dispensePosition = DispenserBlock.getDispensePosition(source);
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            Projectile projectileEntity = this.getProjectileEntity(world, dispensePosition, stack);
+            projectileEntity.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            world.addFreshEntity(projectileEntity);
+            stack.shrink(1);
+            return InteractionResultHolder.success(stack);
+        }
+
+        @Override
+        protected void playSound(BlockSource source, boolean success) {
+            source.getLevel().playSound(null, source.x() + 0.5, source.y() + 0.5, source.z() + 0.5, SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (source.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
+        }
+
+        protected Projectile getProjectileEntity(Level worldIn, Position position, ItemStack stackIn) {
+            return new ThrowableBrickEntity(worldIn, position.x(), position.y(), position.z());
+        }
+
+        protected float getProjectileInaccuracy() {
+            return 7.0F;
+        }
+
+        //TODO: fix throwable bricks rendering glitchyness
+        protected float getProjectileVelocity() {
+            return 0.9F;
         }
 
     }
+
+    private static class BombsDispenserBehavior extends AbstractProjectileDispenseBehavior {
+
+        public BombsDispenserBehavior() {
+        }
+
+        @Override
+        protected Projectile getProjectile(Level worldIn, Position position, ItemStack stackIn) {
+            return new BombEntity(worldIn, position.x(), position.y(), position.z(), ((BombItem) stackIn.getItem()).getType());
+        }
+
+        @Override
+        protected float getUncertainty() {
+            return 11.0F;
+        }
+
+        @Override
+        protected float getPower() {
+            return 1.3F;
+        }
+    }
+
+    private static class BambooSpikesDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected BambooSpikesDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            if (state.getBlock() instanceof BambooSpikesBlock) {
+                if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, stack)) {
+                    return InteractionResultHolder.success(new ItemStack(Items.GLASS_BOTTLE));
+                }
+                return InteractionResultHolder.fail(stack);
+            }
+
+            return InteractionResultHolder.pass(stack);
+        }
+    }
+
+    //TODO: generalize for fluid consumer & put into library
+    private static class PancakesDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected PancakesDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockState state = world.getBlockState(blockpos);
+            if (state.getBlock() instanceof PancakeBlock block) {
+                if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY, null, 1)) {
+                    return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
+                }
+                return InteractionResultHolder.fail(stack);
+            }
+            return InteractionResultHolder.pass(stack);
+        }
+    }
+
+    private static class FishBucketJarDispenserBehavior extends AdditionalDispenserBehavior {
+
+        protected FishBucketJarDispenserBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            //this.setSuccessful(false);
+            ServerLevel world = source.getLevel();
+            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
+                //TODO: add fish buckets
+                if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
+                    if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
+                        tile.setChanged();
+                        return InteractionResultHolder.success(new ItemStack(Items.BUCKET));
+                    }
+                }
+                return InteractionResultHolder.fail(stack);
+            }
+            return InteractionResultHolder.pass(stack);
+        }
+    }
+
+    public static class GunpowderBehavior extends AdditionalDispenserBehavior {
+
+        protected GunpowderBehavior(Item item) {
+            super(item);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos blockpos = source.getPos().relative(direction);
+            Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
+            InteractionResult result = BlockItemUtils.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
+                    ModRegistry.GUNPOWDER_BLOCK.get());
+            if (result.consumesAction()) return InteractionResultHolder.success(stack);
+
+            return InteractionResultHolder.fail(stack);
+        }
+    }
+
+}

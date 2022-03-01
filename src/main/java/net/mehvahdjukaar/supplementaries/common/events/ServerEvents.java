@@ -51,11 +51,13 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Set;
 
 
+@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEvents {
 
     //high priority event to override other wall lanterns
@@ -183,7 +185,7 @@ public class ServerEvents {
                         MinecraftServer server = serverLevel.getServer();
                         var c = cap.orElse(null);
                         boolean a = c.hasAntiqueInk();
-                        server.tell(new TickTask(server.getTickCount() , () ->
+                        server.tell(new TickTask(server.getTickCount(), () ->
                                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(event::getPlayer),
                                         new ClientBoundSyncAntiqueInk(pos, a))));
                     }

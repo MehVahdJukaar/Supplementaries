@@ -123,6 +123,7 @@ public class TextUtil {
                         VerdaPegasus
                         ppblitto
                         DrHesperus
+                        feliixpe
 
                         \u00A75Others:\u00A7r
 

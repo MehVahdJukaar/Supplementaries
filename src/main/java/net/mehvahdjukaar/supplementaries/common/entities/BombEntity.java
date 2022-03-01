@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +39,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
 import java.util.Random;
 
 public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
@@ -360,6 +362,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                     entity.setSecondsOnFire(10);
                 }
                 case SPIKY -> {
+
+                    //we are using the explosion method since it has a bigger radius
+                    /*
                     boolean shouldPoison = false;
                     float random = entity.getRandom().nextInt(100);
                     if (distSq <= 4 * 4) {
@@ -379,6 +384,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                             entity.addEffect(new MobEffectInstance(effect, 40 * 20));
                         }
                     }
+                    */
                 }
             }
         }
@@ -396,14 +402,46 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                     //maybe use method above?
                     var particle = CompatObjects.SHARPNEL.get();
                     if (particle instanceof ParticleOptions p) {
-                        for (int i = 0; i < 100; i++) {
-                            float dx = (float) (bomb.random.nextGaussian() * 4f);
-                            float dy = (float) (bomb.random.nextGaussian() * 4f);
-                            float dz = (float) (bomb.random.nextGaussian() * 4f);
+                        for (int i = 0; i < 80; i++) {
+                            float dx = (float) (bomb.random.nextGaussian() * 2f);
+                            float dy = (float) (bomb.random.nextGaussian() * 2f);
+                            float dz = (float) (bomb.random.nextGaussian() * 2f);
                             bomb.level.addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
                         }
                     }else{
                         bomb.spawnParticleInASphere(ParticleTypes.CRIT, 100, 5f);
+                    }
+                }
+            }
+        }
+
+        public void afterExploded(BombExplosion exp, Level level) {
+            if(this == SPIKY){
+                Vec3 pos = exp.getPosition();
+                Entity e = exp.getExploder();
+                if(e==null)return;
+                for (Entity entity :level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
+                        pos.x + 30, pos.y + 4, pos.z + 30))){
+                    int random = (int) (Math.random() * 100);
+                    boolean shouldPoison = false;
+                    if(entity.distanceToSqr(e) <= 4*4){
+                        shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 8*8) {
+                        if(random < 60) shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 15*15) {
+                        if(random < 30) shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 30*30) {
+                        if(random < 5) shouldPoison = true;
+                    }
+                    if(shouldPoison){
+                        if(entity instanceof LivingEntity livingEntity){
+                            livingEntity.hurt(DamageSource.MAGIC, 2);
+                            livingEntity.addEffect( new MobEffectInstance( MobEffects.POISON , (int) (260*0.5f)) );
+                            var effect = CompatObjects.STUNNED_EFFECT.get();
+                            if (effect != null) {
+                                livingEntity.addEffect(new MobEffectInstance(effect, (int) (40 * 20*0.5f)));
+                            }
+                        }
                     }
                 }
             }

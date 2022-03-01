@@ -36,8 +36,7 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         BlockPos p = this.hasTileEntity(state) ? pos : pos.below();
-        BlockEntity te = worldIn.getBlockEntity(p);
-        if (te instanceof KeyLockableTile keyLockableTile) {
+        if (worldIn.getBlockEntity(p) instanceof KeyLockableTile keyLockableTile) {
             if (keyLockableTile.handleAction(player, handIn, "door")) {
 
                 GoldDoorBlock.tryOpenDoubleDoorKey(worldIn, state, pos, player, handIn);

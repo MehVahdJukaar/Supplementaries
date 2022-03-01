@@ -191,7 +191,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
     }
 
     private void renderScroller(PoseStack poseStack, int size) {
-        RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
+        RenderSystem.setShaderTexture(0, Textures.PRESENT_GUI_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int currentIndex = size + 1 - ENTRY_PER_SCREEN;
         if (currentIndex > 1) {
@@ -258,7 +258,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
 
             int k = i + SKIN_SIZE + 2;
 
-            RenderSystem.setShaderTexture(0, Textures.PRESENT_BLOCK_GUI_TEXTURE);
+            RenderSystem.setShaderTexture(0, Textures.PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             GuiComponent.blit(poseStack, pLeft, pTop, 0, 0, 220, pWidth, pHeight, 256, 256);
 

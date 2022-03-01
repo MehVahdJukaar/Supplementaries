@@ -22,10 +22,13 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainerMenu> {
-    private static final ResourceLocation VILLAGER_LOCATION = Textures.RED_MERCHANT_GUI_TEXTURE;
+    private static final ResourceLocation TEXTURE = Textures.RED_MERCHANT_GUI_TEXTURE;
     private static final Component TRADES_LABEL = new TranslatableComponent("merchant.trades");
-    private static final Component LEVEL_SEPARATOR = new TextComponent(" - ");
     private static final Component DEPRECATED_TOOLTIP = new TranslatableComponent("merchant.deprecated");
+    private static final TranslatableComponent TRADE_OFFER = new TranslatableComponent("gui.supplementaries.orange_trader.trade");
+    private static final TranslatableComponent I_RECEIVE = new TranslatableComponent("gui.supplementaries.orange_trader.get");
+    private static final TranslatableComponent YOU_RECEIVE = new TranslatableComponent("gui.supplementaries.orange_trader.receive");
+
     private int shopItem;
     private final RedMerchantGui.TradeOfferButton[] tradeOfferButtons = new RedMerchantGui.TradeOfferButton[7];
     private int scrollOff;
@@ -65,16 +68,16 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
 
     protected void renderLabels(PoseStack pPoseStack, int pX, int pY) {
 
-        Component tradeOffer = new TranslatableComponent("gui.supplementaries.orange_trader.trade")
+        Component tradeOffer = TRADE_OFFER
                 .withStyle(ChatFormatting.WHITE)
                 .withStyle(ChatFormatting.BOLD);
         this.font.draw(pPoseStack, tradeOffer, (float) (49 + this.imageWidth / 2 - this.font.width(tradeOffer) / 2), 10.0F, 4210752);
 
-        Component iReceive = new TranslatableComponent("gui.supplementaries.orange_trader.get")
+        Component iReceive = I_RECEIVE
                 .withStyle(ChatFormatting.WHITE);
         this.font.draw(pPoseStack, iReceive, (float) (49 - 29 + this.imageWidth / 2 - this.font.width(iReceive) / 2), 24.0F, 4210752);
 
-        Component uReceive = new TranslatableComponent("gui.supplementaries.orange_trader.receive")
+        Component uReceive = YOU_RECEIVE
                 .withStyle(ChatFormatting.WHITE);
         this.font.draw(pPoseStack, uReceive, (float) (49 + 42 + this.imageWidth / 2 - this.font.width(uReceive) / 2), 24.0F, 4210752);
 
@@ -88,7 +91,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
     protected void renderBg(PoseStack poseStack, float partialTicks, int pX, int pY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         blit(poseStack, i, j, this.getBlitOffset(), 0.0F, 0.0F, this.imageWidth, this.imageHeight, 512, 256);
@@ -101,7 +104,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
 
             MerchantOffer $$8 = merchantOffers.get($$7);
             if ($$8.isOutOfStock()) {
-                RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+                RenderSystem.setShaderTexture(0, TEXTURE);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 blit(poseStack, this.leftPos + 83 + 99, this.topPos + 35, this.getBlitOffset(), 311.0F, 0.0F, 28, 21, 512, 256);
             }
@@ -110,7 +113,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
 
     private void renderProgressBar(PoseStack poseStack, int pX, int pY, MerchantOffer merchantOffer) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         int i = this.menu.getTraderLevel();
         int j = this.menu.getTraderXp();
         if (i < 5) {
@@ -160,7 +163,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
             int k = j + 16 + 1;
             int l = i + 5 + 5;
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+            RenderSystem.setShaderTexture(0, TEXTURE);
             this.renderScroller(pMatrixStack, i, j, merchantoffers);
             int i1 = 0;
 
@@ -214,7 +217,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
     private void renderButtonArrows(PoseStack pPoseStack, MerchantOffer pMerchantOffer, int pPosX, int pPosY) {
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         if (pMerchantOffer.isOutOfStock()) {
             blit(pPoseStack, pPosX + 5 + 35 + 20, pPosY + 3, this.getBlitOffset(), 25.0F, 171.0F, 10, 9, 512, 256);
         } else {
@@ -230,7 +233,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
             this.itemRenderer.renderGuiItemDecorations(this.font, pBaseCost, pX, pY, pBaseCost.getCount() == 1 ? "1" : null);
             this.itemRenderer.renderGuiItemDecorations(this.font, pRealCost, pX + 14, pY, pRealCost.getCount() == 1 ? "1" : null);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, VILLAGER_LOCATION);
+            RenderSystem.setShaderTexture(0, TEXTURE);
             this.setBlitOffset(this.getBlitOffset() + 300);
             blit(pPoseStack, pX + 7, pY + 12, this.getBlitOffset(), 0.0F, 176.0F, 9, 2, 512, 256);
             this.setBlitOffset(this.getBlitOffset() - 300);

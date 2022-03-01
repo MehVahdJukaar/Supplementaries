@@ -529,13 +529,10 @@ public class GunpowderBlock extends LightUpBlock {
         return state.setValue(BURNING, lit ? 1 : 0);
     }
 
-    /**
-     * Gets an item for the block being called on. Args: world, x, y, z
-     */
-    @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return new ItemStack(Items.GUNPOWDER);
-    }
+   // @Override
+   // public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+   //     return new ItemStack(Items.GUNPOWDER);
+   // }
 
     //client
 

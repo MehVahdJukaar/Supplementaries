@@ -103,19 +103,6 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         return this.patterns;
     }
 
-    public ItemStack getItem(BlockState state) {
-        ItemStack itemstack = new ItemStack(BannerBlock.byColor(this.getBaseColor(() -> state)));
-        if (this.itemPatterns != null && !this.itemPatterns.isEmpty()) {
-            itemstack.getOrCreateTagElement("BlockEntityTag").put("Patterns", this.itemPatterns.copy());
-        }
-
-        if (this.name != null) {
-            itemstack.setHoverName(this.name);
-        }
-
-        return itemstack;
-    }
-
     public DyeColor getBaseColor(Supplier<BlockState> blockStateSupplier) {
         if (this.baseColor == null) {
             this.baseColor = ((AbstractBannerBlock) blockStateSupplier.get().getBlock()).getColor();

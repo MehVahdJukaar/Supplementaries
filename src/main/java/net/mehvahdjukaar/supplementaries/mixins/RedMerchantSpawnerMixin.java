@@ -29,10 +29,6 @@ import java.util.Random;
 
 @Mixin(WanderingTraderSpawner.class)
 public abstract class RedMerchantSpawnerMixin {
-    @Shadow
-    private int spawnDelay;
-    @Shadow
-    private int tickDelay;
 
     @Final
     @Shadow

@@ -21,13 +21,16 @@ import net.minecraft.world.level.levelgen.structure.MineShaftPieces;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Random;
 
 @Mixin(MineShaftPieces.MineShaftCorridor.class)
 public abstract class MineshaftLanternMixin extends StructurePiece {
 
+    @Unique
     private static final BlockState lantern = ModRegistry.COPPER_LANTERN.get().defaultBlockState().setValue(LightableLanternBlock.HANGING, true);
+    @Unique
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
     protected MineshaftLanternMixin(StructurePieceType pType, int pGenDepth, BoundingBox pBoundingBox) {

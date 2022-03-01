@@ -8,12 +8,11 @@ import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
-import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -41,7 +40,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWashable {
     public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
@@ -142,11 +140,22 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+        if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player) && !te.isWaxed()) {
+            ItemStack stack = player.getItemInHand(handIn);
+
+            if (stack.getItem() instanceof HoneycombItem) {
+                if (player instanceof ServerPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                }
+                stack.shrink(1);
+                worldIn.levelEvent(player, 3003, pos, 0);
+                te.setWaxed(true);
+                return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            }
 
             if (hit.getDirection() == state.getValue(FACING)) {
-                ItemStack stack = player.getItemInHand(handIn);
-                if(stack.getItem() instanceof SoapItem)return InteractionResult.PASS;
+
+                if (stack.getItem() instanceof SoapItem) return InteractionResult.PASS;
                 Pair<Integer, Integer> pair = getHitSubPixel(hit);
                 int x = pair.getFirst();
                 int y = pair.getSecond();
@@ -164,8 +173,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
             if (!worldIn.isClientSide) {
                 te.sendOpenGuiPacket(worldIn, pos, player);
             }
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.PASS;
     }
 
 
@@ -179,15 +189,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new BlackboardBlockTile(pPos, pState);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null) {
-            tooltip.add((new TranslatableComponent("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));
-        }
     }
 
     public ItemStack getBlackboardItem(BlackboardBlockTile te) {
@@ -211,10 +212,16 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && !te.isEmpty()) {
-            te.clear();
-            te.setChanged();
-            return true;
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            if (te.isWaxed()) {
+                te.setWaxed(false);
+                te.setChanged();
+                return true;
+            } else if (!te.isEmpty()) {
+                te.clear();
+                te.setChanged();
+                return true;
+            }
         }
         return false;
     }

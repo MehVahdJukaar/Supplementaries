@@ -9,6 +9,7 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
@@ -43,12 +44,15 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    private void renderBanner(float t, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<BannerPattern, DyeColor>> list) {
+    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<BannerPattern, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
-
-        this.flag.xRot = (-0.0125F + 0.01F * Mth.cos(((float) Math.PI * 2F) * t)) * (float) Math.PI;
-        this.flag.y = -32.0F;
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(0.05f*ang));
+        this.flag.xRot = (float) (0.5*Math.PI);
+        this.flag.yRot = (float) (1*Math.PI);
+        this.flag.zRot = (float) (0.5*Math.PI);
+        this.flag.y = -12;
+        this.flag.x = 1.5f;
         BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
         matrixStack.popPose();
     }
@@ -83,10 +87,9 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             //always from 0 to 1
             float t = ((float) Math.floorMod((long) (bp.getX() * 7 + bp.getZ() * 13) + time, period) + partialTicks) / ((float) period);
 
-            if (true) {
+            if (ClientConfigs.cached.FLAG_BANNER) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) ((((w / l) - t * 2 * (float) Math.PI)))));
-                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
-                renderBanner(t, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
+                renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;

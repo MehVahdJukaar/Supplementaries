@@ -38,7 +38,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -483,19 +482,25 @@ public class RopeBlock extends WaterBlock {
         return false;
     }
 
-    public static boolean isObsidian(BlockState state) {
-        return (state.is(Blocks.OBSIDIAN) || state.is(Blocks.CRYING_OBSIDIAN) || state.is(Blocks.RESPAWN_ANCHOR));
+    public static boolean isBlockMovable(BlockState state, Level level, BlockPos pos) {
+        return (!state.isAir() && !state.is(Blocks.OBSIDIAN) &&
+                !state.is(Blocks.CRYING_OBSIDIAN) && !state.is(Blocks.RESPAWN_ANCHOR))
+                && state.getDestroySpeed(level, pos) != -1;
     }
 
     //TODO: fix order of operations to allow pulling down lanterns
     private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
-        if (toPos.getY() < 0 || toPos.getY() > 255) return false;
+        if (toPos.getY() < world.getMinBuildHeight() || toPos.getY() > world.getMaxBuildHeight()) return false;
         BlockState state = world.getBlockState(fromPos);
 
         PushReaction push = state.getPistonPushReaction();
 
-        if ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY) || state.is(ModTags.ROPE_HANG_TAG)) && state.getDestroySpeed(world, fromPos) != -1
-                && state.canSurvive(world, toPos) && !state.isAir() && !isObsidian(state)) {
+        if (isBlockMovable(state, world, fromPos) &&
+                (
+                        ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY)) && state.canSurvive(world, toPos))
+                        || (state.is(ModTags.ROPE_HANG_TAG))
+                )
+            ) {
 
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {

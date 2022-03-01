@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 
+import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -12,8 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
-import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
-import net.mehvahdjukaar.supplementaries.datagen.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -41,13 +40,9 @@ public class ModSetup {
         event.enqueueWork(() -> {
             try {
 
-                long mills = System.currentTimeMillis();
+                Stopwatch watch = Stopwatch.createStarted();
 
-                ServerDynamicResourcesHandler.init();
-
-                setupStage++;
                 WorldGenHandler.setup(event);
-
                 setupStage++;
 
                 CompatHandler.init();
@@ -57,15 +52,6 @@ public class ModSetup {
                 setupStage++;
 
                 WeatheredMap.init();
-                setupStage++;
-
-                //WorldGenSetup.registerMobSpawns();
-                setupStage++;
-
-                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
-                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
-                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD_ITEM.get(), 0.65F);
-                ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
                 setupStage++;
 
                 FlowerPotHandler.init();
@@ -82,15 +68,24 @@ public class ModSetup {
 
                 LootTableStuff.init();
                 setupStage++;
+
+                registerCompostables();
+                setupStage++;
+
                 registerMobFoods();
+                setupStage++;
+
+                CauldronRegistry.registerInteractions();
+                setupStage++;
+
+                PresentRegistry.registerBehaviors();
+                setupStage++;
 
                 hasFinishedSetup = true;
 
-                long elapsed = System.currentTimeMillis() - mills;
-                Supplementaries.LOGGER.info("Finished mod setup in: {} seconds", elapsed/1000f);
+                Supplementaries.LOGGER.info("Finished mod setup in: {} seconds", watch.elapsed().toSeconds());
 
             } catch (Exception e) {
-                Supplementaries.LOGGER.throwing(new Exception("Exception during mod setup:" + e + ". This is a big bug"));
                 terminateWhenSetupFails();
             }
 
@@ -102,7 +97,7 @@ public class ModSetup {
         //Supplementaries.LOGGER.throwing(e);
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
-                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors. Executing 69/0");
+                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
     }
 
     private static void registerMobFoods() {
@@ -115,6 +110,14 @@ public class ModSetup {
         AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
     }
 
+    private static void registerCompostables() {
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD_ITEM.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
+    }
+
+
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
@@ -124,18 +127,17 @@ public class ModSetup {
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         if (!firstTagLoad) {
-            long mills = System.currentTimeMillis();
-            //using this as a post setup event
+            firstTagLoad = true;
             if (!hasFinishedSetup) {
                 terminateWhenSetupFails();
             }
+            //using this as a post setup event that can access tags
+            Stopwatch watch = Stopwatch.createStarted();
 
-            firstTagLoad = true;
             DispenserRegistry.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
 
-            long elapsed = System.currentTimeMillis() - mills;
-            Supplementaries.LOGGER.info("Finished additional setup in {} seconds", elapsed/1000f);
+            Supplementaries.LOGGER.info("Finished additional setup in {} seconds", watch.elapsed().toSeconds());
         }
     }
 

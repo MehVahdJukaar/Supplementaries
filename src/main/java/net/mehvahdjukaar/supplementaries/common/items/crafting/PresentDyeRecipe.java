@@ -59,7 +59,8 @@ public class PresentDyeRecipe extends CustomRecipe {
                 }
             }
         }
-        ItemStack result = new ItemStack(ModRegistry.PRESENTS_ITEMS.get(dyecolor).get());
+
+        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem()).getItemColorMap().get(dyecolor).get());
 
         if (itemstack.hasTag()) {
             result.setTag(itemstack.getTag().copy());

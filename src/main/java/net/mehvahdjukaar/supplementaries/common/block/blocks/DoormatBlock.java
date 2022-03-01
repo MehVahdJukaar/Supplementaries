@@ -129,7 +129,6 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
         return true;
     }
 
-//TODO: maybe make conditional tile
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

@@ -130,7 +130,7 @@ public class ConfiguredFeaturesRegistry {
      */
     public static ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN_STRUCTURE = StructuresRegistry.WAY_SIGN.get()
             .configured(new JigsawConfiguration(() -> PlainVillagePools.START, 0));
-    // Dummy JigsawConfiguration values for now. We will modify the pool at runtime since we cannot get json pool files here at mod init.
+    // Dummy JigsawConfiguration values for now. We will modify the pool at runtime since we cannot get json pool files here at mod registerBus.
     // You can create and register your pools in code, pass in the code create pool here, and delete both newConfig and newContext in RunDownHouseStructure's createPiecesGenerator.
     // Note: JigsawConfiguration only takes 0 - 7 size so that's another reason why we are going to bypass that "codec" by changing size at runtime to get higher sizes.
 

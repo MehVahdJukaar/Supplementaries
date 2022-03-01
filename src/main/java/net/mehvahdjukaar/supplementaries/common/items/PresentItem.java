@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,8 +19,11 @@ import java.util.Map;
 
 public class PresentItem extends BlockItem implements IColored {
 
-    public PresentItem(Block block, Properties properties) {
+    private final Map<DyeColor, RegistryObject<Item>> registry;
+
+    public PresentItem(Block block, Properties properties, Map<DyeColor, RegistryObject<Item>> registry) {
         super(block, properties);
+        this.registry = registry;
     }
 
     @Override
@@ -34,13 +38,19 @@ public class PresentItem extends BlockItem implements IColored {
         if (tag != null) {
             CompoundTag t = tag.getCompound("BlockEntityTag");
             if(!t.isEmpty()){
+                boolean isPacked = false;
                 if(t.contains("Sender")){
                     var c = PresentBlockTile.getSenderMessage(t.getString("Sender"));
                     if(c != null) components.add(c);
+                    isPacked = true;
                 }
                 if(t.contains("Recipient")){
                     var c = PresentBlockTile.getRecipientMessage(t.getString("Recipient"));
                     if(c != null) components.add(c);
+                    isPacked = true;
+                }
+                if(!isPacked && t.contains("Items")){
+                    components.add(new TranslatableComponent("message.supplementaries.present.public"));
                 }
             }
         }
@@ -54,7 +64,7 @@ public class PresentItem extends BlockItem implements IColored {
     @Nullable
     @Override
     public  Map<DyeColor, RegistryObject<Item>> getItemColorMap() {
-        return ModRegistry.PRESENTS_ITEMS;
+        return registry;
     }
 
     @Override

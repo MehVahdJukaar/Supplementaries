@@ -42,9 +42,8 @@ import static net.minecraftforge.common.BiomeDictionary.Type.*;
 public class WorldGenHandler {
 
 
-    public static void init() {
-        // For registration and init stuff.
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void registerBus(IEventBus modEventBus) {
+        // For registration and registerBus stuff.
         StructuresRegistry.STRUCTURES.register(modEventBus);
         FeaturesRegistry.FEATURES.register(modEventBus);
 

@@ -62,6 +62,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
+        addIcon("axe dispenser behaviors", Items.DIAMOND_AXE);
         addIcon("hanging flower pots", Items.FLOWER_POT);
         addIcon("throwable bricks", Items.BRICK);
         addIcon("wall lantern", Items.LANTERN);
@@ -92,7 +93,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("soap", ModRegistry.SOAP_BLOCK.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
         addIcon("conditional sign registration", Items.BARRIER);
-        addIcon("axe dispenser behavior", Items.GOLDEN_AXE);
+
     }
 
     private ItemStack getIcon(String name) {
@@ -423,8 +424,6 @@ public class CustomConfigScreen extends ConfigScreen {
         public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
             this.button.setMessage(new TextComponent(""));
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
-
-            //TODO: replace with button icon
 
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CustomConfigSelectScreen.ICONS_TEXTURES);

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.markers.NamedMapWorldMarker;
+import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ColoredDecoration;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.BlockGetter;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class FlagMarker extends NamedMapWorldMarker<ColoredDecoration> {
+public class FlagMarker extends NamedMapBlockMarker<ColoredDecoration> {
 
     private DyeColor color;
 
@@ -22,8 +22,7 @@ public class FlagMarker extends NamedMapWorldMarker<ColoredDecoration> {
     }
 
     public FlagMarker(BlockPos pos, DyeColor color, @Nullable Component name) {
-        this();
-        this.pos = pos;
+        super(CMDreg.FLAG_DECORATION_TYPE, pos);
         this.color = color;
         this.name = name;
     }

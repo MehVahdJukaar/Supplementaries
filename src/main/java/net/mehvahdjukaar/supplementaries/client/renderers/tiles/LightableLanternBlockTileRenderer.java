@@ -5,17 +5,16 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.LightableLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.VerticalLanternBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.AttachFace;
 
 
-public class LightableLanternBlockTileRenderer implements BlockEntityRenderer<LightableLanternBlockTile> {
+public class LightableLanternBlockTileRenderer implements BlockEntityRenderer<VerticalLanternBlockTile> {
     protected final BlockRenderDispatcher blockRenderer;
 
     public LightableLanternBlockTileRenderer(BlockEntityRendererProvider.Context context) {
@@ -23,7 +22,7 @@ public class LightableLanternBlockTileRenderer implements BlockEntityRenderer<Li
     }
 
     @Override
-    public void render(LightableLanternBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(VerticalLanternBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         if (tile.getBlockState().getValue(LanternBlock.HANGING)) {
 
