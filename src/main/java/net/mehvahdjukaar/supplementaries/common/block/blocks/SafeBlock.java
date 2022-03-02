@@ -151,12 +151,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                 //clear ownership with tripwire
                 boolean cleared = false;
                 if (ServerConfigs.cached.SAFE_SIMPLE) {
-                    if ((item == Items.TRIPWIRE_HOOK || ModTags.KEY.contains(item)) &&
+                    if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
                             (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
                     }
                 } else {
-                    if (player.isShiftKeyDown() && ModTags.KEY.contains(item) && (player.isCreative() ||
+                    if (player.isShiftKeyDown() && stack.is(ModTags.KEY) && (player.isCreative() ||
                             KeyLockableTile.isCorrectKey(stack, tile.password))) {
                         cleared = true;
                     }
@@ -185,7 +185,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     } else {
                         String key = tile.password;
                         if (key == null) {
-                            if (ModTags.KEY.contains(item)) {
+                            if (stack.is(ModTags.KEY)) {
                                 tile.password = stack.getHoverName().getString();
                                 player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", tile.password), true);
                                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,

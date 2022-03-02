@@ -99,7 +99,7 @@ public class KeyLockableTile extends BlockEntity {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
 
-        boolean isKey = ModTags.KEY.contains(item);
+        boolean isKey = stack.is(ModTags.KEY);
         //clear ownership
         if (player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))) {
             this.clearOwner();

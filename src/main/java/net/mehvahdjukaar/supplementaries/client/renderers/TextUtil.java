@@ -99,7 +99,7 @@ public class TextUtil {
 
                         \u00A75Music and Sound:\u00A7r
 
-                        \u00A70STiiX
+                        \u00A70Partyp
                         Cydian
 
                         \u00A75Translations:\u00A7r

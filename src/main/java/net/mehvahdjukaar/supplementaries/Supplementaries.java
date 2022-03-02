@@ -40,6 +40,18 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
+        /*
+        To check if a given tag has a given object:
+        Registry#getHolderOrThrow(objectID).is(tagKey)
+
+        To get all objects in a given tag:
+        Registry#getTagOrEmpty(tagKey)
+
+        To get all tags for a given object:
+        Registry#getHolderOrThrow(objectID).tags()
+
+        Some things like blockstates and items have helper methods for doing the above as well
+    */
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

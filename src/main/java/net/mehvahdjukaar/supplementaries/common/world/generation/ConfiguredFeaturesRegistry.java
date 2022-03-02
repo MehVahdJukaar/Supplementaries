@@ -59,35 +59,35 @@ public class ConfiguredFeaturesRegistry {
     );
 
     //configured features
-    public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN = FeaturesRegistry.ROAD_SIGN.get()
-            .configured(NoneFeatureConfiguration.INSTANCE);
+    public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN =  new ConfiguredFeature<>(FeaturesRegistry.ROAD_SIGN.get(),
+            NoneFeatureConfiguration.INSTANCE);
 
-    public static final ConfiguredFeature<RandomPatchConfiguration, ?> WILD_FLAX_PATCH = Feature.RANDOM_PATCH.configured(
+    public static final ConfiguredFeature<RandomPatchConfiguration, ?> WILD_FLAX_PATCH =  new ConfiguredFeature<>(Feature.RANDOM_PATCH,
             makeRandomPatch(ServerConfigs.spawn.FLAX_PATCH_TRIES.get(), 4, 0,
-                    Feature.SIMPLE_BLOCK.configured(new SimpleBlockConfiguration(BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
+                    new ConfiguredFeature<>(Feature.SIMPLE_BLOCK,new SimpleBlockConfiguration(BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
                     FLAX_PLACEMENT));
 
 
-    public static final ConfiguredFeature<RandomPatchConfiguration, ?> CAVE_URNS_PATCH = Feature.RANDOM_PATCH.configured(
+    public static final ConfiguredFeature<RandomPatchConfiguration, ?> CAVE_URNS_PATCH = new ConfiguredFeature<>(Feature.RANDOM_PATCH,
             makeRandomPatch(ServerConfigs.spawn.URN_PATCH_TRIES.get(), 4, 1,
-                    Feature.SIMPLE_BLOCK.configured(new SimpleBlockConfiguration(
+                    new ConfiguredFeature<>(Feature.SIMPLE_BLOCK,new SimpleBlockConfiguration(
                             BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
                     URN_PLACEMENT));
 
     //placed features
 
-    public static final PlacedFeature PLACED_WILD_FLAX_PATCH = WILD_FLAX_PATCH.placed(
+    public static final PlacedFeature PLACED_WILD_FLAX_PATCH = new PlacedFeature(WILD_FLAX_PATCH,List.of(
             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
             RarityFilter.onAverageOnceEvery(ServerConfigs.spawn.FLAX_AVERAGE_EVERY.get()),
             InSquarePlacement.spread(),
-            BiomeFilter.biome());
+            BiomeFilter.biome()));
 
 
-    public static final PlacedFeature PLACED_CAVE_URNS = CAVE_URNS_PATCH.placed(
+    public static final PlacedFeature PLACED_CAVE_URNS = new PlacedFeature(CAVE_URNS_PATCH, List.of(
             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
             CountPlacement.of(ServerConfigs.spawn.URN_PER_CHUNK.get()),
             InSquarePlacement.spread(),
-            BiomeFilter.biome());
+            BiomeFilter.biome()));
 
 
     /**
@@ -128,8 +128,8 @@ public class ConfiguredFeaturesRegistry {
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN_STRUCTURE = StructuresRegistry.WAY_SIGN.get()
-            .configured(new JigsawConfiguration(() -> PlainVillagePools.START, 0));
+    public static ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN_STRUCTURE = new ConfiguredFeature<>(StructuresRegistry.WAY_SIGN.get(),
+            new JigsawConfiguration(() -> PlainVillagePools.START, 0));
     // Dummy JigsawConfiguration values for now. We will modify the pool at runtime since we cannot get json pool files here at mod registerBus.
     // You can create and register your pools in code, pass in the code create pool here, and delete both newConfig and newContext in RunDownHouseStructure's createPiecesGenerator.
     // Note: JigsawConfiguration only takes 0 - 7 size so that's another reason why we are going to bypass that "codec" by changing size at runtime to get higher sizes.

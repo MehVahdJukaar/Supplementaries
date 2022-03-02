@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -60,7 +61,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     private Topping getTopping(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof HoneyBottleItem) return BlockProperties.Topping.HONEY;
-        if ((ModTags.CHOCOLATE_BARS.getValues().isEmpty() && item == Items.COCOA_BEANS) || stack.is(ModTags.CHOCOLATE_BARS)) {
+        if ((Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty() && item == Items.COCOA_BEANS) || stack.is(ModTags.CHOCOLATE_BARS)) {
             return Topping.CHOCOLATE;
         }
         if (item.getRegistryName().toString().equals("autumnity:syrup_bottle")) return Topping.SYRUP;

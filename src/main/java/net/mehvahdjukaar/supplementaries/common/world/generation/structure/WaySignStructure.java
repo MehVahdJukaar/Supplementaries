@@ -47,14 +47,6 @@ public class WaySignStructure extends StructureFeature<JigsawConfiguration> {
                 PostPlacementProcessor.NONE);
     }
 
-    @Override
-    public StructureStart<?> generate(RegistryAccess registryAccess, ChunkGenerator generator, BiomeSource biomeSource,
-                                      StructureManager manager, long seed, ChunkPos chunkPos, int p_191139_,
-                                      StructureFeatureConfiguration configuration, JigsawConfiguration jigsawConfiguration,
-                                      LevelHeightAccessor levelHeightAccessor, Predicate<Biome> biomePredicate) {
-
-        return super.generate(registryAccess, generator, biomeSource, manager, seed, chunkPos, p_191139_, configuration, jigsawConfiguration, levelHeightAccessor, biomePredicate);
-    }
 
     /**
      * Generation stage for when to generate the structure. there are 10 stages you can pick from!

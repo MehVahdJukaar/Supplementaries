@@ -1,35 +1,26 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.tetra.TetraToolHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.Tags;
 
 import java.util.Calendar;
 
@@ -100,13 +91,13 @@ public class CommonUtil {
 
 
     public static boolean isSword(Item i) {
-        if(ModTags.STATUE_SWORDS.contains(i)) return true;
+        if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
         if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
         return i instanceof SwordItem;
     }
 
     public static boolean isTool(Item i) {
-        if(ModTags.STATUE_TOOLS.contains(i)) return true;
+        if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
         if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
@@ -125,11 +116,11 @@ public class CommonUtil {
     }
 
     public static boolean isCookie(Item i) {
-        return (ModTags.COOKIES.contains(i));
+        return (i.builtInRegistryHolder().is(ModTags.COOKIES));
     }
 
     public static boolean isBrick(Item i) {
-        return (ModTags.BRICKS.contains(i));
+        return (i.builtInRegistryHolder().is(ModTags.BRICKS));
     }
 
     public static boolean isCake(Item i) {
@@ -191,7 +182,8 @@ public class CommonUtil {
     }
 
     public static HitResult rayTrace(Entity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
-        Vec3 startPos = entity.getEyePosition();;
+        Vec3 startPos = entity.getEyePosition();
+        ;
         Vec3 ray = entity.getViewVector(1).scale(range);
         Vec3 endPos = startPos.add(ray);
         ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);

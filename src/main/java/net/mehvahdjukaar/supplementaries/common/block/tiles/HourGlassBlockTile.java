@@ -191,15 +191,15 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         }
 
         public static HourGlassSandType getHourGlassSandType(Item i) {
-            if (i instanceof BlockItem) {
-                Block b = ((BlockItem) i).getBlock();
-                if (ModTags.SANDS.contains(i)) return SAND;
-                if (ModTags.CONCRETE_POWDERS.contains(b)) return CONCRETE;
+            if (i instanceof BlockItem bi) {
+                Block b = bi.getBlock();
+                if (i.builtInRegistryHolder().is(ModTags.SANDS)) return SAND;
+                if (b.builtInRegistryHolder().is(ModTags.CONCRETE_POWDERS)) return CONCRETE;
             }
             for (HourGlassSandType n : HourGlassSandType.values()) {
                 if (n.item == i) return n;
             }
-            if (ModTags.DUSTS.contains(i)) return FORGE_DUST;
+            if (i.builtInRegistryHolder().is(ModTags.DUSTS)) return FORGE_DUST;
             return DEFAULT;
         }
     }

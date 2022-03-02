@@ -128,7 +128,7 @@ public class ServerEvents {
             Entity entity = event.getEntity();
             if (entity instanceof Animal animal) {
                 EntityType<?> type = event.getEntity().getType();
-                if (ModTags.EATS_FODDER.contains(type)) {
+                if (type.is(ModTags.EATS_FODDER)) {
                     animal.goalSelector.addGoal(3,
                             new EatFodderGoal(animal, 1, 8, 2, 30));
                 }

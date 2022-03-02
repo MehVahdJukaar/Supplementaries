@@ -65,7 +65,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isNormalBook(Item i) {
-        return ModTags.BOOKS.contains(i) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
+        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
     }
 
     public static boolean isWrittenBook(Item i) {

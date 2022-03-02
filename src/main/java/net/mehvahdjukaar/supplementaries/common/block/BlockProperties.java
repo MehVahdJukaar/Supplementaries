@@ -46,12 +46,9 @@ public class BlockProperties {
     public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
     public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
     public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type", PostType.class);
-    public static final EnumProperty<BellAttachment> BELL_ATTACHMENT = EnumProperty.create("attachment", BellAttachment.class);
-    public static final EnumProperty<IBellConnections.BellConnection> BELL_CONNECTION = EnumProperty.create("connection", IBellConnections.BellConnection.class);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
-    public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");

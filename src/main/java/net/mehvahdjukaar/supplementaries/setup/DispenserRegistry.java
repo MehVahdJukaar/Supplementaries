@@ -20,10 +20,7 @@ import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
+import net.minecraft.core.*;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -75,9 +72,10 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
-            for (Item i : ModTags.BRICKS.getValues()) {
-                DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(i));
-            }
+            Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h->
+                    DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(h.value()))
+            );
+
         }
 
         //bomb

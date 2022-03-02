@@ -51,9 +51,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     public static Winding getContentType(Item item) {
         Winding type = Winding.NONE;
-        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof ChainBlock || ModTags.CHAINS.contains(item))
+        if (item instanceof BlockItem bi && bi.getBlock() instanceof ChainBlock || item.builtInRegistryHolder().is(ModTags.CHAINS))
             type = Winding.CHAIN;
-        else if (ModTags.ROPES.contains(item)) type = Winding.ROPE;
+        else if (item.builtInRegistryHolder().is(ModTags.ROPES)) type = Winding.ROPE;
         return type;
     }
 

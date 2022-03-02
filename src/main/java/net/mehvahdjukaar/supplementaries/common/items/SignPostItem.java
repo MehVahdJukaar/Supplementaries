@@ -52,7 +52,7 @@ public class SignPostItem extends Item {
     private boolean isFence(Block b) {
         ResourceLocation res = b.getRegistryName();
         if (res.getNamespace().equals("blockcarpentry")) return false;
-        return ModTags.POSTS.contains(b);
+        return b.builtInRegistryHolder().is(ModTags.POSTS);
     }
 
     @Override

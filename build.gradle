@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.2.2'
+version = '1.18.2-1.2.3'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -36,8 +36,8 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
 
-    //mappings channel: 'official', version: '1.18.1'
-    mappings channel: 'parchment', version: '2021.12.19-1.18.1'
+    mappings channel: 'official', version: '1.18.2'
+    //mappings channel: 'parchment', version: '2022.02.13-1.18.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -150,7 +150,8 @@ publishing {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.79'
+    //minecraft 'net.minecraftforge:forge:1.18.1-39.0.79'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.1'
 
     implementation fg.deobf("curse.maven:configured-457570:3640884")
     implementation fg.deobf("curse.maven:curios-309927:3648837")
