@@ -49,7 +49,7 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.innerTileUp = this.loadInnerTile("Skull", this.innerTileUp, tag);
+        this.innerTileUp = this.loadInnerTile("SkullUp", this.innerTileUp, tag);
 
         if (tag.contains("WaxColor")) {
             this.waxColorInd = tag.getInt("WaxColor");
