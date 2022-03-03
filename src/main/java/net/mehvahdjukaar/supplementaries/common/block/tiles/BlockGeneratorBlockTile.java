@@ -17,12 +17,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -120,8 +119,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                 boolean inVillage = locateResult.getRight();
 
                 if (inVillage) {
-                    ResourceKey<Biome> b = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
-                    BlockState replace = (b == Biomes.DESERT) ? path_2 : path;
+                    var b = world.getBiome(pos);
+                    BlockState replace = b.is(BiomeTags.HAS_VILLAGE_DESERT) ? path_2 : path;
                     replaceCobbleWithPath(world, pos, replace);
                 }
 
@@ -201,7 +200,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
                         boolean hasGroundLantern = false;
 
-                        ResourceKey<Biome> biome = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).getRegistryName());
+                        var biome = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).value().getRegistryName());
+
                         boolean hasFirefly = (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
                                 BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
                                 BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.01f) > rand.nextFloat();

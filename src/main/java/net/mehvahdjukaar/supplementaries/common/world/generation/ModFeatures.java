@@ -8,10 +8,13 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class FeaturesRegistry {
-    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Supplementaries.MOD_ID);
+public class ModFeatures {
 
-    public static final RegistryObject<Feature<NoneFeatureConfiguration>> ROAD_SIGN = FEATURES.register("road_sign_feature",
-            () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
+    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(
+            ForgeRegistries.FEATURES, Supplementaries.MOD_ID);
+
+    //feature spawned by the structure
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> ROAD_SIGN = FEATURES.register(
+            "road_sign_feature", () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
 
 }

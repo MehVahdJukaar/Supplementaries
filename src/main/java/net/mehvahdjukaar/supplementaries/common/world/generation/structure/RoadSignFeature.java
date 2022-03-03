@@ -108,7 +108,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
 
-        float humidity = reader.getBiome(pos).getDownfall();
+        float humidity = reader.getBiome(pos).value().getDownfall();
 
 
         //generate cobble path
@@ -118,7 +118,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
                 reader.setBlock(pos.offset(i, -1, j), this.cobble, 2);
 
                 BlockPos pathPos = pos.offset(i, 0, j);
-                double dist = pos.distSqr(pathPos.getX(), pathPos.getY(), pathPos.getZ(), false) / 5.2f;
+                double dist = pos.distToCenterSqr(pathPos.getX(), pathPos.getY(), pathPos.getZ()) / 5.2f;
 
                 if (rand.nextFloat() < dist - 0.15) continue;
                 ;

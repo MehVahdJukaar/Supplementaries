@@ -1,40 +1,32 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.PlainVillagePools;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.material.Fluids;
-import vectorwing.farmersdelight.common.block.WildCropBlock;
-import vectorwing.farmersdelight.common.block.WildRiceBlock;
 
 import java.util.List;
 
-public class ConfiguredFeaturesRegistry {
-
-    /**
-     * Static instance of our structure, so we can reference it and add it to biomes easily.
-     */
-    //public static final ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN = StructureRegistry.WAY_SIGN.get().configured(FeatureConfiguration.NONE);
-
+public class ModConfiguredFeatures {
 
     //helper
     private static RandomPatchConfiguration makeRandomPatch(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, BlockPredicate placementRule) {
@@ -59,7 +51,7 @@ public class ConfiguredFeaturesRegistry {
     );
 
     //configured features
-    public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN =  new ConfiguredFeature<>(FeaturesRegistry.ROAD_SIGN.get(),
+    public static final ConfiguredFeature<?, ?> CONFIGURED_ROAD_SIGN =  new ConfiguredFeature<>(ModFeatures.ROAD_SIGN.get(),
             NoneFeatureConfiguration.INSTANCE);
 
     public static final ConfiguredFeature<RandomPatchConfiguration, ?> WILD_FLAX_PATCH =  new ConfiguredFeature<>(Feature.RANDOM_PATCH,
@@ -125,14 +117,19 @@ public class ConfiguredFeaturesRegistry {
 
     }
 
+
+
+
     /**
      * Static instance of our structure so we can reference it and add it to biomes easily.
      */
-    public static ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN_STRUCTURE = new ConfiguredFeature<>(StructuresRegistry.WAY_SIGN.get(),
+    public static ConfiguredStructureFeature<?, ?> CONFIGURED_WAY_SIGN_STRUCTURE = new ConfiguredFeature<>(ModStructures.WAY_SIGN.get(),
             new JigsawConfiguration(() -> PlainVillagePools.START, 0));
     // Dummy JigsawConfiguration values for now. We will modify the pool at runtime since we cannot get json pool files here at mod registerBus.
     // You can create and register your pools in code, pass in the code create pool here, and delete both newConfig and newContext in RunDownHouseStructure's createPiecesGenerator.
     // Note: JigsawConfiguration only takes 0 - 7 size so that's another reason why we are going to bypass that "codec" by changing size at runtime to get higher sizes.
+
+
 
 
 }

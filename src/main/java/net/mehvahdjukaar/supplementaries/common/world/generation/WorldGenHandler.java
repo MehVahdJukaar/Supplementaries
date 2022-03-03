@@ -4,14 +4,12 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingFlowerPotBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChunkGeneratorAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -29,9 +27,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.content.world.module.BigDungeonModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,12 +40,13 @@ public class WorldGenHandler {
 
     public static void registerBus(IEventBus modEventBus) {
         // For registration and registerBus stuff.
-        StructuresRegistry.STRUCTURES.register(modEventBus);
-        FeaturesRegistry.FEATURES.register(modEventBus);
+        ModStructures.STRUCTURES.register(modEventBus);
+        ModFeatures.FEATURES.register(modEventBus);
 
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(EventPriority.NORMAL, WorldGenHandler::addDimensionalSpacing);
         bus.addListener(EventPriority.NORMAL, WorldGenHandler::addStuffToBiomes);
+
     }
 
     /**
@@ -62,8 +59,7 @@ public class WorldGenHandler {
      * configured structure instance, and more.
      */
     public static void setup(final FMLCommonSetupEvent event) {
-        StructuresRegistry.setupStructures();
-        ConfiguredFeaturesRegistry.registerFeatures();
+        ModConfiguredFeatures.registerFeatures();
     }
 
     /**
@@ -111,7 +107,7 @@ public class WorldGenHandler {
                             biomeCategory != Biome.BiomeCategory.RIVER &&
                             biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
                             biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
-                        associateBiomeToConfiguredStructure(STStructureToMultiMap, ConfiguredFeaturesRegistry.CONFIGURED_WAY_SIGN_STRUCTURE, biomeEntry.getKey());
+                        associateBiomeToConfiguredStructure(STStructureToMultiMap, ModConfiguredFeatures.CONFIGURED_WAY_SIGN_STRUCTURE, biomeEntry.getKey());
                     }
                 }
 
@@ -127,7 +123,7 @@ public class WorldGenHandler {
 
             //dont forget this part
             Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(worldStructureSettings.structureConfig());
-            tempMap.putIfAbsent(StructuresRegistry.WAY_SIGN.get(), StructureSettings.DEFAULTS.get(StructuresRegistry.WAY_SIGN.get()));
+            tempMap.putIfAbsent(ModStructures.WAY_SIGN.get(), StructureSettings.DEFAULTS.get(ModStructures.WAY_SIGN.get()));
             worldStructureSettings.structureConfig = tempMap;
         }
     }
@@ -185,7 +181,7 @@ public class WorldGenHandler {
 
             if(ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
                 if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
-                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ConfiguredFeaturesRegistry.PLACED_CAVE_URNS);
+                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ModConfiguredFeatures.PLACED_CAVE_URNS);
                 }
             }
 
@@ -197,7 +193,7 @@ public class WorldGenHandler {
                     ResourceKey<Biome> key = ResourceKey.create(ForgeRegistries.Keys.BIOMES, res);
                     Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
                     if (types.contains(SANDY) && (types.contains(HOT) || types.contains(DRY)) || types.contains(RIVER)) {
-                        event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ConfiguredFeaturesRegistry.PLACED_WILD_FLAX_PATCH);
+                        event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.PLACED_WILD_FLAX_PATCH);
                     }
                 }
             }
