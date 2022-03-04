@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-import static net.mehvahdjukaar.supplementaries.common.utils.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class HourGlassBlockTile extends ItemDisplayTile {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;

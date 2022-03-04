@@ -217,7 +217,7 @@ public class AshLayerBlock extends FallingBlock {
 
             Item i = state.getBlock().asItem();
             int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
-            if (ItemTags.LOGS_THAT_BURN.contains(i)) count += 2;
+            if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
 
             if (count > 0) {
                 int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
@@ -283,6 +283,7 @@ public class AshLayerBlock extends FallingBlock {
 
     //TODO: add this
     public static final int GRASS_SPREAD_WIDTH = 3;
+    /*
     public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
         BlockPos blockpos = pos.above();
         BlockState blockstate = Blocks.GRASS.defaultBlockState();
@@ -324,6 +325,6 @@ public class AshLayerBlock extends FallingBlock {
         }
 
     }
-
+    */
 
 }

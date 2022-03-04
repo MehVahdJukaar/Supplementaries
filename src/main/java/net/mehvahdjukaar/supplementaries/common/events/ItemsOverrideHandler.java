@@ -369,7 +369,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToBlock(Block block) {
-            return block == Blocks.CAKE || BlockTags.CANDLE_CAKES.contains(block);
+            return block == Blocks.CAKE || block.builtInRegistryHolder().is(BlockTags.CANDLE_CAKES);
         }
 
         @Override
@@ -996,7 +996,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return ItemTags.CANDLES.contains(item) && item.getRegistryName().getNamespace().equals("minecraft");
+            return item.builtInRegistryHolder().is(ItemTags.CANDLES) && item.getRegistryName().getNamespace().equals("minecraft");
         }
 
         @Override

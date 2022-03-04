@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.utils.ModTags;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -40,12 +39,13 @@ public class PedestalBlockTile extends ItemDisplayTile {
         }
 
         //doing this here since I need crystal on server too
-        Item it = getDisplayedItem().getItem();
+        ItemStack stack = getDisplayedItem();
+        Item it = stack.getItem();
         //TODO: maybe add tag
 
-       if (CommonUtil.isSword(it) || ModTags.PEDESTAL_DOWNRIGHT.contains(it)) {
+       if (CommonUtil.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
             this.type = DisplayType.SWORD;
-        } else if (it instanceof TridentItem || ModTags.PEDESTAL_UPRIGHT.contains(it)) {
+        } else if (it instanceof TridentItem || stack.is(ModTags.PEDESTAL_UPRIGHT)) {
             this.type = DisplayType.TRIDENT;
         } else if (it instanceof EndCrystalItem) {
             this.type = DisplayType.CRYSTAL;

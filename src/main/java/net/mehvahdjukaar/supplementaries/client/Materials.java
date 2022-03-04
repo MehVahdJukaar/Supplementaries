@@ -4,13 +4,11 @@ import net.mehvahdjukaar.selene.util.BlockSetHandler;
 import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.Textures;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.NoteBlock;
-import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.HashMap;

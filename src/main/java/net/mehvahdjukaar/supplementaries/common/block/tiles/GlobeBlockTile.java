@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-import static net.mehvahdjukaar.supplementaries.common.utils.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.Textures.*;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 

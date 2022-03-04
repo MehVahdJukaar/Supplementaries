@@ -114,9 +114,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         super.onHitEntity(entityRayTraceResult);
         if (entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
             Item item = this.getItem().getItem();
-            if (item instanceof BlockItem) {
-                Block block = ((BlockItem) item).getBlock();
-                if (BlockTags.ENDERMAN_HOLDABLE.contains(block) || ServerConfigs.cached.UNRESTRICTED_SLINGSHOT) {
+            if (item instanceof BlockItem bi) {
+                Block block = bi.getBlock();
+                if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || ServerConfigs.cached.UNRESTRICTED_SLINGSHOT) {
                     if (enderman.getCarriedBlock() == null) {
                         enderman.setCarriedBlock(block.defaultBlockState());
                         this.remove(RemovalReason.DISCARDED);

@@ -116,17 +116,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
             tile.recheckOpen();
 
             if (canFall(pos, worldIn)) {
-                FallingBlockEntity fallingblockentity = new FallingBlockEntity(worldIn, (double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos)) {
-                    @Override
-                    public ItemEntity spawnAtLocation(ItemLike itemIn, int offset) {
-                        ItemStack stack = new ItemStack(itemIn);
-                        if (itemIn instanceof Block) {
-                            stack.addTagElement("BlockEntityTag", this.blockData);
-                        }
-                        return this.spawnAtLocation(stack, (float) offset);
-                    }
 
-                };
                 fallingblockentity.setHurtsEntities(1, 20);
                 fallingblockentity.blockData = tile.saveWithoutMetadata();
                 this.falling(fallingblockentity);

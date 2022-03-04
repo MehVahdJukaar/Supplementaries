@@ -1,12 +1,14 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.common.ForgeTagHandler;
@@ -23,7 +25,6 @@ public class ModTags {
 
     //block tags
     public static final TagKey<Block> POSTS = blockTag("posts");
-    public static final TagKey<Block> ENCHANTMENT_BYPASS = blockTag("enchantment_bypass");
     public static final TagKey<Block> PALISADES = blockTag("palisades");
     public static final TagKey<Block> BEAMS = blockTag("beams");
     public static final TagKey<Block> WALLS = blockTag("walls");
@@ -32,7 +33,6 @@ public class ModTags {
     public static final TagKey<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     public static final TagKey<Block> WATER_HOLDER = blockTag("water_holder");
     public static final TagKey<Block> POURING_TANK = blockTag("pouring_tank");
-    public static final TagKey<Block> WALL_LANTERNS = blockTag("wall_lanterns");
     public static final TagKey<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final TagKey<Block> PANE_CONNECTION = blockTag("pane_connection");
     public static final TagKey<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
@@ -56,7 +56,6 @@ public class ModTags {
     public static final TagKey<Item> KEY = itemTag("key");
     public static final TagKey<Item> STATUE_SWORDS = itemTag("statue_swords");
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
-    public static final TagKey<Item> FLAGS = itemTag("flags");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SHULKER_BOXES = ItemTags.create(new ResourceLocation("forge", "shulker_boxes"));
     //entity tags
@@ -67,7 +66,10 @@ public class ModTags {
     public static final TagKey<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     //features
-    public static final TagKey<StructureFeature<?>> VILLAGES = structureTag("villages");
+    public static final TagKey<StructureFeature<?>> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
+    public static final TagKey<StructureFeature<?>> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
+    //biomes
+    public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
 
     private static TagKey<StructureFeature<?>> structureTag(String name) {
         return TagKey.create(Registry.STRUCTURE_FEATURE_REGISTRY,Supplementaries.res( name));
@@ -80,6 +82,9 @@ public class ModTags {
     }
     private static TagKey<EntityType<?>> entityTag(String name) {
         return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, Supplementaries.res( name));
+    }
+    private static TagKey<Biome> biomeTag(String name) {
+        return TagKey.create(Registry.BIOME_REGISTRY, Supplementaries.res( name));
     }
 
 }

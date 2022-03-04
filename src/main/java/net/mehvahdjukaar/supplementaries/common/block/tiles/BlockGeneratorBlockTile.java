@@ -93,7 +93,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
             Thread thread = new Thread(() -> {
                 try {
-                    tile.threadResult = StructureLocator.find(world, posX, posZ, 2);
+                   // tile.threadResult = StructureLocator.find(world, posX, posZ, 2);
+                    tile.failAndRemove(pLevel, pPos, new Exception());
                 } catch (Exception e) {
                     tile.failAndRemove(pLevel, pPos, e);
                 }

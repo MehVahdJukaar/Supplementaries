@@ -54,7 +54,7 @@ public class FDCompatRegistry {
 
 
     public static InteractionResult onCakeInteraction(BlockState state, BlockPos pos, Level world, ItemStack stack) {
-        if (ModTags.KNIVES.contains(stack.getItem())) {
+        if (stack.is(ModTags.KNIVES)) {
             int bites = state.getValue(CakeBlock.BITES);
             if (bites < 6) {
                 world.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);

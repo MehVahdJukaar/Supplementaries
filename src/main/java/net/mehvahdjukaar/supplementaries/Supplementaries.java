@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
@@ -38,7 +39,7 @@ public class Supplementaries {
     public static String str(String n) {
         return MOD_ID + ":" + n;
     }
-
+VillagerTradesHandler
     public Supplementaries() {
         /*
         To check if a given tag has a given object:

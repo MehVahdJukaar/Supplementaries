@@ -1,17 +1,24 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.mehvahdjukaar.selene.map.CustomDecorationType;
 import net.mehvahdjukaar.selene.map.MapDecorationHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ConfiguredStructureTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -20,14 +27,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.OceanMonumentFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.WoodlandMansionFeature;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,11 +48,8 @@ public class AdventurerMapsHandler {
 
     private static final Map<StructureFeature<?>, Pair<CustomDecorationType<?, ?>, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
 
-    private static final List<StructureFeature<?>> RANDOM_MAP_POOL = Arrays.asList(StructureFeature.SHIPWRECK, StructureFeature.RUINED_PORTAL, StructureFeature.SWAMP_HUT,
-            StructureFeature.BASTION_REMNANT, StructureFeature.JUNGLE_TEMPLE, StructureFeature.DESERT_PYRAMID, StructureFeature.PILLAGER_OUTPOST, StructureFeature.MINESHAFT,
-            StructureFeature.OCEAN_RUIN, StructureFeature.IGLOO, StructureFeature.END_CITY);
-
     static {
+        //tags here
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.SHIPWRECK, Pair.of(CMDreg.SHIPWRECK_TYPE, 0x34200f));
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.IGLOO, Pair.of(CMDreg.IGLOO_TYPE, 0x99bdc2));
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.RUINED_PORTAL, Pair.of(CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5));
@@ -56,7 +61,7 @@ public class AdventurerMapsHandler {
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.BASTION_REMNANT, Pair.of(CMDreg.BASTION_TYPE, 0x2c292f));
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.END_CITY, Pair.of(CMDreg.END_CITY_TYPE, 0x9c73ab));
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.SWAMP_HUT, Pair.of(CMDreg.SWAMP_HUT_TYPE, 0x1b411f));
-        DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.NETHER_BRIDGE, Pair.of(CMDreg.NETHER_FORTRESS, 0x3c080b));
+        DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.FORTRESS, Pair.of(CMDreg.NETHER_FORTRESS, 0x3c080b));
         DEFAULT_STRUCTURE_MARKERS.put(StructureFeature.MINESHAFT, Pair.of(CMDreg.MINESHAFT_TYPE, 0x808080));
 
         /*
@@ -79,14 +84,14 @@ public class AdventurerMapsHandler {
     }
 
     private static CustomDecorationType<?, ?> getVanillaMarker(StructureFeature<?> structure) {
-        CustomDecorationType<?, ?> type = DEFAULT_STRUCTURE_MARKERS.get(structure).getLeft();
+        CustomDecorationType<?, ?> type = DEFAULT_STRUCTURE_MARKERS.get(structure).getFirst();
         if (type == null) type = MapDecorationHandler.GENERIC_STRUCTURE_TYPE;
         return type;
     }
 
     private static int getVanillaColor(StructureFeature<?> structure) {
         if (DEFAULT_STRUCTURE_MARKERS.containsKey(structure))
-            return DEFAULT_STRUCTURE_MARKERS.get(structure).getRight();
+            return DEFAULT_STRUCTURE_MARKERS.get(structure).getSecond();
         return -1;
     }
 
@@ -191,7 +196,8 @@ public class AdventurerMapsHandler {
                 //List<StructureFeature<?>> pool = RANDOM_MAP_POOL.stream().filter(s -> serverWorld.getChunkSource().getGenerator()
                 //        .getBiomeSource().canGenerateStructure(s)).collect(Collectors.toList());
 
-                List<StructureFeature<?>> pool = RANDOM_MAP_POOL;
+
+                TagKey<StructureFeature<?>> pool = ModTags.ADVENTURE_MAP_DESTINATIONS;
 
                 int size = pool.size();
                 if (size > 0) {
@@ -210,6 +216,22 @@ public class AdventurerMapsHandler {
             }
             return ItemStack.EMPTY;
         }
+    }
+
+    @Nullable
+    public BlockPos findRandomNearestMapFeature(TagKey<ConfiguredStructureFeature<?, ?>> tagKey, ServerLevel level,
+                                                BlockPos pos, int radius, boolean newChunks) {
+        if (level.getServer().getWorldData().worldGenSettings().generateFeatures()) {
+            Optional<HolderSet.Named<ConfiguredStructureFeature<?, ?>>> optional = level.registryAccess()
+                    .registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).getTag(tagKey);
+
+            if (optional.isPresent()) {
+                var v = optional.get();
+                Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> pair = level.getChunkSource().getGenerator().findNearestMapFeature(level, optional.get(), pos, radius, newChunks);
+                return pair != null ? pair.getFirst() : null;
+            }
+        }
+        return null;
     }
 
     private static class AdventureMapTrade implements VillagerTrades.ItemListing {

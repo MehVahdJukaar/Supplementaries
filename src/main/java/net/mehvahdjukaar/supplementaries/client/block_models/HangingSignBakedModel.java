@@ -1,34 +1,25 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,12 +32,12 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
     private final BlockModelShaper blockModelShaper;
 
     public HangingSignBakedModel(BakedModel stick,
-                                 BakedModel leftPost,BakedModel leftPalisade,BakedModel leftWall,BakedModel leftBeam,
-                                 BakedModel rightPost,BakedModel rightPalisade,BakedModel rightWall,BakedModel rightBeam) {
+                                 BakedModel leftPost, BakedModel leftPalisade, BakedModel leftWall, BakedModel leftBeam,
+                                 BakedModel rightPost, BakedModel rightPalisade, BakedModel rightWall, BakedModel rightBeam) {
         Map<BlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new HashMap<>();
-        for(BlockProperties.SignAttachment a :BlockProperties.SignAttachment.values()){
+        for (BlockProperties.SignAttachment a : BlockProperties.SignAttachment.values()) {
             ImmutableList.Builder<BakedModel> b = ImmutableList.builder();
-            if(a != BlockProperties.SignAttachment.CEILING) {
+            if (a != BlockProperties.SignAttachment.CEILING) {
                 b.add(stick);
                 switch (a.left) {
                     case POST -> b.add(leftPost);
@@ -75,7 +66,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
 
         List<BakedQuad> quads = new ArrayList<>();
 
-        if(state != null && state.getBlock() instanceof HangingSignBlock hs) {
+        if (state != null && state.getBlock() instanceof HangingSignBlock hs) {
             //support & connections
             try {
                 var a = state.getValue(HangingSignBlock.ATTACHMENT);
@@ -91,6 +82,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                 if (!fancy) {
 
                     BakedModel model = blockModelShaper.getModelManager().getModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
+                    if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
                     var signQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;
                     boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == BlockProperties.SignAttachment.CEILING;
@@ -99,12 +91,12 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                         for (BakedQuad q : signQuads) {
                             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
                             Direction dir = q.getDirection();
-                            if(flipped) {
+                            if (flipped) {
                                 RendererUtil.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_90);
                                 if (dir.getAxis() != Direction.Axis.Y) dir = dir.getClockWise();
                             }
-                            if(ceiling){
-                                RendererUtil.moveVertices(v,0, 0.125f, 0, q.getSprite());
+                            if (ceiling) {
+                                RendererUtil.moveVertices(v, 0, 0.125f, 0, q.getSprite());
                             }
                             quads.add(new BakedQuad(v, q.getTintIndex(), dir, q.getSprite(), q.isShade()));
                         }

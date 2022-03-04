@@ -175,7 +175,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public static boolean isPageItem(Item item) {
-        return ItemTags.LECTERN_BOOKS.contains(item) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCStuff.checkForPrintedBook(item));
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCStuff.checkForPrintedBook(item));
     }
 
     @Override

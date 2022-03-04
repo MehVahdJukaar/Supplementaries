@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

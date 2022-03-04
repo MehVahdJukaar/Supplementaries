@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:village",
+    "#minecraft:village",
     {
       "id": "repurposed_structures:village_badlands",
       "required": false

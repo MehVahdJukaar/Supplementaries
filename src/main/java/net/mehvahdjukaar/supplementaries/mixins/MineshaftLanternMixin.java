@@ -1,29 +1,18 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MineshaftAccessor;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.levelgen.feature.MineshaftFeature;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.MineShaftPieces;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
-
-import java.util.Random;
 
 @Mixin(MineShaftPieces.MineShaftCorridor.class)
 public abstract class MineshaftLanternMixin extends StructurePiece {
@@ -33,9 +22,10 @@ public abstract class MineshaftLanternMixin extends StructurePiece {
     @Unique
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
-    protected MineshaftLanternMixin(StructurePieceType pType, int pGenDepth, BoundingBox pBoundingBox) {
-        super(pType, pGenDepth, pBoundingBox);
+    protected MineshaftLanternMixin(StructurePieceType p_209994_, int p_209995_, BoundingBox p_209996_) {
+        super(p_209994_, p_209995_, p_209996_);
     }
+
 
     protected boolean isSupportingBox(BlockGetter p_189918_1_, BoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
         for (int i = p_189918_3_; i <= p_189918_4_; ++i) {

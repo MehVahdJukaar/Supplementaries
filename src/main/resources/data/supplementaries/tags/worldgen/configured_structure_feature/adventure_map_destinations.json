@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:village",
+    "#minecraft:shipwreck",
+    "#minecraft:mineshaft",
+    "#minecraft:ocean_ruin",
+    "#minecraft:ruined_portal",
+    "minecraft:swamp_hut",
+    "minecraft:bastion_remnant",
+    "minecraft:jungle_pyramid",
+    "minecraft:desert_pyramid",
+    "minecraft:pillager_outpost",
+    "minecraft:igloo",
+    "minecraft:endcity"
+  ]
+}

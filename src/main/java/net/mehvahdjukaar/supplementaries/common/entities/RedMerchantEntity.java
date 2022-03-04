@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Item;
@@ -319,7 +320,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         }
 
         private boolean isTooFarAway(BlockPos p_220846_1_, double p_220846_2_) {
-            return !p_220846_1_.closerThan(this.trader.position(), p_220846_2_);
+            return !p_220846_1_.closerToCenterThan(this.trader.position(), p_220846_2_);
         }
     }
 }
