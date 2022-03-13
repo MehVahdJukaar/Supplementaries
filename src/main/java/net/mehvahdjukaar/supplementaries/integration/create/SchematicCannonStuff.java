@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+/*
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
@@ -170,3 +171,4 @@ public class SchematicCannonStuff {
     }
     //TODO: add more once create decently supports this for normal blocks too
 }
+*/

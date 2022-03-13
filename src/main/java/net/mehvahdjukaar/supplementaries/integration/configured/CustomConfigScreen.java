@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.configured;
 
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -7,13 +8,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
-
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -59,7 +58,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE));
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
         addIcon("axe dispenser behaviors", Items.DIAMOND_AXE);
@@ -79,13 +78,13 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("mixins", Items.HOPPER);
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
-        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE));
+        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
         addIcon("shulker shell", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(WoodSetType.OAK_WOOD_TYPE));
+        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(WoodType.OAK_WOOD_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN_ITEM.get());
@@ -150,7 +149,8 @@ public class CustomConfigScreen extends ConfigScreen {
         //hax
         try {
             FOLDER_ENTRY.set(this, folderEntry);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     //needed for custom title
@@ -166,8 +166,8 @@ public class CustomConfigScreen extends ConfigScreen {
         //replace list with new custom entries
         boolean reg = this.config == ConfigHandler.REGISTRY_CONFIG_OBJECT && !this.folderEntry.isRoot();
 
-        this.list.replaceEntries(replaceItems(this.list.children(),reg));
-        Collection<Item> temp = replaceItems(this.entries,reg);
+        this.list.replaceEntries(replaceItems(this.list.children(), reg));
+        Collection<Item> temp = replaceItems(this.entries, reg);
         this.entries = new ArrayList<>(temp);
 
         //overrides save button
@@ -175,11 +175,12 @@ public class CustomConfigScreen extends ConfigScreen {
             try {
                 Button.OnPress press = this::saveButtonAction;
                 BUTTON_ON_PRESS.set(this.saveButton, press);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
-    private Collection<Item> replaceItems(Collection<Item> originals, boolean fancyBooleans){
+    private Collection<Item> replaceItems(Collection<Item> originals, boolean fancyBooleans) {
         ArrayList<Item> newList = new ArrayList<>();
         for (Item c : originals) {
             if (c instanceof FolderItem f) {
@@ -386,7 +387,7 @@ public class CustomConfigScreen extends ConfigScreen {
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
             int light = LightTexture.FULL_BRIGHT;
-            if(!on){
+            if (!on) {
 
                 //int sky = LightTexture.sky(light);
                 //int block = 0;//LightTexture.block(light);
@@ -449,6 +450,14 @@ public class CustomConfigScreen extends ConfigScreen {
         }
     }
 
+
+}
+
+
+
+
+
+
     /*
     public class StringColorWrapper extends ConfigScreen.ConfigItem<String> {
         private final FocusedEditBox textField;
@@ -486,5 +495,3 @@ public class CustomConfigScreen extends ConfigScreen {
         }
     }
     */
-
-}

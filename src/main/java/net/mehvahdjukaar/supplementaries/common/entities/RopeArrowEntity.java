@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -151,7 +151,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 ItemStack ropes = new ItemStack(ropeBlock);
                 BlockPlaceContext context = new BlockPlaceContext(this.level, (Player) entity, InteractionHand.MAIN_HAND, ropes, rayTraceResult);
                 if (context.canPlace()) {
-                    BlockState state = BlockItemUtils.getPlacementState(context, ropeBlock);
+                    BlockState state = ItemsUtil.getPlacementState(context, ropeBlock);
                     if (state != null) {
                         this.level.setBlock(context.getClickedPos(), state, 11);
                         this.prevPlacedPos = context.getClickedPos();

@@ -5,13 +5,13 @@ loaderVersion="[39,)" #mandatory This is typically bumped every Minecraft versio
 
 license="All rights reserved"
 
-issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/issues" #optional
+issueTrackerURL="https://github.com/MehVahdJukaar/Selene/issues" #optional
 
 [[mods]] #mandatory
 
 modId="supplementaries" #mandatory
 
-version="1.2.2" #mandatory
+version="${file.jarVersion}" #mandatory
 
 displayName="Supplementaries" #mandatory
 
@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.18-1.13.2,]"
+    versionRange="[1.18.2-1.14.0,]"
     ordering="AFTER"
     side="BOTH"
 

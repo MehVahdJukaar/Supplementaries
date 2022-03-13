@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.tetra.TetraToolHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.damagesource.DamageSource;
@@ -93,13 +91,13 @@ public class CommonUtil {
 
     public static boolean isSword(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
-        if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
+        //if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
         return i instanceof SwordItem;
     }
 
     public static boolean isTool(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
-        if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
+        //if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
 

@@ -42,6 +42,9 @@ public class ModSetup {
 
                 Stopwatch watch = Stopwatch.createStarted();
 
+                WorldGenHandler.onInit();
+                setupStage++;
+
                 CompatHandler.init();
                 setupStage++;
 

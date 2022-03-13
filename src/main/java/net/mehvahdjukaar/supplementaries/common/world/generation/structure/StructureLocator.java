@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation.structure;
 
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.common.utils.VectorUtils.Vec2i;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureFeatureManager;
@@ -36,206 +39,172 @@ public class StructureLocator {
         int j = pos2.getZ() - pos1.getZ();
         return (int) (Mth.sqrt((float) (i * i + j * j)));
     }
-/*
-    public static Pair<List<Pair<Integer, BlockPos>>, Boolean> find(ServerLevel world, int posX, int posZ, int count) {
-        //TreeMap<Integer,BlockPos> found = new TreeMap<>();
-        List<Pair<Integer, BlockPos>> found = new ArrayList<>();
 
-        boolean inVillage = false;
+    @Nullable
+    static public Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestRandomMapFeature(
+            ServerLevel level, TagKey<ConfiguredStructureFeature<?, ?>> tagKey,  BlockPos pos,
+            int maximumChunkDistance, boolean newlyGenerated) {
+        var found = findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, 1, false);
 
-        if (world.getServer().getWorldData().worldGenSettings().generateFeatures()) {
+        if (found.size() > 0) return found.get(0);
+        return null;
+    }
 
-            ChunkGenerator gen = world.getChunkSource().getGenerator();
-            //BiomeSource biomeSource = gen.getBiomeSource();
-
-            List<StructureFeature<?>> possibleTargets = new ArrayList<>();
-            List<StructureFeatureConfiguration> sepSettings = new ArrayList<>();
-
-
-            //TODO: cache some of this
-            for (StructureFeature<?> str : ModTags.VILLAGES.getValues()) {
-                if (true) { //biomeSource.canGenerateStructure(str)
-                    StructureFeatureConfiguration sep = gen.getSettings().getConfig(str);
-                    if (sep != null) {
-                        possibleTargets.add(str);
-                        sepSettings.add(sep);
-                    }
-                }
-            }
-
-            long seed = world.getSeed();
-
-            StructureFeatureManager manager = world.structureFeatureManager();
+    static public List<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> findNearestMapFeatures(
+            ServerLevel level, TagKey<ConfiguredStructureFeature<?, ?>> tagKey, BlockPos pos,
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount) {
+        return findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, requiredCount, false);
+    }
 
 
-            int chunkX = posX >> 4;
-            int chunkY = posZ >> 4;
+    static public List<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> findNearestMapFeatures(
+            ServerLevel level, TagKey<ConfiguredStructureFeature<?, ?>> tagKey, BlockPos pos,
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
 
-            int range = 25;
+        List<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> foundStructures = new ArrayList<>();
 
-            //checks in ever growing circles by increasing radius r
-            for (int r = 0; r <= range; ++r) {
+        if (!level.getServer().getWorldData().worldGenSettings().generateFeatures()) {
+            return foundStructures;
+        }
+        Optional<HolderSet.Named<ConfiguredStructureFeature<?, ?>>> optional = level.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).getTag(tagKey);
+        if (optional.isEmpty()) return foundStructures;
 
-                for (int ind = 0; ind < possibleTargets.size(); ind++) {
+        var targets = optional.get();
 
-                    for (int x = -r; x <= r; ++x) {
-                        boolean edgeX = x == -r || x == r;
+        Set<Holder<Biome>> targetBiomes = targets.stream().flatMap((holder) -> holder.value().biomes().stream()).collect(Collectors.toSet());
 
-                        for (int y = -r; y <= r; ++y) {
-                            boolean edgeY = y == -r || y == r;
-                            if (edgeX || edgeY) {
+        //return early if these features can't spawn in any biome
+        if (targetBiomes.isEmpty()) return foundStructures;
 
-                                StructureFeatureConfiguration settings = sepSettings.get(ind);
-                                StructureFeature<?> structure = possibleTargets.get(ind);
+        ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
+        Set<Holder<Biome>> possibleBiomes = chunkGenerator.getBiomeSource().possibleBiomes();
+        //if they have biomes in common
+        if (Collections.disjoint(possibleBiomes, targetBiomes)) return foundStructures;
 
-                                int spacing = settings.spacing();
 
-                                int k1 = chunkX + spacing * x;
-                                int l1 = chunkY + spacing * y;
-                                ChunkPos chunkpos = structure.getPotentialFeatureChunk(settings, seed, k1, l1);
+        double maxDist = Double.MAX_VALUE;
 
-                                StructureCheckResult structurecheckresult = manager.checkStructurePresence(chunkpos, structure, false);
-                                if (structurecheckresult != StructureCheckResult.START_NOT_PRESENT) {
+        List<Holder<ConfiguredStructureFeature<?, ?>>> selectedTargets = new ArrayList<>();
 
-                                //telepatic grunt optimization. only checks biomes that can spawn said structure. world.getChunk is very costly
-                               // if(world.getNoiseBiome((chunkpos.x << 2) + 2, 60, (chunkpos.z << 2) + 2).getGenerationSettings().isValidStart(structure)) {
-
-                                    ChunkAccess ichunk = world.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                                    StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.bottomOf(ichunk), structure, ichunk);
-                                    //StructureStart<?> structureStart = manager.getStartForFeature(SectionPos.of(ichunk.getPos(), 0), structure, ichunk);
-                                    if (structureStart != null && structureStart.isValid()) {
-                                        BlockPos p = structure.getLocatePos(structureStart.getChunkPos());
-                                        int distance = dist(new BlockPos(posX, 0, posZ), p);
-                                        //discard one spawning in a village
-                                        if (distance > 90) found.add(new ImmutablePair<>(distance, p));
-                                        else inVillage = true;
-                                        //checking all nearby villages to find the closest
-                                    }
-                                }
-
-                                if (r == 0) {
-                                    break;
-                                }
-                                //less precision at long distances for performance
-                                if (r > 5 && found.size() >= count) break;
-                            }
-                        }
-
-                        if (r == 0) {
-                            break;
-                        }
-                        if (r > 8 && found.size() >= count) break;
-
-                    }
-                }
-                //exit loop
-                if (found.size() >= count) break;
+        //adds all the structures that can generate
+        for (Holder<ConfiguredStructureFeature<?, ?>> holder : targets) {
+            if (possibleBiomes.stream().anyMatch(holder.value().biomes()::contains)) {
+                selectedTargets.add(holder);
             }
         }
 
-        //sort
+        //for adventure maps
+        if (selectRandom) {
+            Holder<ConfiguredStructureFeature<?, ?>> selected = selectedTargets.get(level.random.nextInt(selectedTargets.size()));
+            selectedTargets = List.of(selected);
+        }
 
-        Collections.sort(found);
-        return new ImmutablePair<>(found, inVillage);
-    }
-*/
+        //structures that can generate
+        Map<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> reachableTargetsMap = new Object2ObjectArrayMap<>();
 
-    public Set<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> findNearestMapFeature(
-            ServerLevel level, HolderSet<ConfiguredStructureFeature<?, ?>> targets, BlockPos pos, int radius, boolean newChunks, int required) {
 
-        Set<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> foundStructures = new HashSet<>();
+        for (var holder : selectedTargets) {
+            for (StructurePlacement structureplacement : chunkGenerator.getPlacementsForFeature(holder)) {
+                reachableTargetsMap.computeIfAbsent(structureplacement, (placement) -> new ObjectArraySet<>()).add(holder);
+            }
+        }
 
-        ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-        Set<Holder<Biome>> targetBiomes = targets.stream().flatMap((holder) -> holder.value().biomes().stream()).collect(Collectors.toSet());
 
-        if (!targetBiomes.isEmpty()) {
-            Set<Holder<Biome>> possibleBiomes = chunkGenerator.getBiomeSource().possibleBiomes();
-            //if they have biomes in common
-            if (!Collections.disjoint(possibleBiomes, targetBiomes)) {
+        List<Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>>> list = new ArrayList<>(reachableTargetsMap.size());
 
-                double maxDist = Double.MAX_VALUE;
-                //structures that can generate
-                Map<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> reachableTargets = new Object2ObjectArrayMap<>();
+        int maxSpacing = 0;
 
-                for (Holder<ConfiguredStructureFeature<?, ?>> holder : targets) {
-                    if (possibleBiomes.stream().anyMatch(holder.value().biomes()::contains)) {
-                        for (StructurePlacement structureplacement : chunkGenerator.getPlacementsForFeature(holder)) {
-                            reachableTargets.computeIfAbsent(structureplacement, (placement) -> new ObjectArraySet<>()).add(holder);
-                        }
+        //stronghold hax
+        for (Map.Entry<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> entry : reachableTargetsMap.entrySet()) {
+            StructurePlacement placement = entry.getKey();
+            if (placement instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
+                BlockPos blockpos = chunkGenerator.getNearestGeneratedStructure(pos, concentricringsstructureplacement);
+                double d1 = pos.distSqr(blockpos);
+                if (d1 < maxDist) {
+                    maxDist = d1;
+                    //TODO: readd
+                    //foundStructures.add(Pair.of(blockpos, entry.getValue().iterator().next()));
+                }
+            } else if (placement instanceof RandomSpreadStructurePlacement randomPlacement) {
+                list.add(Pair.of(randomPlacement, entry.getValue()));
+                //finds the structure with the maximum spacing
+                maxSpacing = Math.max(maxSpacing, randomPlacement.spacing());
+            }
+        }
+
+        if (!list.isEmpty()) {
+            int chunkX = SectionPos.blockToSectionCoord(pos.getX());
+            int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
+            long seed = level.getSeed();
+            StructureFeatureManager manager = level.structureFeatureManager();
+
+            //checks in increments based off maximum structure spacing on the list
+
+            outerLoop:
+            for (int k = 0; k <= maximumChunkDistance / maxSpacing; ++k) {
+
+                int outerRing = (k + 1) * maxSpacing;
+                int innerRing = k * maxSpacing;
+
+                //less precision after 2k blocks
+                boolean lessPrecision = innerRing * 16 > 2000;
+
+                //<> madness
+                //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
+                TreeMap<Vec2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>>>> possiblePositions = new TreeMap<>();
+
+                for (Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> p : list) {
+                    RandomSpreadStructurePlacement placement = p.getFirst();
+                    int spacing = placement.spacing();
+
+                    //checks all features in the area where the structure with the biggest spacing can spawn
+                    for (int r = innerRing;  r < outerRing; r+=spacing) {
+                        addAllPossibleFeatureChunksAtDistance(chunkX, chunkZ, r, seed, placement, c -> {
+                            //converts chunkpos to relative pos, so they are ordered by distance already
+                            var v = new Vec2i(c.x - chunkX, c.z - chunkZ);
+                            if(possiblePositions.containsKey(v)){
+                                int aaa = 1;
+                            }
+                            var ll = possiblePositions.computeIfAbsent(v, o -> new ArrayList<>());
+
+                            if(ll.contains(p)){
+                                //TODO: this should never be called... fix
+                                int aaa = 1;
+                            }
+                            else ll.add(p);
+                        });
                     }
                 }
 
-                List<Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>>> list = new ArrayList<>(reachableTargets.size());
+                //checks this first structure batch
 
-                int maxSpacing = 0;
-
-                //stronghold hax
-                for (Map.Entry<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> entry : reachableTargets.entrySet()) {
-                    StructurePlacement placement = entry.getKey();
-                    if (placement instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
-                        BlockPos blockpos = chunkGenerator.getNearestGeneratedStructure(pos, concentricringsstructureplacement);
-                        double d1 = pos.distSqr(blockpos);
-                        if (d1 < maxDist) {
-                            maxDist = d1;
-                            foundStructures.add(Pair.of(blockpos, entry.getValue().iterator().next()));
-                        }
-                    } else if (placement instanceof RandomSpreadStructurePlacement randomPlacement) {
-                        list.add(Pair.of(randomPlacement, entry.getValue()));
-                        //finds the structure with the maximum spacing
-                        maxSpacing = Math.max(maxSpacing, randomPlacement.spacing());
+                for (Vec2i vec2i : possiblePositions.keySet()) {
+                    //check each chunkpos one by one
+                    ChunkPos chunkPos = new ChunkPos(vec2i.x() + chunkX, vec2i.y() + chunkZ);
+                    var structuresThatCanSpawnAtChunkPos = possiblePositions.get(vec2i);
+                    for (var pp : structuresThatCanSpawnAtChunkPos) {
+                        foundStructures.addAll(getFeaturesAtChunkPos(pp.getSecond(), level, manager, newlyGenerated, pp.getFirst(), chunkPos));
                     }
-                }
-
-                if (!list.isEmpty()) {
-                    int chunkX = SectionPos.blockToSectionCoord(pos.getX());
-                    int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
-                    long seed = level.getSeed();
-
-                    //change
-                    for (int k = 0; k <= radius; ++k) {
-
-                        //<> madness
-                        //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
-                        TreeMap<Vec2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>>>> possiblePositions = new TreeMap<>();
-
-                        for (Pair<RandomSpreadStructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> p : list) {
-                            RandomSpreadStructurePlacement placement = p.getFirst();
-                            int spacing = placement.spacing();
-
-                            //checks all features in the area where the structure with the biggest spacing can spawn
-                            for(int r = 0; spacing*r<maxSpacing; r++){
-                                addAllPossibleFeatureChunksAt(chunkX, chunkZ,r, seed, placement, v->{
-                                    var ll = possiblePositions.computeIfAbsent(v,o->new ArrayList<>());
-                                    ll.add(p);
-                                });
-                            }
-                            //checks this first structure batch
-
-                            for(Vec2i vec2i : possiblePositions.keySet()){
-
-                            }
-
-
-                            Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> pair1 = getNearestGeneratedStructureAtDistance(entiy.getValue(), level,
-                                    level.structureFeatureManager(), chunkX, chunkZ, k, newChunks, level.getSeed(), randomspreadstructureplacement);
-                            if (pair1 != null) {
-                                double d2 = pos.distSqr(pair1.getFirst());
-                                if (d2 < maxDist) {
-                                    maxDist = d2;
-                                    foundStructures = pair1;
-                                }
-                            }
-                        }
+                    // after each it checks if criteria is met
+                    if (foundStructures.size() >= requiredCount) {
+                        break outerLoop;
                     }
                 }
             }
+        }
+        //orders found by distance
+        foundStructures.sort(Comparator.comparingDouble(f -> pos.distSqr(f.getFirst())));
+        //returns only needed elements
+        if (foundStructures.size() >= requiredCount) {
+            return Lists.partition(foundStructures, requiredCount).get(0);
         }
         return foundStructures;
     }
 
 
-    private static void addAllPossibleFeatureChunksAt(int chunkX, int chunkZ, int radius, long seed, RandomSpreadStructurePlacement placement,
-                                                            Consumer<Vec2i> positionConsumer) {
+    //gets all the chunk pos where a feature with a certain placement could spawn at a given radius from the center
+    private static void addAllPossibleFeatureChunksAtDistance(int chunkX, int chunkZ, int radius, long seed, RandomSpreadStructurePlacement placement,
+                                                              Consumer<ChunkPos> positionConsumer) {
         int spacing = placement.spacing();
 
         //checks square ring with radius
@@ -245,10 +214,10 @@ public class StructureLocator {
             for (int k = -radius; k <= radius; ++k) {
                 boolean flag1 = k == -radius || k == radius;
                 if (flag || flag1) {
-                    int px = chunkX + spacing * j;
-                    int pz = chunkZ + spacing * k;
+                    int px = chunkX + j;
+                    int pz = chunkZ + k;
                     ChunkPos chunkpos = placement.getPotentialFeatureChunk(seed, px, pz);
-                    positionConsumer.accept(new Vec2i(chunkpos.x-chunkX, chunkpos.z-chunkZ));
+                    positionConsumer.accept(chunkpos);
                 }
             }
         }
@@ -259,7 +228,7 @@ public class StructureLocator {
             Set<Holder<ConfiguredStructureFeature<?, ?>>> targets, LevelReader level, StructureFeatureManager featureManager,
             boolean newChunk, RandomSpreadStructurePlacement placement, ChunkPos chunkpos) {
 
-        Set<Pair<BlockPos, Holder<ConfiguredStructureFeature<?,?>>>> foundStructures = new HashSet<>();
+        Set<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> foundStructures = new HashSet<>();
         //the target set usually contains 1 structure since it's very unlikely that 2 structures have the same placement
         for (Holder<ConfiguredStructureFeature<?, ?>> holder : targets) {
             //I believe this is what takes the most time to execute
@@ -274,11 +243,11 @@ public class StructureLocator {
                 if (structurestart != null && structurestart.isValid()) {
                     if (newChunk && structurestart.canBeReferenced()) {
                         featureManager.addReference(structurestart);
-                        foundStructures.add(Pair.of(StructureFeature.getLocatePos(placement, structurestart.getChunkPos()), holder);
+                        foundStructures.add(Pair.of(StructureFeature.getLocatePos(placement, structurestart.getChunkPos()), holder));
                     }
 
                     if (!newChunk) {
-                        foundStructures.add(Pair.of(StructureFeature.getLocatePos(placement, structurestart.getChunkPos()), holder);
+                        foundStructures.add(Pair.of(StructureFeature.getLocatePos(placement, structurestart.getChunkPos()), holder));
                     }
                 }
             }
@@ -287,7 +256,7 @@ public class StructureLocator {
     }
 
     @Nullable
-    private static Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> getNearestGeneratedStructureAtDistance(
+    private static Set<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> getNearestGeneratedStructureAtDistance(
             Set<Holder<ConfiguredStructureFeature<?, ?>>> targets, LevelReader level, StructureFeatureManager featureManager,
             int x, int z, int distance, boolean newChunk, long seed, RandomSpreadStructurePlacement placement) {
         int i = placement.spacing();
@@ -304,13 +273,34 @@ public class StructureLocator {
                     ChunkPos chunkpos = placement.getPotentialFeatureChunk(seed, px, pz);
 
 
-                    Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> placement1 = getFeaturesAtChunkPos(targets, level, featureManager, newChunk, placement, chunkpos);
-                    if (placement1 != null) return placement1;
+                    return getFeaturesAtChunkPos(targets, level, featureManager, newChunk, placement, chunkpos);
                 }
             }
         }
 
         return null;
+    }
+
+
+    //used for maps
+    @Nullable
+    public BlockPos findRandomMapFeature(TagKey<ConfiguredStructureFeature<?, ?>> tagKey, BlockPos pos,
+                                         int radius, boolean unexplored, ServerLevel level) {
+        if (!level.getServer().getWorldData().worldGenSettings().generateFeatures()) {
+            return null;
+        } else {
+            Optional<HolderSet.Named<ConfiguredStructureFeature<?, ?>>> optional = level.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).getTag(tagKey);
+            if (optional.isEmpty()) {
+                return null;
+            } else {
+                var o = optional.get();
+                var list = o.stream().toList();
+                var chosen = list.get(level.random.nextInt(list.size()));
+                Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> pair = level.getChunkSource().getGenerator().findNearestMapFeature(level,
+                        HolderSet.direct(chosen), pos, radius, unexplored);
+                return pair != null ? pair.getFirst() : null;
+            }
+        }
     }
 
 }

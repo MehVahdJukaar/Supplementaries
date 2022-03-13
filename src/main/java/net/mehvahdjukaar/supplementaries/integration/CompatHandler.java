@@ -1,15 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import net.mehvahdjukaar.supplementaries.common.items.IPlaceableItem;
-import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
-import net.mehvahdjukaar.supplementaries.integration.create.SupplementariesCreatePlugin;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
-import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -91,17 +85,17 @@ public class CompatHandler {
     }
 
     public static void init() {
-        if (create) SupplementariesCreatePlugin.initialize();
+        //  if (create) SupplementariesCreatePlugin.initialize();
         if (computercraft) CCStuff.initialize();
 
         var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
-       // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
+        // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
     }
 
     public static void registerOptionalStuff() {
         if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
-        if (farmers_delight) FDCompatRegistry.registerStuff();
-        if (botania) BotaniaCompatRegistry.registerStuff();
+        //  if (farmers_delight) FDCompatRegistry.registerStuff();
+        //   if (botania) BotaniaCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

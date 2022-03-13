@@ -30,7 +30,7 @@ public class FramedSignPost {
     public static final Item framedHammer = FBContent.itemFramedHammer.get();
 
     public static IModelData getModelData(BlockState mimic) {
-        FramedBlockData date = new FramedBlockData();
+        FramedBlockData date = new FramedBlockData(false);
         date.setCamoState(mimic);
 
         return date;

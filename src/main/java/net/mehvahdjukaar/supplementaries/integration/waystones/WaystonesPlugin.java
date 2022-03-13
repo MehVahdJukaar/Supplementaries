@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.waystones;
 
+/*
 import net.blay09.mods.waystones.block.entity.WaystoneBlockEntityBase;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -19,3 +20,4 @@ public class WaystonesPlugin {
         return new TextComponent(s);
     }
 }
+*/

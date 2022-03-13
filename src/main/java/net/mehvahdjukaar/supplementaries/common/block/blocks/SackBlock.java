@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -111,18 +113,14 @@ public class SackBlock extends FallingBlock implements EntityBlock {
 
     //schedule block tick
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
-        if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand) {
+        if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
             tile.recheckOpen();
-
-            if (canFall(pos, worldIn)) {
-
-                fallingblockentity.setHurtsEntities(1, 20);
-                fallingblockentity.blockData = tile.saveWithoutMetadata();
-                this.falling(fallingblockentity);
-                worldIn.addFreshEntity(fallingblockentity);
+            if (canFall(pos, level)) {
+                ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModRegistry.FALLING_SACK.get(),
+                        level,pos, state, true);
+                entity.setHurtsEntities(1, 20);
             }
-
         }
     }
 

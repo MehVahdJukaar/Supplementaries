@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -25,14 +24,13 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -43,7 +41,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class AshLayerBlock extends FallingBlock {
@@ -128,9 +125,10 @@ public class AshLayerBlock extends FallingBlock {
     public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos otherPos) {
         if (world instanceof ServerLevel serverLevel) {
             BlockPos pos = currentPos.above();
-            BlockState state1 = world.getBlockState(pos);;
-            while (state1.is(this)){
-                serverLevel.scheduleTick( pos,this, this.getDelayAfterPlace());
+            BlockState state1 = world.getBlockState(pos);
+            ;
+            while (state1.is(this)) {
+                serverLevel.scheduleTick(pos, this, this.getDelayAfterPlace());
                 pos = pos.above();
                 state1 = serverLevel.getBlockState(pos);
             }
@@ -143,11 +141,9 @@ public class AshLayerBlock extends FallingBlock {
         BlockState below = level.getBlockState(pos.below());
         if ((FallingAshEntity.isFree(below) || hasIncompleteAshPileBelow(below)) && pos.getY() >= level.getMinBuildHeight()) {
 
-            while (state.is(this)){
-
-                FallingBlockEntity fallingblockentity = new FallingAshEntity(level, pos, state);
+            while (state.is(this)) {
+                FallingBlockEntity fallingblockentity = FallingAshEntity.fall(level, pos, state);
                 this.falling(fallingblockentity);
-                level.addFreshEntity(fallingblockentity);
 
                 pos = pos.above();
                 state = level.getBlockState(pos);
@@ -178,7 +174,7 @@ public class AshLayerBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, Random pRandom) {
-        if(ServerConfigs.cached.ASH_RAIN) {
+        if (ServerConfigs.cached.ASH_RAIN) {
             if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -188,7 +184,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if(ServerConfigs.cached.ASH_RAIN) {
+        if (ServerConfigs.cached.ASH_RAIN) {
             if (level.random.nextInt(2) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -212,7 +208,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     public static boolean tryConvertToAsh(Level level, BlockPos pPos) {
-        if(ServerConfigs.cached.ASH_BURN) {
+        if (ServerConfigs.cached.ASH_BURN) {
             BlockState state = level.getBlockState(pPos);
 
             Item i = state.getBlock().asItem();
@@ -268,7 +264,7 @@ public class AshLayerBlock extends FallingBlock {
 
                 if (level instanceof ServerLevel) {
                     if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {
-                        bonemealableblock.performBonemeal((ServerLevel)level, level.random, pos, blockstate);
+                        bonemealableblock.performBonemeal((ServerLevel) level, level.random, pos, blockstate);
                     }
 
                     stack.shrink(1);

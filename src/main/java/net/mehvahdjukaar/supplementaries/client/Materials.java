@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -28,18 +28,18 @@ public class Materials {
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_AND_QUILL_TEXTURES);
     public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
 
-    public static final Map<WoodSetType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
+    public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
 
-    public static final Map<WoodSetType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
+    public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = new ResourceLocation(
-            Supplementaries.MOD_ID + ":block/" + ModRegistry.WIND_VANE_NAME + "_up");
+            Supplementaries.MOD_ID + ":block/" + RegistryConstants.WIND_VANE_NAME + "_up");
     //TODO: add this to baked model
     public static final ResourceLocation HANGING_POT_BLOCK_MODEL = new ResourceLocation(
-            Supplementaries.MOD_ID + ":block/" + ModRegistry.HANGING_FLOWER_POT_NAME);
+            Supplementaries.MOD_ID + ":block/" + RegistryConstants.HANGING_FLOWER_POT_NAME);
 
     static {
-        for (WoodSetType type : BlockSetHandler.WOOD_TYPES.values()) {
+        for (WoodType type : WoodTypeRegistry.WOOD_TYPES.values()) {
 
             HANGING_SIGNS_BLOCK_MODELS.put(type, Supplementaries.res("block/hanging_signs/" +
                     type.getVariantId("hanging_sign")));

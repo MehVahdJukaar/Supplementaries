@@ -47,6 +47,16 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     }
 
     @Override
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
+    }
+
+    @Override
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
+    }
+
+    @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         return world.getBlockEntity(pos) instanceof FlagBlockTile tile ? tile.getItem(state) : super.getCloneItemStack(state, target, world, pos, player);
     }

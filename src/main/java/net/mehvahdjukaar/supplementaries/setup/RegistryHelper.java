@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.BlockSetManager;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
@@ -12,7 +12,10 @@ import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -37,9 +40,9 @@ import java.util.function.Supplier;
 public class RegistryHelper {
 
     public static void initDynamicRegistry() {
-        BlockSetHandler.addWoodRegistrationCallback(RegistryHelper::registerHangingSignBlocks, Block.class);
-        BlockSetHandler.addWoodRegistrationCallback(RegistryHelper::registerHangingSignItems, Item.class);
-        BlockSetHandler.addWoodRegistrationCallback(RegistryHelper::registerSignPostItems, Item.class);
+        BlockSetManager.addBlockSetRegistrationCallback(RegistryHelper::registerHangingSignBlocks, Block.class, WoodType.class);
+        BlockSetManager.addBlockSetRegistrationCallback(RegistryHelper::registerHangingSignItems, Item.class, WoodType.class);
+        BlockSetManager.addBlockSetRegistrationCallback(RegistryHelper::registerSignPostItems, Item.class, WoodType.class);
     }
 
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
@@ -53,32 +56,19 @@ public class RegistryHelper {
         return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
     }
 
-    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String ...items) {
-        Supplier<? extends Block> newSup = () -> {
-            Block block = sup.get();
-            for(String item  :items) {
-                addOptionalPlaceableItem(item, block);
-            }
-            return block;
-        };
-        return ModRegistry.BLOCKS.register(name, newSup);
+
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String itemLocation) {
+        Supplier<Item> itemSupp = () -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemLocation));
+        return regPlaceableItem(name, sup, itemSupp);
     }
 
-    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, Item... items) {
-        Supplier<? extends Block> newSup = () -> {
-            Block block = sup.get();
-            for (Item i : items) {
-                ((IPlaceableItem) i).addPlaceable(block);
-            }
-            return block;
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, Supplier<? extends Item> itemSupplier) {
+        Supplier<Block> newSupp = () -> {
+            Block b = sup.get();
+            BlockPlacerItem.registerPlaceableItem(b, itemSupplier);
+            return b;
         };
-        return ModRegistry.BLOCKS.register(name, newSup);
-    }
-
-    //only call during registration otherwise will nuke registry
-    public static void addOptionalPlaceableItem(String itemLocation, Block block) {
-        var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemLocation));
-        if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(block);
+        return ModRegistry.BLOCKS.register(name, newSupp);
     }
 
     public static RegistryObject<Item> regItem(String name, Supplier<? extends Item> sup) {
@@ -100,7 +90,6 @@ public class RegistryHelper {
     public static RegistryObject<SoundEvent> makeSoundEvent(String name) {
         return ModRegistry.SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
     }
-
 
     //flags
     public static Map<DyeColor, RegistryObject<Block>> makeFlagBlocks(String baseName) {
@@ -138,7 +127,7 @@ public class RegistryHelper {
     //ceiling banners
     public static Map<DyeColor, RegistryObject<Block>> makeCeilingBanners(String baseName) {
         Map<DyeColor, RegistryObject<Block>> map = new LinkedHashMap<>();
-
+        //TODO: fix this not working
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
             map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
@@ -191,10 +180,10 @@ public class RegistryHelper {
 
 
     //hanging signs
-    private static void registerHangingSignBlocks(RegistryEvent.Register<Block> event, Collection<WoodSetType> woodTypes) {
+    private static void registerHangingSignBlocks(RegistryEvent.Register<Block> event, Collection<WoodType> woodTypes) {
         IForgeRegistry<Block> registry = event.getRegistry();
-        for (WoodSetType wood : woodTypes) {
-            String name = wood.getVariantId(ModRegistry.HANGING_SIGN_NAME);
+        for (WoodType wood : woodTypes) {
+            String name = wood.getVariantId(RegistryConstants.HANGING_SIGN_NAME);
             Block block = new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
                             .strength(2f, 3f)
@@ -208,15 +197,15 @@ public class RegistryHelper {
         }
     }
 
-    public static void registerHangingSignItems(RegistryEvent.Register<Item> event, Collection<WoodSetType> woodTypes) {
+    public static void registerHangingSignItems(RegistryEvent.Register<Item> event, Collection<WoodType> woodTypes) {
         IForgeRegistry<Item> registry = event.getRegistry();
         for (var entry : ModRegistry.HANGING_SIGNS.entrySet()) {
-            WoodSetType wood = entry.getKey();
+            WoodType wood = entry.getKey();
             //should be there already since this is fired after block reg
             Block block = entry.getValue();
             Item item = new WoodBasedBlockItem(block,
                     new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.HANGING_SIGN_NAME)),
+                            getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.HANGING_SIGN_NAME)),
                     200, wood
             ).setRegistryName(block.getRegistryName());
             registry.register(item);
@@ -226,13 +215,13 @@ public class RegistryHelper {
     }
 
     //sign posts
-    public static void registerSignPostItems(RegistryEvent.Register<Item> event, Collection<WoodSetType> woodTypes) {
+    public static void registerSignPostItems(RegistryEvent.Register<Item> event, Collection<WoodType> woodTypes) {
         IForgeRegistry<Item> registry = event.getRegistry();
-        for (WoodSetType wood : woodTypes) {
-            String name = wood.getVariantId(ModRegistry.SIGN_POST_NAME);
+        for (WoodType wood : woodTypes) {
+            String name = wood.getVariantId(RegistryConstants.SIGN_POST_NAME);
             Item item = new SignPostItem(
                     new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, ModRegistry.SIGN_POST_NAME)),
+                            getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.SIGN_POST_NAME)),
                     wood
             ).setRegistryName(Supplementaries.res(name));
             registry.register(item);

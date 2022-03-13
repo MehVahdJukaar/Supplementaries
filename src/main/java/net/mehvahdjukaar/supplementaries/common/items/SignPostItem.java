@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -31,9 +31,9 @@ import net.minecraft.world.level.material.Fluids;
 import javax.annotation.Nullable;
 
 public class SignPostItem extends Item {
-    public final WoodSetType woodType;
+    public final WoodType woodType;
 
-    public SignPostItem(Properties properties, WoodSetType wood) {
+    public SignPostItem(Properties properties, WoodType wood) {
         super(properties);
         woodType = wood;
     }

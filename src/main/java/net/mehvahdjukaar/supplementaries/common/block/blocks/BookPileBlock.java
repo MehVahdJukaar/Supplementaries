@@ -4,7 +4,7 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraft.core.BlockPos;
@@ -121,7 +121,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             double f = 5 * (target.getLocation().y - pos.getY()) / SHAPE_4.bounds().maxY;
-            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS)));
+            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS)-1));
         }
         return Items.BOOK.getDefaultInstance();
     }

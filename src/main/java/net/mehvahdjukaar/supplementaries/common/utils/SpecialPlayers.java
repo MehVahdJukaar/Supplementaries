@@ -34,6 +34,7 @@ public class SpecialPlayers {
         addSpecialPlayer("Jacster1000", false, false, true, "d4c6b27a-68ec-4625-a324-3efbe7fdf155");
         addSpecialPlayer("Little_pianist", false, false, true, "86045b27-09fd-478d-87d7-77fb9312dd91");
         addSpecialPlayer("FishSupreme", false, true, true, "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34");
+        addSpecialPlayer("Plummet_studios", false, false, true, "8c1af44c-d02a-42e8-8ae6-e3f2132acbbf");
 
     }
 

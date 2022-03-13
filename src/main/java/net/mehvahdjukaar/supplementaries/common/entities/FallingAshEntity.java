@@ -4,8 +4,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -13,7 +11,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
@@ -31,7 +28,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class FallingAshEntity extends FallingBlockEntity {
+public class FallingAshEntity extends ImprovedFallingBlockEntity {
 
     public FallingAshEntity(EntityType<FallingAshEntity> type, Level level) {
         super(type, level);
@@ -42,26 +39,15 @@ public class FallingAshEntity extends FallingBlockEntity {
     }
 
     public FallingAshEntity(Level level, BlockPos pos, BlockState blockState) {
-        this(level);
-        this.blocksBuilding = true;
-        this.xo = pos.getX() + 0.5D;
-        this.yo = pos.getY();
-        this.zo = pos.getZ() + 0.5D;
-        this.setPos(xo, yo + (double) ((1.0F - this.getBbHeight()) / 2.0F), zo);
-        this.setDeltaMovement(Vec3.ZERO);
-        this.setStartPos(this.blockPosition());
-        this.setBlockState(blockState);
-        this.setHurtsEntities(1f, 20);
+        super(ModRegistry.FALLING_ASH.get(), level, pos, blockState, false);
     }
 
-    public void setBlockState(BlockState state) {
-        //workaround
-        CompoundTag tag = new CompoundTag();
-        tag.put("BlockState", NbtUtils.writeBlockState(state));
-        tag.putInt("Time", this.time);
-        this.readAdditionalSaveData(tag);
+    public static FallingAshEntity fall(Level level, BlockPos pos, BlockState state) {
+        FallingAshEntity entity = new FallingAshEntity(level, pos, state);
+        level.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
+        level.addFreshEntity(entity);
+        return entity;
     }
-
 
     @Nullable
     @Override
@@ -83,18 +69,7 @@ public class FallingAshEntity extends FallingBlockEntity {
         if (blockState.isAir()) {
             this.discard();
         } else {
-
             Block block = blockState.getBlock();
-            if (this.time++ == 0) {
-                BlockPos blockpos = this.blockPosition();
-                if (this.level.getBlockState(blockpos).is(block)) {
-                    this.level.removeBlock(blockpos, false);
-                } else if (!this.level.isClientSide) {
-                    this.discard();
-                    return;
-                }
-            }
-
             if (!this.isNoGravity()) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
             }

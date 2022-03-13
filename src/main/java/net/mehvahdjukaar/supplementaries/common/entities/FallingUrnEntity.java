@@ -20,35 +20,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class FallingUrnEntity extends FallingBlockEntity {
+public class FallingUrnEntity extends ImprovedFallingBlockEntity {
 
     public FallingUrnEntity(EntityType<FallingUrnEntity> type, Level level) {
         super(type, level);
     }
 
-    public FallingUrnEntity(Level level) {
-        super(ModRegistry.FALLING_URN.get(), level);
-    }
-
     public FallingUrnEntity(Level level, BlockPos pos, BlockState blockState) {
-        this(level);
-        this.blocksBuilding = true;
-        this.xo = pos.getX() + 0.5D;
-        this.yo = pos.getY();
-        this.zo = pos.getZ() + 0.5D;
-        this.setPos(xo, yo + (double) ((1.0F - this.getBbHeight()) / 2.0F), zo);
-        this.setDeltaMovement(Vec3.ZERO);
-        this.setStartPos(this.blockPosition());
-        this.setBlockState(blockState);
+        super(ModRegistry.FALLING_URN.get(),level, pos, blockState, false);
         this.setHurtsEntities(1f, 20);
     }
 
-    public void setBlockState(BlockState state) {
-        //workaround
-        CompoundTag tag = new CompoundTag();
-        tag.put("BlockState", NbtUtils.writeBlockState(state));
-        tag.putInt("Time", this.time);
-        this.readAdditionalSaveData(tag);
+    public static FallingUrnEntity fall(Level level, BlockPos pos, BlockState state) {
+        FallingUrnEntity entity = new FallingUrnEntity(level, pos, state);
+        level.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
+        level.addFreshEntity(entity);
+        return entity;
     }
 
     @Override

@@ -7,8 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
@@ -318,12 +318,12 @@ public class RopeBlock extends WaterBlock {
 
     @Override
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 60;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
 
     @Override
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 60;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
 
     public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
@@ -463,7 +463,7 @@ public class RopeBlock extends WaterBlock {
             context = new PlayerLessContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         }
 
-        BlockState state = BlockItemUtils.getPlacementState(context, ropeBlock);
+        BlockState state = ItemsUtil.getPlacementState(context, ropeBlock);
         if (state == null) return false;
         if (state == world.getBlockState(context.getClickedPos())) return false;
         if (world.setBlock(context.getClickedPos(), state, 11)) {

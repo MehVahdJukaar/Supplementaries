@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(FireBlock.class)
 public abstract class FireBlockMixin {
 
-    //fixing a vanilla bug that causes log spam when a block that can provide a tile doesn't actually provide it (they can do this now)
     @Redirect(method = "tryCatchFire",
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z"))

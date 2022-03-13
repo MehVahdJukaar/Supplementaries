@@ -10,13 +10,16 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -47,6 +50,7 @@ public class PresentRegistry {
         }
         TrappedPresentBlock.registerBehavior(Items.FIREWORK_ROCKET, FIREWORK_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(Items.SPLASH_POTION, SPLASH_POTION_BEHAVIOR);
+        TrappedPresentBlock.registerBehavior(Items.LINGERING_POTION, SPLASH_POTION_BEHAVIOR);
 
 
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), BOMB_BEHAVIOR);
@@ -56,6 +60,7 @@ public class PresentRegistry {
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), BOMB_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), BOMB_BEHAVIOR);
 
+        //trident?
     }
 
     //projectiles, fireworks, tnt, spawn eggs
@@ -154,10 +159,6 @@ public class PresentRegistry {
                 mob.yBodyRot = mob.getYRot();
                 mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.DISPENSER, null, tag);
                 mob.playAmbientSound();
-
-                if (ForgeEventFactory.doSpecialSpawn(mob, serverLevel, pos.getX(), pos.getY(), pos.getZ(), null, MobSpawnType.DISPENSER)) {
-                    return null;
-                }
             }
             serverLevel.addFreshEntityWithPassengers(entity);
             //update client velocity

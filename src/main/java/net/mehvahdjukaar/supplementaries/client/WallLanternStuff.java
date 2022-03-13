@@ -48,16 +48,17 @@ public class WallLanternStuff {
         for (Block i : POSSIBLE_LANTERNS) {
             try {
                 ResourceLocation reg = i.getRegistryName();
-                String namespace = (reg.getNamespace().equals("minecraft")||reg.getNamespace().equals("supplementaries")) ? "" : reg.getNamespace() + "/";
-                String s = "wall_lanterns/" + namespace + reg.getPath();
-                ResourceLocation fullPath = RPUtils.resPath(Supplementaries.res(s), RPUtils.ResType.BLOCK_MODELS);
+                String namespace = (reg.getNamespace().equals("minecraft") || reg.getNamespace().equals("supplementaries")) ? "" : reg.getNamespace() + "/";
+                String s = "textures/blocks/wall_lanterns/" + namespace + reg.getPath() +".json";
+                ResourceLocation fullPath = Supplementaries.res(s);
                 var resource = manager.getResource(fullPath);
                 JsonElement bsElement = RPUtils.deserializeJson(resource.getInputStream());
 
                 String texture = RPUtils.findFirstResourceInJsonRecursive(bsElement);
-                if(!texture.isEmpty()) SPECIAL_TEXTURES.put(i, new ResourceLocation(texture));
+                if (!texture.isEmpty()) SPECIAL_TEXTURES.put(i, new ResourceLocation(texture));
 
-            }catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
         }
     }
 

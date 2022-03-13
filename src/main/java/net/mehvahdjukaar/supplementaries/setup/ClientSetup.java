@@ -68,17 +68,18 @@ public class ClientSetup {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
+
         //compat
         CompatHandlerClient.init(event);
-
-        //overlay
-        //SlimedGuiOverlay.register();
 
         //tooltips
         MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
         //map markers
         CMDclient.init(event);
+
+        //overlay
+        //SlimedGuiOverlay.register();
 
         //dynamic textures
         GlobeTextureManager.init(Minecraft.getInstance().textureManager);
@@ -188,26 +189,26 @@ public class ClientSetup {
     //particles
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        ParticleEngine particleManager = Minecraft.getInstance().particleEngine;
-        particleManager.register(ModRegistry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
-        particleManager.register(ModRegistry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
-        particleManager.register(ModRegistry.GREEN_FLAME.get(), FlameParticle.Provider::new);
-        particleManager.register(ModRegistry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
-        particleManager.register(ModRegistry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
-        particleManager.register(ModRegistry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
-        particleManager.register(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
-        particleManager.register(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
-        particleManager.register(ModRegistry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
-        particleManager.register(ModRegistry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
-        particleManager.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
-        particleManager.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
-        particleManager.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
-        particleManager.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
-        particleManager.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
-        particleManager.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new RotationTrailEmitter.Factory());
-        particleManager.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
-        particleManager.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
-        particleManager.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
+        ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
+        //particleEngine.register(ModRegistry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
+        particleEngine.register(ModRegistry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
+        particleEngine.register(ModRegistry.GREEN_FLAME.get(), FlameParticle.Provider::new);
+        particleEngine.register(ModRegistry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
+        particleEngine.register(ModRegistry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
+        particleEngine.register(ModRegistry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
+        particleEngine.register(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
+        particleEngine.register(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
+        particleEngine.register(ModRegistry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
+        particleEngine.register(ModRegistry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
+        particleEngine.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
+        particleEngine.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
+        particleEngine.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
+        particleEngine.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+        particleEngine.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
+        particleEngine.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new RotationTrailEmitter.Factory());
+        particleEngine.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
+        particleEngine.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
+        particleEngine.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
     }
 
     public static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -235,6 +236,7 @@ public class ClientSetup {
         event.registerEntityRenderer(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
         event.registerEntityRenderer(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
         event.registerEntityRenderer(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
+        event.registerEntityRenderer(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
 
         //tiles
         event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);

@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BellBlockEntity.class)
 public abstract class BellTileEntityMixin extends BlockEntity  implements IBellConnections {
+
     @Unique
     public BellConnection connection = BellConnection.NONE;
 

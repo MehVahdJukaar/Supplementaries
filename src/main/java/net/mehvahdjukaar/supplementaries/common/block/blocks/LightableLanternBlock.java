@@ -127,9 +127,7 @@ public class LightableLanternBlock extends LanternBlock {
                 double maxY = state.getShape(level, pos).bounds().maxY;
                 state = state.setValue(LanternBlock.HANGING, false);
                 double yOffset = maxY - state.getShape(level, pos).bounds().maxY;
-
-                FallingBlockEntity fallingblockentity = new FallingLanternEntity(level, pos, state, yOffset);
-                level.addFreshEntity(fallingblockentity);
+                FallingLanternEntity.fall(level, pos, state, yOffset);
                 return true;
             }
         }

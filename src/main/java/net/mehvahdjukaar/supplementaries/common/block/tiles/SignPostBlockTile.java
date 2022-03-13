@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
@@ -45,9 +45,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public boolean down = false;
 
     @NotNull
-    public WoodSetType woodTypeUp = WoodSetType.OAK_WOOD_TYPE;
+    public WoodType woodTypeUp = WoodType.OAK_WOOD_TYPE;
     @NotNull
-    public WoodSetType woodTypeDown = WoodSetType.OAK_WOOD_TYPE;
+    public WoodType woodTypeDown = WoodType.OAK_WOOD_TYPE;
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
@@ -106,8 +106,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.leftDown = compound.getBoolean("LeftDown");
         this.up = compound.getBoolean("Up");
         this.down = compound.getBoolean("Down");
-        this.woodTypeUp = BlockSetHandler.getWoodTypeFromNBT(compound.getString("TypeUp"));
-        this.woodTypeDown = BlockSetHandler.getWoodTypeFromNBT(compound.getString("TypeDown"));
+        this.woodTypeUp = WoodTypeRegistry.fromNBT(compound.getString("TypeUp"));
+        this.woodTypeDown = WoodTypeRegistry.fromNBT(compound.getString("TypeDown"));
 
         this.loadOwner(compound);
     }

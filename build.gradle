@@ -8,36 +8,39 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath 'org.parchmentmc:librarian:1.+'
-
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${project.forgegradle_version}", changing: true
+        classpath "org.spongepowered:mixingradle:${project.mixingradle_version}"
+        classpath "org.parchmentmc:librarian:${project.librarian_version}"
     }
 }
-
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
-//apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 mixin {
-    add sourceSets.main, "supplementaries.refmap.json"
+    add sourceSets.main, "${project.mod_id}.refmap.json"
 }
 
-version = '1.18.2-1.2.3'
-group = 'net.mehvahdjukaar.supplementaries'
-archivesBaseName = 'supplementaries'
+
+archivesBaseName = project.mod_id
+version = "${project.minecraft_version}-${project.mod_version}".toString()
+group = "${project.maven_group}.${archivesBaseName}".toString()
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
 
-    mappings channel: 'official', version: '1.18.2'
-    //mappings channel: 'parchment', version: '2022.02.13-1.18.1'
+    if(project.parchment_enabled == "true"){
+        mappings channel: 'parchment', version: "${project.parchment_version}-${project.minecraft_version}"
+    }else{
+        mappings channel: 'official', version: "${project.minecraft_version}"
+    }
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -46,7 +49,7 @@ minecraft {
 
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'mixin.env.remapRefMap', 'true'
-            arg "-mixin.config=supplementaries.mixins.json".toString()
+            arg "-mixin.config=${project.mod_id}.mixins.json".toString()
 
             workingDirectory project.file('run')
 
@@ -55,19 +58,13 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                supplementaries {
-                    source sourceSets.main
-                }
-            }
         }
 
         server {
 
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'mixin.env.remapRefMap', 'true'
-            arg "-mixin.config=supplementaries.mixins.json".toString()
+            arg "-mixin.config=${project.mod_id}.mixins.json".toString()
 
             workingDirectory project.file('run')
 
@@ -76,19 +73,11 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                supplementaries {
-                    source sourceSets.main
-                }
-            }
         }
 
         data {
 
-            //run data mixins?
             property 'mixin.env.remapRefMap', 'true'
-
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             workingDirectory project.file('run')
@@ -99,14 +88,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            //args "--mod", "supplementaries", "--all", "--output", "\"" + file("src/generated/resources").toString() + "\"", "--validate", "--existing", "\"" + sourceSets.main.resources.srcDirs[0] + "\""
-            args '--mod', 'supplementaries', '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]   //args "--mod", "usefulbackpacks", "--all", "--output", "\"" + file("src/generated/resources").toString() + "\"", "--validate", "--existing", "\"" + sourceSets.main.resources.srcDirs[0] + "\""
+            args '--mod', "${project.mod_id}", '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]   //args "--mod", "usefulbackpacks", "--all", "--output", "\"" + file("src/generated/resources").toString() + "\"", "--validate", "--existing", "\"" + sourceSets.main.resources.srcDirs[0] + "\""
 
-            mods {
-                supplementaries {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
@@ -116,14 +99,12 @@ minecraft {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "supplementaries",
-                "Specification-Vendor": "examplemodsareus",
+                "Specification-Title": "${projectDir}",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"examplemodsareus",
-                //"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "supplementaries.mixins.json"
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "${project.mod_id}.mixins.json"
         ])
     }
 }
@@ -150,48 +131,50 @@ publishing {
 
 dependencies {
 
-    //minecraft 'net.minecraftforge:forge:1.18.1-39.0.79'
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.1'
+    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 
-    implementation fg.deobf("curse.maven:configured-457570:3640884")
-    implementation fg.deobf("curse.maven:curios-309927:3648837")
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3615366")
-    implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
-    implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
-    implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
-    implementation fg.deobf("curse.maven:create-328085:3623348")
-    implementation fg.deobf("curse.maven:flywheel-486392:3623314")
-    implementation fg.deobf("curse.maven:quark-243121:3545695")
-    implementation fg.deobf("curse.maven:jei-238222:3651118")
-    implementation fg.deobf("curse.maven:malum-484064:3579643")
-    implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
-    implementation fg.deobf("curse.maven:jade-324717:3564963")
-    implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
-    implementation fg.deobf("curse.maven:patchouli-306770:3594394")
-    implementation fg.deobf("curse.maven:tetra-289712:3586368")
-    implementation fg.deobf("curse.maven:mgui-351914:3573121")
-    implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
-    implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
-    implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
-    implementation fg.deobf("curse.maven:kiwi-303657:3577626")
-    implementation fg.deobf("curse.maven:waystones-245755:3658046")
-    //implementation fg.deobf("curse.maven:balm-531761:3658029")
+
+    //implementation fg.deobf("curse.maven:curios-309927:3648837")
+    //implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
+    //implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
+    //implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
+    //implementation fg.deobf("curse.maven:jei-238222:3651118")
+    //implementation fg.deobf("curse.maven:jade-324717:3564963")
+    //implementation fg.deobf("curse.maven:decorativeblocks-362528:3592481")
+    //implementation fg.deobf("curse.maven:patchouli-306770:3594394")
+    //implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
-    //implementation fg.deobf("curse.maven:kiwi-303657:3577626")
+    //implementation fg.deobf("curse.maven:quark-243121:3545695")
 
-    //implementation fg.deobf("curse.maven:just-enough-resources-jer-240630:3489131")
-    //implementation fg.deobf("curse.maven:inspirations-284007:3414517")
-    //implementation fg.deobf("curse.maven:mantle-74924:3439180")
-    //implementation fg.deobf("curse.maven:mantle-250363:3326041")
-    //implementation fg.deobf("curse.maven:dynamictrees-252818:3480621")
-    //implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
+    //removed
 
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+   // implementation fg.deobf("curse.maven:create-328085:3623348")
+   // implementation fg.deobf("curse.maven:flywheel-486392:3623314")
+   // implementation fg.deobf("curse.maven:malum-484064:3579643")
+   // implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
+   // implementation fg.deobf("curse.maven:tetra-289712:3586368")
+   // implementation fg.deobf("curse.maven:mgui-351914:3573121")
 
+   // implementation fg.deobf("curse.maven:kiwi-303657:3577626")
+   // implementation fg.deobf("curse.maven:waystones-245755:3658046")
+   // implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
+//botania
 
+    //updated
+    //implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
+    implementation fg.deobf("curse.maven:configured-457570:3640884")
+    implementation fg.deobf("curse.maven:curios-309927:3670447")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3670782")
+    implementation fg.deobf("curse.maven:jei-238222:3682513")
+    implementation fg.deobf("curse.maven:jade-324717:3681449")
+    implementation fg.deobf("curse.maven:decorativeblocks-362528:3681919")
+    implementation fg.deobf("curse.maven:patchouli-306770:3680301")
+    implementation fg.deobf("curse.maven:framedblocks-441647:3672359")
+    implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3670163")
 
-
+    annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
 }
 
 repositories {
@@ -199,32 +182,6 @@ repositories {
         url = "https://www.cursemaven.com"
         allowInsecureProtocol = true
     }
-    maven {
-        // location of the maven that hosts JEI files (And TiC)
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-        allowInsecureProtocol = true
-    }
-    maven {
-        //location of the maven for mixed mappings and registrate
-        name = "tterrag maven"
-        url = "https://maven.tterrag.com/"
-        allowInsecureProtocol = true
-    }
-    maven {
-        // location of the maven that hosts JEI files (And TiC)
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-        allowInsecureProtocol = true
-    }
-    maven {
-        //location of the maven for vazkii's mods
-        name = "blamejared"
-        url = "http://maven.blamejared.com/"
-        allowInsecureProtocol = true
-    }
-
-
 }
 
 // Loads files in the format {modid}-{version}.jar, MC version optional but picky about hyphens.
@@ -265,7 +222,6 @@ def dev_mods = fileTree(dev_mods_dir).filter { it -> it.isFile() }.files.name.co
 
 // Include resources generated by data generators.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
 
 
 dependencies{

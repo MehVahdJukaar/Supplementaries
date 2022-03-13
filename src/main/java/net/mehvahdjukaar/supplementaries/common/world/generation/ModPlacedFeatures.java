@@ -10,6 +10,8 @@ import java.util.List;
 
 public class ModPlacedFeatures {
 
+    public static void init(){};
+
     //placed features
 
     public static final Holder<PlacedFeature> PLACED_WILD_FLAX_PATCH = PlacementUtils.register(

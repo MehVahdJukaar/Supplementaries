@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
@@ -31,14 +32,13 @@ public class FallingBlockRendererGeneric<T extends FallingBlockEntity> extends E
         return TextureAtlas.LOCATION_BLOCKS;
     }
 
-
     @Override
     public void render(T pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         BlockState blockstate = pEntity.getBlockState();
         if (blockstate.getRenderShape() == RenderShape.MODEL) {
             Level level = pEntity.getLevel();
             BlockPos pos = pEntity.blockPosition();
-            boolean isJustSpawned = Math.abs(pEntity.getY() - pos.getY()) < 0.02 && pEntity.tickCount < 2 && blockstate != level.getBlockState(pos);
+            boolean isJustSpawned = Math.abs(pEntity.getY() - pos.getY()) < 0.02 && pEntity.tickCount < 0 && blockstate != level.getBlockState(pos);
             if (!isJustSpawned && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 pMatrixStack.pushPose();
                 BlockPos blockpos = new BlockPos(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());

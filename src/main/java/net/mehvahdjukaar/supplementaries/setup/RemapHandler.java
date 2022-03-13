@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -41,7 +41,7 @@ public class RemapHandler {
                 try {
                     Block newBlock = getNewBlock(ModRegistry.HANGING_SIGNS, k);
                     if (newBlock == null) {
-                        newBlock = ModRegistry.HANGING_SIGNS.get(WoodSetType.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.HANGING_SIGNS.get(WoodType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
@@ -84,7 +84,7 @@ public class RemapHandler {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.HANGING_SIGNS_ITEMS, k);
                     if (newBlock == null) {
-                        newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(WoodType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
@@ -94,7 +94,7 @@ public class RemapHandler {
                 try {
                     Item newBlock = getNewBlock(ModRegistry.SIGN_POST_ITEMS, k);
                     if (newBlock == null) {
-                        newBlock = ModRegistry.SIGN_POST_ITEMS.get(WoodSetType.OAK_WOOD_TYPE);
+                        newBlock = ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE);
                     }
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
@@ -120,7 +120,7 @@ public class RemapHandler {
     }
 
     @Deprecated
-    public static String getLegacyWoodTypeAppendableID(WoodSetType wood) {
+    public static String getLegacyWoodTypeAppendableID(WoodType wood) {
         String l = getLegacyAbbreviation(wood.getNamespace());
         return l != null ? "_" + wood.getWoodName() + l : "_" + wood.getAppendableId();
     }
@@ -158,7 +158,7 @@ public class RemapHandler {
     }
 
     @Nullable
-    private static <T extends ForgeRegistryEntry<?>> T getNewBlock(Map<WoodSetType, T> newEntries, String oldPath) {
+    private static <T extends ForgeRegistryEntry<?>> T getNewBlock(Map<WoodType, T> newEntries, String oldPath) {
 
         for (var b : newEntries.values()) {
             String path = b.getRegistryName().getPath();

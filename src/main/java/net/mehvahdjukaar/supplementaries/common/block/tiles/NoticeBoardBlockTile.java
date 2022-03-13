@@ -52,6 +52,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     // private int packedFrontLight =0;
     private boolean textVisible = true; //for culling
 
+    //TODO: FINISH THIS!
     private final TextHolder textHolder;
 
     public NoticeBoardBlockTile(BlockPos pos, BlockState state) {
@@ -95,8 +96,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         ItemStack itemstack = getDisplayedItem();
         Item item = itemstack.getItem();
         this.cachedPattern = null;
-        if (item instanceof BannerPatternItem) {
-            this.cachedPattern = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+        if (item instanceof BannerPatternItem bannerPatternItem) {
+            this.cachedPattern = Materials.FLAG_MATERIALS.get(bannerPatternItem.getBannerPattern());
         }
 
         this.needsVisualRefresh = true;
@@ -108,6 +109,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             if (WrittenBookItem.makeSureTagIsValid(com)) {
 
                 ListTag pages = com.getList("pages", 8).copy();
+                assert pages.size()>0;
                 if (this.pageNumber >= pages.size()) {
                     this.pageNumber = this.pageNumber % pages.size();
                 }
@@ -118,6 +120,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             if (WritableBookItem.makeSureTagIsValid(com)) {
 
                 ListTag listTag = com.getList("pages", 8).copy();
+                assert listTag.size()>0;
                 if (this.pageNumber >= listTag.size()) {
                     this.pageNumber = this.pageNumber % listTag.size();
                 }
@@ -145,7 +148,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 }
             }
         }
-
     }
 
     @Override

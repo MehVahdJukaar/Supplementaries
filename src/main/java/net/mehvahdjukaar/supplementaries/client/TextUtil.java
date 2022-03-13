@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.font.GlyphInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -58,6 +58,7 @@ public class TextUtil {
                         FishSuckerSupreme
                         Azrod_dovahkiin
                         AdaraChristine
+                        Plummet_studios
                         ThugPug43
                         MetalBox47
                         LaughHappy
@@ -124,6 +125,7 @@ public class TextUtil {
                         ppblitto
                         DrHesperus
                         feliixpe
+                        ChuijkYahus
 
                         \u00A75Others:\u00A7r
 

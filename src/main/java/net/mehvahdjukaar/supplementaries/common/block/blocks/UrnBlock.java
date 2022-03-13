@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -123,15 +125,16 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel pLevel, BlockPos pos, Random pRand) {
         if (isFree(pLevel.getBlockState(pos.below())) && pos.getY() >= pLevel.getMinBuildHeight()) {
-
-            FallingBlockEntity fallingblockentity = new FallingUrnEntity(pLevel, pos, state);
-
+            CompoundTag tag = null;
             if (pLevel.getBlockEntity(pos) instanceof UrnBlockTile tile) {
-                fallingblockentity.blockData = tile.saveWithoutMetadata();
+                tag = tile.saveWithoutMetadata();
+                tile.clearContent();
                 tile.setRemoved();
             }
+            FallingBlockEntity fallingblockentity = FallingUrnEntity.fall(pLevel, pos, state);
+            fallingblockentity.blockData = tag;
+
             this.falling(fallingblockentity);
-            pLevel.addFreshEntity(fallingblockentity);
         }
     }
 

@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel.instances;
-
+/*
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
@@ -161,3 +161,4 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
         return this.blockState.getValue(BellowsBlock.FACING);
     }
 }
+*/

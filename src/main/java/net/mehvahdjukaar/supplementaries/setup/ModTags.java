@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common;
+package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
@@ -10,7 +10,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ForgeRegistryTagsProvider;
@@ -66,13 +68,24 @@ public class ModTags {
     public static final TagKey<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     //features
-    public static final TagKey<StructureFeature<?>> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
-    public static final TagKey<StructureFeature<?>> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> BASTION_REMNANT = structureTag("bastion_remnant");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> DESERT_PYRAMID = structureTag("desert_pyramid");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> END_CITY = structureTag("end_city");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> NETHER_FORTRESS = structureTag("fortress");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> IGLOO = structureTag("igloo");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> JUNGLE_TEMPLE = structureTag("jungle_pyramid");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> PILLAGER_OUTPOST = structureTag("pillager_outpost");
+    public static final TagKey<ConfiguredStructureFeature<?,?>> SWAMP_HUT = structureTag("swamp_hut");
+
+
+
     //biomes
     public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
 
-    private static TagKey<StructureFeature<?>> structureTag(String name) {
-        return TagKey.create(Registry.STRUCTURE_FEATURE_REGISTRY,Supplementaries.res( name));
+    private static TagKey<ConfiguredStructureFeature<?,?>> structureTag(String name) {
+        return TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY,Supplementaries.res( name));
     }
     private static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registry.ITEM_REGISTRY, Supplementaries.res(name));

@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -12,9 +14,12 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -24,6 +29,22 @@ import net.minecraftforge.items.wrapper.EmptyHandler;
 import javax.annotation.Nullable;
 
 public class ItemsUtil {
+
+    //placeable item stuff
+
+    @Nullable
+    public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
+        return ModRegistry.BLOCK_PLACER.get().mimicGetPlacementState(context, block);
+    }
+
+    public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
+        return place(context, blockToPlace, null);
+    }
+
+    public static InteractionResult place(BlockPlaceContext context, Block blockToPlace, @Nullable SoundType placeSound) {
+        return ModRegistry.BLOCK_PLACER.get().mimicPlace(context, blockToPlace, placeSound);
+    }
+
 
     public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {
     }

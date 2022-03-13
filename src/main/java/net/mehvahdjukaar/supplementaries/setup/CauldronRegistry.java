@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.mapatlas.MapAtlasPlugin;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -41,7 +39,7 @@ public class CauldronRegistry {
 
             LayeredCauldronBlock.lowerFillLevel(state, level, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
-        } else if (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item)) {
+        } /*else if (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item)) {
             if (!level.isClientSide) {
                 MapItemSavedData data = MapAtlasPlugin.getSavedDataFromAtlas(stack, level, player);
                 if (data instanceof ExpandedMapData expandedMapData) {
@@ -51,7 +49,7 @@ public class CauldronRegistry {
 
             LayeredCauldronBlock.lowerFillLevel(state, level, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
-        }
+        }*/
 
         return InteractionResult.PASS;
 

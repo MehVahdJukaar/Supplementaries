@@ -8,10 +8,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.client.block_models.StatueEntityModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,15 +20,19 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Map;
@@ -39,11 +43,28 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
     protected final ItemRenderer itemRenderer;
     private final StatueEntityModel model;
     private final BlockRenderDispatcher blockRenderer;
+    private final EntityRenderDispatcher entityRenderer;
 
     public StatueBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
         model = new StatueEntityModel(context);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
+    }
+
+    protected boolean canRenderName(StatueBlockTile tile) {
+        if (Minecraft.renderNames() && tile.owner != null) {
+            HitResult hit = Minecraft.getInstance().hitResult;
+            if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
+                BlockPos pos = tile.getBlockPos();
+                BlockPos hitPos = new BlockPos(hit.getLocation());
+                if (pos.equals(hitPos)) {
+                    double d0 = entityRenderer.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                    return d0 < 16 * 16;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -54,8 +75,10 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
     private boolean slim = false;
 
     public static ResourceLocation getPlayerSkin(GameProfile gameProfile) {
-        return getPlayerSkinAndSlim(gameProfile, s->{});
+        return getPlayerSkinAndSlim(gameProfile, s -> {
+        });
     }
+
     public static ResourceLocation getPlayerSkinAndSlim(GameProfile gameProfile, Consumer<Boolean> slimSkinSetter) {
         if (!gameProfile.isComplete()) {
             return new ResourceLocation("minecraft:textures/entity/steve.png");
@@ -86,9 +109,18 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        GameProfile playerInfo = tile.owner;
-        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
         matrixStackIn.translate(0.5, 0.5, 0.5);
+        GameProfile playerInfo = tile.owner;
+
+        if (this.canRenderName(tile)) {
+            var name = tile.owner.getName();
+            if (name != null) {
+                PedestalBlockTileRenderer.renderName(new TextComponent(name), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
+            }
+        }
+
+        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
+
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(RotHlpr.rot(dir));
         matrixStackIn.mulPose(RotHlpr.X90);
@@ -153,8 +185,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 }
 
                 matrixStackIn.translate(0, -0.5, -0.5);
-                if(pose.isGlobe()){
-                    if(ClientRegistry.GLOBE_RENDERER_INSTANCE != null){
+                if (pose.isGlobe()) {
+                    if (ClientRegistry.GLOBE_RENDERER_INSTANCE != null) {
 
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
                         Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
@@ -165,8 +197,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                         ClientRegistry.GLOBE_RENDERER_INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
                                 combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                     }
-                }
-                else {
+                } else {
                     this.itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, model);
 

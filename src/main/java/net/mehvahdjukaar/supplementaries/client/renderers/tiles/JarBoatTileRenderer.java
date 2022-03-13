@@ -36,6 +36,7 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
         matrixStackIn.mulPose(RotHlpr.rot((int) -tile.getBlockState().getValue(JarBlock.FACING).getOpposite().toYRot()));
 
         matrixStackIn.translate(0, -3/16f, 0);
+        //TODO: use world time here
         float t = ((System.currentTimeMillis() % 360000) / 1000f);
         matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(Mth.sin(t)*1.7f));
 

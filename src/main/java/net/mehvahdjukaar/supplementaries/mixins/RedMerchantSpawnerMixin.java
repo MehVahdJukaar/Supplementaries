@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,6 +38,7 @@ public abstract class RedMerchantSpawnerMixin {
     @Shadow
     private ServerLevelData serverLevelData;
 
+    @Unique
     private int redSpawnDelay = 0;
 
     //remove
@@ -66,7 +68,7 @@ public abstract class RedMerchantSpawnerMixin {
                     BlockPos targetPos = optional.orElse(blockpos);
                     BlockPos spawnPos = this.findSpawnPositionNear(world, targetPos, 48);
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {
-                        if (!world.getBiomeName(spawnPos).equals(Optional.of(Biomes.THE_VOID))) {
+                        if (!world.getBiome(spawnPos).is(Biomes.THE_VOID)) {
 
                             RedMerchantEntity trader = ModRegistry.RED_MERCHANT.get().spawn(world, null, null, null, spawnPos, MobSpawnType.EVENT, false, false);
                             if (trader != null) {

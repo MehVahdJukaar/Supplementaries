@@ -2,7 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 16],
 	"textures": {
-		"1": "supplementaries:blocks/hanging_signs/hanging_sign_oak"
+		"1": "supplementaries:blocks/hanging_signs/hanging_sign_oak",
+		"particle": "supplementaries:blocks/hanging_signs/hanging_sign_oak"
 	},
 	"elements": [
 		{

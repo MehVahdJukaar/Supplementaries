@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
@@ -49,6 +50,10 @@ public class VectorUtils {
             return new Vec2i(this.x + x, this.y + y);
         }
 
+        public float lengthSqr(){
+            return this.x*this.x + this.y*this.y;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
@@ -70,12 +75,7 @@ public class VectorUtils {
 
         @Override
         public int compareTo(@NotNull Vec2i other) {
-            if (this.y() == other.y()) {
-                return this.x() == other.x() ? 0 : this.x() - other.x();
-            } else {
-                return this.y() - other.y();
-            }
-
+            return Float.compare(this.lengthSqr(), other.lengthSqr());
         }
     }
 }

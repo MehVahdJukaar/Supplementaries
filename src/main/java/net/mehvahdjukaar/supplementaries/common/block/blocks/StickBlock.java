@@ -25,10 +25,12 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -68,7 +70,6 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     public StickBlock(Properties properties, int fireSpread) {
         super(properties);
-
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
         this.fireSpread = fireSpread;
     }
@@ -80,12 +81,12 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     @Override
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return fireSpread;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
     }
 
     @Override
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return fireSpread;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
     }
 
     @Override

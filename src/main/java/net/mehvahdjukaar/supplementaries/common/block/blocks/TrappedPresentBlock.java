@@ -58,13 +58,13 @@ import java.util.*;
 
 public class TrappedPresentBlock extends WaterBlock implements EntityBlock, IColored {
 
+    private static final Map<Item, IPresentItemBehavior> TRAPPED_PRESENT_INTERACTIONS_REGISTRY = Util.make(new Object2ObjectOpenHashMap<>(),
+            (map) -> map.defaultReturnValue(((source, stack) -> Optional.empty())));
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty PRIMED = BlockProperties.PACKED;
 
     private final DyeColor color;
-
-    private static final Map<Item, IPresentItemBehavior> TRAPPED_PRESENT_REGISTRY = Util.make(new Object2ObjectOpenHashMap<>(),
-            (map) -> map.defaultReturnValue(((source, stack) -> Optional.empty())));
 
     public TrappedPresentBlock(DyeColor color, Properties properties) {
         super(properties);
@@ -74,11 +74,11 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     public static void registerBehavior(ItemLike pItem, IPresentItemBehavior pBehavior) {
-        TRAPPED_PRESENT_REGISTRY.put(pItem.asItem(), pBehavior);
+        TRAPPED_PRESENT_INTERACTIONS_REGISTRY.put(pItem.asItem(), pBehavior);
     }
 
     public static IPresentItemBehavior getPresentBehavior(ItemStack pStack) {
-        return TRAPPED_PRESENT_REGISTRY.get(pStack.getItem());
+        return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.get(pStack.getItem());
     }
 
 

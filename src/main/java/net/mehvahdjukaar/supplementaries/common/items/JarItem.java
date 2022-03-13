@@ -6,15 +6,14 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
@@ -260,8 +259,8 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
-            InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
-            if (r.consumesAction()) return r;
+            //InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
+            //if (r.consumesAction()) return r;
         }
         return super.useOn(context);
     }

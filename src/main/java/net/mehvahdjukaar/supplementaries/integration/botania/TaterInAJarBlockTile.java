@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.botania;
-
+/*
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -27,4 +27,4 @@ public class TaterInAJarBlockTile extends TileTinyPotato {
         return BotaniaCompatRegistry.TATER_IN_A_JAR_TILE.get();
     }
 
-}
+}*/

@@ -4,7 +4,6 @@ import net.mehvahdjukaar.selene.map.CustomDecoration;
 import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.waystones.WaystonesPlugin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
@@ -26,10 +25,10 @@ public class WaystoneMarker extends NamedMapBlockMarker<CustomDecoration> {
     public static WaystoneMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (CompatHandler.waystones) {
             var te = world.getBlockEntity(pos);
-            if (WaystonesPlugin.isWaystone(te)) {
-                Component name = WaystonesPlugin.getName(te);
-                return new WaystoneMarker(pos, name);
-            }
+            //if (WaystonesPlugin.isWaystone(te)) {
+            //    Component name = WaystonesPlugin.getName(te);
+            //    return new WaystoneMarker(pos, name);
+            // }
         }
         return null;
     }

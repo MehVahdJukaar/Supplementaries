@@ -15,13 +15,12 @@ import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.mapatlas.MapAtlasPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -220,6 +219,7 @@ public class ItemsOverrideHandler {
                 }
             }
         }
+        //TODO: add             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
     }
 
     //item clicked overrides
@@ -435,7 +435,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item));
+            return item instanceof MapItem; //|| (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item))
         }
 
         @Override
@@ -445,7 +445,7 @@ public class ItemsOverrideHandler {
                 if (!world.isClientSide) {
                     MapItemSavedData data = null;
                     if (stack.getItem() instanceof MapItem) data = MapItem.getSavedData(stack, world);
-                    else if (CompatHandler.mapatlas) data = MapAtlasPlugin.getSavedDataFromAtlas(stack, world, player);
+                    //else if (CompatHandler.mapatlas) data = MapAtlasPlugin.getSavedDataFromAtlas(stack, world, player);
 
                     if (data instanceof ExpandedMapData expandedMapData) {
                         expandedMapData.toggleCustomDecoration(world, pos);
@@ -1131,7 +1131,7 @@ public class ItemsOverrideHandler {
                 placeSound = bi.getBlock().defaultBlockState().getSoundType(world, pos, player);
             }
 
-            result = BlockItemUtils.place(ctx, blockOverride, placeSound);
+            result = ItemsUtil.place(ctx, blockOverride, placeSound);
         }
         if (result.consumesAction() && player instanceof ServerPlayer serverPlayer && !isRanged) {
             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, heldStack);

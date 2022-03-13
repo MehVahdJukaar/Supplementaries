@@ -12,9 +12,10 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
-public class FallingLanternEntity extends FallingBlockEntity {
+public class FallingLanternEntity extends ImprovedFallingBlockEntity {
 
     public FallingLanternEntity(EntityType<FallingLanternEntity> type, Level level) {
         super(type, level);
@@ -25,23 +26,15 @@ public class FallingLanternEntity extends FallingBlockEntity {
     }
 
     public FallingLanternEntity(Level level, BlockPos pos, BlockState blockState, double yOffset) {
-        this(level);
-        this.blocksBuilding = true;
-        this.xo = pos.getX() + 0.5D;
+        super(ModRegistry.FALLING_LANTERN.get(),level,pos, blockState,false);
         this.yo = pos.getY() + yOffset;
-        this.zo = pos.getZ() + 0.5D;
-        this.setPos(xo, yo + (double) ((1.0F - this.getBbHeight()) / 2.0F), zo);
-        this.setDeltaMovement(Vec3.ZERO);
-        this.setStartPos(this.blockPosition());
-        this.setBlockState(blockState);
     }
 
-    public void setBlockState(BlockState state) {
-        //workaround
-        CompoundTag tag = new CompoundTag();
-        tag.put("BlockState", NbtUtils.writeBlockState(state));
-        tag.putInt("Time", this.time);
-        this.readAdditionalSaveData(tag);
+    public static FallingBlockEntity fall(Level level, BlockPos pos, BlockState state, double yOffset) {
+        FallingLanternEntity entity = new FallingLanternEntity(level, pos, state, yOffset);
+        level.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
+        level.addFreshEntity(entity);
+        return entity;
     }
 
     @Override

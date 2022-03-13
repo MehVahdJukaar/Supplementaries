@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -11,14 +10,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class WoodBasedBlockItem extends BlockItem {
     private final int burnTime;
-    private final WoodSetType woodType;
+    private final WoodType woodType;
 
 
     public WoodBasedBlockItem(Block blockIn, Properties builder, int burnTicks) {
-        this(blockIn, builder, burnTicks, WoodSetType.OAK_WOOD_TYPE);
+        this(blockIn, builder, burnTicks, WoodType.OAK_WOOD_TYPE);
     }
 
-    public WoodBasedBlockItem(Block blockIn, Properties builder, int burnTicks, WoodSetType woodType) {
+    public WoodBasedBlockItem(Block blockIn, Properties builder, int burnTicks, WoodType woodType) {
         super(blockIn, builder);
         this.woodType = woodType;
         this.burnTime = woodType.canBurn() ? burnTicks : 0;

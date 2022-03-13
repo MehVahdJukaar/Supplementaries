@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
-
+/*
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -38,15 +38,15 @@ public class BambooSpikesBehavior extends MovementBehaviour {
         return true;
     }
 
-    /*
-    @Override
-    public void visitNewPosition(MovementContext context, BlockPos pos) {
-        World world = context.world;
-        BlockState stateVisited = world.getBlockState(pos);
 
-        if (!stateVisited.isRedstoneConductor(world, pos))
-            damageEntities(context, pos, world);
-    }*/
+    //@Override
+    //public void visitNewPosition(MovementContext context, BlockPos pos) {
+    //    World world = context.world;
+    //    BlockState stateVisited = world.getBlockState(pos);
+
+   //     if (!stateVisited.isRedstoneConductor(world, pos))
+    //        damageEntities(context, pos, world);
+    //}
 
     @Override
     public void tick(MovementContext context) {
@@ -145,4 +145,4 @@ public class BambooSpikesBehavior extends MovementBehaviour {
         return CommonUtil.SPIKE_DAMAGE;
     }
 
-}
+}*/

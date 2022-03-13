@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.util.BlockSetHandler;
-import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.client.gui.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
@@ -30,7 +29,7 @@ import java.util.UUID;
 public class HangingSignBlockTile extends SwayingBlockTile implements IMapDisplay, ITextHolderProvider, IOwnerProtected {
     public static final int MAX_LINES = 7;
 
-    public final WoodSetType woodType;
+    public final WoodType woodType;
 
     private UUID owner = null;
 
@@ -50,11 +49,11 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         this.textHolder = new TextHolder(MAX_LINES);
         if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
-        } else this.woodType = WoodSetType.OAK_WOOD_TYPE;
+        } else this.woodType = WoodType.OAK_WOOD_TYPE;
     }
 
     @Override
-    public boolean isAlwaysFast(){
+    public boolean isAlwaysFast() {
         return ClientConfigs.cached.FAST_SIGNS;
     }
 

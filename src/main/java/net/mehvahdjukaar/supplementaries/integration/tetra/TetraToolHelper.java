@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.tetra;
 
+/*
 import net.minecraft.world.item.Item;
 import se.mickelus.tetra.items.modular.impl.ModularBladedItem;
 import se.mickelus.tetra.items.modular.impl.ModularDoubleHeadedItem;
@@ -15,3 +16,4 @@ public class TetraToolHelper {
     }
 
 }
+*/

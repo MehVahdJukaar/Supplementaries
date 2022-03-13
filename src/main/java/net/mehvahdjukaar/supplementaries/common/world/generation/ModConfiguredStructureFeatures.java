@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.world.generation;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 public class ModConfiguredStructureFeatures {
 
-    public static final ResourceKey<ConfiguredStructureFeature<?, ?>> CONFIGURED_WAY_SIGN_KEY = makeKey("village_desert");
+    public static final ResourceKey<ConfiguredStructureFeature<?, ?>> CONFIGURED_WAY_SIGN_KEY = makeKey("way_sign");
 
     public static final Holder<StructureTemplatePool> WAY_SIGN_START =
             Pools.register(new StructureTemplatePool(

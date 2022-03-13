@@ -1,22 +1,29 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.world.generation.structure.WaySignStructure;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Set;
 
 import static net.minecraftforge.common.BiomeDictionary.Type.*;
 
 public class WorldGenHandler {
+
 
     public static void registerBus(IEventBus modEventBus) {
         // For registration and registerBus stuff.
@@ -25,6 +32,11 @@ public class WorldGenHandler {
 
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(EventPriority.NORMAL, WorldGenHandler::addStuffToBiomes);
+    }
+
+    public static void onInit(){
+        ModStructureSets.init();
+        ModPlacedFeatures.init();
     }
 
 

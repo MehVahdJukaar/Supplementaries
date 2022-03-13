@@ -37,30 +37,6 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
         return false;
     }
 
-    protected void renderName(Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-
-        double f = 0.625; //height
-        int i = 0;
-
-        EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-
-        matrixStackIn.pushPose();
-
-        matrixStackIn.translate(0, f, 0);
-        matrixStackIn.mulPose(renderManager.cameraOrientation());
-        matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = matrixStackIn.last().pose();
-        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int j = (int) (f1 * 255.0F) << 24;
-
-        float f2 = (float) (-font.width(displayNameIn) / 2);
-        //drawInBatch == renderTextComponent
-        font.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
-        matrixStackIn.popPose();
-
-    }
-
-
     @Override
     public void render(ItemShelfBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
@@ -78,9 +54,8 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
                 matrixStackIn.pushPose();
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-yaw));
                 Component name = tile.getItem(0).getHoverName();
-                int i = "Dinnerbone".equals(name.getString()) ? -1 : 1;
-                matrixStackIn.scale(i, i, 1);
-                this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
+
+                PedestalBlockTileRenderer.renderName(name,0.625f, matrixStackIn, bufferIn, combinedLightIn);
                 matrixStackIn.popPose();
             }
 

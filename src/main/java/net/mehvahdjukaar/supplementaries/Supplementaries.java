@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
-import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
@@ -10,13 +8,9 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -39,8 +33,9 @@ public class Supplementaries {
     public static String str(String n) {
         return MOD_ID + ":" + n;
     }
-VillagerTradesHandler
+
     public Supplementaries() {
+//TODO: fix ceiling banners
         /*
         To check if a given tag has a given object:
         Registry#getHolderOrThrow(objectID).is(tagKey)
@@ -52,7 +47,10 @@ VillagerTradesHandler
         Registry#getHolderOrThrow(objectID).tags()
 
         Some things like blockstates and items have helper methods for doing the above as well
-    */
+        */
+
+        //  RegistryConfigs.createSpec();
+        //  RegistryConfigs.load();
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -66,6 +64,7 @@ VillagerTradesHandler
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ClientDynamicResourcesHandler.registerBus(bus));
 
         bus.addListener(ModSetup::init);
+
 
     }
 

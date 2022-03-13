@@ -17,9 +17,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockItemUtils;
-import net.mehvahdjukaar.supplementaries.common.ModTags;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.nbt.CompoundTag;
@@ -371,7 +370,7 @@ public class DispenserRegistry {
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.getPos().relative(direction);
             Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
-            InteractionResult result = BlockItemUtils.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
+            InteractionResult result = ItemsUtil.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
                     ModRegistry.GUNPOWDER_BLOCK.get());
             if (result.consumesAction()) return InteractionResultHolder.success(stack);
 

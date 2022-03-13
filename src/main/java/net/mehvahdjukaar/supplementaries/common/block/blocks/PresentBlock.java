@@ -62,6 +62,12 @@ public class PresentBlock extends WaterBlock implements EntityBlock, IColored {
         return color;
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new PresentBlockTile(pPos, pState);
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PACKED, WATERLOGGED);
@@ -70,12 +76,6 @@ public class PresentBlock extends WaterBlock implements EntityBlock, IColored {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PresentBlockTile(pPos, pState);
     }
 
     @Override

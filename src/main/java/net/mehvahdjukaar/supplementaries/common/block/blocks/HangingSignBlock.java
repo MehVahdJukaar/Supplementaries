@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.util.WoodSetType;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.BlockAttachment;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.SignAttachment;
@@ -49,9 +49,9 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     public static final EnumProperty<SignAttachment> ATTACHMENT = BlockProperties.SIGN_ATTACHMENT;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-    public final WoodSetType woodType;
+    public final WoodType woodType;
 
-    public HangingSignBlock(Properties properties, WoodSetType woodType) {
+    public HangingSignBlock(Properties properties, WoodType woodType) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                 .setValue(ATTACHMENT, SignAttachment.BLOCK_BLOCK).
@@ -73,8 +73,8 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                 //TODO: fix left hand(shield)
                 if (handIn == InteractionHand.MAIN_HAND) {
                     //remove
-                    if(!tile.isEmpty()){
-                        if( handItem.isEmpty()) {
+                    if (!tile.isEmpty()) {
+                        if (handItem.isEmpty()) {
                             ItemStack it = tile.removeStackFromSlot(0);
 
                             player.setItemInHand(handIn, it);

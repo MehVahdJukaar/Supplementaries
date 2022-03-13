@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
@@ -10,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.world.generation.structure.Struc
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -27,18 +30,21 @@ import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
 
     private boolean firstTick = true;
-    public Pair<List<Pair<Integer, BlockPos>>, Boolean> threadResult = null;
+
+    //TODO: make them not spawn in villages
+    public List<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> threadResult = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -77,8 +83,6 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
             ServerLevel world = (ServerLevel) pLevel;
             BlockPos pos = pPos.below(2);
-            final int posX = pos.getX();
-            final int posZ = pos.getZ();
 
             /*
             //lets hope world is thread safe
@@ -93,8 +97,9 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
             Thread thread = new Thread(() -> {
                 try {
-                   // tile.threadResult = StructureLocator.find(world, posX, posZ, 2);
-                    tile.failAndRemove(pLevel, pPos, new Exception());
+                    tile.threadResult = StructureLocator.findNearestMapFeatures(
+                            world, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
+                            false, 2);
                 } catch (Exception e) {
                     tile.failAndRemove(pLevel, pPos, e);
                 }
@@ -112,12 +117,13 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
                 BlockState topState = trapdoor;
 
-                Pair<List<Pair<Integer, BlockPos>>, Boolean> locateResult = tile.threadResult;
-
-                List<Pair<Integer, BlockPos>> villages = locateResult.getLeft();
+                List<Pair<Integer, BlockPos>> villages = new ArrayList<>();
+                for (var r : tile.threadResult) {
+                    villages.add(Pair.of((int) Mth.sqrt((float) r.getFirst().distToCenterSqr(pos.getX(), pos.getY(), pos.getZ())), r.getFirst()));
+                }
 
                 //if I am in a village
-                boolean inVillage = locateResult.getRight();
+                boolean inVillage = false;//locateResult.getRight();
 
                 if (inVillage) {
                     var b = world.getBiome(pos);
@@ -140,18 +146,18 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
                     //only 1 sing found/ 1 sign post. always to closest village. posts that are relatively close to a village will always have two.
                     //posts in a village will point away
-                    if (villages.size() == 1 || (0.3 > rand.nextFloat() && villages.get(0).getLeft() > 192)) {
-                        dist1 = villages.get(0).getLeft();
-                        village1 = villages.get(0).getRight();
+                    if (villages.size() == 1 || (0.3 > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
+                        dist1 = villages.get(0).getFirst();
+                        village1 = villages.get(0).getSecond();
                         dist2 = dist1;
                         village2 = village1;
                         twoSigns = false;
                     } else {
                         boolean inv = rand.nextBoolean();
-                        dist1 = villages.get(inv ? 0 : 1).getLeft();
-                        village1 = villages.get(inv ? 0 : 1).getRight();
-                        dist2 = villages.get(inv ? 1 : 0).getLeft();
-                        village2 = villages.get(inv ? 1 : 0).getRight();
+                        dist1 = villages.get(inv ? 0 : 1).getFirst();
+                        village1 = villages.get(inv ? 0 : 1).getSecond();
+                        dist2 = villages.get(inv ? 1 : 0).getFirst();
+                        village2 = villages.get(inv ? 1 : 0).getSecond();
                     }
 
 
@@ -181,6 +187,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                             if (twoSigns)
                                 sign.textHolder.setLine(1, getSignText(dist2));
                         }
+                        //sign.setChanged();
 
 
                         float yaw = Mth.wrapDegrees(90 + (float) tile.averageAngles(-sign.yawUp + 180, -sign.yawDown + 180));

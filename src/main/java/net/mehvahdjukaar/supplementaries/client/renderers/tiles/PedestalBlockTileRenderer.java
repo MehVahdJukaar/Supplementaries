@@ -32,12 +32,10 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
     private final Minecraft minecraft = Minecraft.getInstance();
     private final ItemRenderer itemRenderer;
     private final EntityRenderDispatcher entityRenderer;
-    private final Font font;
 
     public PedestalBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = minecraft.getItemRenderer();
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
-        this.font = minecraft.font;
     }
 
     protected boolean canRenderName(PedestalBlockTile tile) {
@@ -48,25 +46,26 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         return false;
     }
 
-    protected void renderName(Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public static void renderName(Component name, float h, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn) {
+        Minecraft mc = Minecraft.getInstance();
 
-        double f = 0.875; //height
+        int s = "Dinnerbone".equals(name.getString()) ? -1 : 1;
+        poseStack.scale(s, s, 1);
+
         int i = 0;
+        poseStack.pushPose();
 
-        matrixStackIn.pushPose();
-
-        matrixStackIn.translate(0, f, 0);
-        matrixStackIn.mulPose(entityRenderer.cameraOrientation());
-        matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = matrixStackIn.last().pose();
-        float f1 = minecraft.options.getBackgroundOpacity(0.25F);
+        poseStack.translate(0, h, 0);
+        poseStack.mulPose(mc.getEntityRenderDispatcher().cameraOrientation());
+        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        Matrix4f matrix4f = poseStack.last().pose();
+        float f1 = mc.options.getBackgroundOpacity(0.25F);
         int j = (int) (f1 * 255.0F) << 24;
 
-        float f2 = (float) (-font.width(displayNameIn) / 2);
+        float f2 = (float) (-mc.font.width(name) / 2);
 
-        font.drawInBatch(displayNameIn, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, packedLightIn);
-        matrixStackIn.popPose();
-
+        mc.font.drawInBatch(name, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, combinedLightIn);
+        poseStack.popPose();
     }
 
     @Override
@@ -75,12 +74,8 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         if (!tile.isEmpty()) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 1.125, 0.5);
-
             if (this.canRenderName(tile)) {
-                Component name = tile.getItem(0).getHoverName();
-                int i = "Dinnerbone".equals(name.getString()) ? -1 : 1;
-                matrixStackIn.scale(i, i, 1);
-                this.renderName(name, matrixStackIn, bufferIn, combinedLightIn);
+                renderName(tile.getItem(0).getHoverName(), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
             }
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
             matrixStackIn.translate(0, 0.25, 0);
@@ -92,8 +87,8 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
             ItemStack stack = tile.getDisplayedItem();
 
-            if(ClientConfigs.cached.PEDESTAL_SPECIAL){
-                switch (tile.type){
+            if (ClientConfigs.cached.PEDESTAL_SPECIAL) {
+                switch (tile.type) {
                     case SWORD -> {
                         matrixStackIn.translate(0, -0.03125, 0);
                         matrixStackIn.scale(1.5f, 1.5f, 1.5f);
@@ -126,14 +121,18 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             //float tt = ((float)Math.floorMod(tile.getLevel().getGameTime(), 1000L) + partialTicks) / 1000.0F;
 
                             //long t = blockoffset + time;
-                            float angle = (tile.getLevel().getGameTime() % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;
-                            Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
+
+                            int scale = (int) (ClientConfigs.cached.PEDESTAL_SPEED * 360f);
+                            long time = tile.getLevel().getGameTime();
+                            float angle = ((float) Math.floorMod(time, (long) scale) + partialTicks) / (float) scale;
+                            // float angle = (time % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;
+                            Quaternion rotation = Vector3f.YP.rotation((float) (angle * Math.PI * 10));
 
                             matrixStackIn.mulPose(rotation);
                         }
 
-                        if(tile.type.isGlobe()){
-                            if(ClientRegistry.GLOBE_RENDERER_INSTANCE != null){
+                        if (tile.type.isGlobe()) {
+                            if (ClientRegistry.GLOBE_RENDERER_INSTANCE != null) {
 
                                 boolean sepia = tile.type == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
                                 Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
@@ -153,9 +152,11 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
 
             if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
-            this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn,0);
+            this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 0);
 
             matrixStackIn.popPose();
         }
     }
+
+
 }
