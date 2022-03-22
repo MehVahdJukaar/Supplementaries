@@ -88,7 +88,7 @@ public class CompatHandler {
         //  if (create) SupplementariesCreatePlugin.initialize();
         if (computercraft) CCStuff.initialize();
 
-        var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
+        //var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
         // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
     }
 

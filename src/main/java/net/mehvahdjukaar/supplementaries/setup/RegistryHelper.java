@@ -12,6 +12,8 @@ import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -89,6 +91,10 @@ public class RegistryHelper {
 
     public static RegistryObject<SoundEvent> makeSoundEvent(String name) {
         return ModRegistry.SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
+    }
+
+    public static<T extends Entity> RegistryObject<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
+        return ModRegistry.ENTITIES.register(name, ()->builder.build(name));
     }
 
     //flags

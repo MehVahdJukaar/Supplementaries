@@ -145,7 +145,7 @@ dependencies {
     //implementation fg.deobf("curse.maven:patchouli-306770:3594394")
     //implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
-    //implementation fg.deobf("curse.maven:quark-243121:3545695")
+
 
     //removed
 
@@ -158,12 +158,16 @@ dependencies {
    // implementation fg.deobf("curse.maven:mgui-351914:3573121")
 
    // implementation fg.deobf("curse.maven:kiwi-303657:3577626")
-   // implementation fg.deobf("curse.maven:waystones-245755:3658046")
-   // implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
+
+
 //botania
 
     //updated
+    implementation fg.deobf("curse.maven:quark-243121:3687633")
+    implementation fg.deobf("curse.maven:autoreglib-250363:3642382")
+    implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
     //implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
+    implementation fg.deobf("curse.maven:waystones-245755:3684732")
     implementation fg.deobf("curse.maven:configured-457570:3640884")
     implementation fg.deobf("curse.maven:curios-309927:3670447")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3670782")

@@ -104,7 +104,7 @@ public class ModRegistry {
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
 
-   // public static final SoundType URN = new SoundType(1.0F, 1.0F, SoundEvents.WOOD_BREAK, SoundEvents.WOOD_STEP, SoundEvents.WOOD_PLACE, SoundEvents.WOOD_HIT, SoundEvents.WOOD_FALL);
+    // public static final SoundType URN = new SoundType(1.0F, 1.0F, SoundEvents.WOOD_BREAK, SoundEvents.WOOD_STEP, SoundEvents.WOOD_PLACE, SoundEvents.WOOD_HIT, SoundEvents.WOOD_FALL);
 
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.turntable.cat");
@@ -192,13 +192,12 @@ public class ModRegistry {
 
 
     //orange trader
-    public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT = ENTITIES.register(RED_MERCHANT_NAME, () ->
+    public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
             EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, MobCategory.CREATURE)
                     .setShouldReceiveVelocityUpdates(true)
                     .clientTrackingRange(10)
                     .setUpdateInterval(3)
-                    .sized(0.6F, 1.95F)
-                    .build(RED_MERCHANT_NAME));
+                    .sized(0.6F, 1.95F));
 
     public static final RegistryObject<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = CONTAINERS
             .register(RED_MERCHANT_NAME, () -> IForgeMenuType.create(RedMerchantContainerMenu::new));
@@ -208,35 +207,31 @@ public class ModRegistry {
                     new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
 
     //urn
-    public static final RegistryObject<EntityType<FallingUrnEntity>> FALLING_URN = ENTITIES.register(FALLING_URN_NAME, () ->
+    public static final RegistryObject<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME,
             EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
-                    .updateInterval(20)
-                    .build(FALLING_URN_NAME));
+                    .updateInterval(20));
 
     //ash
-    public static final RegistryObject<EntityType<FallingAshEntity>> FALLING_ASH = ENTITIES.register(FALLING_ASH_NAME, () ->
+    public static final RegistryObject<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME,
             EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
-                    .updateInterval(20)
-                    .build(FALLING_ASH_NAME));
+                    .updateInterval(20));
 
     //ash
-    public static final RegistryObject<EntityType<FallingLanternEntity>> FALLING_LANTERN = ENTITIES.register(FALLING_LANTERN_NAME, () ->
+    public static final RegistryObject<EntityType<FallingLanternEntity>> FALLING_LANTERN = regEntity(FALLING_LANTERN_NAME,
             EntityType.Builder.<FallingLanternEntity>of(FallingLanternEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
-                    .updateInterval(20)
-                    .build(FALLING_LANTERN_NAME));
+                    .updateInterval(20));
 
-    public static final RegistryObject<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = ENTITIES.register(FALLING_SACK_NAME, () ->
+    public static final RegistryObject<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME,
             EntityType.Builder.<ImprovedFallingBlockEntity>of(ImprovedFallingBlockEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
-                    .updateInterval(20)
-                    .build(FALLING_SACK_NAME));
+                    .updateInterval(20));
 
     //firefly
 
@@ -253,20 +248,19 @@ public class ModRegistry {
 //                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
 
     //brick
-    public static final RegistryObject<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = ENTITIES.register(THROWABLE_BRICK_NAME, () -> (
+    public static final RegistryObject<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME,
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
                     .setCustomClientFactory(ThrowableBrickEntity::new)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10))//.size(0.25F, 0.25F).trackingRange(4).updateInterval(10))
-            .build(THROWABLE_BRICK_NAME));
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+    //.size(0.25F, 0.25F).trackingRange(4).updateInterval(10)));
 
     //bomb
-    public static final RegistryObject<EntityType<BombEntity>> BOMB = ENTITIES.register(BOMB_NAME, () -> (
+    public static final RegistryObject<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME,
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
                     .setCustomClientFactory(BombEntity::new)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10))
-            .build(BOMB_NAME));
+                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
-    public static final RegistryObject<Item> BOMB_ITEM = ITEMS.register(BOMB_NAME, () -> new BombItem(new Item.Properties()
+    public static final RegistryObject<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()
             .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME))));
     public static final RegistryObject<Item> BOMB_ITEM_ON = ITEMS.register("bomb_projectile", () -> new BombItem(new Item.Properties()
             .tab(null)));
@@ -994,7 +988,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.copy(Blocks.FLOWER_POT);
 
         return /* CompatHandler.create ? SchematicCannonStuff.makeFlowerPot(p) :*/ new HangingFlowerPotBlock(p);
-    }, ()->Items.FLOWER_POT);
+    }, () -> Items.FLOWER_POT);
     public static final RegistryObject<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME, () -> BlockEntityType.Builder.of(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));
 
@@ -1110,7 +1104,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD), 60), ()->Items.STICK);
+                    .sound(SoundType.WOOD), 60), () -> Items.STICK);
     public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
@@ -1131,7 +1125,7 @@ public class ModRegistry {
                     .strength(0.25F, 0F)
                     .lightLevel(state -> 12)
                     .emissiveRendering((p, w, s) -> true)
-                    .sound(SoundType.GILDED_BLACKSTONE)), ()->Items.BLAZE_ROD
+                    .sound(SoundType.GILDED_BLACKSTONE)), () -> Items.BLAZE_ROD
     );
 
     //daub
@@ -1259,17 +1253,17 @@ public class ModRegistry {
 
     //gunpowder block
     public static final RegistryObject<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)), ()->Items.GUNPOWDER);
+            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)), () -> Items.GUNPOWDER);
 
     //placeable book
     public static final RegistryObject<Block> BOOK_PILE = regPlaceableItem(BOOK_PILE_NAME, () -> new BookPileBlock(
                     BlockBehaviour.Properties.of(Material.DECORATION).strength(0.5F).sound(SoundType.WOOD)),
-            ()->Items.ENCHANTED_BOOK);
+            () -> Items.ENCHANTED_BOOK);
 
     //placeable book
     public static final RegistryObject<Block> BOOK_PILE_H = regPlaceableItem(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
                     BlockBehaviour.Properties.copy(BOOK_PILE.get())),
-            ()->Items.BOOK);
+            () -> Items.BOOK);
 
     public static final RegistryObject<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = TILES.register(BOOK_PILE_NAME, () -> BlockEntityType.Builder.of(
             BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()).build(null));
@@ -1340,8 +1334,6 @@ public class ModRegistry {
 
     public static final RegistryObject<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = TILES.register(BUBBLE_BLOCK_NAME, () ->
             BlockEntityType.Builder.of(BubbleBlockTile::new, BUBBLE_BLOCK.get()).build(null));
-
-
 
 
     //public static final String CRE
