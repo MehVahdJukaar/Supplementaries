@@ -105,16 +105,16 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //TODO: merge
     //immediately discards pets and not alive entities
     protected final boolean isEntityValid(Entity e, Player player) {
-        if(!e.isAlive() || e.isMultipartEntity())return false;
-        if(e instanceof LivingEntity living){
-            if(living.isDeadOrDying())return false;
+        if (!e.isAlive() || e.isMultipartEntity()) return false;
+        if (e instanceof LivingEntity living) {
+            if (living.isDeadOrDying()) return false;
 
             if (e instanceof TamableAnimal pet) {
                 return !pet.isTame() || pet.isOwnedBy(player);
             }
 
             int p = ServerConfigs.cached.CAGE_HEALTH_THRESHOLD;
-            if(p!=100){
+            if (p != 100) {
                 return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
             }
         }
@@ -124,7 +124,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //2
     private <T extends Entity> boolean canCatch(T e) {
         String name = e.getType().getRegistryName().toString();
-        if(name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
+        if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
         if (ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }
@@ -229,9 +229,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return super.useOn(context);
     }
 
-    public boolean blocksPlacement(){
+    public boolean blocksPlacement() {
         return true;
-    };
+    }
+
+    ;
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
@@ -247,7 +249,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         this.addPlacementTooltip(tooltip);
     }
 
-    public void addPlacementTooltip(List<Component> tooltip){
+    public void addPlacementTooltip(List<Component> tooltip) {
         tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
@@ -292,15 +294,18 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
             if (this.isAquarium || this.canCatch(entity)) {
-                if(entity instanceof Bucketable bucketable){
+                if (entity instanceof Bucketable bucketable) {
                     bucket = bucketable.getBucketItemStack();
                 }
                 //maybe remove. not needed with new bucketable interface. might improve compat
-                else if(entity instanceof WaterAnimal){
+                else if (entity instanceof WaterAnimal) {
                     bucket = this.tryGettingFishBucketHackery(player, entity, hand);
                 }
             }
-            if(!bucket.isEmpty()){
+            //safety check since some mods like to give a null bucket...
+            if (bucket == null) bucket = ItemStack.EMPTY;
+
+            if (!bucket.isEmpty()) {
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }
 
