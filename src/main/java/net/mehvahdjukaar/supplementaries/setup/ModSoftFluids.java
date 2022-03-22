@@ -259,12 +259,13 @@ public class ModSoftFluids {
                 .color(0x60A8E0)
                 .translationKey("item.betteranimalsplus.horseshoe_crab_blood")
                 .drink("betteranimalsplus:horseshoe_crab_blood")));
-        custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/sky_congealed_slime",
-                "tconstruct:block/sky_congealed_slime", "sky_slime")
+        //TODO: fix these tcon ones
+        custom.add(makeSF(new SoftFluid.Builder("block/slime/storage/congealed_sky",
+                "block/slime/storage/congealed_sky", "sky_slime")
                 .fromMod("tconstruct")
                 .emptyHandContainerItem("tconstruct:sky_slime_ball", 1)
                 .setSoundsForCategory(SoundEvents.SLIME_BLOCK_PLACE, SoundEvents.SLIME_BLOCK_BREAK, Items.AIR)
-                .food("tconstruct:sky_slime_ball")));
+                .translationKey("item.tconstruct:sky_slime_ball")));
         custom.add(makeSF(new SoftFluid.Builder("tconstruct:block/ichor_congealed_slime",
                 "tconstruct:block/ichor_congealed_slime", "ichor_slime")
                 .fromMod("tconstruct")

@@ -1281,20 +1281,20 @@ public class ModRegistry {
     public static final String ASH_BRICKS_NAME = "ash_bricks";
 
     public static EnumMap<BlockSetHandler.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
-            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, ASH_BRICKS_NAME, Blocks.STONE_BRICKS, isEnabled(ASH_BRICKS_NAME));
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, ASH_BRICKS_NAME, Blocks.STONE_BRICKS, !isEnabled(ASH_BRICKS_NAME));
 
 
     //stone tile
     public static final String STONE_TILE_NAME = "stone_tile";
 
     public static EnumMap<VariantType, RegistryObject<Block>> STONE_TILE_BLOCKS =
-            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, STONE_TILE_NAME, Blocks.STONE_BRICKS, isEnabled(STONE_TILE_NAME));
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, STONE_TILE_NAME, Blocks.STONE_BRICKS, !isEnabled(STONE_TILE_NAME));
 
     //blackstone tile
     public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";
 
     public static EnumMap<VariantType, RegistryObject<Block>> BLACKSTONE_TILE_BLOCKS =
-            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE, isEnabled(BLACKSTONE_TILE_NAME));
+            BlockSetHandler.registerFullBlockSet(BLOCKS, ITEMS, BLACKSTONE_TILE_NAME, Blocks.BLACKSTONE, !isEnabled(BLACKSTONE_TILE_NAME));
 
     //stone lamp
     public static final String STONE_LAMP_NAME = "stone_lamp";

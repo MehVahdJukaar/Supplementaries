@@ -27,7 +27,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.18.1-1.2.2'
+version = '1.18.1-1.2.4'
 group = 'net.mehvahdjukaar.supplementaries'
 archivesBaseName = 'supplementaries'
 
@@ -157,10 +157,11 @@ dependencies {
     //implementation fg.deobf("curse.maven:farmersdelight-398521:3615366")
     implementation fg.deobf("curse.maven:framedblocks-441647:3548376")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3542632")
-    implementation fg.deobf("curse.maven:cc-tweaked-282001:3559368")
-    implementation fg.deobf("curse.maven:create-328085:3623348")
-    implementation fg.deobf("curse.maven:flywheel-486392:3623314")
-    implementation fg.deobf("curse.maven:quark-243121:3545695")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3606346")
+    implementation fg.deobf("curse.maven:create-328085:3706700")
+    implementation fg.deobf("curse.maven:flywheel-486392:3687357")
+    implementation fg.deobf("curse.maven:quark-243121:3662309")
+    implementation fg.deobf("curse.maven:botania-225643:3664223")
     implementation fg.deobf("curse.maven:jei-238222:3651118")
     implementation fg.deobf("curse.maven:malum-484064:3579643")
     implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
@@ -174,6 +175,9 @@ dependencies {
     implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
     implementation fg.deobf("curse.maven:kiwi-303657:3577626")
     implementation fg.deobf("curse.maven:waystones-245755:3658046")
+    implementation fg.deobf("curse.maven:autoreglib-250363:3575622")
+    implementation fg.deobf("curse.maven:balm-531761:3658029")
+    implementation fg.deobf("curse.maven:selene-499980:3668969")
     //implementation fg.deobf("curse.maven:balm-531761:3658029")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
     //implementation fg.deobf("curse.maven:kiwi-303657:3577626")

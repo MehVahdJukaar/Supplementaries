@@ -12,7 +12,5 @@ public class FlywheelPlugin {
         InstancedRenderRegistry.configure(ModRegistry.BELLOWS_TILE.get()).alwaysSkipRender().factory(BellowsInstance::new).apply();
     }
 
-    public static boolean areShadersOn(){
-        return OptifineHandler.usingShaders();
-    }
+    //public static boolean areShadersOn(){return OptifineHandler.usingShaders();}
 }

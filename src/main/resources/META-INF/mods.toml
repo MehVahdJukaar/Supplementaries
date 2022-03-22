@@ -75,7 +75,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="flywheel"
     mandatory=false
-    versionRange="[0.5.1,)"
+    versionRange="[1.18-0.6.1,)"
     ordering="NONE"
     side="CLIENT"
 

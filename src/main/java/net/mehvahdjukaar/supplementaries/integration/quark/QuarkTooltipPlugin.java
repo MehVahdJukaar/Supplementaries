@@ -13,7 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
@@ -36,7 +35,7 @@ public class QuarkTooltipPlugin {
     public static void onItemTooltipEvent(ItemTooltipEvent event) {
         if (canRenderTooltip()) {
             ItemStack stack = event.getItemStack();
-            CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", true);
+            CompoundTag cmp = stack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
                 Item i = stack.getItem();
                 if (i == ModRegistry.SAFE_ITEM.get()) {

@@ -285,7 +285,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
 
         if (hand == null) {
-            int a = 1;
             return InteractionResult.PASS;
         }
         if (this.isEntityValid(entity, player)) {
@@ -300,6 +299,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     bucket = this.tryGettingFishBucketHackery(player, entity, hand);
                 }
             }
+            //safety check cause some mods just give a null bucket...
+            if(bucket == null)bucket = ItemStack.EMPTY;
+
             if(!bucket.isEmpty()){
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }

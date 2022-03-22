@@ -53,10 +53,10 @@ public class RegistryHelper {
         return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
     }
 
-    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String ...items) {
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String... items) {
         Supplier<? extends Block> newSup = () -> {
             Block block = sup.get();
-            for(String item  :items) {
+            for (String item : items) {
                 addOptionalPlaceableItem(item, block);
             }
             return block;

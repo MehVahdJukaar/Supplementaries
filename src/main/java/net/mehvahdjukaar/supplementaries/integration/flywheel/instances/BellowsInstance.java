@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.hardcoded.ModelPart;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
@@ -23,7 +23,7 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
     private final ModelData top;
     private final ModelData bottom;
     private final ModelData leather;
-    private final MatrixTransformStack stack;
+    private final PoseStack stack;
     private float lastProgress = 0;
 
     public BellowsInstance(MaterialManager materialManager, BellowsBlockTile tile) {
@@ -31,18 +31,24 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
 
         this.texture = net.mehvahdjukaar.supplementaries.client.Materials.BELLOWS_MATERIAL.sprite();
         Quaternion rotation = this.getDirection().getRotation();
-        this.stack = new MatrixTransformStack();
-        this.stack.translate(this.getInstancePosition()).scale(0.9995F).translateAll(2.5E-4D).centre()
-                .multiply(rotation).multiply(RotHlpr.X90);
+        this.stack = new PoseStack();
 
-        this.center = this.makeCenterInstance().setTransform(this.stack.unwrap());
-        this.stack.unCentre();
+        var p = this.getInstancePosition();
+        this.stack.translate(p.getX(), p.getY(), p.getZ());
+        this.stack.scale(0.9995F, 0.9995F, 0.9995F);
+        this.stack.translate(2.5E-4D, 2.5E-4D, 2.5E-4D);
+        this.stack.translate(0.5, 0.5, 0.5);
+        this.stack.mulPose(rotation);
+        this.stack.mulPose(RotHlpr.X90);
 
-        this.leather = this.makeLeatherInstance().setTransform(this.stack.unwrap());
+        this.center = this.makeCenterInstance().setTransform(this.stack);
+        this.stack.translate(-0.5, -0.5, -0.5);
 
-        this.top = this.makeTopInstance().setTransform(this.stack.unwrap());
+        this.leather = this.makeLeatherInstance().setTransform(this.stack);
+
+        this.top = this.makeTopInstance().setTransform(this.stack);
         //this.stack.translateY(-13/16f);
-        this.bottom = this.makeBottomInstance().setTransform(this.stack.unwrap());
+        this.bottom = this.makeBottomInstance().setTransform(this.stack);
 
     }
 
@@ -53,13 +59,13 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
 
         this.stack.pushPose();
 
-        this.stack.centre();
+        this.stack.translate(0.5, 0.5, 0.5);
 
         this.stack.pushPose();
 
         this.stack.translate(0, -1 + (3 / 16d) - dh, 0);
 
-        this.top.setTransform(this.stack.unwrap());
+        this.top.setTransform(this.stack);
 
         this.stack.popPose();
 
@@ -67,7 +73,7 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
 
         this.stack.translate(0, dh, 0);
 
-        this.bottom.setTransform(this.stack.unwrap());
+        this.bottom.setTransform(this.stack);
 
         this.stack.popPose();
 
@@ -75,7 +81,7 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
 
         this.stack.scale(1, 1 + j * dh, 1);
 
-        this.leather.setTransform(this.stack.unwrap());
+        this.leather.setTransform(this.stack);
 
         this.stack.popPose();
 

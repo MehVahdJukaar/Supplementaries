@@ -4,14 +4,12 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingFlowerPotBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.ChunkGeneratorAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -29,9 +27,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.content.world.module.BigDungeonModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +84,7 @@ public class WorldGenHandler {
             if (chunkGenerator instanceof FlatLevelSource || !serverLevel.dimension().equals(Level.OVERWORLD)) {
                 return;
             }
-            if(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() == 1001) return;
+            if (ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get() == 1001) return;
 
             StructureSettings worldStructureSettings = chunkGenerator.getSettings();
 
@@ -181,9 +177,9 @@ public class WorldGenHandler {
 //        }
 
         Biome.BiomeCategory category = event.getCategory();
-        if(category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
+        if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
 
-            if(ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
+            if (ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
                 if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
                     event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ConfiguredFeaturesRegistry.PLACED_CAVE_URNS);
                 }
