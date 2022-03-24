@@ -86,6 +86,7 @@ public class ModSetup {
                 Supplementaries.LOGGER.info("Finished mod setup in: {} seconds", watch.elapsed().toSeconds());
 
             } catch (Exception e) {
+                Supplementaries.LOGGER.error(e);
                 terminateWhenSetupFails();
             }
 

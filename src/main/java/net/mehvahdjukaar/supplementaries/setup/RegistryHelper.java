@@ -8,10 +8,12 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -59,15 +62,17 @@ public class RegistryHelper {
     }
 
 
-    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, String itemLocation) {
+    public static RegistryObject<Block> regPlaceableItem(
+            String name, Supplier<? extends Block> sup, String itemLocation, ForgeConfigSpec.BooleanValue config) {
         Supplier<Item> itemSupp = () -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemLocation));
-        return regPlaceableItem(name, sup, itemSupp);
+        return regPlaceableItem(name, sup, itemSupp, config);
     }
 
-    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup, Supplier<? extends Item> itemSupplier) {
+    public static RegistryObject<Block> regPlaceableItem(
+            String name, Supplier<? extends Block> sup, Supplier<? extends Item> itemSupplier, ForgeConfigSpec.BooleanValue config) {
         Supplier<Block> newSupp = () -> {
             Block b = sup.get();
-            BlockPlacerItem.registerPlaceableItem(b, itemSupplier);
+            BlockPlacerItem.registerPlaceableItem(b, itemSupplier,config);
             return b;
         };
         return ModRegistry.BLOCKS.register(name, newSupp);
@@ -83,6 +88,10 @@ public class RegistryHelper {
 
     public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group, int burnTime) {
         return regItem(blockSup.getId().getPath(), () -> new WoodBasedBlockItem(blockSup.get(), (new Item.Properties()).tab(group), burnTime));
+    }
+
+    public static RegistryObject<Item> regBlockItem(RegistryObject<Block> blockSup, CreativeModeTab group, String tagKey) {
+        return regItem(blockSup.getId().getPath(), () -> new OptionalTagBlockItem(blockSup.get(), (new Item.Properties()).tab(group), tagKey));
     }
 
     public static RegistryObject<SimpleParticleType> regParticle(String name) {
@@ -142,7 +151,7 @@ public class RegistryHelper {
                                     .noCollission()
                                     .sound(SoundType.WOOD)
                                     .lootFrom(() -> BannerBlock.byColor(color))
-                    ), color.getName() + "_banner"
+                    ), color.getName() + "_banner", ServerConfigs.tweaks.CEILING_BANNERS
             ));
         }
         return map;

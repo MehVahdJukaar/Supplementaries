@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -17,9 +18,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -27,11 +30,16 @@ import java.util.function.Supplier;
 //hacky registered item that handles placing placeable stuff
 public class BlockPlacerItem extends BlockItem {
 
-    public static final List<Pair<Block, Supplier<? extends Item>>> PLACEABLE_ITEMS = new ArrayList<>();
+    public static final Map<Block,Pair<Supplier<? extends Item>, ForgeConfigSpec.BooleanValue>> PLACEABLE_ITEMS = new HashMap<>();
 
     public static BlockPlacerItem getInstance() {
         return ModRegistry.BLOCK_PLACER.get();
     }
+
+    public static void registerPlaceableItem(Block block, Supplier<? extends Item> item, ForgeConfigSpec.BooleanValue config) {
+        PLACEABLE_ITEMS.put(block,Pair.of(item,config));
+    }
+
 
     private FoodProperties mimicFood;
     private Block mimicBlock;
@@ -41,16 +49,12 @@ public class BlockPlacerItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
-    public static void registerPlaceableItem(Block block, Supplier<? extends Item> item) {
-        PLACEABLE_ITEMS.add(Pair.of(block, item));
-    }
-
     @Override
     public void registerBlocks(Map<Block, Item> pBlockToItemMap, Item pItem) {
         super.registerBlocks(pBlockToItemMap, pItem);
-        for (var v : PLACEABLE_ITEMS) {
-            Block b = v.getFirst();
-            Item i = v.getSecond().get();
+        for (var v : PLACEABLE_ITEMS.entrySet()) {
+            Block b = v.getKey();
+            Item i = v.getValue().getFirst().get();
             if (i != null && i != Items.AIR && b != null && b != Blocks.AIR) {
                 ((IPlaceableItem)i).makePlaceable(b);
                 pBlockToItemMap.put(b, i);
@@ -58,8 +62,14 @@ public class BlockPlacerItem extends BlockItem {
         }
     }
 
+    private boolean isEnabled(Block b){
+        var p = PLACEABLE_ITEMS.get(b);
+        return p == null || p.getSecond().get();
+    }
+
     @Nullable
     public BlockState mimicGetPlacementState(BlockPlaceContext pContext, Block toPlace) {
+        if(!this.isEnabled(toPlace))return null;
         this.mimicBlock = toPlace;
         var r = getPlacementState(pContext);
         this.mimicBlock = null;
@@ -67,6 +77,7 @@ public class BlockPlacerItem extends BlockItem {
     }
 
     public InteractionResult mimicUseOn(UseOnContext pContext, Block toPlace, FoodProperties foodProperties) {
+        if(!this.isEnabled(toPlace))return InteractionResult.PASS;
         this.mimicFood = foodProperties;
         this.mimicBlock = toPlace;
         var r = super.useOn(pContext);
@@ -76,6 +87,7 @@ public class BlockPlacerItem extends BlockItem {
     }
 
     public InteractionResult mimicPlace(BlockPlaceContext pContext, Block toPlace, @Nullable SoundType overrideSound) {
+        if(!this.isEnabled(toPlace))return InteractionResult.PASS;
         this.overrideSound = overrideSound;
         this.mimicBlock = toPlace;
         var r = super.place(pContext);

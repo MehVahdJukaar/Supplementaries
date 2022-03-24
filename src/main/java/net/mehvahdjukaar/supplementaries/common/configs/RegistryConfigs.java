@@ -137,13 +137,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
         public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
 
-        //TODO: use fill item category instead and access the tag
-        public static final Lazy<Boolean> HAS_LEAD = Lazy.of(()->hasMod("oreganized","immersiveengineering", "thermal",
-                "mekanism","silents_mechanisms"));
-        public static final Lazy<Boolean> HAS_BRASS = Lazy.of(()->hasMod("create"));
-        public static final Lazy<Boolean> HAS_SILVER = Lazy.of(()->hasMod("oreganized","mysticalworld","immersiveengineering",
-                "bluepower","silents_mechanisms","thermal","iceandfire","silentgems","occultism"));
-
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
 
@@ -155,22 +148,10 @@ public class RegistryConfigs {
             switch (path) {
                 case "vertical_slabs":
                     return CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
-                case RegistryConstants.BOMB_SPIKY_NAME:
-                    return BOMB_ENABLED.get() && HAS_LEAD.get();
-                case RegistryConstants.SILVER_DOOR_NAME:
-                    return SILVER_DOOR_ENABLED.get() && HAS_SILVER.get();
-                case RegistryConstants.SILVER_TRAPDOOR_NAME:
-                    return SILVER_TRAPDOOR_ENABLED.get() && HAS_SILVER.get();
-                case RegistryConstants.LEAD_DOOR_NAME:
-                    return LEAD_DOOR_ENABLED.get() && HAS_SILVER.get();
-                case RegistryConstants.LEAD_TRAPDOOR_NAME:
-                    return LEAD_TRAPDOOR_ENABLED.get() && HAS_SILVER.get();
                 case RegistryConstants.GLOBE_SEPIA_NAME:
                     return GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
                 case RegistryConstants.FLAX_WILD_NAME:
                     return FLAX_ENABLED.get();
-                case RegistryConstants.BRASS_LANTERN_NAME:
-                    return HAS_BRASS.get() && COPPER_LANTERN_ENABLED.get();
                 case RegistryConstants.KEY_NAME:
                     return NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
             }

@@ -163,7 +163,7 @@ dependencies {
 //botania
 
     //updated
-    implementation fg.deobf("curse.maven:quark-243121:3687633")
+    implementation fg.deobf("curse.maven:quark-243121:3708587")
     implementation fg.deobf("curse.maven:autoreglib-250363:3642382")
     implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
     //implementation fg.deobf("curse.maven:map-atlases-forge-519759:3641038")
@@ -177,6 +177,7 @@ dependencies {
     implementation fg.deobf("curse.maven:patchouli-306770:3680301")
     implementation fg.deobf("curse.maven:framedblocks-441647:3672359")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3670163")
+    implementation fg.deobf("curse.maven:balm-531761:3685074")
 
     annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
 }

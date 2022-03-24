@@ -35,7 +35,7 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
-//TODO: fix ceiling banners
+
         //TODO: dynamic soap undye recipe
         /*
         To check if a given tag has a given object:

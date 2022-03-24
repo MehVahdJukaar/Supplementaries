@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
@@ -632,7 +633,8 @@ public class ModRegistry {
     public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME, () -> new BrassLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()).isViewBlocking((a, b, c) -> false)));
 
-    public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME));
+    public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN,
+            getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME),"forge:ingots/brass");
 
     public static final RegistryObject<BlockEntityType<VerticalLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME, () -> BlockEntityType.Builder.of(
             VerticalLanternBlockTile::new, COPPER_LANTERN.get(), BRASS_LANTERN.get()).build(null));
@@ -919,13 +921,15 @@ public class ModRegistry {
                     .strength(4.0F, 5.0F)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final RegistryObject<Item> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR, getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME));
+    public static final RegistryObject<Item> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR,
+            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME),"forge:ingots/silver");
 
     //silver trapdoor
     public static final RegistryObject<Block> SILVER_TRAPDOOR = BLOCKS.register(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
             BlockBehaviour.Properties.copy(SILVER_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final RegistryObject<Item> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME));
+    public static final RegistryObject<Item> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR,
+            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME),"forge:ingots/silver");
 
     //lead door
     public static final RegistryObject<Block> LEAD_DOOR = BLOCKS.register(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
@@ -933,13 +937,15 @@ public class ModRegistry {
                     .strength(5.0f, 6.0f)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final RegistryObject<Item> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR, getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME));
+    public static final RegistryObject<Item> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR,
+            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME),"forge:ingots/lead");
 
     //lead trapdoor
     public static final RegistryObject<Block> LEAD_TRAPDOOR = BLOCKS.register(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
             BlockBehaviour.Properties.copy(LEAD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final RegistryObject<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR, getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME));
+    public static final RegistryObject<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR,
+            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME),"forge:ingots/lead");
 
 
     //netherite doors
@@ -984,11 +990,9 @@ public class ModRegistry {
 
 
     //hanging flower pot
-    public static final RegistryObject<Block> HANGING_FLOWER_POT = regPlaceableItem(HANGING_FLOWER_POT_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.FLOWER_POT);
-
-        return /* CompatHandler.create ? SchematicCannonStuff.makeFlowerPot(p) :*/ new HangingFlowerPotBlock(p);
-    }, () -> Items.FLOWER_POT);
+    public static final RegistryObject<Block> HANGING_FLOWER_POT = regPlaceableItem(HANGING_FLOWER_POT_NAME,
+            () -> new HangingFlowerPotBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)),
+            () -> Items.FLOWER_POT, ServerConfigs.tweaks.HANGING_POT_PLACEMENT);
     public static final RegistryObject<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = TILES.register(HANGING_FLOWER_POT_NAME, () -> BlockEntityType.Builder.of(
             HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()).build(null));
 
@@ -1104,19 +1108,19 @@ public class ModRegistry {
     public static final RegistryObject<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD), 60), () -> Items.STICK);
+                    .sound(SoundType.WOOD), 60), () -> Items.STICK, ServerConfigs.tweaks.PLACEABLE_STICKS);
     public static final RegistryObject<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick");
+                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", ServerConfigs.tweaks.PLACEABLE_STICKS);
     public static final RegistryObject<Block> PRISMARINE_ROD_BLOCK = regPlaceableItem("prismarine_rod", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod");
+                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", ServerConfigs.tweaks.PLACEABLE_STICKS);
     public static final RegistryObject<Block> PROPELPLANT_ROD_BLOCK = regPlaceableItem("propelplant_cane", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane");
+                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", ServerConfigs.tweaks.PLACEABLE_STICKS);
 
     //blaze rod
     //TODO: blaze sound
@@ -1125,7 +1129,8 @@ public class ModRegistry {
                     .strength(0.25F, 0F)
                     .lightLevel(state -> 12)
                     .emissiveRendering((p, w, s) -> true)
-                    .sound(SoundType.GILDED_BLACKSTONE)), () -> Items.BLAZE_ROD
+                    .sound(SoundType.GILDED_BLACKSTONE)),
+            () -> Items.BLAZE_ROD, ServerConfigs.tweaks.PLACEABLE_RODS
     );
 
     //daub
@@ -1253,17 +1258,18 @@ public class ModRegistry {
 
     //gunpowder block
     public static final RegistryObject<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)), () -> Items.GUNPOWDER);
+            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)),
+            () -> Items.GUNPOWDER, ServerConfigs.tweaks.PLACEABLE_GUNPOWDER);
 
     //placeable book
     public static final RegistryObject<Block> BOOK_PILE = regPlaceableItem(BOOK_PILE_NAME, () -> new BookPileBlock(
                     BlockBehaviour.Properties.of(Material.DECORATION).strength(0.5F).sound(SoundType.WOOD)),
-            () -> Items.ENCHANTED_BOOK);
+            () -> Items.ENCHANTED_BOOK, ServerConfigs.tweaks.PLACEABLE_BOOKS);
 
     //placeable book
     public static final RegistryObject<Block> BOOK_PILE_H = regPlaceableItem(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
                     BlockBehaviour.Properties.copy(BOOK_PILE.get())),
-            () -> Items.BOOK);
+            () -> Items.BOOK, ServerConfigs.tweaks.PLACEABLE_BOOKS);
 
     public static final RegistryObject<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = TILES.register(BOOK_PILE_NAME, () -> BlockEntityType.Builder.of(
             BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()).build(null));
