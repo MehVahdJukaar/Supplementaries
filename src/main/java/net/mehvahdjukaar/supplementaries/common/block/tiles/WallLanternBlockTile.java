@@ -100,9 +100,11 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
             lit = false;
         }
 
-        if(this.level!=null) {
-            this.attachmentOffset = (state.getShape(this.level, this.worldPosition).bounds().maxY - (9 / 16d));
-
+        if (this.level != null && !this.mimic.isAir()) {
+            var shape = state.getShape(this.level, this.worldPosition);
+            if (!shape.isEmpty()) {
+                this.attachmentOffset = (shape.bounds().maxY - (9 / 16d));
+            }
             if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
                 this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT, lit)
                         .setValue(WallLanternBlock.LIGHT_LEVEL, light), 4 | 16);
