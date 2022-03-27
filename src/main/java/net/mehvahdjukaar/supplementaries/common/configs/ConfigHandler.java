@@ -134,6 +134,7 @@ public class ConfigHandler {
 
     //called on client. client -> server -..-> all clients
     public static void clientRequestServerConfigReload() {
+        if(Minecraft.getInstance().getConnection()!=null)
         NetworkHandler.INSTANCE.sendToServer(new RequestConfigReloadPacket());
     }
 

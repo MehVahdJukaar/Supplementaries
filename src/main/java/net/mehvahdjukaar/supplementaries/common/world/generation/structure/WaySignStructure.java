@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation.structure;
 
-import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -62,14 +63,14 @@ public class WaySignStructure extends StructureFeature<JigsawConfiguration> {
 
         // Return the pieces generator that is now set up so that the game runs it when it needs to create the layout of structure pieces.
         return JigsawPlacement.addPieces(
-                        context, // Used for JigsawPlacement to get all the proper behaviors done.
-                        PoolElementStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
-                        blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
-                        false,  // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
-                        // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
-                        false // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
-                        // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                );
+                context, // Used for JigsawPlacement to get all the proper behaviors done.
+                PoolElementStructurePiece::new, // Needed in order to create a list of jigsaw pieces when making the structure's layout.
+                blockpos, // Position of the structure. Y value is ignored if last parameter is set to true.
+                false,  // Special boundary adjustments for villages. It's... hard to explain. Keep this false and make your pieces not be partially intersecting.
+                // Either not intersecting or fully contained will make children pieces spawn just fine. It's easier that way.
+                false // Place at heightmap (top land). Set this to false for structure to be place at the passed in blockpos's Y value instead.
+                // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
+        );
     }
 
     /**
@@ -139,6 +140,18 @@ public class WaySignStructure extends StructureFeature<JigsawConfiguration> {
         ChunkPos chunkPos = context.chunkPos();
         ChunkGenerator generator = context.chunkGenerator();
         LevelHeightAccessor heightLimitView = context.heightAccessor();
+
+        //if it can generate villages
+
+        boolean hasVillages = generator.possibleStructureSets().anyMatch(f -> {
+                    for (var s : f.value().structures()) {
+                        if (s.structure().is(ModTags.WAY_SIGN_DESTINATIONS)) return true;
+                    }
+                    return false;
+                }
+        );
+
+        if(!hasVillages)return false;
 
         BlockPos blockPos = chunkPos.getWorldPosition();
 

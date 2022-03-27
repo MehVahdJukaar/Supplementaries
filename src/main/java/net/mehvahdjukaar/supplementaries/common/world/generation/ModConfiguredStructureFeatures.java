@@ -33,7 +33,7 @@ public class ModConfiguredStructureFeatures {
     public static final Holder<ConfiguredStructureFeature<?, ?>> CONFIGURED_WAY_SIGN_STRUCTURE =
             register(CONFIGURED_WAY_SIGN_KEY, ModStructures.WAY_SIGN.get()
                     .configured(new JigsawConfiguration(WAY_SIGN_START, 4), //max depth
-                            ModTags.HAS_WAY_SIGNS));
+                            ModTags.HAS_WAY_SIGNS, true)); //transform surrounding land
 
 
     private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> Holder<ConfiguredStructureFeature<?, ?>> register(
