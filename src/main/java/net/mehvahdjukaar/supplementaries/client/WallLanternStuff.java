@@ -49,8 +49,8 @@ public class WallLanternStuff {
             try {
                 ResourceLocation reg = i.getRegistryName();
                 String namespace = (reg.getNamespace().equals("minecraft")||reg.getNamespace().equals("supplementaries")) ? "" : reg.getNamespace() + "/";
-                String s = "wall_lanterns/" + namespace + reg.getPath();
-                ResourceLocation fullPath = RPUtils.resPath(Supplementaries.res(s), RPUtils.ResType.BLOCK_MODELS);
+                String s = "textures/blocks/wall_lanterns/" + namespace + reg.getPath() +".json";
+                ResourceLocation fullPath = Supplementaries.res(s);
                 var resource = manager.getResource(fullPath);
                 JsonElement bsElement = RPUtils.deserializeJson(resource.getInputStream());
 

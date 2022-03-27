@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -199,7 +200,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
         }
         level.setBlock(pos, getStateForAge(newAge), 2);
-
     }
 
     @Override
@@ -220,7 +220,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     @Override
     public boolean isMaxAge(BlockState pState) {
-        if(pState.getValue(HALF) == DoubleBlockHalf.UPPER) return false;
         return super.isMaxAge(pState);
     }
 
