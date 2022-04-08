@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common;
 import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -136,7 +136,7 @@ public class Textures {
             for (var s : Materials.SIGN_POSTS_MATERIALS.values()) {
                 event.addSprite(s.texture());
             }
-            for (var w : WallLanternStuff.SPECIAL_TEXTURES.values()) {
+            for (var w : WallLanternTexturesRegistry.SPECIAL_TEXTURES.values()) {
                 event.addSprite(w);
             }
         } else if (loc.equals(Sheets.BANNER_SHEET)) {

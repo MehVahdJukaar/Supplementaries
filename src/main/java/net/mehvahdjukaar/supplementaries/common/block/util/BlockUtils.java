@@ -4,9 +4,9 @@ import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.utils.VectorUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -80,7 +80,12 @@ public class BlockUtils {
     }
 
     public static Optional<Direction> tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
-        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit);
+        var opt = tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit);
+        //try again using up direction if previously failed. Doing this cause many people dont even realize you have to click on the axis you want to rotate
+        if (opt.isEmpty()) {
+            opt = tryRotatingBlock(Direction.UP, ccw, targetPos, level, level.getBlockState(targetPos), hit);
+        }
+        return opt;
     }
 
     // can be called on both sides
@@ -148,8 +153,7 @@ public class BlockUtils {
                 }
             }
             return Optional.of(rotated);
-        }
-        else if(state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)){
+        } else if (state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
             return Optional.of(rotateFaceBlockHorizontal(dir, ccw, state));
         }
         // 6 dir blocks blocks
@@ -272,7 +276,7 @@ public class BlockUtils {
                 return Optional.empty();
             }
         }
-        if (b instanceof BedBlock && face.getAxis() == Direction.Axis.Y) {
+        if (b instanceof BedBlock) {
             BlockState newBed = state.rotate(level, pos, rot);
             BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
             BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
@@ -284,7 +288,7 @@ public class BlockUtils {
             }
             return Optional.empty();
         }
-        if (b instanceof ChestBlock && face.getAxis() == Direction.Axis.Y) {
+        if (b instanceof ChestBlock) {
             if (state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
                 BlockState newChest = state.rotate(level, pos, rot);
                 BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
@@ -337,7 +341,7 @@ public class BlockUtils {
             case CEILING -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
                     .setValue(BlockStateProperties.HORIZONTAL_FACING, !ccw ? dir.getClockWise() : dir.getCounterClockWise());
             case WALL -> {
-                ccw = ccw^(dir.getAxisDirection() != Direction.AxisDirection.POSITIVE);
+                ccw = ccw ^ (dir.getAxisDirection() != Direction.AxisDirection.POSITIVE);
                 yield original.setValue(BlockStateProperties.ATTACH_FACE,
                         (facingDir.getAxisDirection() == Direction.AxisDirection.POSITIVE) ^ ccw ? AttachFace.CEILING : AttachFace.FLOOR);
             }

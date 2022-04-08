@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -89,6 +90,7 @@ public class ClientConfigs {
     public static class general {
         public static ForgeConfigSpec.BooleanValue CONFIG_BUTTON;
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
+        public static ForgeConfigSpec.BooleanValue PLACEABLE_TOOLTIP;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
         public static ForgeConfigSpec.BooleanValue RESOURCE_PACK_SUPPORT;
 
@@ -103,6 +105,8 @@ public class ClientConfigs {
                     .define("config_button", CompatHandler.configured);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints", true);
+            PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")
+                    .define("placeable_tooltips", true);
             ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
                             "Set to false if you have manually changed the mod jar name")
                     .define("anti_reposting_warning", true);
@@ -252,8 +256,7 @@ public class ClientConfigs {
             builder.pop();
             //TODO: add more(hourGlass, sawying blocks...)
 
-
-            builder.push("captured_mobs");
+            builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
             TICKLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
@@ -312,19 +315,12 @@ public class ClientConfigs {
     public static class particle {
         private static ForgeConfigSpec.ConfigValue<String> TURN_INITIAL_COLOR;
         private static ForgeConfigSpec.ConfigValue<String> TURN_FADE_COLOR;
-        public static ForgeConfigSpec.IntValue FIREFLY_PAR_MAXAGE;
-        public static ForgeConfigSpec.DoubleValue FIREFLY_PAR_SCALE;
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Particle parameters")
                     .push("particles");
-            builder.comment("Firefly jar particle")
-                    .push("firefly_glow");
-            FIREFLY_PAR_SCALE = builder.comment("Scale")
-                    .defineInRange("scale", 0.075, 0, 1);
-            FIREFLY_PAR_MAXAGE = builder.comment("Maximum age in ticks. Note that actual max age with be this + a random number between 0 and 10")
-                    .defineInRange("max_age", 40, 1, 256);
-            builder.pop();
+
 
             builder.comment("Rotation particle")
                     .push("turn_particle");
@@ -341,25 +337,12 @@ public class ClientConfigs {
     }
 
     public static class entity {
-        public static ForgeConfigSpec.DoubleValue FIREFLY_INTENSITY;
-        public static ForgeConfigSpec.DoubleValue FIREFLY_EXPONENT;
+
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Entities parameters")
                     .push("entities");
-            builder.push("firefly");
-            FIREFLY_INTENSITY = builder.comment("""
-                            Firefly glow animation uses following equation:
-                            scale = {max[(1-<intensity>)*sin(time*2pi/<period>)+<intensity>, 0]}^<exponent>
-                            Where:
-                             - scale = entity transparency & entity scale
-                             - period = period of the animation. This variable is located in common configs<intensity> affects how long the pulse last, not how frequently it occurs.
-                            Use 0.5 for normal sin wave. Higher and it won't turn off completely
-                            """)
-                    .defineInRange("intensity", 0.2, -100, 1);
-            FIREFLY_EXPONENT = builder.comment("Affects the shape of the wave. Stay under 0.5 for sharper transitions")
-                    .defineInRange("exponent", 0.5, 0, 10);
-            builder.pop();
+
 
             builder.pop();
         }
@@ -373,10 +356,7 @@ public class ClientConfigs {
         public static boolean COLORED_BREWING_STAND;
         public static boolean CLOCK_CLICK;
         public static boolean TOOLTIP_HINTS;
-        public static int FIREFLY_PAR_MAXAGE;
-        public static double FIREFLY_PAR_SCALE;
-        public static double FIREFLY_INTENSITY;
-        public static double FIREFLY_EXPONENT;
+        public static boolean PLACEABLE_TOOLTIPS;
 
         public static boolean PEDESTAL_SPIN;
         public static double PEDESTAL_SPEED;
@@ -418,13 +398,9 @@ public class ClientConfigs {
             BOOK_GLINT = tweaks.BOOK_GLINT.get();
             //general
             TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
+            PLACEABLE_TOOLTIPS = general.PLACEABLE_TOOLTIP.get();
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();
             //particles
-            FIREFLY_PAR_MAXAGE = particle.FIREFLY_PAR_MAXAGE.get();
-            FIREFLY_PAR_SCALE = particle.FIREFLY_PAR_SCALE.get();
-            //entities
-            FIREFLY_INTENSITY = entity.FIREFLY_INTENSITY.get();
-            FIREFLY_EXPONENT = entity.FIREFLY_EXPONENT.get();
             //blocks
             BUBBLE_BLOCK_WOBBLE = (float) (double) block.BUBBLE_BLOCK_WOBBLE.get() / 10f;
             BUBBLE_BLOCK_GROW_SPEED = (float) (double) block.BUBBLE_BLOCK_GROW_SPEED.get();

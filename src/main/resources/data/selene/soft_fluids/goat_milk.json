@@ -1,0 +1,15 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "betteranimalsplus:goatmilk"
+      ],
+      "empty": "minecraft:bucket",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "selene:blocks/milk_liquid",
+  "id": "betteranimalsplus:goat_milk",
+  "still_texture": "selene:blocks/milk_liquid",
+  "translation_key": "item.betteranimalsplus.goatmilk"
+}

@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
-public class CCStuff {
+public class CCPlugin {
 
     public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile tile) {
         return LazyOptional.of(() -> new SpeakerPeripheral(tile));

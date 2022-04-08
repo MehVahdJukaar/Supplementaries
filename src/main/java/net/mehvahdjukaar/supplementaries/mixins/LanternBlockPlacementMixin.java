@@ -15,7 +15,7 @@ public abstract class LanternBlockPlacementMixin {
 
     @Inject(method = {"canSurvive"}, at = {@At("HEAD")}, cancellable = true)
     private void isValidPosition(BlockState state, LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
-        if (state.getValue(LanternBlock.HANGING) && LightableLanternBlock.canSurviveCeiling(state, pos, worldIn)) {
+        if (state.getValue(LanternBlock.HANGING) && LightableLanternBlock.canSurviveCeilingAndMaybeFall(state, pos, worldIn)) {
             callbackInfoReturnable.setReturnValue(true);
         }
     }

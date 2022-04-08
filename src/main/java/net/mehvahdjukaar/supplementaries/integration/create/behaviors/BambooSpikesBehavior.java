@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
-/*
+
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
-public class BambooSpikesBehavior extends MovementBehaviour {
+public class BambooSpikesBehavior implements MovementBehaviour {
 
     public boolean isSameDir(MovementContext context) {
         return VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(BambooSpikesBlock.FACING));
@@ -145,4 +145,4 @@ public class BambooSpikesBehavior extends MovementBehaviour {
         return CommonUtil.SPIKE_DAMAGE;
     }
 
-}*/
+}

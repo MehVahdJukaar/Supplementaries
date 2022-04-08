@@ -6,6 +6,7 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
+import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -189,7 +190,7 @@ public class JarItem extends AbstractMobContainerItem {
             if (tag.contains("FluidHolder")) {
                 CompoundTag com = tag.getCompound("FluidHolder");
                 SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
-                if (s == ModSoftFluids.DIRT) return Rarity.RARE;
+                if (s == ModSoftFluids.DIRT.get()) return Rarity.RARE;
             }
         }
         return super.getRarity(stack);
@@ -236,8 +237,9 @@ public class JarItem extends AbstractMobContainerItem {
                 DUMMY_TILE.load(tag);
                 SoftFluidHolder fh = DUMMY_TILE.getSoftFluidHolder();
                 SoftFluid sf = fh.getFluid();
-                Item food = sf.getFoodItem();
-                return food.getUseDuration(food.getDefaultInstance()) / sf.getFoodDivider();
+                var provider = sf.getFoodProvider();
+                Item food = provider.getFood();
+                return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
             }
         }
         return 0;
@@ -259,8 +261,8 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
-            //InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
-            //if (r.consumesAction()) return r;
+            InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
+            if (r.consumesAction()) return r;
         }
         return super.useOn(context);
     }

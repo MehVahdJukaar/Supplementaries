@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.botania.client.BotaniaCompatClient;
 import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatClient;
+import net.mehvahdjukaar.supplementaries.integration.flywheel.FlywheelPlugin;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,7 +31,7 @@ public class CompatHandlerClient {
         }
 
         if (CompatHandler.flywheel) {
-            //   FlywheelPlugin.registerInstances();
+              FlywheelPlugin.registerInstances();
         }
     }
 

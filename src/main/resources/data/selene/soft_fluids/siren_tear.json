@@ -1,0 +1,16 @@
+{
+  "color": "#a4e0fc",
+  "containers": [
+    {
+      "filled": [
+        "iceandfire:siren_tear"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "selene:blocks/milk_liquid",
+  "id": "iceandfire:siren_tear",
+  "still_texture": "selene:blocks/milk_liquid",
+  "translation_key": "item.iceandfire.siren_tear"
+}

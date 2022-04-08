@@ -26,6 +26,7 @@ public class ParticleUtil {
                                                   UniformInt uniformInt, float maxSpeed) {
 
         Random random = level.random;
+        float offset = 0.1f;
 
         //north
         int i = uniformInt.sample(random);
@@ -36,7 +37,7 @@ public class ParticleUtil {
                 double dx = maxSpeed * level.random.nextDouble();
                 double dy = maxSpeed * level.random.nextDouble();
                 double dz = 0;
-                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.minZ, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.minZ-offset, dx, dy, dz);
             }
         }
         //south
@@ -48,7 +49,7 @@ public class ParticleUtil {
                 double dx = maxSpeed * level.random.nextDouble();
                 double dy = maxSpeed * level.random.nextDouble();
                 double dz = 0;
-                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.maxZ, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + y, pos.getZ() + bb.maxZ+offset, dx, dy, dz);
             }
         }
         //west
@@ -60,7 +61,7 @@ public class ParticleUtil {
                 double dx = 0;
                 double dy = maxSpeed * level.random.nextDouble();
                 double dz = maxSpeed * level.random.nextDouble();
-                level.addParticle(particleOptions, pos.getX() + bb.minX, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + bb.minX-offset, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
             }
         }
         //east
@@ -72,7 +73,7 @@ public class ParticleUtil {
                 double dx = 0;
                 double dy = maxSpeed * level.random.nextDouble();
                 double dz = maxSpeed * level.random.nextDouble();
-                level.addParticle(particleOptions, pos.getX() + bb.maxX, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + bb.maxX+offset, pos.getY() + y, pos.getZ() + z, dx, dy, dz);
             }
         }
         //down
@@ -84,7 +85,7 @@ public class ParticleUtil {
                 double dx = maxSpeed * level.random.nextDouble();
                 double dy = 0;
                 double dz = maxSpeed * level.random.nextDouble();
-                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.minY, pos.getZ() + z, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.minY-offset, pos.getZ() + z, dx, dy, dz);
             }
         }
         //up
@@ -96,7 +97,7 @@ public class ParticleUtil {
                 double dx = maxSpeed * level.random.nextDouble();
                 double dy = 0;
                 double dz = maxSpeed * level.random.nextDouble();
-                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.maxY, pos.getZ() + z, dx, dy, dz);
+                level.addParticle(particleOptions, pos.getX() + x, pos.getY() + bb.maxY+offset, pos.getZ() + z, dx, dy, dz);
             }
         }
     }

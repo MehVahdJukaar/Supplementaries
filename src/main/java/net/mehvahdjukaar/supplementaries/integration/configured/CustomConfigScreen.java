@@ -54,7 +54,6 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("items", Items.AMETHYST_SHARD);
         addIcon("spawns", Items.TURTLE_EGG);
         addIcon("tweaks", ModRegistry.WRENCH.get());
-
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
@@ -128,7 +127,7 @@ public class CustomConfigScreen extends ConfigScreen {
     }
 
     private static void addIcon(String s, ItemLike i) {
-        ICONS.put(s, new ItemStack(i));
+        ICONS.put(s, i.asItem().getDefaultInstance());
     }
 
     @Nullable

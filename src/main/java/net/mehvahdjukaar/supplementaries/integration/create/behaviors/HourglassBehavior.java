@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
 
-/*
+
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.UnaryOperator;
 
-public class HourglassBehavior extends MovementBehaviour {
+public class HourglassBehavior implements MovementBehaviour {
 
     @Override
     public void tick(MovementContext context) {
@@ -91,4 +91,3 @@ public class HourglassBehavior extends MovementBehaviour {
     }
 
 }
-*/

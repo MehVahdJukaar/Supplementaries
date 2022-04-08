@@ -60,9 +60,6 @@ public class ModSetup {
                 CapturedMobsHelper.refresh();
                 setupStage++;
 
-                ModSoftFluids.init();
-                setupStage++;
-
                 NetworkHandler.registerMessages();
                 setupStage++;
 

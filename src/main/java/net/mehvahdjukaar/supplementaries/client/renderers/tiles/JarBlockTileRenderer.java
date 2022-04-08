@@ -109,7 +109,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
-                SoftFluid s = SoftFluidRegistry.WATER;
+                SoftFluid s = SoftFluidRegistry.WATER.get();
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
                 matrixStackIn.popPose();

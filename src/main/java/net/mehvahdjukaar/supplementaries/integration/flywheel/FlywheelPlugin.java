@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-/*
+
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import net.mehvahdjukaar.supplementaries.integration.flywheel.instances.BellowsInstance;
@@ -13,8 +13,4 @@ public class FlywheelPlugin {
         InstancedRenderRegistry.configure(ModRegistry.BELLOWS_TILE.get()).alwaysSkipRender().factory(BellowsInstance::new).apply();
     }
 
-    public static boolean areShadersOn(){
-        return OptifineHandler.usingShaders();
-    }
 }
-*/

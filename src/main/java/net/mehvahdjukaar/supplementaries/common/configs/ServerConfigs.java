@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.configs;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -145,6 +146,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue WALL_LANTERN_HIGH_PRIORITY;
         public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
+        public static ForgeConfigSpec.EnumValue<LightableLanternBlock.FallMode> FALLING_LANTERNS;
         public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
         public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_STICKS;
@@ -210,7 +212,7 @@ public class ServerConfigs {
                     .define("enabled", true);
             builder.pop();
             //wall lantern
-            builder.push("wall_lantern");
+            builder.push("lantern_tweaks");
             WALL_LANTERN_PLACEMENT = builder.comment("Allow wall lanterns placement")
                     .define("enabled", true);
 
@@ -220,6 +222,9 @@ public class ServerConfigs {
             List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct","enigmaticlegacy");
             WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist, STRING_CHECK);
+            FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
+                            "Additionally if they fall from high enough they will break creating a fire where they land")
+                    .defineEnum("fallin_lanterns",LightableLanternBlock.FallMode.ON);
             builder.pop();
             //bells
             builder.push("bells_tweaks");
@@ -525,7 +530,7 @@ public class ServerConfigs {
             CAGE_PERSISTENT_MOBS = builder.comment("Makes it so all (hostile) mobs captured by cages and jars will be set to persistent so they won't despawn when released")
                     .define("persistent_mobs", false);
             CAGE_HEALTH_THRESHOLD = builder.comment("Health percentage under which mobs will be allowed to be captured by cages and jars. Leave at 100 to accept any health level")
-                            .defineInRange("health_threshold", 100, 1, 100);
+                    .defineInRange("health_threshold", 100, 1, 100);
             builder.pop();
 
             builder.push("goblet");
@@ -730,6 +735,7 @@ public class ServerConfigs {
     }
 
 
+    //TODO: yeet these
     //maybe not need but hey
     public static class cached {
 
@@ -762,6 +768,7 @@ public class ServerConfigs {
         public static boolean WALL_LANTERN_PLACEMENT;
         public static boolean WALL_LANTERN_HIGH_PRIORITY;
         public static List<? extends String> WALL_LANTERN_BLACKLIST;
+        public static LightableLanternBlock.FallMode FALLING_LANTERNS;
         public static boolean BELL_CHAIN;
         public static int BELL_CHAIN_LENGTH;
         public static boolean PLACEABLE_STICKS;
@@ -862,8 +869,9 @@ public class ServerConfigs {
             HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
             WALL_LANTERN_HIGH_PRIORITY = tweaks.WALL_LANTERN_HIGH_PRIORITY.get();
-            THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
             WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
+            FALLING_LANTERNS = tweaks.FALLING_LANTERNS.get();
+            THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
             BELL_CHAIN = tweaks.BELL_CHAIN.get();
             BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
             MAP_MARKERS = tweaks.MAP_MARKERS.get();

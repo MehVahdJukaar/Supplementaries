@@ -12,7 +12,7 @@ import net.mehvahdjukaar.selene.textures.Palette;
 import net.mehvahdjukaar.selene.textures.Respriter;
 import net.mehvahdjukaar.selene.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -100,7 +100,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                     try {
                         String logTexture;
                         try {
-                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, Objects.requireNonNull(wood.logBlock), s -> !s.contains("top"));
+                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.logBlock, s -> !s.contains("top"));
                         } catch (Exception e1) {
                             logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.plankBlock, s -> true);
                             getLogger().error("Could not properly generate Hanging Sign model for {}. Falling back to planks texture : {}", v, e1);
@@ -156,7 +156,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
     @Override
     public void regenerateTextures(ResourceManager manager) {
 
-        WallLanternStuff.onResourceReload(manager);
+        WallLanternTexturesRegistry.onResourceReload(manager);
 
         //hanging signs block textures
         try (NativeImage template = readImage(manager, Supplementaries.res(
@@ -231,7 +231,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                         }
 
                     } catch (Exception ex) {
-                        getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
+                        //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
                     }
                 }
                 //if it failed use plank one
@@ -283,7 +283,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                         }
 
                     } catch (Exception ex) {
-                        getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
+                        //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
                     }
                 }
                 //if it failed use plank one

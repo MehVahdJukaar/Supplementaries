@@ -1,0 +1,16 @@
+{
+  "color": "#ffa100",
+  "containers": [
+    {
+      "filled": [
+        "minecraft:magma_cream"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "selene:blocks/magma_flow",
+  "id": "minecraft:magma_cream",
+  "still_texture": "selene:blocks/magma_still",
+  "translation_key": "item.minecraft.magma_cream"
+}

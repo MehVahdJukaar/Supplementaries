@@ -241,7 +241,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ? HangingSignBlockTile::clientTick : null);
+        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ?HangingSignBlockTile::clientTick : null);
     }
 
     @Override
@@ -261,8 +261,9 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         super.entityInside(state, world, pos, entity);
         if (world.getBlockEntity(pos) instanceof SwayingBlockTile tile) {
-            tile.hitByEntity(entity, state);
+            tile.hitByEntity(entity, state, pos);
         }
     }
+
 }
 

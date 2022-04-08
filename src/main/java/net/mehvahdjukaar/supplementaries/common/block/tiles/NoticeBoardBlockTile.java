@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
+import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
@@ -127,15 +127,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.text = listTag.getString(this.pageNumber);
             }
         } else if(CompatHandler.computercraft){
-            if(CCStuff.checkForPrintedBook(item)){
+            if(CCPlugin.checkForPrintedBook(item)){
                 CompoundTag com = itemstack.getTag();
                 if(com != null) {
-                    int pages = CCStuff.getPages(itemstack);
+                    int pages = CCPlugin.getPages(itemstack);
 
                     if (this.pageNumber >= pages) {
                         this.pageNumber = this.pageNumber % pages;
                     }
-                    String[] text = CCStuff.getText(itemstack);
+                    String[] text = CCPlugin.getText(itemstack);
                     StringBuilder combined = new StringBuilder();
                     for(int i = 0; i< 21; i++){
                         int ind = this.pageNumber*21 + i;
@@ -177,7 +177,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public static boolean isPageItem(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCStuff.checkForPrintedBook(item));
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCPlugin.checkForPrintedBook(item));
     }
 
     @Override

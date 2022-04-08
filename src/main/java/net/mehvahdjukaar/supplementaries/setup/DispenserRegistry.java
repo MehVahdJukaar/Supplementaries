@@ -62,7 +62,6 @@ public class DispenserRegistry {
         boolean jar = RegistryConfigs.reg.JAR_ENABLED.get();
         if (jar) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_TINTED.get());
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
         }
 
@@ -324,7 +323,7 @@ public class DispenserRegistry {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if (state.getBlock() instanceof PancakeBlock block) {
-                if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY, null, 1)) {
+                if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY.get(), null, 1)) {
                     return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
                 }
                 return InteractionResultHolder.fail(stack);

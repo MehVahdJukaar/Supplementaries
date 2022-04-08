@@ -459,7 +459,7 @@ public class ItemsOverrideHandler {
 
     private static class XpBottlingBehavior extends ItemUseOnBlockOverride {
 
-        private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
+        private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
         @Override
         public boolean isEnabled() {

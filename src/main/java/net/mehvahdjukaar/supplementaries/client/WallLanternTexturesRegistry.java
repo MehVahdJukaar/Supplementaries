@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class WallLanternStuff {
+public class WallLanternTexturesRegistry {
 
     private static Set<Block> POSSIBLE_LANTERNS = null;
 

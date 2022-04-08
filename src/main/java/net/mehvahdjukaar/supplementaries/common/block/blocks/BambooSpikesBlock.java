@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.selene.api.ISoftFluidConsumer;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.fluids.ISoftFluidConsumer;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
@@ -228,7 +228,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
         if (!tippedEnabled.get()) return false;
-        if (f == SoftFluidRegistry.POTION && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
+        if (f == SoftFluidRegistry.POTION.get() && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
             if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
                 if (te.tryApplyPotion(PotionUtils.getPotion(nbt))) {
                     world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
@@ -242,10 +242,10 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
-        if(state.getValue(TIPPED)){
-            if(!level.isClientSide){
+        if (state.getValue(TIPPED)) {
+            if (!level.isClientSide) {
                 var te = level.getBlockEntity(pos);
-                if(te != null) te.setRemoved();
+                if (te != null) te.setRemoved();
                 level.setBlock(pos, state.setValue(TIPPED, false), 3);
             }
             return true;

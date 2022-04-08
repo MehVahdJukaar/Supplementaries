@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -231,7 +232,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         super.entityInside(state, world, pos, entity);
         if (world.getBlockEntity(pos) instanceof SwayingBlockTile tile) {
-            tile.hitByEntity(entity, state);
+            tile.hitByEntity(entity, state, pos);
         }
     }
 
@@ -258,4 +259,6 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
             tile.setHeldBlock(lantern);
         }
     }
+
+
 }

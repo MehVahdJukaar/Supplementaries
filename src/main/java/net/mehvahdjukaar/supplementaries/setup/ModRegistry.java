@@ -18,7 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
+import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
@@ -149,7 +150,6 @@ public class ModRegistry {
             new StasisEnchantment(Enchantment.Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
 
     //particles
-    //public static final RegistryObject<SimpleParticleType> FIREFLY_GLOW = regParticle("firefly_glow");
     public static final RegistryObject<SimpleParticleType> SPEAKER_SOUND = regParticle("speaker_sound");
     public static final RegistryObject<SimpleParticleType> GREEN_FLAME = regParticle("green_flame");
     public static final RegistryObject<SimpleParticleType> DRIPPING_LIQUID = regParticle("dripping_liquid");
@@ -467,21 +467,11 @@ public class ModRegistry {
                     .noOcclusion()
     ));
 
-    public static final RegistryObject<Block> JAR_TINTED = BLOCKS.register(JAR_TINTED_NAME, () -> new JarBlock(
-            BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.COLOR_BLACK)
-                    .strength(1f, 1f)
-                    .sound(SoundType.GLASS)
-                    .noOcclusion()
-    ));
-
     public static final RegistryObject<BlockEntityType<JarBlockTile>> JAR_TILE = TILES.register(JAR_NAME, () -> BlockEntityType.Builder.of(
-            JarBlockTile::new, JAR.get(), JAR_TINTED.get()).build(null));
+            JarBlockTile::new, JAR.get()).build(null));
 
     public static final RegistryObject<Item> JAR_ITEM = ITEMS.register(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
             getTab(CreativeModeTab.TAB_DECORATIONS, JAR_NAME)).stacksTo(16)));
-
-    public static final RegistryObject<Item> JAR_ITEM_TINTED = ITEMS.register(JAR_TINTED_NAME, () -> new TintedJarItem(JAR_TINTED.get(), new Item.Properties().tab(
-            getTab(CreativeModeTab.TAB_DECORATIONS, JAR_TINTED_NAME)).stacksTo(16)));
 
 
     //sack
@@ -630,26 +620,43 @@ public class ModRegistry {
     public static final RegistryObject<Item> COPPER_LANTERN_ITEM = regBlockItem(COPPER_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, COPPER_LANTERN_NAME));
 
     //brass lantern
-    public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME, () -> new BrassLanternBlock(
-            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()).isViewBlocking((a, b, c) -> false)));
+    public static final RegistryObject<Block> BRASS_LANTERN = BLOCKS.register(BRASS_LANTERN_NAME, () -> new LightableLanternBlock(
+            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
+            Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
+                    Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),
+                    Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D))));
 
     public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN,
             getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME),"forge:ingots/brass");
 
-    public static final RegistryObject<BlockEntityType<VerticalLanternBlockTile>> COPPER_LANTERN_TILE = TILES.register(COPPER_LANTERN_NAME, () -> BlockEntityType.Builder.of(
-            VerticalLanternBlockTile::new, COPPER_LANTERN.get(), BRASS_LANTERN.get()).build(null));
-
     //crimson lantern
-    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
+    public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME, () -> new LightableLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
                     .strength(1.5f)
                     .sound(SoundType.WOOL)
                     .lightLevel((state) -> 15)
-                    .noOcclusion()
+                    .noOcclusion(),
+            Shapes.or(Block.box(4.0D, 1.0D, 4.0D, 12.0D, 8.0D, 12.0D),
+                    Block.box(6.0D, 0.0D, 6.0D, 10.0D, 9.0D, 10.0D))
     ));
-    public static final RegistryObject<BlockEntityType<VerticalLanternBlockTile>> CRIMSON_LANTERN_TILE = TILES.register(CRIMSON_LANTERN_NAME, () -> BlockEntityType.Builder.of(
-            VerticalLanternBlockTile::new, CRIMSON_LANTERN.get()).build(null));
     public static final RegistryObject<Item> CRIMSON_LANTERN_ITEM = regBlockItem(CRIMSON_LANTERN, getTab(CreativeModeTab.TAB_DECORATIONS, CRIMSON_LANTERN_NAME));
+
+    //silver lantern
+    public static final RegistryObject<Block> SILVER_LANTERN = BLOCKS.register(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
+            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
+            Block.box(4.0D, 0.0D, 4.0D, 12.0D, 10.0D, 12.0D)));
+
+    public static final RegistryObject<Item> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN,
+            getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME),"forge:ingots/silver");
+
+    //lead lantern
+    public static final RegistryObject<Block> LEAD_LANTERN = BLOCKS.register(LEAD_LANTERN_NAME, () -> new LightableLanternBlock(
+                    BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
+            Shapes.or(Block.box(4.0D, 4.0D, 4.0D, 12.0D, 7.0D, 12.0D),
+                    Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D))));
+
+    public static final RegistryObject<Item> LEAD_LANTERN_ITEM = regBlockItem(LEAD_LANTERN,
+            getTab(CreativeModeTab.TAB_DECORATIONS, LEAD_LANTERN_NAME),"forge:ingots/lead");
 
 
     //rope
@@ -792,7 +799,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
-        return CompatHandler.computercraft ? CCStuff.makeSpeaker(p) : new SpeakerBlock(p);
+        return CompatHandler.computercraft ? CCPlugin.makeSpeaker(p) : new SpeakerBlock(p);
     });
 
     public static final RegistryObject<BlockEntityType<?>> SPEAKER_BLOCK_TILE = TILES.register(SPEAKER_BLOCK_NAME, () -> BlockEntityType.Builder.of(

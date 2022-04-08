@@ -1,0 +1,27 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "atmospheric:aloe_gel_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    },
+    {
+      "filled": [
+        "item.atmospheric:aloe_gel_block"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "atmospheric:aloe_gel_bottle"
+  },
+  "id": "atmospheric:aloe_gel",
+  "still_texture": "atmospheric:block/aloe_gel_block_top",
+  "tint_method": "flowing",
+  "translation_key": "item.atmospheric:aloe_gel_bottle"
+}

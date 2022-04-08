@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.botania;
-/*
+
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -46,7 +46,6 @@ public class BotaniaCompatRegistry {
     }
 
     public static InteractionResult tryCaptureTater(AbstractMobContainerItem item, UseOnContext context) {
-        //TODO: READD
 
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
@@ -71,4 +70,4 @@ public class BotaniaCompatRegistry {
         }
         return InteractionResult.PASS;
     }
-}*/
+}

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class VerticalLanternBlockTile extends EnhancedLanternBlockTile{
     private final boolean flippable;
     public VerticalLanternBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.COPPER_LANTERN_TILE.get(), pos, state);
+        super(ModRegistry.WALL_LANTERN_TILE.get(), pos, state);
         this.flippable = state.hasProperty(CopperLanternBlock.AXIS);
     }
 

@@ -28,7 +28,7 @@ public class JarTab extends CreativeModeTab {
     public ItemStack makeIcon() {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
-        fluidHolder.fill(SoftFluidRegistry.HONEY);
+        fluidHolder.fill(SoftFluidRegistry.HONEY.get());
         CompoundTag com = new CompoundTag();
         fluidHolder.save(com);
         icon.addTagElement("BlockEntityTag", com);
@@ -52,7 +52,7 @@ public class JarTab extends CreativeModeTab {
     }
 
     public static void populateTab(NonNullList<ItemStack> items) {
-        JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR_TINTED.get().defaultBlockState());
+        JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
 
 
@@ -76,8 +76,8 @@ public class JarTab extends CreativeModeTab {
             }
         }
         if(ServerConfigs.cached.JAR_LIQUIDS) {
-            for (SoftFluid s : SoftFluidRegistry.getFluids()) {
-                if (s == SoftFluidRegistry.POTION || s.isEmpty()) continue;
+            for (SoftFluid s : SoftFluidRegistry.getRegisteredFluids()) {
+                if (s == SoftFluidRegistry.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
                 fluidHolder.fill(s);
@@ -88,7 +88,7 @@ public class JarTab extends CreativeModeTab {
             for (ResourceLocation potion : net.minecraft.core.Registry.POTION.keySet()) {
                 CompoundTag com = new CompoundTag();
                 com.putString("Potion", potion.toString());
-                fluidHolder.fill(SoftFluidRegistry.POTION, com);
+                fluidHolder.fill(SoftFluidRegistry.POTION.get(), com);
                 CompoundTag com2 = new CompoundTag();
                 fluidHolder.save(com2);
                 tryAdd(items, com2);

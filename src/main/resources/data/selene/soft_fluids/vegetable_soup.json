@@ -1,0 +1,19 @@
+{
+  "color": "#8a7825",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:vegetable_soup"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "farmersdelight:vegetable_soup"
+  },
+  "id": "farmersdelight:vegetable_soup",
+  "still_texture": "selene:blocks/soup_liquid"
+}

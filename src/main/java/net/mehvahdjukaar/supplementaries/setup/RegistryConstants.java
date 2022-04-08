@@ -35,7 +35,6 @@ public final class RegistryConstants {
     public static final String SAFE_NAME = "safe";
     public static final String CAGE_NAME = "cage";
     public static final String JAR_NAME = "jar";
-    public static final String JAR_TINTED_NAME = "jar_tinted";
     public static final String SACK_NAME = "sack";
     public static final String BLACKBOARD_NAME = "blackboard";
     public static final String GLOBE_NAME = "globe";
@@ -47,6 +46,8 @@ public final class RegistryConstants {
     public static final String SCONCE_NAME_GREEN = "sconce_green";
     public static final String COPPER_LANTERN_NAME = "copper_lantern";
     public static final String BRASS_LANTERN_NAME = "brass_lantern";
+    public static final String LEAD_LANTERN_NAME = "lead_lantern";
+    public static final String SILVER_LANTERN_NAME = "silver_lantern";
     public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
     public static final String ROPE_NAME = "rope";
     public static final String ROPE_KNOT_NAME = "rope_knot";

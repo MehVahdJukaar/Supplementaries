@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.mapatlas;
 
-/*
+
 import lilypuree.mapatlases.item.MapAtlasItem;
 import lilypuree.mapatlases.util.MapAtlasesAccessUtils;
 import net.minecraft.world.entity.player.Player;
@@ -21,4 +21,3 @@ public class MapAtlasPlugin {
         return MapAtlasesAccessUtils.getActiveAtlasMapState(level, item, player.getName().getString()).getValue();
     }
 }
-*/

@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.setup;
 import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.Materials;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
@@ -68,113 +68,115 @@ public class ClientSetup {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
+        event.enqueueWork(()-> {
+            //compat
+            CompatHandlerClient.init(event);
 
-        //compat
-        CompatHandlerClient.init(event);
+            //tooltips
+            MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
-        //tooltips
-        MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
+            //map markers
+            CMDclient.init(event);
 
-        //map markers
-        CMDclient.init(event);
+            //overlay
+            //SlimedGuiOverlay.register();
 
-        //overlay
-        //SlimedGuiOverlay.register();
+            //dynamic textures
+            GlobeTextureManager.init(Minecraft.getInstance().textureManager);
+            BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
 
-        //dynamic textures
-        GlobeTextureManager.init(Minecraft.getInstance().textureManager);
-        BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
+            MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
+            MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
+            MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
+            MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+            MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
+            MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
+            ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s, RenderType.cutout()));
 
-        MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
-        MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
-        MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
-        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
-        MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
-        MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
-        ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s, RenderType.cutout()));
-
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR_TINTED.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.FAUCET.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SIGN_POST.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.BELLOWS.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_SOUL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_SOUL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_ENDER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.CAGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.HOURGLASS.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.NETHERITE_DOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.NETHERITE_TRAPDOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX_WILD.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX_POT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_FRAME.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_BRACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.COG_BLOCK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.IRON_GATE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
-
-
-        ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
-                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
-
-        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
-                (stack, world, entity, s) -> {
-                    if (entity == null || entity.getUseItem() != stack) {
-                        return 0.0F;
-                    } else {
-                        return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
-                    }
-                });
-
-        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
-                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
-
-        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
-                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.FAUCET.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SIGN_POST.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.BELLOWS.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_SOUL.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_SOUL.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_ENDER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.CAGE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.HOURGLASS.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.NETHERITE_DOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.NETHERITE_TRAPDOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX_WILD.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLAX_POT.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_FRAME.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_BRACE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.COG_BLOCK.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.IRON_GATE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
 
 
-        ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
-                (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
+            ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+                    new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-        ModRegistry.TRAPPED_PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
-                (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
+            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+                    (stack, world, entity, s) -> {
+                        if (entity == null || entity.getUseItem() != stack) {
+                            return 0.0F;
+                        } else {
+                            return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
+                        }
+                    });
 
-        ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
-                (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+                    (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
-        //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
-        //       new SpeedometerItem.SpeedometerItemProperty());
+            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+                    (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
+
+
+            ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
+                    (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
+
+            ModRegistry.TRAPPED_PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
+                    (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
+
+            ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+                    (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+
+            //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
+            //       new SpeedometerItem.SpeedometerItemProperty());
+        });
     }
 
     public record CrossbowProperty(Item projectile) implements ItemPropertyFunction {
@@ -190,7 +192,6 @@ public class ClientSetup {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
         ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
-        //particleEngine.register(ModRegistry.FIREFLY_GLOW.get(), FireflyGlowParticle.Factory::new);
         particleEngine.register(ModRegistry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
         particleEngine.register(ModRegistry.GREEN_FLAME.get(), FlameParticle.Provider::new);
         particleEngine.register(ModRegistry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
@@ -257,8 +258,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.COPPER_LANTERN_TILE.get(), LightableLanternBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.CRIMSON_LANTERN_TILE.get(), LightableLanternBlockTileRenderer::new);
+
         event.registerBlockEntityRenderer(ModRegistry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
@@ -323,7 +323,7 @@ public class ClientSetup {
         for (var r : Materials.HANGING_SIGNS_BLOCK_MODELS.values()) {
             ForgeModelBakery.addSpecialModel(r);
         }
-        for(var m : WallLanternStuff.SPECIAL_TEXTURES.values()){
+        for(var m : WallLanternTexturesRegistry.SPECIAL_TEXTURES.values()){
             ForgeModelBakery.addSpecialModel(m);
         }
         ForgeModelBakery.addSpecialModel(Materials.HANGING_POT_BLOCK_MODEL);

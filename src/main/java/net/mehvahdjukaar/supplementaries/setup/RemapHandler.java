@@ -24,6 +24,9 @@ public class RemapHandler {
 
     private static final Map<String, ResourceLocation> fullReMap = new HashMap<>();
 
+    static{
+        fullReMap.put("jar_tinted",Supplementaries.res(RegistryConstants.JAR_NAME));
+    }
 
     @SubscribeEvent
     public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {

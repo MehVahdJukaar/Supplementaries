@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
-/*
+
 import com.simibubi.create.AllMovementBehaviours;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.create.behaviors.BambooSpikesBehavior;
 import net.mehvahdjukaar.supplementaries.integration.create.behaviors.HourglassBehavior;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 
-public class SupplementariesCreatePlugin {
+public class CreatePlugin {
     public static void initialize() {
 
         try {
@@ -21,4 +21,3 @@ public class SupplementariesCreatePlugin {
 
 
 }
-*/

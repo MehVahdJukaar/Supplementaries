@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingLanternEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireChargeItem;
 import net.minecraft.world.item.FlintAndSteelItem;
@@ -30,22 +30,27 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Optional;
 
 public class LightableLanternBlock extends LanternBlock {
-    public static final VoxelShape SHAPE_DOWN = Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
-            Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D));
-    public static final VoxelShape SHAPE_UP = Shapes.or(Block.box(5.0D, 5.0D, 5.0D, 11.0D, 13.0D, 11.0D),
-            Block.box(6.0D, 13.0D, 6.0D, 10.0D, 14.0D, 10.0D));
+    public final VoxelShape shapeDown;
+    public final VoxelShape shapeUp;
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public LightableLanternBlock(Properties properties) {
+    public LightableLanternBlock(Properties properties, VoxelShape shape) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, true)
                 .setValue(HANGING, false));
+        this.shapeDown = shape;
+        this.shapeUp = shapeDown.move(0, 14/16f - shape.bounds().maxY, 0);
+    }
+
+    public LightableLanternBlock(Properties properties) {
+        this(properties, Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
+                Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D)));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter p_153475_, BlockPos p_153476_, CollisionContext p_153477_) {
-        return state.getValue(HANGING) ? SHAPE_UP : SHAPE_DOWN;
+        return state.getValue(HANGING) ? shapeUp : shapeDown;
     }
 
     @Override
@@ -111,9 +116,9 @@ public class LightableLanternBlock extends LanternBlock {
 
     //TODO: hitting sounds
     //called by mixin
-    public static boolean canSurviveCeiling(BlockState state, BlockPos pos, LevelReader worldIn) {
+    public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader worldIn) {
         if (!RopeBlock.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
-            if (l.getBlockState(pos).is(state.getBlock())) {
+            if (ServerConfigs.cached.FALLING_LANTERNS.isOn() && l.getBlockState(pos).is(state.getBlock())) {
                 return createFallingLantern(state, pos, l);
             }
             return false;
@@ -132,5 +137,19 @@ public class LightableLanternBlock extends LanternBlock {
             }
         }
         return false;
+    }
+
+    public enum FallMode {
+        ON,
+        OFF,
+        NO_FIRE;
+
+        public boolean hasFire() {
+            return this != NO_FIRE;
+        }
+
+        public boolean isOn() {
+            return this != OFF;
+        }
     }
 }

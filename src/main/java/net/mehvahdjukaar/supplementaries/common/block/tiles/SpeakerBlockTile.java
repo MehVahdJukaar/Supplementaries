@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMe
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCStuff;
+import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -39,7 +39,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPEAKER_BLOCK_TILE.get(), pos, state);
         if (CompatHandler.computercraft) {
-            this.peripheral = CCStuff.getPeripheralSupplier(this);
+            this.peripheral = CCPlugin.getPeripheralSupplier(this);
         } else {
             this.peripheral = LazyOptional.empty();
         }

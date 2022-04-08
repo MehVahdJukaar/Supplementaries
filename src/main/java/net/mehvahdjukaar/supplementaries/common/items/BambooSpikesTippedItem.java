@@ -122,4 +122,9 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         //        TextUtil.format(PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed("")));
 
     }
+
+    @Override
+    public ItemStack getDefaultInstance() {
+        return makeSpikeItem(Potions.POISON);
+    }
 }

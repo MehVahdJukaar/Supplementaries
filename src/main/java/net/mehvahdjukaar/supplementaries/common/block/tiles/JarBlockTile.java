@@ -35,11 +35,11 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidHolder {
+
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
-    @Nonnull
-    public MobContainer mobContainer;
-    public SoftFluidHolder fluidHolder;
+    public final MobContainer mobContainer;
+    public final SoftFluidHolder fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state);

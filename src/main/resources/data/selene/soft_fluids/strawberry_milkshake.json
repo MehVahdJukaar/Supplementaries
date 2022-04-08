@@ -1,0 +1,16 @@
+{
+  "color": "#ec8daa",
+  "containers": [
+    {
+      "filled": [
+        "minecraft:strawberry_milkshake"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "id": "neapolitan:strawberry_milkshake",
+  "still_texture": "selene:blocks/soup_liquid",
+  "translation_key": "item.neapolitan.strawberry_milkshake"
+}

@@ -35,7 +35,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[39.0.78,)" #mandatory
+    versionRange="[40.0.36,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.18.2-1.14.0,]"
+    versionRange="[1.18.2-1.15.0,]"
     ordering="AFTER"
     side="BOTH"
 

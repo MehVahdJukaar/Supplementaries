@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.items.IPlaceableItem;
 import net.minecraft.ChatFormatting;
@@ -48,7 +49,7 @@ public class ItemMixin implements IPlaceableItem {
     //delegates stuff to internal blockItem
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     private void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced, CallbackInfo ci) {
-        if (this.placeable != null) {
+        if (this.placeable != null && ClientConfigs.cached.PLACEABLE_TOOLTIPS) {
             pTooltipComponents.add(new TranslatableComponent("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }

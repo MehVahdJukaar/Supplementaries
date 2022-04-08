@@ -59,7 +59,6 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue NOTICE_BOARD_ENABLED;
         public static ForgeConfigSpec.BooleanValue CRANK_ENABLED;
         public static ForgeConfigSpec.BooleanValue JAR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue JAR_TINTED_ENABLED;
         public static ForgeConfigSpec.BooleanValue FAUCET_ENABLED;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_ENABLED;
         public static ForgeConfigSpec.BooleanValue PISTON_LAUNCHER_ENABLED;
@@ -196,7 +195,6 @@ public class RegistryConfigs {
             NOTICE_BOARD_ENABLED = builder.define(RegistryConstants.NOTICE_BOARD_NAME, true);
             CRANK_ENABLED = builder.define(RegistryConstants.CRANK_NAME, true);
             JAR_ENABLED = builder.define(RegistryConstants.JAR_NAME, true);
-            JAR_TINTED_ENABLED = builder.define(RegistryConstants.JAR_TINTED_NAME, false);
             FAUCET_ENABLED = builder.define(RegistryConstants.FAUCET_NAME, true);
             TURN_TABLE_ENABLED = builder.define(RegistryConstants.TURN_TABLE_NAME, true);
             PISTON_LAUNCHER_ENABLED = builder.define(RegistryConstants.SPRING_LAUNCHER_NAME, true);

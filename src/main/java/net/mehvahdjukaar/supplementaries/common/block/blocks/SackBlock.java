@@ -119,6 +119,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
             if (canFall(pos, level)) {
                 ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModRegistry.FALLING_SACK.get(),
                         level,pos, state, true);
+                entity.blockData = tile.saveWithoutMetadata();
                 entity.setHurtsEntities(1, 20);
             }
         }

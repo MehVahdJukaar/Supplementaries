@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
@@ -65,7 +66,6 @@ public class Supplementaries {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ClientDynamicResourcesHandler.registerBus(bus));
 
         bus.addListener(ModSetup::init);
-
 
     }
 

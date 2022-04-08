@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.WallLanternStuff;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -17,11 +15,9 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -57,7 +53,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
             var supportQuads = support.getQuads(state, side, rand, EmptyModelData.INSTANCE);
             if(!supportQuads.isEmpty()){
                 if (mimic != null) {
-                    var sprite = WallLanternStuff.getTextureForLantern(mimic.getBlock());
+                    var sprite = WallLanternTexturesRegistry.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
                         supportQuads = RendererUtil.swapSprite(supportQuads, sprite);
                     }

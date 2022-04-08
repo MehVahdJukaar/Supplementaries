@@ -97,6 +97,7 @@ public class TextUtil {
                         MightyGoat
                         Fr_z_n
                         Brun333rp
+                        Binome
 
                         \u00A75Music and Sound:\u00A7r
 
@@ -125,6 +126,7 @@ public class TextUtil {
                         ppblitto
                         DrHesperus
                         feliixpe
+                        zeedif
                         ChuijkYahus
 
                         \u00A75Others:\u00A7r

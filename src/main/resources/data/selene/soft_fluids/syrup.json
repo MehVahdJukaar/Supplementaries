@@ -1,0 +1,24 @@
+{
+  "color": "#8e3f26",
+  "containers": [
+    {
+      "filled": [
+        "autumnity:syrup_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "equivalent_fluids": [
+    "thermal:syrup"
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "autumnity:syrup_bottle"
+  },
+  "id": "autumnity:syrup",
+  "still_texture": "selene:blocks/honey_liquid",
+  "translation_key": "item.autumnity.syrup",
+  "use_texture_from": "create:honey"
+}

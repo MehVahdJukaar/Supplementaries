@@ -1,0 +1,16 @@
+{
+  "color": "#db8f47",
+  "containers": [
+    {
+      "filled": [
+        "malum:holy_sap"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "id": "malum:holy_sap",
+  "still_texture": "selene:blocks/potion_still",
+  "translation_key": "item.malum:holy_sap"
+}

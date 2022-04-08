@@ -15,28 +15,6 @@ import java.util.function.Supplier;
 public class CompatObjects {
     //object holders
 
-    /*
-    @ObjectHolder("decorative_blocks:chandelier")
-    public static final Block CHANDELIER = null;
-
-    @ObjectHolder("decorative_blocks:soul_chandelier")
-
-    public static final Block SOUL_CHANDELIER = null;
-
-    @ObjectHolder("decorative_blocks_abnormals:ender_chandelier")
-    public static final Block ENDER_CHANDELIER = null;
-
-    @ObjectHolder("muchmoremodcompat:glow_chandelier")
-    public static final Block GLOW_CHANDELIER = null;
-
-    @ObjectHolder("infernalexp:glowstone_sparkle")
-    public static final ParticleType<?> GLOW_FLAME = null;
-
-    @ObjectHolder("endergetic:ender_flame")
-    public static final ParticleType<?> ENDER_FLAME = null;
-
-    */
-
     //these can return null on get instead of throwing
 
     public static final Supplier<Block> CHANDELIER = makeCompatObject("decorative_blocks:chandelier", ForgeRegistries.BLOCKS);
@@ -71,7 +49,7 @@ public class CompatObjects {
     }
 
     private static <T extends IForgeRegistryEntry<T>, U extends T> RegistryObject<U> getRegistryObject(String name, IForgeRegistry<T> registry) {
-        return RegistryObject.of(new ResourceLocation(name), registry);
+        return RegistryObject.create(new ResourceLocation(name), registry);
     }
 
 

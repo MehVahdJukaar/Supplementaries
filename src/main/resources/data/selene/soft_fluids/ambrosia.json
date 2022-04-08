@@ -1,0 +1,20 @@
+{
+  "color": "#f8a0db",
+  "containers": [
+    {
+      "filled": [
+        "iceandfire:ambrosia"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "selene:blocks/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "iceandfire:ambrosia"
+  },
+  "id": "iceandfire:ambrosia",
+  "still_texture": "selene:blocks/dragon_breath_liquid",
+  "translation_key": "item.iceandfire.ambrosia"
+}

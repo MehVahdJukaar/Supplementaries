@@ -191,7 +191,7 @@ public class BlockProperties {
         }
 
         public static Topping fromFluid(SoftFluid s) {
-            if (s == SoftFluidRegistry.HONEY) return HONEY;
+            if (s == SoftFluidRegistry.HONEY.get()) return HONEY;
             String name = s.getRegistryName().getPath();
             if (name.equals("chocolate")) return CHOCOLATE;
             if (name.equals("syrup") || name.equals("maple_syrup")) return SYRUP;

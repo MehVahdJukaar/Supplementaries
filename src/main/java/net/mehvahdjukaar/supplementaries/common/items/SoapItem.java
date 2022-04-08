@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSpawnBlockParticlePacket;
@@ -86,7 +87,7 @@ public class SoapItem extends Item {
     }
 
     public static boolean hasBeenEatenBefore(Player player, Level level) {
-        ResourceLocation res = new ResourceLocation("supplementaries", "husbandry/soap");
+        ResourceLocation res = Supplementaries.res("husbandry/soap");
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
             Advancement a = serverLevel.getServer().getAdvancements().getAdvancement(res);
             if (a != null) {
