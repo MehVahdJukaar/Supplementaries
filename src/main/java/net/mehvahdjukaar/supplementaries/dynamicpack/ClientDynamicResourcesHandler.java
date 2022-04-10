@@ -158,6 +158,9 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
 
         WallLanternTexturesRegistry.onResourceReload(manager);
 
+        //leather armor
+
+
         //hanging signs block textures
         try (NativeImage template = readImage(manager, Supplementaries.res(
                 "textures/blocks/hanging_signs/hanging_sign_oak.png"));

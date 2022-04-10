@@ -47,6 +47,7 @@
     "FontRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
+    "LeatherArmorMixin",
     "LevelRendererMixin",
     "LoomScreenFlagMixin",
     "ParrotMixin",

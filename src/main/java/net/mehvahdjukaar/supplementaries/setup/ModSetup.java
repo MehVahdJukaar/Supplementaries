@@ -80,7 +80,7 @@ public class ModSetup {
 
                 hasFinishedSetup = true;
 
-                Supplementaries.LOGGER.info("Finished mod setup in: {} seconds", watch.elapsed().toSeconds());
+                Supplementaries.LOGGER.info("Finished mod setup in: {} ms", watch.elapsed().toMillis());
 
             } catch (Exception e) {
                 Supplementaries.LOGGER.error(e);

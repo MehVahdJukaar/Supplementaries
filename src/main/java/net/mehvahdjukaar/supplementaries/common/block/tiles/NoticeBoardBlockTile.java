@@ -103,33 +103,22 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.needsVisualRefresh = true;
         this.cachedPageLines = Collections.emptyList();
         this.text = null;
+        CompoundTag com = itemstack.getTag();
+        if ((item instanceof WrittenBookItem && WrittenBookItem.makeSureTagIsValid(com)) ||
+                (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
 
-        if (item instanceof WrittenBookItem) {
-            CompoundTag com = itemstack.getTag();
-            if (WrittenBookItem.makeSureTagIsValid(com)) {
-
-                ListTag pages = com.getList("pages", 8).copy();
-                assert pages.size()>0;
+            ListTag pages = com.getList("pages", 8).copy();
+            if (pages.size() > 0) {
                 if (this.pageNumber >= pages.size()) {
                     this.pageNumber = this.pageNumber % pages.size();
                 }
                 this.text = pages.getString(this.pageNumber);
             }
-        } else if (item instanceof WritableBookItem) {
-            CompoundTag com = itemstack.getTag();
-            if (WritableBookItem.makeSureTagIsValid(com)) {
 
-                ListTag listTag = com.getList("pages", 8).copy();
-                assert listTag.size()>0;
-                if (this.pageNumber >= listTag.size()) {
-                    this.pageNumber = this.pageNumber % listTag.size();
-                }
-                this.text = listTag.getString(this.pageNumber);
-            }
-        } else if(CompatHandler.computercraft){
-            if(CCPlugin.checkForPrintedBook(item)){
-                CompoundTag com = itemstack.getTag();
-                if(com != null) {
+        } else if (CompatHandler.computercraft) {
+            if (CCPlugin.checkForPrintedBook(item)) {
+
+                if (com != null) {
                     int pages = CCPlugin.getPages(itemstack);
 
                     if (this.pageNumber >= pages) {
@@ -137,9 +126,9 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                     }
                     String[] text = CCPlugin.getText(itemstack);
                     StringBuilder combined = new StringBuilder();
-                    for(int i = 0; i< 21; i++){
-                        int ind = this.pageNumber*21 + i;
-                        if(ind<text.length){
+                    for (int i = 0; i < 21; i++) {
+                        int ind = this.pageNumber * 21 + i;
+                        if (ind < text.length) {
                             combined.append(text[ind]);
                             combined.append(" ");
                         }

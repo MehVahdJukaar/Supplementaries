@@ -133,7 +133,7 @@ dependencies {
 
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 
-    //implementation fg.deobf("curse.maven:farmersdelight-398521:3615366")
+
     //implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
 
@@ -144,6 +144,7 @@ dependencies {
 
     // implementation fg.deobf("curse.maven:kiwi-303657:3577626")
 
+    implementation fg.deobf("curse.maven:farmersdelight-398521:3739914")
     implementation fg.deobf("curse.maven:flywheel-486392:3737402")
     implementation fg.deobf("curse.maven:create-328085:3737418")
     implementation fg.deobf("curse.maven:patchouli-306770:3680301")

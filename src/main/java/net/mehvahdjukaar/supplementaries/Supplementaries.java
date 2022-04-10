@@ -37,7 +37,7 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        //TODO: dynamic soap undye recipe
+
         /*
         To check if a given tag has a given object:
         Registry#getHolderOrThrow(objectID).is(tagKey)
@@ -71,7 +71,7 @@ public class Supplementaries {
 
 
     //yes this is where I write crap. deal with it XD
-
+    //TODO: dynamic soap undye recipe
     //animated lantern textures
     //add option for soul jar
     //ash jei plugin
@@ -89,8 +89,6 @@ public class Supplementaries {
     //add chain knot
 
     //elytra acrobatics mod
-
-    //swaying blocks water friction
 
     //horizontal shearable ropes
 
@@ -111,8 +109,6 @@ public class Supplementaries {
 
     //firefly glow block
 
-    //TODO: replace soft fluid system with forge caps to itemstacks and register actual forge fluids
-
     //TODO: bugs: bell ropes(add to flywheel instance), brewing stand colors(?)
 
     //TODO: mod ideas: particle block, blackboard banners and flags, lantern holding
@@ -128,17 +124,11 @@ public class Supplementaries {
 
     //throwable slimeballs
 
-    //TODO: make dummy not show numbers at a distance, headshot
-
     //simple mode for doors and trapdoors
-
-    //data driven fluid system
 
     //label
 
     //animated pulley texture
-
-    //TODO: add more support for new game events
 
     //TODO: faucets create sprout
 
@@ -146,8 +136,6 @@ public class Supplementaries {
 
     //TODO: xp bottling whose cost depends on player total xp
     //TODO: randomium that can spawn in other dimensions via whitelist
-
-    //todo: serene easons & moon stuff for haunted harvest
 
     //TODO: wiki for custom map markers icons. add simple icon datapacks
 
@@ -157,7 +145,7 @@ public class Supplementaries {
 
     //directional books fixed
     //particles for randomium
-    //data driven fluid system :0
+
     //TODO: credist screen
 
     //TODO: way signs as villages pieces
@@ -165,13 +153,10 @@ public class Supplementaries {
 
     //small honey slime in cage
 
-    //blackboard texture glitchyness (baked model)
-
     //ender pearls dispensers
 
     //idea: Increase range of enchantment table
 
-    //TODO: fix faucet water is completely bugged
     //IRON gate connected model
 
     //hud mod. armor broken hud, items offhadn crafting
@@ -196,8 +181,5 @@ public class Supplementaries {
     //soap signs & finish notice board dye (add dye interface)
     //snow real magic compat
     //bugs: spring launcher broken on servers
-
-    //add new cauldron stuff to cauldron interaction map
-
 
 }

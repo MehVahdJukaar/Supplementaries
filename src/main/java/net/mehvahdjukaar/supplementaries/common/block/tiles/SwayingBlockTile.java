@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -151,7 +150,6 @@ public abstract class SwayingBlockTile extends BlockEntity {
     public void hitByEntity(Entity entity, BlockState state, BlockPos pos) {
         Vec3 mot = entity.getDeltaMovement();
         if (mot.length() > 0.05) {
-            Level level = entity.getLevel();
 
             Vec3 norm = new Vec3(mot.x, 0, mot.z).normalize();
             Vec3i dv = this.getNormalRotationAxis(state);
@@ -164,11 +162,14 @@ public abstract class SwayingBlockTile extends BlockEntity {
                 if (this.animationCounter > 10) {
                     //TODO: fix this doesnt work because this only works client side
                     Player player = entity instanceof Player p ? p : null;
-                    entity.getLevel().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
-                    if(state.getBlock() instanceof HangingSignBlock){
+                    if (state.getBlock() instanceof HangingSignBlock) {
                         //hardcoding goes brr
                         //TODO: replace with proper custom sound & sound event
-                        entity.getLevel().playSound(player, pos, SoundEvents.CHAIN_STEP, SoundSource.BLOCKS, 0.75f, 1);
+                        entity.getLevel().playSound(player, pos, SoundEvents.CHAIN_STEP, SoundSource.BLOCKS, 0.5f, 2);
+                        entity.getLevel().playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 0.75f, 2f);
+
+                    } else {
+                        entity.getLevel().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
 
                     }
                 }

@@ -3,7 +3,7 @@
   "containers": [
     {
       "filled": [
-        "farmersdelight:beef_stew"
+        "ecologics:tropical_stew"
       ],
       "empty": "ecologics:coconut_husk",
       "capacity": 2

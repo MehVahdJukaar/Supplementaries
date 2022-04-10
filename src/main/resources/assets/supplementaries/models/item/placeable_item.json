@@ -1,6 +1,7 @@
+
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:items/amethyst_arrow"
+    "layer0": "supplementaries:blocks/statue_base"
   }
 }

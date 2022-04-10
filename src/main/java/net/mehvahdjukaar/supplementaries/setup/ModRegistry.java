@@ -644,7 +644,7 @@ public class ModRegistry {
     //silver lantern
     public static final RegistryObject<Block> SILVER_LANTERN = BLOCKS.register(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
-            Block.box(4.0D, 0.0D, 4.0D, 12.0D, 10.0D, 12.0D)));
+            Block.box(4.0D, 0.0D, 4.0D, 12.0D, 9.0D, 12.0D)));
 
     public static final RegistryObject<Item> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN,
             getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME),"forge:ingots/silver");

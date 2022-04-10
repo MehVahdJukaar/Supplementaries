@@ -20,32 +20,18 @@ import java.util.Map;
 public class Textures {
 
     private static final String MOD_ID = Supplementaries.MOD_ID;
-    private static final String LIB = Selene.MOD_ID;
 
     //minecraft
-    public static final ResourceLocation DIRT_TEXTURE = new ResourceLocation("minecraft:block/dirt");
-    public static final ResourceLocation POWDER_SNOW_TEXTURE = new ResourceLocation("minecraft:block/powder_snow");
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
-    public static final ResourceLocation WATER_TEXTURE = new ResourceLocation("minecraft:block/water_still");
-    public static final ResourceLocation LAVA_TEXTURE = new ResourceLocation("minecraft:block/lava_still");
     public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
-    public static final ResourceLocation FLOWING_WATER_TEXTURE = new ResourceLocation("minecraft:block/water_flow");
+    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
 
-    //fluids
-
-    public static final ResourceLocation MILK_TEXTURE = new ResourceLocation(LIB, "blocks/milk_liquid");
-    public static final ResourceLocation POTION_TEXTURE = new ResourceLocation(LIB, "blocks/potion_still");
-    public static final ResourceLocation POTION_TEXTURE_FLOW = new ResourceLocation(LIB, "blocks/potion_flow");
-    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation(LIB, "blocks/honey_liquid");
-    public static final ResourceLocation DRAGON_BREATH_TEXTURE = new ResourceLocation(LIB, "blocks/dragon_breath_liquid");
-    public static final ResourceLocation SOUP_TEXTURE = new ResourceLocation(LIB, "blocks/soup_liquid");
     //blocks (to stitch)
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("blocks/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("entity/bellows");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("blocks/clock_hand");
-    public static final ResourceLocation CRIMSON_LANTERN_TEXTURE = Supplementaries.res("blocks/crimson_lantern_front");
     public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("blocks/hourglass_redstone");
     public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("blocks/hourglass_glowstone");
     public static final ResourceLocation HOURGLASS_SUGAR = Supplementaries.res("blocks/hourglass_sugar");
@@ -55,7 +41,6 @@ public class Textures {
 
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("blocks/timber_cross_brace");
     public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("blocks/blackboard");
-    public static final ResourceLocation WALL_LANTERN_TEXTURE = Supplementaries.res("blocks/wall_lantern");
 
     //entities
     public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res("textures/entity/globes/globe_the_world.png");
@@ -64,8 +49,6 @@ public class Textures {
     public static final ResourceLocation GLOBE_SUN_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sun.png");
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sheared.png");
 
-
-    public static final ResourceLocation AMETHYST_ARROW = Supplementaries.res("textures/entity/amethyst_arrow.png");
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
     public static final ResourceLocation RED_MERCHANT = Supplementaries.res("textures/entity/misc/red_merchant.png");
     public static final ResourceLocation RED_MERCHANT_CHRISTMAS = Supplementaries.res("textures/entity/misc/christmas_merchant.png");

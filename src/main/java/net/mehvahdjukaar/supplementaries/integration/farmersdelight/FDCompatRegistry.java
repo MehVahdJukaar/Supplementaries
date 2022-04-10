@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.farmersdelight;
 
-/*
+
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -55,8 +55,7 @@ public class FDCompatRegistry {
 
 
     public static InteractionResult onCakeInteraction(BlockState state, BlockPos pos, Level world, ItemStack stack) {
-        //TODO: READD
-        if (false ) { //stack.is(ModTags.KNIVES)
+        if (stack.is(ModTags.KNIVES)) {
             int bites = state.getValue(CakeBlock.BITES);
             if (bites < 6) {
                 world.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);
@@ -76,4 +75,3 @@ public class FDCompatRegistry {
     }
 
 }
-*/

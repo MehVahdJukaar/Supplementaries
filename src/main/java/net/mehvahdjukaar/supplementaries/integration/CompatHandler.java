@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegist
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.mehvahdjukaar.supplementaries.integration.create.CreatePlugin;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.minecraftforge.fml.ModList;
 
 public class CompatHandler {
@@ -85,7 +86,7 @@ public class CompatHandler {
     }
 
     public static void init() {
-          if (create) CreatePlugin.initialize();
+        if (create) CreatePlugin.initialize();
         if (computercraft) CCPlugin.initialize();
 
         //var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
@@ -94,7 +95,7 @@ public class CompatHandler {
 
     public static void registerOptionalStuff() {
         if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
-        //  if (farmers_delight) FDCompatRegistry.registerStuff();
+        if (farmers_delight) FDCompatRegistry.registerStuff();
         if (botania) BotaniaCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
     }

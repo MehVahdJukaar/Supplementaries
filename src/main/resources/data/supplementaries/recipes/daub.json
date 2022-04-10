@@ -20,7 +20,7 @@
             "item": "minecraft:clay_ball"
           },
           "2": {
-            "item": "minecraft:wheat"
+            "tag": "supplementaries:straw"
           }
         },
         "result": {
