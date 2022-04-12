@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -10,8 +10,8 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,7 +21,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -41,17 +44,17 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(createTippedBambooSpikesRecipes(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createBlackboardDuplicate(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createRopeArrowCreateRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createRopeArrowAddRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createFlagFromBanner(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createAntiqueMaoRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createBubbleBlowerChargeRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createSoapCleanShulkerRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(createSoapCleanPresentRecipe(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(makePresentCloringRecipes(), VanillaRecipeCategoryUid.CRAFTING);
-        registry.addRecipes(makeTrappedPresentRecipes(), VanillaRecipeCategoryUid.CRAFTING);
+        registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
+        registry.addRecipes(RecipeTypes.CRAFTING, createBlackboardDuplicate());
+        registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowCreateRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowAddRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, createFlagFromBanner());
+        registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMaoRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanShulkerRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanPresentRecipe());
+        registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
+        registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
     }
 
 
@@ -81,8 +84,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         }
     }
 
-    public static List<Recipe<?>> createAntiqueMaoRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createAntiqueMaoRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.antique_map";
 
         ItemStack stack = new ItemStack(Items.FILLED_MAP);
@@ -99,8 +102,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createRopeArrowCreateRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createRopeArrowCreateRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
@@ -116,8 +119,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createRopeArrowAddRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createRopeArrowAddRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.rope_arrow";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
@@ -134,8 +137,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createSoapCleanPresentRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createSoapCleanPresentRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.soap";
 
         ItemStack output = new ItemStack(ModRegistry.PRESENTS.get(null).get());
@@ -149,8 +152,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createSoapCleanShulkerRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createSoapCleanShulkerRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.soap";
 
         ItemStack output = new ItemStack(Items.SHULKER_BOX);
@@ -164,11 +167,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> makeTrappedPresentRecipes() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> makeTrappedPresentRecipes() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.presents";
 
-        for(DyeColor color : DyeColor.values()){
+        for (DyeColor color : DyeColor.values()) {
             Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(color).get());
             ItemStack output = ModRegistry.TRAPPED_PRESENTS_ITEMS.get(color).get().getDefaultInstance();
 
@@ -187,11 +190,11 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> makePresentCloringRecipes() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> makePresentCloringRecipes() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.presents";
         Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
-        for(DyeColor color : DyeColor.values()){
+        for (DyeColor color : DyeColor.values()) {
             DyeItem dye = DyeItem.byColor(color);
             ItemStack output = ModRegistry.PRESENTS_ITEMS.get(color).get().getDefaultInstance();
 
@@ -203,8 +206,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createBubbleBlowerChargeRecipe() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createBubbleBlowerChargeRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.bubble_blower";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.BUBBLE_BLOWER.get());
@@ -222,8 +225,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     }
 
 
-    public static List<Recipe<?>> createTippedBambooSpikesRecipes() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createTippedBambooSpikesRecipes() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.tipped_spikes";
 
         for (Potion potionType : ForgeRegistries.POTIONS.getValues()) {
@@ -246,8 +249,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return new ShapelessRecipe(id, group, output, inputs);
     }
 
-    public static List<Recipe<?>> createFlagFromBanner() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createFlagFromBanner() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.flag_from_banner";
 
         //List<BannerPatternItem> patterns = ForgeRegistries.ITEMS.getValues().stream().filter(i -> i instanceof BannerPatternItem)
@@ -282,8 +285,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         return recipes;
     }
 
-    public static List<Recipe<?>> createBlackboardDuplicate() {
-        List<Recipe<?>> recipes = new ArrayList<>();
+    public static List<CraftingRecipe> createBlackboardDuplicate() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.blackboard_duplicate";
 
         ItemStack blackboard = new ItemStack(ModRegistry.BLACKBOARD_ITEM.get());

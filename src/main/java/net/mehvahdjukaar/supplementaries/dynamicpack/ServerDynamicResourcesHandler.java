@@ -44,7 +44,8 @@ public class ServerDynamicResourcesHandler {
         DYNAMIC_DATA_PACK.registerPack(forgeBus);
         FMLJavaModLoadingContext.get().getModEventBus()
                 .addListener(ServerDynamicResourcesHandler::generateAssets);
-        //DYNAMIC_DATA_PACK.generateDebugResources = !FMLLoader.isProduction();
+        //TODO: fix tags not working
+        DYNAMIC_DATA_PACK.generateDebugResources = !FMLLoader.isProduction();
     }
 
     public static void generateAssets(final FMLCommonSetupEvent event) {
@@ -68,7 +69,6 @@ public class ServerDynamicResourcesHandler {
         }
         //sing posts
         {
-
             List<ResourceLocation> posts = new ArrayList<>();
 
             //recipes

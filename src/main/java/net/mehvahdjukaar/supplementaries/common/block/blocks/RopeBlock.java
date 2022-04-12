@@ -2,17 +2,16 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -175,7 +174,7 @@ public class RopeBlock extends WaterBlock {
                 return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
             }
             default -> {
-                if(ServerConfigs.cached.ROPE_UNRESTRICTED && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())){
+                if (ServerConfigs.cached.ROPE_UNRESTRICTED && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
                     return true;
                 }
                 if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
@@ -399,7 +398,7 @@ public class RopeBlock extends WaterBlock {
                     if (removeRope(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
-                            Utils.swapItem(player, handIn, stack, new ItemStack(this.asItem()));
+                            addStackToExisting(player, new ItemStack(this));
                         }
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
@@ -420,6 +419,21 @@ public class RopeBlock extends WaterBlock {
             return InteractionResult.PASS;
         }
         return InteractionResult.PASS;
+    }
+
+    @Deprecated //use lib one
+    private static void addStackToExisting(Player player, ItemStack stack) {
+        var inv = player.getInventory();
+        boolean added = false;
+        for (int j = 0; j < inv.items.size(); j++) {
+            if (inv.getItem(j).is(stack.getItem()) && inv.add(j, stack)) {
+                added = true;
+                break;
+            }
+        }
+        if (!added && inv.add(stack)) {
+            player.drop(stack, false);
+        }
     }
 
 
@@ -498,9 +512,9 @@ public class RopeBlock extends WaterBlock {
         if (isBlockMovable(state, world, fromPos) &&
                 (
                         ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY)) && state.canSurvive(world, toPos))
-                        || (state.is(ModTags.ROPE_HANG_TAG))
+                                || (state.is(ModTags.ROPE_HANG_TAG))
                 )
-            ) {
+        ) {
 
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
@@ -540,7 +554,7 @@ public class RopeBlock extends WaterBlock {
             if (tile != null) {
                 CompoundTag tag = tile.saveWithoutMetadata();
                 BlockEntity te = world.getBlockEntity(toPos);
-                if(te != null){
+                if (te != null) {
                     te.load(tag);
                 }
             }

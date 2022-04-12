@@ -18,6 +18,10 @@ public record OptionalRecipeCondition(String condition) implements ICondition {
     }
 
     @Override
+    public boolean test(IContext context) {
+        return RegistryConfigs.reg.isEnabled(this.condition);
+    }
+
     public boolean test() {
         return RegistryConfigs.reg.isEnabled(this.condition);
     }

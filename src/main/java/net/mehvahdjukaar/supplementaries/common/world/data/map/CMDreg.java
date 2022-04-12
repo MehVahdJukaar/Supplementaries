@@ -58,7 +58,7 @@ public class CMDreg {
     public static final CustomDecorationType<?, ?> SWAMP_HUT_TYPE = makeSimple("swamp_hut");
     public static final CustomDecorationType<?, ?> OCEAN_RUIN_TYPE = makeSimple("ocean_ruin");
 
-    public static void init(FMLCommonSetupEvent event) {
+    public static void init() {
         MapDecorationHandler.register(SIGN_POST_DECORATION_TYPE);
         MapDecorationHandler.register(BED_DECORATION_TYPE);
         MapDecorationHandler.register(FLAG_DECORATION_TYPE);

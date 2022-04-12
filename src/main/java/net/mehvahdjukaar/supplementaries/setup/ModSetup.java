@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import com.google.common.base.Stopwatch;
+import com.jozufozu.flywheel.Flywheel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -35,49 +36,37 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
 
+    //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
+    private static boolean hasFinishedSetup = false;
+    private static int setupStage = 0;
+    public static boolean firstTagLoad = false;
+
+    private static final List<Runnable> MOD_SETUP_WORK = List.of(
+            WorldGenHandler::onInit,
+            CompatHandler::init,
+            FlowerPotHandler::init,
+            CMDreg::init,
+            WeatheredMap::init,
+            CapturedMobsHelper::refresh,
+            NetworkHandler::registerMessages,
+            LootTableStuff::init,
+            ModSetup::registerCompostables,
+            ModSetup::registerMobFoods,
+            CauldronRegistry::registerInteractions,
+            PresentRegistry::registerBehaviors
+    );
+
     public static void init(final FMLCommonSetupEvent event) {
 
         event.enqueueWork(() -> {
-            try {
 
+            try {
                 Stopwatch watch = Stopwatch.createStarted();
 
-                WorldGenHandler.onInit();
-                setupStage++;
-
-                CompatHandler.init();
-                setupStage++;
-
-                CMDreg.init(event);
-                setupStage++;
-
-                WeatheredMap.init();
-                setupStage++;
-
-                FlowerPotHandler.init();
-                setupStage++;
-
-                CapturedMobsHelper.refresh();
-                setupStage++;
-
-                NetworkHandler.registerMessages();
-                setupStage++;
-
-                LootTableStuff.init();
-                setupStage++;
-
-                registerCompostables();
-                setupStage++;
-
-                registerMobFoods();
-                setupStage++;
-
-                CauldronRegistry.registerInteractions();
-                setupStage++;
-
-                PresentRegistry.registerBehaviors();
-                setupStage++;
-
+                for(int i = 0; i<MOD_SETUP_WORK.size(); i++){
+                    setupStage = i;
+                    MOD_SETUP_WORK.get(i).run();
+                }
                 hasFinishedSetup = true;
 
                 Supplementaries.LOGGER.info("Finished mod setup in: {} ms", watch.elapsed().toMillis());
@@ -115,18 +104,20 @@ public class ModSetup {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK_ITEM.get(), 1);
     }
 
-
-    //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
-    private static boolean hasFinishedSetup = false;
-    private static int setupStage = 0;
-    public static boolean firstTagLoad = false;
-
     //events on setup
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         if (!firstTagLoad) {
             firstTagLoad = true;
             if (!hasFinishedSetup) {
+                //if mod setup fails (without throwing errors) we try to replicate what caused it to crash and printing that error
+                try{
+                    Supplementaries.LOGGER.error("Something went wrong during mod setup, exiting");
+                    MOD_SETUP_WORK.get(setupStage).run();
+                    Supplementaries.LOGGER.error("No error found. Weird");
+                }catch (Exception e){
+                    Supplementaries.LOGGER.error(e);
+                }
                 terminateWhenSetupFails();
             }
             //using this as a post setup event that can access tags

@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
 
-
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
@@ -21,6 +20,8 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.UnaryOperator;
 
@@ -63,8 +64,9 @@ public class HourglassBehavior implements MovementBehaviour {
         com.putFloat("PrevProgress", prevProgress);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+    public void renderInContraption(MovementContext context, com.jozufozu.flywheel.core.virtual.VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
 
         CompoundTag com = context.tileData;
         HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
