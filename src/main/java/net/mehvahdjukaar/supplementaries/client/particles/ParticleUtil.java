@@ -140,6 +140,7 @@ public class ParticleUtil {
 
     public enum EventType {
         BUBBLE_BLOW,
-        BUBBLE_CLEAN
+        BUBBLE_CLEAN,
+        DISPENSER_MINECART
     }
 }

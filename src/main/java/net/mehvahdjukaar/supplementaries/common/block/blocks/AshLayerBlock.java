@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,6 @@ public class AshLayerBlock extends FallingBlock {
 
     static {
         Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2, 16.0D));
-        SHAPE_BY_LAYER[0] = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 0.1f, 16.0D);
     }
 
     public AshLayerBlock(Properties properties) {
@@ -207,9 +206,8 @@ public class AshLayerBlock extends FallingBlock {
         }
     }
 
-    public static boolean tryConvertToAsh(Level level, BlockPos pPos) {
+    public static boolean tryConvertToAsh(Level level, BlockPos pPos, BlockState state) {
         if (ServerConfigs.cached.ASH_BURN) {
-            BlockState state = level.getBlockState(pPos);
 
             Item i = state.getBlock().asItem();
             int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
@@ -237,11 +235,17 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Override
-    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (level.isClientSide && level.random.nextInt(8) == 0 && (entity.xOld != entity.getX() || entity.zOld != entity.getZ())) {
-            addParticle(entity, pos, level, state.getValue(LAYERS), 0.05f);
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (level.isClientSide) {
+            if (!(entity instanceof LivingEntity) || entity.getFeetBlockState().is(this)) {
+
+                boolean bl = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
+                if (bl && level.random.nextInt(2) == 0) {
+                    addParticle(entity, pos, level, state.getValue(LAYERS), 0.05f);
+                }
+            }
         }
-        super.stepOn(level, pos, state, entity);
+        super.entityInside(state, level, pos, entity);
     }
 
     @Override

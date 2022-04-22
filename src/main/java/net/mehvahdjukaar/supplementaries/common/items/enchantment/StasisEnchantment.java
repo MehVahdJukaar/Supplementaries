@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.enchantment;
 
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.BubbleBlower;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.minecraft.world.entity.EquipmentSlot;

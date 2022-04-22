@@ -171,7 +171,7 @@ public class SoapItem extends Item {
             if (success) {
                 level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON,
                         player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
-                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 32,
+                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 64,
                         new ClientBoundSpawnBlockParticlePacket(pos, ParticleUtil.EventType.BUBBLE_CLEAN));
                 stack.shrink(1);
 

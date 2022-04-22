@@ -1,7 +1,6 @@
-package net.mehvahdjukaar.supplementaries.common.configs;
+package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -9,8 +8,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler.STRING_CHECK;
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
 
 public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_SPEC;

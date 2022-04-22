@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

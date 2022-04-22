@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.IPlaceableItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

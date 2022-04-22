@@ -2,10 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
@@ -398,7 +399,7 @@ public class RopeBlock extends WaterBlock {
                     if (removeRope(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
-                            addStackToExisting(player, new ItemStack(this));
+                            Utils.addStackToExisting(player, new ItemStack(this));
                         }
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
@@ -420,22 +421,6 @@ public class RopeBlock extends WaterBlock {
         }
         return InteractionResult.PASS;
     }
-
-    @Deprecated //use lib one
-    private static void addStackToExisting(Player player, ItemStack stack) {
-        var inv = player.getInventory();
-        boolean added = false;
-        for (int j = 0; j < inv.items.size(); j++) {
-            if (inv.getItem(j).is(stack.getItem()) && inv.add(j, stack)) {
-                added = true;
-                break;
-            }
-        }
-        if (!added && inv.add(stack)) {
-            player.drop(stack, false);
-        }
-    }
-
 
     public static boolean removeRope(BlockPos pos, Level world, Block ropeBlock) {
         BlockState state = world.getBlockState(pos);
@@ -462,7 +447,6 @@ public class RopeBlock extends WaterBlock {
             return tryPlaceAndMove(player, hand, world, pos, ropeBlock);
         }
     }
-
 
     public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);

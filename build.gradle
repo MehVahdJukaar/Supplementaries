@@ -138,7 +138,6 @@ dependencies {
     //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
 
     // implementation fg.deobf("curse.maven:malum-484064:3579643")
-    // implementation fg.deobf("curse.maven:farmersdelight-398521:3575116")
     // implementation fg.deobf("curse.maven:tetra-289712:3586368")
     // implementation fg.deobf("curse.maven:mgui-351914:3573121")
 

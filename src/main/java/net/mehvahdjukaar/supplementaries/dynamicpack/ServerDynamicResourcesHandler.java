@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.resourcepack.DynamicDataPack;
+import net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
-import net.minecraft.SharedConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -17,40 +18,42 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.eventbus.EventBus;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ServerDynamicResourcesHandler {
+public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
 
-    public static final DynamicDataPack DYNAMIC_DATA_PACK =
-            new DynamicDataPack(Supplementaries.res("virtual_resourcepack"));
-
-    //fired on mod setup
-    public static void registerBus(IEventBus forgeBus) {
-        DYNAMIC_DATA_PACK.registerPack(forgeBus);
-        FMLJavaModLoadingContext.get().getModEventBus()
-                .addListener(ServerDynamicResourcesHandler::generateAssets);
-        //TODO: fix tags not working
-        DYNAMIC_DATA_PACK.generateDebugResources = !FMLLoader.isProduction();
+    public ServerDynamicResourcesHandler() {
+        super(new DynamicDataPack(Supplementaries.res("virtual_resourcepack")));
+        this.dynamicPack.generateDebugResources = RegistryConfigs.reg.DEBUG_RESOURCES.get();
     }
 
-    public static void generateAssets(final FMLCommonSetupEvent event) {
+    @Override
+    public Logger getLogger() {
+        return Supplementaries.LOGGER;
+    }
 
-        Stopwatch watch = Stopwatch.createStarted();
+    @Override
+    public boolean dependsOnLoadedPacks() {
+        return false;
+    }
+
+    @Override
+    public void regenerateDynamicAssets(ResourceManager resourceManager) {
+    }
+
+    @Override
+    public void generateStaticAssetsOnStartup(ResourceManager manager) {
 
         //hanging signs
         {
@@ -58,14 +61,14 @@ public class ServerDynamicResourcesHandler {
 
             //loot table
             for (var r : ModRegistry.HANGING_SIGNS.values()) {
-                DYNAMIC_DATA_PACK.addSimpleBlockLootTable(r);
+                dynamicPack.addSimpleBlockLootTable(r);
                 signs.add(r.getRegistryName());
 
-                makeHangingSignRecipe(r.woodType, DYNAMIC_DATA_PACK::addRecipe);
+                makeHangingSignRecipe(r.woodType, dynamicPack::addRecipe);
             }
             //tag
-            DYNAMIC_DATA_PACK.addTag(Supplementaries.res("hanging_signs"), signs, Registry.BLOCK_REGISTRY);
-            DYNAMIC_DATA_PACK.addTag(Supplementaries.res("hanging_signs"), signs, Registry.ITEM_REGISTRY);
+            dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.BLOCK_REGISTRY);
+            dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.ITEM_REGISTRY);
         }
         //sing posts
         {
@@ -75,11 +78,11 @@ public class ServerDynamicResourcesHandler {
             for (var r : ModRegistry.SIGN_POST_ITEMS.values()) {
                 posts.add(r.getRegistryName());
 
-                makeSignPostRecipe(r.woodType, DYNAMIC_DATA_PACK::addRecipe);
+                makeSignPostRecipe(r.woodType, dynamicPack::addRecipe);
             }
 
             //tag
-            DYNAMIC_DATA_PACK.addTag(Supplementaries.res("sign_posts"), posts, Registry.ITEM_REGISTRY);
+            dynamicPack.addTag(Supplementaries.res("sign_posts"), posts, Registry.ITEM_REGISTRY);
         }
         //way signs tag
         {
@@ -93,26 +96,24 @@ public class ServerDynamicResourcesHandler {
                         biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
                         biomeCategory != Biome.BiomeCategory.JUNGLE &&
                         biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
-                    if(!e.getValue().getRegistryName().getPath().equals("minecraft:mushroom_fields")) {
+                    if (!e.getValue().getRegistryName().getPath().equals("minecraft:mushroom_fields")) {
 
                         biomes.add(e.getValue().getRegistryName());
                     }
                 }
-                DYNAMIC_DATA_PACK.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
+                dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
             }
         }
-
-        Supplementaries.LOGGER.info("Generated runtime data resources in: {} seconds", watch.elapsed().toSeconds());
     }
 
-    public static void makeConditionalRec(FinishedRecipe r, Consumer<FinishedRecipe> consumer, String name) {
+    private void makeConditionalRec(FinishedRecipe r, Consumer<FinishedRecipe> consumer, String name) {
         ConditionalRecipe.builder()
                 .addCondition(new OptionalRecipeCondition(name))
                 .addRecipe(r)
                 .build(consumer, "supplementaries", name);
     }
 
-    public static void makeConditionalWoodRec(FinishedRecipe r, WoodType wood, Consumer<FinishedRecipe> consumer, String name) {
+    private void makeConditionalWoodRec(FinishedRecipe r, WoodType wood, Consumer<FinishedRecipe> consumer, String name) {
 
         ConditionalRecipe.builder().addCondition(new OptionalRecipeCondition(name))
                 .addCondition(new ModLoadedCondition(wood.getNamespace()))
@@ -121,15 +122,15 @@ public class ServerDynamicResourcesHandler {
                 .build(consumer, "supplementaries", name + "_" + wood.getAppendableId());
     }
 
-    private static ResourceLocation getPlankRegName(WoodType wood) {
+    private ResourceLocation getPlankRegName(WoodType wood) {
         return new ResourceLocation(wood.getNamespace(), wood.getWoodName() + "_planks");
     }
 
-    private static ResourceLocation getSignRegName(WoodType wood) {
+    private ResourceLocation getSignRegName(WoodType wood) {
         return new ResourceLocation(wood.getNamespace(), wood.getWoodName() + "_sign");
     }
 
-    private static void makeSignPostRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
+    private void makeSignPostRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
         try {
             Item plank = wood.plankBlock.asItem();
             Preconditions.checkArgument(plank != Items.AIR);
@@ -160,7 +161,7 @@ public class ServerDynamicResourcesHandler {
         }
     }
 
-    private static void makeHangingSignRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
+    private void makeHangingSignRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
         try {
             Item plank = wood.plankBlock.asItem();
             Preconditions.checkArgument(plank != Items.AIR);
@@ -180,6 +181,7 @@ public class ServerDynamicResourcesHandler {
             Supplementaries.LOGGER.error("Failed to generate hanging sign recipe for wood type {}", wood);
         }
     }
+
 
 
 }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -281,6 +281,7 @@ public class BellowsBlockTile extends BlockEntity {
     private void pushAir(Level level, BlockPos pos, BlockState state, int power, long time, float period, float airIntensity) {
         Direction facing = state.getValue(BellowsBlock.FACING);
         BlockPos frontPos = pos.relative(facing);
+        //TODO: optimize and add campfire smoke
         FluidState fluid = level.getFluidState(frontPos);
 
         //client. particles

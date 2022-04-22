@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -13,16 +13,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class VillagerTradesHandler {
 
@@ -120,8 +118,9 @@ public class VillagerTradesHandler {
             ListTag listTag = new ListTag();
 
             int stars = 0;
+            List<FireworkRocketItem.Shape> usedShapes = new ArrayList<>();
             do {
-                listTag.add(createRandomFireworkStar(random));
+                listTag.add(createRandomFireworkStar(random,usedShapes));
                 stars++;
             } while (random.nextFloat() < 0.42f && stars < 7);
 
@@ -140,22 +139,30 @@ public class VillagerTradesHandler {
         public MerchantOffer getOffer(Entity entity, Random random) {
 
             ItemStack itemstack = new ItemStack(Items.FIREWORK_STAR);
-            itemstack.addTagElement("Explosion", createRandomFireworkStar(random));
+            itemstack.addTagElement("Explosion", createRandomFireworkStar(random, List.of()));
             return new MerchantOffer(new ItemStack(Items.EMERALD, price), itemstack, maxTrades, 1, BUY);
         }
     }
 
+    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE,DyeColor.ORANGE,DyeColor.MAGENTA,DyeColor.LIGHT_BLUE,
+            DyeColor.YELLOW,DyeColor.LIME,DyeColor.PINK,DyeColor.CYAN,DyeColor.PURPLE,DyeColor.BLUE,DyeColor.GREEN,DyeColor.RED};
 
-    private static CompoundTag createRandomFireworkStar(Random random) {
+    private static CompoundTag createRandomFireworkStar(Random random, List<FireworkRocketItem.Shape> usedShapes) {
         CompoundTag tag = new CompoundTag();
-        tag.putByte("Type", (byte) FireworkRocketItem.Shape.values()
-                [random.nextInt(FireworkRocketItem.Shape.values().length)].getId());
+        ArrayList<FireworkRocketItem.Shape> possible =  new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
+        possible.removeAll(usedShapes);
+        if(possible.isEmpty()) {
+            tag.putByte("Type", (byte) FireworkRocketItem.Shape.values()
+                    [random.nextInt(FireworkRocketItem.Shape.values().length)].getId());
+        }else{
+            tag.putByte("Type", (byte) possible.get(random.nextInt(possible.size())).getId());
+        }
         tag.putBoolean("Flicker", random.nextFloat() < 0.42f);
         tag.putBoolean("Trail", random.nextFloat() < 0.42f);
         List<Integer> list = Lists.newArrayList();
         int colors = 0;
         do {
-            list.add(DyeColor.values()[random.nextInt(DyeColor.values().length)].getFireworkColor());
+            list.add(VIBRANT_COLORS[random.nextInt(VIBRANT_COLORS.length)].getFireworkColor());
             colors++;
         } while (random.nextFloat() < 0.42f && colors < 9);
         tag.putIntArray("Colors", list);
@@ -165,7 +172,7 @@ public class VillagerTradesHandler {
             List<Integer> fadeList = Lists.newArrayList();
             colors = 0;
             do {
-                fadeList.add(DyeColor.values()[random.nextInt(DyeColor.values().length)].getFireworkColor());
+                fadeList.add(VIBRANT_COLORS[random.nextInt(VIBRANT_COLORS.length)].getFireworkColor());
                 colors++;
             } while (random.nextFloat() < 0.42f && colors < 9);
             tag.putIntArray("FadeColors", fadeList);

@@ -2,44 +2,29 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
-import net.mehvahdjukaar.selene.resourcepack.AssetGenerators;
-import net.mehvahdjukaar.selene.resourcepack.DynamicTexturePack;
-import net.mehvahdjukaar.selene.resourcepack.RPUtils;
-import net.mehvahdjukaar.selene.resourcepack.RPUtils.ResType;
-import net.mehvahdjukaar.selene.resourcepack.RPUtils.StaticResource;
-import net.mehvahdjukaar.selene.resourcepack.ResourcePackAwareDynamicTextureProvider;
-import net.mehvahdjukaar.selene.textures.Palette;
-import net.mehvahdjukaar.selene.textures.Respriter;
-import net.mehvahdjukaar.selene.textures.SpriteUtils;
+import net.mehvahdjukaar.selene.resourcepack.*;
+import net.mehvahdjukaar.selene.resourcepack.asset_generators.LangBuilder;
+import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.Palette;
+import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.Respriter;
+import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextureProvider {
 
-    public static final ClientDynamicResourcesHandler INSTANCE = new ClientDynamicResourcesHandler();
-    public static final DynamicTexturePack DYNAMIC_TEXTURE_PACK =
-            new DynamicTexturePack(Supplementaries.res("virtual_resourcepack"));
+public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider {
 
-
-    public static void registerBus(IEventBus bus) {
-        DYNAMIC_TEXTURE_PACK.registerPack(bus);
-
-        DYNAMIC_TEXTURE_PACK.generateDebugResources = RegistryConfigs.reg.DEBUG_RESOURCES.get();
-    }
-
-    @Override
-    public DynamicTexturePack getDynamicPack() {
-        return DYNAMIC_TEXTURE_PACK;
+    public ClientDynamicResourcesHandler() {
+        super(new DynamicTexturePack(Supplementaries.res("virtual_resourcepack")));
+        this.dynamicPack.generateDebugResources = RegistryConfigs.reg.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -48,28 +33,27 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
     }
 
     @Override
-    public boolean hasTexturePackSupport() {
+    public boolean dependsOnLoadedPacks() {
         return ClientConfigs.general.RESOURCE_PACK_SUPPORT.get();
     }
-
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
         //generate static resources
 
-        AssetGenerators.LangBuilder langBuilder = new AssetGenerators.LangBuilder();
+        LangBuilder langBuilder = new LangBuilder();
 
         //------hanging signs------
         {
 
             StaticResource hsBlockState = getResOrLog(manager,
-                    RPUtils.resPath(Supplementaries.res("hanging_sign_oak"), ResType.BLOCKSTATES));
+                    ResType.BLOCKSTATES.getPath(Supplementaries.res("hanging_sign_oak")));
             StaticResource hsModel = getResOrLog(manager,
-                    RPUtils.resPath(Supplementaries.res("hanging_signs/hanging_sign_oak"), ResType.BLOCK_MODELS));
+                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("hanging_signs/hanging_sign_oak")));
             StaticResource hsLoader = getResOrLog(manager,
-                    RPUtils.resPath(Supplementaries.res("hanging_signs/loader_template"), ResType.BLOCK_MODELS));
+                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("hanging_signs/loader_template")));
             StaticResource hsItemModel = getResOrLog(manager,
-                    RPUtils.resPath(Supplementaries.res("hanging_sign_oak"), ResType.ITEM_MODELS));
+                    ResType.ITEM_MODELS.getPath(Supplementaries.res("hanging_sign_oak")));
 
             for (var e : ModRegistry.HANGING_SIGNS.entrySet()) {
                 WoodType wood = e.getKey();
@@ -80,19 +64,19 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                     langBuilder.addEntry(v, wood.getNameForTranslation("hanging_sign"));
 
                     try {
-                        DYNAMIC_TEXTURE_PACK.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);
+                        dynamicPack.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);
                     } catch (Exception ex) {
                         getLogger().error("Failed to generate Hanging Sign blockstate definition for {} : {}", v, ex);
                     }
 
                     try {
-                        DYNAMIC_TEXTURE_PACK.addSimilarJsonResource(hsModel, "hanging_sign_oak", id);
+                        dynamicPack.addSimilarJsonResource(hsModel, "hanging_sign_oak", id);
                     } catch (Exception ex) {
                         getLogger().error("Failed to generate Hanging Sign block model for {} : {}", v, ex);
                     }
 
                     try {
-                        DYNAMIC_TEXTURE_PACK.addSimilarJsonResource(hsItemModel, "hanging_sign_oak", id);
+                        dynamicPack.addSimilarJsonResource(hsItemModel, "hanging_sign_oak", id);
                     } catch (Exception ex) {
                         getLogger().error("Failed to generate Hanging Sign item model for {} : {}", v, ex);
                     }
@@ -117,7 +101,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
         //------sing posts-----
         {
             StaticResource spItemModel = getResOrLog(manager,
-                    RPUtils.resPath(Supplementaries.res("sign_post_oak"), ResType.ITEM_MODELS));
+                    ResType.ITEM_MODELS.getPath(Supplementaries.res("sign_post_oak")));
 
             for (var e : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
                 WoodType wood = e.getKey();
@@ -126,7 +110,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                     langBuilder.addEntry(v, e.getKey().getNameForTranslation("sign_post"));
 
                     try {
-                        DYNAMIC_TEXTURE_PACK.addSimilarJsonResource(spItemModel,
+                        dynamicPack.addSimilarJsonResource(spItemModel,
                                 "sign_post_oak", wood.getVariantId("sign_post"));
                     } catch (Exception ex) {
                         getLogger().error("Failed to generate Sign Post item model for {} : {}", v, ex);
@@ -136,10 +120,10 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
         }
 
 
-        DYNAMIC_TEXTURE_PACK.addLang(Supplementaries.res("en_us"), langBuilder.build());
+        dynamicPack.addLang(Supplementaries.res("en_us"), langBuilder.build());
     }
 
-    public void addHangingSignLoaderModel(RPUtils.StaticResource resource, String woodTextPath, String logTexture) {
+    public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
         String string = new String(resource.data, StandardCharsets.UTF_8);
 
         string = string.replace("wood_type", woodTextPath);
@@ -147,14 +131,14 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
 
         //adds modified under my namespace
         ResourceLocation newRes = Supplementaries.res("hanging_signs/" + woodTextPath + "_loader");
-        DYNAMIC_TEXTURE_PACK.addBytes(newRes, string.getBytes(), ResType.BLOCK_MODELS);
+        dynamicPack.addBytes(newRes, string.getBytes(), ResType.BLOCK_MODELS);
     }
 
 
     //-------------resource pack dependant textures-------------
 
     @Override
-    public void regenerateTextures(ResourceManager manager) {
+    public void regenerateDynamicAssets(ResourceManager manager) {
 
         WallLanternTexturesRegistry.onResourceReload(manager);
 
@@ -162,9 +146,9 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
 
 
         //hanging signs block textures
-        try (NativeImage template = readImage(manager, Supplementaries.res(
+        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
                 "textures/blocks/hanging_signs/hanging_sign_oak.png"));
-             NativeImage mask = readImage(manager, Supplementaries.res(
+             NativeImage mask = SpriteUtils.readImage(manager, Supplementaries.res(
                      "textures/blocks/hanging_signs/board_mask.png"))) {
 
             Palette palette = Palette.fromImage(template, mask);
@@ -182,7 +166,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                     Palette targetPalette = SpriteUtils.extrapolateSignBlockPalette(plankPalette);
                     NativeImage newImage = respriter.recolorImage(targetPalette);
 
-                    DYNAMIC_TEXTURE_PACK.addTexture(textureRes, newImage);
+                    dynamicPack.addTexture(textureRes, newImage);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Hanging Sign block texture for for {} : {}", v, ex);
                 }
@@ -193,9 +177,9 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
         }
 
         //hanging sign item textures
-        try (NativeImage boardTemplate = readImage(manager, Supplementaries.res(
+        try (NativeImage boardTemplate = SpriteUtils.readImage(manager, Supplementaries.res(
                 "textures/items/hanging_signs/template.png"));
-             NativeImage boardMask = readImage(manager, Supplementaries.res(
+             NativeImage boardMask = SpriteUtils.readImage(manager, Supplementaries.res(
                      "textures/items/hanging_signs/board_mask.png"))) {
 
             Palette palette = Palette.fromImage(boardTemplate, boardMask);
@@ -211,13 +195,13 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                 NativeImage newImage = null;
                 if (wood.signItem != null) {
                     try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
-                         NativeImage signMask = readImage(manager, Supplementaries.res(
+                         NativeImage signMask = SpriteUtils.readImage(manager, Supplementaries.res(
                                  "textures/items/hanging_signs/sign_board_mask.png"))) {
 
                         Palette targetPalette = Palette.fromImage(vanillaSign, signMask);
                         newImage = respriter.recolorImage(targetPalette);
 
-                        try (NativeImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        try (NativeImage scribbles = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("textures/items/hanging_signs/sign_scribbles_mask.png"),
                                 Supplementaries.res("textures/items/hanging_signs/scribbles_template.png"));) {
                             SpriteUtils.mergeImages(newImage, scribbles);
@@ -225,7 +209,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                             getLogger().error("Could not properly color Hanging Sign texture for {} : {}", v, ex);
                         }
 
-                        try (NativeImage stick = recolorFromVanilla(manager, vanillaSign,
+                        try (NativeImage stick = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("textures/items/hanging_signs/sign_stick_mask.png"),
                                 Supplementaries.res("textures/items/hanging_signs/stick_template.png"))) {
                             SpriteUtils.mergeImages(newImage, stick);
@@ -247,7 +231,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                     }
                 }
                 if (newImage != null) {
-                    DYNAMIC_TEXTURE_PACK.addTexture(textureRes, newImage);
+                    dynamicPack.addTexture(textureRes, newImage);
                 }
             }
         } catch (Exception ex) {
@@ -255,7 +239,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
         }
 
         //sign posts item textures
-        try (NativeImage template = readImage(manager, Supplementaries.res(
+        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
                 "textures/items/sign_posts/template.png"))) {
 
             Respriter respriter = new Respriter(template);
@@ -271,13 +255,13 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                 NativeImage newImage = null;
                 if (wood.signItem != null) {
                     try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
-                         NativeImage signMask = readImage(manager, Supplementaries.res(
+                         NativeImage signMask = SpriteUtils.readImage(manager, Supplementaries.res(
                                  "textures/items/hanging_signs/sign_board_mask.png"))) {
 
                         Palette targetPalette = Palette.fromImage(vanillaSign, signMask);
                         newImage = respriter.recolorImage(targetPalette);
 
-                        try (NativeImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        try (NativeImage scribbles = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("textures/items/hanging_signs/sign_scribbles_mask.png"),
                                 Supplementaries.res("textures/items/sign_posts/scribbles_template.png"));) {
                             SpriteUtils.mergeImages(newImage, scribbles);
@@ -301,7 +285,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                 }
                 if (newImage != null) {
 
-                    DYNAMIC_TEXTURE_PACK.addTexture(textureRes, newImage);
+                    dynamicPack.addTexture(textureRes, newImage);
                 }
             }
         } catch (Exception ex) {
@@ -309,7 +293,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
         }
 
         //sign posts block textures
-        try (NativeImage template = readImage(manager, Supplementaries.res(
+        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
                 "textures/entity/sign_posts/sign_post_oak.png"))) {
 
             Respriter respriter = new Respriter(template);
@@ -324,7 +308,7 @@ public class ClientDynamicResourcesHandler extends ResourcePackAwareDynamicTextu
                 try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
                     NativeImage newImage = respriter.recolorImage(plankPalette, null);
 
-                    DYNAMIC_TEXTURE_PACK.addTexture(textureRes, newImage);
+                    dynamicPack.addTexture(textureRes, newImage);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post block texture for for {} : {}", v, ex);
                 }

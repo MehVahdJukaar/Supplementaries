@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.selene.api.ISoftFluidConsumer;
+import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Topping;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,15 +41,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Arrays;
+
 public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
-    protected static final VoxelShape SHAPE_1 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
-    protected static final VoxelShape SHAPE_2 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D);
-    protected static final VoxelShape SHAPE_3 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D);
-    protected static final VoxelShape SHAPE_4 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 8.0D, 14.0D);
-    protected static final VoxelShape SHAPE_5 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 10.0D, 14.0D);
-    protected static final VoxelShape SHAPE_6 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
-    protected static final VoxelShape SHAPE_7 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 14.0D, 14.0D);
-    protected static final VoxelShape SHAPE_8 = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
+
+    protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[8];
+
+    static {
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(2, 0.0D, 2, 14.0D, 2 + l * 2, 14.0D));
+    }
 
     public static final IntegerProperty PANCAKES = BlockProperties.PANCAKES_1_8;
     public static final EnumProperty<Topping> TOPPING = BlockProperties.TOPPING;
@@ -61,7 +62,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     private Topping getTopping(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof HoneyBottleItem) return BlockProperties.Topping.HONEY;
-        if ((Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty() && item == Items.COCOA_BEANS) || stack.is(ModTags.CHOCOLATE_BARS)) {
+        var tag = Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS);
+        if ((tag.isEmpty() || tag.get().stream().findAny().isEmpty() && item == Items.COCOA_BEANS) || stack.is(ModTags.CHOCOLATE_BARS)) {
             return Topping.CHOCOLATE;
         }
         if (item.getRegistryName().toString().equals("autumnity:syrup_bottle")) return Topping.SYRUP;
@@ -162,16 +164,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(PANCAKES)) {
-            default -> SHAPE_1;
-            case 2 -> SHAPE_2;
-            case 3 -> SHAPE_3;
-            case 4 -> SHAPE_4;
-            case 5 -> SHAPE_5;
-            case 6 -> SHAPE_6;
-            case 7 -> SHAPE_7;
-            case 8 -> SHAPE_8;
-        };
+        return SHAPE_BY_LAYER[state.getValue(PANCAKES) - 1];
     }
 
     @Override

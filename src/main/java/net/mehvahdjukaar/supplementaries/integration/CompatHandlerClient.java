@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.botania.client.BotaniaCompatClient;
 import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatClient;

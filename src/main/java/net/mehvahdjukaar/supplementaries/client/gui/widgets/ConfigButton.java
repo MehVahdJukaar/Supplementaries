@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraft.client.gui.components.AbstractWidget;

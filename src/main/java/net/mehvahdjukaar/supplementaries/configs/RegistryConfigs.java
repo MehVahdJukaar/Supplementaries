@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.configs;
+package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
@@ -8,9 +8,7 @@ import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.mixins.MixinConfigs;
 import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.lang.reflect.Field;
@@ -31,7 +29,7 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
-    //TODO: merge with common. Recipe condition is loaded client side so they need to be synced
+    //TODO: maybe merge with common
     //called from mixin config so they can be accessed super early
     public static void load() {
         CommentedFileConfig replacementConfig = CommentedFileConfig
@@ -129,6 +127,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue SILVER_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue LEAD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue LEAD_DOOR_ENABLED;
+        public static ForgeConfigSpec.BooleanValue DISPENSER_MINECART_ENABLED;
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -265,6 +264,7 @@ public class RegistryConfigs {
             PRESENT_ENABLED = builder.define(RegistryConstants.PRESENT_NAME, true);
             PRESENT_ENABLED = builder.define(RegistryConstants.STATUE_NAME, true);
             STASIS_ENABLED = builder.define(RegistryConstants.STASIS_NAME, true);
+            DISPENSER_MINECART_ENABLED = builder.define(RegistryConstants.DISPENSER_MINECART_NAME, true);
 
             SILVER_TRAPDOOR_ENABLED = builder.define(RegistryConstants.SILVER_TRAPDOOR_NAME, true);
             SILVER_DOOR_ENABLED = builder.define(RegistryConstants.SILVER_DOOR_NAME, true);
@@ -290,8 +290,8 @@ public class RegistryConfigs {
 
     }
 
-    private static boolean hasMod(String... modIds){
-       return Arrays.stream(modIds).anyMatch(ModList.get()::isLoaded);
+    private static boolean hasMod(String... modIds) {
+        return Arrays.stream(modIds).anyMatch(ModList.get()::isLoaded);
     }
 
 }

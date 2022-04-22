@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
 import net.minecraft.client.Minecraft;

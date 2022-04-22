@@ -1,7 +1,7 @@
 //package net.mehvahdjukaar.supplementaries.common.entities;
 //
-//import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-//import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+//import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+//import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 //import net.minecraft.core.BlockPos;
 //import net.minecraft.nbt.CompoundTag;
 //import net.minecraft.network.FriendlyByteBuf;

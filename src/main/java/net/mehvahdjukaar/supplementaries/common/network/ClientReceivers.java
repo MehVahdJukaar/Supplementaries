@@ -6,14 +6,17 @@ import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.*;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -23,6 +26,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
 
 import java.util.function.Consumer;
@@ -98,14 +102,33 @@ public class ClientReceivers {
             //bubble blow
             switch (message.id) {
                 case BUBBLE_BLOW -> {
-                    ParticleUtil.spawnParticlesOnBlockFaces(l, message.pos,
+                    ParticleUtil.spawnParticlesOnBlockFaces(l, new BlockPos(message.pos),
                             ModRegistry.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.001f, 0.01f, true);
                 }
                 case BUBBLE_CLEAN -> {
-                    ParticleUtil.spawnParticleOnBlockShape(l, message.pos,
+                    ParticleUtil.spawnParticleOnBlockShape(l, new BlockPos(message.pos),
                             ModRegistry.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
+                }
+                case DISPENSER_MINECART ->{
+                    int j1 = 0;
+                    int j2 = 1;
+                    int k2 = 0;
+                    double d18 = message.pos.x + (double)j1 * 0.6D;
+                    double d24 = message.pos.y + (double)j2 * 0.6D;
+                    double d28 = message.pos.z + (double)k2 * 0.6D;
+
+                    for(int i3 = 0; i3 < 10; ++i3) {
+                        double d4 = l.random.nextDouble() * 0.2D + 0.01D;
+                        double d6 = d18 + (double)j1 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)k2 * 0.5D;
+                        double d8 = d24 + (double)j2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)j2 * 0.5D;
+                        double d30 = d28 + (double)k2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)j1 * 0.5D;
+                        double d9 = (double)j1 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d10 = (double)j2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d11 = (double)k2 * d4 + l.random.nextGaussian() * 0.01D;
+                        l.addParticle(ParticleTypes.SMOKE, d6, d8, d30, d9, d10, d11);
+                    }
                 }
             }
         });

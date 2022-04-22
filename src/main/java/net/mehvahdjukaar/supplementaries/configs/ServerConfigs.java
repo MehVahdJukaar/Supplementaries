@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.configs;
+package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler.STRING_CHECK;
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
 
 
 public class ServerConfigs {

@@ -11,8 +11,8 @@ import com.mrcrayfish.configured.client.util.ScreenUtil;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -91,6 +91,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("soap", ModRegistry.SOAP_BLOCK.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
         addIcon("conditional sign registration", Items.BARRIER);
+        addIcon("dispenser minecart", ModRegistry.DISPENSER_MINECART_ITEM.get());
 
     }
 

@@ -19,13 +19,11 @@ import java.util.Map;
 
 public class Textures {
 
-    private static final String MOD_ID = Supplementaries.MOD_ID;
-
     //minecraft
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
     public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
     public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
-    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block");
+    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block_side");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
 
     //blocks (to stitch)

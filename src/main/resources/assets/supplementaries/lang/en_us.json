@@ -331,6 +331,8 @@
   "block.supplementaries.silver_lantern": "Silver Lantern",
   "block.supplementaries.lead_lantern": "Lead Lantern",
   "block.supplementaries.gold_lantern": "Gold Lantern",
+  "entity.supplementaries.dispenser_minecart": "Dispenser Minecart",
+  "item.supplementaries.dispenser_minecart": "Dispenser Minecart",
 
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",

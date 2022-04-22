@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.supplementaries.common.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.minecraft.advancements.Advancement;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.levelgen.feature.TreeFeature;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,6 +19,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -36,7 +38,6 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
-
 
         /*
         To check if a given tag has a given object:
@@ -62,8 +63,13 @@ public class Supplementaries {
         ModRegistry.registerBus(bus);
         WorldGenHandler.registerBus(bus);
 
-        ServerDynamicResourcesHandler.registerBus(bus);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ClientDynamicResourcesHandler.registerBus(bus));
+        var serverRes = new ServerDynamicResourcesHandler();
+        serverRes.register(bus);
+
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            var clientRes = new ClientDynamicResourcesHandler();
+            clientRes.register(bus);
+        });
 
         bus.addListener(ModSetup::init);
 
@@ -72,6 +78,8 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
     //TODO: dynamic soap undye recipe
+    //create moving dynamic blocks like rope knot
+    //jei villagers adds
     //animated lantern textures
     //add option for soul jar
     //ash jei plugin

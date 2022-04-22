@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import com.google.common.base.Stopwatch;
-import com.jozufozu.flywheel.Flywheel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;

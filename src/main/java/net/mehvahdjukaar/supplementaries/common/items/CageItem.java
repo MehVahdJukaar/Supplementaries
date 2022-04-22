@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.sounds.SoundEvents;

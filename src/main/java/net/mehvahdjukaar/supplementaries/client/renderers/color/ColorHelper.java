@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.common.configs.ClientConfigs;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 

@@ -6,8 +6,9 @@ import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.common.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -192,7 +194,15 @@ public class ModRegistry {
             new SimpleRecipeSerializer<>(TrappedPresentRecipe::new));
 
 
-    //orange trader
+    //dispenser minecart
+    public static final RegistryObject<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME,
+            EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.7F).clientTrackingRange(8));
+
+    public static final RegistryObject<Item> DISPENSER_MINECART_ITEM = regItem(DISPENSER_MINECART_NAME, () -> new DispenserMinecartItem(new Item.Properties()
+            .stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION)));
+
+    //red trader
     public static final RegistryObject<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
             EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, MobCategory.CREATURE)
                     .setShouldReceiveVelocityUpdates(true)
@@ -345,7 +355,7 @@ public class ModRegistry {
     //dynamic. Handled by wood set handler
     public static final Map<WoodType, HangingSignBlock> HANGING_SIGNS = new LinkedHashMap<>();
 
-    public static final Map<WoodType, Item> HANGING_SIGNS_ITEMS = new HashMap<>();
+    public static final Map<WoodType, Item> HANGING_SIGNS_ITEMS = new LinkedHashMap<>();
 
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
     public static final RegistryObject<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = TILES

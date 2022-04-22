@@ -31,6 +31,7 @@
     "MineshaftLanternMixin",
     "PistonBlockEntityMixin",
     "RedMerchantSpawnerMixin",
+    "ServerLevelMixin",
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxSlotsMixin",
     "SkellyHorseMixin",
@@ -38,7 +39,7 @@
     "StrongholdRoomSconceMixin",
     "VineMixin",
     "ZombieHorseMixin",
-    "accessors.ChunkGeneratorAccessor",
+    "accessors.DispenserAccessor",
     "accessors.MineshaftAccessor"
   ],
   "client": [
