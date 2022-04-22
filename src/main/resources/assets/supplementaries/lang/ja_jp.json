@@ -331,6 +331,8 @@
   "block.supplementaries.silver_lantern": "銀のランタン",
   "block.supplementaries.lead_lantern": "鉛のランタン",
   "block.supplementaries.gold_lantern": "金のランタン",
+  "entity.supplementaries.dispenser_minecart": "ディスペンサー付きトロッコ",
+  "item.supplementaries.dispenser_minecart": "ディスペンサー付きトロッコ",
 
   "block.supplementaries.laser_block": "エンダービーマー",
   "death.attack.supplementaries.amethyst_shard": "%1$sは飛び散った破片によって死んだ",
