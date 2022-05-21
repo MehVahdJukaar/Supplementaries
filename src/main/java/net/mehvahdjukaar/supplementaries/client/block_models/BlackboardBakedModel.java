@@ -97,7 +97,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
             Direction dir = state.getValue(BlackboardBlock.FACING);
             BlackboardKey key = data.getData(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
-                quads.addAll(BlackboardTextureManager.INSTANCE.getBlackboardInstance(key)
+                quads.addAll(BlackboardTextureManager.getBlackboardInstance(key)
                   .getModel(dir, b -> generateQuads(b, this.modelTransform)));
             }
         }

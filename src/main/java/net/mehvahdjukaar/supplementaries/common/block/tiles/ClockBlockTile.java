@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 
 public class ClockBlockTile extends BlockEntity {
+
     public float roll = 0;
     public float prevRoll = 0;
     public float targetRoll = 0;
@@ -91,8 +94,9 @@ public class ClockBlockTile extends BlockEntity {
                     this.power = p;
                     level.updateNeighbourForOutputSignal(pos, this.getBlockState().getBlock());
                 }
-                //TODO: add proper sounds
-                //this.world.playSound(null, this.pos, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS,0.03f,time%40==0?2:1.92f);
+                this.level.playSound(null, this.worldPosition,
+                        (minute % 2 == 0 ? ModSounds.CLOCK_TICK_1 : ModSounds.CLOCK_TICK_2).get(), SoundSource.BLOCKS,
+                        0.08f, MthUtils.nextWeighted(level.random, 0.1f) + 0.95f);
 
             }
             //hours

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "supplementaries:block/flower_pot"
+		"particle": "minecraft:block/flower_pot"
 	},
 	"elements": [
 		{

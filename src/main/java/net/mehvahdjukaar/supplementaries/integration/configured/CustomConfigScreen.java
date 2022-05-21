@@ -60,7 +60,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
-        addIcon("axe dispenser behaviors", Items.DIAMOND_AXE);
+        addIcon("dispenser tweaks", Items.DISPENSER);
         addIcon("hanging flower pots", Items.FLOWER_POT);
         addIcon("throwable bricks", Items.BRICK);
         addIcon("wall lantern", Items.LANTERN);
@@ -90,6 +90,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("structures", Items.BRICKS);
         addIcon("soap", ModRegistry.SOAP_BLOCK.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
+        addIcon("lantern tweaks", Items.LANTERN);
         addIcon("conditional sign registration", Items.BARRIER);
         addIcon("dispenser minecart", ModRegistry.DISPENSER_MINECART_ITEM.get());
 

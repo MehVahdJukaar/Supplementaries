@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,7 +28,7 @@ public class BubbleBlockItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         poseStack.pushPose();
 
-        TextureAtlasSprite sprite = Materials.BUBBLE_BLOCK_MATERIAL.sprite();
+        TextureAtlasSprite sprite = ClientRegistry.BUBBLE_BLOCK_MATERIAL.sprite();
         poseStack.translate(0.5, 0.5, 0.5);
         RendererUtil.renderBubble(buffer.getBuffer(RenderType.translucent()), poseStack, 1, sprite, light,
                 false, BlockPos.ZERO, null, ClientEvents.getPartialTicks());

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

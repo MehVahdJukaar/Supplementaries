@@ -7,8 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -56,7 +54,7 @@ public class HangingFlowerPotBlockTile extends SwayingBlockTile implements IBloc
         if (state.getBlock() instanceof FlowerPotBlock) {
             this.pot = state;
             this.setChanged();
-            //TODO: optimize mark dirty and block update to send only what's needed
+            //TODO: optimize mark dirty and block refreshTextures to send only what's needed
             if (this.level != null)
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
             return true;

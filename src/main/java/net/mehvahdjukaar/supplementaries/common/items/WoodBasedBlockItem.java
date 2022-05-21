@@ -30,7 +30,7 @@ public class WoodBasedBlockItem extends BlockItem {
 
     @Override
     protected boolean allowdedIn(CreativeModeTab pCategory) {
-        if (woodType.plankBlock.asItem().getItemCategory() == null) return false;
+        if (woodType.planks.asItem().getItemCategory() == null) return false;
         return super.allowdedIn(pCategory);
     }
 }

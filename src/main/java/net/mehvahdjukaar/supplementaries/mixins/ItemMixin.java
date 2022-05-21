@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.IPlaceableItem;
-import net.minecraft.ChatFormatting;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.AdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -12,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,12 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 import java.util.List;
 
+//makes any item potentially placeable
 @Mixin(Item.class)
-public class ItemMixin implements IPlaceableItem {
+public abstract class ItemMixin implements IExtendedItem {
 
     @Unique
     @Nullable
-    private Block placeable;
+    private AdditionalPlacement additionalBehavior;
 
     @Shadow
     @Final
@@ -40,27 +38,29 @@ public class ItemMixin implements IPlaceableItem {
     //delegates stuff to internal blockItem
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void onUseOnBlock(UseOnContext pContext, CallbackInfoReturnable<InteractionResult> cir) {
-        if (this.placeable != null) {
-            cir.setReturnValue(this.getPlacer().mimicUseOn(pContext, placeable, foodProperties));
+        AdditionalPlacement behavior = this.getAdditionalBehavior();
+        if (behavior != null) {
+            var result = behavior.overrideUseOn(pContext, foodProperties);
+            if (result.consumesAction()) cir.setReturnValue(result);
         }
     }
 
     //delegates stuff to internal blockItem
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     private void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced, CallbackInfo ci) {
-        if (this.placeable != null && ClientConfigs.cached.PLACEABLE_TOOLTIPS) {
-            pTooltipComponents.add(new TranslatableComponent("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+        AdditionalPlacement behavior = this.getAdditionalBehavior();
+        if (behavior != null) {
+            behavior.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         }
     }
 
     @Nullable
-    public Block getPlaceableBlock() {
-        return placeable;
+    public AdditionalPlacement getAdditionalBehavior() {
+        return this.additionalBehavior;
     }
 
     @Override
-    public void makePlaceable(Block placeableState) {
-        this.placeable = placeableState;
-
+    public void addAdditionalBehavior(AdditionalPlacement placementOverride) {
+        this.additionalBehavior = placementOverride;
     }
 }

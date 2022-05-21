@@ -103,9 +103,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }
 
     //TODO: merge
-    //immediately discards pets and not alive entities
+    //immediately discards pets and not alive entities as well as players
     protected final boolean isEntityValid(Entity e, Player player) {
-        if (!e.isAlive() || e.isMultipartEntity()) return false;
+        if (!e.isAlive() || e.isMultipartEntity() || e instanceof Player) return false;
         if (e instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 
@@ -293,7 +293,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (this.isEntityValid(entity, player)) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
-            if (this.isAquarium || this.canCatch(entity)) {
+            boolean canCatch = this.canCatch(entity);
+            if (this.isAquarium || canCatch) {
                 if (entity instanceof Bucketable bucketable) {
                     bucket = bucketable.getBucketItemStack();
                 }
@@ -303,13 +304,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 }
             }
             //safety check since some mods like to give a null bucket...
-            if (bucket == null) bucket = ItemStack.EMPTY;
-
-            if (!bucket.isEmpty()) {
+            if (bucket == null || bucket.isEmpty()){
+                bucket = ItemStack.EMPTY;
+            } else {
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }
 
-            if (!bucket.isEmpty() || this.canCatch(entity)) {
+            if (!bucket.isEmpty() || canCatch) {
                 entity.revive();
                 //return for client
                 if (player.level.isClientSide) return InteractionResult.SUCCESS;
@@ -331,7 +332,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 entity.remove(Entity.RemovalReason.DISCARDED);
                 return InteractionResult.CONSUME;
             }
+            else if(player.getLevel().isClientSide){
+                player.displayClientMessage(new TranslatableComponent(  "message.supplementaries.cage.fail"),true);
+            }
         }
+
         this.playFailSound(player);
         return InteractionResult.PASS;
     }

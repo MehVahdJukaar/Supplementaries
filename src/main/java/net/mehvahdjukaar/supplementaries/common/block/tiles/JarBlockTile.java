@@ -8,10 +8,11 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -127,7 +128,8 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
         if (player != null) {
             ItemStack returnStack = ItemStack.EMPTY;
-            //TODO: cookie sounds
+            player.level.playSound(player, this.worldPosition, ModSounds.JAR_COOKIE.get(), SoundSource.BLOCKS,
+                    1, 0.9f + player.level.random.nextFloat() * 0.1f);
             player.awardStat(Stats.ITEM_USED.get(item));
             // shrink stack and replace bottle /bucket with empty ones
             if (!player.isCreative()) {
@@ -210,7 +212,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        if(!ServerConfigs.cached.JAR_COOKIES) return false;
+        if (!ServerConfigs.cached.JAR_COOKIES) return false;
         return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 

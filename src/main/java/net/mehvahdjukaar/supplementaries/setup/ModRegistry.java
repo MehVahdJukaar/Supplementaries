@@ -6,17 +6,18 @@ import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.effects.OverencumberedEffect;
+import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
+import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
-import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
@@ -25,18 +26,16 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -73,32 +72,34 @@ public class ModRegistry {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Supplementaries.MOD_ID);
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Supplementaries.MOD_ID);
     public static final DeferredRegister<Motive> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_TYPES, Supplementaries.MOD_ID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Supplementaries.MOD_ID);
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Supplementaries.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
 
 
     public static void registerBus(IEventBus bus) {
-        MOD_TAB = !RegistryConfigs.reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
-        JAR_TAB = !RegistryConfigs.reg.JAR_TAB.get() ? null : new JarTab("jars");
+        MOD_TAB = !RegistryConfigs.Reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
+        JAR_TAB = !RegistryConfigs.Reg.JAR_TAB.get() ? null : new JarTab("jars");
         BLOCKS.register(bus);
         ITEMS.register(bus);
         TILES.register(bus);
         CONTAINERS.register(bus);
         ENTITIES.register(bus);
         PARTICLES.register(bus);
-        SOUNDS.register(bus);
         RECIPES.register(bus);
         PAINTINGS.register(bus);
         ENCHANTMENTS.register(bus);
+        EFFECTS.register(bus);
+        SOUNDS.register(bus);
 
         CompatHandler.registerOptionalStuff();
         RegistryHelper.initDynamicRegistry();
     }
 
     public static boolean isDisabled(String name) {
-        return !RegistryConfigs.reg.isEnabled(name);
+        return !RegistryConfigs.Reg.isEnabled(name);
     }
 
 
@@ -107,17 +108,6 @@ public class ModRegistry {
     public static CreativeModeTab JAR_TAB = null;
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
-
-    // public static final SoundType URN = new SoundType(1.0F, 1.0F, SoundEvents.WOOD_BREAK, SoundEvents.WOOD_STEP, SoundEvents.WOOD_PLACE, SoundEvents.WOOD_HIT, SoundEvents.WOOD_FALL);
-
-    //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
-    public static final RegistryObject<SoundEvent> TOM_SOUND = makeSoundEvent("block.turntable.cat");
-    public static final RegistryObject<SoundEvent> TICK_SOUND = makeSoundEvent("block.tick_1");
-    public static final RegistryObject<SoundEvent> TICK_2_SOUND = makeSoundEvent("block.tick_2");
-    public static final RegistryObject<SoundEvent> BOMB_SOUND = makeSoundEvent("item.bomb");
-    public static final RegistryObject<SoundEvent> PANCAKE_MUSIC = makeSoundEvent("music.pancake");
-    public static final RegistryObject<SoundEvent> GUNPOWDER_IGNITE = makeSoundEvent("block.gunpowder.ignite");
-    public static final RegistryObject<SoundEvent> PRESENT_PACK_SOUND = makeSoundEvent("block.present.pack");
 
 
     //using this to register overwrites and conditional block items
@@ -130,7 +120,7 @@ public class ModRegistry {
         //shulker shell
         //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
 
-        if (RegistryConfigs.reg.SHULKER_HELMET_ENABLED.get()) {
+        if (RegistryConfigs.Reg.SHULKER_HELMET_ENABLED.get()) {
             event.getRegistry().register(new ShulkerShellItem(new Item.Properties()
                     .stacksTo(64)
                     .tab(CreativeModeTab.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
@@ -148,8 +138,9 @@ public class ModRegistry {
     public static final RegistryObject<Motive> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new Motive(32, 32));
 
     //enchantment
-    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register(STASIS_NAME, () ->
-            new StasisEnchantment(Enchantment.Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND));
+    public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register(STASIS_NAME, StasisEnchantment::new);
+
+    public static final RegistryObject<MobEffect> OVERENCUMBERED = EFFECTS.register("overencumbered", OverencumberedEffect::new);
 
     //particles
     public static final RegistryObject<SimpleParticleType> SPEAKER_SOUND = regParticle("speaker_sound");
@@ -193,6 +184,12 @@ public class ModRegistry {
     public static final RegistryObject<RecipeSerializer<?>> TRAPPED_PRESENT_RECIPE = RECIPES.register("trapped_present", () ->
             new SimpleRecipeSerializer<>(TrappedPresentRecipe::new));
 
+
+    public static final RegistryObject<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
+            EntityType.Builder.<PearlMarker>of(PearlMarker::new, MobCategory.MISC)
+                    .sized(0.999F, 0.999F)
+                    .updateInterval(-1).setShouldReceiveVelocityUpdates(false)
+                    .clientTrackingRange(4));
 
     //dispenser minecart
     public static final RegistryObject<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME,
@@ -308,6 +305,18 @@ public class ModRegistry {
             .build(SLINGSHOT_PROJECTILE_NAME));
 
 
+    //label
+    /*
+    public static final RegistryObject<EntityType<LabelEntity>> LABEL = ENTITIES.register(LABEL_NAME, () -> (
+            EntityType.Builder.<LabelEntity>of(LabelEntity::new, MobCategory.MISC)
+                    .setCustomClientFactory(LabelEntity::new)
+                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(10))
+            .build(LABEL_NAME));
+
+    public static final RegistryObject<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
+
+     */
     //soap bubbler
     public static final RegistryObject<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))
@@ -472,8 +481,8 @@ public class ModRegistry {
     //jar
     public static final RegistryObject<Block> JAR = BLOCKS.register(JAR_NAME, () -> new JarBlock(
             BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
-                    .strength(1f, 1f)
-                    .sound(SoundType.GLASS)
+                    .strength(0.5f, 1f)
+                    .sound(ModSounds.JAR)
                     .noOcclusion()
     ));
 
@@ -488,7 +497,7 @@ public class ModRegistry {
     public static final RegistryObject<Block> SACK = BLOCKS.register(SACK_NAME, () -> new SackBlock(
             BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                     .strength(1F)
-                    .sound(SoundType.WOOL)
+                    .sound(ModSounds.SACK)
     ));
     public static final RegistryObject<BlockEntityType<SackBlockTile>> SACK_TILE = TILES.register(SACK_NAME, () -> BlockEntityType.Builder.of(
             SackBlockTile::new, SACK.get()).build(null));
@@ -637,7 +646,7 @@ public class ModRegistry {
                     Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D))));
 
     public static final RegistryObject<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME),"forge:ingots/brass");
+            getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME), "forge:ingots/brass");
 
     //crimson lantern
     public static final RegistryObject<Block> CRIMSON_LANTERN = BLOCKS.register(CRIMSON_LANTERN_NAME, () -> new LightableLanternBlock(
@@ -657,23 +666,23 @@ public class ModRegistry {
             Block.box(4.0D, 0.0D, 4.0D, 12.0D, 9.0D, 12.0D)));
 
     public static final RegistryObject<Item> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME),"forge:ingots/silver");
+            getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME), "forge:ingots/silver");
 
     //lead lantern
     public static final RegistryObject<Block> LEAD_LANTERN = BLOCKS.register(LEAD_LANTERN_NAME, () -> new LightableLanternBlock(
-                    BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
+            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
             Shapes.or(Block.box(4.0D, 4.0D, 4.0D, 12.0D, 7.0D, 12.0D),
                     Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D))));
 
     public static final RegistryObject<Item> LEAD_LANTERN_ITEM = regBlockItem(LEAD_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, LEAD_LANTERN_NAME),"forge:ingots/lead");
+            getTab(CreativeModeTab.TAB_DECORATIONS, LEAD_LANTERN_NAME), "forge:ingots/lead");
 
 
     //rope
     public static final RegistryObject<Block> ROPE = BLOCKS.register(ROPE_NAME, () -> new RopeBlock(
             BlockBehaviour.Properties.of(Material.WOOL)
-                    .sound(SoundType.WOOL)
-                    .instabreak()
+                    .sound(ModSounds.ROPE)
+                    .strength(0.25f)
                     .speedFactor(0.7f)
                     .noOcclusion()));
     public static final RegistryObject<Item> ROPE_ITEM = ITEMS.register(ROPE_NAME, () -> new RopeItem(ROPE.get(),
@@ -939,14 +948,14 @@ public class ModRegistry {
                     .sound(SoundType.METAL)
                     .noOcclusion()));
     public static final RegistryObject<Item> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME),"forge:ingots/silver");
+            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME), "forge:ingots/silver");
 
     //silver trapdoor
     public static final RegistryObject<Block> SILVER_TRAPDOOR = BLOCKS.register(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
             BlockBehaviour.Properties.copy(SILVER_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
     public static final RegistryObject<Item> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME),"forge:ingots/silver");
+            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME), "forge:ingots/silver");
 
     //lead door
     public static final RegistryObject<Block> LEAD_DOOR = BLOCKS.register(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
@@ -955,14 +964,14 @@ public class ModRegistry {
                     .sound(SoundType.METAL)
                     .noOcclusion()));
     public static final RegistryObject<Item> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME),"forge:ingots/lead");
+            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME), "forge:ingots/lead");
 
     //lead trapdoor
     public static final RegistryObject<Block> LEAD_TRAPDOOR = BLOCKS.register(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
             BlockBehaviour.Properties.copy(LEAD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
     public static final RegistryObject<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME),"forge:ingots/lead");
+            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME), "forge:ingots/lead");
 
 
     //netherite doors
@@ -1057,7 +1066,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_FOOD, PANCAKE_NAME))
     ));
     public static final RegistryObject<Item> PANCAKE_DISC = ITEMS.register("pancake_disc",
-            () -> new RecordItem(15, PANCAKE_MUSIC, new Item.Properties().tab(null)
+            () -> new RecordItem(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null)
             ));
 
     //flax
@@ -1142,11 +1151,11 @@ public class ModRegistry {
     //blaze rod
     //TODO: blaze sound
     public static final RegistryObject<Block> BLAZE_ROD_BLOCK = regPlaceableItem(BLAZE_ROD_NAME, () -> new BlazeRodBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
-                    .strength(0.25F, 0F)
-                    .lightLevel(state -> 12)
-                    .emissiveRendering((p, w, s) -> true)
-                    .sound(SoundType.GILDED_BLACKSTONE)),
+                    BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
+                            .strength(0.25F, 0F)
+                            .lightLevel(state -> 12)
+                            .emissiveRendering((p, w, s) -> true)
+                            .sound(SoundType.GILDED_BLACKSTONE)),
             () -> Items.BLAZE_ROD, ServerConfigs.tweaks.PLACEABLE_RODS
     );
 
@@ -1275,7 +1284,7 @@ public class ModRegistry {
 
     //gunpowder block
     public static final RegistryObject<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)),
+                    BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)),
             () -> Items.GUNPOWDER, ServerConfigs.tweaks.PLACEABLE_GUNPOWDER);
 
     //placeable book
@@ -1344,13 +1353,14 @@ public class ModRegistry {
             BlockEntityType.Builder.of(CandleSkullBlockTile::new, SKULL_CANDLE.get()).build(null));
 
     //bubble
-    public static final RegistryObject<Block> BUBBLE_BLOCK = BLOCKS.register(BUBBLE_BLOCK_NAME, () ->
+    public static final RegistryObject<BubbleBlock> BUBBLE_BLOCK = BLOCKS.register(BUBBLE_BLOCK_NAME, () ->
             new BubbleBlock(BlockBehaviour.Properties.of(Material.DECORATION, MaterialColor.COLOR_PINK)
+                    .sound(ModSounds.BUBBLE_BLOCK)
                     .noOcclusion()
                     .isSuffocating((a, b, c) -> false)
                     .isViewBlocking((a, b, c) -> false)
                     .isRedstoneConductor((a, b, c) -> false)
-                    .instabreak().sound(SoundType.HONEY_BLOCK))
+                    .instabreak())
     );
     public static final RegistryObject<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BubbleBlockItem(
             BUBBLE_BLOCK.get(), (new Item.Properties()).tab(null)));

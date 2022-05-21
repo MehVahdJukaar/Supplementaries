@@ -74,6 +74,21 @@
     "facing=west,attachment=palisade": {
       "model": "supplementaries:block/wall_lantern_long",
       "y": 270
+    },
+    "facing=north,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer"
+    },
+    "facing=east,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 90
+    },
+    "facing=south,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 180
+    },
+    "facing=west,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 270
     }
   }
 }

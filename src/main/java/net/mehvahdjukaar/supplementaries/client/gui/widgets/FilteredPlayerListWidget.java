@@ -74,7 +74,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
         if (filter == null) filter = "";
         this.filter = filter.toLowerCase(Locale.ROOT);
         this.updateFilteredEntries();
-        //if a player is added it wont update suggestion
+        //if a player is added it wont refreshTextures suggestion
         return this.filtered.stream().map(SimplePlayerEntry::getName).toList();
     }
 

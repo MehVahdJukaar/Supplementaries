@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "supplementaries:blackstone_tile"
-  },
-  "result": "supplementaries:blackstone_tile_stairs",
-  "count": 1
-}

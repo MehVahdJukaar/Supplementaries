@@ -2,17 +2,14 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CopperLanternBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 

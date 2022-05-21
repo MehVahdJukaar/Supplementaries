@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -96,7 +96,7 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.message = this.commandTextField.getValue();
         this.tileSpeaker.narrator = this.narrator;
         this.tileSpeaker.volume = this.volume.getValue() / this.volume.maxValue;
-        //update server tile
+        //refreshTextures server tile
         NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
     }

@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
+import net.mehvahdjukaar.selene.ClientSetup;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -53,32 +54,17 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
     @Override
     public boolean canBeCaughtWithItem(Item item) {
         //only allows small slimes
-        if (mob instanceof Slime && ((Slime) mob).getSize() > 1) {
+        if (mob instanceof Slime slime && slime.getSize() > 1) {
             return false;
         }
         //hard coding bees to work with resourceful bees
         if (mob instanceof Bee) {
             return true;
         }
-        if (item instanceof AbstractMobContainerItem) {
+        if (item instanceof AbstractMobContainerItem containerItem) {
             //we went full circle lol
-            return ((AbstractMobContainerItem) item).canItemCatch(mob);
+            return containerItem.canItemCatch(mob);
         }
-        return false;
-    }
-
-    @Override
-    public boolean canBeCaughtWithJar() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeCaughtWithTintedJar() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeCaughtWithCage() {
         return false;
     }
 

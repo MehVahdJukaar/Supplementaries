@@ -8,8 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,7 +80,7 @@ public class BombExplosion extends Explosion {
 
     public void doFinalizeExplosion() {
 
-        this.level.playSound(null, this.x, this.y, this.z, ModRegistry.BOMB_SOUND.get(), SoundSource.NEUTRAL, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+        this.level.playSound(null, this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.NEUTRAL, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Collections.shuffle(this.toBlow, this.level.random);

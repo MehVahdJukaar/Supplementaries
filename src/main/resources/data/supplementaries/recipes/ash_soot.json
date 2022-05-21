@@ -13,6 +13,7 @@
         }
       ],
       "recipe": {
+        "type": "minecraft:crafting_shapeless",
         "ingredients": [
           {
             "item": "immersive_weathering:soot"

@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
@@ -129,7 +129,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            builder = buffer.getBuffer(GlobeTextureManager.INSTANCE.getRenderType(level, isSepia));
+            builder = buffer.getBuffer(GlobeTextureManager.getRenderType(level, isSepia));
         } else {
             builder = buffer.getBuffer(RenderType.entityCutout(texture));
         }

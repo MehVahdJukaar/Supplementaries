@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -31,10 +32,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemShelfBlock extends WaterBlock implements EntityBlock {
+
     protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(0D, 1.0D, 0.0D, 16.0D, 4.0D, 3.0D);
-    protected static final VoxelShape SHAPE_WEST = Block.box(13.0D, 1.0D, 0D, 16.0D, 4.0D, 16.0D);
-    protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 1.0D, 0D, 3.0D, 4.0D, 16.0D);
+    protected static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
+    protected static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 

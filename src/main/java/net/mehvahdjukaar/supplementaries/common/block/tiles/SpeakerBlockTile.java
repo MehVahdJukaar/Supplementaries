@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;

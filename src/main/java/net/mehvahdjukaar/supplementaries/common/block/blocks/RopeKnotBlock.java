@@ -225,7 +225,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
                 newHeld = oldHeld.updateShape(facing, facingState, world, currentPos, facingPos);
             }
 
-            //manually update facing states
+            //manually refreshTextures facing states
             //world.setBlock(currentPos,newHeld,2);
             BlockState newFacing = facingState.updateShape(facing.getOpposite(), newHeld, world, facingPos, currentPos);
 

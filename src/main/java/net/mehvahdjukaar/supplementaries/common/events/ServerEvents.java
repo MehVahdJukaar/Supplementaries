@@ -5,18 +5,20 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.common.utils.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
@@ -28,7 +30,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -40,17 +41,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraftforge.common.UsernameCache;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
-import net.minecraftforge.event.world.NoteBlockEvent;
-import net.minecraftforge.event.world.PistonEvent;
-import net.minecraftforge.event.world.SaplingGrowTreeEvent;
+import net.minecraftforge.event.world.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,11 +67,9 @@ public class ServerEvents {
     //high priority event to override other wall lanterns
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRightClickBlockHigh(PlayerInteractEvent.RightClickBlock event) {
-        if (ServerConfigs.cached.WALL_LANTERN_HIGH_PRIORITY) {
-            Player player = event.getPlayer();
-            if (!player.isSpectator()) {
-                ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(event, event.getItemStack());
-            }
+        Player player = event.getPlayer();
+        if (!player.isSpectator() && !event.isCanceled()) {
+            ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(event, event.getItemStack());
         }
     }
 
@@ -79,10 +77,8 @@ public class ServerEvents {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getPlayer();
-        if (!player.isSpectator()) {
-            ItemStack stack = event.getItemStack();
-
-            ItemsOverrideHandler.tryPerformClickedBlockOverride(event, stack, false);
+        if (!player.isSpectator() && !event.isCanceled()) {
+            ItemsOverrideHandler.tryPerformClickedBlockOverride(event, event.getItemStack(), false);
         }
     }
 
@@ -124,7 +120,7 @@ public class ServerEvents {
         }
     }
 
-    private static final boolean FODDER_ENABLED = RegistryConfigs.reg.FODDER_ENABLED.get();
+    private static final boolean FODDER_ENABLED = RegistryConfigs.Reg.FODDER_ENABLED.get();
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
@@ -209,5 +205,16 @@ public class ServerEvents {
             level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
         }
 
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onProjectileImpact(final ProjectileImpactEvent event) {
+        PearlMarker.onProjectileImpact(event);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onDimensionUnload(WorldEvent.Unload event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel)
+            MovableFakePlayer.unloadLevel(serverLevel);
     }
 }

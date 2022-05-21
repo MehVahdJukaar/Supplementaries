@@ -6,18 +6,18 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.selene.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
-import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -176,7 +176,7 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (RegistryConfigs.reg.JAR_TAB.get()) {
+        if (RegistryConfigs.Reg.JAR_TAB.get()) {
             if (group == ModRegistry.JAR_TAB) {
                 JarTab.populateTab(items);
             }

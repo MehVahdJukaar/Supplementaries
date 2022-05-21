@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerPattern;
 

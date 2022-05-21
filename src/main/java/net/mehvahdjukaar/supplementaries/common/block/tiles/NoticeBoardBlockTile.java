@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
@@ -65,7 +65,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return new TranslatableComponent("block.supplementaries.notice_board");
     }
 
-    //update blockState and plays sound. server side
+    //refreshTextures blockState and plays sound. server side
     @Override
     public void updateTileOnInventoryChanged() {
 
@@ -97,7 +97,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if (item instanceof BannerPatternItem bannerPatternItem) {
-            this.cachedPattern = Materials.FLAG_MATERIALS.get(bannerPatternItem.getBannerPattern());
+            this.cachedPattern = ClientRegistry.FLAG_MATERIALS.get(bannerPatternItem.getBannerPattern());
         }
 
         this.needsVisualRefresh = true;

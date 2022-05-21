@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,7 +15,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -45,6 +46,14 @@ public class ItemsUtil {
         return ModRegistry.BLOCK_PLACER.get().mimicPlace(context, blockToPlace, placeSound);
     }
 
+    //helper for slingshot. Calls both block item and this in case it as additional behavior
+    public static InteractionResult place(Item item, BlockPlaceContext pContext) {
+        //this also calls mixin
+        if (item instanceof BlockItem bi) return bi.place(pContext);
+        if (((IExtendedItem) item).getAdditionalBehavior() instanceof SimplePlacement si)
+            return si.overridePlace(pContext);
+        return InteractionResult.PASS;
+    }
 
     public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {
     }

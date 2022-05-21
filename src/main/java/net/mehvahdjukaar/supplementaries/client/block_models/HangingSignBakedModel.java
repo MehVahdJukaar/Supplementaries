@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -32,8 +32,8 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
     private final BlockModelShaper blockModelShaper;
 
     public HangingSignBakedModel(BakedModel stick,
-                                 BakedModel leftPost, BakedModel leftPalisade, BakedModel leftWall, BakedModel leftBeam,
-                                 BakedModel rightPost, BakedModel rightPalisade, BakedModel rightWall, BakedModel rightBeam) {
+                                 BakedModel leftPost, BakedModel leftPalisade, BakedModel leftWall, BakedModel leftBeam, BakedModel leftStick,
+                                 BakedModel rightPost, BakedModel rightPalisade, BakedModel rightWall, BakedModel rightBeam, BakedModel rightStick) {
         Map<BlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new HashMap<>();
         for (BlockProperties.SignAttachment a : BlockProperties.SignAttachment.values()) {
             ImmutableList.Builder<BakedModel> b = ImmutableList.builder();
@@ -44,12 +44,14 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                     case PALISADE -> b.add(leftPalisade);
                     case WALL -> b.add(leftWall);
                     case BEAM -> b.add(leftBeam);
+                    case STICK -> b.add(leftStick);
                 }
                 switch (a.right) {
                     case POST -> b.add(rightPost);
                     case PALISADE -> b.add(rightPalisade);
                     case WALL -> b.add(rightWall);
                     case BEAM -> b.add(rightBeam);
+                    case STICK -> b.add(rightStick);
                 }
             }
             temp.put(a, b.build());
@@ -81,7 +83,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
                 boolean fancy = Boolean.TRUE.equals(extraData.getData(BlockProperties.FANCY));
                 if (!fancy) {
 
-                    BakedModel model = blockModelShaper.getModelManager().getModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
+                    BakedModel model = blockModelShaper.getModelManager().getModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
                     if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
                     var signQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;

@@ -2,25 +2,19 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.Minecraft;
@@ -39,8 +33,10 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
@@ -53,7 +49,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,7 +56,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -70,7 +64,8 @@ public class ClientSetup {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
-        event.enqueueWork(()-> {
+        event.enqueueWork(() -> {
+
             //compat
             CompatHandlerClient.init(event);
 
@@ -82,10 +77,6 @@ public class ClientSetup {
 
             //overlay
             //SlimedGuiOverlay.register();
-
-            //dynamic textures
-            GlobeTextureManager.init(Minecraft.getInstance().textureManager);
-            BlackboardTextureManager.init(Minecraft.getInstance().textureManager);
 
             MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
             MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
@@ -241,6 +232,8 @@ public class ClientSetup {
         event.registerEntityRenderer(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
         event.registerEntityRenderer(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
         event.registerEntityRenderer(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
+        event.registerEntityRenderer(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+        // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
 
         //tiles
         event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
@@ -317,54 +310,34 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(Supplementaries.res("flower_box_loader"), new FlowerBoxLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("blackboard_loader"), new BlackboardBlockLoader());
-
         //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
 
-        //fake models & blockstates
-
-        //TODO: merge with materials and client registry
-        for (var r : Materials.HANGING_SIGNS_BLOCK_MODELS.values()) {
-            ForgeModelBakery.addSpecialModel(r);
-        }
-        for(var m : WallLanternTexturesRegistry.SPECIAL_TEXTURES.values()){
-            ForgeModelBakery.addSpecialModel(m);
-        }
-        ForgeModelBakery.addSpecialModel(Materials.HANGING_POT_BLOCK_MODEL);
-        ForgeModelBakery.addSpecialModel(Materials.WIND_VANE_BLOCK_MODEL);
-
-        ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_3D_MODEL);
-        ForgeModelBakery.addSpecialModel(FluteItemRenderer.FLUTE_2D_MODEL);
-        ForgeModelBakery.addSpecialModel(JarBoatTileRenderer.BOAT_MODEL);
-
-        //registerStaticItemModel(new ModelResourceLocation("supplementaries:flute_in_hand#inventory"));
-
-
-        FlowerPotHandler.CUSTOM_MODELS.forEach(ForgeModelBakery::addSpecialModel);
+        ClientRegistry.registerSpecialModels();
     }
 
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        if(true)return;
+        if (true) return;
         //adds to all entities
         var entityTypes = ImmutableList.copyOf(
                 ForgeRegistries.ENTITIES.getValues().stream()
                         .filter(DefaultAttributes::hasSupplier)
-                        .filter(e-> (e != EntityType.ENDER_DRAGON))
+                        .filter(e -> (e != EntityType.ENDER_DRAGON))
                         .map(entityType -> (EntityType<LivingEntity>) entityType)
                         .collect(Collectors.toList()));
 
         entityTypes.forEach((entityType -> addLayer(event.getRenderer(entityType))));
 
         //player skins
-        for (String skinType : event.getSkins()){
+        for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
-            if(renderer!=null) renderer.addLayer(new SlimedLayer(renderer));
+            if (renderer != null) renderer.addLayer(new SlimedLayer(renderer));
         }
     }
 
     private static <T extends LivingEntity, M extends EntityModel<T>, R extends LivingEntityRenderer<T, M>> void
-    addLayer(@Nullable R renderer){
-        if(renderer != null) {
+    addLayer(@Nullable R renderer) {
+        if (renderer != null) {
             renderer.addLayer(new SlimedLayer<>(renderer));
         }
     }

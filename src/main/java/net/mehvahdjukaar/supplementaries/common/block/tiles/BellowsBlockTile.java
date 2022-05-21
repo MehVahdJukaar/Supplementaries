@@ -1,17 +1,20 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -32,12 +35,16 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.List;
 
+//TODO: this is a mess
 public class BellowsBlockTile extends BlockEntity {
 
     public float height = 0;
     public float prevHeight = 0;
     private long startTime = 0;
     public boolean isPressed = false;
+
+    //for sounds
+    private boolean lastBlowing = false;
 
     public BellowsBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BELLOWS_TILE.get(), pos, state);
@@ -249,8 +256,18 @@ public class BellowsBlockTile extends BlockEntity {
             final float dh = 1 / 16f;//0.09375f;
             tile.height = dh * cos - dh;
 
-
             tile.pushAir(level, pos, state, power, time, period, sin);
+
+            //sound
+            boolean blowing = Mth.sin(arg - 0.8f) > 0;
+            if (tile.lastBlowing != blowing) {
+                level.playSound(null, pos,
+                        blowing ? ModSounds.BELLOWS_BLOW.get() : ModSounds.BELLOWS_RETRACT.get(),
+                        SoundSource.BLOCKS, 0.1f,
+                        MthUtils.nextWeighted(level.random, 0.1f) + 0.85f + 0.6f * power / 15f);
+            }
+
+            tile.lastBlowing = blowing;
 
         } else if (tile.isPressed) {
             float minH = -2 / 16f;
@@ -261,6 +278,7 @@ public class BellowsBlockTile extends BlockEntity {
                 //when operated by a mob it behaves like a constant with 7 power
                 int p = 7;
                 float period = tile.getPeriodForPower(p);
+
 
                 tile.pushAir(level, pos, state, power, time, period, 0.8f);
             }
@@ -287,6 +305,7 @@ public class BellowsBlockTile extends BlockEntity {
         //client. particles
         if (level.isClientSide) {
             this.blowParticles(airIntensity, facing, level, fluid.getType().is(FluidTags.WATER));
+
         }
         //server
         else if (fluid.isEmpty()) {
@@ -302,7 +321,7 @@ public class BellowsBlockTile extends BlockEntity {
             }
 
             //refresh fire blocks
-            //update more frequently block closed to it
+            //refreshTextures more frequently block closed to it
             //fire updates (previous random tick) at a minimum of 30 ticks
             int n = 0;
             for (int a = 0; a <= range; a++) {

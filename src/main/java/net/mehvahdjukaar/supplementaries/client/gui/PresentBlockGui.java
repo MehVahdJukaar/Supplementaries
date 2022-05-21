@@ -5,11 +5,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.MultiLineEditBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPacket;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -188,7 +188,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
             RenderSystem.setShaderTexture(0, Textures.PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
-            blit(poseStack, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
+            blit(poseStack, k + slot.x, l + slot.y,  300,12, 232, 16, 16, 256, 256);
         }
         this.renderTooltip(poseStack, mouseX, mouseY);
     }

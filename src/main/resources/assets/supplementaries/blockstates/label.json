@@ -1,8 +1,13 @@
-
-
 {
-    "variants": {
-        "jar=false": { "model": "supplementaries:block/wind_vane_up" },
-        "jar=true":  { "model": "supplementaries:block/label_jar" }
+  "variants": {
+    "type=block": {
+      "model": "supplementaries:block/label"
+    },
+    "type=chest": {
+      "model": "supplementaries:block/label_chest"
+    },
+    "type=jar": {
+      "model": "supplementaries:block/label_jar"
     }
+  }
 }

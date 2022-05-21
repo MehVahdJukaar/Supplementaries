@@ -62,7 +62,10 @@
     "supplementaries:ash_bricks_stairs",
     "supplementaries:ash_bricks_wall",
     "supplementaries:soap_block",
-    "supplementaries:urn"
+    "supplementaries:urn",
+    "supplementaries:jar"
+
+
 
   ]
 }

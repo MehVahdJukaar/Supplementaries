@@ -7,8 +7,8 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -223,7 +223,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    public Lazy<Boolean> tippedEnabled = Lazy.of(() -> RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get());
+    public Lazy<Boolean> tippedEnabled = Lazy.of(() -> RegistryConfigs.Reg.TIPPED_SPIKES_ENABLED.get());
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {

@@ -6,11 +6,11 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -36,15 +36,20 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         itemRenderer = minecraft.getItemRenderer();
     }
 
-    public static void renderFluid(float height, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static final Vector3f liquidParams = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f); //Width, Height, y0
+
+    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         float opacity = 1;//tile.liquidType.opacity;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
-        matrixStackIn.translate(0.5, 0.0625, 0.5);
-        RendererUtil.addCube(builder, matrixStackIn, 0.5f, height, sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
+        matrixStackIn.translate(0.5, liquidParams.z(), 0.5);
+        RendererUtil.addCube(builder, matrixStackIn,
+                liquidParams.x(),
+                percentageFill * liquidParams.y(),
+                sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
         matrixStackIn.popPose();
     }
 
@@ -91,7 +96,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
-                matrixStackIn.translate(0, -0.2, -0.335);
+                matrixStackIn.translate(0, -0.2, -0.335 * (liquidParams.x()/0.5f));
                 int fishType = data.getFishIndex();
 
                 //overlay
@@ -103,21 +108,21 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
             if (tile.mobContainer.shouldHaveWater()) {
                 matrixStackIn.pushPose();
-                matrixStackIn.translate(0.5, 0.0635, 0.5);
+                matrixStackIn.translate(0.5, 0.0015 + liquidParams.z(), 0.5);
                 VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                 TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.SAND_TEXTURE);
-                RendererUtil.addCube(builder, matrixStackIn, 0.499f, 0.0625f, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
+                RendererUtil.addCube(builder, matrixStackIn, 0.99f * liquidParams.x(), liquidParams.y() / 12, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
                 SoftFluid s = SoftFluidRegistry.WATER.get();
-                renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
+                renderFluid(9/12f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
                 matrixStackIn.popPose();
             }
         }
         //render fluid
         if (!tile.fluidHolder.isEmpty()) {
-            renderFluid(tile.fluidHolder.getHeight(0.75f), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
+            renderFluid(tile.fluidHolder.getHeight(1), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
                     tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
                     matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }

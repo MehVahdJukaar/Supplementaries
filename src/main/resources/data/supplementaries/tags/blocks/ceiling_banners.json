@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:ceiling_banner_white",
+    "supplementaries:ceiling_banner_orange",
+    "supplementaries:ceiling_banner_magenta",
+    "supplementaries:ceiling_banner_light_blue",
+    "supplementaries:ceiling_banner_yellow",
+    "supplementaries:ceiling_banner_lime",
+    "supplementaries:ceiling_banner_light_blue",
+    "supplementaries:ceiling_banner_pink",
+    "supplementaries:ceiling_banner_gray",
+    "supplementaries:ceiling_banner_light_gray",
+    "supplementaries:ceiling_banner_cyan",
+    "supplementaries:ceiling_banner_purple",
+    "supplementaries:ceiling_banner_blue",
+    "supplementaries:ceiling_banner_brown",
+    "supplementaries:ceiling_banner_green",
+    "supplementaries:ceiling_banner_red",
+    "supplementaries:ceiling_banner_black"
+  ]
+}

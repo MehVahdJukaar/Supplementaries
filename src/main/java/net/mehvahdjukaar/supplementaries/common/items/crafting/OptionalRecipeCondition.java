@@ -19,11 +19,11 @@ public record OptionalRecipeCondition(String condition) implements ICondition {
 
     @Override
     public boolean test(IContext context) {
-        return RegistryConfigs.reg.isEnabled(this.condition);
+        return RegistryConfigs.Reg.isEnabled(this.condition);
     }
 
     public boolean test() {
-        return RegistryConfigs.reg.isEnabled(this.condition);
+        return RegistryConfigs.Reg.isEnabled(this.condition);
     }
 
     public static class Serializer implements IConditionSerializer<OptionalRecipeCondition> {

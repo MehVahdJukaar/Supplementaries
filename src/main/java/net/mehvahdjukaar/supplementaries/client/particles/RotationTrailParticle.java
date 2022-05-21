@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.VectorUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -80,7 +80,7 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.currentAngle += this.angularVelocity;
         Vec3 rot = new Vec3(this.radius, 0, 0).yRot(currentAngle);
 
-        Vec3 newPos = VectorUtils.changeBasisN(this.axis, rot).add(this.origin);
+        Vec3 newPos = MthUtils.changeBasisN(this.axis, rot).add(this.origin);
 
         this.angularVelocity *= 0.75;
 
@@ -123,10 +123,10 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
 
             float radAngle = (float) (initialAngle * Math.PI / 180);
 
-            Vec3 axis = VectorUtils.ItoD(dir.getNormal());
+            Vec3 axis = MthUtils.V3itoV3(dir.getNormal());
 
             Vec3 rot = new Vec3(radius, 0, 0).yRot(radAngle);
-            Vec3 newPos = VectorUtils.changeBasisN(axis, rot).add(center);
+            Vec3 newPos = MthUtils.changeBasisN(axis, rot).add(center);
 
 
             return new RotationTrailParticle(world, newPos.x, newPos.y, newPos.z, center, axis, ccw,

@@ -5,8 +5,8 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -147,7 +147,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
                     tile.setChanged();
                 } else {
-                    //also update visuals on client. will get overwritten by packet tho
+                    //also refreshTextures visuals on client. will get overwritten by packet tho
                     tile.updateClientVisualsOnLoad();
                 }
                 resultType = InteractionResult.sidedSuccess(worldIn.isClientSide);

@@ -282,12 +282,14 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("wall_lantern");
-            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation")
+            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
+                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_lanterns", false);
             builder.pop();
 
             builder.push("hanging_sign");
-            FAST_SIGNS = builder.comment("Makes hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation")
+            FAST_SIGNS = builder.comment("Makes hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
+                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_signs", false);
             builder.pop();
 

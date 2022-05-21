@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
@@ -29,14 +30,9 @@ public class BlockPlacerItem extends BlockItem {
 
     public static final Map<Block,Pair<Supplier<? extends Item>, ForgeConfigSpec.BooleanValue>> PLACEABLE_ITEMS = new HashMap<>();
 
-    public static BlockPlacerItem getInstance() {
-        return ModRegistry.BLOCK_PLACER.get();
-    }
-
     public static void registerPlaceableItem(Block block, Supplier<? extends Item> item, ForgeConfigSpec.BooleanValue config) {
         PLACEABLE_ITEMS.put(block,Pair.of(item,config));
     }
-
 
     private FoodProperties mimicFood;
     private Block mimicBlock;
@@ -53,20 +49,20 @@ public class BlockPlacerItem extends BlockItem {
             Block b = v.getKey();
             Item i = v.getValue().getFirst().get();
             if (i != null && i != Items.AIR && b != null && b != Blocks.AIR) {
-                ((IPlaceableItem)i).makePlaceable(b);
+                ((IExtendedItem)i).addAdditionalBehavior(new SimplePlacement(b));
                 pBlockToItemMap.put(b, i);
             }
         }
     }
 
-    private boolean isEnabled(Block b){
+    private boolean isDisabled(Block b){
         var p = PLACEABLE_ITEMS.get(b);
-        return p == null || p.getSecond().get();
+        return p != null && !p.getSecond().get();
     }
 
     @Nullable
     public BlockState mimicGetPlacementState(BlockPlaceContext pContext, Block toPlace) {
-        if(!this.isEnabled(toPlace))return null;
+        if(this.isDisabled(toPlace))return null;
         this.mimicBlock = toPlace;
         var r = getPlacementState(pContext);
         this.mimicBlock = null;
@@ -74,7 +70,7 @@ public class BlockPlacerItem extends BlockItem {
     }
 
     public InteractionResult mimicUseOn(UseOnContext pContext, Block toPlace, FoodProperties foodProperties) {
-        if(!this.isEnabled(toPlace))return InteractionResult.PASS;
+        if(this.isDisabled(toPlace))return InteractionResult.PASS;
         this.mimicFood = foodProperties;
         this.mimicBlock = toPlace;
         var r = super.useOn(pContext);
@@ -84,7 +80,7 @@ public class BlockPlacerItem extends BlockItem {
     }
 
     public InteractionResult mimicPlace(BlockPlaceContext pContext, Block toPlace, @Nullable SoundType overrideSound) {
-        if(!this.isEnabled(toPlace))return InteractionResult.PASS;
+        if(this.isDisabled(toPlace))return InteractionResult.PASS;
         this.overrideSound = overrideSound;
         this.mimicBlock = toPlace;
         var r = super.place(pContext);
@@ -122,5 +118,12 @@ public class BlockPlacerItem extends BlockItem {
         return super.getPlaceSound(state, world, pos, entity);
     }
 
+    @Override
+    public boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
+        this.mimicBlock = pState.getBlock();
+        boolean r = super.canPlace(pContext, pState);
+        this.mimicBlock = null;
+        return r;
+    }
 
 }

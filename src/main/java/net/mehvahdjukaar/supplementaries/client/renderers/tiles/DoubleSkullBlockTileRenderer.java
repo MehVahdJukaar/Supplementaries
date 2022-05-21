@@ -1,17 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class DoubleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer<DoubleSkullBlockTile> {
 

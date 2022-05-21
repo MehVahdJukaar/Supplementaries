@@ -4,8 +4,10 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -50,7 +53,7 @@ public class BubbleBlock extends Block implements EntityBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos p_60557_, CollisionContext collisionContext) {
         return Shapes.block();
-    }    //TODO: replace sounds
+    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext collisionContext) {
@@ -63,13 +66,19 @@ public class BubbleBlock extends Block implements EntityBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (ServerConfigs.cached.BUBBLE_BREAK && level instanceof ServerLevel serverLevel) {
-            breakBubble(serverLevel, pos);
+            breakBubble(serverLevel, pos,state);
         }
     }
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
         makeParticle(pos, level);
+        playBreakSound(state, level, pos, player);
+    }
+
+    private void playBreakSound(BlockState state, Level level, BlockPos pos, Player player){
+        SoundType soundtype = state.getSoundType(level, pos, null);
+        level.playSound(player,pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 
     @Override
@@ -77,18 +86,19 @@ public class BubbleBlock extends Block implements EntityBlock {
         return true;
     }
 
-    public static void makeParticle(BlockPos pos, Level level) {
+    public void makeParticle(BlockPos pos, Level level) {
         level.addParticle(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
 
-    public static void sendParticles(BlockPos pos, ServerLevel level) {
+    public void sendParticles(BlockPos pos, ServerLevel level) {
         level.sendParticles(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 1, 0, 0, 0, 0);
     }
 
-    public static void breakBubble(ServerLevel level, BlockPos pos) {
+    public void breakBubble(ServerLevel level, BlockPos pos, BlockState state) {
         level.removeBlock(pos, false);
         sendParticles(pos, level);
+        playBreakSound(state, level, pos, null);
     }
 
     @Override
@@ -101,16 +111,15 @@ public class BubbleBlock extends Block implements EntityBlock {
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity p_152429_, float v) {
         super.fallOn(level, state, pos, p_152429_, v);
         if (!level.isClientSide && ServerConfigs.cached.BUBBLE_BREAK) {
-            if (v > 3) breakBubble((ServerLevel) level, pos);
+            if (v > 3) breakBubble((ServerLevel) level, pos, state);
             else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
 
         }
-
     }
 
     @Override
     public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, Random random) {
-        breakBubble(serverLevel, pos);
+        breakBubble(serverLevel, pos, state);
     }
 
     @Nullable

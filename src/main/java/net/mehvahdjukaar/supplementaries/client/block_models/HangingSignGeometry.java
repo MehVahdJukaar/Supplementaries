@@ -20,10 +20,12 @@ public record HangingSignGeometry(BlockModel stick,
                                   BlockModel leftPalisade,
                                   BlockModel leftWall,
                                   BlockModel leftBeam,
+                                  BlockModel leftStick,
                                   BlockModel rightFence,
                                   BlockModel rightPalisade,
                                   BlockModel rightWall,
-                                  BlockModel rightBeam) implements IModelGeometry<HangingSignGeometry> {
+                                  BlockModel rightBeam,
+                                  BlockModel rightStick) implements IModelGeometry<HangingSignGeometry> {
 
 
     @Override
@@ -33,13 +35,16 @@ public record HangingSignGeometry(BlockModel stick,
         BakedModel bakedLeftPalisade = this.leftPalisade.bake(bakery, leftPalisade, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedLeftWall = this.leftWall.bake(bakery, leftWall, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedLeftBeam = this.leftBeam.bake(bakery, leftBeam, spriteGetter, modelTransform, modelLocation, true);
+        BakedModel bakedLeftStick = this.leftStick.bake(bakery, leftStick, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedRightFence = this.rightFence.bake(bakery, rightFence, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedRightPalisade = this.rightPalisade.bake(bakery, rightPalisade, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedRightWall = this.rightWall.bake(bakery, rightWall, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedRightBeam = this.rightBeam.bake(bakery, rightBeam, spriteGetter, modelTransform, modelLocation, true);
+        BakedModel bakedRightStick = this.rightStick.bake(bakery, rightStick, spriteGetter, modelTransform, modelLocation, true);
+
         return new HangingSignBakedModel(bakedStick,
-                bakedLeftFence, bakedLeftPalisade, bakedLeftWall, bakedLeftBeam,
-                bakedRightFence, bakedRightPalisade, bakedRightWall, bakedRightBeam);
+                bakedLeftFence, bakedLeftPalisade, bakedLeftWall, bakedLeftBeam, bakedLeftStick,
+                bakedRightFence, bakedRightPalisade, bakedRightWall, bakedRightBeam, bakedRightStick);
     }
 
     @Override
@@ -50,10 +55,12 @@ public record HangingSignGeometry(BlockModel stick,
         list.addAll(leftPalisade.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(leftBeam.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(leftWall.getMaterials(modelGetter, missingTextureErrors));
+        list.addAll(leftStick.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(rightBeam.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(rightPalisade.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(rightWall.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(rightFence.getMaterials(modelGetter, missingTextureErrors));
+        list.addAll(rightStick.getMaterials(modelGetter, missingTextureErrors));
         return list;
     }
 }

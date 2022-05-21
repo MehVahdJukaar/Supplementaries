@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -16,34 +16,25 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-public class GlobeTextureManager implements AutoCloseable {
-    public static GlobeTextureManager INSTANCE = null;
+public class GlobeTextureManager {
 
-    private final TextureManager textureManager;
-    private final Map<String, TextureInstance> globeTextures = Maps.newHashMap();
+    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().textureManager;
+    private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
 
-    public static void init(TextureManager textureManager) {
-        INSTANCE = new GlobeTextureManager(textureManager);
-    }
-
-    public GlobeTextureManager(TextureManager textureManager) {
-        this.textureManager = textureManager;
-    }
-
-    public void update() {
+    public static void refreshTextures() {
         Level world = Minecraft.getInstance().level;
         if (world != null) {
-            this.getTextureInstance(world, false).updateTexture(world);
-            this.getTextureInstance(world, true).updateTexture(world);
+            getTextureInstance(world, false).updateTexture(world);
+            getTextureInstance(world, true).updateTexture(world);
         }
     }
 
-    public RenderType getRenderType(Level world, boolean sepia) {
-        return this.getTextureInstance(world, sepia).renderType;
+    public static RenderType getRenderType(Level world, boolean sepia) {
+        return getTextureInstance(world, sepia).renderType;
     }
 
-    private TextureInstance getTextureInstance(Level world, boolean sepia) {
-        return this.globeTextures.computeIfAbsent(getTextureId(world, sepia),
+    private static TextureInstance getTextureInstance(Level world, boolean sepia) {
+        return TEXTURE_CACHE.computeIfAbsent(getTextureId(world, sepia),
                 (i) -> new TextureInstance(world, sepia));
     }
 
@@ -53,15 +44,8 @@ public class GlobeTextureManager implements AutoCloseable {
         return id;
     }
 
-    @Override
-    public void close() {
-        for (TextureInstance textureInstance : this.globeTextures.values()) {
-            textureInstance.close();
-        }
-        this.globeTextures.clear();
-    }
-
-    private class TextureInstance implements AutoCloseable {
+    private static class TextureInstance implements AutoCloseable {
+        private final ResourceLocation textureLocation;
         private final DynamicTexture texture;
         private final RenderType renderType;
         private final String dimensionId;
@@ -72,9 +56,8 @@ public class GlobeTextureManager implements AutoCloseable {
             this.dimensionId = world.dimension().location().toString();
             this.texture = new DynamicTexture(32, 16, false);
             this.updateTexture(world);
-            ResourceLocation resourcelocation = GlobeTextureManager.this.textureManager.register("globe/" + dimensionId.replace(":", "_"), this.texture);
-            this.renderType = RenderType.entitySolid(resourcelocation);
-
+            this.textureLocation = TEXTURE_MANAGER.register("globe/" + dimensionId.replace(":", "_"), this.texture);
+            this.renderType = RenderType.entitySolid(textureLocation);
         }
 
         private void updateTexture(Level world) {
@@ -96,52 +79,53 @@ public class GlobeTextureManager implements AutoCloseable {
         @Override
         public void close() {
             this.texture.close();
+            TEXTURE_MANAGER.release(textureLocation);
         }
     }
 
     public static class GlobeColors {
-        public static final HashMap<String, List<Integer>> dimensionColorMap = new HashMap<>();
-        public static final List<Integer> defaultColorMap = new ArrayList<>();
-        public static final List<Integer> sepiaColorMap = new ArrayList<>();
+        public static final HashMap<String, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
+        public static final List<Integer> DEFAULT_COLORS = new ArrayList<>();
+        public static final List<Integer> SEPIA_COLORS = new ArrayList<>();
 
         static {
-            defaultColorMap.add(GlobeDataGenerator.Col.BLACK, 0); //black
-            defaultColorMap.add(GlobeDataGenerator.Col.WATER, 0x23658d);
-            defaultColorMap.add(GlobeDataGenerator.Col.WATER_S, 0x25527d);
-            defaultColorMap.add(GlobeDataGenerator.Col.WATER_D, 0x1d396d);
-            defaultColorMap.add(GlobeDataGenerator.Col.SUNKEN, 0x2d8a5c);
-            defaultColorMap.add(GlobeDataGenerator.Col.GREEN, 0x34a03a);
-            defaultColorMap.add(GlobeDataGenerator.Col.GREEN_S, 0x6ea14b);
-            defaultColorMap.add(GlobeDataGenerator.Col.HOT_S, 0x89a83d);
-            defaultColorMap.add(GlobeDataGenerator.Col.HOT, 0xb5ba65);
-            defaultColorMap.add(GlobeDataGenerator.Col.COLD, 0xccd7d5);
-            defaultColorMap.add(GlobeDataGenerator.Col.COLD_S, 0x83b4c6);
-            defaultColorMap.add(GlobeDataGenerator.Col.ICEBERG, 0x2f83a2);
-            defaultColorMap.add(GlobeDataGenerator.Col.MUSHROOM, 0x826e71);
-            defaultColorMap.add(GlobeDataGenerator.Col.MUSHROOM_S, 0x8e8675);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.BLACK, 0); //black
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.WATER, 0x23658d);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.WATER_S, 0x25527d);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.WATER_D, 0x1d396d);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.SUNKEN, 0x2d8a5c);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.GREEN, 0x34a03a);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.GREEN_S, 0x6ea14b);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.HOT_S, 0x89a83d);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.HOT, 0xb5ba65);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.COLD, 0xccd7d5);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.COLD_S, 0x83b4c6);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.ICEBERG, 0x2f83a2);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MUSHROOM, 0x826e71);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MUSHROOM_S, 0x8e8675);
 
             //TODO: finish this
-            defaultColorMap.add(GlobeDataGenerator.Col.TAIGA, 0x2d8a5c);
-            defaultColorMap.add(GlobeDataGenerator.Col.MESA, 0xc28947);
-            defaultColorMap.add(GlobeDataGenerator.Col.MESA_S, 0xba9f65);
-            defaultColorMap.add(GlobeDataGenerator.Col.MOUNTAIN, 0xba9f65);
-            defaultColorMap.add(GlobeDataGenerator.Col.MOUNTAIN_S, 0x769169);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.TAIGA, 0x2d8a5c);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MESA, 0xc28947);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MESA_S, 0xba9f65);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MOUNTAIN, 0xba9f65);
+            DEFAULT_COLORS.add(GlobeDataGenerator.Col.MOUNTAIN_S, 0x769169);
 
 
-            sepiaColorMap.add(GlobeDataGenerator.Col.BLACK, 0); //black
-            sepiaColorMap.add(GlobeDataGenerator.Col.WATER, 0xbbb5a6);
-            sepiaColorMap.add(GlobeDataGenerator.Col.WATER_S, 0xa6a090);
-            sepiaColorMap.add(GlobeDataGenerator.Col.WATER_D, 0x908a78);
-            sepiaColorMap.add(GlobeDataGenerator.Col.SUNKEN, 0x857b65);
-            sepiaColorMap.add(GlobeDataGenerator.Col.GREEN, 0x766857);
-            sepiaColorMap.add(GlobeDataGenerator.Col.GREEN_S, 0x675a4a);
-            sepiaColorMap.add(GlobeDataGenerator.Col.HOT_S, 0x766857);
-            sepiaColorMap.add(GlobeDataGenerator.Col.HOT, 0x857b65);
-            sepiaColorMap.add(GlobeDataGenerator.Col.COLD, 0x766857);
-            sepiaColorMap.add(GlobeDataGenerator.Col.COLD_S, 0x857b65);
-            sepiaColorMap.add(GlobeDataGenerator.Col.ICEBERG, 0x908a78);
-            sepiaColorMap.add(GlobeDataGenerator.Col.MUSHROOM, 0x857b65);
-            sepiaColorMap.add(GlobeDataGenerator.Col.MUSHROOM_S, 0x857b65);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.BLACK, 0); //black
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.WATER, 0xbbb5a6);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.WATER_S, 0xa6a090);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.WATER_D, 0x908a78);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.SUNKEN, 0x857b65);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.GREEN, 0x766857);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.GREEN_S, 0x675a4a);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.HOT_S, 0x766857);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.HOT, 0x857b65);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.COLD, 0x766857);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.COLD_S, 0x857b65);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.ICEBERG, 0x908a78);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.MUSHROOM, 0x857b65);
+            SEPIA_COLORS.add(GlobeDataGenerator.Col.MUSHROOM_S, 0x857b65);
         }
 
         public static List<List<String>> getDefaultConfig() {
@@ -149,7 +133,7 @@ public class GlobeTextureManager implements AutoCloseable {
             List<String> col = new ArrayList<>();
             col.add("minecraft:overworld");
             for (int i = 1; i < 13; i++) {
-                col.add(Integer.toHexString(defaultColorMap.get((byte) i)));
+                col.add(Integer.toHexString(DEFAULT_COLORS.get((byte) i)));
             }
             l.add(col);
 
@@ -160,10 +144,10 @@ public class GlobeTextureManager implements AutoCloseable {
 
 
         public static void refreshColorsFromConfig() {
-            dimensionColorMap.clear();
+            DIMENSION_COLOR_MAP.clear();
             try {
                 List<? extends List<String>> customColors = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.GLOBE_COLORS);
-                ;
+
                 for (List<String> l : customColors) {
                     if (l.size() >= 13) {
                         String id = l.get(0);
@@ -180,18 +164,18 @@ public class GlobeTextureManager implements AutoCloseable {
                             }
                             col.add(hex);
                         }
-                        dimensionColorMap.put(id, col);
+                        DIMENSION_COLOR_MAP.put(id, col);
                     }
                 }
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("failed to parse config globe_color configs. Try deleting them");
-                dimensionColorMap.put("minecraft:overworld", new ArrayList<>(defaultColorMap));
+                DIMENSION_COLOR_MAP.put("minecraft:overworld", new ArrayList<>(DEFAULT_COLORS));
             }
         }
 
         private static int getRGB(byte b, String dimension, boolean sepia) {
-            if (sepia) return sepiaColorMap.get(b);
-            return dimensionColorMap.getOrDefault(dimension, defaultColorMap).get(b);
+            if (sepia) return SEPIA_COLORS.get(b);
+            return DIMENSION_COLOR_MAP.getOrDefault(dimension, DEFAULT_COLORS).get(b);
         }
 
         public static int getRGBA(byte b, String dimension, boolean sepia) {

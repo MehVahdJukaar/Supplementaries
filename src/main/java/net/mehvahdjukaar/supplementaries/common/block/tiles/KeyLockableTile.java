@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;

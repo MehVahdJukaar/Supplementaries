@@ -51,4 +51,8 @@ public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
     public ServerLevel getLevel() {
         return ((ServerLevel) entity.getLevel());
     }
+
+    public Entity getMinecartEntity() {
+        return entity;
+    }
 }

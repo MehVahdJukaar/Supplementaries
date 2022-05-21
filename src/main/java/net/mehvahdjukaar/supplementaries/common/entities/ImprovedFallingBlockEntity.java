@@ -1,15 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -24,7 +25,8 @@ public class ImprovedFallingBlockEntity extends FallingBlockEntity {
         saveTileDataToItem = false;
     }
 
-    public ImprovedFallingBlockEntity(EntityType<? extends FallingBlockEntity> type, Level level, BlockPos pos, BlockState blockState, boolean saveDataToItem) {
+    public ImprovedFallingBlockEntity(EntityType<? extends FallingBlockEntity> type, Level level, BlockPos pos,
+                                      BlockState blockState, boolean saveDataToItem) {
         super(type, level);
         this.blocksBuilding = true;
         this.xo = pos.getX() + 0.5D;
@@ -37,15 +39,16 @@ public class ImprovedFallingBlockEntity extends FallingBlockEntity {
         this.saveTileDataToItem = saveDataToItem;
     }
 
-    public static ImprovedFallingBlockEntity fall(EntityType<? extends FallingBlockEntity> type,
-                                          Level level, BlockPos pos, BlockState state, boolean saveDataToItem) {
-        ImprovedFallingBlockEntity entity = new ImprovedFallingBlockEntity(type, level, pos, state, saveDataToItem);
+    public static ImprovedFallingBlockEntity fall(EntityType<? extends FallingBlockEntity> type, Level level,
+                                                  BlockPos pos, BlockState state, boolean saveDataToItem) {
+        ImprovedFallingBlockEntity entity = new ImprovedFallingBlockEntity(type, level, pos, state,
+                saveDataToItem);
         level.setBlock(pos, state.getFluidState().createLegacyBlock(), 3);
         level.addFreshEntity(entity);
         return entity;
     }
 
-    public void setSaveTileDataToItem(boolean b){
+    public void setSaveTileDataToItem(boolean b) {
         this.saveTileDataToItem = b;
     }
 
@@ -60,8 +63,6 @@ public class ImprovedFallingBlockEntity extends FallingBlockEntity {
         super.readAdditionalSaveData(tag);
         this.saveTileDataToItem = tag.getBoolean("saveToItem");
     }
-
-    //        this.setHurtsEntities(1f, 20);
 
     //workaround
     public void setBlockState(BlockState state) {
@@ -83,5 +84,8 @@ public class ImprovedFallingBlockEntity extends FallingBlockEntity {
         return this.spawnAtLocation(stack, (float) offset);
     }
 
-
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+        return super.causeFallDamage(pFallDistance, pMultiplier, pSource);
+    }
 }

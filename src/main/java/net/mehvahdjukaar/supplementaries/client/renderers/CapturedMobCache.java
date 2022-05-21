@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 public class CapturedMobCache {
 
-    public static LoadingCache<UUID, Entity> cachedMobs = CacheBuilder.newBuilder()
+    public static LoadingCache<UUID, Entity> MOB_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
-            .build(new CacheLoader<UUID, Entity>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public Entity load(UUID key) {
                     return null;
@@ -29,21 +29,21 @@ public class CapturedMobCache {
             });
 
     public static void addMob(Entity e) {
-        if (e == null) e = defaultPig.get();
-        cachedMobs.put(e.getUUID(), e);
+        if (e == null) e = DEFAULT_PIG.get();
+        MOB_CACHE.put(e.getUUID(), e);
     }
 
-    public static final Lazy<EndCrystal> pedestalCrystal = Lazy.of(() -> {
+    public static final Lazy<EndCrystal> PEDESTAL_CRYSTAL = Lazy.of(() -> {
         EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
         entity.setShowBottom(false);
         return entity;
     });
 
-    private static final Lazy<Entity> defaultPig = Lazy.of(() -> new Pig(EntityType.PIG, Minecraft.getInstance().level));
+    private static final Lazy<Entity> DEFAULT_PIG = Lazy.of(() -> new Pig(EntityType.PIG, Minecraft.getInstance().level));
 
     @Nullable
     public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {
-        Entity e = cachedMobs.getIfPresent(id);
+        Entity e = MOB_CACHE.getIfPresent(id);
         if (e == null) {
             Level world = Minecraft.getInstance().level;
             if (world != null) {
@@ -56,8 +56,7 @@ public class CapturedMobCache {
         return e;
     }
 
-
     public static void tickCrystal() {
-        pedestalCrystal.get().time++;
+        PEDESTAL_CRYSTAL.get().time++;
     }
 }

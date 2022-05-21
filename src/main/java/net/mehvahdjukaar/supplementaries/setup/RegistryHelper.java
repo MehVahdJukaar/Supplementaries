@@ -7,9 +7,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -50,7 +50,7 @@ public class RegistryHelper {
     }
 
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (RegistryConfigs.reg.isEnabled(regName)) {
+        if (RegistryConfigs.Reg.isEnabled(regName)) {
             return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;
         }
         return null;
@@ -67,11 +67,12 @@ public class RegistryHelper {
         return regPlaceableItem(name, sup, itemSupp, config);
     }
 
-    public static RegistryObject<Block> regPlaceableItem(
-            String name, Supplier<? extends Block> sup, Supplier<? extends Item> itemSupplier, ForgeConfigSpec.BooleanValue config) {
+    public static RegistryObject<Block> regPlaceableItem(String name, Supplier<? extends Block> sup,
+                                                         Supplier<? extends Item> itemSupplier,
+                                                         ForgeConfigSpec.BooleanValue config) {
         Supplier<Block> newSupp = () -> {
             Block b = sup.get();
-            BlockPlacerItem.registerPlaceableItem(b, itemSupplier,config);
+            BlockPlacerItem.registerPlaceableItem(b, itemSupplier, config);
             return b;
         };
         return ModRegistry.BLOCKS.register(name, newSupp);
@@ -97,12 +98,12 @@ public class RegistryHelper {
         return ModRegistry.PARTICLES.register(name, () -> new SimpleParticleType(true));
     }
 
-    public static RegistryObject<SoundEvent> makeSoundEvent(String name) {
+    public static RegistryObject<SoundEvent> regSound(String name) {
         return ModRegistry.SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
     }
 
-    public static<T extends Entity> RegistryObject<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
-        return ModRegistry.ENTITIES.register(name, ()->builder.build(name));
+    public static <T extends Entity> RegistryObject<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
+        return ModRegistry.ENTITIES.register(name, () -> builder.build(name));
     }
 
     //flags
@@ -165,13 +166,13 @@ public class RegistryHelper {
             map.put(color, ModRegistry.BLOCKS.register(name, () -> presentFactory.apply(color,
                     BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
                             .strength(1.0F)
-                            .sound(SoundType.WOOL))
+                            .sound(ModSounds.PRESENT))
             ));
         }
         map.put(null, ModRegistry.BLOCKS.register(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
-                        .sound(SoundType.WOOL))
+                        .sound(ModSounds.PRESENT))
         ));
         return map;
     }

@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.enchantedbooks.EnchantedBookRedesignRenderer;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -123,23 +123,23 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 }
                 colors.remove(this.color);
 
-                this.material = Materials.BOOK_MATERIALS.get(this.color);
+                this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
             } else if (item.getRegistryName().getNamespace().equals("inspirations")) {
                 String colName = item.getRegistryName().getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
-                this.material = Materials.BOOK_MATERIALS.get(this.color);
+                this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
             } else if (BookPileBlock.isWrittenBook(item)) {
                 this.color = null;
-                this.material = item instanceof WritableBookItem ? Materials.BOOK_AND_QUILL_MATERIAL : Materials.BOOK_WRITTEN_MATERIAL;
+                this.material = item instanceof WritableBookItem ? ClientRegistry.BOOK_AND_QUILL_MATERIAL : ClientRegistry.BOOK_WRITTEN_MATERIAL;
 
                 this.isEnchanted = false;
             } else {
                 this.color = null;
 
-                this.material = BookPileBlock.isQuarkTome(item) ? Materials.BOOK_TOME_MATERIAL : Materials.BOOK_ENCHANTED_MATERIAL;
+                this.material = BookPileBlock.isQuarkTome(item) ? ClientRegistry.BOOK_TOME_MATERIAL : ClientRegistry.BOOK_ENCHANTED_MATERIAL;
                 this.isEnchanted = true;
             }
         }

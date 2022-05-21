@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common;
 
-import net.mehvahdjukaar.selene.Selene;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -114,7 +113,7 @@ public class Textures {
             for (ResourceLocation r : blocks) {
                 event.addSprite(r);
             }
-            for (var s : Materials.SIGN_POSTS_MATERIALS.values()) {
+            for (var s : ClientRegistry.SIGN_POSTS_MATERIALS.values()) {
                 event.addSprite(s.texture());
             }
             for (var w : WallLanternTexturesRegistry.SPECIAL_TEXTURES.values()) {

@@ -18,7 +18,7 @@
       "recipe": {
         "type": "minecraft:crafting_shaped",
         "pattern": [
-          "212",
+          "121",
           "1 1",
           "111"
         ],
@@ -40,7 +40,7 @@
       "conditions": [
         {
           "type": "supplementaries:flag",
-          "flag": "doormat"
+          "flag": "sack"
         },
         {
           "type": "supplementaries:flag",

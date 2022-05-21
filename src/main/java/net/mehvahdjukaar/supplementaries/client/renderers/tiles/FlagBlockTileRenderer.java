@@ -6,11 +6,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -118,7 +118,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         for (int p = 0; p < list.size(); p++) {
 
-            Material material = Materials.FLAG_MATERIALS.get(list.get(p).getFirst());
+            Material material = ClientRegistry.FLAG_MATERIALS.get(list.get(p).getFirst());
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();

@@ -18,6 +18,7 @@ public class SpecialPlayers {
 
     //TODO: fix pickle not working on me offline
     static {
+        addSpecialPlayer("Dev", true, false, false, "380df991-f603-344c-a090-369bad2a924a");
         addSpecialPlayer("Dev", true, false, true, "5084e6f3-8f54-43f1-8df5-1dca109e430f");
         addSpecialPlayer("MehVahdJukaar", true, false, true, "898b3a39-e486-405c-a873-d6b472dc3ba2", "TheEvilGolem");
         addSpecialPlayer("Capobianco", true, true, true, "90ceb598-9983-4da3-9cae-436d5afb9d81");
@@ -35,6 +36,9 @@ public class SpecialPlayers {
         addSpecialPlayer("Little_pianist", false, false, true, "86045b27-09fd-478d-87d7-77fb9312dd91");
         addSpecialPlayer("FishSupreme", false, true, true, "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34");
         addSpecialPlayer("Plummet_studios", false, false, true, "8c1af44c-d02a-42e8-8ae6-e3f2132acbbf");
+        addSpecialPlayer("Kevin2000", false, false, true, "36c058a7-c9db-4526-b787-ded8f4be48f0");
+        addSpecialPlayer("DrPineapple", false, false, true, "935b65e9-6451-4c2b-92da-287846a94b07");
+
 
     }
 

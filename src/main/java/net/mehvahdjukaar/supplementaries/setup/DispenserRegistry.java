@@ -11,14 +11,16 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
+import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +31,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,19 +50,26 @@ public class DispenserRegistry {
 
     public static void registerBehaviors() {
 
-        if (!RegistryConfigs.reg.DISPENSERS.get()) return;
+        if (!RegistryConfigs.Reg.DISPENSERS.get()) return;
+
+        DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
+
+        //dispenser minecart
+        if(RegistryConfigs.Reg.DISPENSER_MINECART_ENABLED.get()){
+            DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
+        }
 
         //fodder
-        if (RegistryConfigs.reg.FODDER_ENABLED.get()) {
+        if (RegistryConfigs.Reg.FODDER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
         }
         //bubble
-        if (RegistryConfigs.reg.BUBBLE_BLOWER_ENABLED.get()) {
+        if (RegistryConfigs.Reg.BUBBLE_BLOWER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
 
         //jar
-        boolean jar = RegistryConfigs.reg.JAR_ENABLED.get();
+        boolean jar = RegistryConfigs.Reg.JAR_ENABLED.get();
         if (jar) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
@@ -77,7 +87,7 @@ public class DispenserRegistry {
         }
 
         //bomb
-        if (RegistryConfigs.reg.BOMB_ENABLED.get()) {
+        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) {
             //default behaviors for modded items
             var bombBehavior = new BombsDispenserBehavior();
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), bombBehavior);
@@ -91,7 +101,7 @@ public class DispenserRegistry {
         if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
             DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
-        if (RegistryConfigs.reg.ROPE_ARROW_ENABLED.get()) {
+        if (RegistryConfigs.Reg.ROPE_ARROW_ENABLED.get()) {
 
             DispenserBlock.registerBehavior(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
                 protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
@@ -110,7 +120,7 @@ public class DispenserRegistry {
 
         }
 
-        if (RegistryConfigs.reg.SOAP_ENABLED.get()) {
+        if (RegistryConfigs.Reg.SOAP_ENABLED.get()) {
             DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
         }
 
@@ -374,6 +384,45 @@ public class DispenserRegistry {
             if (result.consumesAction()) return InteractionResultHolder.success(stack);
 
             return InteractionResultHolder.fail(stack);
+        }
+    }
+
+    public static class EnderPearlBehavior extends AdditionalDispenserBehavior {
+
+        protected EnderPearlBehavior() {
+            super(Items.ENDER_PEARL);
+        }
+
+        @Override
+        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
+            Level level = source.getLevel();
+            BlockPos pos = source.getPos();
+
+            ThrownEnderpearl pearl = PearlMarker.getPearlToDispense(source, level, pos);
+
+
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+
+            pearl.shoot(direction.getStepX(), (float)direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
+            level.addFreshEntity(pearl);
+
+            stack.shrink(1);
+
+            return InteractionResultHolder.success(stack);
+        }
+
+
+        @Override
+        protected void playSound(BlockSource source, boolean success) {
+            source.getLevel().levelEvent(1002, source.getPos(), 0);
+        }
+
+        protected float getUncertainty() {
+            return 6.0F;
+        }
+
+        protected float getPower() {
+            return 1.1F;
         }
     }
 

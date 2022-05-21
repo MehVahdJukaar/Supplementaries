@@ -12,6 +12,7 @@ import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -29,7 +30,7 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
     public BellowsInstance(MaterialManager materialManager, BellowsBlockTile tile) {
         super(materialManager, tile);
 
-        this.texture = net.mehvahdjukaar.supplementaries.client.Materials.BELLOWS_MATERIAL.sprite();
+        this.texture = ClientRegistry.BELLOWS_MATERIAL.sprite();
         Quaternion rotation = this.getDirection().getRotation();
         this.stack = new PoseStack();
 

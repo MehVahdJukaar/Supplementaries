@@ -2,12 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -97,8 +98,8 @@ public class CrankBlock extends WaterBlock {
         } else {
             boolean ccw = player.isShiftKeyDown();
             this.activate(state, worldIn, pos, ccw);
-            float f = 0.4f;
-            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            float f = (ccw ? 0.6f : 0.7f) + MthUtils.nextWeighted(worldIn.random, 0.1f);
+            worldIn.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
             worldIn.gameEvent(player, GameEvent.BLOCK_SWITCH, pos);
 
             Direction dir = state.getValue(FACING).getOpposite();

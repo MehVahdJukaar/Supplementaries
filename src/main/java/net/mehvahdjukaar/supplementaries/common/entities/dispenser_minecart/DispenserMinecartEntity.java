@@ -207,6 +207,11 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
         }
     }
 
+    @Override
+    public void teleportTo(double pX, double pY, double pZ) {
+        super.teleportTo(pX, pY, pZ);
+        level.broadcastEntityEvent(this, (byte) 46);
+    }
 
     protected void dispenseFrom(ServerLevel pLevel, BlockPos pPos) {
 
@@ -235,5 +240,7 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
         ((ILevelEventRedirect) pLevel).setRedirected(false, Vec3.ZERO);
 
     }
+
+
 
 }

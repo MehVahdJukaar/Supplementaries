@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

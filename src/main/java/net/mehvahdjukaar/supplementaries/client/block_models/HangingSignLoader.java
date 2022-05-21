@@ -34,7 +34,11 @@ public class HangingSignLoader implements IModelLoader<HangingSignGeometry> {
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_wall"));
         BlockModel rightBeam = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_beam"));
-        return new HangingSignGeometry(stick, leftFence, leftPalisade, leftWall, leftBeam,
-                rightFence, rightPalisade, rightWall, rightBeam);
+        BlockModel leftStick = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+                .getAdapter(BlockModel.class).fromJsonTree(json.get("left_stick"));
+        BlockModel rightStick = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+                .getAdapter(BlockModel.class).fromJsonTree(json.get("right_stick"));
+        return new HangingSignGeometry(stick, leftFence, leftPalisade, leftWall, leftBeam, leftStick,
+                rightFence, rightPalisade, rightWall, rightBeam, rightStick);
     }
 }

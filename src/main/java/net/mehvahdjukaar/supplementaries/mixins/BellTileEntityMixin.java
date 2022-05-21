@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBellConnections;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BellBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;

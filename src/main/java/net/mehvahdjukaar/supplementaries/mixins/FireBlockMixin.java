@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -19,7 +18,7 @@ import java.util.Random;
 public abstract class FireBlockMixin {
 
     @Unique
-    BlockState bs;
+    private BlockState bs;
 
     @Inject(method = "tryCatchFire",
             at = @At(value = "INVOKE",
@@ -35,6 +34,8 @@ public abstract class FireBlockMixin {
     private void beforeRemoveBlock(Level pLevel, BlockPos pPos, int pChance, Random pRandom, int pAge, Direction face, CallbackInfo ci) {
         bs = pLevel.getBlockState(pPos);
     }
+
+    
 
 
 }

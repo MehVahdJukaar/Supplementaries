@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

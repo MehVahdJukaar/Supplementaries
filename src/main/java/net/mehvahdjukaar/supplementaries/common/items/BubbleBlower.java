@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -15,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,6 +30,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -61,8 +65,13 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             }
             first = level.getBlockState(pos);
             if (first.getMaterial().isReplaceable()) {
+                BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
+
+                SoundType soundtype = bubble.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
                 if (!level.isClientSide) {
-                    level.setBlockAndUpdate(pos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
+                    level.setBlockAndUpdate(pos, bubble);
                 }
                 if (!(player.getAbilities().instabuild)) {
                     int max = this.getMaxDamage(stack);
@@ -137,7 +146,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
         int charges = this.getCharges(itemstack);
@@ -145,7 +154,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         if (charges > 0) {
 
             int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
-            if (ench > 0) return this.deployBubbleBlock(itemstack, world, player, hand);
+            if (ench > 0) return this.deployBubbleBlock(itemstack, level, player, hand);
 
             player.startUsingItem(hand);
 
@@ -164,6 +173,13 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         }
         if (!(entity instanceof Player player) || !(player.isCreative())) {
             this.setDamage(stack, damage);
+        }
+
+        int soundLength = 4;
+        if (count % soundLength == 0) {
+            Player p = entity instanceof Player pl ? pl : null;
+            entity.level.playSound(p, entity, ModSounds.BUBBLE_BLOW.get(), entity.getSoundSource(),
+                    1.0F, MthUtils.nextWeighted(level.random, 0.20f) + 0.95f);
         }
 
         //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
@@ -216,10 +232,10 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         float headYRot = RotHlpr.wrapRad(model.head.yRot);
 
         float pitch = Mth.clamp(headXRot, -1.6f, 0.8f) + 0.55f - cr;
-        mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f *headYRot;
+        mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f * headYRot;
 
         float yaw = 0.7f * dir;
-        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch + cr) +headYRot, -1.1f, 1.1f);//yaw;
+        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch + cr) + headYRot, -1.1f, 1.1f);//yaw;
         mainHand.zRot = -yaw * Mth.sin(pitch + cr);
 
         AnimationUtils.bobModelPart(mainHand, entity.tickCount, -dir);

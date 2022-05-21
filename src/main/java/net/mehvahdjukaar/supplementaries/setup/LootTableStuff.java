@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.common.items.enchantment.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -24,14 +24,14 @@ public class LootTableStuff {
 
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
-        if (RegistryConfigs.reg.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
-        if (RegistryConfigs.reg.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
-        if (RegistryConfigs.reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
-        if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
-        if (RegistryConfigs.reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
+        if (RegistryConfigs.Reg.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
+        if (RegistryConfigs.Reg.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
+        if (RegistryConfigs.Reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
+        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
+        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
         if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
-        if (RegistryConfigs.reg.BAMBOO_SPIKES_ENABLED.get() &&
-                RegistryConfigs.reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
+        if (RegistryConfigs.Reg.BAMBOO_SPIKES_ENABLED.get() &&
+                RegistryConfigs.Reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
     }
 
     public static void injectLootTables(LootTableLoadEvent event) {

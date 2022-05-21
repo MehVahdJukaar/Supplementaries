@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +36,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public boolean sheared = false;
     //client
-    public Pair<GlobeModel,@Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
+    public Pair<GlobeModel, @Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
@@ -105,6 +108,10 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     public boolean triggerEvent(int id, int type) {
         if (id == 1) {
             this.spin();
+            this.level.playSound(null, this.worldPosition,
+                       ModSounds.GLOBE_SPIN.get(),
+                        SoundSource.BLOCKS, 0.55f,
+                        MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
         } else {
             return super.triggerEvent(id, type);

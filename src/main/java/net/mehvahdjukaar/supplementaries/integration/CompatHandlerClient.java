@@ -22,7 +22,7 @@ public class CompatHandlerClient {
 
         if (CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();
         //registers custom screen instead of default configured one
-        if (CompatHandler.configured && RegistryConfigs.reg.CUSTOM_CONFIGURED_SCREEN.get()) {
+        if (CompatHandler.configured && RegistryConfigs.Reg.CUSTOM_CONFIGURED_SCREEN.get()) {
             try {
                  CustomConfigSelectScreen.registerScreen();
             } catch (Exception e) {

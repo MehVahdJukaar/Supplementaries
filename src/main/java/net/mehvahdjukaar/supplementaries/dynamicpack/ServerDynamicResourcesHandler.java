@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.resourcepack.DynamicDataPack;
 import net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider;
@@ -34,8 +33,8 @@ import java.util.function.Consumer;
 public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
 
     public ServerDynamicResourcesHandler() {
-        super(new DynamicDataPack(Supplementaries.res("virtual_resourcepack")));
-        this.dynamicPack.generateDebugResources = RegistryConfigs.reg.DEBUG_RESOURCES.get();
+        super(new DynamicDataPack(Supplementaries.res("generated_pack")));
+        this.dynamicPack.generateDebugResources = RegistryConfigs.Reg.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -60,12 +59,12 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
             List<ResourceLocation> signs = new ArrayList<>();
 
             //loot table
-            for (var r : ModRegistry.HANGING_SIGNS.values()) {
-                dynamicPack.addSimpleBlockLootTable(r);
-                signs.add(r.getRegistryName());
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign)->{
+                dynamicPack.addSimpleBlockLootTable(sign);
+                signs.add(sign.getRegistryName());
 
-                makeHangingSignRecipe(r.woodType, dynamicPack::addRecipe);
-            }
+                makeHangingSignRecipe(wood, dynamicPack::addRecipe);
+            });
             //tag
             dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.BLOCK_REGISTRY);
             dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.ITEM_REGISTRY);
@@ -75,11 +74,11 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
             List<ResourceLocation> posts = new ArrayList<>();
 
             //recipes
-            for (var r : ModRegistry.SIGN_POST_ITEMS.values()) {
-                posts.add(r.getRegistryName());
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign)->{
+                posts.add(sign.getRegistryName());
 
-                makeSignPostRecipe(r.woodType, dynamicPack::addRecipe);
-            }
+                makeSignPostRecipe(wood, dynamicPack::addRecipe);
+            });
 
             //tag
             dynamicPack.addTag(Supplementaries.res("sign_posts"), posts, Registry.ITEM_REGISTRY);
@@ -122,22 +121,13 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
                 .build(consumer, "supplementaries", name + "_" + wood.getAppendableId());
     }
 
-    private ResourceLocation getPlankRegName(WoodType wood) {
-        return new ResourceLocation(wood.getNamespace(), wood.getWoodName() + "_planks");
-    }
-
-    private ResourceLocation getSignRegName(WoodType wood) {
-        return new ResourceLocation(wood.getNamespace(), wood.getWoodName() + "_sign");
-    }
-
     private void makeSignPostRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
         try {
-            Item plank = wood.plankBlock.asItem();
+            Item plank = wood.planks.asItem();
             Preconditions.checkArgument(plank != Items.AIR);
 
-            Item sign = ForgeRegistries.ITEMS.getValue(getSignRegName(wood));
-
-            if (sign != null && sign != Items.AIR) {
+            Item sign = wood.signItem.get();
+            if (sign != null) {
                 ShapelessRecipeBuilder.shapeless(ModRegistry.SIGN_POST_ITEMS.get(wood), 2)
                         .requires(sign)
                         .group(RegistryConstants.SIGN_POST_NAME)
@@ -163,7 +153,7 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
 
     private void makeHangingSignRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
         try {
-            Item plank = wood.plankBlock.asItem();
+            Item plank = wood.planks.asItem();
             Preconditions.checkArgument(plank != Items.AIR);
             ShapedRecipeBuilder.shaped(ModRegistry.HANGING_SIGNS.get(wood), 2)
                     .pattern("010")

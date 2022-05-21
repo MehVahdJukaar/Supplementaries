@@ -45,9 +45,9 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
                     ordinal = 0))
     public Item containerChanged(ItemStack stack) {
         Item i = stack.getItem();
-        if(i instanceof FlagItem){
+        if(i instanceof FlagItem fi){
             //hax
-            i = BannerBlock.byColor(((FlagItem) i).getColor()).asItem();
+            i = BannerBlock.byColor(fi.getColor()).asItem();
         }
         return i;
     }

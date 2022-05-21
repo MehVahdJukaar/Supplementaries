@@ -2,15 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.world.songs;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSetSongPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;

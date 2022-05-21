@@ -2,13 +2,14 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -434,7 +435,7 @@ public class GunpowderBlock extends LightUpBlock {
                 ((Level) world).blockEvent(pos, this, 0, 0);
             }
             world.setBlock(pos, toggleLitState(state, true), 11);
-            world.playSound(null, pos, ModRegistry.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
+            world.playSound(null, pos, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
                     1.9f + world.getRandom().nextFloat() * 0.1f);
         }
     }
@@ -544,7 +545,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     /**
-     * A randomly called display update to be able to add particles or other
+     * A randomly called display refreshTextures to be able to add particles or other
      * items for display
      */
     @Override

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

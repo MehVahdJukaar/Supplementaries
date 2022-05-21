@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;

@@ -21,7 +21,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public class DispenserMinecartItem extends Item {
 
-    private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
+    public static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 
         /**
@@ -78,7 +78,6 @@ public class DispenserMinecartItem extends Item {
 
     public DispenserMinecartItem(Item.Properties pProperties) {
         super(pProperties);
-        DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
     /**

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.minecraft.client.Minecraft;

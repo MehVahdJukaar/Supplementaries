@@ -25,7 +25,7 @@ public class RegistryConfigs {
 
     public static void createSpec() {
         ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
-        reg.init(REGISTRY_BUILDER);
+        Reg.init(REGISTRY_BUILDER);
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
@@ -42,11 +42,11 @@ public class RegistryConfigs {
         replacementConfig.save();
         REGISTRY_CONFIG.setConfig(replacementConfig);
 
-        reg.HAS_MINESHAFT_LANTERN = reg.COPPER_LANTERN_ENABLED.get();
-        reg.HAS_STRONGHOLD_SCONCE = reg.SCONCE_ENABLED.get();
+        Reg.HAS_MINESHAFT_LANTERN = Reg.COPPER_LANTERN_ENABLED.get();
+        Reg.HAS_STRONGHOLD_SCONCE = Reg.SCONCE_ENABLED.get();
     }
 
-    public static class reg {
+    public static class Reg {
         public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
         public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
@@ -153,7 +153,7 @@ public class RegistryConfigs {
                 case RegistryConstants.KEY_NAME:
                     return NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
             }
-            for (Field f : reg.class.getDeclaredFields()) {
+            for (Field f : Reg.class.getDeclaredFields()) {
                 try {
                     if (ForgeConfigSpec.BooleanValue.class.isAssignableFrom(f.getType())) {
                         ForgeConfigSpec.BooleanValue b = (ForgeConfigSpec.BooleanValue) f.get(null);
@@ -214,7 +214,6 @@ public class RegistryConfigs {
             BLACKBOARD_ENABLED = builder.define(RegistryConstants.BLACKBOARD_NAME, true);
             SAFE_ENABLED = builder.define(RegistryConstants.SAFE_NAME, true);
             COPPER_LANTERN_ENABLED = builder.define(RegistryConstants.COPPER_LANTERN_NAME, true);
-            FLUTE_ENABLED = builder.define(RegistryConstants.FLUTE_NAME, true);
             GOLD_TRAPDOOR_ENABLED = builder.define(RegistryConstants.GOLD_TRAPDOOR_NAME, true);
             GOLD_DOOR_ENABLED = builder.define(RegistryConstants.GOLD_DOOR_NAME, true);
             BAMBOO_SPIKES_ENABLED = builder.define(RegistryConstants.BAMBOO_SPIKES_NAME, true);
@@ -226,14 +225,12 @@ public class RegistryConfigs {
             CHECKERBOARD_ENABLED = builder.define(RegistryConstants.CHECKER_BLOCK_NAME, true);
             NETHERITE_DOOR_ENABLED = builder.define(RegistryConstants.NETHERITE_DOOR_NAME, true);
             NETHERITE_TRAPDOOR_ENABLED = builder.define(RegistryConstants.NETHERITE_TRAPDOOR_NAME, true);
-            PANCAKES_ENABLED = builder.define(RegistryConstants.PANCAKE_NAME, true);
             LOCK_BLOCK_ENABLED = builder.define(RegistryConstants.LOCK_BLOCK_NAME, true);
             FLAX_ENABLED = builder.define(RegistryConstants.FLAX_NAME, true);
             ROPE_ENABLED = builder.define(RegistryConstants.ROPE_NAME, true);
-            ROPE_ARROW_ENABLED = builder.define(RegistryConstants.ROPE_ARROW_NAME, true);
             PULLEY_ENABLED = builder.define(RegistryConstants.PULLEY_BLOCK_NAME, true);
             FODDER_ENABLED = builder.define(RegistryConstants.FODDER_NAME, true);
-            BOMB_ENABLED = builder.define(RegistryConstants.BOMB_NAME, true);
+
             CRIMSON_LANTERN_ENABLED = builder.define(RegistryConstants.CRIMSON_LANTERN_NAME, true);
             MAGMA_CREAM_BLOCK_ENABLED = builder.define(RegistryConstants.MAGMA_CREAM_BLOCK_NAME, true);
             DAUB_ENABLED = builder.define(RegistryConstants.DAUB_NAME, true);
@@ -247,30 +244,38 @@ public class RegistryConfigs {
             IRON_GATE_ENABLED = builder.define(RegistryConstants.IRON_GATE_NAME, true);
             FEATHER_BLOCK_ENABLED = builder.define(RegistryConstants.FEATHER_BLOCK_NAME, true);
             FLINT_BLOCK_ENABLED = builder.define(RegistryConstants.FLINT_BLOCK_NAME, true);
-            SLINGSHOT_ENABLED = builder.define(RegistryConstants.SLINGSHOT_NAME, true);
-            SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
-            CANDY_ENABLED = builder.define(RegistryConstants.CANDY_NAME, true);
-            WRENCH_ENABLED = builder.define(RegistryConstants.WRENCH_NAME, true);
             URN_ENABLED = builder.define(RegistryConstants.URN_NAME, true);
             ASH_ENABLED = builder.define(RegistryConstants.ASH_NAME, true);
             ASH_BRICKS_ENABLED = builder.define(RegistryConstants.ASH_BRICKS_NAME, true);
-            ANTIQUE_INK_ENABLED = builder.define(RegistryConstants.ANTIQUE_INK_NAME, true);
             DOORMAT_ENABLED = builder.define(RegistryConstants.DOORMAT_NAME, true);
             FLOWER_BOX_ENABLED = builder.define(RegistryConstants.FLOWER_BOX_NAME, true);
             BLACKSTONE_TILE_ENABLED = builder.define(RegistryConstants.BLACKSTONE_TILE_NAME, true);
-            SOAP_ENABLED = builder.define(RegistryConstants.SOAP_NAME, true);
-            BUBBLE_BLOWER_ENABLED = builder.define(RegistryConstants.BUBBLE_BLOWER_NAME, true);
             GLOBE_SEPIA = builder.define(RegistryConstants.GLOBE_SEPIA_NAME, true);
             PRESENT_ENABLED = builder.define(RegistryConstants.PRESENT_NAME, true);
             PRESENT_ENABLED = builder.define(RegistryConstants.STATUE_NAME, true);
-            STASIS_ENABLED = builder.define(RegistryConstants.STASIS_NAME, true);
-            DISPENSER_MINECART_ENABLED = builder.define(RegistryConstants.DISPENSER_MINECART_NAME, true);
+
 
             SILVER_TRAPDOOR_ENABLED = builder.define(RegistryConstants.SILVER_TRAPDOOR_NAME, true);
             SILVER_DOOR_ENABLED = builder.define(RegistryConstants.SILVER_DOOR_NAME, true);
             LEAD_TRAPDOOR_ENABLED = builder.define(RegistryConstants.LEAD_TRAPDOOR_NAME, true);
             LEAD_DOOR_ENABLED = builder.define(RegistryConstants.LEAD_DOOR_NAME, true);
 
+            builder.pop();
+
+            builder.push("items");
+            FLUTE_ENABLED = builder.define(RegistryConstants.FLUTE_NAME, true);
+            STASIS_ENABLED = builder.define(RegistryConstants.STASIS_NAME, true);
+            DISPENSER_MINECART_ENABLED = builder.define(RegistryConstants.DISPENSER_MINECART_NAME, true);
+            SOAP_ENABLED = builder.define(RegistryConstants.SOAP_NAME, true);
+            BUBBLE_BLOWER_ENABLED = builder.define(RegistryConstants.BUBBLE_BLOWER_NAME, true);
+            ANTIQUE_INK_ENABLED = builder.define(RegistryConstants.ANTIQUE_INK_NAME, true);
+            SHULKER_HELMET_ENABLED = builder.define("shulker_shell", true);
+            CANDY_ENABLED = builder.define(RegistryConstants.CANDY_NAME, true);
+            WRENCH_ENABLED = builder.define(RegistryConstants.WRENCH_NAME, true);
+            SLINGSHOT_ENABLED = builder.define(RegistryConstants.SLINGSHOT_NAME, true);
+            ROPE_ARROW_ENABLED = builder.define(RegistryConstants.ROPE_ARROW_NAME, true);
+            BOMB_ENABLED = builder.define(RegistryConstants.BOMB_NAME, true);
+            PANCAKES_ENABLED = builder.define(RegistryConstants.PANCAKE_NAME, true);
             builder.pop();
 
             builder.push("entities");

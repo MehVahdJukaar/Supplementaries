@@ -1,30 +1,31 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.mojang.blaze3d.platform.NativeImage;
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.selene.client.asset_generators.LangBuilder;
+import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
+import net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter;
+import net.mehvahdjukaar.selene.client.asset_generators.textures.SpriteUtils;
+import net.mehvahdjukaar.selene.client.asset_generators.textures.TextureImage;
 import net.mehvahdjukaar.selene.resourcepack.*;
-import net.mehvahdjukaar.selene.resourcepack.asset_generators.LangBuilder;
-import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.Palette;
-import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.Respriter;
-import net.mehvahdjukaar.selene.resourcepack.asset_generators.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 
 
 public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider {
 
     public ClientDynamicResourcesHandler() {
-        super(new DynamicTexturePack(Supplementaries.res("virtual_resourcepack")));
-        this.dynamicPack.generateDebugResources = RegistryConfigs.reg.DEBUG_RESOURCES.get();
+        super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
+        this.dynamicPack.generateDebugResources = true;//RegistryConfigs.Reg.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -39,88 +40,87 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
+
+
+        //hack. I need this for texture stitch
+        WallLanternTexturesRegistry.reloadTextures(manager);
+
         //generate static resources
 
-        LangBuilder langBuilder = new LangBuilder();
+        //LangBuilder langBuilder = new LangBuilder();
 
         //------hanging signs------
         {
-
-            StaticResource hsBlockState = getResOrLog(manager,
+            StaticResource hsBlockState = StaticResource.getOrLog(manager,
                     ResType.BLOCKSTATES.getPath(Supplementaries.res("hanging_sign_oak")));
-            StaticResource hsModel = getResOrLog(manager,
+            StaticResource hsModel = StaticResource.getOrLog(manager,
                     ResType.BLOCK_MODELS.getPath(Supplementaries.res("hanging_signs/hanging_sign_oak")));
-            StaticResource hsLoader = getResOrLog(manager,
+            StaticResource hsLoader = StaticResource.getOrLog(manager,
                     ResType.BLOCK_MODELS.getPath(Supplementaries.res("hanging_signs/loader_template")));
-            StaticResource hsItemModel = getResOrLog(manager,
+            StaticResource hsItemModel = StaticResource.getOrLog(manager,
                     ResType.ITEM_MODELS.getPath(Supplementaries.res("hanging_sign_oak")));
 
-            for (var e : ModRegistry.HANGING_SIGNS.entrySet()) {
-                WoodType wood = e.getKey();
-                if (true || !wood.isVanilla()) {
-                    var v = e.getValue();
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
+                //if(wood.isVanilla())return;
 
-                    String id = wood.getVariantId("hanging_sign");
-                    langBuilder.addEntry(v, wood.getNameForTranslation("hanging_sign"));
+                String id = sign.getRegistryName().getPath();
+                //langBuilder.addEntry(sign, wood.getVariantReadableName("block_type.supplementaries.hanging_sign"));
 
-                    try {
-                        dynamicPack.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Hanging Sign blockstate definition for {} : {}", v, ex);
-                    }
-
-                    try {
-                        dynamicPack.addSimilarJsonResource(hsModel, "hanging_sign_oak", id);
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Hanging Sign block model for {} : {}", v, ex);
-                    }
-
-                    try {
-                        dynamicPack.addSimilarJsonResource(hsItemModel, "hanging_sign_oak", id);
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Hanging Sign item model for {} : {}", v, ex);
-                    }
-
-                    try {
-                        String logTexture;
-                        try {
-                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.logBlock, s -> !s.contains("top"));
-                        } catch (Exception e1) {
-                            logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.plankBlock, s -> true);
-                            getLogger().error("Could not properly generate Hanging Sign model for {}. Falling back to planks texture : {}", v, e1);
-                        }
-                        addHangingSignLoaderModel(Objects.requireNonNull(hsLoader), id, logTexture);
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Hanging Sign loader model for {} : {}", v, ex);
-                    }
+                try {
+                    dynamicPack.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Hanging Sign blockstate definition for {} : {}", sign, ex);
                 }
-            }
+
+                try {
+                    dynamicPack.addSimilarJsonResource(hsModel, "hanging_sign_oak", id);
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Hanging Sign block model for {} : {}", sign, ex);
+                }
+
+                try {
+                    dynamicPack.addSimilarJsonResource(hsItemModel, "hanging_sign_oak", id);
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Hanging Sign item model for {} : {}", sign, ex);
+                }
+
+                try {
+                    ResourceLocation logTexture;
+                    try {
+                        logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.log, s -> !s.contains("top"));
+                    } catch (Exception e1) {
+                        logTexture = RPUtils.findFirstBlockTextureLocation(manager, wood.planks, s -> true);
+                        getLogger().error("Could not properly generate Hanging Sign model for {}. Falling back to planks texture : {}", sign, e1);
+                    }
+                    addHangingSignLoaderModel(Objects.requireNonNull(hsLoader), id, logTexture.toString());
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Hanging Sign loader model for {} : {}", sign, ex);
+                }
+            });
+
         }
 
 
         //------sing posts-----
         {
-            StaticResource spItemModel = getResOrLog(manager,
+            StaticResource spItemModel = StaticResource.getOrLog(manager,
                     ResType.ITEM_MODELS.getPath(Supplementaries.res("sign_post_oak")));
 
-            for (var e : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
-                WoodType wood = e.getKey();
-                if (!wood.isVanilla() || true) {
-                    var v = e.getValue();
-                    langBuilder.addEntry(v, e.getKey().getNameForTranslation("sign_post"));
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
+                //if (wood.isVanilla()) return;
+                String id = sign.getRegistryName().getPath();
+                //langBuilder.addEntry(sign, wood.getVariantReadableName("sign_post"));
 
-                    try {
-                        dynamicPack.addSimilarJsonResource(spItemModel,
-                                "sign_post_oak", wood.getVariantId("sign_post"));
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Sign Post item model for {} : {}", v, ex);
-                    }
+                try {
+                    dynamicPack.addSimilarJsonResource(spItemModel, "sign_post_oak", id);
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }
-            }
+            });
         }
 
 
-        dynamicPack.addLang(Supplementaries.res("en_us"), langBuilder.build());
+        // dynamicPack.addLang(Supplementaries.res("en_us"), langBuilder.build());
     }
 
     public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
@@ -140,81 +140,72 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
-        WallLanternTexturesRegistry.onResourceReload(manager);
-
-        //leather armor
-
-
         //hanging signs block textures
-        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
-                "textures/blocks/hanging_signs/hanging_sign_oak.png"));
-             NativeImage mask = SpriteUtils.readImage(manager, Supplementaries.res(
-                     "textures/blocks/hanging_signs/board_mask.png"))) {
+        try (TextureImage template = TextureImage.open(manager,
+                Supplementaries.res("blocks/hanging_signs/hanging_sign_oak"));
+             TextureImage mask = TextureImage.open(manager,
+                     Supplementaries.res("blocks/hanging_signs/board_mask"))) {
 
-            Palette palette = Palette.fromImage(template, mask);
-            Respriter respriter = new Respriter(template, palette);
 
-            for (var e : ModRegistry.HANGING_SIGNS.entrySet()) {
-                WoodType wood = e.getKey();
+            Respriter respriter = Respriter.masked(template, mask);
+
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res(
-                        String.format("blocks/hanging_signs/%s", wood.getVariantId("hanging_sign")));
-                if (alreadyHasTextureAtLocation(manager, textureRes)) continue;
-                var v = e.getValue();
-                try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
+                ResourceLocation textureRes = Supplementaries.res("blocks/hanging_signs/" + sign.getRegistryName().getPath());
+                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
+                try (TextureImage plankTexture = TextureImage.open(manager,
+                        RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
 
-                    Palette targetPalette = SpriteUtils.extrapolateSignBlockPalette(plankPalette);
-                    NativeImage newImage = respriter.recolorImage(targetPalette);
+                    List<Palette> targetPalette = SpriteUtils.extrapolateSignBlockPalette(plankTexture);
+                    TextureImage newImage = respriter.recolorWithAnimation(targetPalette, plankTexture.getMetadata());
 
-                    dynamicPack.addTexture(textureRes, newImage);
+                    dynamicPack.addAndCloseTexture(textureRes, newImage);
                 } catch (Exception ex) {
-                    getLogger().error("Failed to generate Hanging Sign block texture for for {} : {}", v, ex);
+                    getLogger().error("Failed to generate Hanging Sign block texture for for {} : {}", sign, ex);
                 }
-
-            }
+            });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Hanging Sign block texture : ", ex);
         }
 
         //hanging sign item textures
-        try (NativeImage boardTemplate = SpriteUtils.readImage(manager, Supplementaries.res(
-                "textures/items/hanging_signs/template.png"));
-             NativeImage boardMask = SpriteUtils.readImage(manager, Supplementaries.res(
-                     "textures/items/hanging_signs/board_mask.png"))) {
+        try (TextureImage boardTemplate = TextureImage.open(manager,
+                Supplementaries.res("items/hanging_signs/template"));
+             TextureImage boardMask = TextureImage.open(manager,
+                     Supplementaries.res("items/hanging_signs/board_mask"));
+             TextureImage signMask = TextureImage.open(manager,
+                     Supplementaries.res("items/hanging_signs/sign_board_mask"))) {
 
-            Palette palette = Palette.fromImage(boardTemplate, boardMask);
-            Respriter respriter = new Respriter(boardTemplate, palette);
+            Respriter respriter = Respriter.masked(boardTemplate, boardMask);
 
-            for (var e : ModRegistry.HANGING_SIGNS.entrySet()) {
-                WoodType wood = e.getKey();
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
+
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res(String.format("items/hanging_signs/%s", wood.getVariantId("hanging_sign")));
-                if (alreadyHasTextureAtLocation(manager, textureRes)) continue;
-                var v = e.getValue();
+                ResourceLocation textureRes = Supplementaries.res("items/hanging_signs/" + sign.getRegistryName().getPath());
+                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
-                NativeImage newImage = null;
+                TextureImage newImage = null;
                 if (wood.signItem != null) {
-                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
-                         NativeImage signMask = SpriteUtils.readImage(manager, Supplementaries.res(
-                                 "textures/items/hanging_signs/sign_board_mask.png"))) {
+                    try (TextureImage vanillaSign = TextureImage.open(manager,
+                            RPUtils.findFirstItemTextureLocation(manager, wood.signItem.get()))) {
 
                         Palette targetPalette = Palette.fromImage(vanillaSign, signMask);
-                        newImage = respriter.recolorImage(targetPalette);
+                        newImage = respriter.recolor(targetPalette);
 
-                        try (NativeImage scribbles = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res("textures/items/hanging_signs/sign_scribbles_mask.png"),
-                                Supplementaries.res("textures/items/hanging_signs/scribbles_template.png"));) {
-                            SpriteUtils.mergeImages(newImage, scribbles);
+                        try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                                Supplementaries.res("items/hanging_signs/sign_scribbles_mask"),
+                                Supplementaries.res("items/hanging_signs/scribbles_template"));) {
+                            newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
-                            getLogger().error("Could not properly color Hanging Sign texture for {} : {}", v, ex);
+                            getLogger().error("Could not properly color Hanging Sign texture for {} : {}", sign, ex);
                         }
 
-                        try (NativeImage stick = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res("textures/items/hanging_signs/sign_stick_mask.png"),
-                                Supplementaries.res("textures/items/hanging_signs/stick_template.png"))) {
-                            SpriteUtils.mergeImages(newImage, stick);
+                        try (TextureImage stick = recolorFromVanilla(manager, vanillaSign,
+                                Supplementaries.res("items/hanging_signs/sign_stick_mask"),
+                                Supplementaries.res("items/hanging_signs/stick_template"))) {
+                            newImage.applyOverlay(stick);
                         } catch (Exception ex) {
-                            getLogger().error("Could not properly color Hanging Sign item texture for {} : {}", v, ex);
+                            getLogger().error("Could not properly color Hanging Sign item texture for {} : {}", sign, ex);
                         }
 
                     } catch (Exception ex) {
@@ -223,50 +214,52 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                 }
                 //if it failed use plank one
                 if (newImage == null) {
-                    try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
+                    try (TextureImage plankPalette = TextureImage.open(manager,
+                            RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
-                        newImage = respriter.recolorImage(targetPalette);
+                        newImage = respriter.recolor(targetPalette);
                     } catch (Exception ex) {
-                        getLogger().error("Failed to generate Hanging Sign item texture for for {} : {}", v, ex);
+                        getLogger().error("Failed to generate Hanging Sign item texture for for {} : {}", sign, ex);
                     }
                 }
                 if (newImage != null) {
-                    dynamicPack.addTexture(textureRes, newImage);
+                    dynamicPack.addAndCloseTexture(textureRes, newImage);
                 }
-            }
+            });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Hanging Sign item texture : ", ex);
         }
 
         //sign posts item textures
-        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
-                "textures/items/sign_posts/template.png"))) {
+        try (TextureImage template = TextureImage.open(manager,
+                Supplementaries.res("items/sign_posts/template"))) {
 
-            Respriter respriter = new Respriter(template);
+            Respriter respriter = Respriter.of(template);
 
-            for (var e : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
-                WoodType wood = e.getKey();
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res(
-                        String.format("items/sign_posts/%s", wood.getVariantId("sign_post")));
-                if (alreadyHasTextureAtLocation(manager, textureRes)) continue;
-                var v = e.getValue();
 
-                NativeImage newImage = null;
-                if (wood.signItem != null) {
-                    try (NativeImage vanillaSign = RPUtils.findFirstItemTexture(manager, wood.signItem.get());
-                         NativeImage signMask = SpriteUtils.readImage(manager, Supplementaries.res(
-                                 "textures/items/hanging_signs/sign_board_mask.png"))) {
+                ResourceLocation textureRes = Supplementaries.res("items/sign_posts/" + sign.getRegistryName().getPath());
 
-                        Palette targetPalette = Palette.fromImage(vanillaSign, signMask);
-                        newImage = respriter.recolorImage(targetPalette);
+                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
-                        try (NativeImage scribbles = SpriteUtils.recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res("textures/items/hanging_signs/sign_scribbles_mask.png"),
-                                Supplementaries.res("textures/items/sign_posts/scribbles_template.png"));) {
-                            SpriteUtils.mergeImages(newImage, scribbles);
+                TextureImage newImage = null;
+                Item signItem = wood.signItem.get();
+                if (signItem != null) {
+                    try (TextureImage vanillaSign = TextureImage.open(manager,
+                            RPUtils.findFirstItemTextureLocation(manager, signItem));
+                         TextureImage signMask = TextureImage.open(manager,
+                                 Supplementaries.res("items/hanging_signs/sign_board_mask"))) {
+
+                        List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
+                        newImage = respriter.recolor(targetPalette);
+
+                        try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                                Supplementaries.res("items/hanging_signs/sign_scribbles_mask"),
+                                Supplementaries.res("items/sign_posts/scribbles_template"));) {
+                            newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
-                            getLogger().error("Could not properly color Sign Post item texture for {} : {}", v, ex);
+                            getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
                         }
 
                     } catch (Exception ex) {
@@ -275,50 +268,77 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                 }
                 //if it failed use plank one
                 if (newImage == null) {
-                    try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
+                    try (TextureImage plankPalette = TextureImage.open(manager,
+                            RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
-                        newImage = respriter.recolorImage(targetPalette);
+                        newImage = respriter.recolor(targetPalette);
 
                     } catch (Exception ex) {
-                        getLogger().error("Failed to generate Sign Post item texture for for {} : {}", v, ex);
+                        getLogger().error("Failed to generate Sign Post item texture for for {} : {}", sign, ex);
                     }
                 }
                 if (newImage != null) {
-
-                    dynamicPack.addTexture(textureRes, newImage);
+                    dynamicPack.addAndCloseTexture(textureRes, newImage);
                 }
-            }
+            });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post item texture : ", ex);
         }
 
         //sign posts block textures
-        try (NativeImage template = SpriteUtils.readImage(manager, Supplementaries.res(
-                "textures/entity/sign_posts/sign_post_oak.png"))) {
+        try (TextureImage template = TextureImage.open(manager,
+                Supplementaries.res("entity/sign_posts/sign_post_oak"))) {
 
-            Respriter respriter = new Respriter(template);
+            Respriter respriter = Respriter.of(template);
 
-            for (var e : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
-                WoodType wood = e.getKey();
-                var textureRes = Supplementaries.res(String.format("entity/sign_posts/%s", wood.getVariantId("sign_post")));
-                if (alreadyHasTextureAtLocation(manager, textureRes)) continue;
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                var v = e.getValue();
+                var textureRes = Supplementaries.res("entity/sign_posts/" + sign.getRegistryName().getPath());
+                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
-                try (NativeImage plankPalette = RPUtils.findFirstBlockTexture(manager, wood.plankBlock)) {
-                    NativeImage newImage = respriter.recolorImage(plankPalette, null);
+                try (TextureImage plankTexture = TextureImage.open(manager,
+                        RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
+                    Palette palette = Palette.fromImage(plankTexture);
+                    TextureImage newImage = respriter.recolor(palette);
 
-                    dynamicPack.addTexture(textureRes, newImage);
+                    dynamicPack.addAndCloseTexture(textureRes, newImage);
                 } catch (Exception ex) {
-                    getLogger().error("Failed to generate Sign Post block texture for for {} : {}", v, ex);
+                    getLogger().error("Failed to generate Sign Post block texture for for {} : {}", sign, ex);
                 }
-            }
+            });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
     }
 
 
+    /**
+     * helper method.
+     * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
+     */
+    @Nullable
+    public static TextureImage recolorFromVanilla(ResourceManager manager, TextureImage vanillaTexture, ResourceLocation vanillaMask,
+                                                  ResourceLocation templateTexture) {
+        try (TextureImage scribbleMask = TextureImage.open(manager, vanillaMask);
+             TextureImage template = TextureImage.open(manager, templateTexture)) {
+            Respriter respriter = Respriter.of(template);
+            Palette palette = Palette.fromImage(vanillaTexture, scribbleMask);
+            return respriter.recolor(palette);
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
     //TODO: invert scribble color if sign is darker than them
+
+    @Override
+    public void addDynamicTranslations(DynamicLanguageManager.LanguageAccessor lang) {
+        ModRegistry.HANGING_SIGNS.forEach((type, block) -> {
+            LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block);
+        });
+        ModRegistry.SIGN_POST_ITEMS.forEach((type, item) -> {
+            LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item);
+        });
+    }
 
 }

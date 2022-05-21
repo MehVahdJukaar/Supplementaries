@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

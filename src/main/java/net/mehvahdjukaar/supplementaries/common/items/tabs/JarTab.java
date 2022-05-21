@@ -6,7 +6,6 @@ import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;

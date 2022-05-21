@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 

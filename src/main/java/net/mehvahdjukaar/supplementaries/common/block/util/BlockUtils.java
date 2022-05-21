@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.util;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.common.utils.VectorUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
@@ -200,8 +200,8 @@ public class BlockUtils {
 
     //check if it has facing property
     private static BlockState rotateBlockStateOnAxis(BlockState state, Direction axis, boolean ccw) {
-        Vec3 targetNormal = VectorUtils.ItoD(state.getValue(BlockStateProperties.FACING).getNormal());
-        Vec3 myNormal = VectorUtils.ItoD(axis.getNormal());
+        Vec3 targetNormal = MthUtils.V3itoV3(state.getValue(BlockStateProperties.FACING).getNormal());
+        Vec3 myNormal = MthUtils.V3itoV3(axis.getNormal());
         if (!ccw) targetNormal = targetNormal.scale(-1);
 
         Vec3 rotated = myNormal.cross(targetNormal);

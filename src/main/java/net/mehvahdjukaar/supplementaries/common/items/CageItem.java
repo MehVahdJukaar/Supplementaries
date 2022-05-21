@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -45,7 +45,7 @@ public class CageItem extends AbstractMobContainerItem {
 
         EntityType<?> type = e.getType();
 
-        boolean isBaby = e instanceof LivingEntity && ((LivingEntity) e).isBaby();
+        boolean isBaby = e instanceof LivingEntity le && le.isBaby();
         return ((ServerConfigs.cached.CAGE_ALL_BABIES && isBaby) ||
                 type.is(ModTags.CAGE_CATCHABLE) ||
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));

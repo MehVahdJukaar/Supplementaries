@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.util.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
@@ -85,14 +86,11 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         if (!this.level.isClientSide && this.isPrimed() != primed) {
             if (primed) {
                 this.level.playSound(null, this.worldPosition,
-                        ModRegistry.PRESENT_PACK_SOUND.get(), SoundSource.BLOCKS, 1,
+                        ModSounds.PRESENT_PACK.get(), SoundSource.BLOCKS, 1,
                         level.random.nextFloat() * 0.1F + 0.95F);
-                //this.level.playSound(null, this.worldPosition,
-                //        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F,
-                //        level.random.nextFloat() * 0.1F + 1.2F);
             } else {
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F,
+                        ModSounds.PRESENT_BREAK.get(), SoundSource.BLOCKS, 0.75F,
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }

@@ -3,11 +3,11 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPresentPacket;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;

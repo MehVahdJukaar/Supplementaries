@@ -54,7 +54,7 @@ public class GlobeData extends SavedData {
     }
 
     //data received from network is stored here
-    private static GlobeData clientSide = null;
+    private static GlobeData CLIENT_SIDE_INSTANCE = null;
 
     @Nullable
     public static GlobeData get(Level world) {
@@ -63,7 +63,7 @@ public class GlobeData extends SavedData {
                     () -> new GlobeData(server.getSeed()),
                     DATA_NAME);
         } else {
-            return clientSide;
+            return CLIENT_SIDE_INSTANCE;
         }
     }
 
@@ -72,10 +72,9 @@ public class GlobeData extends SavedData {
     }
 
     public static void setClientData(GlobeData data) {
-        clientSide = data;
-        GlobeTextureManager.INSTANCE.update();
+        CLIENT_SIDE_INSTANCE = data;
+        GlobeTextureManager.refreshTextures();
     }
-
 
     public static void sendGlobeData(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {

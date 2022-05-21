@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,10 +38,9 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
         double d0 = (double) this.worldPosition.getX() + 0.5D;
         double d1 = (double) this.worldPosition.getY() + 1;
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
-        this.level.playSound(null, d0, d1, d2,
-                SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.55F);
-        this.level.playSound(null, d0, d1, d2,
-                SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.7F);
+
+        this.level.playSound(null, d0, d1, d2, ModSounds.SACK_OPEN.get(), SoundSource.BLOCKS, 1,
+                this.level.random.nextFloat() * 0.1F + 0.95F);
     }
 
     @Override
@@ -49,10 +48,8 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
         double d0 = (double) this.worldPosition.getX() + 0.5D;
         double d1 = (double) this.worldPosition.getY() + 1;
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
-        this.level.playSound(null, d0, d1, d2,
-                SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.5F);
-        this.level.playSound(null, d0, d1, d2,
-                SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.6F);
+        this.level.playSound(null, d0, d1, d2, ModSounds.SACK_OPEN.get(), SoundSource.BLOCKS, 1,
+                this.level.random.nextFloat() * 0.1F + 0.8F);
     }
 
     @Override

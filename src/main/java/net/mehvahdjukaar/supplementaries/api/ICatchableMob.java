@@ -32,17 +32,18 @@ public interface ICatchableMob {
     default boolean canBeCaughtWithItem(Item item) {
         return switch (item.getRegistryName().toString()) {
             case "supplementaries:jar" -> canBeCaughtWithJar();
-            case "supplementaries:tinted_jar" -> canBeCaughtWithTintedJar();
             case "supplementaries:cage" -> canBeCaughtWithCage();
             default -> false;
         };
     }
 
-    boolean canBeCaughtWithJar();
+    default boolean canBeCaughtWithJar(){
+        return false;
+    };
 
-    boolean canBeCaughtWithTintedJar();
-
-    boolean canBeCaughtWithCage();
+    default  boolean canBeCaughtWithCage(){
+        return true;
+    };
 
     /**
      * the scale of a mob inside a jar/cage is determined by its hitbox. <br>

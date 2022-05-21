@@ -8,13 +8,15 @@ import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
@@ -87,9 +89,9 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         }
     }
 
-    private static void shootProjectile(Level world, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
+    private static void shootProjectile(Level level, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
 
-        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, world, projectileStack, stack);
+        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
         Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), yaw, true);
@@ -99,9 +101,16 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, accuracy);
 
         stack.hurtAndBreak(1, entity, (p) -> p.broadcastBreakEvent(hand));
-        world.addFreshEntity(projectile);
+        level.addFreshEntity(projectile);
 
-        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.WITCH_THROW, SoundSource.PLAYERS, 1.0F, soundPitch * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F) + power * 0.6F));
+        level.playSound(null, entity, ModSounds.SLINGSHOT_SHOOT.get(), SoundSource.PLAYERS, 1.0F,
+                soundPitch * (1.0F / (level.random.nextFloat() * 0.3F + 0.9F) + power * 0.6F));
+
+    }
+
+    @Override
+    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
+        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
 
     }
 
@@ -157,15 +166,30 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             return InteractionResultHolder.fail(itemstack);
         } else {
             player.startUsingItem(hand);
+            player.level.playSound(player,player,
+                    getChargeSound(itemstack), SoundSource.PLAYERS, 1.0F,
+                    1 * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F)));
             return InteractionResultHolder.consume(itemstack);
         }
     }
 
+    public SoundEvent getChargeSound(ItemStack stack) {
+        int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
+        return switch (i) {
+            case 0 -> ModSounds.SLINGSHOT_CHARGE_0.get();
+            case 1 -> ModSounds.SLINGSHOT_CHARGE_1.get();
+            case 2 -> ModSounds.SLINGSHOT_CHARGE_2.get();
+            default -> ModSounds.SLINGSHOT_CHARGE_3.get();
+        };
+    }
+
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
-        return s ->{
+        return s -> {
             Item i = s.getItem();
+            //no buckets
             return !(i instanceof DispensibleContainerItem) && i instanceof BlockItem ||
+                    ((IExtendedItem) i).hasPlacementBehavior() ||
                     ItemsOverrideHandler.hasBlockPlacementAssociated(i);
         };
     }
@@ -225,7 +249,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = (float) stack.getUseDuration() - ((float)entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = (float) stack.getUseDuration() - ((float) entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {

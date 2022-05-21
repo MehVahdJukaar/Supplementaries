@@ -4,8 +4,9 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -89,8 +90,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
                                  BlockHitResult hit) {
         boolean enabled = state.getValue(ENABLED);
 
-        float f = enabled ? 0.6F : 0.5F;
-        worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+        float f = enabled ? 1.2F : 1.0F;
+        worldIn.playSound(null, pos, ModSounds.FAUCET.get(), SoundSource.BLOCKS, 1F, f);
         worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
         this.updateBlock(state, worldIn, pos, true);
         return InteractionResult.SUCCESS;

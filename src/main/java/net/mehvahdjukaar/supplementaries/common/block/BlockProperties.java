@@ -3,13 +3,15 @@ package net.mehvahdjukaar.supplementaries.common.block;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
@@ -113,7 +115,7 @@ public class BlockProperties {
             } else if (state.is(ModTags.WALLS)) {
                 if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {
                     //ignoring not full height ones. might use hitbox here instead
-                    if(needsFullHeight && (state.getValue(WallBlock.NORTH_WALL) == WallSide.LOW ||
+                    if (needsFullHeight && (state.getValue(WallBlock.NORTH_WALL) == WallSide.LOW ||
                             state.getValue(WallBlock.WEST_WALL) == WallSide.LOW)) return null;
                     type = PostType.PALISADE;
                 } else {
@@ -138,7 +140,8 @@ public class BlockProperties {
         BEAM("beam"),
         WALL("wall"),
         PALISADE("palisade"),
-        POST("post");
+        POST("post"),
+        STICK("stick");
 
         private final String name;
 
@@ -163,7 +166,16 @@ public class BlockProperties {
         public static BlockAttachment get(BlockState state, BlockPos pos, LevelReader level, Direction facing) {
             if (state.isFaceSturdy(level, pos, facing)) return BLOCK;
             PostType postType = PostType.get(state, true);
-            if (postType == null) return null;
+            if (postType == null) {
+                //case for sticks
+                if ((state.getBlock() instanceof StickBlock &&
+                        (facing.getAxis() == Direction.Axis.X ?
+                                !state.getValue(StickBlock.AXIS_X) :
+                                !state.getValue(StickBlock.AXIS_Z))) ||
+                        (state.getBlock() instanceof EndRodBlock &&
+                                state.getValue(EndRodBlock.FACING).getAxis()== Direction.Axis.Y)) return STICK;
+                return null;
+            }
             return switch (postType) {
                 case BEAM -> BEAM;
                 case WALL -> WALL;
@@ -320,11 +332,13 @@ public class BlockProperties {
         BLOCK_PALISADE(BlockAttachment.BLOCK, BlockAttachment.PALISADE),
         BLOCK_POST(BlockAttachment.BLOCK, BlockAttachment.POST),
 
+
         BEAM_BLOCK(BlockAttachment.BEAM, BlockAttachment.BLOCK),
         BEAM_BEAM(BlockAttachment.BEAM, BlockAttachment.BEAM),
         BEAM_WALL(BlockAttachment.BEAM, BlockAttachment.WALL),
         BEAM_PALISADE(BlockAttachment.BEAM, BlockAttachment.PALISADE),
         BEAM_POST(BlockAttachment.BEAM, BlockAttachment.POST),
+
 
         WALL_BLOCK(BlockAttachment.WALL, BlockAttachment.BLOCK),
         WALL_BEAM(BlockAttachment.WALL, BlockAttachment.BEAM),
@@ -332,17 +346,32 @@ public class BlockProperties {
         WALL_PALISADE(BlockAttachment.WALL, BlockAttachment.PALISADE),
         WALL_POST(BlockAttachment.WALL, BlockAttachment.POST),
 
+
         PALISADE_BLOCK(BlockAttachment.PALISADE, BlockAttachment.BLOCK),
         PALISADE_BEAM(BlockAttachment.PALISADE, BlockAttachment.BEAM),
         PALISADE_WALL(BlockAttachment.PALISADE, BlockAttachment.WALL),
         PALISADE_PALISADE(BlockAttachment.PALISADE, BlockAttachment.PALISADE),
         PALISADE_POST(BlockAttachment.PALISADE, BlockAttachment.POST),
 
+
         POST_BLOCK(BlockAttachment.POST, BlockAttachment.BLOCK),
         POST_BEAM(BlockAttachment.POST, BlockAttachment.BEAM),
         POST_WALL(BlockAttachment.POST, BlockAttachment.WALL),
         POST_PALISADE(BlockAttachment.POST, BlockAttachment.PALISADE),
-        POST_POST(BlockAttachment.POST, BlockAttachment.POST);
+        POST_POST(BlockAttachment.POST, BlockAttachment.POST),
+
+        STICK_BLOCK(BlockAttachment.STICK, BlockAttachment.BLOCK),
+        STICK_BEAM(BlockAttachment.STICK, BlockAttachment.BEAM),
+        STICK_WALL(BlockAttachment.STICK, BlockAttachment.WALL),
+        STICK_PALISADE(BlockAttachment.STICK, BlockAttachment.PALISADE),
+        STICK_POST(BlockAttachment.STICK, BlockAttachment.POST),
+        STICK_STICK(BlockAttachment.STICK, BlockAttachment.STICK),
+
+        BLOCK_STICK(BlockAttachment.BLOCK, BlockAttachment.STICK),
+        BEAM_STICK(BlockAttachment.BEAM, BlockAttachment.STICK),
+        WALL_STICK(BlockAttachment.WALL, BlockAttachment.STICK),
+        PALISADE_STICK(BlockAttachment.PALISADE, BlockAttachment.STICK),
+        POST_STICK(BlockAttachment.POST, BlockAttachment.STICK);
 
         public final BlockAttachment left;
         public final BlockAttachment right;
@@ -371,7 +400,7 @@ public class BlockProperties {
         }
 
         public SignAttachment withAttachment(boolean left, @Nullable BlockAttachment attachment) {
-            if(attachment == null) attachment = BlockAttachment.BLOCK;
+            if (attachment == null) attachment = BlockAttachment.BLOCK;
             String s = left ? attachment.name + "_" + this.right : this.left + "_" + attachment.name;
             return SignAttachment.valueOf(s.toUpperCase(Locale.ROOT));
         }

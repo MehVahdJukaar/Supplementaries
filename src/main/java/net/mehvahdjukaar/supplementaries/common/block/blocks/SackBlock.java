@@ -3,16 +3,19 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,7 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -266,8 +268,14 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     }
 
     @Override
-    public void onLand(Level level, BlockPos pos, BlockState p_153222_, BlockState p_153223_, FallingBlockEntity p_153224_) {
-        super.onLand(level, pos, p_153222_, p_153223_, p_153224_);
+    public void onLand(Level level, BlockPos pos, BlockState state, BlockState state1, FallingBlockEntity blockEntity) {
+        super.onLand(level, pos, state, state1, blockEntity);
+        //land sound
+        if (!blockEntity.isSilent()) {
+            level.playSound(null, pos, state.getSoundType().getPlaceSound(),
+                    SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        }
         level.scheduleTick(pos, this, this.getDelayAfterPlace());
     }
+
 }

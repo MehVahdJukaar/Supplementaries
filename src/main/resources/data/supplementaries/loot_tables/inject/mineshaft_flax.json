@@ -5,12 +5,12 @@
       "conditions": [
         {
           "condition": "random_chance",
-          "chance": 0.15
+          "chance": 0.14
         }
       ],
       "entries": [
         {
-          "type": "item",
+          "type": "minecraft:item",
           "weight": 1,
           "name": "supplementaries:flax_seeds",
           "functions": [

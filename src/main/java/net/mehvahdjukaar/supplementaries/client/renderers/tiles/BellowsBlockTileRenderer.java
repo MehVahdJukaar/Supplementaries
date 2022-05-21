@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.Materials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
@@ -66,7 +65,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        VertexConsumer builder = Materials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
+        VertexConsumer builder = ClientRegistry.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 
         float dh = Mth.lerp(partialTicks, tile.prevHeight, tile.height);

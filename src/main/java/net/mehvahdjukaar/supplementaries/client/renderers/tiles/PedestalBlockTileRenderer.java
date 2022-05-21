@@ -10,8 +10,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -99,7 +99,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                         matrixStackIn.mulPose(RotHlpr.ZN45);
                     }
                     case CRYSTAL -> {
-                        entityRenderer.render(CapturedMobCache.pedestalCrystal.get(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+                        entityRenderer.render(CapturedMobCache.PEDESTAL_CRYSTAL.get(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
                         matrixStackIn.popPose();
                         return;
                     }

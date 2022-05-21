@@ -7,7 +7,10 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.Antique
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 public class CapabilityHandler {
@@ -22,7 +25,7 @@ public class CapabilityHandler {
         event.register(IAntiqueTextProvider.class);
     }
 
-    public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.reg.ANTIQUE_INK_ENABLED.get();
+    public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.Reg.ANTIQUE_INK_ENABLED.get();
 
     public static void attachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (ANTIQUE_CAP_ENABLED && event.getObject() instanceof SignBlockEntity) {

@@ -3,15 +3,21 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -109,9 +115,34 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null){
+        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null) {
             CapturedMobCache.tickCrystal();
+            Player p = Minecraft.getInstance().player;
+            if (p != null) {
+                BlockState state = p.getFeetBlockState();
+                isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.is(ModRegistry.ROPE.get()) && !state.getValue(RopeBlock.UP) &&
+                        (p.getY() + 500) % 1 >= RopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
+            }
+        }
+    }
 
+    private static double wobble; // from 0 to 1
+    private static boolean isOnRope;
+
+    @SubscribeEvent
+    public static void onCameraSetup(EntityViewRenderEvent.CameraSetup event) {
+        Player p = Minecraft.getInstance().player;
+        if (p != null && !Minecraft.getInstance().isPaused()) {
+            if (isOnRope || wobble != 0) {
+
+                double newWobble = (((p.tickCount + event.getPartialTicks()) / 12f) % 1);
+                if (!isOnRope && newWobble < wobble) {
+                    wobble = 0;
+                } else {
+                    wobble = newWobble;
+                }
+                event.setRoll(event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * 1.2f);
+            }
         }
     }
 

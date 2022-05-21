@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;

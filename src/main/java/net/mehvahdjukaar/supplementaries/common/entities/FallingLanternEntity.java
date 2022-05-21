@@ -22,7 +22,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
     }
 
     public FallingLanternEntity(Level level, BlockPos pos, BlockState blockState, double yOffset) {
-        super(ModRegistry.FALLING_LANTERN.get(),level,pos, blockState,false);
+        super(ModRegistry.FALLING_LANTERN.get(), level, pos, blockState, false);
         this.yo = pos.getY() + yOffset;
     }
 
@@ -36,18 +36,19 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
     @Override
     public boolean causeFallDamage(float height, float amount, DamageSource source) {
         boolean r = super.causeFallDamage(height, amount, source);
-        if (ServerConfigs.cached.FALLING_LANTERNS.hasFire() && this.getDeltaMovement().lengthSqr() > 0.4*0.4) {
+        if (ServerConfigs.cached.FALLING_LANTERNS.hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
             BlockState state = this.getBlockState();
 
             BlockPos pos = this.blockPosition();
+            //break event
             level.levelEvent(null, 2001, pos, Block.getId(state));
-            if(state.getLightEmission()!=0) {
+            if (state.getLightEmission() != 0) {
+
                 GunpowderBlock.createMiniExplosion(level, pos, true);
-            }
-            else{
+            } else {
                 this.spawnAtLocation(state.getBlock());
             }
-            this.cancelDrop =true;
+            this.cancelDrop = true;
             this.discard();
         }
         return r;

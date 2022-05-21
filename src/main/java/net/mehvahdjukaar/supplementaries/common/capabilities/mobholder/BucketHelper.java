@@ -70,12 +70,13 @@ public class BucketHelper {
         return null;
     }
 
+    //TODO: rething all this and remove this one
     public static void tryAddingFromEntityId(String id) {
-        EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
-        if (en != null && !BUCKET_TO_MOB_MAP.containsValue(en)) {
-
-
-        }
+        //EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
+      //  if (en != null && !BUCKET_TO_MOB_MAP.containsValue(en)) {
+       //     BUCKET_TO_MOB_MAP.putIfAbsent()
+//
+      //  }
     }
 
     public static Collection<Item> getValidBuckets() {
@@ -93,7 +94,10 @@ public class BucketHelper {
 
     public static void associateMobToBucketIfAbsent(EntityType<?> entity, Item item) {
         if(!BUCKET_TO_MOB_MAP.containsKey(item)){
-            BUCKET_TO_MOB_MAP.putIfAbsent(item, entity.getRegistryName().toString());
+            String name = entity.getRegistryName().toString();
+            if(!BUCKET_TO_MOB_MAP.inverse().containsKey(name)) {
+                BUCKET_TO_MOB_MAP.putIfAbsent(item, name);
+            }
         }
     }
 }

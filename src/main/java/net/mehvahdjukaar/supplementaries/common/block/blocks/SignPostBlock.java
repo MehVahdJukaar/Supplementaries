@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
-
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -59,7 +58,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
 
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             ItemStack itemstack = player.getItemInHand(handIn);
             Item item = itemstack.getItem();
 
@@ -84,7 +83,10 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                     //sneak right click rotates the sign on z axis
                     if (isSneaking) {
                         double y = hit.getLocation().y;
-                        boolean up = y % ((int) y) > 0.5d;
+                        //negative y yay!
+                        if (y < 0) y = y + (1 - (int) y);
+                        else y = y - (int) y;
+                        boolean up = y > 0.5d;
                         if (up) {
                             tile.leftUp = !tile.leftUp;
                         } else {
@@ -114,12 +116,10 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                             return InteractionResult.CONSUME;
                         }
                         return InteractionResult.FAIL;
-                    }
-                    else if (CompatHandler.framedblocks && tile.framed) {
+                    } else if (CompatHandler.framedblocks && tile.framed) {
                         boolean success = FramedSignPost.handleInteraction(tile, player, handIn, itemstack, level, pos);
                         if (success) return InteractionResult.CONSUME;
-                    }
-                    else if (item instanceof SignPostItem) {
+                    } else if (item instanceof SignPostItem) {
                         //let sign item handle this one
                         return InteractionResult.PASS;
                     }
@@ -130,8 +130,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                 return InteractionResult.CONSUME;
             }
             return InteractionResult.PASS;
-        }
-        else{
+        } else {
             return InteractionResult.SUCCESS;
         }
     }

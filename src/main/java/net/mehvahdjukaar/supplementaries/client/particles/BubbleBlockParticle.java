@@ -82,7 +82,7 @@ public class BubbleBlockParticle extends TextureSheetParticle {
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
             var p = new BubbleBlockParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, sprite);
             p.gravity = 0.0F;
-            p.lifetime = 8;
+            p.lifetime = 4;
             p.hasPhysics = false;
             return p;
         }

@@ -5,9 +5,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -29,49 +29,35 @@ import java.util.function.Function;
 
 public class BlackboardTextureManager {
 
-    public static BlackboardTextureManager INSTANCE = null;
-    //private final AtlasTexture textureAtlas;
-    private final TextureManager textureManager;
+    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().textureManager;
 
-    private long lastID = 0;
-
-    //will roll over at some point overriding possible textures. Not really a problem since it's ver unlikely somebody will generate 2^64 blackboards in a session
-    public long bindNextID() {
-        return ++lastID;
-    }
-
-    //TODO: call close() on DynamicTextures to prevent memory leak
-    private final LoadingCache<BlackboardKey, TextureInstance> blackboardTextures = CacheBuilder.newBuilder()
-            .expireAfterAccess(30, TimeUnit.SECONDS)
-            .build(new CacheLoader<BlackboardKey, TextureInstance>() {
+    private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
+            .expireAfterAccess(2, TimeUnit.MINUTES)
+            .removalListener(i -> {
+                TextureInstance value = (TextureInstance) i.getValue();
+                if (value != null) value.close();
+            })
+            .build(new CacheLoader<>() {
                 @Override
                 public TextureInstance load(BlackboardKey key) {
                     return null;
                 }
             });
 
-    public static void init(TextureManager textureManager) {
-        INSTANCE = new BlackboardTextureManager(textureManager);
-    }
-
-    public BlackboardTextureManager(TextureManager textureManager) {
-        this.textureManager = textureManager;
-    }
-
-    public TextureInstance getBlackboardInstance(BlackboardKey key) {
-        TextureInstance textureInstance = this.blackboardTextures.getIfPresent(key);
+    public static TextureInstance getBlackboardInstance(BlackboardKey key) {
+        TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values), bindNextID());
-            this.blackboardTextures.put(key, textureInstance);
+            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values));
+            TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    public TextureInstance getBlackboardInstance(long[] packed) {
+    public static TextureInstance getBlackboardInstance(long[] packed) {
         return getBlackboardInstance(new BlackboardKey(packed));
     }
 
-    public TextureInstance getBlackboardInstance(BlackboardBlockTile tile) {
+    public static TextureInstance getBlackboardInstance(BlackboardBlockTile tile) {
         return getBlackboardInstance(tile.getTextureKey());
     }
 
@@ -84,10 +70,9 @@ public class BlackboardTextureManager {
 
         public BlackboardKey(byte[][] pixels) {
             values = BlackboardBlockTile.packPixels(pixels);
-            ;
         }
 
-        public byte[][] unpackValues(){
+        public byte[][] unpackValues() {
             return BlackboardBlockTile.unpackPixels(values);
         }
 
@@ -113,10 +98,12 @@ public class BlackboardTextureManager {
     }
 
 
-    public class TextureInstance implements AutoCloseable {
+    public static class TextureInstance implements AutoCloseable {
         private static final int WIDTH = 16;
+
+        //models for each direction
+        private final Map<Direction, List<BakedQuad>> models = new HashMap<>();
         private final byte[][] pixels;
-        private final long id;
         //he be lazy
         @Nullable
         private DynamicTexture texture;
@@ -124,13 +111,11 @@ public class BlackboardTextureManager {
         private RenderType renderType;
         @Nullable
         private ResourceLocation textureLocation;
-        private Map<Direction, List<BakedQuad>> models = new HashMap<>();
-        //private final RenderMaterial renderMaterial;
 
-        private TextureInstance(byte[][] pixels, long id) {
+        private TextureInstance(byte[][] pixels) {
             this.pixels = pixels;
-            this.id = id;
         }
+        //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
             this.texture = new DynamicTexture(WIDTH, WIDTH, false);
@@ -142,13 +127,14 @@ public class BlackboardTextureManager {
             }
             this.texture.upload();
 
-            this.textureLocation = BlackboardTextureManager.this.textureManager.register("blackboard/" + Long.toHexString(id), this.texture);
+            //texture manager has its own internal id
+            this.textureLocation = TEXTURE_MANAGER.register("blackboard/", this.texture);
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
         @Nonnull
-        public List<BakedQuad> getModel(Direction dir, Function<byte[][],List<BakedQuad>> modelFactory){
-            if(!models.containsKey(dir)){
+        public List<BakedQuad> getModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
+            if (!models.containsKey(dir)) {
                 this.models.put(dir, modelFactory.apply(pixels));
             }
             return models.get(dir);
@@ -156,7 +142,8 @@ public class BlackboardTextureManager {
 
         @Nonnull
         public ResourceLocation getTextureLocation() {
-            if(textureLocation == null){
+            if (textureLocation == null) {
+                //I can only initialize it here since this is guaranteed to be on render thread
                 this.initializeTexture();
             }
             return textureLocation;
@@ -164,7 +151,8 @@ public class BlackboardTextureManager {
 
         @Nonnull
         public RenderType getRenderType() {
-            if(renderType == null){
+            if (renderType == null) {
+                //I can only initialize it here since this is guaranteed to be on render thread
                 this.initializeTexture();
             }
             return renderType;
@@ -173,10 +161,12 @@ public class BlackboardTextureManager {
         //should be called when cache expires
         @Override
         public void close() {
-            this.texture.close();
+            if(texture != null) this.texture.close();
+            if(textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
         }
     }
 
+    //helper methods
     private static int getColoredPixel(byte i, int x, int y) {
         int offset = i > 0 ? 16 : 0;
         int tint = BlackboardBlock.colorFromByte(i);
@@ -192,7 +182,7 @@ public class BlackboardTextureManager {
         int tintG = tint >> 8 & 255;
         int tintB = tint & 255;
 
-        int pixel = sprite.getPixelRGBA(0, Math.min(sprite.getWidth()-1, x + offset), Math.min(sprite.getHeight()-1, y));
+        int pixel = sprite.getPixelRGBA(0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
 
         // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
         int totalB = pixel >> 16 & 255;

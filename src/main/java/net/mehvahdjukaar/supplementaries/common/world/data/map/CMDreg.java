@@ -5,7 +5,6 @@ import net.mehvahdjukaar.selene.map.CustomDecorationType;
 import net.mehvahdjukaar.selene.map.MapDecorationHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.markers.*;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CMDreg {
 

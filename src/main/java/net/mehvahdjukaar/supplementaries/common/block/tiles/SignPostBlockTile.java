@@ -6,12 +6,15 @@ import net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -44,6 +47,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public boolean up = false;
     public boolean down = false;
 
+    public boolean isSlim = false;
+
     @NotNull
     public WoodType woodTypeUp = WoodType.OAK_WOOD_TYPE;
     @NotNull
@@ -61,6 +66,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 .withInitial(FRAMED, this.framed)
                 .withInitial(MIMIC, this.getHeldBlock())
                 .build();
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+        this.isSlim = this.mimic.getBlock() instanceof StickBlock;
     }
 
     @Override
@@ -110,6 +121,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.woodTypeDown = WoodTypeRegistry.fromNBT(compound.getString("TypeDown"));
 
         this.loadOwner(compound);
+        this.isSlim = this.mimic.getBlock() instanceof StickBlock;
     }
 
     @Override

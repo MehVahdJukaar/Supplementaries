@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -117,14 +118,11 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         if (!this.level.isClientSide && this.isPacked() != shouldPack) {
             if (shouldPack) {
                 this.level.playSound(null, this.worldPosition,
-                        ModRegistry.PRESENT_PACK_SOUND.get(), SoundSource.BLOCKS, 1,
+                        ModSounds.PRESENT_PACK.get(), SoundSource.BLOCKS, 1,
                         level.random.nextFloat() * 0.1F + 0.95F);
-                //this.level.playSound(null, this.worldPosition,
-                //        SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.5F,
-                //        level.random.nextFloat() * 0.1F + 1.2F);
             } else {
                 this.level.playSound(null, this.worldPosition,
-                        SoundEvents.WOOL_BREAK, SoundSource.BLOCKS, 0.5F,
+                        ModSounds.PRESENT_OPEN.get(), SoundSource.BLOCKS, 1F,
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }

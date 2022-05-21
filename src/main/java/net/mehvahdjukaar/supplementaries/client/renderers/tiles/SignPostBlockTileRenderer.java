@@ -3,10 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Camera;
@@ -91,6 +90,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawUp - 90));
                 //matrixStackIn.rotate(Const.YN90);
 
+                if(tile.isSlim) matrixStackIn.translate(0,0,-1/16f);
+
                 //sign block
                 matrixStackIn.pushPose();
 
@@ -100,7 +101,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
+                Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
                 //sanity check. can happen when log detection fails across versions
                 if(material != null) {
                     VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
@@ -131,6 +132,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawDown - 90));
                 matrixStackIn.translate(0, -0.5, 0);
 
+                if(tile.isSlim) matrixStackIn.translate(0,0,-1/16f);
+
                 //sign block
                 matrixStackIn.pushPose();
 
@@ -140,7 +143,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = Materials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
+                Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
                 VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
 
-import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import net.mehvahdjukaar.supplementaries.integration.flywheel.instances.BellowsInstance;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;

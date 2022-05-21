@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
@@ -10,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -45,10 +45,10 @@ import java.util.List;
 import java.util.Random;
 
 public class WallLanternBlock extends WaterBlock implements EntityBlock {
-    public static final VoxelShape SHAPE_SOUTH = Block.box(5, 2, 0, 11, 15.99, 10);
     public static final VoxelShape SHAPE_NORTH = Block.box(5, 2, 6, 11, 15.99, 16);
-    public static final VoxelShape SHAPE_WEST = Block.box(6, 2, 5, 16, 15.99, 11);
-    public static final VoxelShape SHAPE_EAST = Block.box(0, 2, 5, 10, 15.99, 11);
+    public static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    public static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
+    public static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<BlockProperties.BlockAttachment> ATTACHMENT = BlockProperties.BLOCK_ATTACHMENT;
@@ -65,13 +65,13 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof WallLanternBlockTile te) {
             BlockState lantern = te.getHeldBlock();
-            if(lantern.getBlock() instanceof LightableLanternBlock){
+            if (lantern.getBlock() instanceof LightableLanternBlock) {
                 var opt = LightableLanternBlock.toggleLight(lantern, pLevel, pPos, pPlayer, pHand);
-                if(opt.isPresent()){
+                if (opt.isPresent()) {
                     te.setHeldBlock(opt.get());
                     int light = opt.get().getLightEmission();
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL,light));
-                    pLevel.sendBlockUpdated(pPos, pState, pState,Block.UPDATE_CLIENTS);
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL, light));
+                    pLevel.sendBlockUpdated(pPos, pState, pState, Block.UPDATE_CLIENTS);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }
@@ -82,7 +82,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if (context.getClickedFace() == Direction.UP || context.getClickedFace() == Direction.DOWN) return null;
+        if (context.getClickedFace().getAxis() == Direction.Axis.Y) return null;
         BlockState state = super.getStateForPlacement(context);
 
         BlockPos blockpos = context.getClickedPos();
@@ -139,7 +139,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
 
     public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction dir) {
         BlockProperties.BlockAttachment attachment = BlockProperties.BlockAttachment.get(facingState, pos, world, dir);
-        if(attachment == null){
+        if (attachment == null) {
             return state;
         }
         return state.setValue(ATTACHMENT, attachment);

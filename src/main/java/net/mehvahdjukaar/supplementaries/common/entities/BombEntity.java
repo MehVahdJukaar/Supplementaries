@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -43,6 +45,7 @@ import java.util.Random;
 
 public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
 
+    private final boolean hasFuse = ServerConfigs.cached.BOMB_FUSE != 0;
     private BombType type;
     private boolean active = true;
     private int changeTimer = -1;
@@ -50,19 +53,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
-        this.maxAge = 200;
+        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
     }
 
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
         super(ModRegistry.BOMB.get(), throwerIn, worldIn);
         this.type = type;
-        this.maxAge = 200;
+        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModRegistry.BOMB.get(), x, y, z, worldIn);
         this.type = type;
-        this.maxAge = 200;
+        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
     }
 
     public BombEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -169,6 +172,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     @Override
     public void tick() {
 
+        //if((this.tickCount-1)%6==0) {
+        //    this.playSound(ModSounds.GUNPOWDER_IGNITE.get(), 1.0f,
+        //            1.8f + level.getRandom().nextFloat() * 0.2f);
+        //}
+
         if (this.changeTimer > 0) {
             this.changeTimer--;
             level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
@@ -259,7 +267,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide && !this.hasFuse) {
             boolean isInstantlyActivated = this.type.isInstantlyActivated();
             if (!isInstantlyActivated && this.changeTimer == -1) {
                 this.changeTimer = 10;
@@ -407,7 +415,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
                             float dz = (float) (bomb.random.nextGaussian() * 2f);
                             bomb.level.addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
                         }
-                    }else{
+                    } else {
                         bomb.spawnParticleInASphere(ParticleTypes.CRIT, 100, 5f);
                     }
                 }
@@ -415,30 +423,30 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         }
 
         public void afterExploded(BombExplosion exp, Level level) {
-            if(this == SPIKY){
+            if (this == SPIKY) {
                 Vec3 pos = exp.getPosition();
                 Entity e = exp.getExploder();
-                if(e==null)return;
-                for (Entity entity :level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
-                        pos.x + 30, pos.y + 4, pos.z + 30))){
+                if (e == null) return;
+                for (Entity entity : level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
+                        pos.x + 30, pos.y + 4, pos.z + 30))) {
                     int random = (int) (Math.random() * 100);
                     boolean shouldPoison = false;
-                    if(entity.distanceToSqr(e) <= 4*4){
+                    if (entity.distanceToSqr(e) <= 4 * 4) {
                         shouldPoison = true;
-                    } else if (entity.distanceToSqr(e) <= 8*8) {
-                        if(random < 60) shouldPoison = true;
-                    } else if (entity.distanceToSqr(e) <= 15*15) {
-                        if(random < 30) shouldPoison = true;
-                    } else if (entity.distanceToSqr(e) <= 30*30) {
-                        if(random < 5) shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 8 * 8) {
+                        if (random < 60) shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 15 * 15) {
+                        if (random < 30) shouldPoison = true;
+                    } else if (entity.distanceToSqr(e) <= 30 * 30) {
+                        if (random < 5) shouldPoison = true;
                     }
-                    if(shouldPoison){
-                        if(entity instanceof LivingEntity livingEntity){
+                    if (shouldPoison) {
+                        if (entity instanceof LivingEntity livingEntity) {
                             livingEntity.hurt(DamageSource.MAGIC, 2);
-                            livingEntity.addEffect( new MobEffectInstance( MobEffects.POISON , (int) (260*0.5f)) );
+                            livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (260 * 0.5f)));
                             var effect = CompatObjects.STUNNED_EFFECT.get();
                             if (effect != null) {
-                                livingEntity.addEffect(new MobEffectInstance(effect, (int) (40 * 20*0.5f)));
+                                livingEntity.addEffect(new MobEffectInstance(effect, (int) (40 * 20 * 0.5f)));
                             }
                         }
                     }
@@ -446,7 +454,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             }
         }
     }
-
 
 
 }

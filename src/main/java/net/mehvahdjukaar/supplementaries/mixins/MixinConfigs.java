@@ -164,7 +164,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String truncatedName = mixinClassName.substring(this.getClass().getPackage().getName().length() + 1);
-        ForgeConfigSpec.BooleanValue config = RegistryConfigs.reg.MIXIN_VALUES.get(truncatedName);
+        ForgeConfigSpec.BooleanValue config = RegistryConfigs.Reg.MIXIN_VALUES.get(truncatedName);
         return config == null || config.get();
     }
 

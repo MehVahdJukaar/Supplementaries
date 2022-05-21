@@ -1,14 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -40,7 +43,7 @@ public class SignPostItem extends Item {
 
     @Override
     protected boolean allowdedIn(CreativeModeTab pCategory) {
-        if (woodType.plankBlock.asItem().getItemCategory() == null) return false;
+        if (woodType.planks.asItem().getItemCategory() == null) return false;
         return super.allowdedIn(pCategory);
     }
 
@@ -49,10 +52,20 @@ public class SignPostItem extends Item {
         return woodType.canBurn() ? 100 : 0;
     }
 
-    private boolean isFence(Block b) {
+    private AttachType getAttachType(BlockState state) {
+        Block b = state.getBlock();
+        if (b instanceof SignPostBlock) return AttachType.SIGN_POST;
+        else if ((b instanceof StickBlock && !state.getValue(StickBlock.AXIS_X) && !state.getValue(StickBlock.AXIS_Z))
+                || (state.getBlock() instanceof EndRodBlock && state.getValue(EndRodBlock.FACING).getAxis() == Direction.Axis.Y))
+            return AttachType.STICK;
         ResourceLocation res = b.getRegistryName();
-        if (res.getNamespace().equals("blockcarpentry")) return false;
-        return b.builtInRegistryHolder().is(ModTags.POSTS);
+        //hardcoding this one
+        if (state.is(ModTags.POSTS) && !res.getNamespace().equals("blockcarpentry")) return AttachType.FENCE;
+        return AttachType.NONE;
+    }
+
+    private enum AttachType {
+        FENCE, SIGN_POST, STICK, NONE
     }
 
     @Override
@@ -70,9 +83,8 @@ public class SignPostItem extends Item {
 
         boolean framed = false;
 
-        boolean isFence = isFence(targetBlock);
-        boolean isSignPost = targetBlock instanceof SignPostBlock;
-        if (isFence || isSignPost) {
+        var attachType = getAttachType(state);
+        if (attachType != AttachType.NONE) {
 
             //if(!world.isRemote) world.setBlockState(blockpos, Registry.SIGN_POST.get().getDefaultState(), 3);
 
@@ -85,7 +97,7 @@ public class SignPostItem extends Item {
             }
 
             boolean waterlogged = world.getFluidState(blockpos).getType() == Fluids.WATER;
-            if (!isSignPost) {
+            if (attachType != AttachType.SIGN_POST) {
                 world.setBlock(blockpos, ModRegistry.SIGN_POST.get()
                         .getStateForPlacement(new BlockPlaceContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
             }
@@ -115,8 +127,9 @@ public class SignPostItem extends Item {
                     flag = true;
                 }
                 if (flag) {
-                    if (isFence) tile.mimic = targetBlock.defaultBlockState();
+                    if (attachType != AttachType.SIGN_POST) tile.mimic = targetBlock.defaultBlockState();
                     tile.framed = framed;
+                    tile.isSlim = attachType == AttachType.STICK;
                     tile.setChanged();
                     world.sendBlockUpdated(blockpos, state, state, 3);
                 }

@@ -32,6 +32,7 @@ public class ServerConfigs {
         block.init(builder);
         spawn.init(builder);
         entity.init(builder);
+        entity.init(builder);
         tweaks.init(builder);
         item.init(builder);
         general.init(builder);
@@ -58,6 +59,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
         public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
         public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
+        public static ForgeConfigSpec.IntValue BOMB_FUSE;
         public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BREAKS;
         public static ForgeConfigSpec.DoubleValue BOMB_BLUE_RADIUS;
         public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
@@ -105,7 +107,8 @@ public class ServerConfigs {
                     .defineInRange("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
-
+            BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certaom amount of ticks instead than on contact")
+                            .defineInRange("bomb_fuse",0,0,100000);
             builder.pop();
 
             builder.push("blue_bomb");
@@ -138,6 +141,7 @@ public class ServerConfigs {
     }
 
     public static class tweaks {
+        public static ForgeConfigSpec.BooleanValue ENDER_PEAR_DISPENSERS;
         public static ForgeConfigSpec.BooleanValue AXE_DISPENSER_BEHAVIORS;
         public static ForgeConfigSpec.BooleanValue DIRECTIONAL_CAKE;
         public static ForgeConfigSpec.BooleanValue DOUBLE_CAKE_PLACEMENT;
@@ -177,10 +181,13 @@ public class ServerConfigs {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
 
-            builder.push("axe_dispenser_behaviors");
+            builder.push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
-                    .define("enabled", true);
+                    .define("axe_strip", true);
+            ENDER_PEAR_DISPENSERS = builder.comment("Enables shooting ender pearls with dispensers")
+                            .define("shoot_ender_pearls",true);
             builder.pop();
+
 
             //double cake
             builder.push("cake_tweaks");
@@ -211,6 +218,7 @@ public class ServerConfigs {
             THROWABLE_BRICKS_ENABLED = builder.comment("Throw bricks at your foes! Might break glass blocks")
                     .define("enabled", true);
             builder.pop();
+
             //wall lantern
             builder.push("lantern_tweaks");
             WALL_LANTERN_PLACEMENT = builder.comment("Allow wall lanterns placement")
@@ -546,7 +554,7 @@ public class ServerConfigs {
             builder.push("sack");
             SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penalty", true);
-            SACK_INCREMENT = builder.comment("Maximum number of sacks after which the slowness effect will be applied. each multiple of this number will further slow the player down")
+            SACK_INCREMENT = builder.comment("Maximum number of sacks after which the overencumbered effect will be applied. Each multiple of this number will increase the effect strength by one")
                     .defineInRange("sack_increment", 2, 0, 50);
             SACK_SLOTS = builder.comment("How many slots should a sack have")
                     .defineInRange("slots", 9, 1, 27);
@@ -748,6 +756,7 @@ public class ServerConfigs {
         public static int FLUTE_RADIUS;
         public static int FLUTE_DISTANCE;
         public static float BOMB_RADIUS;
+        public static int BOMB_FUSE;
         public static BombEntity.BreakingMode BOMB_BREAKS;
         public static float BOMB_BLUE_RADIUS;
         public static BombEntity.BreakingMode BOMB_BLUE_BREAKS;
@@ -861,7 +870,7 @@ public class ServerConfigs {
             ZOMBIE_HORSE_UNDERWATER = tweaks.ZOMBIE_HORSE_UNDERWATER.get();
             BOTTLING_COST = tweaks.BOTTLING_COST.get();
             BOTTLE_XP = tweaks.BOTTLE_XP.get();
-            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.reg.RAKED_GRAVEL_ENABLED.get();
+            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.Reg.RAKED_GRAVEL_ENABLED.get();
             PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
             PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
@@ -899,6 +908,7 @@ public class ServerConfigs {
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();
             BOMB_RADIUS = (float) (item.BOMB_RADIUS.get() + 0f);
+            BOMB_FUSE = item.BOMB_FUSE.get();
             BOMB_BLUE_BREAKS = item.BOMB_BLUE_BREAKS.get();
             BOMB_BLUE_RADIUS = (float) (item.BOMB_BLUE_RADIUS.get() + 0f);
             SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();

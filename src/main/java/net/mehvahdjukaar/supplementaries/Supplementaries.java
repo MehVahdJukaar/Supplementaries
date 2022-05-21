@@ -1,26 +1,25 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
-import net.minecraft.core.Registry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 @Mod(Supplementaries.MOD_ID)
 public class Supplementaries {
@@ -55,6 +54,8 @@ public class Supplementaries {
         //  RegistryConfigs.createSpec();
         //  RegistryConfigs.load();
 
+
+
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         CraftingHelper.register(new OptionalRecipeCondition.Serializer());
@@ -66,31 +67,37 @@ public class Supplementaries {
         var serverRes = new ServerDynamicResourcesHandler();
         serverRes.register(bus);
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
             var clientRes = new ClientDynamicResourcesHandler();
             clientRes.register(bus);
-        });
+
+            //wall lantern and jar jsons
+            if(!FMLLoader.getLaunchHandler().isData()) {
+                ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager())
+                        .registerReloadListener(new WallLanternTexturesRegistry());
+            }
+        }
 
         bus.addListener(ModSetup::init);
 
     }
 
-
     //yes this is where I write crap. deal with it XD
+    //wrench rotation overlay
     //TODO: dynamic soap undye recipe
     //create moving dynamic blocks like rope knot
-    //jei villagers adds
+    //jei villagers addon
+    //corona mod
+    //lilypad mod
+    //trollium interaction mod
     //animated lantern textures
-    //add option for soul jar
     //ash jei plugin
+    //bubble sound for bellows
     //bundle sound for sacks
 
     //FIx spikes piston movements
     //TODO: fish bucket on cages a
     //TODO: shift click to pickup placed book
-
-    //TODO: fix slingshot proj not playing sound on client (all messed up)
-
 
     //todo: fix projectile hitbox being a single point on y = 0
     //divining rod
@@ -103,7 +110,6 @@ public class Supplementaries {
     //TODO: more flywheel stuff
 
     //TODO: improve feather particle
-
 
     //use feather particle on spriggans
 
@@ -157,11 +163,8 @@ public class Supplementaries {
     //TODO: credist screen
 
     //TODO: way signs as villages pieces
-    //slime balls
 
     //small honey slime in cage
-
-    //ender pearls dispensers
 
     //idea: Increase range of enchantment table
 
@@ -171,16 +174,13 @@ public class Supplementaries {
 
     //ash auto bonemeal, improve bubbles
 
-    //redo achievement rendering
     //better badlands kindling gunpowder compat (whenevr it updates lol)
     //better fodder pathfinding
     //TODO fix randomium recipe jei extensin
 
     //TODO: add dispenser like interaction registry for faucet
     //TODO: flax upper stage grows depending on lower
-    //add sack sound
 
-    //smarter farmers not planting tomatoes & task needing to be rewritten
     //jeed mod loaded recipe condition
     //blackboard otline gui+
     //quiver that allows to select arrows
@@ -189,5 +189,9 @@ public class Supplementaries {
     //soap signs & finish notice board dye (add dye interface)
     //snow real magic compat
     //bugs: spring launcher broken on servers
+
+    //rope sliding sound instance
+    //bellows particles
+    //rope walking
 
 }

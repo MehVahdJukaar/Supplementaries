@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -126,6 +129,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
+
     @Override
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
@@ -144,13 +148,16 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
                 success = true;
             }
-            if (!success && item instanceof BlockItem blockItem) {
-                BlockPlaceContext ctx = new BlockPlaceContext(this.level, player, InteractionHand.MAIN_HAND, this.getItem(), hit);
-                success = blockItem.place(ctx).consumesAction();
+            if (!success) {
+                //null player so sound always plays
+                //hackeries because for some god damn reason after 1.17 just using player here does not play the sound 50% of the times
+                Player p = CommonUtil.getEntityStand(this, player);
 
-                //TODO: sound isn't working that well
+                success = ItemsUtil.place(item,
+                        new BlockPlaceContext(this.level, p, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
+
             }
-            if (success){
+            if (success) {
                 this.remove(RemovalReason.DISCARDED);
             }
 
@@ -246,7 +253,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     Vec3 rot = new Vec3(0.325, 0, 0).yRot(this.tickCount * 0.32f);
 
                     Vec3 movement = this.getDeltaMovement();
-                    Vec3 offset = changeBasis(movement, rot);
+                    Vec3 offset = MthUtils.changeBasisN(movement, rot);
 
                     double px = newPos.x + offset.x;
                     double py = newPos.y + offset.y; //+ this.getBbHeight() / 2d;
@@ -266,13 +273,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 }
             }
         }
-    }
-
-    private Vec3 changeBasis(Vec3 dir, Vec3 rot) {
-        Vec3 y = dir.normalize();
-        Vec3 x = new Vec3(y.y, y.z, y.x).normalize();
-        Vec3 z = y.cross(x).normalize();
-        return x.scale(rot.x).add(y.scale(rot.y)).add(z.scale(rot.z));
     }
 
     @Override

@@ -26,7 +26,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -50,7 +49,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -59,7 +57,8 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty TREASURE = BlockProperties.TREASURE;
 
-    private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 10, 12), box(5, 10, 5, 11, 12, 11),
+    private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 10, 12),
+            box(5, 10, 5, 11, 12, 11),
             box(4, 12, 4, 12, 14, 12));
 
     public UrnBlock(Properties properties) {

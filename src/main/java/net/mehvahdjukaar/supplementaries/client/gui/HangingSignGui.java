@@ -3,14 +3,14 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -146,7 +146,7 @@ public class HangingSignGui extends Screen {
         poseStack.mulPose(RotHlpr.Y90);
         poseStack.translate(0, -0.5 + 0.1875, -0.5);
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(this.tileSign.woodType), poseStack, bufferSource, blockRenderer,
+        RendererUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(this.tileSign.woodType), poseStack, bufferSource, blockRenderer,
                 15728880, OverlayTexture.NO_OVERLAY, true);
 
         poseStack.popPose();

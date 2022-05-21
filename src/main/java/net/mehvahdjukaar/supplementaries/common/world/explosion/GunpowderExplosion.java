@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.world.explosion;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -82,9 +82,12 @@ public class GunpowderExplosion extends Explosion {
 
         BlockPos pos = new BlockPos(x, y, z);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
-        if (this.hasFlammableNeighbours(pos) || this.level.getBlockState(pos.below()).isFireSource(level, pos, Direction.UP)
-                || newFire.getBlock() != Blocks.FIRE) {
-            this.level.setBlockAndUpdate(pos, newFire);
+        BlockState s = level.getBlockState(pos);
+        if(s.getMaterial().isReplaceable() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
+            if (this.hasFlammableNeighbours(pos) || this.level.getBlockState(pos.below()).isFireSource(level, pos, Direction.UP)
+                    || newFire.getBlock() != Blocks.FIRE) {
+                this.level.setBlockAndUpdate(pos, newFire);
+            }
         }
 
     }
@@ -111,7 +114,7 @@ public class GunpowderExplosion extends Explosion {
 
 
             if (block.getExplosionResistance(state, this.level, pos, this) == 0) {
-                if (!state.isAir() && block != Blocks.FIRE && block instanceof TntBlock) {
+                if (block instanceof TntBlock) {
                     this.toBlow.add(pos);
                 }
             }

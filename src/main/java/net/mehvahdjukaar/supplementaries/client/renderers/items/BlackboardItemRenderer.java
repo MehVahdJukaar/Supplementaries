@@ -4,9 +4,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -21,7 +20,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
-    private static final BlockState state = ModRegistry.BLACKBOARD.get().defaultBlockState();
+    private static final BlockState STATE = ModRegistry.BLACKBOARD.get().defaultBlockState();
 
     public BlackboardItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
         super(pBlockEntityRenderDispatcher, pEntityModelSet);
@@ -32,7 +31,7 @@ public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundTag com = stack.getTagElement("BlockEntityTag");
         long[] packed = new long[16];
@@ -40,7 +39,7 @@ public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
             packed = com.getLongArray("Pixels");
         }
         VertexConsumer builder = bufferIn.getBuffer(
-                BlackboardTextureManager.INSTANCE.getBlackboardInstance(packed).getRenderType());
+                BlackboardTextureManager.getBlackboardInstance(packed).getRenderType());
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok

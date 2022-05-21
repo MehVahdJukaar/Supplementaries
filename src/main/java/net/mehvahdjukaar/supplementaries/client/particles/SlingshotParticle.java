@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
 
 public class SlingshotParticle extends TextureSheetParticle {
 
@@ -31,7 +31,7 @@ public class SlingshotParticle extends TextureSheetParticle {
         this.setSpriteFromAge(this.sprites);
         //crazy hyperbole instead of normal parabula. idk
         float x = this.age / (float) this.lifetime;
-        final float a = 1 + (Mth.sqrt(5f) - 1f) / 2f;
+        final float a = MthUtils.PHI;
         this.alpha = a + 1 / (x - a);
     }
 
@@ -49,8 +49,7 @@ public class SlingshotParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            SlingshotParticle particle = new SlingshotParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
-            return particle;
+            return new SlingshotParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         }
     }
 

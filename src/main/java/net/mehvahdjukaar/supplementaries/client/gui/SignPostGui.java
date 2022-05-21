@@ -3,9 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -174,7 +173,7 @@ public class SignPostGui extends Screen {
                 poseStack.translate(0, 0, -0.3125);
             }
             poseStack.scale(1, -1, -1);
-            Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
+            Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
             VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
 
             this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
@@ -190,7 +189,7 @@ public class SignPostGui extends Screen {
             }
             poseStack.translate(0, -0.5, 0);
             poseStack.scale(1, -1, -1);
-            Material material = Materials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
+            Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
             VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
 
             this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);

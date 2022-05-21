@@ -2,11 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -42,10 +43,11 @@ import net.minecraftforge.common.Tags;
 import javax.annotation.Nullable;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWashable {
-    public static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 5.0D);
-    public static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
-    public static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 5.0D, 16.0D, 16.0D);
-    public static final VoxelShape SHAPE_WEST = Block.box(11.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
+    protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 

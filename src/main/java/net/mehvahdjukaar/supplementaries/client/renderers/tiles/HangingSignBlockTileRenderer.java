@@ -3,16 +3,16 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.Materials;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
+import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -71,7 +71,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
             poseStack.translate(-0.5, -0.875, -0.5);
             //render block
-            RendererUtil.renderBlockModel(Materials.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
+            RendererUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
         }else{
             poseStack.translate(-0.5, -0.875, -0.5);
         }
@@ -110,7 +110,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                 } else if (item instanceof BannerPatternItem) {
 
                     //TODO: cache or not like notice board
-                    Material renderMaterial = Materials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material renderMaterial = ClientRegistry.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
 
                     VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 

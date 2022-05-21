@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -38,8 +39,22 @@ public class BubbleBlockTile extends BlockEntity {
                 }
             }
             if (tile.age > lifetime && pLevel.random.nextInt(500) == 0) {
-                BubbleBlock.breakBubble((ServerLevel) pLevel, pPos);
+                ModRegistry.BUBBLE_BLOCK.get().breakBubble((ServerLevel) pLevel, pPos, pState);
             }
         }
     }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.putInt("age",age);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        this.age = pTag.getInt("age");
+    }
+
+
 }

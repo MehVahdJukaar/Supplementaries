@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -190,7 +191,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
                     if (world.getBlockEntity(pos) instanceof TurnTableBlockTile tile) {
                         if (tile.cat == 0) {
                             tile.cat = 20 * 20;
-                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModRegistry.TOM_SOUND.get(), SoundSource.BLOCKS, 0.85f, 1);
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModSounds.TOM.get(), SoundSource.BLOCKS, 0.85f, 1);
                         }
                     }
                 }

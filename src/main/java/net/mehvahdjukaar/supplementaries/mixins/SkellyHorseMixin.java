@@ -32,9 +32,6 @@ import javax.annotation.Nullable;
 @Mixin(SkeletonHorse.class)
 public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomDataHolder {
 
-    @Unique
-    private static final int FLESH_NEEDED = 64;
-
     public boolean getVariable() {
         return this.isConverting();
     }

@@ -59,7 +59,7 @@ public class BlackBoardGui extends Screen {
         this.minecraft.setScreen(null);
     }
 
-    //dynamic update for client
+    //dynamic refreshTextures for client
     public void setPixel(int x, int y, boolean on) {
         this.tileBoard.setPixel(x,y,(byte) (on ? 1 : 0));
     }

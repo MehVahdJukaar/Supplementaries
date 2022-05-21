@@ -2,16 +2,18 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -62,6 +64,10 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 public class RopeBlock extends WaterBlock {
+
+    //TODO: make solid when player is not colliding
+    public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
+
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
 
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -143,8 +149,6 @@ public class RopeBlock extends WaterBlock {
         return state.getValue(DOWN) && (state.getValue(UP) || entity.position().y() - pos.getY() < (13 / 16f));
     }
 
-    //TODO: make solid when player is not colliding
-    private static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
@@ -412,7 +416,7 @@ public class RopeBlock extends WaterBlock {
                     world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.8F, 1.3F);
                     BlockState newState = state.setValue(DOWN, false).setValue(KNOT, true);
                     world.setBlock(pos, newState, 3);
-                    //update below
+                    //refreshTextures below
                     //world.updateNeighborsAt(pos, newState.getBlock());
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
@@ -510,7 +514,7 @@ public class RopeBlock extends WaterBlock {
                 }
             }
 
-            //gets update state for new position
+            //gets refreshTextures state for new position
 
             Fluid fluidState = world.getFluidState(toPos).getType();
             boolean waterFluid = fluidState == Fluids.WATER;
@@ -532,7 +536,7 @@ public class RopeBlock extends WaterBlock {
             boolean leaveWater = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource()) && !canHoldWater;
             world.setBlockAndUpdate(fromPos, leaveWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
 
-            //update existing block block to new position
+            //refreshTextures existing block block to new position
             BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
             world.setBlockAndUpdate(toPos, newState);
             if (tile != null) {
@@ -554,9 +558,27 @@ public class RopeBlock extends WaterBlock {
         super.entityInside(state, worldIn, pos, entityIn);
         if (entityIn instanceof Arrow && !worldIn.isClientSide) {
             worldIn.destroyBlock(pos, true, entityIn);
+            //TODO: add proper sound event
             worldIn.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.BLOCKS, 1, 1);
         }
     }
 
+    //for culling
+    @Override
+    public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pSide) {
+        return pAdjacentBlockState.is(this) || super.skipRendering(pState, pAdjacentBlockState, pSide);
+    }
+
+    public static boolean playEntitySlideSound(LivingEntity entity, int ropeTicks) {
+        if (ropeTicks % 15 == 0) {
+            if (!entity.isSilent()) {
+                Player p = entity instanceof Player pl ? pl : null;
+                entity.level.playSound(p, entity.getX(), entity.getY(), entity.getZ(), ModSounds.ROPE_SLIDE.get(),
+                        entity.getSoundSource(), 0.1f, 1);
+            }
+            return true;
+        }
+        return false;
+    }
 
 }
