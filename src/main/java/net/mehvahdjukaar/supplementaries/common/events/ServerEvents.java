@@ -41,7 +41,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -199,8 +198,8 @@ public class ServerEvents {
         LevelAccessor level = event.getWorld();
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos.below());
-        if(state.getBlock() instanceof PlanterBlock){
-            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK,pos.below(), Block.getId(state));
+        if (state.getBlock() instanceof PlanterBlock) {
+            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), Block.getId(state));
             level.setBlock(pos.below(), Blocks.ROOTED_DIRT.defaultBlockState(), 2);
             level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
         }

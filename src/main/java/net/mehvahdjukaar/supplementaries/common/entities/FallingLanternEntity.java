@@ -10,6 +10,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 
 public class FallingLanternEntity extends ImprovedFallingBlockEntity {
 
@@ -48,7 +49,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
             } else {
                 this.spawnAtLocation(state.getBlock());
             }
-            this.cancelDrop = true;
+            this.setCancelDrop(true);
             this.discard();
         }
         return r;

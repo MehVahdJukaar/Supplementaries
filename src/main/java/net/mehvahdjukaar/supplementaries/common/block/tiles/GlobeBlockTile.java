@@ -110,7 +110,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
             this.spin();
             this.level.playSound(null, this.worldPosition,
                        ModSounds.GLOBE_SPIN.get(),
-                        SoundSource.BLOCKS, 0.55f,
+                        SoundSource.BLOCKS, 0.65f,
                         MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
         } else {

@@ -19,6 +19,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final RegistryObject<SoundEvent> CRANK = regSound("block.crank");
 
+    public static final RegistryObject<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
+
+    public static final RegistryObject<SoundEvent> WRENCH_ROTATE = regSound("item.wrench.rotate");
+    public static final RegistryObject<SoundEvent> WRENCH_HIT = regSound("item.wrench.hit");
+    public static final RegistryObject<SoundEvent> WRENCH_FAIL = regSound("item.wrench.fail");
+
     public static final RegistryObject<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final RegistryObject<SoundEvent> PRESENT_PLACE = regSound("block.present.place");
     public static final RegistryObject<SoundEvent> PRESENT_OPEN = regSound("block.present.open");
@@ -85,7 +91,7 @@ public class ModSounds {
             ROPE_BREAK,
             ROPE_STEP,
             ROPE_PLACE,
-            () -> SoundEvents.WOOL_HIT,
+            ROPE_STEP,
             () -> SoundEvents.WOOL_FALL);
 
 }

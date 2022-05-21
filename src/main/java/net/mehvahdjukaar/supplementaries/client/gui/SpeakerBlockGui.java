@@ -13,7 +13,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.gui.widget.Slider;
+import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 public class SpeakerBlockGui extends Screen {
     private static final Component NARRATOR_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.chat_message");
@@ -26,7 +26,7 @@ public class SpeakerBlockGui extends Screen {
     private boolean narrator;
     private final String message;
     private Button modeBtn;
-    private Slider volume;
+    private ForgeSlider volumeSlider;
 
     public SpeakerBlockGui(SpeakerBlockTile te) {
         super(new TranslatableComponent("gui.supplementaries.speaker_block.edit"));
@@ -63,18 +63,19 @@ public class SpeakerBlockGui extends Screen {
 
         int range = ServerConfigs.cached.SPEAKER_RANGE;
 
-        double v = this.tileSpeaker.volume * range;
-        this.volume = new Slider(this.width / 2 - 75, this.height / 4 + 80, 150, 20, VOLUME_TEXT, DISTANCE_BLOCKS, 1, range, v, false, true, null, null);
+        double currentValue = this.tileSpeaker.volume * range;
+        this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20, VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
+                currentValue, 1, 1, true);
 
-        this.addWidget(this.volume);
+        this.addWidget(this.volumeSlider);
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.onDone()));
         this.modeBtn = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
             this.toggleMode();
             this.updateMode();
         }));
-        if(!ServerConfigs.cached.SPEAKER_NARRATOR){
-            this.modeBtn.active =false;
+        if (!ServerConfigs.cached.SPEAKER_NARRATOR) {
+            this.modeBtn.active = false;
         }
 
         this.updateMode();
@@ -95,7 +96,7 @@ public class SpeakerBlockGui extends Screen {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         this.tileSpeaker.message = this.commandTextField.getValue();
         this.tileSpeaker.narrator = this.narrator;
-        this.tileSpeaker.volume = this.volume.getValue() / this.volume.maxValue;
+        this.tileSpeaker.volume = this.volumeSlider.getValue();
         //refreshTextures server tile
         NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
@@ -125,7 +126,7 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) this.volume.onRelease(mouseX, mouseY);
+        if (button == 0) this.volumeSlider.onRelease(mouseX, mouseY);
         return false;
     }
 
@@ -133,7 +134,7 @@ public class SpeakerBlockGui extends Screen {
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
-        this.volume.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.volumeSlider.render(matrixStack, mouseX, mouseY, partialTicks);
         this.commandTextField.render(matrixStack, mouseX, mouseY, partialTicks);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

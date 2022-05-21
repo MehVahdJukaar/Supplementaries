@@ -90,7 +90,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
                                  BlockHitResult hit) {
         boolean enabled = state.getValue(ENABLED);
 
-        float f = enabled ? 1.2F : 1.0F;
+        float f = enabled ? 1F : 1.2F;
         worldIn.playSound(null, pos, ModSounds.FAUCET.get(), SoundSource.BLOCKS, 1F, f);
         worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
         this.updateBlock(state, worldIn, pos, true);

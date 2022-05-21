@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 
 public class FallingUrnEntity extends ImprovedFallingBlockEntity {
 
@@ -51,7 +52,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
         boolean r = super.causeFallDamage(height, amount, source);
         if (this.getDeltaMovement().lengthSqr() > 0.5*0.5) {
             this.shatter();
-            this.cancelDrop = true;
+            this.setCancelDrop(true);
             this.discard();
         } else {
             if (!this.isSilent()) {

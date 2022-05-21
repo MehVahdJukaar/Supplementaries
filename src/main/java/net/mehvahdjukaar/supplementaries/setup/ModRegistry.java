@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import net.mehvahdjukaar.selene.block_set.BlockRegistryHelper;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
+import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;

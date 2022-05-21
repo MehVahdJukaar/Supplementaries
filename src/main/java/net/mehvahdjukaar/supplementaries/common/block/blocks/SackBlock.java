@@ -1,16 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSounds;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -120,7 +117,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
             tile.recheckOpen();
             if (canFall(pos, level)) {
                 ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModRegistry.FALLING_SACK.get(),
-                        level,pos, state, true);
+                        level, pos, state, true);
                 entity.blockData = tile.saveWithoutMetadata();
                 entity.setHurtsEntities(1, 20);
             }

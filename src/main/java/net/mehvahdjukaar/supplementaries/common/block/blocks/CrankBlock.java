@@ -98,7 +98,7 @@ public class CrankBlock extends WaterBlock {
         } else {
             boolean ccw = player.isShiftKeyDown();
             this.activate(state, worldIn, pos, ccw);
-            float f = (ccw ? 0.6f : 0.7f) + MthUtils.nextWeighted(worldIn.random, 0.1f);
+            float f = 0.55f + state.getValue(POWER) * 0.04f ; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
             worldIn.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
             worldIn.gameEvent(player, GameEvent.BLOCK_SWITCH, pos);
 
