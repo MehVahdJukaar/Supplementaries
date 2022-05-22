@@ -1,7 +1,6 @@
 {
   "itemGroup.supplementaries": "Supplementaries",
   "block.supplementaries.faucet": "蛇口",
-  "block.supplementaries.hanging_sign": "吊り下げ看板",
   "block.supplementaries.wall_lantern": "壁付きランタン",
   "block.supplementaries.planter": "プランター",
   "block.supplementaries.bellows": "ふいご",
@@ -121,7 +120,6 @@
   "item.supplementaries.bomb": "爆弾",
   "item.supplementaries.bomb_projectile": "爆弾",
   "block.supplementaries.flax_block": "亜麻の俵",
-  "subtitle.supplementaries.bomb": "爆弾が爆発する",
   "message.supplementaries.anti_repost": "悪意のあるサイトからSupplementariesがダウンロードされました、Corseforgeのサイト %s からダウンロードし直してください",
   "message.supplementaries.anti_repost_link": "これやで",
   "message.supplementaries.anti_repost_2": "Configを変えることによりこの警告画面を無効にできます",
@@ -215,7 +213,6 @@
   "item.supplementaries.pancake_disc.desc": "Partyp - Pancake Music",
   "message.supplementaries.key.lockable": "鍵でのロック可能",
   "message.supplementaries.placeable": "設置可能",
-  "subtitle.supplementaries.gunpowder.ignite": "火薬が音を立てる",
   "item.supplementaries.red_merchant_spawn_egg": "レッド商人のスポーンエッグ",
   "block.supplementaries.feather_block": "羽根ブロック",
   "block.supplementaries.flint_block": "火打石ブロック",
@@ -291,7 +288,6 @@
   "message.supplementaries.present.to": "%sへ",
   "message.supplementaries.present.public": "梱包済み",
   "message.supplementaries.present.info": "このプレゼントは%s宛です",
-  "subtitle.supplementaries.present.pack": "プレゼントが梱包される",
   "advancements.adventure.globe.title": "俺を振り回してる ベイベー",
   "advancements.adventure.globe.description": "地球儀をとてつもない速度で自転させる",
   "entity.supplementaries.slingshot_projectile": "パチンコ発射物",
@@ -333,6 +329,46 @@
   "block.supplementaries.gold_lantern": "金のランタン",
   "entity.supplementaries.dispenser_minecart": "ディスペンサー付きトロッコ",
   "item.supplementaries.dispenser_minecart": "ディスペンサー付きトロッコ",
+  "effect.supplementaries.overencumbered": "重量超過",
+  "effect.supplementaries.overencumbered.description": "このステータス効果は、レベルⅠではダッシュができなくなり、レベルⅡではジャンプの高さも半減し、レベルⅢ以降は歩行速度も低下します",
+  "message.supplementaries.cage.fail": "小さな動物しか入れることはできません",
+  "item.supplementaries.sign_post": "%の道標",
+  "block.supplementaries.hanging_sign": "%の吊り下げ看板",
+
+
+  "subtitle.supplementaries.clock_tick": "時計が音を立てる",
+  "subtitle.supplementaries.gunpowder.ignite": "火薬が音を立てる",
+  "subtitle.supplementaries.bomb": "爆弾が爆発する",
+  "subtitle.supplementaries.sack.break": "袋が破壊される",
+  "subtitle.supplementaries.sack.place": "袋が設置される",
+  "subtitle.supplementaries.sack.open": "袋が開く",
+  "subtitle.supplementaries.rope.break": "ロープが破壊される",
+  "subtitle.supplementaries.rope.place": "ロープが設置される",
+  "subtitle.supplementaries.bubble.pop": "シャボンが弾ける",
+  "subtitle.supplementaries.bubble.blow": "シャボンが飛ばされる",
+  "subtitle.supplementaries.present.place": "プレゼントが設置される",
+  "sbtitle.supplementaries.present.break": "プレゼントが破壊される",
+  "subtitle.supplementaries.present.open": "プレゼントが開く",
+  "subtitle.supplementaries.present.pack": "プレゼントが梱包される",
+  "subtitle.supplementaries.crank.turn": "クランクが回る",
+  "subtitle.supplementaries.jar.place": "瓶が設置される",
+  "subtitle.supplementaries.jar.break": "瓶が破壊される",
+  "subtitle.supplementaries.jar.cookie": "クッキーを瓶に入れる",
+  "subtitle.supplementaries.bellows.retract": "ふいごが空気を吸う",
+  "subtitle.supplementaries.bellows.blow": "ふいごが空気を出す",
+  "subtitle.supplementaries.globe.spin": "地球儀が回る",
+  "subtitle.supplementaries.faucet.turn": "蛇口がひねられる",
+  "subtitle.supplementaries.slingshot.charge": "パチンコが引かれる",
+  "subtitle.supplementaries.slingshot.release": "パチンコが打たれる",
+  "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
+
+
+
+
+
+  "block_type.supplementaries.hanging_sign": "吊り下げ看板22",
+  "block_type.supplementaries.sign_post": "道標",
+
 
   "block.supplementaries.laser_block": "エンダービーマー",
   "death.attack.supplementaries.amethyst_shard": "%1$sは飛び散った破片によって死んだ",
