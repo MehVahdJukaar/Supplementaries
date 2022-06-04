@@ -4,6 +4,7 @@ import net.mehvahdjukaar.selene.block_set.BlockRegistryHelper;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -17,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
+import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -114,7 +116,7 @@ public class ModRegistry {
     //using this to register overwrites and conditional block items
     @SubscribeEvent
     public static void registerAdditionalStuff(final RegistryEvent.Register<Item> event) {
-
+        WorldGenHandler.onRegisterAdditional();
         Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
 
         //CompatHandler.registerOptionalItems(event);

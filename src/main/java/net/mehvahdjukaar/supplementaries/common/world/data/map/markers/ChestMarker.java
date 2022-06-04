@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.CustomDecoration;
+import net.mehvahdjukaar.selene.map.CustomMapDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 
-public class ChestMarker extends MapBlockMarker<CustomDecoration> {
+public class ChestMarker extends MapBlockMarker<CustomMapDecoration> {
 
     public ChestMarker() {
         super(CMDreg.CHEST_DECORATION_TYPE);
@@ -31,7 +31,7 @@ public class ChestMarker extends MapBlockMarker<CustomDecoration> {
 
     @Nullable
     @Override
-    public CustomDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomDecoration(this.getType(), mapX, mapY, rot, null);
+    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
+        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, null);
     }
 }

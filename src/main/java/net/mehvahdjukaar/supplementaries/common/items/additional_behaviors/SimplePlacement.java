@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,6 +27,10 @@ public record SimplePlacement(@Nullable Block placeable) implements AdditionalPl
 
     public SimplePlacement(@Nullable Block placeable) {
         this.placeable = placeable;
+    }
+
+    BlockPlacerItem getMimic() {
+        return ModRegistry.BLOCK_PLACER.get();
     }
 
     @Override

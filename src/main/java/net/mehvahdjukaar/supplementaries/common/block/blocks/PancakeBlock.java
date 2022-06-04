@@ -65,7 +65,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         if ((tag.isEmpty() || tag.get().stream().findAny().isEmpty() && item == Items.COCOA_BEANS) || stack.is(ModTags.CHOCOLATE_BARS)) {
             return Topping.CHOCOLATE;
         }
-        if (item.getRegistryName().toString().equals("autumnity:syrup_bottle")) return Topping.SYRUP;
+        if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
         //if(item.isIn(ItemTags.getCollection().get(ResourceLocation.tryCreate("forge:sugar"))))return BlockProperties.Topping.CHOCOLATE;
         return Topping.NONE;
     }

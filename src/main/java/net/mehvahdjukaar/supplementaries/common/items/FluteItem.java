@@ -25,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -61,22 +60,10 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         return tag.contains("Pet") || super.isFoil(pStack);
     }
 
+    /*
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
-        CompoundTag c = stack.getTagElement("Pet");
-        if (c == null && (
-                target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(playerIn.getUUID()))
-                || target.getType().is(ModTags.FLUTE_PET)) {
-            if (target instanceof AbstractHorse horse && !horse.isTamed()) return InteractionResult.PASS;
-            //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
-            CompoundTag com = new CompoundTag();
-            com.putString("Name", target.getName().getString());
-            com.putUUID("UUID", target.getUUID());
-            com.putInt("ID", target.getId());
-
-            stack.addTagElement("Pet", com);
-            playerIn.setItemInHand(hand, stack);
-            playerIn.getCooldowns().addCooldown(this, 20);
+        if (interactWithPet(stack, playerIn, target, hand)) {
             return InteractionResult.sidedSuccess(playerIn.level.isClientSide);
         }
         return super.interactLivingEntity(stack, playerIn, target, hand);
@@ -85,12 +72,36 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
-            return this.interactLivingEntity(stack, player, livingEntity, player.getUsedItemHand()).consumesAction();
+            return interactWithPet(stack, player, livingEntity, player.getUsedItemHand());
+        }
+        return false;
+    }*/
+
+    //now called from forge event
+    public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
+        if (!(target instanceof LivingEntity)) return false;
+        CompoundTag c = stack.getTagElement("Pet");
+        if (c == null && (
+                target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(player.getUUID()))
+                || target.getType().is(ModTags.FLUTE_PET)) {
+            if (target instanceof AbstractHorse horse && !horse.isTamed()) return false;
+
+            //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
+            CompoundTag com = new CompoundTag();
+            com.putString("Name", target.getName().getString());
+            com.putUUID("UUID", target.getUUID());
+            com.putInt("ID", target.getId());
+
+            stack.addTagElement("Pet", com);
+            player.setItemInHand(hand, stack);
+            player.getCooldowns().addCooldown(stack.getItem(), 20);
+            return true;
         }
         return false;
     }
 
-    //TODO: figure out continous use
+
+    //TODO: figure out continuous use
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         super.use(worldIn, playerIn, handIn);
@@ -262,7 +273,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
 
         offHand.yRot = (float) Mth.clamp((RotHlpr.wrapRad(mainHand.yRot) - 1 * mirror) * 0.2, -0.15, 0.15) + 1.1f * mirror;
-        offHand.xRot = RotHlpr.wrapRad(mainHand.xRot - 0.06f) ;
+        offHand.xRot = RotHlpr.wrapRad(mainHand.xRot - 0.06f);
 
 
         //shoulder joint hackery

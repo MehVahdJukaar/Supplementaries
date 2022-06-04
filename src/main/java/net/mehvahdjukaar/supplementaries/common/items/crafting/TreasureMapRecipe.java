@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,13 +28,13 @@ public class TreasureMapRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() instanceof MapItem) {
+            if (stack.getItem() == Items.FILLED_MAP) {
                 if (itemstack != null) {
                     return false;
                 }
                 itemstack = stack;
             }
-            if (stack.getItem() == ModRegistry.ANTIQUE_INK.get()) {
+            else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get()) {
 
                 if (itemstack1 != null) {
                     return false;
@@ -41,6 +42,7 @@ public class TreasureMapRecipe extends CustomRecipe {
                 itemstack1 = stack;
 
             }
+            else return false;
         }
         boolean match = itemstack != null && itemstack1 != null;
         if (match) {

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.CustomDecoration;
+import net.mehvahdjukaar.selene.map.CustomMapDecoration;
 import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
-public class WaystoneMarker extends NamedMapBlockMarker<CustomDecoration> {
+public class WaystoneMarker extends NamedMapBlockMarker<CustomMapDecoration> {
 
     public WaystoneMarker() {
         super(CMDreg.WAYSTONE_DECORATION_TYPE);
@@ -35,7 +35,7 @@ public class WaystoneMarker extends NamedMapBlockMarker<CustomDecoration> {
 
     @Nullable
     @Override
-    public CustomDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomDecoration(this.getType(), mapX, mapY, rot, name);
+    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
+        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, name);
     }
 }

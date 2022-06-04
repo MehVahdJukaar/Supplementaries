@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 
 public class FallingLanternEntity extends ImprovedFallingBlockEntity {
 
@@ -40,7 +40,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
         if (ServerConfigs.cached.FALLING_LANTERNS.hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
             BlockState state = this.getBlockState();
 
-            BlockPos pos = this.blockPosition();
+            BlockPos pos = new BlockPos(this.getX(), this.getY() + 0.25, this.getZ());
             //break event
             level.levelEvent(null, 2001, pos, Block.getId(state));
             if (state.getLightEmission() != 0) {

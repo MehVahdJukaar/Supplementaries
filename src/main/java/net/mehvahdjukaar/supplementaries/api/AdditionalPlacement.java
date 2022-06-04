@@ -1,7 +1,5 @@
-package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
+package net.mehvahdjukaar.supplementaries.api;
 
-import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.FoodProperties;
@@ -19,10 +17,6 @@ import java.util.List;
  * something called by mixin which allows performing extra action when an item is used
  */
 public interface AdditionalPlacement {
-
-    default BlockPlacerItem getMimic() {
-        return ModRegistry.BLOCK_PLACER.get();
-    }
 
     @Nullable
     default BlockState overrideGetPlacementState(BlockPlaceContext pContext) {

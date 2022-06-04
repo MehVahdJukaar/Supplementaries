@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 
-import net.mehvahdjukaar.selene.map.CustomDecoration;
+import net.mehvahdjukaar.selene.map.CustomMapDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.ConduitBlock;
 
 import javax.annotation.Nullable;
 
-public class ConduitMarker extends MapBlockMarker<CustomDecoration> {
+public class ConduitMarker extends MapBlockMarker<CustomMapDecoration> {
 
     public ConduitMarker() {
-        super(CMDreg.CONDUIT_DECORATION_TYPE);
+        super(CMDreg.NETHER_PORTAL_DECORATION_TYPE);
     }
 
     public ConduitMarker(BlockPos pos) {
@@ -32,8 +32,8 @@ public class ConduitMarker extends MapBlockMarker<CustomDecoration> {
 
     @Nullable
     @Override
-    public CustomDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomDecoration(this.getType(), mapX, mapY, rot, null);
+    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
+        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, null);
     }
 
 }

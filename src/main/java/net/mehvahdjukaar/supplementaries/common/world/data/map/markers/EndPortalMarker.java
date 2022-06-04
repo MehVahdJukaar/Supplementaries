@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.CustomDecoration;
+import net.mehvahdjukaar.selene.map.CustomMapDecoration;
 import net.mehvahdjukaar.selene.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.EndPortalBlock;
 
 import javax.annotation.Nullable;
 
-public class EndPortalMarker extends MapBlockMarker<CustomDecoration> {
+public class EndPortalMarker extends MapBlockMarker<CustomMapDecoration> {
 
     public EndPortalMarker() {
         super(CMDreg.END_PORTAL_DECORATION_TYPE);
@@ -30,7 +30,7 @@ public class EndPortalMarker extends MapBlockMarker<CustomDecoration> {
 
     @Nullable
     @Override
-    public CustomDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomDecoration(this.getType(), mapX, mapY, rot, null);
+    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
+        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, null);
     }
 }

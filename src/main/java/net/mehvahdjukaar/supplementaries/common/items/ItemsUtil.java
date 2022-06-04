@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -140,16 +140,18 @@ public class ItemsUtil {
 
     @Nullable
     public static Pair<IItemHandler, BlockEntity> getItemHandler(ItemStack containerStack, Player player) {
-        CompoundTag tag = containerStack.getOrCreateTag();
-        CompoundTag cmp = tag.getCompound("BlockEntityTag");
-        if (!cmp.contains("LootTable")) {
-            BlockEntity te = loadBlockEntityFromItem(cmp.copy(), containerStack.getItem());
+        CompoundTag tag = containerStack.getTag();
+        if(tag != null) {
+            CompoundTag cmp = tag.getCompound("BlockEntityTag");
+            if (!cmp.contains("LootTable")) {
+                BlockEntity te = loadBlockEntityFromItem(cmp.copy(), containerStack.getItem());
 
-            if (te != null) {
-                if (te instanceof SafeBlockTile safe && !safe.canPlayerOpen(player, false)) return null;
-                LazyOptional<IItemHandler> handlerHolder = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-                if (handlerHolder.isPresent()) {
-                    return Pair.of(handlerHolder.orElseGet(EmptyHandler::new), te);
+                if (te != null) {
+                    if (te instanceof SafeBlockTile safe && !safe.canPlayerOpen(player, false)) return null;
+                    LazyOptional<IItemHandler> handlerHolder = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+                    if (handlerHolder.isPresent()) {
+                        return Pair.of(handlerHolder.orElseGet(EmptyHandler::new), te);
+                    }
                 }
             }
         }

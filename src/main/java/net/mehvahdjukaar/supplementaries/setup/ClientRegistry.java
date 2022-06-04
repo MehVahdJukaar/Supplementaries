@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -13,10 +15,13 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.Material;
@@ -32,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
 
@@ -144,5 +150,33 @@ public class ClientRegistry {
                 return renderer.get();
             }
         });
+    }
+
+    public static class RR extends RenderType {
+
+        public RR(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
+            super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
+        }
+
+        public static RenderType createGenericRenderType(String name, VertexFormat format, VertexFormat.Mode mode, RenderStateShard.ShaderStateShard shader,
+                                                         RenderStateShard.TransparencyStateShard transparency, RenderStateShard.EmptyTextureStateShard texture) {
+            return RenderType.create(
+                    name, format, mode, 256, false, false, CompositeState.builder()
+                            .setShaderState(shader)
+                            .setWriteMaskState(new WriteMaskStateShard(true, true))
+                            .setLightmapState(new LightmapStateShard(false))
+                            .setTransparencyState(transparency)
+                            .setTextureState(texture)
+                            .setCullState(new CullStateShard(true))
+                            .createCompositeState(true)
+            );
+        }
+
+        //this internally contains a map of render types
+        public static final Function<ResourceLocation, RenderType> TRANSPARENT_TEXTURE = Util.memoize((texture) ->
+                createGenericRenderType("test_texture", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+                        VertexFormat.Mode.QUADS, RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER,
+                        RenderStateShard.TRANSLUCENT_TRANSPARENCY,
+                        new RenderStateShard.TextureStateShard(texture,false, false)));
     }
 }

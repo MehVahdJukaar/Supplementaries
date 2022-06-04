@@ -31,6 +31,7 @@
     {"id":"twilightdecor:twilight_oak_post","required":false},
 
     {"id":"#adorn:posts","required":false},
+    {"id":"#quark:posts","required":false},
 
     {"id":"mysticalworld:pearl_small_post","required":false},
     {"id":"mysticalworld:uncanny_mushroom_small_post","required":false},
@@ -113,6 +114,39 @@
     {"id":"bayou_blues:stripped_cypress_post","required":false},
     {"id":"bayou_blues:cypress_post","required":false},
     {"id":"habitat:stripped_fairy_ring_mushroom_post","required":false},
-    {"id":"habitat:fairy_ring_mushroom_post","required":false}
+    {"id":"habitat:fairy_ring_mushroom_post","required":false},
+
+
+    {"id":"compatoplenty:fir_post","required":false},
+    {"id":"compatoplenty:redwood_post","required":false},
+    {"id":"compatoplenty:cherry_post","required":false},
+    {"id":"compatoplenty:mahogany_post","required":false},
+    {"id":"compatoplenty:jacaranda_post","required":false},
+    {"id":"compatoplenty:palm_post","required":false},
+    {"id":"compatoplenty:willow_post","required":false},
+    {"id":"compatoplenty:dead_post","required":false},
+    {"id":"compatoplenty:magic_post","required":false},
+    {"id":"compatoplenty:umbran_post","required":false},
+    {"id":"compatoplenty:hallbark_post","required":false},
+    {"id":"compatoplenty:stripped_fir_post","required":false},
+    {"id":"compatoplenty:stripped_redwood_post","required":false},
+    {"id":"compatoplenty:stripped_cherry_post","required":false},
+    {"id":"compatoplenty:stripped_mahogany_post","required":false},
+    {"id":"compatoplenty:stripped_jacaranda_post","required":false},
+    {"id":"compatoplenty:stripped_palm_post","required":false},
+    {"id":"compatoplenty:stripped_willow_post","required":false},
+    {"id":"compatoplenty:stripped_dead_post","required":false},
+    {"id":"compatoplenty:stripped_magic_post","required":false},
+    {"id":"compatoplenty:stripped_umbran_post","required":false},
+    {"id":"compatoplenty:stripped_hallbark_post","required":false},
+
+
+    {"id":"ecologics:coconut_post","required":false},
+    {"id":"ecologics:walnut_post","required":false},
+    {"id":"ecologics:azalea_post","required":false},
+    {"id":"ecologics:flowering_azalea_post","required":false},
+    {"id":"ecologics:stripped_coconut_post","required":false},
+    {"id":"ecologics:stripped_walnut_post","required":false},
+    {"id":"ecologics:stripped_azalea_post","required":false}
   ]
 }

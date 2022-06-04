@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "autumnity:syrup_bottle",
+      "required": false
+    },
+    {
+      "id": "malum:holy_syrup",
+      "required": false
+    },
+    {
+      "id": "malum:unholy_syrup",
+      "required": false
+    }
+  ]
+}

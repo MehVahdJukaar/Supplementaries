@@ -194,7 +194,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("items/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res("items/hanging_signs/scribbles_template"));) {
+                                Supplementaries.res("items/hanging_signs/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Hanging Sign texture for {} : {}", sign, ex);
@@ -244,7 +244,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;
-                Item signItem = wood.signItem.get();
+                Item signItem = wood.getItemOfThis("sign");
                 if (signItem != null) {
                     try (TextureImage vanillaSign = TextureImage.open(manager,
                             RPUtils.findFirstItemTextureLocation(manager, signItem));
@@ -256,7 +256,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("items/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res("items/sign_posts/scribbles_template"));) {
+                                Supplementaries.res("items/sign_posts/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
@@ -333,12 +333,10 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
     @Override
     public void addDynamicTranslations(DynamicLanguageManager.LanguageAccessor lang) {
-        ModRegistry.HANGING_SIGNS.forEach((type, block) -> {
-            LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block);
-        });
-        ModRegistry.SIGN_POST_ITEMS.forEach((type, item) -> {
-            LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item);
-        });
+        ModRegistry.HANGING_SIGNS.forEach((type, block) ->
+                LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block));
+        ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
+                LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
     }
 
 }

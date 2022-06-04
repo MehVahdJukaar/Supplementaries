@@ -219,7 +219,11 @@ public class FaucetBlockTile extends BlockEntity {
             //pull other items from containers
             return this.spillItemsFromInventory(level, pos, dir, tileBack);
         } else if (level.getFluidState(behind).getType() == Fluids.WATER) {
+            //Unlimited water!!
             this.prepareToTransferBottle(SoftFluidRegistry.WATER.get());
+            if (doTransfer && tryFillingBlockBelow(level, pos)) {
+                return true;
+            }
             return true;
         }
 

@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -21,8 +24,10 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
@@ -99,6 +104,18 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
                 BlockEntity entity = upSkull.newBlockEntity(this.getBlockPos(), state);
                 if (entity instanceof SkullBlockEntity blockEntity) {
                     this.innerTileUp = blockEntity;
+
+                    //sets owner of upper tile
+                    GameProfile gameprofile = null;
+                    if (skullStack.hasTag()) {
+                        CompoundTag compoundtag = skullStack.getTag();
+                        if (compoundtag.contains("SkullOwner", 10)) {
+                            gameprofile = NbtUtils.readGameProfile(compoundtag.getCompound("SkullOwner"));
+                        } else if (compoundtag.contains("SkullOwner", 8) && !StringUtils.isBlank(compoundtag.getString("SkullOwner"))) {
+                            gameprofile = new GameProfile(null, compoundtag.getString("SkullOwner"));
+                        }
+                    }
+                    this.innerTileUp.setOwner(gameprofile);
                 }
             }
         }

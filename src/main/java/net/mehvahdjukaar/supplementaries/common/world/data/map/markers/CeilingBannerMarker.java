@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
+import net.mehvahdjukaar.selene.map.CustomMapDecoration;
 import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;

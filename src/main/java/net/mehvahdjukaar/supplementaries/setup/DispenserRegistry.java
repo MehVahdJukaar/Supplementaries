@@ -68,6 +68,10 @@ public class DispenserRegistry {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
 
+        if(RegistryConfigs.Reg.SACK_ENABLED.get()){
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
+        }
+
         //jar
         boolean jar = RegistryConfigs.Reg.JAR_ENABLED.get();
         if (jar) {

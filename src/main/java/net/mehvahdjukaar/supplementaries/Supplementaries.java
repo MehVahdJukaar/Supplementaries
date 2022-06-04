@@ -10,9 +10,12 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -55,9 +58,7 @@ public class Supplementaries {
 
         //  RegistryConfigs.createSpec();
         //  RegistryConfigs.load();
-
-
-
+        
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         CraftingHelper.register(new OptionalRecipeCondition.Serializer());
@@ -84,6 +85,12 @@ public class Supplementaries {
 
     }
 
+    //ehcnahted books placed vertically. fix placement based off player look dir
+
+    //camera mod with screenshots
+
+    //clicking on cage with lead will put the leashed animal inside
+    //bug: tipped spikes not getting placed. rope not playing up sound
     //yes this is where I write crap. deal with it XD
     //wrench rotation overlay
     //TODO: dynamic soap undye recipe

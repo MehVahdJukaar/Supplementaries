@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -31,5 +33,9 @@ public class WallLanternPlacement implements AdditionalPlacement {
         if (ClientConfigs.cached.PLACEABLE_TOOLTIPS) {
             pTooltipComponents.add(new TranslatableComponent("message.supplementaries.wall_lantern").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         }
+    }
+
+    BlockPlacerItem getMimic() {
+        return ModRegistry.BLOCK_PLACER.get();
     }
 }

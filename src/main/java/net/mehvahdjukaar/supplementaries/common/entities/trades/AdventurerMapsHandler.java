@@ -2,8 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.mehvahdjukaar.selene.map.CustomDecorationType;
-import net.mehvahdjukaar.selene.map.MapDecorationHandler;
+import net.mehvahdjukaar.selene.map.MapDecorationRegistry;
+import net.mehvahdjukaar.selene.map.MapHelper;
+import net.mehvahdjukaar.selene.map.type.IMapDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
@@ -41,24 +42,34 @@ public class AdventurerMapsHandler {
     private static final int SEARCH_RADIUS = 100;
     private static final List<TradeData> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
-    private static final Map<TagKey<ConfiguredStructureFeature<?, ?>>, Pair<CustomDecorationType<?, ?>, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
+    private static final Map<TagKey<ConfiguredStructureFeature<?, ?>>,
+            Pair<ResourceLocation, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
+
+
+    private static void addStructureDecoration(TagKey<ConfiguredStructureFeature<?, ?>> tag, ResourceLocation res, int color) {
+        DEFAULT_STRUCTURE_MARKERS.put(tag, Pair.of(res, color));
+    }
+
+    private static void addStructureDecoration(TagKey<ConfiguredStructureFeature<?, ?>> tag, IMapDecorationType<?, ?> type, int color) {
+        addStructureDecoration(tag, type.getId(), color);
+    }
 
     static {
         //tags here
 
-        DEFAULT_STRUCTURE_MARKERS.put(ConfiguredStructureTags.SHIPWRECK, Pair.of(CMDreg.SHIPWRECK_TYPE, 0x34200f));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.IGLOO, Pair.of(CMDreg.IGLOO_TYPE, 0x99bdc2));
-        DEFAULT_STRUCTURE_MARKERS.put(ConfiguredStructureTags.RUINED_PORTAL, Pair.of(CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5));
-        DEFAULT_STRUCTURE_MARKERS.put(ConfiguredStructureTags.VILLAGE, Pair.of(CMDreg.VILLAGE_TYPE, 0xba8755));
-        DEFAULT_STRUCTURE_MARKERS.put(ConfiguredStructureTags.OCEAN_RUIN, Pair.of(CMDreg.OCEAN_RUIN_TYPE, 0x3a694d));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.PILLAGER_OUTPOST, Pair.of(CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.DESERT_PYRAMID, Pair.of(CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.JUNGLE_TEMPLE, Pair.of(CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.BASTION_REMNANT, Pair.of(CMDreg.BASTION_TYPE, 0x2c292f));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.END_CITY, Pair.of(CMDreg.END_CITY_TYPE, 0x9c73ab));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.SWAMP_HUT, Pair.of(CMDreg.SWAMP_HUT_TYPE, 0x1b411f));
-        DEFAULT_STRUCTURE_MARKERS.put(ModTags.NETHER_FORTRESS, Pair.of(CMDreg.NETHER_FORTRESS, 0x3c080b));
-        DEFAULT_STRUCTURE_MARKERS.put(ConfiguredStructureTags.MINESHAFT, Pair.of(CMDreg.MINESHAFT_TYPE, 0x808080));
+        addStructureDecoration(ConfiguredStructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
+        addStructureDecoration(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
+        addStructureDecoration(ConfiguredStructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
+        addStructureDecoration(ConfiguredStructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
+        addStructureDecoration(ConfiguredStructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
+        addStructureDecoration(ModTags.PILLAGER_OUTPOST, CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100);
+        addStructureDecoration(ModTags.DESERT_PYRAMID, CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f);
+        addStructureDecoration(ModTags.JUNGLE_TEMPLE, CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638);
+        addStructureDecoration(ModTags.BASTION_REMNANT, CMDreg.BASTION_TYPE, 0x2c292f);
+        addStructureDecoration(ModTags.END_CITY, CMDreg.END_CITY_TYPE, 0x9c73ab);
+        addStructureDecoration(ModTags.SWAMP_HUT, CMDreg.SWAMP_HUT_TYPE, 0x1b411f);
+        addStructureDecoration(ModTags.NETHER_FORTRESS, CMDreg.NETHER_FORTRESS, 0x3c080b);
+        addStructureDecoration(ConfiguredStructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
 
         /*
         simpleMapTrade(Structure.SHIPWRECK);
@@ -78,15 +89,21 @@ public class AdventurerMapsHandler {
 
     }
 
-    private static Pair<CustomDecorationType<?, ?>, Integer> getVanillaMarker(Holder<ConfiguredStructureFeature<?, ?>> structure) {
+    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(Holder<ConfiguredStructureFeature<?, ?>> structure) {
+        ResourceLocation res = new ResourceLocation("selene:generic_structure");
+        int color = -1;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
-            if (structure.is(v.getKey())) return v.getValue();
+            if (structure.is(v.getKey())) {
+                res = v.getValue().getFirst();
+                color = v.getValue().getSecond();
+            }
         }
-        return Pair.of(MapDecorationHandler.GENERIC_STRUCTURE_TYPE, -1);
+        return Pair.of(MapDecorationRegistry.get(res), color);
     }
 
-    private static Pair<CustomDecorationType<?, ?>, Integer> getVanillaMarker(TagKey<ConfiguredStructureFeature<?, ?>> tag) {
-        return DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(MapDecorationHandler.GENERIC_STRUCTURE_TYPE, -1));
+    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<ConfiguredStructureFeature<?, ?>> tag) {
+        var g = DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(new ResourceLocation("selene:generic_structure"), -1));
+        return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
     }
 
 
@@ -195,10 +212,10 @@ public class AdventurerMapsHandler {
                     ItemStack stack = MapItem.create(level, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
                     MapItem.renderBiomePreviewMap(serverLevel, stack);
 
-                    var decoration = getVanillaMarker(found.getSecond());
+                    var decoration = getStructureMarker(found.getSecond());
 
                     //adds custom decoration
-                    MapDecorationHandler.addTargetDecoration(stack, toPos, decoration.getFirst(), 0x78151a);
+                    MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), 0x78151a);
                     stack.setHoverName(new TranslatableComponent("filled_map.adventure"));
                     return stack;
                 }
@@ -207,7 +224,6 @@ public class AdventurerMapsHandler {
             return ItemStack.EMPTY;
         }
     }
-
 
 
     private static class AdventureMapTrade implements VillagerTrades.ItemListing {
@@ -256,13 +272,13 @@ public class AdventurerMapsHandler {
                 } else {
                     //adds custom decoration
 
-                    var decoration = getVanillaMarker(destination);
+                    var decoration = getStructureMarker(destination);
 
                     int color = mapColor == 0xffffff ? decoration.getSecond() : mapColor;
                     if (mapMarker == null) {
-                        MapDecorationHandler.addTargetDecoration(stack, toPos, decoration.getFirst(), color);
+                        MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), color);
                     } else {
-                        MapDecorationHandler.addTargetDecoration(stack, toPos, mapMarker, color);
+                        MapHelper.addDecorationToMap(stack, toPos, mapMarker, color);
                     }
 
                 }

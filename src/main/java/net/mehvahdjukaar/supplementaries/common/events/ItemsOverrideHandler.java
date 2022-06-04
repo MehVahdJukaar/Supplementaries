@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.map.ExpandedMapData;
-import net.mehvahdjukaar.selene.map.MapDecorationHandler;
+import net.mehvahdjukaar.selene.builtincompat.MapAtlasPlugin;
+import net.mehvahdjukaar.selene.map.MapHelper;
 import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
@@ -12,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
-import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -52,7 +53,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -100,10 +100,11 @@ public class ItemsOverrideHandler {
 
         HPItemActionOnBlock.add(new AntiqueInkBehavior());
         HPItemActionOnBlock.add(new WrenchBehavior());
+        HPItemActionOnBlock.add(new SkullCandlesBehavior());
 
         //maybe move in mixin system (cant for cakes as block interaction has priority)
         itemActionOnBlock.add(new SkullPileBehavior());
-        itemActionOnBlock.add(new SkullCandlesBehavior());
+
         itemActionOnBlock.add(new EnhancedCakeBehavior());
 
         itemActionOnBlock.add(new MapMarkerBehavior());
@@ -128,6 +129,16 @@ public class ItemsOverrideHandler {
                     continue;
                 }
             }
+            //block items dont work here
+            /*
+            if (ServerConfigs.cached.SKULL_CANDLES) {
+                if (i.builtInRegistryHolder().is(ItemTags.CANDLES) &&
+                        i.getRegistryName().getNamespace().equals("minecraft")) {
+                    ((IExtendedItem) i).addAdditionalBehavior(new SkullCandlesPlacement());
+                    continue;
+                }
+            }*/
+
 
             for (ItemUseOnBlockOverride b : itemActionOnBlock) {
                 if (b.appliesToItem(i)) {
@@ -361,20 +372,23 @@ public class ItemsOverrideHandler {
             if (!(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && stack.is(Items.CAKE))) {
                 //for candles. normal cakes have no drops
                 BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
-                if (world instanceof ServerLevel serverLevel) {
-                    //prevents dropping cake
-                    Block.getDrops(state, serverLevel, pos, null).forEach((d) -> {
-                        if (d.getItem() != Items.CAKE) {
-                            Block.popResource(world, pos, d);
-                        }
-                    });
-                    state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY);
-                    world.setBlock(pos, newState, 4);
-                }
+                if (world.isClientSide) world.setBlock(pos, newState, 3);
                 BlockHitResult raytrace = new BlockHitResult(
                         new Vec3(pos.getX(), pos.getY(), pos.getZ()), hit.getDirection(), pos, false);
 
-                return newState.use(world, player, hand, raytrace);
+                var r = newState.use(world, player, hand, raytrace);
+                if (world instanceof ServerLevel serverLevel) {
+                    if (r.consumesAction()) {
+                        //prevents dropping cake
+                        Block.getDrops(state, serverLevel, pos, null).forEach((d) -> {
+                            if (d.getItem() != Items.CAKE) {
+                                Block.popResource(world, pos, d);
+                            }
+                        });
+                        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY);
+                    } else world.setBlock(pos, state, 3); //returns to normal
+                }
+                return r;
             }
             //fallback to default cake interaction
             return InteractionResult.PASS;
@@ -415,23 +429,14 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof MapItem; //|| (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item))
+            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item));
         }
 
         @Override
-        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+        public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             BlockPos pos = hit.getBlockPos();
-            if (!MapDecorationHandler.getMarkersFromWorld(world, pos).isEmpty()) {
-                if (!world.isClientSide) {
-                    MapItemSavedData data = null;
-                    if (stack.getItem() instanceof MapItem) data = MapItem.getSavedData(stack, world);
-                    //else if (CompatHandler.mapatlas) data = MapAtlasPlugin.getSavedDataFromAtlas(stack, world, player);
-
-                    if (data instanceof ExpandedMapData expandedMapData) {
-                        expandedMapData.toggleCustomDecoration(world, pos);
-                    }
-                }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+            if (MapHelper.toggleMarkersAtPos(level, pos, stack, player)) {
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
         }
@@ -526,7 +531,7 @@ public class ItemsOverrideHandler {
 
             if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == Blocks.CAKE.defaultBlockState()) {
 
-                return replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(), player, stack, pos, world, state, isRanged,
+                return replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(), player, stack, pos, world, state,
                         null, DoubleCakeBlock.FACING);
             }
             return InteractionResult.PASS;
@@ -705,7 +710,7 @@ public class ItemsOverrideHandler {
                         ItemStack copy = stack.copy();
 
                         InteractionResult result = replaceSimilarBlock(ModRegistry.SKULL_PILE.get(), player, stack, pos, world,
-                                state, isRanged, null, SkullBlock.ROTATION);
+                                state, null, SkullBlock.ROTATION);
 
                         if (result.consumesAction()) {
                             if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
@@ -746,7 +751,7 @@ public class ItemsOverrideHandler {
                         ItemStack copy = stack.copy();
 
                         InteractionResult result = replaceSimilarBlock(ModRegistry.SKULL_CANDLE.get(), player, stack, pos, world,
-                                state, isRanged, SoundType.CANDLE, SkullBlock.ROTATION);
+                                state, SoundType.CANDLE, SkullBlock.ROTATION);
 
                         if (result.consumesAction()) {
                             if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
@@ -762,9 +767,9 @@ public class ItemsOverrideHandler {
     }
 
 
-    private static InteractionResult replaceSimilarBlock(Block blockOverride, Player player, ItemStack stack,
-                                                         BlockPos pos, Level world, BlockState replaced,
-                                                         boolean isRanged, @Nullable SoundType sound, Property<?>... properties) {
+    public static InteractionResult replaceSimilarBlock(Block blockOverride, Player player, ItemStack stack,
+                                                        BlockPos pos, Level world, BlockState replaced,
+                                                        @Nullable SoundType sound, Property<?>... properties) {
 
         BlockState newState = blockOverride.defaultBlockState();
         for (Property<?> p : properties) {
@@ -787,9 +792,9 @@ public class ItemsOverrideHandler {
         if (player == null || !player.getAbilities().instabuild) {
             stack.shrink(1);
         }
-        if (player instanceof ServerPlayer serverPlayer && !isRanged) {
-            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-        }
+        // if (player instanceof ServerPlayer serverPlayer && !isRanged) {
+        //     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+        // }
         return InteractionResult.sidedSuccess(world.isClientSide);
 
     }

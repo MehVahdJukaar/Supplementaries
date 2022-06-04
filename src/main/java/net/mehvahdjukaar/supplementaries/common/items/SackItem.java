@@ -59,7 +59,10 @@ public class SackItem extends BlockItem {
                 for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
                     ItemStack slotItem = reference.get().getStackInSlot(_idx);
                     if (slotItem.getItem() instanceof SackItem) {
-                        amount++;
+                        CompoundTag tag = stack.getTag();
+                        if(tag != null && tag.contains("BlockEntityTag")) {
+                            amount++;
+                        }
                     }
                 }
 

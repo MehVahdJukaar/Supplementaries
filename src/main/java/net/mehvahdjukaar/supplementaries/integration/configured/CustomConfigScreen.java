@@ -63,6 +63,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("dispenser tweaks", Items.DISPENSER);
         addIcon("hanging flower pots", Items.FLOWER_POT);
         addIcon("throwable bricks", Items.BRICK);
+        addIcon("rope", ModRegistry.ROPE.get());
         addIcon("wall lantern", Items.LANTERN);
         addIcon("placeable sticks", Items.STICK);
         addIcon("placeable sticks", Items.STICK);

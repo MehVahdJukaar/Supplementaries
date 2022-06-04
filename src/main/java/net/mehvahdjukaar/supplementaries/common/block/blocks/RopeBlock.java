@@ -570,7 +570,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     public static boolean playEntitySlideSound(LivingEntity entity, int ropeTicks) {
-        if (ropeTicks % 15 == 0) {
+        if (ropeTicks % 14 == 0) {
             if (!entity.isSilent()) {
                 Player p = entity instanceof Player pl ? pl : null;
                 entity.level.playSound(p, entity.getX(), entity.getY(), entity.getZ(), ModSounds.ROPE_SLIDE.get(),

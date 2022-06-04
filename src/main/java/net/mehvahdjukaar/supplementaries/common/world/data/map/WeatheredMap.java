@@ -7,7 +7,7 @@ import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.mehvahdjukaar.selene.map.CustomDataHolder;
 import net.mehvahdjukaar.selene.map.ExpandedMapData;
-import net.mehvahdjukaar.selene.map.MapDecorationHandler;
+import net.mehvahdjukaar.selene.map.MapDecorationRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -35,8 +35,8 @@ import java.util.Map;
 public class WeatheredMap {
 
     public static void init() {
-        MapDecorationHandler.registerCustomMapSavedData(
-                "Antique",
+        MapDecorationRegistry.registerCustomMapSavedData(
+                Supplementaries.res("antique"),
                 boolean.class,
                 t -> t.getBoolean("Antique"),
                 (t, b) -> t.putBoolean("Antique", b),

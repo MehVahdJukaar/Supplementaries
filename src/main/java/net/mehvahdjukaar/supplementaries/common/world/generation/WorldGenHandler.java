@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.BigDripleafBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,6 +34,10 @@ public class WorldGenHandler {
         ModPlacedFeatures.init();
     }
 
+    public static void onRegisterAdditional(){
+        CaveFilter.init();
+    }
+
     public static void addStuffToBiomes(BiomeLoadingEvent event) {
 
         Biome.BiomeCategory category = event.getCategory();
@@ -39,6 +45,7 @@ public class WorldGenHandler {
 
             if (ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
                 if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
+                    if(!event.getName().getNamespace().equals("twilightforest")) //TODO: find a better way to handle dimensons with weird land height
                     event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ModPlacedFeatures.PLACED_CAVE_URNS);
                 }
             }

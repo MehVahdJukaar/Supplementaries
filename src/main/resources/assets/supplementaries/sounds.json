@@ -223,7 +223,6 @@
     ]
   },
   "block.rope.step": {
-    "subtitle": "subtitle.supplementaries.rope.step",
     "sounds": [
       "supplementaries:block/rope_step_0",
       "supplementaries:block/rope_step_1",

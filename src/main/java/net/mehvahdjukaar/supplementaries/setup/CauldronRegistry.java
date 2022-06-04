@@ -1,16 +1,11 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.map.ExpandedMapData;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.mapatlas.MapAtlasPlugin;
+import net.mehvahdjukaar.selene.map.MapHelper;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CauldronRegistry {
@@ -29,31 +24,11 @@ public class CauldronRegistry {
     }
 
     private static final CauldronInteraction MAP_INTERACTION = (state, level, pos, player, hand, stack) -> {
-        Item item = stack.getItem();
-        if (item instanceof MapItem) {
-
-            if (!level.isClientSide) {
-                MapItemSavedData data = MapItem.getSavedData(stack, level);
-                if (data instanceof ExpandedMapData expandedMapData) {
-                    expandedMapData.resetCustomDecoration();
-                }
-            }
-
-            LayeredCauldronBlock.lowerFillLevel(state, level, pos);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        } else if (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item)) {
-            if (!level.isClientSide) {
-                MapItemSavedData data = MapAtlasPlugin.getSavedDataFromAtlas(stack, level, player);
-                if (data instanceof ExpandedMapData expandedMapData) {
-                    expandedMapData.resetCustomDecoration();
-                }
-            }
+        if (MapHelper.removeAllCustomMarkers(level, stack, player)) {
 
             LayeredCauldronBlock.lowerFillLevel(state, level, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
-
         return InteractionResult.PASS;
-
     };
 }

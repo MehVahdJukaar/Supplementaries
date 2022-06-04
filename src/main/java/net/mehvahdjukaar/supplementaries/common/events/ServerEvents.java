@@ -7,7 +7,9 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
+import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
+import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -26,10 +28,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -216,4 +220,22 @@ public class ServerEvents {
         if (event.getWorld() instanceof ServerLevel serverLevel)
             MovableFakePlayer.unloadLevel(serverLevel);
     }
+
+    //TODO: Use for cages
+    //for flute and cage
+    @SubscribeEvent
+    public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof FluteItem) {
+            if (FluteItem.interactWithPet(stack, event.getPlayer(), event.getTarget(), event.getHand())) {
+                event.setCancellationResult(InteractionResult.sidedSuccess(event.getPlayer().level.isClientSide));
+            }
+        } else if (stack.getItem() instanceof AbstractMobContainerItem containerItem) {
+            if (!containerItem.isFull(stack)) {
+                var res = containerItem.doInteract(stack, event.getPlayer(), event.getTarget(), event.getHand());
+                if (res.consumesAction()) event.setCancellationResult(res);
+            }
+        }
+    }
+
 }

@@ -1,0 +1,7 @@
+{
+  "id": "supplementaries:lodestone",
+  "target_block": {
+    "block": "minecraft:lodestone",
+    "predicate_type": "minecraft:block_match"
+  }
+}

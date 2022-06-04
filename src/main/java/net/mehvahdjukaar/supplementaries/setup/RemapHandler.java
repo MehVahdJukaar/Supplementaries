@@ -125,7 +125,7 @@ public class RemapHandler {
     @Deprecated
     public static String getLegacyWoodTypeAppendableID(WoodType wood) {
         String l = getLegacyAbbreviation(wood.getNamespace());
-        return l != null ? "_" + wood.getWoodName() + l : "_" + wood.getAppendableId();
+        return l != null ? "_" + wood.getTypeName() + l : "_" + wood.getAppendableId();
     }
 
     //T_T

@@ -108,7 +108,7 @@ public class ServerConfigs {
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
             BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certaom amount of ticks instead than on contact")
-                            .defineInRange("bomb_fuse",0,0,100000);
+                    .defineInRange("bomb_fuse", 0, 0, 100000);
             builder.pop();
 
             builder.push("blue_bomb");
@@ -185,7 +185,7 @@ public class ServerConfigs {
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
                     .define("axe_strip", true);
             ENDER_PEAR_DISPENSERS = builder.comment("Enables shooting ender pearls with dispensers")
-                            .define("shoot_ender_pearls",true);
+                    .define("shoot_ender_pearls", true);
             builder.pop();
 
 
@@ -227,12 +227,12 @@ public class ServerConfigs {
             WALL_LANTERN_HIGH_PRIORITY = builder.comment("Gives high priority to wall lantern placement. Enable to override other wall lanterns placements, disable if it causes issues with other mods that use lower priority block click events")
                     .define("high_priority", true);
 
-            List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct","enigmaticlegacy");
+            List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct", "enigmaticlegacy");
             WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
                     .defineList("mod_blacklist", modBlacklist, STRING_CHECK);
             FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
                             "Additionally if they fall from high enough they will break creating a fire where they land")
-                    .defineEnum("fallin_lanterns",LightableLanternBlock.FallMode.ON);
+                    .defineEnum("fallin_lanterns", LightableLanternBlock.FallMode.ON);
             builder.pop();
             //bells
             builder.push("bells_tweaks");

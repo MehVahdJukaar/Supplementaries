@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
+package net.mehvahdjukaar.supplementaries.api;
 
 import javax.annotation.Nullable;
 

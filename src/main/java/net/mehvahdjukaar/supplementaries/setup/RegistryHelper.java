@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.selene.block_set.BlockSetManager;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
@@ -221,7 +222,7 @@ public class RegistryHelper {
             Item item = new WoodBasedBlockItem(block,
                     new Item.Properties().stacksTo(16).tab(
                             getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.HANGING_SIGN_NAME)),
-                    200, wood
+                    wood, 200
             ).setRegistryName(block.getRegistryName());
             registry.register(item);
             ModRegistry.HANGING_SIGNS_ITEMS.put(wood, item);

@@ -16,6 +16,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
@@ -23,9 +24,8 @@ import java.util.List;
 public class ModConfiguredFeatures {
 
     //helper
-    private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, BlockPredicate placementRule) {
-        return new RandomPatchConfiguration(tries, xzSpread, ySpread, PlacementUtils.inlinePlaced(Holder.direct(feature),
-                BlockPredicateFilter.forPredicate(placementRule)));
+    private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier placementRule) {
+        return new RandomPatchConfiguration(tries, xzSpread, ySpread, PlacementUtils.inlinePlaced(Holder.direct(feature), placementRule));
     }
 
     //placed features predicates
@@ -35,15 +35,15 @@ public class ModConfiguredFeatures {
             BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, 1)),
             BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, -1)));
 
-    private static final BlockPredicate FLAX_PLACEMENT = BlockPredicate.allOf(
+    private static final PlacementModifier FLAX_PLACEMENT = BlockPredicateFilter.forPredicate(BlockPredicate.allOf(
             BlockPredicate.ONLY_IN_AIR_PREDICATE,
             BlockPredicate.wouldSurvive(ModRegistry.FLAX_WILD.get().defaultBlockState(), BlockPos.ZERO),
             HAS_WATER_PREDICATE
-    );
-    private static final BlockPredicate URN_PLACEMENT = BlockPredicate.allOf(
+    ));
+    private static final PlacementModifier URN_PLACEMENT = BlockPredicateFilter.forPredicate(BlockPredicate.allOf(
             BlockPredicate.ONLY_IN_AIR_PREDICATE,
             BlockPredicate.solid(BlockPos.ZERO.below())
-    );
+    ));
 
 
     //configured features

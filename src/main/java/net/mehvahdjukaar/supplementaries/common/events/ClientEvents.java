@@ -134,14 +134,14 @@ public class ClientEvents {
         Player p = Minecraft.getInstance().player;
         if (p != null && !Minecraft.getInstance().isPaused()) {
             if (isOnRope || wobble != 0) {
-
-                double newWobble = (((p.tickCount + event.getPartialTicks()) / 12f) % 1);
+                double period = ClientConfigs.cached.ROPE_WOBBLE_PERIOD;
+                double newWobble = (((p.tickCount + event.getPartialTicks()) / period) % 1);
                 if (!isOnRope && newWobble < wobble) {
                     wobble = 0;
                 } else {
                     wobble = newWobble;
                 }
-                event.setRoll(event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * 1.2f);
+                event.setRoll(event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.cached.ROPE_WOBBLE_AMPLITUDE);
             }
         }
     }

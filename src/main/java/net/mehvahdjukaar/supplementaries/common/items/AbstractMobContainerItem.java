@@ -87,11 +87,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return tag != null && tag.contains("BlockEntityTag");
     }
 
+    //called from event now
+    /*
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
         if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
-    }
+    }*/
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {

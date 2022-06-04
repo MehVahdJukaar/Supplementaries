@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -95,44 +98,20 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         }
     }
 
+    private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
     private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
         CompoundTag com = context.tileData;
-        int charges = com.getInt("Charges");
         long lastTicked = com.getLong("LastTicked");
-        Potion potion = PotionUtils.getPotion(com);
-        if (potion != Potions.EMPTY && charges > 0 && !this.isOnCooldown(world, lastTicked)) {
-            boolean used = false;
-            for (MobEffectInstance effect : potion.getEffects()) {
-                if (!le.canBeAffected(effect)) continue;
-                if (le.hasEffect(effect.getEffect())) continue;
-
-                if (effect.getEffect().isInstantenous()) {
-                    float health = 0.5f;//no idea of what this does. it's either 0.5 or 1
-                    effect.getEffect().applyInstantenousEffect(null, null, le, effect.getAmplifier(), health);
-                } else {
-                    le.addEffect(new MobEffectInstance(effect.getEffect(),
-                            (int) (effect.getDuration() * BambooSpikesBlockTile.POTION_MULTIPLIER),
-                            effect.getAmplifier()));
-                }
-                used = true;
+        if(!this.isOnCooldown(world, lastTicked)){
+            DUMMY.load(com);
+            if(DUMMY.interactWithEntity(le,world)){
+                MovementUtils.changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
             }
-            if (used) {
-                lastTicked = world.getGameTime();
-                charges -= 1;
-                if (charges <= 0) {
-                    charges = 0;
-                    potion = Potions.EMPTY;
-                    MovementUtils.changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
-                }
-                com.remove("Charges");
-                com.remove("LastTicked");
-                com.remove("Potion");
-                com.putInt("Charges", charges);
-                com.putLong("LastTicked", lastTicked);
-                com.putString("Potion", Registry.POTION.getKey(potion).toString());
-                context.tileData = com;
-            }
+            com = DUMMY.saveWithFullMetadata();
+            lastTicked = world.getGameTime();
+            com.putLong("LastTicked", lastTicked);
+            context.tileData = com;
         }
     }
 

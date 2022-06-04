@@ -95,12 +95,6 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add((new TextComponent("You shouldn't have this")).withStyle(ChatFormatting.GRAY));
-    }
-
-    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
@@ -117,7 +111,7 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
                     itemstack.shrink(1);
                 }
 
-                level.playSound((Player) null, pos, SoundEvents.CAKE_ADD_CANDLE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.CAKE_ADD_CANDLE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlockAndUpdate(pos, CandleCakeBlock.byCandle(block));
                 level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 player.awardStat(Stats.ITEM_USED.get(item));
@@ -160,9 +154,8 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
 
     @Override
     public MutableComponent getName() {
-        return new TranslatableComponent("block.minecraft.cake");
+        return Blocks.CAKE.getName();
     }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

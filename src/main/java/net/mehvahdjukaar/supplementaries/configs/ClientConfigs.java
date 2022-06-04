@@ -156,6 +156,8 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
         public static ForgeConfigSpec.BooleanValue TURN_TABLE_PARTICLES;
         public static ForgeConfigSpec.BooleanValue SPEAKER_BLOCK_MUTE;
+        public static ForgeConfigSpec.DoubleValue ROPE_WOBBLE_AMPLITUDE;
+        public static ForgeConfigSpec.DoubleValue ROPE_WOBBLE_PERIOD;
 
         private static void init(ForgeConfigSpec.Builder builder) {
 
@@ -308,6 +310,13 @@ public class ClientConfigs {
                     .define("mute_narrator", false);
             builder.pop();
 
+            builder.push("rope");
+            ROPE_WOBBLE_AMPLITUDE = builder.comment("Amplitude of rope wobbling effect")
+                            .defineInRange("wobbling_amplitude",1.2d,0,20);
+            ROPE_WOBBLE_PERIOD = builder.comment("Period of rope wobbling effect")
+                    .defineInRange("wobbling_period",12d,0.01,200);
+            builder.pop();
+
             builder.pop();
         }
     }
@@ -390,6 +399,8 @@ public class ClientConfigs {
         public static boolean SPEAKER_BLOCK_MUTE;
         public static float BUBBLE_BLOCK_WOBBLE;
         public static float BUBBLE_BLOCK_GROW_SPEED;
+        public static float ROPE_WOBBLE_AMPLITUDE;
+        public static double ROPE_WOBBLE_PERIOD;
 
         public static void refresh() {
             //tweaks
@@ -403,6 +414,8 @@ public class ClientConfigs {
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();
             //particles
             //blocks
+            ROPE_WOBBLE_AMPLITUDE = (float)(double)block.ROPE_WOBBLE_AMPLITUDE.get();
+            ROPE_WOBBLE_PERIOD = block.ROPE_WOBBLE_PERIOD.get();
             BUBBLE_BLOCK_WOBBLE = (float) (double) block.BUBBLE_BLOCK_WOBBLE.get() / 10f;
             BUBBLE_BLOCK_GROW_SPEED = (float) (double) block.BUBBLE_BLOCK_GROW_SPEED.get();
             PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();

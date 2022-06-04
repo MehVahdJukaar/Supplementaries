@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +41,8 @@ public abstract class EntityMixin {
             return;
         }
         //cancels for rope
-        if (state.is(ModRegistry.ROPE.get()) && (Entity) (Object) this instanceof LivingEntity le && le.onClimbable()) {
+        if (state.is(ModRegistry.ROPE.get()) && (Entity) (Object) this instanceof LivingEntity le
+                && le.onClimbable() && le.yya <= 0) {
             ci.cancel();
         }
     }

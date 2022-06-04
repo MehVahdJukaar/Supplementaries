@@ -40,8 +40,6 @@ public class OverencumberedEffect extends MobEffect {
 
     @Override
     public void removeAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-        if (pAmplifier > 1) {
-            super.removeAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier - 2);
-        }
+        super.removeAttributeModifiers(pLivingEntity, pAttributeMap, pAmplifier - 2);
     }
 }
