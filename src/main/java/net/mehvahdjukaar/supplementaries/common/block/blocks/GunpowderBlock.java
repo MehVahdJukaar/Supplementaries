@@ -427,6 +427,8 @@ public class GunpowderBlock extends LightUpBlock {
         return ret;
     }
 
+
+
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor world) {
         if (!isLit(state)) {

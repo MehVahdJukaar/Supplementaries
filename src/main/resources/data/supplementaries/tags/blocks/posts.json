@@ -127,7 +127,7 @@
     {"id":"compatoplenty:dead_post","required":false},
     {"id":"compatoplenty:magic_post","required":false},
     {"id":"compatoplenty:umbran_post","required":false},
-    {"id":"compatoplenty:hallbark_post","required":false},
+    {"id":"compatoplenty:hellbark_post","required":false},
     {"id":"compatoplenty:stripped_fir_post","required":false},
     {"id":"compatoplenty:stripped_redwood_post","required":false},
     {"id":"compatoplenty:stripped_cherry_post","required":false},
@@ -138,7 +138,7 @@
     {"id":"compatoplenty:stripped_dead_post","required":false},
     {"id":"compatoplenty:stripped_magic_post","required":false},
     {"id":"compatoplenty:stripped_umbran_post","required":false},
-    {"id":"compatoplenty:stripped_hallbark_post","required":false},
+    {"id":"compatoplenty:stripped_hellbark_post","required":false},
 
 
     {"id":"ecologics:coconut_post","required":false},

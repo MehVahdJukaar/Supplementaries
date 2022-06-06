@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +35,7 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
 
     public ServerDynamicResourcesHandler() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = RegistryConfigs.Reg.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = !FMLLoader.isProduction() || RegistryConfigs.Reg.DEBUG_RESOURCES.get();
     }
 
     @Override

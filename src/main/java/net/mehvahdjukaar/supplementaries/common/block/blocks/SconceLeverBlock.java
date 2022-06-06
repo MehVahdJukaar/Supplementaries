@@ -4,10 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -30,14 +33,6 @@ public class SconceLeverBlock extends SconceWallBlock {
         super(properties, particleData);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));
-    }
-
-    //need to update neighbours too
-    //TODO: remove by replacing proper update for block change 11->3
-    @Override
-    public void onChange(BlockState state, LevelAccessor world, BlockPos pos) {
-        if (world instanceof Level)
-            this.updateNeighbors(state, (Level) world, pos);
     }
 
     @Override
@@ -120,5 +115,19 @@ public class SconceLeverBlock extends SconceWallBlock {
             worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(this.particleData.get(), d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    @Override
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
+        boolean ret = super.lightUp(entity, state, pos, world, sound);
+        if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
+        return ret;
+    }
+
+    @Override
+    public boolean extinguish(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world) {
+        boolean ret = super.extinguish(player, state, pos, world);
+        if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
+        return ret;
     }
 }

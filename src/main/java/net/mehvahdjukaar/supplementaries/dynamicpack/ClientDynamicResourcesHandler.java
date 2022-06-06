@@ -9,10 +9,12 @@ import net.mehvahdjukaar.selene.resourcepack.*;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +27,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = true;//RegistryConfigs.Reg.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = !FMLLoader.isProduction() || RegistryConfigs.Reg.DEBUG_RESOURCES.get();
     }
 
     @Override

@@ -155,7 +155,8 @@
     {"id":"fins:red_bull_crab","required":false},
     {"id":"fins:white_bull_crab","required":false},
     {"id":"habitat:pooka","required":false},
-    {"id":"habitat:passerine","required":false}
+    {"id":"habitat:passerine","required":false},
+    {"id":"biomemakeover:dragonfly","required":false}
   ]
 }
 

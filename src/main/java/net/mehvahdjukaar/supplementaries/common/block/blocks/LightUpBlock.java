@@ -1,39 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.ForgeEventFactory;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public abstract class LightUpBlock extends Block implements ILightable {
+
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public LightUpBlock(Properties properties) {
@@ -53,103 +39,21 @@ public abstract class LightUpBlock extends Block implements ILightable {
         return this.material.isReplaceable();
     }
 
-    //TODO: remove
-    public void onChange(BlockState state, LevelAccessor world, BlockPos pos) {
-    }
-
-    @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, ILightable.FireSound sound) {
-        if (!isLit(state)) {
-            if (!world.isClientSide()) {
-                world.setBlock(pos, toggleLitState(state, true), 11);
-                sound.play(world, pos);
-            }
-            world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean extinguish(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world) {
-        if (this.isLit(state)) {
-            if (!world.isClientSide()) {
-                world.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
-                world.setBlock(pos, toggleLitState(state, false), 11);
-            } else {
-                Random random = world.getRandom();
-                for (int i = 0; i < 10; ++i) {
-                    world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.25f + random.nextFloat() * 0.5f, pos.getY() + 0.35f + random.nextFloat() * 0.5f, pos.getZ() + 0.25f + random.nextFloat() * 0.5f, 0, 0.005, 0);
-                }
-            }
-            world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!this.isLit(state) && player.getAbilities().mayBuild) {
-            ItemStack stack = player.getItemInHand(handIn);
-            Item item = stack.getItem();
-            if (item instanceof FlintAndSteelItem || stack.is(ModTags.FIRE_SOURCES)) {
-                if (lightUp(player, state, pos, worldIn, FireSound.FLINT_AND_STEEL)) {
-                    this.onChange(state, worldIn, pos);
-                    stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                }
-            } else if (item instanceof FireChargeItem) {
-                if (lightUp(player, state, pos, worldIn, FireSound.FIRE_CHANGE)) {
-                    this.onChange(state, worldIn, pos);
-                    stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(handIn));
-                    if (!player.isCreative()) stack.shrink(1);
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                }
-            } else if (item instanceof PotionItem && PotionUtils.getPotion(stack) == Potions.WATER) {
-                if (extinguish(player, state, pos, worldIn)) {
-                    this.onChange(state, worldIn, pos);
-                    Utils.swapItem(player, handIn, stack, new ItemStack(Items.GLASS_BOTTLE));
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
-                }
-            }
-        }
-        return InteractionResult.PASS;
+        return interactWithPlayer(state, worldIn, pos, player, handIn);
     }
 
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        if (projectile.isOnFire()) {
-            Entity entity = projectile.getOwner();
-            if (entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity)) {
-                if (lightUp(projectile, state, pos, level, FireSound.FLAMING_ARROW)) this.onChange(state, level, pos);
-            }
-        } else if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
-            Entity entity = projectile.getOwner();
-            boolean flag = entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity);
-            if (flag && extinguish(projectile, state, pos, level)) {
-                this.onChange(state, level, pos);
-            }
-        }
+        interactWithProjectile(level, state, projectile, pos);
     }
 
-    @SuppressWarnings({"StrongCast", "OverlyStrongTypeCast"})
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof Projectile projectile) {
-            if (projectile.isOnFire()) {
-                Entity entity = projectile.getOwner();
-                if (entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(worldIn, entity)) {
-                    if (lightUp(projectile,state, pos, worldIn, FireSound.FLAMING_ARROW)) this.onChange(state, worldIn, pos);
-                }
-            } else if (projectile instanceof ThrownPotion pot && PotionUtils.getPotion(pot.getItem()) == Potions.WATER) {
-                Entity entity = projectile.getOwner();
-                boolean flag = entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-                if (flag && extinguish(projectile,state, pos, worldIn)) {
-                    this.onChange(state, worldIn, pos);
-                }
-            }
+            interactWithProjectile(worldIn, state, projectile, pos);
         }
     }
 

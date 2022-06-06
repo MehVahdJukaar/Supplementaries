@@ -32,7 +32,8 @@
     {"id":"whisperwoods:moth","required":false},
     {"id":"fins:river_pebble_snail","required":false},
     {"id":"tconstruct:sky_slime","required":false},
-    {"id":"twilightforest:maze_slime","required":false}
+    {"id":"twilightforest:maze_slime","required":false},
+    {"id":"biomemakeover:dragonfly","required":false}
   ]
 }
 

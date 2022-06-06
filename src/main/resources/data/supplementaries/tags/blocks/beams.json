@@ -7,16 +7,9 @@
     {"id":"terrestria:stripped_small_oak_log","required":false},
     {"id":"terrestria:stripped_yucca_palm_log","required":false},
     {"id":"terrestria:yucca_palm_log","required":false},
+    {"id":"nether_exoticism:jaboticaba_branch_empty","required":false},
 
-    {"id":"#valhelsia_structures:posts","required":false},
-    {"id":"valhelsia_structures:oak_post","required":false},
-    {"id":"valhelsia_structures:spruce_post","required":false},
-    {"id":"valhelsia_structures:birch_post","required":false},
-    {"id":"valhelsia_structures:jungle_post","required":false},
-    {"id":"valhelsia_structures:acacia_post","required":false},
-    {"id":"valhelsia_structures:dark_oak_post","required":false},
-    {"id":"valhelsia_structures:warped_post","required":false},
-    {"id":"valhelsia_structures:crimson_post","required":false}
+    {"id":"#valhelsia_structures:posts","required":false}
   ]
 }
 

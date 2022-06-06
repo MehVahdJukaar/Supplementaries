@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -37,7 +38,7 @@ public class ModTags {
     public static final TagKey<Item> PEDESTAL_UPRIGHT = itemTag("pedestal_upright");
     public static final TagKey<Item> PEDESTAL_DOWNRIGHT = itemTag("pedestal_downright");
     public static final TagKey<Item> CHOCOLATE_BARS = itemTag("chocolate_bars");
-    public static final TagKey<Item> FIRE_SOURCES = itemTag("fire_sources");
+    public static final TagKey<Item> FLINT_AND_STEELS = ILightable.FLINT_AND_STEELS;
     public static final TagKey<Item> FLOWER_BOX_PLANTABLE = itemTag("flower_box_plantable");
     public static final TagKey<Item> CHALK = itemTag("chalk");
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");

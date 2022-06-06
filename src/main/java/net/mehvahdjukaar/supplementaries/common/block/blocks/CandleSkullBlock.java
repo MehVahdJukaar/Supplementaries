@@ -171,7 +171,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
             if (!state.getValue(LIT)) {
 
                 Item item = stack.getItem();
-                if (item instanceof FlintAndSteelItem || stack.is(ModTags.FIRE_SOURCES)) {
+                if (item instanceof FlintAndSteelItem || stack.is(ModTags.FLINT_AND_STEELS)) {
                     if (this.lightUp(player, state, pos, level, ILightable.FireSound.FLINT_AND_STEEL)) {
 
                         stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(hand));

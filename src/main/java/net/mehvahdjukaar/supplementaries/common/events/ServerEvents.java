@@ -216,7 +216,7 @@ public class ServerEvents {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onDimensionUnload(WorldEvent.Unload event) {
+    public static void onDimensionUnload(WorldEvent.Unload event) {
         if (event.getWorld() instanceof ServerLevel serverLevel)
             MovableFakePlayer.unloadLevel(serverLevel);
     }
@@ -224,16 +224,20 @@ public class ServerEvents {
     //TODO: Use for cages
     //for flute and cage
     @SubscribeEvent
-    public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         ItemStack stack = event.getItemStack();
         if (stack.getItem() instanceof FluteItem) {
             if (FluteItem.interactWithPet(stack, event.getPlayer(), event.getTarget(), event.getHand())) {
-                event.setCancellationResult(InteractionResult.sidedSuccess(event.getPlayer().level.isClientSide));
+                event.setCancellationResult(InteractionResult.SUCCESS); // we need this for event to be actually cancelled
+                event.setCanceled(true);
             }
         } else if (stack.getItem() instanceof AbstractMobContainerItem containerItem) {
             if (!containerItem.isFull(stack)) {
                 var res = containerItem.doInteract(stack, event.getPlayer(), event.getTarget(), event.getHand());
-                if (res.consumesAction()) event.setCancellationResult(res);
+                if (res.consumesAction()){
+                    event.setCancellationResult(InteractionResult.SUCCESS);
+                    event.setCanceled(true);
+                }
             }
         }
     }
