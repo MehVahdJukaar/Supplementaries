@@ -49,7 +49,7 @@ public class FaucetBlockTile extends BlockEntity {
 
     public void updateLight() {
         if (this.level == null) return;
-        int light = this.tempFluidHolder.getFluid().getLuminosity();
+        int light = this.tempFluidHolder.getFluid().get().getLuminosity();
         if (light != 0) light = (int) Mth.clamp(light / 2f, 1, 7);
         if (light != this.getBlockState().getValue(FaucetBlock.LIGHT_LEVEL)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FaucetBlock.LIGHT_LEVEL, light), 2);
@@ -103,7 +103,7 @@ public class FaucetBlockTile extends BlockEntity {
             Pair<SoftFluid, CompoundTag> stack = provider.getProvidedFluid(level, backState, behind);
             this.prepareToTransferBottle(stack.getLeft(), stack.getRight());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid(), this.tempFluidHolder.getNbt(), 1);
+                provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid().get(), this.tempFluidHolder.getNbt(), 1);
                 return true;
             }
         }
@@ -249,7 +249,7 @@ public class FaucetBlockTile extends BlockEntity {
     //sf->ff/sf
     @SuppressWarnings("ConstantConditions")
     private boolean tryFillingBlockBelow(Level level, BlockPos pos) {
-        SoftFluid softFluid = this.tempFluidHolder.getFluid();
+        SoftFluid softFluid = this.tempFluidHolder.getFluid().get();
         //can't full below if empty
         if (softFluid.isEmpty()) return false;
 

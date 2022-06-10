@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry.FluidReference;
+import net.mehvahdjukaar.selene.fluids.FluidReference;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 
 public class ModSoftFluids {

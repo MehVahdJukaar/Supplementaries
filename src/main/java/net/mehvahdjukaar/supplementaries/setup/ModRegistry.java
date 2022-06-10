@@ -309,8 +309,10 @@ public class ModRegistry {
 
 
     //label
-    /*
-    public static final RegistryObject<EntityType<LabelEntity>> LABEL = ENTITIES.register(LABEL_NAME, () -> (
+
+    public static final RegistryObject<EntityType<LabelEntity>> LABEL =
+            null; /*
+            ENTITIES.register(LABEL_NAME, () -> (
             EntityType.Builder.<LabelEntity>of(LabelEntity::new, MobCategory.MISC)
                     .setCustomClientFactory(LabelEntity::new)
                     .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(10))
@@ -318,8 +320,8 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
             .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
+*/
 
-     */
     //soap bubbler
     public static final RegistryObject<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))

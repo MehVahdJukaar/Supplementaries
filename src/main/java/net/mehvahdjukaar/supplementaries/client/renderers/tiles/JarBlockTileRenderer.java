@@ -123,7 +123,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         //render fluid
         if (!tile.fluidHolder.isEmpty()) {
             renderFluid(tile.fluidHolder.getHeight(1), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
-                    tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
+                    tile.fluidHolder.getFluid().get().getLuminosity(), tile.fluidHolder.getFluid().get().getStillTexture(),
                     matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }

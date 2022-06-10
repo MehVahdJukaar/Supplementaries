@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
 import net.mehvahdjukaar.selene.fluids.SoftFluid;
 import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
@@ -236,8 +237,7 @@ public class JarItem extends AbstractMobContainerItem {
                     DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                 DUMMY_TILE.load(tag);
                 SoftFluidHolder fh = DUMMY_TILE.getSoftFluidHolder();
-                SoftFluid sf = fh.getFluid();
-                var provider = sf.getFoodProvider();
+                var provider = fh.getFluid().get().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
             }

@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -51,26 +50,18 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
     public void render(LabelEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, light);
 
+        //debug. refresh
         if (entity.tickCount % 500 == 0) {
-            // FlatItemTextureManager.clearCache();
+            ////  RenderedTexturesManager.clearCache();
             //  return;
         }
-
-
         poseStack.pushPose();
-        Direction direction = entity.getDirection();
 
-        //poseStack.translate((double) direction.getStepX() * d0, (double) direction.getStepY() * d0, (double) direction.getStepZ() * d0);
-        Vector3f v = direction.step();
-        float w = entity.getBbWidth() / 2f;
-        v.mul(w, 0, w);
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(180 - entity.getYRot()));
+        poseStack.translate(0, -0, -0.5 + 1 / 32f);
+        poseStack.translate(-0.5, -0.5, -0.5);
 
-        //poseStack.mulPose(Vector3f.XP.rotationDegrees(entity.getXRot()));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - entity.getYRot()));
-        //poseStack.translate(0.5D+v.x(), 0.5D+entity.getEyeHeight(), 0.5D+v.z());
-        poseStack.translate(-0.5D, -0.5D + entity.getBbHeight() / 2f, -0.5D - 6 / 32f);
-
-        modelRenderer.renderModel(poseStack.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()),
+        modelRenderer.renderModel(poseStack.last(), buffer.getBuffer(Sheets.cutoutBlockSheet()), //
                 null, modelManager.getModel(this.getModel(entity)), 1.0F, 1.0F, 1.0F,
                 light, OverlayTexture.NO_OVERLAY);
 
@@ -92,7 +83,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
             Matrix3f normal = poseStack.last().normal();
             int overlay = OverlayTexture.NO_OVERLAY;
 
-            float z = 15.5f / 16f;
+            float z = 15.8f / 16f;
             float s = 0.25f;
             poseStack.translate(0.5, 0.5, 0);
             vertexConsumer.vertex(tr, -s, -s, z).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
@@ -107,9 +98,11 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
     }
 
+    //post process image
     public static void pp(NativeImage image) {
-        HCLColor dark = new RGBColor(41 / 255f, 22 / 255f, 1 / 255f, 1).asHCL();
-        HCLColor light = new RGBColor(196 / 255f, 155 / 255f, 88 / 255f, 1).asHCL();
+        HCLColor dark = new RGBColor(64 / 255f, 34 / 255f, 0 / 255f, 1).asHCL();
+        //HCLColor light = new RGBColor(196 / 255f, 155 / 255f, 88 / 255f, 1).asHCL();
+        HCLColor light = new RGBColor(235 / 255f, 213 / 255f, 178 / 255f, 1).asHCL();
 
         //tex.getPixels().flipY();
         SpriteUtils.grayscaleImage(image);
@@ -120,7 +113,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
         };
 
         SpriteUtils.reduceColors(image, fn);
-
+        //if (true) return;
 
         var t = TextureImage.of(image, null);
         Palette old = Palette.fromImage(t, null, 0);
@@ -163,9 +156,9 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
         return ClientRegistry.LABEL_MODELS.get(entity.getAttachmentType());
     }
 
-    //TODO USE this
+    @Override
     public Vec3 getRenderOffset(LabelEntity entity, float partialTicks) {
-        return new Vec3((float) entity.getDirection().getStepX() * 0.3F, -0.25D, (float) entity.getDirection().getStepZ() * 0.3F);
+        return Vec3.ZERO;
     }
 
     @Override

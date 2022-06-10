@@ -59,8 +59,8 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     //check if it only gets called client side
     public int getJarLiquidColor(BlockPos pos, LevelReader world) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof JarBlockTile) {
-            return ((JarBlockTile) te).fluidHolder.getParticleColor(world, pos);
+        if (te instanceof JarBlockTile tile) {
+            return tile.fluidHolder.getParticleColor(world, pos);
         }
         return 0xffffff;
     }

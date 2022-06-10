@@ -49,7 +49,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
         if (this.level == null) return;
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
-        int light = this.fluidHolder.getFluid().getLuminosity();
+        int light = this.fluidHolder.getFluid().get().getLuminosity();
         if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }

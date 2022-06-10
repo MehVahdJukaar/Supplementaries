@@ -87,6 +87,7 @@ public class Supplementaries {
 
     //ehcnahted books placed vertically. fix placement based off player look dir
 
+    //TODO: readd nethers delight stuff & maybe IW planter
     //camera mod with screenshots
 
     //clicking on cage with lead will put the leashed animal inside

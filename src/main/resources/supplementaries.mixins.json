@@ -39,6 +39,7 @@
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
     "VineMixin",
+    "WanderingTraderMixin",
     "ZombieHorseMixin",
     "accessors.DispenserAccessor",
     "accessors.MineshaftAccessor"

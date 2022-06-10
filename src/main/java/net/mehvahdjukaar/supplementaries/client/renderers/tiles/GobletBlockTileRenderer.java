@@ -24,8 +24,8 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     public static void renderFluid(float h, BlockEntity tile, SoftFluidHolder fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         int color = fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos());
-        int luminosity = fluidHolder.getFluid().getLuminosity();
-        ResourceLocation texture = fluidHolder.getFluid().getStillTexture();
+        int luminosity = fluidHolder.getFluid().get().getLuminosity()    ;
+        ResourceLocation texture = fluidHolder.getFluid().get().getStillTexture();
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);

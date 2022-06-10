@@ -51,7 +51,7 @@ public class LabelEntity extends HangingEntity {
     }
 
     public LabelEntity(Level level, BlockPos pos, Direction direction) {
-        super(null, level, pos);
+        super(ModRegistry.LABEL.get(), level, pos);
         this.setDirection(direction);
 
     }
@@ -159,38 +159,6 @@ public class LabelEntity extends HangingEntity {
         this.setDirection(Direction.from2DDataValue(tag.getByte("Facing")));
     }
 
-/*
-    @Override
-    protected void recalculateBoundingBox() {
-        if (this.direction != null) {
-            double d0 = (double) this.pos.getX() + 0.5D;
-            double d1 = (double) this.pos.getY() + 0.5D;
-            double d2 = (double) this.pos.getZ() + 0.5D;
-            double d3 = 0.46875D;
-            double d4 = this.offs(this.getWidth());
-            double d5 = this.offs(this.getHeight());
-            d0 = d0 - (double) this.direction.getStepX() * 0.46875D;
-            d2 = d2 - (double) this.direction.getStepZ() * 0.46875D;
-            d1 = d1 + d5;
-            Direction direction = this.direction.getCounterClockWise();
-            d0 = d0 + d4 * (double) direction.getStepX();
-            d2 = d2 + d4 * (double) direction.getStepZ();
-            this.setPosRaw(d0, d1, d2);
-            double d6 = this.getWidth();
-            double d7 = this.getHeight();
-            double d8 = this.getWidth();
-            if (this.direction.getAxis() == Direction.Axis.Z) {
-                d8 = 1.0D;
-            } else {
-                d6 = 1.0D;
-            }
-
-            d6 = d6 / 32.0D;
-            d7 = d7 / 32.0D;
-            d8 = d8 / 32.0D;
-            this.setBoundingBox(new AABB(d0 - d6, d1 - d7, d2 - d8, d0 + d6, d1 + d7, d2 + d8));
-        }
-    }*/
 
     protected void recalculateBoundingBox() {
         if (this.direction != null) {
@@ -199,9 +167,9 @@ public class LabelEntity extends HangingEntity {
             double d2 = (double) this.pos.getY() + 0.5D - (double) this.direction.getStepY() * offsetFromCenter;
             double d3 = (double) this.pos.getZ() + 0.5D - (double) this.direction.getStepZ() * offsetFromCenter;
             this.setPosRaw(d1, d2, d3);
-            double d4 = (double) this.getWidth();
-            double d5 = (double) this.getHeight();
-            double d6 = (double) this.getWidth();
+            double d4 = this.getWidth();
+            double d5 = this.getHeight();
+            double d6 = this.getWidth();
             Direction.Axis axis = this.direction.getAxis();
             switch (axis) {
                 case X -> d4 = 1.0D;
@@ -228,7 +196,7 @@ public class LabelEntity extends HangingEntity {
     public enum AttachType {
         BLOCK(0),
         CHEST(1 / 16f),
-        JAR(+3 / 16f);
+        JAR(-3 / 16f);
         public final float offset;
 
         AttachType(float offset) {
@@ -254,10 +222,10 @@ public class LabelEntity extends HangingEntity {
             }
             return InteractionResult.sidedSuccess(pPlayer.level.isClientSide);
         }
-        ;
         return InteractionResult.PASS;
     }
 
+    @Override
     public boolean survives() {
 
         AttachType currentAttachment = this.getAttachmentType();
