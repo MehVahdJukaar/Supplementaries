@@ -13,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -34,12 +35,15 @@ import java.util.Map;
 
 public class WeatheredMap {
 
+    private static final String ANTIQUE_KEY = "antique";
+    private static final ResourceLocation ANTIQUE_ID = Supplementaries.res(ANTIQUE_KEY);
+
     public static void init() {
         MapDecorationRegistry.registerCustomMapSavedData(
-                Supplementaries.res("antique"),
+                ANTIQUE_ID,
                 boolean.class,
-                t -> t.getBoolean("Antique"),
-                (t, b) -> t.putBoolean("Antique", b),
+                t -> t.getBoolean(ANTIQUE_KEY),
+                (t, b) -> t.putBoolean(ANTIQUE_KEY, b),
                 WeatheredMap::update,
                 WeatheredMap::onTooltip);
     }
@@ -286,8 +290,11 @@ public class WeatheredMap {
 
             MapItemSavedData newData = data.copy();
             if (newData instanceof ExpandedMapData n) {
-                CustomDataHolder.Instance<Boolean> antique = (CustomDataHolder.Instance<Boolean>) n.getCustomData().get("Antique");
-                antique.set(true);
+                var aa = n.getCustomData().get(ANTIQUE_ID);
+                if (aa != null) {
+                    CustomDataHolder.Instance<Boolean> antique = (CustomDataHolder.Instance<Boolean>) aa;
+                    antique.set(true);
+                }
             }
 
             int mapId = level.getFreeMapId();
@@ -295,7 +302,6 @@ public class WeatheredMap {
 
             level.setMapData(mapKey, newData);
             stack.getOrCreateTag().putInt("map", mapId);
-            ;
         }
     }
 }

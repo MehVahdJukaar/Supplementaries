@@ -332,9 +332,11 @@
   "effect.supplementaries.overencumbered": "重量超過",
   "effect.supplementaries.overencumbered.description": "このステータス効果は、レベルⅠではダッシュができなくなり、レベルⅡではジャンプの高さも半減し、レベルⅢ以降は歩行速度も低下します",
   "message.supplementaries.cage.fail": "小さな動物しか入れることはできません",
-  "item.supplementaries.sign_post": "%の道標",
-  "block.supplementaries.hanging_sign": "%の吊り下げ看板",
 
+  "item.supplementaries.sign_post": "%sの道標",
+  "block.supplementaries.hanging_sign": "%sの吊り下げ看板",
+  "block_type.supplementaries.hanging_sign": "%sの吊り下げ看板",
+  "block_type.supplementaries.sign_post": "%sの道標",
 
   "subtitle.supplementaries.clock_tick": "時計が音を立てる",
   "subtitle.supplementaries.gunpowder.ignite": "火薬が音を立てる",
@@ -366,8 +368,7 @@
 
 
 
-  "block_type.supplementaries.hanging_sign": "吊り下げ看板22",
-  "block_type.supplementaries.sign_post": "道標",
+
 
 
   "block.supplementaries.laser_block": "エンダービーマー",

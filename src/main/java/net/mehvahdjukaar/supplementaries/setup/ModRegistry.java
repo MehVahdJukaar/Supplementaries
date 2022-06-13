@@ -179,7 +179,7 @@ public class ModRegistry {
     public static final RegistryObject<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RECIPES.register("flag_from_banner", () ->
             new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RECIPES.register("treasure_map", () ->
-            new SimpleRecipeSerializer<>(TreasureMapRecipe::new));
+            new SimpleRecipeSerializer<>(WeatheredMapRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> SOAP_CLEARING_RECIPE = RECIPES.register("soap_clearing", () ->
             new SimpleRecipeSerializer<>(SoapClearRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> PRESENT_DYE_RECIPE = RECIPES.register("present_dye", () ->

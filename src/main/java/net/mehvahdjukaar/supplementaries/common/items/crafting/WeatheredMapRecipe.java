@@ -13,8 +13,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public class TreasureMapRecipe extends CustomRecipe {
-    public TreasureMapRecipe(ResourceLocation idIn) {
+public class WeatheredMapRecipe extends CustomRecipe {
+    public WeatheredMapRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
@@ -28,7 +28,8 @@ public class TreasureMapRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == Items.FILLED_MAP) {
+            if(stack.isEmpty()){}
+            else if (stack.getItem() == Items.FILLED_MAP) {
                 if (itemstack != null) {
                     return false;
                 }

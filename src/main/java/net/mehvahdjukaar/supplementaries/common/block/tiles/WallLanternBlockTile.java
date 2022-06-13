@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
@@ -17,11 +18,13 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder {
+public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected {
 
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
@@ -29,6 +32,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
     //for charm compat
     public boolean isRedstoneLantern = false;
+
+    private UUID owner = null;
 
     static {
         maxSwingAngle = 45f;
@@ -112,6 +117,17 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
         return true;
     }
 
+
+    @Nullable
+    @Override
+    public UUID getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(@Nullable UUID owner) {
+        this.owner = owner;
+    }
 
 
 }

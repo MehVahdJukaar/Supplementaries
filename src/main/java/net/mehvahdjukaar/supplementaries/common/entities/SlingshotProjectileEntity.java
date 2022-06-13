@@ -61,7 +61,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setItem(item);
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(throwerStack));
         this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
-        this.maxAge = 500;
+        this.maxAge = 700;
 
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
@@ -138,7 +138,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player player && player.getAbilities().mayBuild) {
+        if (owner instanceof Player player && player.getAbilities().mayBuild ) {
 
             ItemStack stack = this.getItem();
             Item item = stack.getItem();

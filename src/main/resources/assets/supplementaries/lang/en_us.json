@@ -354,19 +354,16 @@
   "subtitle.supplementaries.jar.place": "Jar placed",
   "subtitle.supplementaries.jar.break": "Jar broken",
   "subtitle.supplementaries.jar.cookie": "Cookied placed in a jar",
-  "subtitle.supplementaries.bellows.retract": "Bellows contract",
-  "subtitle.supplementaries.bellows.blow": "Bellows blow",
-  "subtitle.supplementaries.globe.spin": "Globe spin",
-  "subtitle.supplementaries.faucet.turn": "Faucet turn",
+  "subtitle.supplementaries.bellows.retract": "Bellows contracts",
+  "subtitle.supplementaries.bellows.blow": "Bellows blows",
+  "subtitle.supplementaries.globe.spin": "Globe spins",
+  "subtitle.supplementaries.faucet.turn": "Faucet turns",
   "subtitle.supplementaries.slingshot.charge": "Slingshot charged",
   "subtitle.supplementaries.slingshot.release": "Slingshot released",
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
 
 
-
-
-
-  "block_type.supplementaries.hanging_sign": "Hanging Sign22",
+  "block_type.supplementaries.hanging_sign": "Hanging Sign",
   "block_type.supplementaries.sign_post": "Sign Post",
 
 
