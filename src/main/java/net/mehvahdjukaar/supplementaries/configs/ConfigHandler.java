@@ -143,7 +143,6 @@ public class ConfigHandler {
                 syncServerConfigs(player);
             }
         }
-
     }
 
     //send configs from server -> client
@@ -155,27 +154,6 @@ public class ConfigHandler {
         } catch (IOException e) {
             Supplementaries.LOGGER.error(Supplementaries.MOD_ID + ": Failed to sync common configs", e);
         }
-    }
-
-
-    //TODO: remake config system (this isnt needed, specs do exactly this)
-    public static class CachedConfigValue<T, C extends ForgeConfigSpec.ConfigValue<T>> {
-        private T cached;
-        private final C config;
-
-        public CachedConfigValue(C config) {
-            this.config = config;
-            this.refresh();
-        }
-
-        public T get() {
-            return cached;
-        }
-
-        public void refresh() {
-            this.cached = this.config.get();
-        }
-
     }
 
 }

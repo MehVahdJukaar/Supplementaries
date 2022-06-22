@@ -7,6 +7,7 @@ import net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -87,22 +88,24 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
         //way signs tag
         {
             List<ResourceLocation> biomes = new ArrayList<>();
-            for (var e : ForgeRegistries.BIOMES.getEntries()) {
-                Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(e.getKey());
-                Biome.BiomeCategory biomeCategory = Biome.getBiomeCategory(holder);
+            if(ServerConfigs.spawn.WAY_SIGN_ENABLED.get()) {
+                for (var e : ForgeRegistries.BIOMES.getEntries()) {
+                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(e.getKey());
+                    Biome.BiomeCategory biomeCategory = Biome.getBiomeCategory(holder);
 
-                if (biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND &&
-                        biomeCategory != Biome.BiomeCategory.RIVER &&
-                        biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
-                        biomeCategory != Biome.BiomeCategory.JUNGLE &&
-                        biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
-                    if (!e.getValue().getRegistryName().getPath().equals("minecraft:mushroom_fields")) {
+                    if (biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND &&
+                            biomeCategory != Biome.BiomeCategory.RIVER &&
+                            biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
+                            biomeCategory != Biome.BiomeCategory.JUNGLE &&
+                            biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
+                        if (!e.getValue().getRegistryName().getPath().equals("minecraft:mushroom_fields")) {
 
-                        biomes.add(e.getValue().getRegistryName());
+                            biomes.add(e.getValue().getRegistryName());
+                        }
                     }
                 }
-                dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
             }
+            dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
         }
     }
 

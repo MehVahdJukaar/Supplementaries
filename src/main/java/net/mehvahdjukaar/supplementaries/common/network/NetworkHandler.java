@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
@@ -32,7 +31,7 @@ public class NetworkHandler {
 
 
     public static void registerMessages() {
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(Supplementaries.MOD_ID, "network"), () -> PROTOCOL_VERSION,
+        INSTANCE = NetworkRegistry.newSimpleChannel(Supplementaries.res("network"), () -> PROTOCOL_VERSION,
                 PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
         register(ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::buffer,
@@ -66,7 +65,7 @@ public class NetworkHandler {
                 RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
 
         register(PicklePacket.class, PicklePacket::buffer,
-                 PicklePacket::new, PicklePacket::handler);
+                PicklePacket::new, PicklePacket::handler);
 
         register(ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::buffer,
                 ClientBoundSyncTradesPacket::new, ClientBoundSyncTradesPacket::handler);

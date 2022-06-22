@@ -24,13 +24,16 @@ public class RemapHandler {
 
     private static final Map<String, ResourceLocation> fullReMap = new HashMap<>();
 
-    static{
-        fullReMap.put("jar_tinted",Supplementaries.res(RegistryConstants.JAR_NAME));
+    static {
+        fullReMap.put("jar_tinted", Supplementaries.res(RegistryConstants.JAR_NAME));
     }
 
     @SubscribeEvent
     public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
         for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(Supplementaries.MOD_ID)) {
+            mapping.ignore();
+            mapping.remap();
+            if (true) continue;
             String k = mapping.key.getPath();
             if (fullReMap.containsKey(k)) {
                 var i = fullReMap.get(k);
@@ -75,6 +78,8 @@ public class RemapHandler {
     public static void onRemapItems(RegistryEvent.MissingMappings<Item> event) {
         for (RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getMappings(Supplementaries.MOD_ID)) {
             String k = mapping.key.getPath();
+            mapping.ignore();
+            if (true) continue;
             if (itemReMap.containsKey(k)) {
                 var i = itemReMap.get(k);
                 try {
@@ -89,6 +94,7 @@ public class RemapHandler {
                     if (newBlock == null) {
                         newBlock = ModRegistry.HANGING_SIGNS_ITEMS.get(WoodType.OAK_WOOD_TYPE);
                     }
+                    mapping.ignore();
                     mapping.remap(newBlock);
                 } catch (Exception ex) {
                     Supplementaries.LOGGER.warn("Remapping block '{}' failed: {}", mapping.key, ex);
@@ -165,8 +171,11 @@ public class RemapHandler {
 
         for (var b : newEntries.values()) {
             String path = b.getRegistryName().getPath();
+            if (oldPath.contains("minecraft/") && path.equals(oldPath.replace("minecraft/", ""))) return b;
+
             String[] modId = path.split("/");
             if (modId.length == 2) {
+
                 String abb = getLegacyAbbreviation(modId[0]);
                 String match = modId[1] + abb;
                 if (oldPath.equals(match)) {

@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="selene"
     mandatory=true
-    versionRange="[1.18.2-1.17.5,]"
+    versionRange="[1.18.2-1.16.6,]"
     ordering="AFTER"
     side="BOTH"
 

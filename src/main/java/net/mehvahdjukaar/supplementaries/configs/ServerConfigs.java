@@ -634,6 +634,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
         public static ForgeConfigSpec.BooleanValue DISTANCE_TEXT;
+        public static ForgeConfigSpec.BooleanValue WAY_SIGN_ENABLED;
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_MIN;
         public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
 
@@ -682,11 +683,12 @@ public class ServerConfigs {
 
             builder.push("structures");
             builder.push("way_sign");
-            ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts")
-                    .defineInRange("average_distance", 19, 0, 1001);
-            ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts. 1001 to disable them entirely")
-                    .defineInRange("minimum_distance", 10, 0, 1001);
-
+            ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts. Has to be larger than minimum_distance of course")
+                    .defineInRange("average_distance", 19, 0, 1000);
+            ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts")
+                    .defineInRange("minimum_distance", 10, 0, 1000);
+            WAY_SIGN_ENABLED = builder.comment("Entirely disables them from spawning")
+                    .define("enabled", true);
             DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
 

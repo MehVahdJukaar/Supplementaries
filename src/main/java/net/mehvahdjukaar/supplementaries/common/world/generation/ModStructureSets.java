@@ -23,7 +23,7 @@ public class ModStructureSets {
     public static final Holder<StructureSet> WAY_SIGNS = register(
             WAY_SIGN_SET_KEY, ModConfiguredStructureFeatures.CONFIGURED_WAY_SIGN_STRUCTURE,
             new RandomSpreadStructurePlacement(
-                    ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get(), //spacing
+                    Math.max(ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get()+1, ServerConfigs.spawn.ROAD_SIGN_DISTANCE_AVR.get()), //spacing
                     ServerConfigs.spawn.ROAD_SIGN_DISTANCE_MIN.get(), //separation
                     RandomSpreadType.LINEAR,
                     431041527));
