@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +31,7 @@ public interface ICatchableMob {
      * @return can be caught
      */
     default boolean canBeCaughtWithItem(Item item) {
-        return switch (item.getRegistryName().toString()) {
+        return switch (Utils.getID(item).toString()) {
             case "supplementaries:jar" -> canBeCaughtWithJar();
             case "supplementaries:cage" -> canBeCaughtWithCage();
             default -> false;

@@ -1,11 +1,17 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import net.mehvahdjukaar.selene.client.asset_generators.LangBuilder;
-import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
-import net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter;
-import net.mehvahdjukaar.selene.client.asset_generators.textures.SpriteUtils;
-import net.mehvahdjukaar.selene.client.asset_generators.textures.TextureImage;
-import net.mehvahdjukaar.selene.resourcepack.*;
+import net.mehvahdjukaar.moonlight.client.language.AfterLanguageLoadEvent;
+import net.mehvahdjukaar.moonlight.client.language.LangBuilder;
+import net.mehvahdjukaar.moonlight.client.textures.Palette;
+import net.mehvahdjukaar.moonlight.client.textures.Respriter;
+import net.mehvahdjukaar.moonlight.client.textures.SpriteUtils;
+import net.mehvahdjukaar.moonlight.client.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.resources.RPUtils;
+import net.mehvahdjukaar.moonlight.resources.ResType;
+import net.mehvahdjukaar.moonlight.resources.StaticResource;
+import net.mehvahdjukaar.moonlight.resources.pack.DynClientResourcesProvider;
+import net.mehvahdjukaar.moonlight.resources.pack.DynamicTexturePack;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -23,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider {
+public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
@@ -65,7 +71,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
                 //if(wood.isVanilla())return;
 
-                String id = sign.getRegistryName().getPath();
+                String id = Utils.getID(sign).getPath();
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("block_type.supplementaries.hanging_sign"));
 
                 try {
@@ -110,7 +116,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) return;
-                String id = sign.getRegistryName().getPath();
+                String id = Utils.getID(sign).getPath();
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("sign_post"));
 
                 try {
@@ -120,9 +126,6 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                 }
             });
         }
-
-
-        // dynamicPack.addLang(Supplementaries.res("en_us"), langBuilder.build());
     }
 
     public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
@@ -153,7 +156,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res("blocks/hanging_signs/" + sign.getRegistryName().getPath());
+                ResourceLocation textureRes = Supplementaries.res("blocks/hanging_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
                 try (TextureImage plankTexture = TextureImage.open(manager,
                         RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
@@ -183,18 +186,19 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
 
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res("items/hanging_signs/" + sign.getRegistryName().getPath());
+                ResourceLocation textureRes = Supplementaries.res("items/hanging_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;
-                if (wood.signItem != null) {
-                    try (TextureImage vanillaSign = TextureImage.open(manager,
-                            RPUtils.findFirstItemTextureLocation(manager, wood.signItem.get()))) {
+                Item vanillaSign = wood.getItemOfThis("sign");
+                if (vanillaSign != null) {
+                    try (TextureImage vanillaSignTexture = TextureImage.open(manager,
+                            RPUtils.findFirstItemTextureLocation(manager, vanillaSign))) {
 
-                        Palette targetPalette = Palette.fromImage(vanillaSign, signMask);
+                        Palette targetPalette = Palette.fromImage(vanillaSignTexture, signMask);
                         newImage = respriter.recolor(targetPalette);
 
-                        try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSignTexture,
                                 Supplementaries.res("items/hanging_signs/sign_scribbles_mask"),
                                 Supplementaries.res("items/hanging_signs/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
@@ -202,7 +206,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                             getLogger().error("Could not properly color Hanging Sign texture for {} : {}", sign, ex);
                         }
 
-                        try (TextureImage stick = recolorFromVanilla(manager, vanillaSign,
+                        try (TextureImage stick = recolorFromVanilla(manager, vanillaSignTexture,
                                 Supplementaries.res("items/hanging_signs/sign_stick_mask"),
                                 Supplementaries.res("items/hanging_signs/stick_template"))) {
                             newImage.applyOverlay(stick);
@@ -241,7 +245,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
 
-                ResourceLocation textureRes = Supplementaries.res("items/sign_posts/" + sign.getRegistryName().getPath());
+                ResourceLocation textureRes = Supplementaries.res("items/sign_posts/" + Utils.getID(sign).getPath());
 
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
@@ -295,7 +299,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                var textureRes = Supplementaries.res("entity/sign_posts/" + sign.getRegistryName().getPath());
+                var textureRes = Supplementaries.res("entity/sign_posts/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 try (TextureImage plankTexture = TextureImage.open(manager,
@@ -334,7 +338,7 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
     //TODO: invert scribble color if sign is darker than them
 
     @Override
-    public void addDynamicTranslations(DynamicLanguageManager.LanguageAccessor lang) {
+    public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
         ModRegistry.HANGING_SIGNS.forEach((type, block) ->
                 LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block));
         ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->

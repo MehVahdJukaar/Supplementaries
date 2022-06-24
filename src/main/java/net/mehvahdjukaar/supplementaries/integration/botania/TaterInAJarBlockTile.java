@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.botania;
 
+/*
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,3 +21,4 @@ public class TaterInAJarBlockTile extends TileTinyPotato {
     }
 
 }
+*/

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
-
+/*
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
@@ -92,3 +92,4 @@ public class HourglassBehavior implements MovementBehaviour {
     }
 
 }
+*/

@@ -39,7 +39,7 @@ public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBloc
         if (inner != null) {
             float yaw = -22.5F * (float) (tile.getBlockState().getValue(SkullBlock.ROTATION)
             -inner.getBlockState().getValue(SkullBlock.ROTATION));
-            //lets base block master the rotation
+            //let's base block master the rotation
 
 
            poseStack.translate(0.5, 0.5, 0.5);

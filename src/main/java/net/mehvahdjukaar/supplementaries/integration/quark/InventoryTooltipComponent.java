@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
 
+/*
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -109,3 +110,4 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
         return locked ? 0 : CORNER * 2 + EDGE * dimensions[0];
     }
 }
+*/

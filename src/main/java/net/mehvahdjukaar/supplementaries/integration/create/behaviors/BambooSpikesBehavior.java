@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create.behaviors;
 
-
+/*
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -124,4 +124,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         return CommonUtil.SPIKE_DAMAGE;
     }
 
+}*/
+
+public  class BambooSpikesBehavior {
 }

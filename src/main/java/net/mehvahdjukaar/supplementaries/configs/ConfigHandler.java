@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
@@ -64,37 +65,6 @@ public class ConfigHandler {
         value.set((T) valueSpec.getDefault());
     }
 
-    //maybe not needed anymore now with predicated below
-    public static <T> T safeGetListString(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value) {
-        Object o = value.get();
-        //resets failed config value
-        try {
-            T o1 = (T) o;
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn(
-                    new Exception("Resetting erroneous config value: " + value + "in config " + spec));
-            resetConfigValue(spec, value);
-        }
-        return value.get();
-    }
-
-    public static final Predicate<Object> STRING_CHECK = o -> o instanceof String;
-
-    public static final Predicate<Object> LIST_STRING_CHECK = (s)->{
-        if(s instanceof List<?>){
-            return ((Collection<?>) s).stream().allMatch(o -> o instanceof String);
-        }
-        return false;
-    };
-
-    public static final Predicate<Object> COLOR_CHECK = s -> {
-        try {
-            Integer.parseUnsignedInt(((String) s).replace("0x", ""), 16);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    };
 
     public static void reloadConfigsEvent(ModConfigEvent event) {
         if (event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {
@@ -105,14 +75,14 @@ public class ConfigHandler {
             ClientConfigs.cached.refresh();
     }
 
-
+    @Deprecated
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
             syncServerConfigs((ServerPlayer) event.getPlayer());
         }
     }
-
+    @Deprecated
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getPlayer().level.isClientSide) {
             //reload local common configs

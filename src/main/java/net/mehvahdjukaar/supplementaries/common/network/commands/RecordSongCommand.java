@@ -9,7 +9,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.server.command.EnumArgument;
 
@@ -56,7 +55,7 @@ public class RecordSongCommand {
 
         String savedName = SongsManager.stopRecording(context.getSource().getLevel(), name, speedup);
 
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.record.stop", savedName), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.record.stop", savedName), false);
 
         return 0;
     }
@@ -66,7 +65,7 @@ public class RecordSongCommand {
 
         SongsManager.startRecording(whitelist);
 
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.record.start"), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.record.start"), false);
 
         return 0;
     }

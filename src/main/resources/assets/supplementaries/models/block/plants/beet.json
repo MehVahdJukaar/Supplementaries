@@ -2,7 +2,7 @@
     "ambientocclusion": false,
     "textures": {
         "beet": "moreminecarts:block/pot_beet",
-		"particle": "minecraft:block/flower_pot",
+		"particle": "minecraft:block/flower_pot"
     },
     "elements": [
         {

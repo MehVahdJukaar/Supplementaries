@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +63,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
             h = h % 12;
             if (h == 0) h = 12;
         }
-        player.displayClientMessage(new TextComponent(h + ":" + ((m < 10) ? "0" : "") + m + a), true);
+        player.displayClientMessage(Component.literal(h + ":" + ((m < 10) ? "0" : "") + m + a), true);
 
     }
 

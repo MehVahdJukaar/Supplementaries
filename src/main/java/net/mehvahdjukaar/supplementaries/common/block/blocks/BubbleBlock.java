@@ -4,11 +4,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -118,7 +118,7 @@ public class BubbleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource random) {
         breakBubble(serverLevel, pos, state);
     }
 

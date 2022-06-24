@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -17,11 +18,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.STRING_CHECK;
 
 
 public class ServerConfigs {
+
 
     //overwritten by server one
     public static ForgeConfigSpec SERVER_SPEC;

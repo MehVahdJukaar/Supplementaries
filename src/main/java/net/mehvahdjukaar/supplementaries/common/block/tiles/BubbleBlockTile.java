@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BubbleBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -55,6 +54,4 @@ public class BubbleBlockTile extends BlockEntity {
         super.load(pTag);
         this.age = pTag.getInt("age");
     }
-
-
 }

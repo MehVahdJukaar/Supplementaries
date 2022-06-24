@@ -29,6 +29,7 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
+    @Deprecated(forRemoval = true)
     //TODO: maybe merge with common
     //called from mixin config so they can be accessed super early
     public static void load() {

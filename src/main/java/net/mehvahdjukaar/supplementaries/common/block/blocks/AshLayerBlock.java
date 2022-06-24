@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,7 +42,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Random;
 
 public class AshLayerBlock extends FallingBlock {
     private static final int MAX_LAYERS = 8;
@@ -136,7 +136,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random pRand) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource pRand) {
         BlockState below = level.getBlockState(pos.below());
         if ((FallingAshEntity.isFree(below) || hasIncompleteAshPileBelow(below)) && pos.getY() >= level.getMinBuildHeight()) {
 
@@ -172,7 +172,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Override
-    public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, Random pRandom) {
+    public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, RandomSource pRandom) {
         if (ServerConfigs.cached.ASH_RAIN) {
             if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
                 this.removeOneLayer(pState, pPos, level);

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -29,8 +30,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 ;
 
@@ -48,7 +47,7 @@ public class GunpowderExplosion extends Explosion {
     private final double y;
     private final double z;
     private float radius;
-    private final List<BlockPos> toBlow = new ArrayList<>();
+    private final ObjectArrayList<BlockPos> toBlow = new ObjectArrayList<>();
 
     public GunpowderExplosion(Level world, Entity entity, double x, double y, double z, float size) {
         super(world, entity, null, null, x, y, z, size, false, BlockInteraction.DESTROY);
@@ -135,7 +134,7 @@ public class GunpowderExplosion extends Explosion {
     public void finalizeExplosion(boolean spawnFire) {
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
-        Collections.shuffle(this.toBlow, this.level.random);
+        Util.shuffle(this.toBlow, this.level.random);
 
         for (BlockPos blockpos : this.toBlow) {
             BlockState blockstate = this.level.getBlockState(blockpos);

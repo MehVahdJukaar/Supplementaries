@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;

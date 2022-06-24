@@ -8,7 +8,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Random;
 
@@ -29,7 +28,7 @@ public class IUsedToRollTheDice implements Command<CommandSourceStack> {
         int dice = IntegerArgumentType.getInteger(context, "dice");
 
         int roll = r.nextInt(dice);
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.dice", dice, roll), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.dice", dice, roll), false);
 
         return 0;
     }

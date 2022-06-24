@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -34,7 +35,7 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
     }
 
     public void render(CeilingBannerBlockTile tile, float p_225616_2_, PoseStack matrixStack, MultiBufferSource p_225616_4_, int light, int pPackedOverlay) {
-        List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
+        List<Pair<Holder<BannerPattern>, DyeColor>> list = tile.getPatterns();
         if (list != null) {
 
             matrixStack.pushPose();

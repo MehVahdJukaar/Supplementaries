@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
-
+/*
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
@@ -65,10 +65,16 @@ public class QuarkTooltipPlugin {
         }
 
         if (ImprovedTooltipsModule.shulkerBoxRequireShift && !Screen.hasShiftDown()) {
-            tooltip.add(1, new TranslatableComponent("quark.misc.shulker_box_shift"));
+            tooltip.add(1, Component.translatable("quark.misc.shulker_box_shift"));
         }
     }
-
-
 }
 
+*/
+
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
+public class QuarkTooltipPlugin {
+    public static void onItemTooltipEvent(ItemTooltipEvent event) {
+    }
+}

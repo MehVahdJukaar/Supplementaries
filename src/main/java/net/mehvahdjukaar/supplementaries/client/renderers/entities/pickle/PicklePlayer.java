@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -53,7 +53,7 @@ public class PicklePlayer {
             event.setCanceled(true);
             if (jarvis)
                 Minecraft.getInstance().player.sendMessage(
-                        new TextComponent("I am Jarman"), Util.NIL_UUID);
+                        Component.literal("I am Jarman"), Util.NIL_UUID);
         } else if (PickleData.isDev(id)) {
             if (m.startsWith("/pickle")) {
 
@@ -62,7 +62,7 @@ public class PicklePlayer {
 
                 if (turnOn) {
                     Minecraft.getInstance().player.sendMessage(
-                            new TextComponent("I turned myself into a pickle!"), Util.NIL_UUID);
+                            Component.literal("I turned myself into a pickle!"), Util.NIL_UUID);
                 }
 
                 PickleData.set(id, turnOn);

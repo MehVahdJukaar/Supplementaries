@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
@@ -29,7 +29,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     @Nullable
     private ListTag itemPatterns;
     @Nullable
-    private List<Pair<BannerPattern, DyeColor>> patterns;
+    private List<Pair<Holder<BannerPattern>, DyeColor>> patterns;
 
     public CeilingBannerBlockTile(BlockPos pos, BlockState state) {
         this(pos, state, DyeColor.WHITE);
@@ -42,7 +42,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
 
     @Override
     public Component getName() {
-        return this.name != null ? this.name : new TranslatableComponent("block.minecraft.banner");
+        return this.name != null ? this.name : Component.translatable("block.minecraft.banner");
     }
 
     @Nullable
@@ -93,7 +93,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         return this.saveWithoutMetadata();
     }
 
-    public List<Pair<BannerPattern, DyeColor>> getPatterns() {
+    public List<Pair<Holder<BannerPattern>, DyeColor>> getPatterns() {
         if (this.patterns == null) {
             this.patterns = BannerBlockEntity.createPatterns(this.baseColor, this.itemPatterns);
         }

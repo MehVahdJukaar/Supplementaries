@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -11,7 +11,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
@@ -147,7 +146,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
-        tooltip.add((new TranslatableComponent("message.supplementaries.hourglass")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+        tooltip.add((Component.translatable("message.supplementaries.hourglass")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Override

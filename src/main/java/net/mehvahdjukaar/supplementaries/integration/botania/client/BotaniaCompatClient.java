@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.botania.client;
 
+/*
 import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -13,4 +14,4 @@ public class BotaniaCompatClient {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BotaniaCompatRegistry.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
     }
-}
+}*/

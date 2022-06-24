@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -20,11 +19,9 @@ import net.minecraft.world.item.Items;
 
 public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelfBlockTile> {
     protected final ItemRenderer itemRenderer;
-    private final Font font;
 
     public ItemShelfBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
-        font = context.getFont();
     }
 
     protected boolean canRenderName(ItemShelfBlockTile tile) {

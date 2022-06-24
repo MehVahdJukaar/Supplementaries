@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.impl.entities.ImprovedProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -28,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import net.mehvahdjukaar.selene.entities.ImprovedProjectileEntity;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {

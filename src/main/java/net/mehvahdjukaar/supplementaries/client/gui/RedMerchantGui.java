@@ -10,9 +10,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.npc.VillagerData;
@@ -23,11 +23,11 @@ import net.minecraft.world.item.trading.MerchantOffers;
 
 public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainerMenu> {
     private static final ResourceLocation TEXTURE = Textures.RED_MERCHANT_GUI_TEXTURE;
-    private static final Component TRADES_LABEL = new TranslatableComponent("merchant.trades");
-    private static final Component DEPRECATED_TOOLTIP = new TranslatableComponent("merchant.deprecated");
-    private static final TranslatableComponent TRADE_OFFER = new TranslatableComponent("gui.supplementaries.orange_trader.trade");
-    private static final TranslatableComponent I_RECEIVE = new TranslatableComponent("gui.supplementaries.orange_trader.get");
-    private static final TranslatableComponent YOU_RECEIVE = new TranslatableComponent("gui.supplementaries.orange_trader.receive");
+    private static final MutableComponent TRADES_LABEL = Component.translatable("merchant.trades");
+    private static final MutableComponent DEPRECATED_TOOLTIP = Component.translatable("merchant.deprecated");
+    private static final MutableComponent TRADE_OFFER = Component.translatable("gui.supplementaries.orange_trader.trade");
+    private static final MutableComponent I_RECEIVE = Component.translatable("gui.supplementaries.orange_trader.get");
+    private static final MutableComponent YOU_RECEIVE = Component.translatable("gui.supplementaries.orange_trader.receive");
 
     private int shopItem;
     private final RedMerchantGui.TradeOfferButton[] tradeOfferButtons = new RedMerchantGui.TradeOfferButton[7];
@@ -68,7 +68,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
 
     protected void renderLabels(PoseStack pPoseStack, int pX, int pY) {
 
-        Component tradeOffer = TRADE_OFFER
+        MutableComponent tradeOffer = TRADE_OFFER
                 .withStyle(ChatFormatting.WHITE)
                 .withStyle(ChatFormatting.BOLD);
         this.font.draw(pPoseStack, tradeOffer, (float) (49 + this.imageWidth / 2 - this.font.width(tradeOffer) / 2), 10.0F, 4210752);
@@ -286,7 +286,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
         final int index;
 
         public TradeOfferButton(int p_99205_, int p_99206_, int p_99207_, OnPress p_99208_) {
-            super(p_99205_, p_99206_, 89, 20, TextComponent.EMPTY, p_99208_);
+            super(p_99205_, p_99206_, 89, 20, CommonComponents.EMPTY, p_99208_);
             this.index = p_99207_;
             this.visible = false;
         }

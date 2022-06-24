@@ -3,7 +3,7 @@
 	"ambientocclusion": false,
 	"textures": {
 		"cactus": "moreminecarts:block/glass_cactus",
-		"particle": "minecraft:block/flower_pot",
+		"particle": "minecraft:block/flower_pot"
 	},
 	"elements": [
 		{

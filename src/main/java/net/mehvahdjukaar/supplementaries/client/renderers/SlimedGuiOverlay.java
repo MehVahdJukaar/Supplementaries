@@ -6,18 +6,21 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
 
 public class SlimedGuiOverlay extends Gui implements IIngameOverlay {
 
-    public SlimedGuiOverlay(Minecraft pMinecraft) {
-        super(pMinecraft);
+
+    public SlimedGuiOverlay(Minecraft p_232355_, ItemRenderer p_232356_) {
+        super(p_232355_, p_232356_);
     }
 
     public static void register() {
-        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FROSTBITE_ELEMENT, "Slimed", new SlimedGuiOverlay(Minecraft.getInstance()));
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FROSTBITE_ELEMENT, "Slimed",
+                new SlimedGuiOverlay(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer()));
     }
 
     @Override

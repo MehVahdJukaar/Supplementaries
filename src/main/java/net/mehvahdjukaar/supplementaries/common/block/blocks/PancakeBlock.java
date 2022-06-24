@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.api.ISoftFluidConsumer;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.api.ISoftFluidConsumer;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Topping;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;

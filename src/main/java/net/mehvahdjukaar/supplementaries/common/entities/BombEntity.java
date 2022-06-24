@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.selene.entities.ImprovedProjectileEntity;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.moonlight.impl.entities.ImprovedProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -18,6 +16,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -41,8 +40,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.Random;
 
 public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
 
@@ -141,7 +138,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             }
             case 68 -> level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
             case 67 -> {
-                Random random = level.getRandom();
+                RandomSource random = level.getRandom();
                 for (int i = 0; i < 10; ++i) {
                     level.addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
                 }

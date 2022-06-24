@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.CustomMapDecoration;
-import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
+import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
+import net.mehvahdjukaar.moonlight.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
@@ -26,7 +25,7 @@ public class SignPostMarker extends NamedMapBlockMarker<CustomMapDecoration> {
     @Nullable
     public static SignPostMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
-            Component t = new TextComponent("");
+            Component t = Component.literal("");
             if (tile.up) t = tile.textHolder.getLine(0);
             if (tile.down && t.getString().isEmpty())
                 t = tile.textHolder.getLine(1);

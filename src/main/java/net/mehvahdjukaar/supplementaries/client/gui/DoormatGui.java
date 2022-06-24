@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
@@ -20,8 +20,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -37,7 +35,7 @@ public class DoormatGui extends Screen {
     private final String[] cachedLines;
 
     private DoormatGui(DoormatBlockTile teSign) {
-        super(new TranslatableComponent("gui.supplementaries.doormat.edit"));
+        super(Component.translatable("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES)
                 .mapToObj(teSign.textHolder::getLine)
@@ -119,7 +117,7 @@ public class DoormatGui extends Screen {
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (h) -> {
             this.cachedLines[this.editLine] = h;
-            this.tileSign.textHolder.setLine(this.editLine, new TextComponent(h));
+            this.tileSign.textHolder.setLine(this.editLine, Component.literal(h));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
                 (s) -> this.minecraft.font.width(s) <= DoormatBlockTileRenderer.LINE_MAX_WIDTH);
     }

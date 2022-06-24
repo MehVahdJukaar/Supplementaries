@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.framedblocks;
 
+/*
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -48,7 +49,7 @@ public class FramedSignPost {
         Item i = stack.getItem();
         boolean hasMimic = !te.mimic.isAir() && !te.mimic.is(framedFence.getBlock());
         if (hasMimic && i == FBContent.itemFramedHammer.get()) {
-            net.mehvahdjukaar.selene.util.Utils.swapItem(player, hand, stack, new ItemStack(te.mimic.getBlock().asItem()));
+            net.mehvahdjukaar.moonlight.util.Utils.swapItem(player, hand, stack, new ItemStack(te.mimic.getBlock().asItem()));
             te.setHeldBlock(framedFence);
             te.setChanged();
             te.requestModelDataUpdate();
@@ -81,3 +82,5 @@ public class FramedSignPost {
     }
 
 }
+*/
+

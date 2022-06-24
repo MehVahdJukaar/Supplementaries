@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.minecraft.core.BlockPos;

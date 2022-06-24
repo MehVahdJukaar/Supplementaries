@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.impl.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -112,7 +113,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
 
     //schedule block tick
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
             tile.recheckOpen();
             if (canFall(pos, level)) {

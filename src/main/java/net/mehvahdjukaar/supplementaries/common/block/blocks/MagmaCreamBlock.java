@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,7 +44,7 @@ public class MagmaCreamBlock extends HalfTransparentBlock {
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (CompatHandler.quark) return;
         if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
-        tooltip.add(new TranslatableComponent("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override

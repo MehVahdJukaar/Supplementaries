@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.world.songs;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
@@ -56,8 +56,8 @@ public class Song {
         return name;
     }
 
-    public TranslatableComponent getName() {
-        return new TranslatableComponent(getTranslationKey());
+    public Component getName() {
+        return Component.translatable(getTranslationKey());
     }
 
     public int getTempo() {

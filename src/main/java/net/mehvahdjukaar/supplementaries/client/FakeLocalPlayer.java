@@ -4,15 +4,13 @@ import com.google.common.collect.Maps;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
 public class FakeLocalPlayer extends AbstractClientPlayer {
     public FakeLocalPlayer(ClientLevel pClientLevel, GameProfile pGameProfile) {
-        super(pClientLevel, pGameProfile);
+        super(pClientLevel, pGameProfile,null);
         this.noPhysics = true;
     }
 

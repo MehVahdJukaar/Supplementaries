@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
@@ -70,7 +71,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
             double x = pos.getX() + 0.5 + tile.dx * tile.offset;
             double y = pos.getY() + tile.dy * tile.offset;
             double z = pos.getZ() + 0.5 + tile.dz * tile.offset;
-            Random random = level.random;
+            RandomSource random = level.random;
             for (int l = 0; l < 2; ++l) {
                 double d0 = (x + random.nextFloat() - 0.5D);
                 double d1 = (y + random.nextFloat() + 0.5D);

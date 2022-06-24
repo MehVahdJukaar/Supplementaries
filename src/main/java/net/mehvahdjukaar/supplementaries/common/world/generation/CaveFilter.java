@@ -6,12 +6,11 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
-
-import java.util.Random;
 
 public class CaveFilter extends PlacementFilter {
 
@@ -32,7 +31,7 @@ public class CaveFilter extends PlacementFilter {
 
 
     @Override
-    protected boolean shouldPlace(PlacementContext context, Random random, BlockPos pos) {
+    protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
         if (context.getLevel().getChunkSource() instanceof ServerChunkCache serverChunkCache) {
             int sea = serverChunkCache.getGenerator().getSeaLevel();
             //below sea level

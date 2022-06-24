@@ -5,7 +5,7 @@
 //import knightminer.inspirations.library.recipe.cauldron.inventory.ICauldronInventory;
 //import knightminer.inspirations.library.recipe.cauldron.inventory.IModifyableCauldronInventory;
 //import knightminer.inspirations.library.recipe.cauldron.recipe.ICauldronRecipe;
-//import net.mehvahdjukaar.selene.map.CustomDecorationHolder;
+//import net.mehvahdjukaar.moonlight.map.CustomDecorationHolder;
 //import net.minecraft.fluid.Fluids;
 //import net.minecraft.item.FilledMapItem;
 //import net.minecraft.item.ItemStack;

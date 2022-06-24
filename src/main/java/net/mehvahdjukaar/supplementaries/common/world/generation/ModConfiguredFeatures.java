@@ -30,10 +30,10 @@ public class ModConfiguredFeatures {
 
     //placed features predicates
     private static final BlockPredicate HAS_WATER_PREDICATE = BlockPredicate.anyOf(
-            BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(1, -1, 0)),
-            BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(-1, -1, 0)),
-            BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, 1)),
-            BlockPredicate.matchesFluids(List.of(Fluids.WATER, Fluids.FLOWING_WATER), new BlockPos(0, -1, -1)));
+            BlockPredicate.matchesFluids(new BlockPos(1, -1, 0), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
+            BlockPredicate.matchesFluids(new BlockPos(-1, -1, 0), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
+            BlockPredicate.matchesFluids(new BlockPos(0, -1, 1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
+            BlockPredicate.matchesFluids(new BlockPos(0, -1, -1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)));
 
     private static final PlacementModifier FLAX_PLACEMENT = BlockPredicateFilter.forPredicate(BlockPredicate.allOf(
             BlockPredicate.ONLY_IN_AIR_PREDICATE,
@@ -63,8 +63,8 @@ public class ModConfiguredFeatures {
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
                             URN_PLACEMENT));
 
-    public static final Holder<ConfiguredFeature<NoneFeatureConfiguration,?>> ROAD_SIGN =
-            FeatureUtils.register("supplementaries:road_sign",ModFeatures.ROAD_SIGN.get(), FeatureConfiguration.NONE);
+    public static final Holder<ConfiguredFeature<NoneFeatureConfiguration, ?>> ROAD_SIGN =
+            FeatureUtils.register("supplementaries:road_sign", ModFeatures.ROAD_SIGN.get(), FeatureConfiguration.NONE);
 
 
 }

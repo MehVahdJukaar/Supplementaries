@@ -1,0 +1,16 @@
+{
+  "color": "#cc9a51",
+  "containers": [
+    {
+      "filled": [
+        "malum:holy_syrup"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/honey_liquid",
+  "id": "malum:holy_syrup",
+  "still_texture": "moonlight:soft_fluids/honey_liquid",
+  "translation_key": "item.malum.holy_syrup"
+}

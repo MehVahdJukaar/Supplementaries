@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -43,7 +44,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<BannerPattern, DyeColor>> list) {
+    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(0.05f*ang));
@@ -60,7 +61,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     public void render(FlagBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        List<Pair<BannerPattern, DyeColor>> list = tile.getPatterns();
+        List<Pair<Holder<BannerPattern>, DyeColor>> list = tile.getPatterns();
         if (list != null) {
 
             int lu = combinedLightIn & '\uffff';
@@ -108,17 +109,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
     }
 
-    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<BannerPattern, DyeColor>> list, int combinedLightIn) {
+    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int combinedLightIn) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0);
     }
 
-    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<BannerPattern, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
+    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
 
         for (int p = 0; p < list.size(); p++) {
 
-            Material material = ClientRegistry.FLAG_MATERIALS.get(list.get(p).getFirst());
+            Material material = ClientRegistry.FLAG_MATERIALS.get(list.get(p).getFirst().value());
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();

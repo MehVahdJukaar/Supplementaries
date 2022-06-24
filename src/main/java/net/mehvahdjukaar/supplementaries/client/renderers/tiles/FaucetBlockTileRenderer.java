@@ -29,11 +29,11 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
     @Override
     public void render(FaucetBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int ov) {
         if (tile.hasWater() && tile.isOpen() && !tile.isConnectedBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
-            ResourceLocation texture = tile.tempFluidHolder.getFluid().get().getFlowingTexture();
+            ResourceLocation texture = tile.tempFluidHolder.getFluid().getFlowingTexture();
             TextureAtlasSprite sprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
             VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
             int color = tile.tempFluidHolder.getFlowingTint(tile.getLevel(), tile.getBlockPos());
-            int luminosity = tile.tempFluidHolder.getFluid().get().getLuminosity();
+            int luminosity = tile.tempFluidHolder.getFluid().getLuminosity();
             if (luminosity != 0) light = light & 15728640 | luminosity << 4;
             float opacity = 1.3f;
             matrixStackIn.pushPose();

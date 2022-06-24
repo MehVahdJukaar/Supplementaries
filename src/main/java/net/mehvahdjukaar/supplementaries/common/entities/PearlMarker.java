@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -40,7 +41,6 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class PearlMarker extends Entity {
 
@@ -204,7 +204,7 @@ public class PearlMarker extends Entity {
     public void handleEntityEvent(byte pId) {
         if (pId == 92) {
             if (level.isClientSide) {
-                Random random = level.random;
+                RandomSource random = level.random;
                 //smort
                 BlockPos end = this.getTeleportPos();
                 BlockPos start = this.blockPosition();

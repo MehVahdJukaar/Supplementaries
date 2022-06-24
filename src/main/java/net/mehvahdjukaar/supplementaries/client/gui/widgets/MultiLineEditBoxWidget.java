@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -55,7 +54,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     private DisplayCache displayCache = DisplayCache.EMPTY;
 
     public MultiLineEditBoxWidget(Minecraft mc, int x, int y, int width, int height) {
-        super(x, y, width, height, new TextComponent("hhhhh"));
+        super(x, y, width, height, Component.literal("hhhhh"));
         this.minecraft = mc;
         this.font = mc.font;
         this.x1 = x + width;
@@ -542,7 +541,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
             this.contents = contents;
             this.x = x;
             this.y = y;
-            this.asComponent = (new TextComponent(contents)).setStyle(style);
+            this.asComponent = (Component.literal(contents)).setStyle(style);
         }
     }
 

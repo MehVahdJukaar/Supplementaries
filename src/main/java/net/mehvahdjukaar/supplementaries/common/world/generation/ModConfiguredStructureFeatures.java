@@ -10,16 +10,17 @@ import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
 public class ModConfiguredStructureFeatures {
 
-    public static final ResourceKey<ConfiguredStructureFeature<?, ?>> CONFIGURED_WAY_SIGN_KEY = makeKey("way_sign");
+    public static final ResourceKey<Structure> CONFIGURED_WAY_SIGN_KEY =
+            ResourceKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res("way_sign"));
 
     public static final Holder<StructureTemplatePool> WAY_SIGN_START =
             Pools.register(new StructureTemplatePool(
@@ -30,20 +31,16 @@ public class ModConfiguredStructureFeatures {
                     StructureTemplatePool.Projection.RIGID));
 
 
-    public static final Holder<ConfiguredStructureFeature<?, ?>> CONFIGURED_WAY_SIGN_STRUCTURE =
+    public static final Holder<Structure> CONFIGURED_WAY_SIGN_STRUCTURE =
             register(CONFIGURED_WAY_SIGN_KEY, ModStructures.WAY_SIGN.get()
                     .configured(new JigsawConfiguration(WAY_SIGN_START, 4), //max depth
                             ModTags.HAS_WAY_SIGNS, true)); //transform surrounding land
 
 
-    private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> Holder<ConfiguredStructureFeature<?, ?>> register(
-            ResourceKey<ConfiguredStructureFeature<?, ?>> resourceKey,
-            ConfiguredStructureFeature<FC, F> configuredStructureFeature) {
-        return BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, resourceKey, configuredStructureFeature);
-    }
-
-    private static ResourceKey<ConfiguredStructureFeature<?, ?>> makeKey(String name) {
-        return ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, Supplementaries.res(name));
+    private static <FC extends FeatureConfiguration, F extends StructureFeature<FC>> Holder<Structure> register(
+            ResourceKey<Structure> resourceKey,
+            Structure configuredStructureFeature) {
+        return BuiltinRegistries.register(BuiltinRegistries.STRUCTURES, resourceKey, configuredStructureFeature);
     }
 
 }

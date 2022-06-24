@@ -13,9 +13,8 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -170,7 +169,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
         private boolean packed;
 
         protected PackButton(int x, int y) {
-            super(x, y, 22, 22, TextComponent.EMPTY);
+            super(x, y, 22, 22, CommonComponents.EMPTY);
         }
 
         @Override
@@ -198,7 +197,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
             if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                TrappedPresentBlockGui.this.renderTooltip(matrixStack, new TranslatableComponent("gui.supplementaries.present.trapped"), x, y);
+                TrappedPresentBlockGui.this.renderTooltip(matrixStack, Component.translatable("gui.supplementaries.present.trapped"), x, y);
             }
         }
 

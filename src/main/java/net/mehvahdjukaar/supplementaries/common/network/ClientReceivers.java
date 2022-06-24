@@ -15,7 +15,10 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
@@ -77,14 +80,14 @@ public class ClientReceivers {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
                     if (fileName.contains(".jar")) {
                         if (fileName.contains("-Mod-1")) {
-                            MutableComponent link = new TranslatableComponent("message.supplementaries.anti_repost_link");
+                            MutableComponent link = Component.translatable("message.supplementaries.anti_repost_link");
 
                             String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
                             ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
                             link.setStyle(link.getStyle().withClickEvent(click).setUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
 
-                            p.sendMessage(new TranslatableComponent("message.supplementaries.anti_repost", link), Util.NIL_UUID);
-                            p.sendMessage(new TranslatableComponent("message.supplementaries.anti_repost_2"), Util.NIL_UUID);
+                            p.sendMessage(Component.translatable("message.supplementaries.anti_repost", link), Util.NIL_UUID);
+                            p.sendMessage(Component.translatable("message.supplementaries.anti_repost_2"), Util.NIL_UUID);
                             //player.sendMessage(ForgeHooks.newChatWithLinks(, false), Util.DUMMY_UUID);
                         }
                     }

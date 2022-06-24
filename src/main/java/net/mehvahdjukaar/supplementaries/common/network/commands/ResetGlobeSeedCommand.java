@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 
 public class ResetGlobeSeedCommand implements Command<CommandSourceStack> {
@@ -27,7 +26,7 @@ public class ResetGlobeSeedCommand implements Command<CommandSourceStack> {
         GlobeData data = new GlobeData(level.getSeed());
         GlobeData.set(level, data);
         data.sendToClient(level);
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.globe_reset"), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.globe_reset"), false);
         return 0;
     }
 }

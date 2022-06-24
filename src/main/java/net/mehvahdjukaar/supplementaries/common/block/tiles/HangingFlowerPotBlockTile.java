@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;

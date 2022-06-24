@@ -16,9 +16,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -30,7 +29,7 @@ import java.util.UUID;
 
 public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
 
-    private static final TranslatableComponent PACK_BUTTON = new TranslatableComponent("gui.supplementaries.present.pack");
+    private static final Component PACK_BUTTON = Component.translatable("gui.supplementaries.present.pack");
 
     private static final int DESCRIPTION_BOX_X = 53;
     private static final int DESCRIPTION_BOX_Y = 33;
@@ -249,7 +248,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         private boolean packed;
 
         protected PackButton(int x, int y) {
-            super(x, y, 22, 22, TextComponent.EMPTY);
+            super(x, y, 22, 22, CommonComponents.EMPTY);
         }
 
         @Override

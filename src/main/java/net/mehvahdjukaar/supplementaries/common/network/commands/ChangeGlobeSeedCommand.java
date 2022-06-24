@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.Random;
@@ -31,7 +30,7 @@ public class ChangeGlobeSeedCommand implements Command<CommandSourceStack> {
         GlobeData.set(level, newData);
 
         newData.sendToClient(level);
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.globe_changed"), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.globe_changed"), false);
         return 0;
     }
 }

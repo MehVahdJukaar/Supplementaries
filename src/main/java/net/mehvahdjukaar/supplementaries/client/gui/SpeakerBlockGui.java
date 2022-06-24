@@ -12,14 +12,13 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 
 public class SpeakerBlockGui extends Screen {
-    private static final Component NARRATOR_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.chat_message");
-    private static final Component CHAT_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.narrator_message");
-    private static final Component DISTANCE_BLOCKS = new TranslatableComponent("gui.supplementaries.speaker_block.blocks");
-    private static final Component VOLUME_TEXT = new TranslatableComponent("gui.supplementaries.speaker_block.volume");
+    private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
+    private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
+    private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");
+    private static final Component VOLUME_TEXT = Component.translatable("gui.supplementaries.speaker_block.volume");
 
     private EditBox commandTextField;
     private final SpeakerBlockTile tileSpeaker;
@@ -29,7 +28,7 @@ public class SpeakerBlockGui extends Screen {
     private ForgeSlider volumeSlider;
 
     public SpeakerBlockGui(SpeakerBlockTile te) {
-        super(new TranslatableComponent("gui.supplementaries.speaker_block.edit"));
+        super(Component.translatable("gui.supplementaries.speaker_block.edit"));
         this.tileSpeaker = te;
         this.narrator = tileSpeaker.narrator;
         this.message = tileSpeaker.message;

@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
@@ -30,7 +29,7 @@ import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -44,7 +43,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     private boolean firstTick = true;
 
     //TODO: make them not spawn in villages
-    public List<Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>>> threadResult = null;
+    public List<Pair<BlockPos, Holder<Structure>>> threadResult = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -332,7 +331,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         if (d < 100) s = 10;
         else if (d < 2000) s = 100;
         else s = 1000;
-        return new TranslatableComponent("message.supplementaries.road_sign", (((d + (s / 2)) / s) * s));
+        return Component.translatable("message.supplementaries.road_sign", (((d + (s / 2)) / s) * s));
     }
 
     private static void replaceCobbleWithPath(Level world, BlockPos pos, BlockState path) {

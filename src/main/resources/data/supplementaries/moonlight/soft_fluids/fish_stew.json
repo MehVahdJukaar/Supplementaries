@@ -1,0 +1,19 @@
+{
+  "color": "#b34420",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:fish_stew"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "farmersdelight:fish_stew"
+  },
+  "id": "farmersdelight:fish_stew",
+  "still_texture": "moonlight:soft_fluids/soup_liquid"
+}

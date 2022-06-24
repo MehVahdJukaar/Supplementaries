@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.block_set.BlockRegistryHelper;
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
-import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
-import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
-import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.block_set.BlockRegistryHelper;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.impl.blocks.VerticalSlabBlock;
+import net.mehvahdjukaar.moonlight.impl.entities.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -28,12 +28,13 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -48,13 +49,13 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.EnumMap;
@@ -76,7 +77,7 @@ public class ModRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Supplementaries.MOD_ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Supplementaries.MOD_ID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Supplementaries.MOD_ID);
-    public static final DeferredRegister<Motive> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_TYPES, Supplementaries.MOD_ID);
+    public static final DeferredRegister<PaintingVariant> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_VARIANTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
@@ -105,7 +106,6 @@ public class ModRegistry {
         return !RegistryConfigs.Reg.isEnabled(name);
     }
 
-
     //creative tab
     public static CreativeModeTab MOD_TAB = null;
     public static CreativeModeTab JAR_TAB = null;
@@ -115,18 +115,22 @@ public class ModRegistry {
 
     //using this to register overwrites and conditional block items
     @SubscribeEvent
-    public static void registerAdditionalStuff(final RegistryEvent.Register<Item> event) {
-        WorldGenHandler.onRegisterAdditional();
-        Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
+    public static void registerAdditionalStuff(final RegisterEvent event) {
+        if (event.getRegistryKey() == ForgeRegistries.ITEMS.getRegistryKey()) {
 
-        //CompatHandler.registerOptionalItems(event);
-        //shulker shell
-        //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
+            WorldGenHandler.onRegisterAdditional();
+            Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
 
-        if (RegistryConfigs.Reg.SHULKER_HELMET_ENABLED.get()) {
-            event.getRegistry().register(new ShulkerShellItem(new Item.Properties()
-                    .stacksTo(64)
-                    .tab(CreativeModeTab.TAB_MATERIALS)).setRegistryName("minecraft:shulker_shell"));
+            //CompatHandler.registerOptionalItems(event);
+            //shulker shell
+            //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
+
+            if (RegistryConfigs.Reg.SHULKER_HELMET_ENABLED.get()) {
+                event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
+                        new ShulkerShellItem(new Item.Properties()
+                                .stacksTo(64)
+                                .tab(CreativeModeTab.TAB_MATERIALS)));
+            }
         }
     }
 
@@ -138,11 +142,12 @@ public class ModRegistry {
     }
 
     //paintings
-    public static final RegistryObject<Motive> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new Motive(32, 32));
+    public static final RegistryObject<PaintingVariant> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingVariant(32, 32));
 
     //enchantment
     public static final RegistryObject<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register(STASIS_NAME, StasisEnchantment::new);
 
+    //effects
     public static final RegistryObject<MobEffect> OVERENCUMBERED = EFFECTS.register("overencumbered", OverencumberedEffect::new);
 
     //particles
@@ -805,7 +810,7 @@ public class ModRegistry {
                     .strength(4f, 5f)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()
-                    .noDrops()
+                    .noLootTable()
                     .jumpFactor(1.18f)
     ));
     public static final RegistryObject<Block> SPRING_LAUNCHER_ARM = BLOCKS.register(PISTON_LAUNCHER_ARM_NAME, () -> new SpringLauncherArmBlock(
@@ -813,7 +818,7 @@ public class ModRegistry {
                     .strength(50f, 50f)
                     .sound(SoundType.METAL)
                     .noOcclusion()
-                    .noDrops()
+                    .noLootTable()
     ));
     public static final RegistryObject<BlockEntityType<SpringLauncherArmBlockTile>> SPRING_LAUNCHER_ARM_TILE = TILES.register(PISTON_LAUNCHER_ARM_NAME, () -> BlockEntityType.Builder.of(
             SpringLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()).build(null));
@@ -1012,7 +1017,7 @@ public class ModRegistry {
     //wall lantern
     public static final RegistryObject<WallLanternBlock> WALL_LANTERN = BLOCKS.register(WALL_LANTERN_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.LANTERN)
-                .lightLevel((state) -> 15).noDrops();
+                .lightLevel((state) -> 15).noLootTable();
 
         return /*CompatHandler.create ? SchematicCannonStuff.makeWallLantern(p):*/  new WallLanternBlock(p);
     });
@@ -1123,7 +1128,7 @@ public class ModRegistry {
 
     //block generator
     public static final RegistryObject<Block> STRUCTURE_TEMP = BLOCKS.register(STRUCTURE_TEMP_NAME, () -> new StructureTempBlock(
-            BlockBehaviour.Properties.of(Material.STONE).strength(0).noDrops().noCollission().noOcclusion()));
+            BlockBehaviour.Properties.of(Material.STONE).strength(0).noLootTable().noCollission().noOcclusion()));
     public static final RegistryObject<BlockEntityType<StructureTempBlockTile>> STRUCTURE_TEMP_TILE = TILES.register(STRUCTURE_TEMP_NAME, () -> BlockEntityType.Builder.of(
             StructureTempBlockTile::new, STRUCTURE_TEMP.get()).build(null));
 

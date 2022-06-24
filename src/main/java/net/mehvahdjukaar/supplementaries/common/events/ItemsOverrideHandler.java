@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.builtincompat.MapAtlasPlugin;
-import net.mehvahdjukaar.selene.map.MapHelper;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.builtincompat.MapAtlasPlugin;
+import net.mehvahdjukaar.moonlight.map.MapHelper;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
@@ -29,9 +29,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -240,13 +239,13 @@ public class ItemsOverrideHandler {
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
             List<Component> tooltip = event.getToolTip();
-            BaseComponent t = override.getTooltip();
+            MutableComponent t = override.getTooltip();
             if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         } else {
             ItemUseOverride o = ITEM_USE_OVERRIDES.get(item);
             if (o != null && o.isEnabled()) {
                 List<Component> tooltip = event.getToolTip();
-                BaseComponent t = o.getTooltip();
+                MutableComponent t = o.getTooltip();
                 if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
             }
         }
@@ -270,7 +269,7 @@ public class ItemsOverrideHandler {
         public abstract boolean appliesToItem(Item item);
 
         @Nullable
-        public BaseComponent getTooltip() {
+        public MutableComponent getTooltip() {
             return null;
         }
 
@@ -285,7 +284,7 @@ public class ItemsOverrideHandler {
         }
 
         @Nullable
-        public BaseComponent getTooltip() {
+        public MutableComponent getTooltip() {
             return null;
         }
     }
@@ -321,8 +320,8 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public BaseComponent getTooltip() {
-            return new TranslatableComponent("message.supplementaries.throwable_brick");
+        public MutableComponent getTooltip() {
+            return Component.translatable("message.supplementaries.throwable_brick");
         }
 
         @Override
@@ -512,8 +511,8 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public BaseComponent getTooltip() {
-            return new TranslatableComponent("message.supplementaries.double_cake");
+        public MutableComponent getTooltip() {
+            return Component.translatable("message.supplementaries.double_cake");
         }
 
         @Override
@@ -684,8 +683,8 @@ public class ItemsOverrideHandler {
 
         @Nullable
         @Override
-        public BaseComponent getTooltip() {
-            return new TranslatableComponent("message.supplementaries.double_cake");
+        public MutableComponent getTooltip() {
+            return Component.translatable("message.supplementaries.double_cake");
         }
 
         @Override

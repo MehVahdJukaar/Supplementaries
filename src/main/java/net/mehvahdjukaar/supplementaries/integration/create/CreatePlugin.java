@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
-
+/*
 import com.simibubi.create.AllMovementBehaviours;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.create.behaviors.BambooSpikesBehavior;
@@ -18,6 +18,5 @@ public class CreatePlugin {
         }
 
     }
-
-
 }
+*/

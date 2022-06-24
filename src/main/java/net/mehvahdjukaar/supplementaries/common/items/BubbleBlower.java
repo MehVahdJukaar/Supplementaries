@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.selene.math.MthUtils;
-import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.math.MthUtils;
+import net.mehvahdjukaar.moonlight.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -16,7 +16,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -127,7 +126,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (this.getCharges(stack) != 0) {
-            tooltip.add(new TranslatableComponent("message.supplementaries.bubble_blower_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+            tooltip.add(Component.translatable("message.supplementaries.bubble_blower_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         }
     }
 

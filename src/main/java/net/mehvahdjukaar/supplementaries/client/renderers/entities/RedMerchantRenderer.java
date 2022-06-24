@@ -19,8 +19,8 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
     public RedMerchantRenderer(EntityRendererProvider.Context context) {
         super(context, new VillagerModel<>(context.bakeLayer(ClientRegistry.RED_MERCHANT_MODEL)), 0.5F);
 
-        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
-        this.addLayer(new CrossedArmsItemLayer<>(this));
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
+        this.addLayer(new CrossedArmsItemLayer<>(this, context.getItemInHandRenderer()));
         this.getModel().getHead().y = this.getModel().getHead().y + 1 - 0.9375F;
     }
 
@@ -49,7 +49,7 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
         hat.addOrReplaceChild("hat_rim", CubeListBuilder.create()
                         .texOffs(30, 47)
                         .addBox(-8.0F, -8.0F, -6.0F, 16.0F, 16.0F, 1.0F),
-                PartPose.rotation((-(float)Math.PI / 2F), 0.0F, 0.0F));
+                PartPose.rotation((-(float) Math.PI / 2F), 0.0F, 0.0F));
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 }

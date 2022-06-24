@@ -6,7 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
@@ -18,7 +18,8 @@ public class ModStructureSets {
 
     //structure sets
 
-    public static final ResourceKey<StructureSet> WAY_SIGN_SET_KEY = makeKey(ModStructures.WAY_SIGN_NAME);
+    public static final ResourceKey<StructureSet> WAY_SIGN_SET_KEY =
+            ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, Supplementaries.res(ModStructures.WAY_SIGN_NAME));
 
     public static final Holder<StructureSet> WAY_SIGNS = register(
             WAY_SIGN_SET_KEY, ModConfiguredStructureFeatures.CONFIGURED_WAY_SIGN_STRUCTURE,
@@ -36,12 +37,9 @@ public class ModStructureSets {
 
     private static Holder<StructureSet> register(
             ResourceKey<StructureSet> setResourceKey,
-            Holder<ConfiguredStructureFeature<?, ?>> configuredFeature,
+            Holder<Structure> configuredFeature,
             StructurePlacement structurePlacement) {
         return register(setResourceKey, new StructureSet(configuredFeature, structurePlacement));
     }
 
-    private static ResourceKey<StructureSet> makeKey(String name) {
-        return ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, Supplementaries.res(name));
-    }
 }

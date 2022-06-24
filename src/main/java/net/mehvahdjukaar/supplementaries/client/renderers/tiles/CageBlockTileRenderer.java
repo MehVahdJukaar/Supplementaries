@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;

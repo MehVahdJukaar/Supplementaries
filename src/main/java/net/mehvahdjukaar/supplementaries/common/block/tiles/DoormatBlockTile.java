@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.client.gui.DoormatGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +40,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.doormat");
+        return Component.translatable("block.supplementaries.doormat");
     }
 
     public Direction getDirection(){

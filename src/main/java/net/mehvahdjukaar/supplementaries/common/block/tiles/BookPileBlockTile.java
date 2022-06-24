@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -17,7 +18,6 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,7 +93,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
     @Override
     protected Component getDefaultName() {
-        return new TextComponent("block.supplementaries.book_pile");
+        return Component.translatable("block.supplementaries.book_pile");
     }
 
     //only client
@@ -125,8 +125,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
                 this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
-            } else if (item.getRegistryName().getNamespace().equals("inspirations")) {
-                String colName = item.getRegistryName().getPath().replace("_book", "");
+            } else if (Utils.getID(item).getNamespace().equals("inspirations")) {
+                String colName = Utils.getID(item).getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
                 this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);

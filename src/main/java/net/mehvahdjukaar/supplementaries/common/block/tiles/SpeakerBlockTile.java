@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
@@ -15,8 +15,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
@@ -58,7 +56,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.speaker_block");
+        return Component.translatable("block.supplementaries.speaker_block");
     }
 
     @Override
@@ -98,7 +96,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Style style = !state.getValue(SpeakerBlock.ANTIQUE) ? Style.EMPTY.applyFormats(ChatFormatting.ITALIC) :
                     Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT).applyFormats(ChatFormatting.ITALIC);
 
-            Component message = new TextComponent(this.getName().getString() + ": " + this.message)
+            Component message = Component.literal(this.getName().getString() + ": " + this.message)
                     .withStyle(style);
 
             NetworkHandler.sendToAllInRangeClients(pos, server,

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
@@ -16,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -62,7 +61,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.notice_board");
+        return Component.translatable("block.supplementaries.notice_board");
     }
 
     //refreshTextures blockState and plays sound. server side

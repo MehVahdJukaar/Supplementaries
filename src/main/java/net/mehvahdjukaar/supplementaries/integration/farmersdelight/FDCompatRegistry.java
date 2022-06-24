@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.farmersdelight;
 
-
+/*
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -74,4 +74,17 @@ public class FDCompatRegistry {
 
     }
 
+}
+*/
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class FDCompatRegistry {
+    public static InteractionResult onCakeInteraction(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
+    return InteractionResult.PASS;
+    }
 }

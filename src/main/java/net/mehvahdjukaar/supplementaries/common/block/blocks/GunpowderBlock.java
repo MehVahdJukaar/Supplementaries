@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -377,7 +378,7 @@ public class GunpowderBlock extends LightUpBlock {
     //-----explosion-stuff------
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int burning = state.getValue(BURNING);
 
         if (!world.isClientSide) {
@@ -551,7 +552,7 @@ public class GunpowderBlock extends LightUpBlock {
      * items for display
      */
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         int i = state.getValue(BURNING);
         if (i != 0) {
             for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -570,7 +571,7 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    private void spawnParticlesAlongLine(Level world, Random rand, BlockPos pos, int burning, Direction dir1, Direction dir2, float from, float to) {
+    private void spawnParticlesAlongLine(Level world, RandomSource rand, BlockPos pos, int burning, Direction dir1, Direction dir2, float from, float to) {
         float f = to - from;
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {

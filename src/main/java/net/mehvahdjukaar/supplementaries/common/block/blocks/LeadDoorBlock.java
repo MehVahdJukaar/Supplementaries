@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +64,7 @@ public class LeadDoorBlock extends DoorBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random pRandom) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource pRandom) {
         level.setBlock(pos, state.setValue(OPENING_PROGRESS, 0), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             level.setBlock(pos.below(), level.getBlockState(pos.below()).setValue(OPENING_PROGRESS, 0), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);

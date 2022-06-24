@@ -42,7 +42,7 @@ public abstract class BellMixin extends Block {
         return false;
     }
 
-    @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "updateShape", at = @At("HEAD"))
     public void updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
                             BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
         try {

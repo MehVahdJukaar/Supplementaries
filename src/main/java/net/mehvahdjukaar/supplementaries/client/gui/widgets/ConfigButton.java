@@ -11,8 +11,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.event.ScreenEvent;
 
 import java.util.Arrays;
@@ -21,7 +20,7 @@ import java.util.List;
 public class ConfigButton extends Button {
 
     public ConfigButton(int x, int y) {
-        super(x, y, 20, 20, new TextComponent("s"), ConfigButton::click);
+        super(x, y, 20, 20, Component.literal("s"), ConfigButton::click);
     }
 
     @Override
@@ -39,8 +38,8 @@ public class ConfigButton extends Button {
         if (gui instanceof TitleScreen || gui instanceof PauseScreen) {
             boolean isOnRight = CompatHandler.quark && !QuarkPlugin.hasQButtonOnRight();
             List<String> targets = isOnRight ?
-                    Arrays.asList(new TranslatableComponent("menu.online").getString(), new TranslatableComponent("fml.menu.modoptions").getString(), new TranslatableComponent("menu.shareToLan").getString())
-                    : Arrays.asList(new TranslatableComponent("menu.options").getString(), new TranslatableComponent("fml.menu.mods").getString());
+                    Arrays.asList(Component.translatable("menu.online").getString(), Component.translatable("fml.menu.modoptions").getString(), Component.translatable("menu.shareToLan").getString())
+                    : Arrays.asList(Component.translatable("menu.options").getString(), Component.translatable("fml.menu.mods").getString());
 
             List<GuiEventListener> widgets = event.getListenersList();
 

@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -47,7 +47,6 @@ public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
                             matrixStackIn.translate(0.5, 0.5, 0.5);
                             matrixStackIn.mulPose(RotHlpr.Y180);
                             matrixStackIn.translate(-0.5, -0.5, -0.5);
-
 
                     CageBlockTileRenderer.renderMobStatic(e, s, entityRenderer, matrixStackIn, 1, bufferIn, combinedLightIn, -90);
 

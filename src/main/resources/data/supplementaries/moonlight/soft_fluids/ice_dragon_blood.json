@@ -1,0 +1,20 @@
+{
+  "color": "#1bcffc",
+  "containers": [
+    {
+      "filled": [
+        "iceandfire:ice_dragon_blood"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "iceandfire:ice_dragon_blood"
+  },
+  "id": "iceandfire:ice_dragon_blood",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.iceandfire.ice_dragon_blood"
+}

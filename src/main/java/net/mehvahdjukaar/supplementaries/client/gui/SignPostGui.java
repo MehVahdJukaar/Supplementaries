@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -24,8 +24,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -46,7 +44,7 @@ public class SignPostGui extends Screen {
     private ModelPart signModel;
 
     private SignPostGui(SignPostBlockTile teSign) {
-        super(new TranslatableComponent("sign.edit"));
+        super(Component.translatable("sign.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
 
@@ -128,7 +126,7 @@ public class SignPostGui extends Screen {
         //this.tileSign.textHolder.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
             this.cachedLines[this.editLine] = s;
-            this.tileSign.textHolder.setLine(this.editLine, new TextComponent(s));
+            this.tileSign.textHolder.setLine(this.editLine, Component.literal(s));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
 
         this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);

@@ -6,10 +6,10 @@ import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
@@ -34,7 +34,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     @Nullable
     private ListTag itemPatterns;
     @Nullable
-    private List<Pair<BannerPattern, DyeColor>> patterns;
+    private List<Pair<Holder<BannerPattern>, DyeColor>> patterns;
 
     public FlagBlockTile(BlockPos pos, BlockState state) {
         this(pos, state, ((IColored)state.getBlock()).getColor());
@@ -50,7 +50,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         this.name = p_213136_1_;
     }
 
-    public List<Pair<BannerPattern, DyeColor>> getPatterns() {
+    public List<Pair<Holder<BannerPattern>, DyeColor>> getPatterns() {
         if (this.patterns == null) {
             this.patterns = BannerBlockEntity.createPatterns(this.baseColor, this.itemPatterns);
         }
@@ -117,7 +117,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
 
     @Override
     public Component getName() {
-        return this.name != null ? this.name : new TranslatableComponent("block.supplementaries.flag_" + this.baseColor.getName());
+        return this.name != null ? this.name : Component.translatable("block.supplementaries.flag_" + this.baseColor.getName());
     }
 
     @Nullable

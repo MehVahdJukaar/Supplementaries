@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

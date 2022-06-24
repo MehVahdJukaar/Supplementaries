@@ -17,7 +17,7 @@ public class WaystonesPlugin {
     public static Component getName(BlockEntity te) {
         var s = ((WaystoneBlockEntityBase) te).getWaystone().getName();
         if (s.isEmpty()) return null;
-        return new TextComponent(s);
+        return Component.literal(s);
     }
 }
 */

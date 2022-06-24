@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -20,8 +20,6 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.stream.IntStream;
 
@@ -35,7 +33,7 @@ public class HangingSignGui extends Screen {
     private final String[] cachedLines;
 
     private HangingSignGui(HangingSignBlockTile teSign) {
-        super(new TranslatableComponent("sign.edit"));
+        super(Component.translatable("sign.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
 
@@ -119,7 +117,7 @@ public class HangingSignGui extends Screen {
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (t) -> {
             this.cachedLines[this.editLine] = t;
-            this.tileSign.textHolder.setLine(this.editLine, new TextComponent(t));
+            this.tileSign.textHolder.setLine(this.editLine, Component.literal(t));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
                 (s) -> this.minecraft.font.width(s) <= HangingSignBlockTileRenderer.LINE_MAX_WIDTH);
     }

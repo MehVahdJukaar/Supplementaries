@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.botania.client;
 
-
+/*
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -24,3 +24,4 @@ public class TaterInAJarTileRenderer extends RenderTileTinyPotato {
         ms.popPose();
     }
 }
+*/

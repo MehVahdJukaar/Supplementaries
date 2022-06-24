@@ -18,8 +18,6 @@ public class AshCauldronBlock extends LayeredCauldronBlock {
                             Predicate<Biome.Precipitation> predicate,
                             Map<Item, CauldronInteraction> interactionMap) {
         super(BlockBehaviour.Properties.copy(Blocks.CAULDRON), predicate, interactionMap);
-
-
     }
 
     //lower level with water

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

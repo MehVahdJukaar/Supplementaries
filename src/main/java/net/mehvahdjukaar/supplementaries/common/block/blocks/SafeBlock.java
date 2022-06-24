@@ -14,11 +14,10 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -85,7 +84,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     //schedule block tick
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             tile.recheckOpen();
         }
@@ -164,7 +163,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 if (cleared) {
                     tile.clearOwner();
-                    player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.cleared"), true);
+                    player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
                     worldIn.playSound(null, pos,
                             SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
                     return InteractionResult.CONSUME;
@@ -179,7 +178,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                             tile.setOwner(owner);
                         }
                         if (!owner.equals(player.getUUID())) {
-                            player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.owner", tile.ownerName), true);
+                            player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", tile.ownerName), true);
                             if (!player.isCreative()) return InteractionResult.CONSUME;
                         }
                     } else {
@@ -187,7 +186,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                         if (key == null) {
                             if (stack.is(ModTags.KEY)) {
                                 tile.password = stack.getHoverName().getString();
-                                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", tile.password), true);
+                                player.displayClientMessage(Component.translatable("message.supplementaries.safe.assigned_key", tile.password), true);
                                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                                         SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
                                 return InteractionResult.CONSUME;
@@ -217,12 +216,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     UUID id = compoundTag.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
                         String name = compoundTag.getString("OwnerName");
-                        tooltip.add((new TranslatableComponent("container.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
+                        tooltip.add((Component.translatable("container.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
                         return;
                     }
                 }
                 if (compoundTag.contains("LootTable", 8)) {
-                    tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
+                    tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
                 }
                 if (compoundTag.contains("Items", 9)) {
                     NonNullList<ItemStack> itemStacks = NonNullList.withSize(27, ItemStack.EMPTY);
@@ -243,18 +242,18 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     }
 
                     if (j - i > 0) {
-                        tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                        tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
                 }
                 return;
             } else {
                 if (compoundTag.contains("Password")) {
-                    tooltip.add((new TranslatableComponent("message.supplementaries.safe.bound")).withStyle(ChatFormatting.GRAY));
+                    tooltip.add((Component.translatable("message.supplementaries.safe.bound")).withStyle(ChatFormatting.GRAY));
                     return;
                 }
             }
         }
-        tooltip.add((new TranslatableComponent("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
+        tooltip.add((Component.translatable("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
 
     }
 

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +14,7 @@ public class BambooSpikesItem extends WoodBasedBlockItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowdedIn(group)) {
+        if (this.allowedIn(group)) {
             items.add(new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get()));
         }
     }

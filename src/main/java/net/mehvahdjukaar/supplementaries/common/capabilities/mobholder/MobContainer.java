@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -416,7 +416,7 @@ public class MobContainer {
                 scale = maxH / aH;
         }
         //ice&fire dragons
-        String name = mob.getType().getRegistryName().toString();
+        String name = Utils.getID(mob.getType()).toString();
         if (name.equals("iceandfire:fire_dragon") || name.equals("iceandfire:ice_dragon") || name.equals("iceandfire:lightning_dragon")) {
             scale *= 0.45;
         }

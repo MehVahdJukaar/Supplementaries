@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.util;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.math.MthUtils;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

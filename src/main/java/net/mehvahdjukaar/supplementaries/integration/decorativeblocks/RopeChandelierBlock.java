@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.decorativeblocks;
-
+/*
 import lilypuree.decorative_blocks.blocks.ChandelierBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -96,5 +96,16 @@ public class RopeChandelierBlock extends ChandelierBlock {
         } else if (b == CompatObjects.GLOW_CHANDELIER.get()) {
             world.setBlock(pos, DecoBlocksCompatRegistry.GLOW_CHANDELIER_ROPE.get().defaultBlockState(), 3);
         }
+    }
+}
+*/
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class RopeChandelierBlock {
+    public static void tryConverting(BlockState blockState, LevelAccessor worldIn, BlockPos down) {
     }
 }

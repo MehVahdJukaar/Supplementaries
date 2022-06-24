@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map;
 
-import net.mehvahdjukaar.selene.map.CustomMapDecoration;
-import net.mehvahdjukaar.selene.map.MapDecorationRegistry;
-import net.mehvahdjukaar.selene.map.type.CustomDecorationType;
+import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
+import net.mehvahdjukaar.moonlight.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.map.type.CustomDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.markers.*;
 import net.minecraft.resources.ResourceLocation;

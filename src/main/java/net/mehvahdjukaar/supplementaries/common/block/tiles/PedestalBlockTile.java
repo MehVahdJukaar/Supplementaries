@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -75,7 +74,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.pedestal");
+        return Component.translatable("block.supplementaries.pedestal");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.math.MthUtils;
+import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;

@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.mehvahdjukaar.selene.map.MapDecorationRegistry;
-import net.mehvahdjukaar.selene.map.MapHelper;
-import net.mehvahdjukaar.selene.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.map.MapHelper;
+import net.mehvahdjukaar.moonlight.map.type.IMapDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
@@ -15,11 +15,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ConfiguredStructureTags;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.event.village.VillagerTradesEvent;
@@ -42,26 +42,26 @@ public class AdventurerMapsHandler {
     private static final int SEARCH_RADIUS = 100;
     private static final List<TradeData> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
-    private static final Map<TagKey<ConfiguredStructureFeature<?, ?>>,
+    private static final Map<TagKey<Structure>,
             Pair<ResourceLocation, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
 
 
-    private static void addStructureDecoration(TagKey<ConfiguredStructureFeature<?, ?>> tag, ResourceLocation res, int color) {
+    private static void addStructureDecoration(TagKey<Structure> tag, ResourceLocation res, int color) {
         DEFAULT_STRUCTURE_MARKERS.put(tag, Pair.of(res, color));
     }
 
-    private static void addStructureDecoration(TagKey<ConfiguredStructureFeature<?, ?>> tag, IMapDecorationType<?, ?> type, int color) {
+    private static void addStructureDecoration(TagKey<Structure> tag, IMapDecorationType<?, ?> type, int color) {
         addStructureDecoration(tag, type.getId(), color);
     }
 
     static {
         //tags here
 
-        addStructureDecoration(ConfiguredStructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
+        addStructureDecoration(StructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
         addStructureDecoration(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
-        addStructureDecoration(ConfiguredStructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
-        addStructureDecoration(ConfiguredStructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
-        addStructureDecoration(ConfiguredStructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
+        addStructureDecoration(StructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
+        addStructureDecoration(StructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
+        addStructureDecoration(StructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
         addStructureDecoration(ModTags.PILLAGER_OUTPOST, CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100);
         addStructureDecoration(ModTags.DESERT_PYRAMID, CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f);
         addStructureDecoration(ModTags.JUNGLE_TEMPLE, CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638);
@@ -69,7 +69,7 @@ public class AdventurerMapsHandler {
         addStructureDecoration(ModTags.END_CITY, CMDreg.END_CITY_TYPE, 0x9c73ab);
         addStructureDecoration(ModTags.SWAMP_HUT, CMDreg.SWAMP_HUT_TYPE, 0x1b411f);
         addStructureDecoration(ModTags.NETHER_FORTRESS, CMDreg.NETHER_FORTRESS, 0x3c080b);
-        addStructureDecoration(ConfiguredStructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
+        addStructureDecoration(StructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
 
         /*
         simpleMapTrade(Structure.SHIPWRECK);
@@ -89,7 +89,7 @@ public class AdventurerMapsHandler {
 
     }
 
-    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(Holder<ConfiguredStructureFeature<?, ?>> structure) {
+    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {
         ResourceLocation res = new ResourceLocation("selene:generic_structure");
         int color = -1;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
@@ -101,7 +101,7 @@ public class AdventurerMapsHandler {
         return Pair.of(MapDecorationRegistry.get(res), color);
     }
 
-    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<ConfiguredStructureFeature<?, ?>> tag) {
+    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
         var g = DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(new ResourceLocation("selene:generic_structure"), -1));
         return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
     }
@@ -112,7 +112,7 @@ public class AdventurerMapsHandler {
         if (!CUSTOM_MAPS_TRADES.isEmpty()) return;
 
         try {
-            List<? extends List<String>> tradeData = ConfigHandler.safeGetListString(ServerConfigs.SERVER_SPEC, ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES);
+            List<? extends List<String>> tradeData = ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
 
             for (List<String> l : tradeData) {
                 int s = l.size();
@@ -187,7 +187,7 @@ public class AdventurerMapsHandler {
         }
 
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             int maxPrice = 13;
             int minPrice = 7;
             int level = 2;
@@ -216,7 +216,7 @@ public class AdventurerMapsHandler {
 
                     //adds custom decoration
                     MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), 0x78151a);
-                    stack.setHoverName(new TranslatableComponent("filled_map.adventure"));
+                    stack.setHoverName(Component.translatable("filled_map.adventure"));
                     return stack;
                 }
 
@@ -234,7 +234,7 @@ public class AdventurerMapsHandler {
         }
 
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull Random random) {
+        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
 
             int i = Math.max(1, random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice)) + tradeData.minPrice);
 
@@ -252,7 +252,7 @@ public class AdventurerMapsHandler {
     public static ItemStack createStructureMap(Level world, BlockPos pos, ResourceLocation structureName,
                                                @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
 
-        var destination = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, structureName);
+        var destination = TagKey.create(Registry.STRUCTURE_REGISTRY, structureName);
 
         if (world instanceof ServerLevel serverLevel) {
 
@@ -283,7 +283,7 @@ public class AdventurerMapsHandler {
 
                 }
 
-                Component name = new TranslatableComponent(mapName == null ?
+                Component name = Component.translatable(mapName == null ?
                         "filled_map." + structureName.getPath().toLowerCase(Locale.ROOT) : mapName);
                 stack.setHoverName(name);
                 return stack;

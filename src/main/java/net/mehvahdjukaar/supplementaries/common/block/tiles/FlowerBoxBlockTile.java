@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -113,7 +112,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder 
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.flower_box");
+        return Component.translatable("block.supplementaries.flower_box");
     }
 
     public float getYaw() {

@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,8 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class GobletBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 9, 11);
@@ -91,17 +89,17 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
-            return tile.fluidHolder.isEmpty() ? 0 : 15;
+            return tile.fluidTank.isEmpty() ? 0 : 15;
         }
         return 0;
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         if (0.05 > random.nextFloat()) {
             if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
-                SoftFluidHolder holder = tile.getSoftFluidHolder();
-                if (holder.getFluid().get() == SoftFluidRegistry.POTION.get()) {
+                SoftFluidTank holder = tile.getSoftFluidTank();
+                if (holder.getFluid() == VanillaSoftFluids.POTION.get()) {
                     int i = holder.getTintColor(world, pos);
                     double d0 = (double) (i >> 16 & 255) / 255.0D;
                     double d1 = (double) (i >> 8 & 255) / 255.0D;

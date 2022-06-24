@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.math.MthUtils;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -100,7 +99,7 @@ public class CrankBlock extends WaterBlock {
             this.activate(state, worldIn, pos, ccw);
             float f = 0.55f + state.getValue(POWER) * 0.04f ; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
             worldIn.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
-            worldIn.gameEvent(player, GameEvent.BLOCK_SWITCH, pos);
+            worldIn.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
 
             Direction dir = state.getValue(FACING).getOpposite();
             if (dir.getAxis() != Direction.Axis.Y) {

@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 
 public class ReloadConfigsCommand implements Command<CommandSourceStack> {
 
@@ -28,7 +27,7 @@ public class ReloadConfigsCommand implements Command<CommandSourceStack> {
         ClientConfigs.cached.refresh();
         ConfigHandler.sendSyncedConfigsToAllPlayers();
         ServerConfigs.cached.refresh();
-        context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.configs_reloaded"), false);
+        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.configs_reloaded"), false);
         return 0;
     }
 }

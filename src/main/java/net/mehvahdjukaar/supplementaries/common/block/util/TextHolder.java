@@ -4,11 +4,12 @@ import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.renderer.entity.layers.SheepFurLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +47,7 @@ public class TextHolder implements IAntiqueTextProvider {
         this.lines = size;
         this.renderText = new FormattedCharSequence[size];
         this.signText = new Component[size];
-        Arrays.fill(this.signText, TextComponent.EMPTY);
+        Arrays.fill(this.signText, CommonComponents.EMPTY);
         this.engraved = engraved;
     }
 
@@ -59,7 +60,7 @@ public class TextHolder implements IAntiqueTextProvider {
             this.hasAntiqueInk = com.getBoolean("AntiqueInk");
             for (int i = 0; i < this.lines; ++i) {
                 String s = com.getString("Text" + (i + 1));
-                Component mutableComponent = s.isEmpty() ? TextComponent.EMPTY : Component.Serializer.fromJson(s);
+                Component mutableComponent = s.isEmpty() ? CommonComponents.EMPTY : Component.Serializer.fromJson(s);
                 this.signText[i] = mutableComponent;
                 this.renderText[i] = null;
             }
@@ -100,7 +101,7 @@ public class TextHolder implements IAntiqueTextProvider {
 
     @Nullable
     public FormattedCharSequence getRenderText(int line, Function<Component, FormattedCharSequence> f) {
-        if ((this.renderText[line] == null) && this.signText[line] != TextComponent.EMPTY) {
+        if ((this.renderText[line] == null) && this.signText[line] != CommonComponents.EMPTY) {
             this.renderText[line] = f.apply(this.signText[line]);
         }
         return this.renderText[line];
@@ -206,11 +207,11 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public boolean isEmpty() {
-        return Arrays.stream(this.signText).allMatch(s-> s.getContents().isEmpty());
+        return Arrays.stream(this.signText).allMatch(s-> s.getString().isEmpty());
     }
 
     public void clear(){
-        Arrays.fill(this.signText, TextComponent.EMPTY);
+        Arrays.fill(this.signText, CommonComponents.EMPTY);
         this.setTextColor(DyeColor.BLACK);
         this.setAntiqueInk(false);
         this.setGlowingText(false);

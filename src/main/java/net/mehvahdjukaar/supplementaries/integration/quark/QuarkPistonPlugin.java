@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
 
-
+/*
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -51,5 +51,20 @@ public class QuarkPistonPlugin {
 
     public static boolean canMoveTile(BlockState state) {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+    }
+}
+*/
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class QuarkPistonPlugin {
+    public static boolean canMoveTile(BlockState state) {
+    return true;
+    }
+
+    public static Object getMovingTile(BlockPos pos, Level level) {
+        return null;
     }
 }

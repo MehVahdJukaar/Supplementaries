@@ -5,8 +5,8 @@ import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -59,7 +59,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     @Override
     public MutableComponent getName() {
-        return new TranslatableComponent("block.minecraft.flower_pot");
+        return Component.translatable("block.minecraft.flower_pot");
     }
 
     @Nullable

@@ -43,7 +43,7 @@ public record BlackboardBlockGeometry(
 
     @Override
     public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
-        // fetch textures before rebaking
+        // fetch textures before rebuking
         BakedModel bakedOverlay = this.model.bake(bakery, model, spriteGetter, modelTransform, modelLocation, true);
 
         return new BlackboardBakedModel(bakedOverlay, owner, bakery, spriteGetter, modelTransform, overrides);

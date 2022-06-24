@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -59,7 +58,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.pulley_block");
+        return Component.translatable("block.supplementaries.pulley_block");
     }
 
     @Override

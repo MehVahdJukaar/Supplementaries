@@ -83,7 +83,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
                 if (!gold || !ServerConfigs.cached.CONSISTENT_GATE) {
                     if (state.getValue(OPEN) != flag) {
                         world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
-                        world.gameEvent(flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                        world.gameEvent(null, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
                     }
                     state = state.setValue(OPEN, flag);
                 }
@@ -92,7 +92,6 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             world.setBlock(pos, state.setValue(IN_WALL, connect), 2);
         }
     }
-
 
 
     private boolean canConnect(LevelAccessor world, BlockPos pos, Direction dir) {

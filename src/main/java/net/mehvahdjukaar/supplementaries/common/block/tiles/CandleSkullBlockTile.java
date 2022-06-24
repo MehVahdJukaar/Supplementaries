@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -91,7 +92,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
     @Nullable
     public static DyeColor colorFromCandle(Block b) {
         if (b instanceof CandleBlock) {
-            String n = b.getRegistryName().getPath().replace("_candle", "");
+            String n = Utils.getID(b).getPath().replace("_candle", "");
             return DyeColor.byName(n, null);
         }
         return null;

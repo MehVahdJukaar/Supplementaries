@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -17,7 +18,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class CurseLootFunction extends LootItemConditionalFunction {
@@ -49,7 +49,7 @@ public class CurseLootFunction extends LootItemConditionalFunction {
 
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(pStack);
 
-        Random random = pContext.getRandom();
+        RandomSource random = pContext.getRandom();
 
         if (random.nextFloat() < chance && CURSES.stream().noneMatch(map::containsKey)) {
 

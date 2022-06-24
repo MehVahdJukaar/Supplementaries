@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.farmersdelight;
 
-
+/*
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -38,3 +38,4 @@ public class PlanterRichBlock extends PlanterBlock {
         RICH_SOIL_DELEGATE.get().randomTick(worldIn, pos, rand);
     }
 }
+ */

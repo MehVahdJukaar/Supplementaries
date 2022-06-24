@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -111,7 +112,7 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (CommonUtil.FESTIVITY.isStValentine()) {
             if (rand.nextFloat() > 0.8) {
                 double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));

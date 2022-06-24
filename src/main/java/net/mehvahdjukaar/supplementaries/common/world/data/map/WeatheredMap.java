@@ -5,14 +5,13 @@ import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import net.mehvahdjukaar.selene.map.CustomDataHolder;
-import net.mehvahdjukaar.selene.map.ExpandedMapData;
-import net.mehvahdjukaar.selene.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.map.CustomDataHolder;
+import net.mehvahdjukaar.moonlight.map.ExpandedMapData;
+import net.mehvahdjukaar.moonlight.map.MapDecorationRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -50,7 +49,7 @@ public class WeatheredMap {
 
     public static Component onTooltip(MapItemSavedData data, ItemStack stack, boolean antique) {
         if (antique) {
-            return new TranslatableComponent("filled_map.antique.tooltip").withStyle(ChatFormatting.GRAY);
+            return Component.translatable("filled_map.antique.tooltip").withStyle(ChatFormatting.GRAY);
         }
         return null;
     }

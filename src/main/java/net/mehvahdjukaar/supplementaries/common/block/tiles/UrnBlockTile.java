@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -17,7 +16,7 @@ public class UrnBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.urn");
+        return Component.translatable("block.supplementaries.urn");
     }
 
     @Override

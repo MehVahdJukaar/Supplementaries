@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -82,11 +81,11 @@ public class KeyLockableTile extends BlockEntity {
         KeyStatus key = hasKeyInInventory(player, lockPassword);
         if (key == KeyStatus.INCORRECT_KEY) {
             if (feedbackMessage)
-                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.incorrect_key"), true);
+                player.displayClientMessage(Component.translatable("message.supplementaries.safe.incorrect_key"), true);
             return false;
         } else if (key == KeyStatus.CORRECT_KEY) return true;
         if (feedbackMessage)
-            player.displayClientMessage(new TranslatableComponent("message.supplementaries." + translName + ".locked"), true);
+            player.displayClientMessage(Component.translatable("message.supplementaries." + translName + ".locked"), true);
         return false;
     }
 
@@ -102,7 +101,7 @@ public class KeyLockableTile extends BlockEntity {
         //clear ownership
         if (player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))) {
             this.clearOwner();
-            player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.cleared"), true);
+            player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
             this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
                     SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
             return false;
@@ -111,7 +110,7 @@ public class KeyLockableTile extends BlockEntity {
         else if (this.password == null) {
             if (isKey) {
                 this.setPassword(stack);
-                player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.assigned_key", this.password), true);
+                player.displayClientMessage(Component.translatable("message.supplementaries.safe.assigned_key", this.password), true);
                 this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
                         SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
                 return false;

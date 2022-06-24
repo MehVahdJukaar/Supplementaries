@@ -19,6 +19,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -29,7 +30,6 @@ import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
 public class BlackboardBakedModel implements IDynamicBakedModel {
@@ -91,7 +91,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
 
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, Random random, IModelData data) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random, IModelData data) {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, direction, random, data));
         if (data != EmptyModelData.INSTANCE && state != null && direction == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
@@ -103,35 +103,6 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         }
 
         return quads;
-        /*
-        ResourceLocation texture;
-        if (data == EmptyModelData.INSTANCE) {
-            texture = MissingTextureSprite.getLocation();
-        }
-        else {
-            // get texture name, if missing use missing
-            // also use missing if no retextured, that just makes the cache smaller for empty cauldron
-
-            Black = data.getData(BlackboardBlockTile.TEXTURE);
-            if (texture == null) {
-                texture = MissingTextureSprite.getLocation();
-            } else {
-                // serverside uses texture "name" rather than path, use the sprite getter to translate
-                texture = Textures.HONEY_TEXTURE;
-            }
-        }
-
-        // fetch liquid offset amount
-
-        // determine model variant
-        IBakedModel baked = null;//warmBakery.apply(texture);
-        // return quads
-
-
-
-        return baked.getQuads(state, direction, random, data);
-        */
-
     }
 
     private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform) {
@@ -200,7 +171,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
 
         float r = (color >> 16 & 255) / 255f;
         float g = (color >> 8 & 255) / 255f;
-        float b = (color >> 0 & 255) / 255f;
+        float b = (color & 255) / 255f;
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
         for (int j = 0; j < elements.size(); j++) {
             VertexFormatElement e = elements.get(j);

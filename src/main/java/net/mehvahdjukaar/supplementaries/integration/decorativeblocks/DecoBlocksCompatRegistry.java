@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.decorativeblocks;
-
+/*
 import lilypuree.decorative_blocks.blocks.BrazierBlock;
 import lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -85,4 +85,18 @@ public class DecoBlocksCompatRegistry {
     }
 
 
+}
+*/
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class DecoBlocksCompatRegistry{
+    public static boolean isBrazier(Block b) {
+        return false;
+    }
+
+    public static boolean isPalisade(BlockState state) {
+        return false;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class LeatherPatternTexturesRegistry {
 
+    /*
     private static final Map<String, ResourceLocation> MAP = new HashMap<>() {{
         Arrays.stream(BannerPattern.values()).filter(b -> b.hasPatternItem).forEach(p -> {
             String name = p.getFilename();
@@ -38,5 +39,7 @@ public class LeatherPatternTexturesRegistry {
         }
         return null;//getTexture(BannerPattern.SKULL);
     }
+    */
+
 
 }

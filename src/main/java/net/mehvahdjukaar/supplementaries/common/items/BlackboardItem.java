@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +34,7 @@ public class BlackboardItem extends BlockItem {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = pStack.getTagElement("BlockEntityTag");
         if (tag != null && tag.contains("Waxed")) {
-            pTooltip.add((new TranslatableComponent("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));
+            pTooltip.add((Component.translatable("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));
         }
     }
 

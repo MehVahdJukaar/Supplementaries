@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
 
-
-import net.mehvahdjukaar.selene.resourcepack.RPUtils;
+/*
+import net.mehvahdjukaar.moonlight.resourcepack.RPUtils;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.minecraft.core.Direction;
@@ -79,5 +79,28 @@ public class QuarkPlugin {
 
     public static boolean isVerticalSlabEnabled() {
         return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
+    }
+}
+*/
+
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class QuarkPlugin{
+    public static boolean hasQButtonOnRight() {
+        return false;
+    }
+
+    public static boolean isTome(Item i) {
+        return false;
+    }
+
+    public static BlockState updateWoodPostShape(BlockState oldHeld, Direction facing, BlockState facingState) {
+        return oldHeld;
+    }
+
+    public static boolean isDoubleDoorEnabled() {
+        return false;
     }
 }

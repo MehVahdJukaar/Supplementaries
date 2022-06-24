@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
 
+/*
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
@@ -53,4 +54,16 @@ public class BambooSpikesPistonMovement {
 
     }
 
+
+}
+ */
+
+import net.mehvahdjukaar.supplementaries.mixins.PistonBlockEntityMixin;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+
+public class BambooSpikesPistonMovement {
+    public static void tick(Level level, BlockPos pos, AABB aabb, boolean sameDir, PistonBlockEntityMixin pistonBlockEntityMixin) {
+    }
 }

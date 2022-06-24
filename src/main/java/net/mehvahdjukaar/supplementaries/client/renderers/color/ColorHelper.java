@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class ColorHelper {
         return hslToRgb(hsl[0], hsl[1], hsl[2]);
     }
 
-    public static int getRandomBrightColor(Random random) {
+    public static int getRandomBrightColor(RandomSource random) {
         float h = random.nextFloat();
         float[] hsl = prettyfyColor(new float[]{h, 0.62f + random.nextFloat() * 0.3f, 0.43f + random.nextFloat() * 0.15f});
         return hslToRgb(hsl[0], hsl[1], hsl[2]);

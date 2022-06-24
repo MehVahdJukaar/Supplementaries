@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -11,9 +11,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,7 +80,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
             //server
             //calls event on server and client through packet
             if (powered) {
-                world.gameEvent(GameEvent.BLOCK_PRESS, pos);
+                world.gameEvent(null,GameEvent.BLOCK_ACTIVATE, pos);
                 world.blockEvent(pos, state.getBlock(), 1, 0);
             }
         }
@@ -108,17 +109,18 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                         serverPlayer.getAdvancements().award(advancement, "unlock");
                     }
                 }
-                level.gameEvent(player, GameEvent.BLOCK_PRESS, pos);
+
+                level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 level.blockEvent(pos, state.getBlock(), 1, 0);
             } else {
-                player.displayClientMessage(new TextComponent("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+                player.displayClientMessage(Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (CommonUtil.FESTIVITY.isEarthDay() && worldIn.isClientSide) {
             int x = pos.getX();
             int y = pos.getY();

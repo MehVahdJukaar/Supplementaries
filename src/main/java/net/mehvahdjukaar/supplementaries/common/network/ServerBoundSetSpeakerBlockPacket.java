@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent;
@@ -28,7 +27,7 @@ public class ServerBoundSetSpeakerBlockPacket {
 
     public ServerBoundSetSpeakerBlockPacket(BlockPos pos, String str, boolean narrator, double volume) {
         this.pos = pos;
-        this.str = new TextComponent(str);
+        this.str = Component.literal(str);
         this.narrator = narrator;
         this.volume = volume;
     }

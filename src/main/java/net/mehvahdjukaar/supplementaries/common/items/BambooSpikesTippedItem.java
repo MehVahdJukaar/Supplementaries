@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -79,7 +77,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if(ClientConfigs.block.TIPPED_BAMBOO_SPIKES_TAB.get()) {
-            if (this.allowdedIn(group)) {
+            if (this.allowedIn(group)) {
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));
                 items.add(makeSpikeItem(Potions.STRONG_POISON));
@@ -109,19 +107,13 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public Component getName(ItemStack stack) {
         Potion p = PotionUtils.getPotion(stack);
-        BaseComponent arrowName = new TranslatableComponent(p.getName("item.minecraft.tipped_arrow.effect."));
+        Component arrowName = Component.translatable(p.getName("item.minecraft.tipped_arrow.effect."));
         String s = arrowName.getString();
         if (s.contains("Arrow of ")) {
-            return new TranslatableComponent("item.supplementaries.bamboo_spikes_tipped_effect",
+            return Component.translatable("item.supplementaries.bamboo_spikes_tipped_effect",
                     s.replace("Arrow of ", ""));
         }
-        return new TranslatableComponent(this.getDescriptionId(stack));
-        //String effectName = new TranslationTextComponent(p.getNamePrefixed("effect.minecraft.")).getString();
-        //return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",effectName);
-
-        //return new TranslationTextComponent("item.supplementaries.bamboo_spikes_tipped_effect",
-        //        TextUtil.format(PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed("")));
-
+        return Component.translatable(this.getDescriptionId(stack));
     }
 
     @Override

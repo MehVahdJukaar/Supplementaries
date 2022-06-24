@@ -1,0 +1,19 @@
+{
+  "color": "#eccd96",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:baked_cod_stew"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "farmersdelight:baked_cod_stew"
+  },
+  "id": "farmersdelight:baked_cod_stew",
+  "still_texture": "moonlight:soft_fluids/soup_liquid"
+}

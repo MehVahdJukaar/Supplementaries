@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class BellowsBlock extends Block implements EntityBlock {
 
     private static final VoxelShape DEFAULT_SHAPE = Shapes.create(Shapes.block().bounds().inflate(0.1f));
+    //don't ask me why we use this weird map
     private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_Y_CACHE = new Float2ObjectAVLTreeMap<>();
     private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_X_Z_CACHE = new Float2ObjectAVLTreeMap<>();
 

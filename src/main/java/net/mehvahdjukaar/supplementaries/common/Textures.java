@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -87,8 +88,9 @@ public class Textures {
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     static {
-        for (BannerPattern pattern : BannerPattern.values()) {
-            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename()));
+        for (BannerPattern pattern : Registry.BANNER_PATTERN) {
+            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
+                    Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey()));
         }
 
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {

@@ -35,7 +35,7 @@ public class EndLampBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(RUNE, Rune.values()[RANDOM.nextInt(Rune.values().length)]);
+        return this.defaultBlockState().setValue(RUNE, Rune.values()[context.getLevel().random.nextInt(Rune.values().length)]);
     }
 
     @Override

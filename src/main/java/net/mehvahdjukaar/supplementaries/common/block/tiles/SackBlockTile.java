@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +29,7 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.sack");
+        return Component.translatable("block.supplementaries.sack");
     }
 
     @Override

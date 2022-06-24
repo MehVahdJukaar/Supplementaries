@@ -4,10 +4,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -52,7 +53,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     RendererUtil.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn);
                     matrixStackIn.popPose();
                 }
-                SoftFluid s = SoftFluidRegistry.WATER.get();
+                SoftFluid s = VanillaSoftFluids.WATER.get();
                 renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
             }

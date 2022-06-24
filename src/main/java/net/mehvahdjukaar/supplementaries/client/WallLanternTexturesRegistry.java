@@ -5,7 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.mehvahdjukaar.selene.resourcepack.RPUtils;
+import net.mehvahdjukaar.moonlight.resources.RPUtils;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -13,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
@@ -44,34 +44,40 @@ public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListene
     }
 
     public static void reloadTextures(ResourceManager manager) {
-        if(POSSIBLE_LANTERNS == null) init();
+        if (POSSIBLE_LANTERNS == null) init();
         SPECIAL_TEXTURES.clear();
         for (Block i : POSSIBLE_LANTERNS) {
 
-            ResourceLocation reg = i.getRegistryName();
+            ResourceLocation reg = Utils.getID(i);
             String namespace = (reg.getNamespace().equals("minecraft") || reg.getNamespace().equals("supplementaries")) ? "" : reg.getNamespace() + "/";
             String s = "textures/blocks/wall_lanterns/" + namespace + reg.getPath() + ".json";
             ResourceLocation fullPath = Supplementaries.res(s);
-            try (var resource = manager.getResource(fullPath)) {
-                JsonElement bsElement = RPUtils.deserializeJson(resource.getInputStream());
+            var resource = manager.getResource(fullPath);
+            if (resource.isPresent()) {
+                try (var stream = resource.get().open()) {
+                    JsonElement bsElement = RPUtils.deserializeJson(stream);
 
-                String texture = RPUtils.findFirstResourceInJsonRecursive(bsElement);
-                if (!texture.isEmpty()) SPECIAL_TEXTURES.put(i, new ResourceLocation(texture));
+                    String texture = RPUtils.findFirstResourceInJsonRecursive(bsElement);
+                    if (!texture.isEmpty()) SPECIAL_TEXTURES.put(i, new ResourceLocation(texture));
 
-            } catch (Exception ignored) {
+                } catch (Exception ignored) {
+                }
             }
         }
 
         //jar stuff
         //using this to also load jar model
         ResourceLocation fullPath = Supplementaries.res("textures/blocks/jar_fluid.json");
-        try (Resource resource = manager.getResource(fullPath)) {
-            JsonObject bsElement = RPUtils.deserializeJson(resource.getInputStream());
-            float width = GsonHelper.getAsFloat(bsElement, "width")/16f;
-            float height = GsonHelper.getAsFloat(bsElement, "height")/16f;
-            float y0 = GsonHelper.getAsFloat(bsElement, "y")/16f;
-            JarBlockTileRenderer.liquidParams.set(width, height, y0);
-        } catch (Exception ignored) {
+        var resource = manager.getResource(fullPath);
+        if (resource.isPresent()) {
+            try (var stream = resource.get().open()) {
+                JsonObject bsElement = RPUtils.deserializeJson(stream);
+                float width = GsonHelper.getAsFloat(bsElement, "width") / 16f;
+                float height = GsonHelper.getAsFloat(bsElement, "height") / 16f;
+                float y0 = GsonHelper.getAsFloat(bsElement, "y") / 16f;
+                JarBlockTileRenderer.liquidParams.set(width, height, y0);
+            } catch (Exception ignored) {
+            }
         }
     }
 

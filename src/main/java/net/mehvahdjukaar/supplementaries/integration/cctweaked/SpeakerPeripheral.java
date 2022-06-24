@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.integration.cctweaked;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class SpeakerPeripheral implements IPeripheral {
 
     @LuaFunction
     public final void setName(String name) {
-        tile.setCustomName(new TextComponent(name));
+        tile.setCustomName(Component.literal(name));
         tile.setChanged();
     }
 

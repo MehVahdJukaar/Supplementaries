@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -90,7 +89,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //called from event now
     /*
     @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player, LivingEntity entity, InteractionHand hand) {
         if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
     }*/
@@ -125,7 +124,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
     //2
     private <T extends Entity> boolean canCatch(T e) {
-        String name = e.getType().getRegistryName().toString();
+        String name = Utils.getID(e.getType()).toString();
         if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
         if (ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
@@ -245,14 +244,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             CompoundTag com = tag.getCompound("MobHolder");
             if (com.isEmpty()) com = tag.getCompound("BucketHolder");
             if (com.contains("Name")) {
-                tooltip.add(new TranslatableComponent(com.getString("Name")).withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
         this.addPlacementTooltip(tooltip);
     }
 
     public void addPlacementTooltip(List<Component> tooltip) {
-        tooltip.add(new TranslatableComponent("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     private void angerNearbyEntities(Entity entity, Player player) {
@@ -335,7 +334,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 return InteractionResult.CONSUME;
             }
             else if(player.getLevel().isClientSide){
-                player.displayClientMessage(new TranslatableComponent(  "message.supplementaries.cage.fail"),true);
+                player.displayClientMessage(Component.translatable(  "message.supplementaries.cage.fail"),true);
             }
         }
 

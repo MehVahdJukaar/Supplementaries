@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -124,8 +124,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
         Item item = stack.getItem();
         DyeColor color = null;
         if (ServerConfigs.cached.BLACKBOARD_COLOR) {
-            if (item.getRegistryName().getNamespace().equals("chalk")) {
-                color = DyeColor.byName(item.getRegistryName().getPath().replace("_chalk", ""), DyeColor.WHITE);
+            var id = Utils.getID(item);
+            if (id.getNamespace().equals("chalk")) {
+                color = DyeColor.byName(id.getPath().replace("_chalk", ""), DyeColor.WHITE);
             } else color = DyeColor.getColor(stack);
         }
         if (color == null) {

@@ -6,15 +6,15 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.MineshaftFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.MineShaftPieces;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.structures.MineshaftPieces;
+import net.minecraft.world.level.levelgen.structure.structures.MineshaftStructure;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(MineShaftPieces.MineShaftCorridor.class)
+@Mixin(MineshaftPieces.MineShaftCorridor.class)
 public abstract class MineshaftLanternMixin extends StructurePiece {
 
     @Unique
@@ -36,11 +36,12 @@ public abstract class MineshaftLanternMixin extends StructurePiece {
         return true;
     }
 
-    private MineshaftFeature.Type getMineshaftType() {
+    private MineshaftStructure.Type getMineshaftType() {
         return ((MineshaftAccessor) this).getType();
     }
 
 
+    //TODO: readd
     /**
      * @author mehvahdjukaar
      * @reason replacing some torches with lanterns

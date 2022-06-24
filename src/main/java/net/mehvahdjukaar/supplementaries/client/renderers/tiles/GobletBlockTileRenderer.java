@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.minecraft.client.Minecraft;
@@ -21,11 +21,11 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     public GobletBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-    public static void renderFluid(float h, BlockEntity tile, SoftFluidHolder fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static void renderFluid(float h, BlockEntity tile, SoftFluidTank fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         int color = fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos());
-        int luminosity = fluidHolder.getFluid().get().getLuminosity()    ;
-        ResourceLocation texture = fluidHolder.getFluid().get().getStillTexture();
+        int luminosity = fluidHolder.getFluid().getLuminosity();
+        ResourceLocation texture = fluidHolder.getFluid().getStillTexture();
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
@@ -62,8 +62,8 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     @Override
     public void render(GobletBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        if (!tile.fluidHolder.isEmpty()) {
-            renderFluid(7 / 16f,tile, tile.getSoftFluidHolder(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
+        if (!tile.fluidTank.isEmpty()) {
+            renderFluid(7 / 16f, tile, tile.getSoftFluidTank(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }
 }

@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -48,7 +47,7 @@ public class PresentItem extends BlockItem implements IColored {
                     isPacked = true;
                 }
                 if(!isPacked && t.contains("Items")){
-                    components.add(new TranslatableComponent("message.supplementaries.present.public"));
+                    components.add(Component.translatable("message.supplementaries.present.public"));
                 }
             }
         }

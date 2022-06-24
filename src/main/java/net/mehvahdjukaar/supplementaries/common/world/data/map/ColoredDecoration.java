@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map;
 
-import net.mehvahdjukaar.selene.map.CustomMapDecoration;
-import net.mehvahdjukaar.selene.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
+import net.mehvahdjukaar.moonlight.map.type.IMapDecorationType;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

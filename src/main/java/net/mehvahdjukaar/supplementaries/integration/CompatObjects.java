@@ -6,7 +6,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
@@ -44,16 +43,16 @@ public class CompatObjects {
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T extends IForgeRegistryEntry<T>, U extends T> NullableRegistryObject<T, U> makeCompatObject(String name, IForgeRegistry<T> registry) {
+    private static <T, U extends T> NullableRegistryObject<T, U> makeCompatObject(String name, IForgeRegistry<T> registry) {
         return new NullableRegistryObject<>(getRegistryObject(name, registry));
     }
 
-    private static <T extends IForgeRegistryEntry<T>, U extends T> RegistryObject<U> getRegistryObject(String name, IForgeRegistry<T> registry) {
+    private static <T, U extends T> RegistryObject<U> getRegistryObject(String name, IForgeRegistry<T> registry) {
         return RegistryObject.create(new ResourceLocation(name), registry);
     }
 
 
-    private record NullableRegistryObject<T extends IForgeRegistryEntry<T>, U extends T>(
+    private record NullableRegistryObject<T, U extends T>(
             RegistryObject<U> obj) implements Supplier<T> {
 
         @Nullable

@@ -17,7 +17,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.ConfigGuiHandler;
@@ -95,14 +98,14 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
     private Button createModifyButton(ModConfig config) {
         String langKey = "configured.gui.modify";
-        return new IconButton(0, 0, 33, 0, 60, new TranslatableComponent(langKey), (onPress) -> {
+        return new IconButton(0, 0, 33, 0, 60, Component.translatable(langKey), (onPress) -> {
             Minecraft.getInstance().setScreen(new CustomConfigScreen(CustomConfigSelectScreen.this,
-                    new TextComponent("\u00A76Supplementaries Configured"),
+                    Component.literal("\u00A76Supplementaries Configured"),
                     config, CustomConfigSelectScreen.this.background));
         }, (button, matrixStack, mouseX, mouseY) -> {
             if (button.isHoveredOrFocused()) {
                 if (ConfigScreen.isPlayingGame() && !ConfigHelper.isConfiguredInstalledOnServer()) {
-                    CustomConfigSelectScreen.this.renderTooltip(matrixStack, this.font.split(new TranslatableComponent("configured.gui.not_installed"),
+                    CustomConfigSelectScreen.this.renderTooltip(matrixStack, this.font.split(Component.translatable("configured.gui.not_installed"),
                             Math.max(CustomConfigSelectScreen.this.width / 2 - 43, 170)), mouseX, mouseY);
                 }
             }
@@ -114,7 +117,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
         if (ScreenUtil.isMouseWithin((this.width / 2) - 90, 2, 180, 16, mouseX, mouseY)) {
-            this.renderTooltip(poseStack, this.font.split(new TranslatableComponent("supplementaries.gui.info"), 200), mouseX, mouseY);
+            this.renderTooltip(poseStack, this.font.split(Component.translatable("supplementaries.gui.info"), 200), mouseX, mouseY);
         }
         int titleWidth = this.font.width(this.title) + 35;
         this.itemRenderer.renderAndDecorateFakeItem(CustomConfigScreen.MAIN_ICON, (this.width / 2) + titleWidth / 2 - 17, 2);
@@ -204,14 +207,14 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
             OnTooltip onTooltip = (button, poseStack, mouseX, mouseY) -> {
                 if (button.isHoveredOrFocused()) {
                     parent.renderTooltip(poseStack, parent.getMinecraft().font.split(
-                            new TextComponent(tooltip), Math.max(parent.width / 2 - 43, 170)), mouseX, mouseY);
+                            Component.literal(tooltip), Math.max(parent.width / 2 - 43, 170)), mouseX, mouseY);
                 }
             };
-            return new ButtonIcon(x, y, uInd * ICON_WIDTH, vInd * ICON_WIDTH, 20, TextComponent.EMPTY, onPress, onTooltip);
+            return new ButtonIcon(x, y, uInd * ICON_WIDTH, vInd * ICON_WIDTH, 20, CommonComponents.EMPTY, onPress, onTooltip);
         }
 
         public ButtonIcon(int x, int y, int u, int v, int width, Component label, OnPress onPress, OnTooltip onTooltip) {
-            super(x, y, width, 20, TextComponent.EMPTY, onPress, onTooltip);
+            super(x, y, width, 20, CommonComponents.EMPTY, onPress, onTooltip);
             this.label = label;
             this.u = u;
             this.v = v;

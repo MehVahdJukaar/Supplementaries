@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
@@ -99,7 +100,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
         int light = state.getLightEmission();
         boolean lit = true;
-        if (this.mimic.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
+        if (Utils.getID(this.mimic.getBlock()).toString().equals("charm:redstone_lantern")) {
             this.isRedstoneLantern = true;
             light = 15;
             lit = false;

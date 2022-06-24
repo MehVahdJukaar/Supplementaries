@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -42,9 +42,9 @@ public class SignPostItem extends Item {
     }
 
     @Override
-    protected boolean allowdedIn(CreativeModeTab pCategory) {
+    protected boolean allowedIn(CreativeModeTab pCategory) {
         if (woodType.planks.asItem().getItemCategory() == null) return false;
-        return super.allowdedIn(pCategory);
+        return super.allowedIn(pCategory);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -9,9 +10,9 @@ import net.mehvahdjukaar.supplementaries.setup.ModSounds;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,17 +41,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 public class FaucetBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(5, 5, 5, 11, 15, 16);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(5, 5, 0, 11, 15, 11);
-    protected static final VoxelShape SHAPE_WEST = Block.box(5, 5, 5, 16, 15, 11);
-    protected static final VoxelShape SHAPE_EAST = Block.box(0, 5, 5, 11, 15, 11);
+    protected static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
+    protected static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_NORTH_JAR = Block.box(5, 0, 5, 11, 10, 16);
-    protected static final VoxelShape SHAPE_SOUTH_JAR = Block.box(5, 0, 0, 11, 10, 11);
-    protected static final VoxelShape SHAPE_WEST_JAR = Block.box(5, 0, 5, 16, 10, 11);
-    protected static final VoxelShape SHAPE_EAST_JAR = Block.box(0, 0, 5, 11, 10, 11);
+    protected static final VoxelShape SHAPE_SOUTH_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_WEST_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.WEST);
+    protected static final VoxelShape SHAPE_EAST_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.EAST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
@@ -92,7 +91,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
         float f = enabled ? 1F : 1.2F;
         worldIn.playSound(null, pos, ModSounds.FAUCET.get(), SoundSource.BLOCKS, 1F, f);
-        worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
+
+        worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
         this.updateBlock(state, worldIn, pos, true);
         return InteractionResult.SUCCESS;
     }
@@ -213,7 +213,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     //TODO: maybe remove haswater state
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         boolean flag = this.isOpen(state);
         if (state.getValue(HAS_WATER) && !state.getValue(HAS_JAR)) {
             if (random.nextFloat() > (flag ? 0 : 0.06)) return;

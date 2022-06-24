@@ -15,7 +15,6 @@ import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.*;
@@ -89,7 +88,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.antique_map";
 
         ItemStack stack = new ItemStack(Items.FILLED_MAP);
-        stack.setHoverName(new TranslatableComponent("filled_map.antique"));
+        stack.setHoverName(Component.translatable("filled_map.antique"));
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));

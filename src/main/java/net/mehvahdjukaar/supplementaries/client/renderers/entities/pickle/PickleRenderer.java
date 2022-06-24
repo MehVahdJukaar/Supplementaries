@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.entity.layers.ArrowLayer;
 import net.minecraft.client.renderer.entity.layers.BeeStingerLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -35,7 +34,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
 
         this.shadowStrength = 0;
         this.shadowRadius = 0;
-        this.addLayer(new PlayerItemInHandLayer<>(this));
+        this.addLayer(new PlayerItemInHandLayer<>(this, context.getItemInHandRenderer()));
 
         this.addLayer(new PickleModel.PickleArmor<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
 
@@ -156,7 +155,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
             Objective objective = scoreboard.getDisplayObjective(2);
             if (objective != null) {
                 Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), objective);
-                super.renderNameTag(player, (new TextComponent(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, p_225629_5_);
+                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, p_225629_5_);
                 matrixStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
             }
         }

@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.common.base.Preconditions;
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
-import net.mehvahdjukaar.selene.resourcepack.DynamicDataPack;
-import net.mehvahdjukaar.selene.resourcepack.RPAwareDynamicDataProvider;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.resources.SimpleTagBuilder;
+import net.mehvahdjukaar.moonlight.resources.pack.DynServerResourcesProvider;
+import net.mehvahdjukaar.moonlight.resources.pack.DynamicDataPack;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
+public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     public ServerDynamicResourcesHandler() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
@@ -63,7 +65,7 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
             //loot table
             ModRegistry.HANGING_SIGNS.forEach((wood, sign)->{
                 dynamicPack.addSimpleBlockLootTable(sign);
-                signs.add(sign.getRegistryName());
+                signs.add(Utils.getID(sign));
 
                 makeHangingSignRecipe(wood, dynamicPack::addRecipe);
             });
@@ -73,17 +75,11 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
         }
         //sing posts
         {
-            List<ResourceLocation> posts = new ArrayList<>();
-
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
+            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
+            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
             //recipes
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign)->{
-                posts.add(sign.getRegistryName());
-
-                makeSignPostRecipe(wood, dynamicPack::addRecipe);
-            });
-
-            //tag
-            dynamicPack.addTag(Supplementaries.res("sign_posts"), posts, Registry.ITEM_REGISTRY);
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign)-> makeSignPostRecipe(wood, dynamicPack::addRecipe));
         }
         //way signs tag
         {
@@ -130,7 +126,7 @@ public class ServerDynamicResourcesHandler extends RPAwareDynamicDataProvider {
             Item plank = wood.planks.asItem();
             Preconditions.checkArgument(plank != Items.AIR);
 
-            Item sign = wood.signItem.get();
+            Item sign = wood.getItemOfThis("sign");
             if (sign != null) {
                 ShapelessRecipeBuilder.shapeless(ModRegistry.SIGN_POST_ITEMS.get(wood), 2)
                         .requires(sign)

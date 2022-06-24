@@ -6,8 +6,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.block_models.StatueEntityModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
@@ -28,7 +28,7 @@ import net.minecraft.client.resources.SkinManager;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -115,7 +115,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         if (this.canRenderName(tile)) {
             var name = tile.owner.getName();
             if (name != null) {
-                PedestalBlockTileRenderer.renderName(new TextComponent(name), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
+                PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
             }
         }
 

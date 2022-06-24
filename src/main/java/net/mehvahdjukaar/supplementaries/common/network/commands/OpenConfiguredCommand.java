@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.OpenConfigsPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.fml.ModList;
@@ -34,7 +33,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
                         (ServerPlayer) context.getSource().getEntity()), new OpenConfigsPacket());
             }
         } else {
-            context.getSource().sendSuccess(new TranslatableComponent("message.supplementaries.command.configs"), false);
+            context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.configs"), false);
         }
         return 0;
     }

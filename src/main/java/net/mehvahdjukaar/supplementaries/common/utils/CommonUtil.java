@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.authlib.GameProfile;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -96,7 +95,7 @@ public class CommonUtil {
     public static Festivity FESTIVITY = Festivity.get();
 
     public static boolean isLanternBlock(Block b) {
-        String namespace = b.getRegistryName().getNamespace();
+        String namespace = Utils.getID(b).getNamespace();
         if (namespace.equals("skinnedlanterns")) return true;
         if (b instanceof LanternBlock) {
             return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
@@ -120,7 +119,7 @@ public class CommonUtil {
     public static boolean isLantern(Item i) {
         if (i instanceof BlockItem blockItem) {
             Block b = blockItem.getBlock();
-            String namespace = b.getRegistryName().getNamespace();
+            String namespace = Utils.getID(b).getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
             if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
                 return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
@@ -207,17 +206,17 @@ public class CommonUtil {
     private static final GameProfile DUMMY_PROFILE = new GameProfile(
             UUID.fromString("9bf808b4-d64a-47f0-9220-e3849f80f35b"), "[player_stando]");
 
-    public static Player getEntityStand(Entity copyFrom){
-        return getEntityStand(copyFrom);
+    public static Player getEntityStand(Entity copyFrom) {
+        return getEntityStand(copyFrom, copyFrom);
     }
 
-    public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom){
+    public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
         Level level = copyPosFrom.getLevel();
         Player p;
-        if(level instanceof ServerLevel serverLevel){
-            p = MovableFakePlayer.get(serverLevel,DUMMY_PROFILE);
-        }else{
-            p = ClientAccess.getFakeClientPlayer(level,DUMMY_PROFILE);
+        if (level instanceof ServerLevel serverLevel) {
+            p = MovableFakePlayer.get(serverLevel, DUMMY_PROFILE);
+        } else {
+            p = ClientAccess.getFakeClientPlayer(level, DUMMY_PROFILE);
         }
         p.setPos(copyPosFrom.getX(), copyPosFrom.getY(), copyPosFrom.getZ());
         p.setYHeadRot(copyRotFrom.getYHeadRot());

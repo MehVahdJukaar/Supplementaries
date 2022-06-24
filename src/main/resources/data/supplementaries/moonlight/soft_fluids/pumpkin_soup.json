@@ -1,0 +1,20 @@
+{
+  "color": "#e38a1d",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:pumpkin_soup"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "farmersdelight:pumpkin_soup"
+  },
+  "id": "farmersdelight:pumpkin_soup",
+  "still_texture": "moonlight:soft_fluids/soup_liquid",
+  "translation_key": "item.farmersdelight.pumpkin_soup"
+}

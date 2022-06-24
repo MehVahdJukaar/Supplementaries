@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.botania;
 
-import net.mehvahdjukaar.selene.util.Utils;
+/*
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;
@@ -68,6 +69,17 @@ public class BotaniaCompatRegistry {
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
+        return InteractionResult.PASS;
+    }
+}
+*/
+
+import net.mehvahdjukaar.supplementaries.common.items.JarItem;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+
+public class BotaniaCompatRegistry {
+    public static InteractionResult tryCaptureTater(JarItem jarItem, UseOnContext context) {
         return InteractionResult.PASS;
     }
 }

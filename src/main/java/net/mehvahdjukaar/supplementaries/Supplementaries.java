@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
@@ -10,12 +9,8 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,22 +38,8 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        /*
-        To check if a given tag has a given object:
-        Registry#getHolderOrThrow(objectID).is(tagKey)
+        //TODO: hanging flower pot baked model
 
-        To get all objects in a given tag:
-        Registry#getTagOrEmpty(tagKey)
-
-        To get all tags for a given object:
-        Registry#getHolderOrThrow(objectID).tags()
-
-        Some things like blockstates and items have helper methods for doing the above as well
-        */
-
-        //  RegistryConfigs.createSpec();
-        //  RegistryConfigs.load();
-        
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         CraftingHelper.register(new OptionalRecipeCondition.Serializer());
@@ -84,6 +65,22 @@ public class Supplementaries {
         bus.addListener(ModSetup::init);
 
     }
+
+    /*
+        To check if a given tag has a given object:
+        Registry#getHolderOrThrow(objectID).is(tagKey)
+
+        To get all objects in a given tag:
+        Registry#getTagOrEmpty(tagKey)
+
+        To get all tags for a given object:
+        Registry#getHolderOrThrow(objectID).tags()
+
+        Some things like blockstates and items have helper methods for doing the above as well
+        */
+
+    //  RegistryConfigs.createSpec();
+    //  RegistryConfigs.load();
 
     //ehcnahted books placed vertically. fix placement based off player look dir
 

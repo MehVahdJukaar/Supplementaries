@@ -135,21 +135,16 @@ dependencies {
 
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 
+    implementation fg.deobf("curse.maven:jei-238222:3835406")
+    implementation fg.deobf("curse.maven:configured-457570:3822820")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3829191")
+    implementation fg.deobf("curse.maven:curios-309927:3841962")
 
-    //implementation fg.deobf("curse.maven:texture-dump-319039:3573998")
-    //implementation fg.deobf("curse.maven:snow-real-magic-308663:3601344")
-
-    // implementation fg.deobf("curse.maven:malum-484064:3579643")
-    // implementation fg.deobf("curse.maven:tetra-289712:3586368")
-    // implementation fg.deobf("curse.maven:mgui-351914:3573121")
-
-    // implementation fg.deobf("curse.maven:kiwi-303657:3577626")
-
+    /*
     implementation fg.deobf("curse.maven:farmersdelight-398521:3739914")
     implementation fg.deobf("curse.maven:flywheel-486392:3737402")
     implementation fg.deobf("curse.maven:create-328085:3737418")
     implementation fg.deobf("curse.maven:patchouli-306770:3680301")
-
     implementation fg.deobf("curse.maven:botania-225643:3732401")
     implementation fg.deobf("curse.maven:quark-243121:3708587")
     implementation fg.deobf("curse.maven:autoreglib-250363:3642382")
@@ -157,17 +152,11 @@ dependencies {
     implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
     implementation fg.deobf("curse.maven:map-atlases-forge-519759:3723298")
     implementation fg.deobf("curse.maven:waystones-245755:3684732")
-    implementation fg.deobf("curse.maven:configured-457570:3640884")
-    implementation fg.deobf("curse.maven:curios-309927:3670447")
-    implementation fg.deobf("curse.maven:cc-tweaked-282001:3709268")
-    implementation fg.deobf("curse.maven:jei-238222:3682513")
     implementation fg.deobf("curse.maven:jade-324717:3681449")
-
-    //implementation fg.deobf("curse.maven:patchouli-306770:3729975")
     implementation fg.deobf("curse.maven:framedblocks-441647:3672359")
     implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3670163")
     implementation fg.deobf("curse.maven:balm-531761:3685074")
-    //implementation fg.deobf("curse.maven:just-enough-effect-descriptions-jeed-532286:3736071")
+    */
 
     annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
 }
@@ -226,7 +215,7 @@ dependencies{
         runtimeOnly fg.deobf(it)
     }
 
-    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
 }
 
 repositories{

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -8,8 +9,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.STRING_CHECK;
 
 public class ClientConfigs {
     public static ForgeConfigSpec CLIENT_SPEC;
@@ -45,7 +46,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .define("block_outline_color", "ffffff66", ConfigHandler.COLOR_CHECK);
+                    .define("block_outline_color", "ffffff66", ConfigHelper.COLOR_CHECK);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .defineInRange("projectile_scale", 0.5, 0, 1);
             builder.pop();
@@ -336,9 +337,9 @@ public class ClientConfigs {
                     .push("turn_particle");
 
             TURN_INITIAL_COLOR = builder.comment("An RGBA color")
-                    .define("initial_color", "2a77ea", ConfigHandler.COLOR_CHECK);
+                    .define("initial_color", "2a77ea", ConfigHelper.COLOR_CHECK);
             TURN_FADE_COLOR = builder.comment("An RGBA color")
-                    .define("fade_color", "32befa", ConfigHandler.COLOR_CHECK);
+                    .define("fade_color", "32befa", ConfigHelper.COLOR_CHECK);
 
             builder.pop();
 

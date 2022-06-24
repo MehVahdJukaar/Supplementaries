@@ -37,12 +37,12 @@ public class BombItem extends Item {
     }
 
     @Override
-    protected boolean allowdedIn(CreativeModeTab pCategory) {
+    protected boolean allowedIn(CreativeModeTab pCategory) {
         if(this.type == BombEntity.BombType.SPIKY && !Registry.ITEM.getTagOrEmpty(TagKey.create(Registry.ITEM_REGISTRY,
                 new ResourceLocation("forge:ingots/lead"))).iterator().hasNext()){
             return false;
         }
-        return super.allowdedIn(pCategory);
+        return super.allowedIn(pCategory);
     }
 
     @Override

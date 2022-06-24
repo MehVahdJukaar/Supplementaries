@@ -42,7 +42,7 @@ public abstract class RedMerchantSpawnerMixin {
     private int redSpawnDelay = 0;
 
     //remove
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"))
     public void tick(ServerLevel p_230253_1_, boolean p_230253_2_, boolean p_230253_3_, CallbackInfoReturnable<Integer> cir) {
         if (this.redSpawnDelay > 0) {
             this.redSpawnDelay--;
@@ -50,7 +50,7 @@ public abstract class RedMerchantSpawnerMixin {
     }
 
 
-    @Inject(method = "spawn", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "spawn", at = @At("RETURN"))
     public void spawn(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && redSpawnDelay == 0) {
             //doesn't set cir to true, so it doesn't interfere with wandering trader spawn

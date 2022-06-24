@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -49,7 +48,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         if (ServerConfigs.cached.SAFE_SIMPLE) {
             if (this.isNotOwnedBy(player)) {
                 if (feedbackMessage)
-                    player.displayClientMessage(new TranslatableComponent("message.supplementaries.safe.owner", this.ownerName), true);
+                    player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", this.ownerName), true);
                 return false;
             }
         } else {
@@ -92,17 +91,17 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     public Component getDisplayName() {
         if (ServerConfigs.cached.SAFE_SIMPLE) {
             if (this.ownerName != null) {
-                return (new TranslatableComponent("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
+                return (Component.translatable("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
             }
         } else if (this.password != null) {
-            return (new TranslatableComponent("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
+            return (Component.translatable("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
         }
         return super.getDisplayName();
     }
 
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.safe");
+        return Component.translatable("block.supplementaries.safe");
     }
 
     @Override

@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.selene.api.IThirdPersonSpecialItemRenderer;
-import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.IThirdPersonSpecialItemRenderer;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.util.TwoHandedAnimation;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -151,7 +150,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag tag = stack.getTagElement("Pet");
         if (tag != null) {
-            tooltip.add(new TextComponent(tag.getString("Name")).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.literal(tag.getString("Name")).withStyle(ChatFormatting.GRAY));
         }
     }
 

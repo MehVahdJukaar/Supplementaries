@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.selene.math.MthUtils;
+import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -69,7 +68,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.globe");
+        return Component.translatable("block.supplementaries.globe");
     }
 
     @Override
@@ -147,22 +146,22 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     //TODO: improve. this is a mess
     public enum GlobeType {
-        FLAT(new String[]{"flat", "flat earth"}, new TranslatableComponent("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        FLAT(new String[]{"flat", "flat earth"}, Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
         MOON(new String[]{"moon", "luna", "selene", "cynthia"},
-                new TranslatableComponent("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
+                Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
         EARTH(new String[]{"earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"},
-                new TranslatableComponent("globe.supplementaries.earth"), GLOBE_TEXTURE),
+                Component.translatable("globe.supplementaries.earth"), GLOBE_TEXTURE),
         SUN(new String[]{"sun", "sol", "helios"},
-                new TranslatableComponent("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
+                Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
 
-        GlobeType(String[] key, TranslatableComponent tr, ResourceLocation res) {
+        GlobeType(String[] key, Component tr, ResourceLocation res) {
             this.keyWords = key;
             this.transKeyWord = tr;
             this.texture = res;
         }
 
         public final String[] keyWords;
-        public final TranslatableComponent transKeyWord;
+        public final Component transKeyWord;
         public final ResourceLocation texture;
 
         public static Pair<GlobeModel, ResourceLocation> getGlobeTexture(String text) {

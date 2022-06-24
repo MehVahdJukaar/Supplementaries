@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -40,7 +41,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
 
         List<BakedQuad> quads = new ArrayList<>();
 
@@ -99,7 +100,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         return quads;
     }
 
-    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @Nonnull Random rand) {
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @Nonnull RandomSource rand) {
 
         BakedModel model;
         //for special flowers

@@ -4,13 +4,15 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.selene.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.selene.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.selene.util.TwoHandedAnimation;
-import net.mehvahdjukaar.supplementaries.client.renderers.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+
+import net.mehvahdjukaar.moonlight.math.MthUtils;
+import net.mehvahdjukaar.moonlight.misc.AnimationState;
+import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSounds;
@@ -20,6 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.HumanoidArm;
@@ -115,12 +118,12 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
     //shoot pitches for multi shot
-    private static float[] getShotPitches(Random random) {
+    private static float[] getShotPitches(RandomSource random) {
         boolean flag = random.nextBoolean();
         return new float[]{getRandomShotPitch(random, flag), 1.0F, getRandomShotPitch(random, !flag)};
     }
 
-    private static float getRandomShotPitch(Random random, boolean left) {
+    private static float getRandomShotPitch(RandomSource random, boolean left) {
         float f = left ? 0.63F : 0.43F;
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
@@ -206,11 +209,11 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, AnimationState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
-            model.leftArm.yRot = RotHlpr.wrapRad(0.1F + model.head.yRot);
-            model.leftArm.xRot = RotHlpr.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
+            model.leftArm.yRot = MthUtils.wrapRad(0.1F + model.head.yRot);
+            model.leftArm.xRot = MthUtils.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
             return true;
         }
         return false;
@@ -218,12 +221,12 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     //TODO: finish this
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, AnimationState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
-            model.rightArm.yRot = RotHlpr.wrapRad(-0.1F + model.head.yRot);
+            model.rightArm.yRot = MthUtils.wrapRad(-0.1F + model.head.yRot);
             //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
-            model.rightArm.xRot = RotHlpr.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
+            model.rightArm.xRot = MthUtils.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
             //model.leftArm.xRot = (-(float) Math.PI / 2F) + model.head.xRot;
 
             /*

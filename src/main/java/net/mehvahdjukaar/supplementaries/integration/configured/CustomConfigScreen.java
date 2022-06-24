@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -22,7 +22,9 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -57,7 +59,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
         addIcon("dispenser tweaks", Items.DISPENSER);
@@ -78,13 +80,13 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("mixins", Items.HOPPER);
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
-        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
+        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
         addIcon("shulker shell", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(WoodType.OAK_WOOD_TYPE));
+        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN_ITEM.get());
@@ -227,7 +229,7 @@ public class CustomConfigScreen extends ConfigScreen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (ScreenUtil.isMouseWithin((this.width / 2) - 90, 2, 180, 16, mouseX, mouseY)) {
-            this.renderTooltip(matrixStack, this.font.split(new TranslatableComponent("supplementaries.gui.info"), 200), mouseX, mouseY);
+            this.renderTooltip(matrixStack, this.font.split(Component.translatable("supplementaries.gui.info"), 200), mouseX, mouseY);
         }
         int titleWidth = this.font.width(this.title) + 35;
         this.itemRenderer.renderAndDecorateFakeItem(MAIN_ICON, (this.width / 2) + titleWidth / 2 - 17, 2);
@@ -263,7 +265,7 @@ public class CustomConfigScreen extends ConfigScreen {
             FolderEntry found = null;
             for (IEntry e : folderEntry.getEntries()) {
                 if (e instanceof FolderEntry f) {
-                    String n = new TextComponent(ConfigScreen.createLabel((String) FOLDER_LABEL.get(e))).getContents();
+                    String n = Component.literal(ConfigScreen.createLabel((String) FOLDER_LABEL.get(e))).getString();
                     if (n.equals(oldName)) found = f;
                 }
             }
@@ -283,7 +285,7 @@ public class CustomConfigScreen extends ConfigScreen {
         private FolderWrapper(FolderEntry folderEntry, String label) {
             super(folderEntry);
             //make new button I can access
-            this.button = new Button(10, 5, 44, 20, (new TextComponent(label)).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE), (onPress) -> {
+            this.button = new Button(10, 5, 44, 20, (Component.literal(label)).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE), (onPress) -> {
                 Component newTitle = CustomConfigScreen.this.title.plainCopy().append(" > " + label);
                 CustomConfigScreen.this.minecraft.setScreen(new CustomConfigScreen(CustomConfigScreen.this,
                         newTitle, CustomConfigScreen.this.config, CustomConfigScreen.this.background, folderEntry));
@@ -379,7 +381,7 @@ public class CustomConfigScreen extends ConfigScreen {
         public BooleanWrapperItem(ValueHolder<Boolean> holder) {
             super(holder);
 
-            this.item = getIcon(label.getContents().toLowerCase(Locale.ROOT));
+            this.item = getIcon(label.getString().toLowerCase(Locale.ROOT));
             this.iconOffset = 7;
         }
 
@@ -404,7 +406,7 @@ public class CustomConfigScreen extends ConfigScreen {
 
         @Override
         public void onResetValue() {
-            this.button.setMessage(new TextComponent(""));
+            this.button.setMessage(Component.literal(""));
         }
     }
 
@@ -420,12 +422,12 @@ public class CustomConfigScreen extends ConfigScreen {
                 button = (Button) BOOLEAN_ITEM_BUTTON.get(this);
             } catch (Exception ignored) {
             }
-            button.setMessage(new TextComponent(""));
+            button.setMessage(Component.literal(""));
         }
 
         @Override
         public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
-            this.button.setMessage(new TextComponent(""));
+            this.button.setMessage(Component.literal(""));
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -448,7 +450,7 @@ public class CustomConfigScreen extends ConfigScreen {
 
         @Override
         public void onResetValue() {
-            this.button.setMessage(new TextComponent(""));
+            this.button.setMessage(Component.literal(""));
         }
     }
 

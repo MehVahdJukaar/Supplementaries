@@ -25,8 +25,8 @@ public class OptionalTagBlockItem extends BlockItem {
     }
 
     @Override
-    protected boolean allowdedIn(CreativeModeTab pCategory) {
+    protected boolean allowedIn(CreativeModeTab pCategory) {
         if (this.hidden.get()) return false;
-        return super.allowdedIn(pCategory);
+        return super.allowedIn(pCategory);
     }
 }

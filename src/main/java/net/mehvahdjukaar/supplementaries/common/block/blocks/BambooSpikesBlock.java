@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.selene.api.ISoftFluidConsumer;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.ISoftFluidConsumer;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +55,6 @@ import net.minecraftforge.common.util.Lazy;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock, EntityBlock, ISoapWashable {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
@@ -215,7 +215,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         if (0.01 > random.nextFloat() && state.getValue(TIPPED)) {
             if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile tile) {
                 tile.makeParticle(world);
@@ -228,7 +228,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
         if (!tippedEnabled.get()) return false;
-        if (f == SoftFluidRegistry.POTION.get() && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
+        if (f == VanillaSoftFluids.POTION.get() && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
             if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
                 if (te.tryApplyPotion(PotionUtils.getPotion(nbt))) {
                     world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);

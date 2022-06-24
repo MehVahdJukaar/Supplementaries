@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.map.MapHelper;
+import net.mehvahdjukaar.moonlight.map.MapHelper;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;

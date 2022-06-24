@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.selene.util.DispenserHelper;
-import net.mehvahdjukaar.selene.util.DispenserHelper.AddItemToInventoryBehavior;
-import net.mehvahdjukaar.selene.util.DispenserHelper.AdditionalDispenserBehavior;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.util.DispenserHelper;
+import net.mehvahdjukaar.moonlight.util.DispenserHelper.AddItemToInventoryBehavior;
+import net.mehvahdjukaar.moonlight.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;

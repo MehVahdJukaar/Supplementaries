@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.BigDripleafBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,6 +36,7 @@ public class WorldGenHandler {
         CaveFilter.init();
     }
 
+    @Deprecated
     public static void addStuffToBiomes(BiomeLoadingEvent event) {
 
         Biome.BiomeCategory category = event.getCategory();

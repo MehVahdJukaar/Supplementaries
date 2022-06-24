@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -48,8 +48,9 @@ public class ClientEvents {
             Item item = event.getItemStack().getItem();
             if (item == ModRegistry.ROPE_ARROW_ITEM.get() || item == ModRegistry.BUBBLE_BLOWER.get()) {
                 List<Component> tooltip = event.getToolTip();
-                Optional<Component> r = tooltip.stream().filter(t -> (t instanceof TranslatableComponent component) &&
-                        component.getKey().equals("item.durability")).findFirst();
+
+                Optional<Component> r = tooltip.stream().filter(t -> (t.getContents() instanceof TranslatableContents tc) &&
+                        tc.getKey().equals("item.durability")).findFirst();
                 r.ifPresent(tooltip::remove);
             }
         }
@@ -135,7 +136,7 @@ public class ClientEvents {
         if (p != null && !Minecraft.getInstance().isPaused()) {
             if (isOnRope || wobble != 0) {
                 double period = ClientConfigs.cached.ROPE_WOBBLE_PERIOD;
-                double newWobble = (((p.tickCount + event.getPartialTicks()) / period) % 1);
+                double newWobble = (((p.tickCount + event.getPartialTick()) / period) % 1);
                 if (!isOnRope && newWobble < wobble) {
                     wobble = 0;
                 } else {

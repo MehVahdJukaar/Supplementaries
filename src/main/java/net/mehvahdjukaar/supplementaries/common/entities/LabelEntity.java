@@ -59,7 +59,7 @@ public class LabelEntity extends HangingEntity {
     //might aswell use this
     @Override
     public Packet<?> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this, this.getType(), this.direction.get2DDataValue(), this.getPos());
+        return new ClientboundAddEntityPacket(this, this.direction.get2DDataValue(), this.getPos());
     }
 
     @Override

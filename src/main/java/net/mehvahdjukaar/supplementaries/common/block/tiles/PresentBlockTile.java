@@ -13,12 +13,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -143,7 +141,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
                 NetworkHooks.openGui(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
-                player.displayClientMessage(new TranslatableComponent("message.supplementaries.present.info", this.recipient), true);
+                player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);
             }
             return InteractionResult.CONSUME;
         }
@@ -154,7 +152,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("gui.supplementaries.present");
+        return Component.translatable("gui.supplementaries.present");
     }
 
     @Override
@@ -244,7 +242,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     @Nullable
     public static Component getSenderMessage(String sender) {
         if (sender.isEmpty()) return null;
-        return new TranslatableComponent("message.supplementaries.present.from", sender);
+        return Component.translatable("message.supplementaries.present.from", sender);
     }
 
     @Nullable
@@ -256,9 +254,9 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     public static Component getRecipientMessage(String recipient) {
         if (recipient.isEmpty()) return null;
         if (recipient.equalsIgnoreCase(PUBLIC_KEY)) {
-            return new TranslatableComponent("message.supplementaries.present.public");
+            return Component.translatable("message.supplementaries.present.public");
         } else {
-            return new TranslatableComponent("message.supplementaries.present.to", recipient);
+            return Component.translatable("message.supplementaries.present.to", recipient);
         }
     }
 }

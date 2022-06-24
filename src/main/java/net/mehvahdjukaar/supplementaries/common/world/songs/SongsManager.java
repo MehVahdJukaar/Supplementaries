@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPack
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,7 +57,7 @@ public class SongsManager {
     }
 
     @Nonnull
-    private static ResourceLocation selectRandomSong(Random random) {
+    private static ResourceLocation selectRandomSong(RandomSource random) {
         Optional<WeightedEntry.Wrapper<ResourceLocation>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
         return song.map(WeightedEntry.Wrapper::getData).orElseGet(() -> new ResourceLocation(""));
     }
@@ -95,7 +96,7 @@ public class SongsManager {
         return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm, Song.EMPTY), timeSinceStarted);
     }
 
-    //servers controls everything here
+    //server controls everything here
     public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song,
                                    long timeSinceStarted) {
         boolean played = false;

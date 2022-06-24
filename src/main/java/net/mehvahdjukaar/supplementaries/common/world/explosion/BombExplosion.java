@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.world.explosion;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
@@ -9,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,7 +39,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class BombExplosion extends Explosion {
 
@@ -52,7 +55,7 @@ public class BombExplosion extends Explosion {
     private final BombEntity.BombType bombType;
 
     private final ExplosionDamageCalculator damageCalculator;
-    private final List<BlockPos> toBlow = Lists.newArrayList();
+    private final ObjectArrayList<BlockPos> toBlow = new ObjectArrayList<>();
     private final Map<Player, Vec3> hitPlayers = Maps.newHashMap();
     private final BlockInteraction mode;
 
@@ -83,7 +86,7 @@ public class BombExplosion extends Explosion {
         this.level.playSound(null, this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.NEUTRAL, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
-        Collections.shuffle(this.toBlow, this.level.random);
+        Util.shuffle(this.toBlow, this.level.random);
 
 
         for (BlockPos blockpos : this.toBlow) {

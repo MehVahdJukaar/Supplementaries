@@ -11,9 +11,11 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
@@ -22,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class WaySignStructure extends StructureFeature<JigsawConfiguration> {
+public class WaySignStructure extends StructureType<NoneFeatureConfiguration> {
 
     public WaySignStructure() {
         super(JigsawConfiguration.CODEC, WaySignStructure::createPiecesGenerator, PostPlacementProcessor.NONE);

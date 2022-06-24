@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.client;
 
-import net.mehvahdjukaar.selene.map.client.MapDecorationRenderHandler;
+import net.mehvahdjukaar.moonlight.map.client.MapDecorationRenderHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;

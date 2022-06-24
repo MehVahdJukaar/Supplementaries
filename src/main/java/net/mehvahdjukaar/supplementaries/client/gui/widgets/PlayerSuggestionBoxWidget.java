@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +20,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
     public static Map<UUID, String> USERNAME_CACHE = new HashMap<>();
 
-    private static final Component EMPTY_SEARCH = (new TranslatableComponent("gui.supplementaries.present.send"))
+    private static final Component EMPTY_SEARCH = (Component.translatable("gui.supplementaries.present.send"))
             .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC);
 
 

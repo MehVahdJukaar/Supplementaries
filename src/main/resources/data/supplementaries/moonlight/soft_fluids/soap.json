@@ -1,0 +1,20 @@
+{
+  "color": "#60a8e0",
+  "containers": [
+    {
+      "filled": [
+        "betteranimalsplus:horseshoe_crab_blood"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "betteranimalsplus:horseshoe_crab_blood"
+  },
+  "id": "betteranimalsplus:soap",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.betteranimalsplus.horseshoe_crab_blood"
+}

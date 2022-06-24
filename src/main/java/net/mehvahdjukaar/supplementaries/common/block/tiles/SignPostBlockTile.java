@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
-import net.mehvahdjukaar.selene.block_set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.block_set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -50,9 +50,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public boolean isSlim = false;
 
     @NotNull
-    public WoodType woodTypeUp = WoodType.OAK_WOOD_TYPE;
+    public WoodType woodTypeUp = WoodTypeRegistry.OAK_TYPE;
     @NotNull
-    public WoodType woodTypeDown = WoodType.OAK_WOOD_TYPE;
+    public WoodType woodTypeDown = WoodTypeRegistry.OAK_TYPE;
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);

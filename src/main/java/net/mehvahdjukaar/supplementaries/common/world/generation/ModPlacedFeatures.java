@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.placement.*;
 
 import java.util.List;

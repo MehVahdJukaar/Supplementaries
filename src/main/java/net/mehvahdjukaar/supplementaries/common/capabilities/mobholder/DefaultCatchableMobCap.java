@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
-import net.mehvahdjukaar.selene.ClientSetup;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;

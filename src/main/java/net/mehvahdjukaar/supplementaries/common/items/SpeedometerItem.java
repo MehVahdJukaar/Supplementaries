@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -47,7 +46,7 @@ public class SpeedometerItem extends Item {
     private void calculateSpeed(Player player, Entity entity) {
         double speed = getBPS(entity);
         double s = roundToSignificantFigures(speed, 3);
-        player.displayClientMessage(new TranslatableComponent("message.supplementaries.speedometer", s), true);
+        player.displayClientMessage(Component.translatable("message.supplementaries.speedometer", s), true);
     }
 
     private static double getBPS(Entity entity) {

@@ -72,7 +72,7 @@ public class PresentRegistry {
             Entity e = spawnMob(type, level, source, stack);
             if (e != null) {
                 stack.shrink(1);
-                level.gameEvent(GameEvent.ENTITY_PLACE, pos);
+                level.gameEvent(null,GameEvent.ENTITY_PLACE, pos);
                 return Optional.of(stack);
             }
         } catch (Exception exception) {

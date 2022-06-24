@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.selene.util.PotionNBTHelper;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -25,8 +24,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
@@ -113,10 +110,10 @@ public class JarItem extends AbstractMobContainerItem {
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag == null) {
             if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
-            tooltip.add(new TranslatableComponent("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
             if (compoundTag.contains("LootTable", 8)) {
-                tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
             }
 
             if (compoundTag.contains("FluidHolder")) {
@@ -135,8 +132,8 @@ public class JarItem extends AbstractMobContainerItem {
                         }
                     }
 
-                    tooltip.add(new TranslatableComponent("message.supplementaries.fluid_tooltip",
-                            new TranslatableComponent(s.getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
+                    tooltip.add(Component.translatable("message.supplementaries.fluid_tooltip",
+                            Component.translatable(s.getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
                     if (nbt != null) {
                         PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
@@ -161,7 +158,7 @@ public class JarItem extends AbstractMobContainerItem {
                             s = s.replace(" Bucket", "");
                             s = s.replace(" Bottle", "");
                             s = s.replace("Bucket of ", "");
-                            MutableComponent str = new TextComponent(s);
+                            MutableComponent str = Component.literal(s);
 
                             str.append(" x").append(String.valueOf(itemstack.getCount()));
                             tooltip.add(str.withStyle(ChatFormatting.GRAY));
@@ -169,7 +166,7 @@ public class JarItem extends AbstractMobContainerItem {
                     }
                 }
                 if (j - i > 0) {
-                    tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                    tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                 }
             }
         }
@@ -205,7 +202,7 @@ public class JarItem extends AbstractMobContainerItem {
         if (tag != null && entity instanceof Player) {
             JarBlockTile temp = new JarBlockTile(entity.getOnPos(), ModRegistry.JAR.get().defaultBlockState());
             temp.load(tag);
-            SoftFluidHolder fh = temp.getSoftFluidHolder();
+            SoftFluidTank fh = temp.getSoftFluidTank();
             if (fh.containsFood()) {
                 if (fh.tryDrinkUpFluid((Player) entity, world)) {
                     CompoundTag newTag = new CompoundTag();
@@ -236,8 +233,8 @@ public class JarItem extends AbstractMobContainerItem {
                 if (DUMMY_TILE == null)
                     DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                 DUMMY_TILE.load(tag);
-                SoftFluidHolder fh = DUMMY_TILE.getSoftFluidHolder();
-                var provider = fh.getFluid().get().getFoodProvider();
+                SoftFluidTank fh = DUMMY_TILE.getSoftFluidHolder();
+                var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
             }

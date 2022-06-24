@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
-import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.selene.util.Utils;
+import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
@@ -18,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -34,16 +33,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidHolder {
+public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTank {
 
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
     public final MobContainer mobContainer;
-    public final SoftFluidHolder fluidHolder;
+    public final SoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state);
-        this.fluidHolder = new SoftFluidHolder(CAPACITY);
+        this.fluidHolder = new SoftFluidTank(CAPACITY);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight());
     }
@@ -51,7 +50,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public void updateTileOnInventoryChanged() {
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
-        int light = this.fluidHolder.getFluid().get().getLuminosity();
+        int light = this.fluidHolder.getFluid().getLuminosity();
         if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
@@ -64,7 +63,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         ItemStack displayedStack = this.getDisplayedItem();
 
         //interact with fluid holder
-        if (canInteractWithFluidHolder() && this.fluidHolder.interactWithPlayer(player, hand, level, pos)) {
+        if (canInteractWithSoftFluidTank() && this.fluidHolder.interactWithPlayer(player, hand, level, pos)) {
             return true;
         }
         //empty hand: eat food
@@ -206,7 +205,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public Component getDefaultName() {
-        return new TranslatableComponent("block.supplementaries.jar");
+        return Component.translatable("block.supplementaries.jar");
     }
 
     @Override
@@ -235,12 +234,12 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public SoftFluidHolder getSoftFluidHolder() {
+    public SoftFluidTank getSoftFluidTank() {
         return this.fluidHolder;
     }
 
     @Override
-    public boolean canInteractWithFluidHolder() {
+    public boolean canInteractWithSoftFluidTank() {
         return ServerConfigs.cached.JAR_LIQUIDS && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 }

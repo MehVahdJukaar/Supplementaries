@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.api.ISoftFluidConsumer;
-import net.mehvahdjukaar.selene.fluids.*;
+import net.mehvahdjukaar.moonlight.api.ISoftFluidConsumer;
+import net.mehvahdjukaar.moonlight.api.ISoftFluidProvider;
+import net.mehvahdjukaar.moonlight.fluids.*;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -40,7 +42,7 @@ public class FaucetBlockTile extends BlockEntity {
     private static final int COOLDOWN = 20;
 
     private int transferCooldown = 0;
-    public final SoftFluidHolder tempFluidHolder = new SoftFluidHolder(5);
+    public final SoftFluidTank tempFluidHolder = new SoftFluidTank(5);
 
     public FaucetBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
@@ -49,7 +51,7 @@ public class FaucetBlockTile extends BlockEntity {
 
     public void updateLight() {
         if (this.level == null) return;
-        int light = this.tempFluidHolder.getFluid().get().getLuminosity();
+        int light = this.tempFluidHolder.getFluid().getLuminosity();
         if (light != 0) light = (int) Mth.clamp(light / 2f, 1, 7);
         if (light != this.getBlockState().getValue(FaucetBlock.LIGHT_LEVEL)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FaucetBlock.LIGHT_LEVEL, light), 2);
@@ -103,14 +105,14 @@ public class FaucetBlockTile extends BlockEntity {
             Pair<SoftFluid, CompoundTag> stack = provider.getProvidedFluid(level, backState, behind);
             this.prepareToTransferBottle(stack.getLeft(), stack.getRight());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid().get(), this.tempFluidHolder.getNbt(), 1);
+                provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid(), this.tempFluidHolder.getNbt(), 1);
                 return true;
             }
         }
         //beehive
         else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             if (backState.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-                this.prepareToTransferBottle(SoftFluidRegistry.HONEY.get());
+                this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
                             backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
@@ -123,7 +125,7 @@ public class FaucetBlockTile extends BlockEntity {
         //honey pot
         else if (CompatHandler.buzzier_bees && backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
             if (backState.getValue(BlockProperties.HONEY_LEVEL_POT) > 0) {
-                this.prepareToTransferBottle(SoftFluidRegistry.HONEY.get());
+                this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     level.setBlock(behind, backState.setValue(BlockProperties.HONEY_LEVEL_POT,
                             backState.getValue(BlockProperties.HONEY_LEVEL_POT) - 1), 3);
@@ -136,7 +138,7 @@ public class FaucetBlockTile extends BlockEntity {
         else if (CompatHandler.autumnity && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
             this.prepareToTransferBottle(ModSoftFluids.SAP.get());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(backBlock.getRegistryName().toString().replace("sappy", "stripped")));
+                Block log = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
                 if (log != null) {
 
                     level.setBlock(behind, log.withPropertiesOf(backState), 3);
@@ -158,7 +160,7 @@ public class FaucetBlockTile extends BlockEntity {
                     return CauldronPlugin.doStuff(level.getBlockEntity(behind), this.tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
                 }
 
-                this.prepareToTransferBottle(SoftFluidRegistry.WATER.get());
+                this.prepareToTransferBottle(VanillaSoftFluids.WATER.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     if (waterLevel > 1) {
                         level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
@@ -167,8 +169,9 @@ public class FaucetBlockTile extends BlockEntity {
                     return true;
                 }
             }
+            //TODO: this doesnt seem to work
         } else if (backBlock == Blocks.LAVA_CAULDRON) {
-            this.prepareToTransferBucket(SoftFluidRegistry.LAVA.get());
+            this.prepareToTransferBucket(VanillaSoftFluids.LAVA.get());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
                 this.transferCooldown += COOLDOWN * 3;
@@ -177,7 +180,7 @@ public class FaucetBlockTile extends BlockEntity {
         } else if (backBlock == Blocks.POWDER_SNOW_CAULDRON) {
             int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (waterLevel == 3) {
-                this.prepareToTransferBucket(SoftFluidRegistry.POWDERED_SNOW.get());
+                this.prepareToTransferBucket(VanillaSoftFluids.POWDERED_SNOW.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
                     level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
                     this.transferCooldown += COOLDOWN * 3;
@@ -189,8 +192,8 @@ public class FaucetBlockTile extends BlockEntity {
         //soft fluid holders
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
-            if (tileBack instanceof ISoftFluidHolder holder && holder.canInteractWithFluidHolder()) {
-                SoftFluidHolder fluidHolder = holder.getSoftFluidHolder();
+            if (tileBack instanceof ISoftFluidTank holder && holder.canInteractWithSoftFluidTank()) {
+                SoftFluidTank fluidHolder = holder.getSoftFluidTank();
                 this.tempFluidHolder.copy(fluidHolder);
                 this.tempFluidHolder.setCount(2);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
@@ -203,7 +206,7 @@ public class FaucetBlockTile extends BlockEntity {
             else {
                 IFluidHandler handlerBack = tileBack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).orElse(null);
                 //TODO: fix create fluid int bug
-                if (handlerBack != null && !backBlock.getRegistryName().getPath().equals("fluid_interface")) {
+                if (handlerBack != null && ! Utils.getID(backBlock).getPath().equals("fluid_interface")) {
                     //only works in 250 increment
                     if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
                     this.tempFluidHolder.copy(handlerBack);
@@ -220,7 +223,7 @@ public class FaucetBlockTile extends BlockEntity {
             return this.spillItemsFromInventory(level, pos, dir, tileBack);
         } else if (level.getFluidState(behind).getType() == Fluids.WATER) {
             //Unlimited water!!
-            this.prepareToTransferBottle(SoftFluidRegistry.WATER.get());
+            this.prepareToTransferBottle(VanillaSoftFluids.WATER.get());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 return true;
             }
@@ -249,7 +252,7 @@ public class FaucetBlockTile extends BlockEntity {
     //sf->ff/sf
     @SuppressWarnings("ConstantConditions")
     private boolean tryFillingBlockBelow(Level level, BlockPos pos) {
-        SoftFluid softFluid = this.tempFluidHolder.getFluid().get();
+        SoftFluid softFluid = this.tempFluidHolder.getFluid();
         //can't full below if empty
         if (softFluid.isEmpty()) return false;
 
@@ -267,7 +270,7 @@ public class FaucetBlockTile extends BlockEntity {
             return true;
         }
         //beehive
-        else if (softFluid == SoftFluidRegistry.HONEY.get()) {
+        else if (softFluid == VanillaSoftFluids.HONEY.get()) {
 
             //beehives
             if (belowState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
@@ -287,14 +290,14 @@ public class FaucetBlockTile extends BlockEntity {
                 }
                 return false;
             }
-        } else if (softFluid == SoftFluidRegistry.XP.get() && belowState.isAir()) {
+        } else if (softFluid == VanillaSoftFluids.XP.get() && belowState.isAir()) {
             this.dropXP(level, pos);
             return true;
         } else if (belowBlock instanceof AbstractCauldronBlock) {
             //if any other mod adds a cauldron tile this will crash
             if (CompatHandler.inspirations) {
                 return CauldronPlugin.tryAddFluid(level.getBlockEntity(below), this.tempFluidHolder);
-            } else if (softFluid == SoftFluidRegistry.WATER.get()) {
+            } else if (softFluid == VanillaSoftFluids.WATER.get()) {
                 //TODO: finish
                 if (belowBlock == Blocks.WATER_CAULDRON) {
                     int levels = belowState.getValue(BlockStateProperties.LEVEL_CAULDRON);
@@ -307,12 +310,12 @@ public class FaucetBlockTile extends BlockEntity {
                     level.setBlock(below, Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 1), 3);
                     return true;
                 }
-            } else if (softFluid == SoftFluidRegistry.LAVA.get()) {
+            } else if (softFluid == VanillaSoftFluids.LAVA.get()) {
                 if (belowBlock instanceof CauldronBlock && this.tempFluidHolder.getCount() == 5) {
                     level.setBlock(below, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);
                     return true;
                 }
-            } else if (softFluid == SoftFluidRegistry.POWDERED_SNOW.get()) {
+            } else if (softFluid == VanillaSoftFluids.POWDERED_SNOW.get()) {
                 if (belowBlock instanceof CauldronBlock && this.tempFluidHolder.getCount() == 5) {
                     level.setBlock(below, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
                             .setValue(PowderSnowCauldronBlock.LEVEL, 3), 3);
@@ -327,8 +330,8 @@ public class FaucetBlockTile extends BlockEntity {
         boolean result;
         //soft fluid holders
         BlockEntity tileBelow = level.getBlockEntity(below);
-        if (tileBelow instanceof ISoftFluidHolder holder) {
-            SoftFluidHolder fluidHolder = holder.getSoftFluidHolder();
+        if (tileBelow instanceof ISoftFluidTank holder) {
+            SoftFluidTank fluidHolder = holder.getSoftFluidTank();
             result = this.tempFluidHolder.tryTransferFluid(fluidHolder, this.tempFluidHolder.getCount() - 1);
             if (result) {
                 tileBelow.setChanged();

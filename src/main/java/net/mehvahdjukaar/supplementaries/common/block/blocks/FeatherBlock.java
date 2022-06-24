@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +55,7 @@ public class FeatherBlock extends Block {
             }
         } else {
             for (int i = 0; i < Math.min(6, height * 0.8); i++) {
-                Random random = world.getRandom();
+                RandomSource random = world.getRandom();
                 double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055);
                 world.addParticle(ModRegistry.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.35),
                         entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy*0.5, r(random, 0.007));
@@ -82,7 +83,7 @@ public class FeatherBlock extends Block {
             if (!(entity instanceof LivingEntity) || entity.getFeetBlockState().is(this)) {
 
 
-                Random random = level.getRandom();
+                RandomSource random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextInt(10) == 0) {
                     double dy = 0.005;
@@ -92,7 +93,8 @@ public class FeatherBlock extends Block {
         }
     }
 
-    private double r(Random random, double a) {
+    //triangle distribution?
+    private double r(RandomSource random, double a) {
         return a * (random.nextFloat() + random.nextFloat() - 1);
     }
 
@@ -126,7 +128,7 @@ public class FeatherBlock extends Block {
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
         if (level.isClientSide) {
-            Random r = level.random;
+            RandomSource r = level.random;
             for (int i = 0; i < 10; i++) {
                 level.addParticle(ModRegistry.FEATHER_PARTICLE.get(), pos.getX() + r.nextFloat(),
                         pos.getY() + r.nextFloat(), pos.getZ() + r.nextFloat(),

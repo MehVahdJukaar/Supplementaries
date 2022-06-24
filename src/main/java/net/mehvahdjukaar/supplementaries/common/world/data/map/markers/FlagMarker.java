@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.selene.map.CustomMapDecoration;
-import net.mehvahdjukaar.selene.map.markers.NamedMapBlockMarker;
+import net.mehvahdjukaar.moonlight.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ColoredDecoration;

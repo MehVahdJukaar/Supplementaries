@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.selene.blocks.IOwnerProtected;
-import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -21,16 +21,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IOwnerProtected {
+public class GobletBlockTile extends BlockEntity implements ISoftFluidTank, IOwnerProtected {
 
     private UUID owner = null;
 
-    public SoftFluidHolder fluidHolder;
+    public SoftFluidTank fluidTank;
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
         int CAPACITY = 1;
-        this.fluidHolder = new SoftFluidHolder(CAPACITY);
+        this.fluidTank = new SoftFluidTank(CAPACITY);
     }
 
     @Nullable
@@ -49,7 +49,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
         if (this.level == null) return;
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
-        int light = this.fluidHolder.getFluid().get().getLuminosity();
+        int light = this.fluidTank.getFluid().getLuminosity();
         if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
@@ -71,17 +71,17 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
     public boolean handleInteraction(Player player, InteractionHand hand) {
 
         //interact with fluid holder
-        if (this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
+        if (this.fluidTank.interactWithPlayer(player, hand, level, worldPosition)) {
             return true;
         }
         //empty hand: eat food
         if (!player.isShiftKeyDown()) {
             //from drink
             if (ServerConfigs.cached.GOBLET_DRINK) {
-                boolean b = this.fluidHolder.tryDrinkUpFluid(player, this.level);
-                if(b && player instanceof ServerPlayer serverPlayer){
+                boolean b = this.fluidTank.tryDrinkUpFluid(player, this.level);
+                if (b && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));
-                    if(advancement != null){
+                    if (advancement != null) {
                         serverPlayer.getAdvancements().award(advancement, "unlock");
                     }
                 }
@@ -94,19 +94,19 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidHolder, IO
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.fluidHolder.load(compound);
+        this.fluidTank.load(compound);
         this.loadOwner(compound);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        this.fluidHolder.save(tag);
+        this.fluidTank.save(tag);
         this.saveOwner(tag);
     }
 
     @Override
-    public SoftFluidHolder getSoftFluidHolder() {
-        return this.fluidHolder;
+    public SoftFluidTank getSoftFluidTank() {
+        return this.fluidTank;
     }
 }

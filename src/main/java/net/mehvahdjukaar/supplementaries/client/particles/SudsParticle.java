@@ -5,6 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 import java.util.Random;
 
@@ -63,7 +64,7 @@ public class SudsParticle extends BubbleBlockParticle {
 
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
-            Random r = pLevel.random;
+            RandomSource r = pLevel.random;
             //TODO: add randomness here
             return new SudsParticle(pLevel, pX, pY, pZ,
                     pXSpeed + ((0.5-r.nextFloat()) * 0.04),

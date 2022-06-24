@@ -23,7 +23,7 @@ public abstract class AbstractSkullBlockMixin extends BaseEntityBlock {
         return SoundType.BONE_BLOCK;
     }
 
-    //fixing vanilla bug dont mind me. Should not be invisible so it can be called by render single block
+    //fixing vanilla bug don't mind me. Should not be invisible, so it can be called by render single block
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;

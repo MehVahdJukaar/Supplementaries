@@ -1,0 +1,19 @@
+{
+  "color": "#eb5d10",
+  "containers": [
+    {
+      "filled": [
+        "iceandfire:fire_stew"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "iceandfire:fire_stew"
+  },
+  "id": "iceandfire:fire_stew",
+  "still_texture": "moonlight:soft_fluids/soup_liquid"
+}

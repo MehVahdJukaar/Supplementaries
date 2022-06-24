@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -146,7 +145,7 @@ public class GlobeTextureManager {
         public static void refreshColorsFromConfig() {
             DIMENSION_COLOR_MAP.clear();
             try {
-                List<? extends List<String>> customColors = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.GLOBE_COLORS);
+                List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
 
                 for (List<String> l : customColors) {
                     if (l.size() >= 13) {

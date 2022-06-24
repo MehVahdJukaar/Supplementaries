@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.impl.entities.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import net.mehvahdjukaar.selene.entities.ImprovedFallingBlockEntity;
 
 public class FallingUrnEntity extends ImprovedFallingBlockEntity {
 

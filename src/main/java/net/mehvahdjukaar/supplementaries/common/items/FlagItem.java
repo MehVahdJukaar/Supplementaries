@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;

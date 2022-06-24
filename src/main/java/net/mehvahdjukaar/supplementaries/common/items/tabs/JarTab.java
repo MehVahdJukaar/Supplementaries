@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items.tabs;
 
-import net.mehvahdjukaar.selene.fluids.SoftFluid;
-import net.mehvahdjukaar.selene.fluids.SoftFluidHolder;
-import net.mehvahdjukaar.selene.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidHolder;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;

@@ -12,8 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
@@ -87,7 +85,7 @@ public class SackItem extends BlockItem {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (tag.contains("LootTable", 8)) {
-                    tooltip.add(new TextComponent("???????").withStyle(ChatFormatting.GRAY));
+                    tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
                 }
 
                 if (tag.contains("Items", 9)) {
@@ -108,7 +106,7 @@ public class SackItem extends BlockItem {
                         }
                     }
                     if (j - i > 0) {
-                        tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i))
+                        tooltip.add((Component.translatable("container.shulkerBox.more", j - i))
                                 .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
                 }
@@ -116,7 +114,7 @@ public class SackItem extends BlockItem {
         }
 
         //if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
-        //tooltip.add(new TranslatableComponent("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        //tooltip.add(Component.translatable("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
