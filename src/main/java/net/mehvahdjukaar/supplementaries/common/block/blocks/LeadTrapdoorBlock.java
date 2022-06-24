@@ -20,8 +20,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.Random;
-
 public class LeadTrapdoorBlock extends TrapDoorBlock {
 
     public static IntegerProperty OPENING_PROGRESS = BlockProperties.OPENING_PROGRESS;

@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -50,7 +51,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class UrnBlock extends FallingBlock implements EntityBlock {
 
@@ -122,7 +122,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel pLevel, BlockPos pos, Random pRand) {
+    public void tick(BlockState state, ServerLevel pLevel, BlockPos pos, RandomSource pRand) {
         if (isFree(pLevel.getBlockState(pos.below())) && pos.getY() >= pLevel.getMinBuildHeight()) {
             CompoundTag tag = null;
             if (pLevel.getBlockEntity(pos) instanceof UrnBlockTile tile) {

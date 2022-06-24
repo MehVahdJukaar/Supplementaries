@@ -31,8 +31,8 @@ import java.util.UUID;
 
 public class CommonUtil {
 
-    public static DamageSource SPIKE_DAMAGE = (new DamageSource("supplementaries.bamboo_spikes"));
-    public static DamageSource BOTTLING_DAMAGE = (new DamageSource("supplementaries.xp_extracting"));
+    public static DamageSource SPIKE_DAMAGE = new DamageSource("supplementaries.bamboo_spikes");
+    public static DamageSource BOTTLING_DAMAGE = new DamageSource("supplementaries.xp_extracting");
 
     public enum Festivity {
         NONE,
@@ -196,7 +196,6 @@ public class CommonUtil {
 
     public static HitResult rayTrace(Entity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
         Vec3 startPos = entity.getEyePosition();
-        ;
         Vec3 ray = entity.getViewVector(1).scale(range);
         Vec3 endPos = startPos.add(ray);
         ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);

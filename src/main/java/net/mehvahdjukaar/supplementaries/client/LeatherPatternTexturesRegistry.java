@@ -1,16 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BannerPattern;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 public class LeatherPatternTexturesRegistry {
 
     /*

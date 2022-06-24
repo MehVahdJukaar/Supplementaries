@@ -85,6 +85,7 @@ public class QuarkPlugin {
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class QuarkPlugin{
@@ -102,5 +103,9 @@ public class QuarkPlugin{
 
     public static boolean isDoubleDoorEnabled() {
         return false;
+    }
+
+    public static int getSacksInBackpack(ItemStack backpack) {
+        return 0;
     }
 }

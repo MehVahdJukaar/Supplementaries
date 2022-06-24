@@ -148,8 +148,6 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         return InteractionResult.PASS;
     }
 
-    ;
-
     @Override
     public Component getDefaultName() {
         return Component.translatable("gui.supplementaries.present");

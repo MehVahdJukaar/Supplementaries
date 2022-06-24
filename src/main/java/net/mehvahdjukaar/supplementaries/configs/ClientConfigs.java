@@ -151,7 +151,7 @@ public class ClientConfigs {
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE;
         public static ForgeConfigSpec.DoubleValue FLAG_AMPLITUDE_INCREMENT;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> TICKLE_MOBS;
+        public static ForgeConfigSpec.ConfigValue<List<? extends String>> TICKABLE_MOBS;
 
         public static ForgeConfigSpec.BooleanValue FAST_SIGNS;
         public static ForgeConfigSpec.BooleanValue FAST_LANTERNS;
@@ -260,7 +260,7 @@ public class ClientConfigs {
 
             builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
-            TICKLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
+            TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
 
             CAPTURED_MOBS_PROPERTIES = builder.comment("""

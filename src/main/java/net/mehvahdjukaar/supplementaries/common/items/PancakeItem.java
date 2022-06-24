@@ -22,19 +22,19 @@ public class PancakeItem extends BlockItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (!context.getPlayer().isShiftKeyDown()) {
+        Player player = context.getPlayer();
+        if (!player.isShiftKeyDown()) {
             Level world = context.getLevel();
             BlockPos blockpos = context.getClickedPos();
             BlockState blockstate = world.getBlockState(blockpos);
             if (blockstate.is(Blocks.JUKEBOX) && !blockstate.getValue(JukeboxBlock.HAS_RECORD)) {
                 ItemStack itemstack = context.getItemInHand();
                 if (!world.isClientSide) {
-                    ((JukeboxBlock) Blocks.JUKEBOX).setRecord(world, blockpos, blockstate, itemstack.split(1));
+
+                    ((JukeboxBlock) Blocks.JUKEBOX).setRecord(player, world, blockpos, blockstate, itemstack.split(1));
                     world.levelEvent(null, 1010, blockpos, Item.getId(ModRegistry.PANCAKE_DISC.get()));
-                    Player player = context.getPlayer();
-                    if (player != null) {
-                        player.awardStat(Stats.PLAY_RECORD);
-                    }
+
+                    player.awardStat(Stats.PLAY_RECORD);
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }

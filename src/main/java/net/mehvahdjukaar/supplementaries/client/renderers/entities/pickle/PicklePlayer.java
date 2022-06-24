@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -52,8 +51,9 @@ public class PicklePlayer {
             jarvis = !jarvis;
             event.setCanceled(true);
             if (jarvis)
-                Minecraft.getInstance().player.sendMessage(
-                        Component.literal("I am Jarman"), Util.NIL_UUID);
+
+                Minecraft.getInstance().player.displayClientMessage(
+                        Component.literal("I am Jarman"), true);
         } else if (PickleData.isDev(id)) {
             if (m.startsWith("/pickle")) {
 
@@ -61,8 +61,8 @@ public class PicklePlayer {
                 boolean turnOn = !PickleData.isActive(id);
 
                 if (turnOn) {
-                    Minecraft.getInstance().player.sendMessage(
-                            Component.literal("I turned myself into a pickle!"), Util.NIL_UUID);
+                    Minecraft.getInstance().player.displayClientMessage(
+                            Component.literal("I turned myself into a pickle!"), true);
                 }
 
                 PickleData.set(id, turnOn);
@@ -180,7 +180,7 @@ public class PicklePlayer {
             }
 
             private enum State {
-                ON, OFF, FIRST_ON, FIRST_OFF;
+                ON, OFF, FIRST_ON, FIRST_OFF
             }
         }
     }

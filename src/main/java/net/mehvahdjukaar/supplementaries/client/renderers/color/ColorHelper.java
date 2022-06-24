@@ -4,8 +4,6 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
-import java.util.Random;
-
 public class ColorHelper {
     private static final float[][] SOAP_COLORS;
 

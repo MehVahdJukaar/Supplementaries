@@ -20,8 +20,6 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.Random;
-
 public class LeadDoorBlock extends DoorBlock {
     public static IntegerProperty OPENING_PROGRESS = BlockProperties.OPENING_PROGRESS;
 

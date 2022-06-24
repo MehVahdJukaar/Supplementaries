@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -27,7 +27,7 @@ public class CapturedMobsHelper {
 
 
     public static boolean is2DFish(EntityType<?> type){
-        return FISHES_2D.contains(type.getRegistryName().toString());
+        return FISHES_2D.contains(Utils.getID(type).toString());
     }
 
     private static List<String> addFish(String id) {
@@ -147,7 +147,7 @@ public class CapturedMobsHelper {
         return getType(mob.getType());
     }
     public static CapturedMobConfigProperties getType(EntityType<?> type) {
-        return getType(type.getRegistryName().toString());
+        return getType(Utils.getID(type).toString());
     }
 
     public static CapturedMobConfigProperties getType(String mobId) {
@@ -173,7 +173,7 @@ public class CapturedMobsHelper {
     public static void refresh() {
         TYPES.clear();
 
-        List<? extends List<String>> config = ConfigHandler.safeGetListString(ClientConfigs.CLIENT_SPEC, ClientConfigs.block.CAPTURED_MOBS_PROPERTIES);
+        List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS_PROPERTIES.get();
         for (List<String> l : config) {
             try {
                 int size = l.size();

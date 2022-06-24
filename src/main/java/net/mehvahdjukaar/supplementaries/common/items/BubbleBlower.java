@@ -3,9 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.moonlight.math.MthUtils;
-import net.mehvahdjukaar.moonlight.util.TwoHandedAnimation;
+import net.mehvahdjukaar.moonlight.misc.DualWeildState;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -18,6 +17,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,7 +37,6 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 public class BubbleBlower extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
@@ -187,7 +186,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             double x = entity.getX() + v.x;
             double y = entity.getEyeY() + v.y - 0.12;
             double z = entity.getZ() + v.z;
-            Random r = entity.getRandom();
+            RandomSource r = entity.getRandom();
             v = v.scale(0.1 + r.nextFloat() * 0.1f);
             double dx = v.x + ((0.5 - r.nextFloat()) * 0.08);
             double dy = v.y + ((0.5 - r.nextFloat()) * 0.04);
@@ -203,7 +202,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, true);
             return true;
@@ -212,7 +211,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, false);
             return true;
@@ -227,8 +226,8 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
         float cr = (entity.isCrouching() ? 0.3F : 0.0F);
 
-        float headXRot = RotHlpr.wrapRad(model.head.xRot);
-        float headYRot = RotHlpr.wrapRad(model.head.yRot);
+        float headXRot = MthUtils.wrapRad(model.head.xRot);
+        float headYRot = MthUtils.wrapRad(model.head.yRot);
 
         float pitch = Mth.clamp(headXRot, -1.6f, 0.8f) + 0.55f - cr;
         mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f * headYRot;

@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.*;
 
-import java.util.Random;
 import java.util.TreeMap;
 
 public class FeatherBlock extends Block {

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
@@ -26,9 +25,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
 
 public class ConfigHandler {
 

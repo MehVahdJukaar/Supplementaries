@@ -190,11 +190,10 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
             }
             return Pair.of(GlobeModel.GLOBE, null);
         }
-
     }
 
     public enum GlobeModel {
-        GLOBE, FLAT, SNOW, SHEARED;
+        GLOBE, FLAT, SNOW, SHEARED
     }
 
 }

@@ -112,9 +112,6 @@ public class SackItem extends BlockItem {
                 }
             }
         }
-
-        //if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
-        //tooltip.add(Component.translatable("message.supplementaries.sack").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override

@@ -233,7 +233,7 @@ public class JarItem extends AbstractMobContainerItem {
                 if (DUMMY_TILE == null)
                     DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                 DUMMY_TILE.load(tag);
-                SoftFluidTank fh = DUMMY_TILE.getSoftFluidHolder();
+                SoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();

@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -72,6 +73,11 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
     @Override
     public ItemStack getPickResult() {
         return ModRegistry.DISPENSER_MINECART_ITEM.get().getDefaultInstance();
+    }
+
+    @Override
+    protected Item getDropItem() {
+        return ModRegistry.DISPENSER_MINECART_ITEM.get();
     }
 
     @Override
@@ -217,12 +223,12 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
 
         ((ILevelEventRedirect) pLevel).setRedirected(true, this.position());
 
-        int i = this.dispenser.getRandomSlot();
+        int i = this.dispenser.getRandomSlot(level.getRandom());
 
         if (i < 0) {
             //replace with client side animation
             pLevel.levelEvent(1001, pPos, 0);
-            pLevel.gameEvent(GameEvent.DISPENSE_FAIL, pPos);
+            pLevel.gameEvent(this, GameEvent.DISPENSE_FAIL, pPos);
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
             try {
@@ -240,7 +246,5 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
         ((ILevelEventRedirect) pLevel).setRedirected(false, Vec3.ZERO);
 
     }
-
-
 
 }

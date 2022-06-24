@@ -7,8 +7,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.RandomSource;
 
-import java.util.Random;
-
 public class SudsParticle extends BubbleBlockParticle {
 
     private final double additionalSize;

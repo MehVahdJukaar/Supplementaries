@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ModPlacedFeatures {
 
-    public static void init(){};
+    public static void init(){}
 
     //placed features
 

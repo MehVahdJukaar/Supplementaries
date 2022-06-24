@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -54,7 +55,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class TrappedPresentBlock extends WaterBlock implements EntityBlock, IColored {
 
@@ -216,7 +220,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     public boolean triggerEvent(BlockState pState, Level pLevel, BlockPos pPos, int pId, int pParam) {
         if (pId == 0) {
             if (pLevel.isClientSide) {
-                Random random = pLevel.random;
+                RandomSource random = pLevel.random;
 
 
                 double cx = (double) pPos.getX() + 0.5D;
@@ -240,8 +244,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         }
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
-
-    ;
 
     @OnlyIn(Dist.CLIENT)
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {

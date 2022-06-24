@@ -125,7 +125,7 @@ public class AshLayerBlock extends FallingBlock {
         if (world instanceof ServerLevel serverLevel) {
             BlockPos pos = currentPos.above();
             BlockState state1 = world.getBlockState(pos);
-            ;
+
             while (state1.is(this)) {
                 serverLevel.scheduleTick(pos, this, this.getDelayAfterPlace());
                 pos = pos.above();

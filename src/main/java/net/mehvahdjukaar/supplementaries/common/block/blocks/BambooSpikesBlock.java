@@ -145,8 +145,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof Player && ((Player) entityIn).isCreative()) return;
-        if (entityIn instanceof LivingEntity && entityIn.isAlive()) {
+        if (entityIn instanceof Player player && player.isCreative()) return;
+        if (entityIn instanceof LivingEntity le && entityIn.isAlive()) {
             boolean up = state.getValue(FACING) == Direction.UP;
             double vy = up ? 0.45 : 0.95;
             entityIn.makeStuckInBlock(state, new Vec3(0.95D, vy, 0.95D));
@@ -155,9 +155,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 3 : 1.5f;
                 entityIn.hurt(CommonUtil.SPIKE_DAMAGE, damage);
                 if (state.getValue(TIPPED)) {
-                    BlockEntity te = worldIn.getBlockEntity(pos);
-                    if (te instanceof BambooSpikesBlockTile) {
-                        if (((BambooSpikesBlockTile) te).interactWithEntity(((LivingEntity) entityIn), worldIn)) {
+                    if ( worldIn.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
+                        if (te.interactWithEntity(le, worldIn)) {
                             worldIn.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
                         }
                     }
@@ -167,7 +166,12 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        return BlockPathTypes.DAMAGE_OTHER;
+    }
+
+    @Override
+    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
         return BlockPathTypes.DAMAGE_OTHER;
     }
 

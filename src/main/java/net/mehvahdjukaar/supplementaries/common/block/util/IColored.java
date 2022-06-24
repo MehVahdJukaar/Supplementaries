@@ -14,7 +14,7 @@ public interface IColored {
 
     default boolean setColor(DyeColor color){
         return false;
-    };
+    }
 
     @Nullable
     default Map<DyeColor, RegistryObject<Item>> getItemColorMap(){

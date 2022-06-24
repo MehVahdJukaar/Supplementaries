@@ -52,7 +52,7 @@ public interface IRotatable {
             }
         }
         return Optional.empty();
-    };
+    }
 
     /**
      * performs extra actions after it has been rotated

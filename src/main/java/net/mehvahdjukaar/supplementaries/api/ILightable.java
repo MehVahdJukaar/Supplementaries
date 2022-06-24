@@ -27,8 +27,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 /**
  * Author: MehVahdJukaar
  * Used for blocks that can be lit up. Implement for best compatibility. Do not modify

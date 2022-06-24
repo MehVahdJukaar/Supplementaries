@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -126,7 +127,6 @@ public class KeyLockableTile extends BlockEntity {
         super.load(compound);
         if (compound.contains("Password"))
             this.password = compound.getString("Password");
-        ;
     }
 
     @Override

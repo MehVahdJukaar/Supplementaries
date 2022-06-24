@@ -356,7 +356,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToBlock(Block block) {
-            return block == Blocks.CAKE || (block.builtInRegistryHolder().is(BlockTags.CANDLE_CAKES) && block.getRegistryName().getNamespace().equals("minecraft"));
+            return block == Blocks.CAKE || (block.builtInRegistryHolder().is(BlockTags.CANDLE_CAKES) && Utils.getID(block).getNamespace().equals("minecraft"));
         }
 
         @Override
@@ -384,7 +384,7 @@ public class ItemsOverrideHandler {
                                 Block.popResource(world, pos, d);
                             }
                         });
-                        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY);
+                        state.spawnAfterBreak(serverLevel, pos, ItemStack.EMPTY, true);
                     } else world.setBlock(pos, state, 3); //returns to normal
                 }
                 return r;
@@ -478,7 +478,7 @@ public class ItemsOverrideHandler {
                             DUMMY_JAR_TILE.load(tag);
                         }
 
-                        if (DUMMY_JAR_TILE.canInteractWithFluidHolder()) {
+                        if (DUMMY_JAR_TILE.canInteractWithSoftFluidTank()) {
                             ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                             ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null, false);
                             if (temp != null && temp.getItem() == Items.GLASS_BOTTLE) {
@@ -734,7 +734,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item.builtInRegistryHolder().is(ItemTags.CANDLES) && item.getRegistryName().getNamespace().equals("minecraft");
+            return item.builtInRegistryHolder().is(ItemTags.CANDLES) && Utils.getID(item).getNamespace().equals("minecraft");
         }
 
         @Override

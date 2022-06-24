@@ -17,10 +17,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -30,12 +30,9 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 //turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
@@ -134,7 +131,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                 if (villages.size() >= 1) {
 
 
-                    Random rand = world.random;
+                    RandomSource rand = world.random;
                     //if two signs will spawn
                     boolean twoSigns = true;
                     BlockPos village1;
@@ -207,11 +204,11 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
                         boolean hasGroundLantern = false;
 
-                        var biome = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).value().getRegistryName());
+                        // var biome = ResourceKey.create(ForgeRegistries.Keys.BIOMES, world.getBiome(pos).value().getRegistryName());
 
-                        boolean hasFirefly = (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
-                                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
-                                BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.01f) > rand.nextFloat();
+                        boolean hasFirefly = false; //(BiomeDictionary.hasType(biome, BiomeDictionary.Type.MAGICAL) ||
+                        //BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) ||
+                        // BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY) ? 0.2f : 0.01f) > rand.nextFloat();
 
 
                         //stone

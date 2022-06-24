@@ -25,7 +25,7 @@ public class SlimedGuiOverlay extends Gui implements IIngameOverlay {
 
     @Override
     public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height) {
-        if (this.minecraft.player != null && false) {
+        if (this.minecraft.player != null) {
             float alpha = 1;//iHealable.getHealingFade(partialTicks);
             gui.setupOverlayRenderState(true, false);
             RenderSystem.disableDepthTest();

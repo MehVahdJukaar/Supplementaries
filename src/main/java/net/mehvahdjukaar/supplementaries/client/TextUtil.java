@@ -75,7 +75,7 @@ public class TextUtil {
                         DrPineapple
                         Colleen Cleland
                         Astralis
-                        Mars The Gamer         
+                        Mars The Gamer        
                         Eudes Gerodez
                         Little Pianist
 
@@ -302,7 +302,7 @@ public class TextUtil {
     }
 
     public enum Mode {
-        NORMAL, GLOWING, ENGRAVED;
+        NORMAL, GLOWING, ENGRAVED
     }
 
     public static class RenderTextProperties {

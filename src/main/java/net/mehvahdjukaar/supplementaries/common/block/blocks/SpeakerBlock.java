@@ -32,7 +32,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class SpeakerBlock extends Block implements EntityBlock{
+public class SpeakerBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty ANTIQUE = BlockProperties.ANTIQUE;
@@ -91,7 +91,7 @@ public class SpeakerBlock extends Block implements EntityBlock{
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
                     if (world.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
                         tile.sendMessage();
-                        world.gameEvent(GameEvent.RING_BELL, pos);
+                        world.gameEvent(null, GameEvent.INSTRUMENT_PLAY, pos);
                     }
                 }
             }

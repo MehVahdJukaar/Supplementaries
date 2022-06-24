@@ -99,4 +99,8 @@ public class DecoBlocksCompatRegistry{
     public static boolean isPalisade(BlockState state) {
         return false;
     }
+
+    public static boolean canLightBrazier(BlockState state) {
+        return false;
+    }
 }

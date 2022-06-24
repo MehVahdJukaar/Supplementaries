@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
 

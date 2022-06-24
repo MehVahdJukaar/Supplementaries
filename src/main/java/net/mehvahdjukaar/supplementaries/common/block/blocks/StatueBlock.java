@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -35,8 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class StatueBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 16, 12);
@@ -137,7 +136,7 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
             double x = (double) pos.getX() + 0.5D - 0.1875 * (double) direction.getStepX();
@@ -148,7 +147,7 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     }
 
     //candle code
-    public static void addCandleParticleAndSound(Level level, Vec3 vec3, Random random) {
+    public static void addCandleParticleAndSound(Level level, Vec3 vec3, RandomSource random) {
         float f = random.nextFloat();
         if (f < 0.3F) {
             level.addParticle(ParticleTypes.SMOKE, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);

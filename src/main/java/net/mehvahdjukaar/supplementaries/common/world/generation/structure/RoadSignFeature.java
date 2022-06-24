@@ -121,7 +121,6 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
                 double dist = pos.distToCenterSqr(pathPos.getX(), pathPos.getY(), pathPos.getZ()) / 5.2f;
 
                 if (rand.nextFloat() < dist - 0.15) continue;
-                ;
                 boolean m = (humidity * 0.75) > rand.nextFloat();
                 reader.setBlock(pathPos, m ? this.mossyCobble : this.cobble, 2);
             }

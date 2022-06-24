@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -7,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.*;
@@ -16,8 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Random;
 
 public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCap<T> {
 
@@ -105,16 +105,16 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
     }
 
     public static <E extends Entity> ICatchableMob getDefaultCap(E e) {
-        if (e.level.isClientSide && e instanceof LivingEntity && ClientConfigs.block.TICKLE_MOBS.get()
-                .contains(e.getType().getRegistryName().toString())) return new ClientTickableAnim((LivingEntity) e);
-        else if (e instanceof Squid) return new DoubleSideTickableAnim((LivingEntity) e);
+        if (e.level.isClientSide && e instanceof LivingEntity le && ClientConfigs.block.TICKABLE_MOBS.get()
+                .contains(Utils.getID(e.getType()).toString())) return new ClientTickableAnim(le);
+        else if (e instanceof Squid s) return new DoubleSideTickableAnim(s);
             //else if (e instanceof WaterMobEntity) return WATER_MOB;
-        else if (e instanceof Slime) return new SlimeAnim((Slime) e);
-        else if (e instanceof Parrot) return new ParrotAnim((Parrot) e);
+        else if (e instanceof Slime s) return new SlimeAnim(s);
+        else if (e instanceof Parrot s) return new ParrotAnim(s);
             //else if (e instanceof CatEntity) return CAT;
-        else if (e instanceof Rabbit) return new RabbitAnim((Rabbit) e);
-        else if (e instanceof Chicken) return new ChickenAnim((Chicken) e);
-        else if (e instanceof Endermite) return new EndermiteAnim((Endermite) e);
+        else if (e instanceof Rabbit s) return new RabbitAnim(s);
+        else if (e instanceof Chicken s) return new ChickenAnim(s);
+        else if (e instanceof Endermite s) return new EndermiteAnim(s);
         return new DefaultCatchableMobCap<>(e);
     }
 
@@ -167,7 +167,7 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
 
         @Override
         public void tickInsideContainer(Level world, BlockPos pos, float mobScale, CompoundTag tag) {
-            Random rand = world.getRandom();
+            RandomSource rand = world.getRandom();
             if (!world.isClientSide) {
                 if (--mob.eggTime <= 0) {
                     mob.spawnAtLocation(Items.EGG);

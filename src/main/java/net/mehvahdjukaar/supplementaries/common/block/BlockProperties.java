@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -203,7 +204,7 @@ public class BlockProperties {
         }
 
         public static Topping fromFluid(SoftFluid s) {
-            if (s == SoftFluidRegistry.HONEY.get()) return HONEY;
+            if (s == VanillaSoftFluids.HONEY.get()) return HONEY;
             String name = s.getRegistryName().getPath();
             if (name.equals("chocolate")) return CHOCOLATE;
             if (name.equals("syrup") || name.equals("maple_syrup") || name.equals("holy_syrup") || name.equals("unholy_syrup")) return SYRUP;

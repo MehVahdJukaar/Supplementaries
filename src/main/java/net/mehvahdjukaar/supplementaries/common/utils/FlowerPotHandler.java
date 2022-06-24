@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -36,7 +37,7 @@ public class FlowerPotHandler {
     }
 
     public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
-        return FULL_POTS.get(emptyPot.getEmptyPot()).getOrDefault(flowerBlock.getRegistryName(), Blocks.AIR.delegate).get();
+        return FULL_POTS.get(emptyPot.getEmptyPot()).getOrDefault(Utils.getID(flowerBlock), () -> Blocks.AIR).get();
     }
 
     public static boolean isEmptyPot(Block b) {
@@ -46,7 +47,7 @@ public class FlowerPotHandler {
 
     public static void init() {
         //registers pots
-        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModRegistry.FLAX_ITEM.get().getRegistryName(), ModRegistry.FLAX_POT);
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModRegistry.FLAX_ITEM.getId(), ModRegistry.FLAX_POT);
 
         //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
         Set<FlowerPotBlock> emptyPots = new HashSet<>();
@@ -57,10 +58,11 @@ public class FlowerPotHandler {
         }
         FULL_POTS = Maps.newHashMap();
         for (FlowerPotBlock pot : emptyPots) {
-            FULL_POTS.put(pot,pot.getFullPotsView());
+            FULL_POTS.put(pot, pot.getFullPotsView());
             FULL_POTs_BLOCKSTATES_LIST.addAll((pot.getFullPotsView()).values().stream().map(s -> s.get().defaultBlockState()).collect(Collectors.toList()));
         }
     }
+
 
     //flower box
     private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new HashMap<>();
@@ -76,29 +78,30 @@ public class FlowerPotHandler {
     }
 
     private static void registerCompatFlower(String itemRes) {
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemRes));
+        var id = new ResourceLocation(itemRes);
+        Item item = ForgeRegistries.ITEMS.getValue(id);
         if (item != null && item != Items.AIR) {
-            ResourceLocation res = Supplementaries.res("block/plants/" + item.getRegistryName().getPath());
+            ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
             CUSTOM_MODELS.add(res);
             registerCustomFlower(item, res);
-
         }
     }
 
+    //to manually add
     public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
     //static registerBus for client and server sync
-    static{
+    static {
         List<String> toAdd = new ArrayList<>();
-        toAdd.add(Items.CACTUS.getRegistryName().toString());
-        toAdd.add(Items.FLOWERING_AZALEA.getRegistryName().toString());
-        toAdd.add(Items.AZALEA.getRegistryName().toString());
-        toAdd.add(ModRegistry.FLAX_SEEDS_ITEM.get().getRegistryName().toString());
-        if(ModList.get().isLoaded("snowyspirit")){
+        toAdd.add(Utils.getID(Items.CACTUS).toString());
+        toAdd.add(Utils.getID(Items.FLOWERING_AZALEA).toString());
+        toAdd.add(Utils.getID(Items.AZALEA).toString());
+        toAdd.add(ModRegistry.FLAX_SEEDS_ITEM.getId().toString());
+        if (ModList.get().isLoaded("snowyspirit")) {
             toAdd.add("snowyspirit:ginger_flower");
         }
 
-        if(CompatHandler.quark) {
+        if (CompatHandler.quark) {
             Item[] items = new Item[]{
                     Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,
                     Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.WEEPING_VINES,
@@ -107,46 +110,46 @@ public class FlowerPotHandler {
             toAdd.add("quark:chorus_weeds");
             toAdd.add("quark:root");
             toAdd.add("quark:chorus_twist");
-            Arrays.stream(items).forEach(i -> toAdd.add(i.getRegistryName().toString()));
+            Arrays.stream(items).forEach(i -> toAdd.add(Utils.getID(i).toString()));
         }
 
-        if(CompatHandler.pokecube_legends){
+        if (CompatHandler.pokecube_legends) {
             toAdd.add("pokecube_legends:crystallized_cactus");
         }
 
-        if(CompatHandler.pokecube){
+        if (CompatHandler.pokecube) {
             String[] berries = new String[]{
-                "pokecube:berry_aspear",
-                "pokecube:berry_cheri",
-                "pokecube:berry_chesto",
-                "pokecube:berry_cornn",
-                "pokecube:berry_enigma",
-                "pokecube:berry_grepa",
-                "pokecube:berry_hondew",
-                "pokecube:berry_jaboca",
-                "pokecube:berry_kelpsy",
-                "pokecube:berry_leppa",
-                "pokecube:berry_lum",
-                "pokecube:berry_nanab",
-                "pokecube:berry_null",
-                "pokecube:berry_oran",
-                "pokecube:berry_pecha",
-                "pokecube:berry_persim",
-                "pokecube:berry_pinap",
-                "pokecube:berry_pomeg",
-                "pokecube:berry_qualot",
-                "pokecube:berry_rawst",
-                "pokecube:berry_rowap",
-                "pokecube:berry_sitrus",
-                "pokecube:berry_tamato"};
+                    "pokecube:berry_aspear",
+                    "pokecube:berry_cheri",
+                    "pokecube:berry_chesto",
+                    "pokecube:berry_cornn",
+                    "pokecube:berry_enigma",
+                    "pokecube:berry_grepa",
+                    "pokecube:berry_hondew",
+                    "pokecube:berry_jaboca",
+                    "pokecube:berry_kelpsy",
+                    "pokecube:berry_leppa",
+                    "pokecube:berry_lum",
+                    "pokecube:berry_nanab",
+                    "pokecube:berry_null",
+                    "pokecube:berry_oran",
+                    "pokecube:berry_pecha",
+                    "pokecube:berry_persim",
+                    "pokecube:berry_pinap",
+                    "pokecube:berry_pomeg",
+                    "pokecube:berry_qualot",
+                    "pokecube:berry_rawst",
+                    "pokecube:berry_rowap",
+                    "pokecube:berry_sitrus",
+                    "pokecube:berry_tamato"};
             toAdd.addAll(Arrays.asList(berries));
         }
 
-        if(CompatHandler.moreminecarts){
+        if (CompatHandler.moreminecarts) {
             toAdd.add("moreminecarts:chunkrodite_block");
             toAdd.add("moreminecarts:glass_cactus");
         }
-        if(CompatHandler.habitat){
+        if (CompatHandler.habitat) {
             toAdd.add("habitat:rafflesia");
             toAdd.add("habitat:orange_ball_cactus");
             toAdd.add("habitat:red_ball_cactus");
@@ -154,15 +157,15 @@ public class FlowerPotHandler {
             toAdd.add("habitat:yellow_ball_cactus");
             toAdd.add("habitat:kabloom_pulp");
         }
-        if(CompatHandler.endergetic){
+        if (CompatHandler.endergetic) {
             toAdd.add("endergetic:tall_poise_bush");
         }
-        if(CompatHandler.simplefarming){
+        if (CompatHandler.simplefarming) {
             toAdd.add("simplefarming:cantaloupe_block");
             toAdd.add("simplefarming:honeydew_block");
             toAdd.add("simplefarming:squash_block");
         }
-        if(CompatHandler.atmospheric){
+        if (CompatHandler.atmospheric) {
             toAdd.add("atmospheric:barrel_cactus");
         }
 

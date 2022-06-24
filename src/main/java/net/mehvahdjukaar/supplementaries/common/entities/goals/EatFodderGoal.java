@@ -7,6 +7,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
@@ -22,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 
 import java.util.EnumSet;
-import java.util.Random;
 
 public class EatFodderGoal extends MoveToBlockGoal {
 
@@ -102,7 +102,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
         //BlockPos blockpos = this.removerMob.blockPosition();
         //BlockPos blockpos1 = this.getPosWithBlock(blockpos, world);
 
-        Random random = this.animal.getRandom();
+        RandomSource random = this.animal.getRandom();
         if (this.isReachedTarget()) {
 
             //prevents stopping while eating

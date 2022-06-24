@@ -41,7 +41,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
      * @return fully qualified class name strings
      * @see <a href="https://stackoverflow.com/a/520344">Source</a>
      */
-    private static List<String> getClassesInPackage(String packageName) throws IOException, URISyntaxException {
+    private static List<String> getClassesInPackage(String packageName) throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
         String path = packageName.replaceAll("[.]", "/");
@@ -55,7 +55,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
             assert classLoaderResource != null;
             File dir = new File(classLoaderResource.toURI().toURL().getFile());
             dirs.add(dir);
-        }catch (Exception exception){};
+        }catch (Exception ignored){}
 
 
         while (resources.hasMoreElements()) {

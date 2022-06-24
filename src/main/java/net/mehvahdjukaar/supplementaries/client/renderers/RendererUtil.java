@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -40,7 +41,6 @@ import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 //TODO: move to lib
@@ -66,7 +66,7 @@ public class RendererUtil {
         ForgeHooksClient.setRenderType(type);
         blockRenderer.getModelRenderer().tesselateBlock(world,
                 blockRenderer.getBlockModel(state), state, pos, matrixStack,
-                buffer.getBuffer(type), false, new Random(), 0,
+                buffer.getBuffer(type), false, world.random, 0,
                 OverlayTexture.NO_OVERLAY);
         ForgeHooksClient.setRenderType(null);
     }
@@ -199,19 +199,12 @@ public class RendererUtil {
         int cUne = setColorForAge(time, 0.15f);
         int cUse = setColorForAge(time, 0.55f);
         int cUsw = setColorForAge(time, 0.35f);
-        ;
 
 
         int cDnw = setColorForAge(time, 0.45f);
-        ;
-        ;
         int cDne = setColorForAge(time, 0.85f);
-        ;
-        ;
         int cDse = setColorForAge(time, 1);
-        ;
         int cDsw = setColorForAge(time, 0.65f);
-        ;
 
 
         float amp = ClientConfigs.cached.BUBBLE_BLOCK_WOBBLE;

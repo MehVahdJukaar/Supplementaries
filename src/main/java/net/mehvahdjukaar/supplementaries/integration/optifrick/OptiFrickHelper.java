@@ -30,9 +30,9 @@ public class OptiFrickHelper {
                 var b = (BlockPos)spawnPos.get(entity.getEntityData());
                 Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.WARN,"spawnPos is: "+ b);
                 return b;
-            } catch (Exception ignored) {
+            } catch (Exception e) {
 
-                Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.ERROR,"getSpawnPosError: "+ ignored);
+                Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.ERROR,"getSpawnPosError: "+ e);
             }
         }
         Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.ERROR,"optifineNotInstalled");
@@ -44,8 +44,8 @@ public class OptiFrickHelper {
             try {
                 spawnPos.set(entity.getEntityData(), pos);
                 spawnBiome.set(entity.getEntityData(), level.getBiome(pos));
-            } catch (Exception ignored) {
-                Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.ERROR,"initRandomTextures: "+ ignored);
+            } catch (Exception e) {
+                Supplementaries.LOGGER.log(org.apache.logging.log4j.Level.ERROR,"initRandomTextures: "+ e);
             }
         }
     }

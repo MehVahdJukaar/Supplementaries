@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
@@ -44,7 +45,6 @@ public class SoapItem extends Item {
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
             .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
                     () -> new MobEffectInstance(MobEffects.POISON, 120, 2), 1).build();
-    ;
 
     public SoapItem(Properties pProperties) {
         super(pProperties.food(SOAP_FOOD));
@@ -138,8 +138,8 @@ public class SoapItem extends Item {
 
             //try parsing it if mods aren't using that tool modifier state (cause they arent god darn)
             if (newState == null) {
-                ResourceLocation r = oldState.getBlock().getRegistryName();
-                //hardcoding goes brr. This is needed and I can't just use forge event since I only want to react to axe scrape, not stripping
+                ResourceLocation r = Utils.getID(oldState.getBlock());
+                //hardcoding goes brr. This is needed, and I can't just use forge event since I only want to react to axe scrape, not stripping
                 String name = r.getPath();
                 String[] keywords = new String[]{"waxed_", "weathered_", "exposed_", "oxidized_",
                         "_waxed", "_weathered", "_exposed", "_oxidized"};
@@ -177,10 +177,8 @@ public class SoapItem extends Item {
 
                 if (player != null) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
-                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                } else {
-                    level.gameEvent(GameEvent.BLOCK_CHANGE, pos);
                 }
+                level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
         }
         return success;

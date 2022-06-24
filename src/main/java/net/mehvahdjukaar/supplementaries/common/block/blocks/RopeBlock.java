@@ -60,7 +60,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Predicate;
 
 public class RopeBlock extends WaterBlock {

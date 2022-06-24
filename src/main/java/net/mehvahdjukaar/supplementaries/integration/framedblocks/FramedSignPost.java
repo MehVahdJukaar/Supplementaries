@@ -84,3 +84,22 @@ public class FramedSignPost {
 }
 */
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.IModelData;
+
+public class FramedSignPost {
+    public static BlockState framedFence = Blocks.OAK_FENCE.defaultBlockState();
+
+    public static IModelData getModelData(BlockState mimic) {
+        return EmptyModelData.INSTANCE;
+    }
+
+    public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {
+        return null;
+    }
+}

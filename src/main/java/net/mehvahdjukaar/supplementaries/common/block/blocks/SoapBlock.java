@@ -3,13 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
-
-import java.util.Random;
 
 public class SoapBlock extends Block {
     public SoapBlock(Properties p_49795_) {
@@ -17,7 +16,7 @@ public class SoapBlock extends Block {
     }
 
     @Override
-    public void animateTick(BlockState pState, Level level, BlockPos pos, Random random) {
+    public void animateTick(BlockState pState, Level level, BlockPos pos, RandomSource random) {
 
     }
 
@@ -29,7 +28,7 @@ public class SoapBlock extends Block {
     @Override
     public boolean triggerEvent(BlockState pState, Level level, BlockPos pos, int pId, int pParam) {
         if (pId == 0) {
-            Random r = level.random;
+            RandomSource r = level.random;
             for (int i = 0; i < 2; i++) {
                 level.addParticle(ModRegistry.SUDS_PARTICLE.get(), pos.getX() + r.nextFloat(), pos.getY() + 1.1, pos.getZ() + r.nextFloat(),
                         (0.5 - r.nextFloat()) * 0.13f, (r.nextFloat()) * 0.1f, (0.5 - r.nextFloat()) * 0.13f);
@@ -68,7 +67,7 @@ public class SoapBlock extends Block {
 
     @Override
     public void stepOn(Level pLevel, BlockPos pPos, BlockState state, Entity entity) {
-        Random rand = entity.level.random;
+        RandomSource rand = entity.level.random;
         if ((!pLevel.isClientSide || entity instanceof LocalPlayer) && !entity.isSteppingCarefully()) {
             if (rand.nextFloat() < 0.14) {
                 var m = entity.getDeltaMovement();

@@ -36,14 +36,15 @@ public class SpringLauncherBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
-    public SpringLauncherBlock(Properties properties){
+
+    public SpringLauncherBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(EXTENDED, false));
     }
 
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
-        return state.getValue(EXTENDED)?PushReaction.BLOCK:PushReaction.NORMAL;
+        return state.getValue(EXTENDED) ? PushReaction.BLOCK : PushReaction.NORMAL;
     }
 
     @Override
@@ -124,17 +125,17 @@ public class SpringLauncherBlock extends Block {
                     world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
                     world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.25F + 0.45F);
-                    world.gameEvent(GameEvent.PISTON_EXTEND, pos);
+                    world.gameEvent(null, GameEvent.PISTON_EXTEND, pos);
                 }
             } else if (!flag && state.getValue(EXTENDED)) {
                 BlockState bs = world.getBlockState(offset);
                 if (bs.getBlock() instanceof SpringLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
                     // world.setBlockState(offset, Blocks.AIR.getDefaultState(), 3);
                     world.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
-                                    .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)));
+                            .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)));
                     world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
                             world.random.nextFloat() * 0.15F + 0.45F);
-                    world.gameEvent(GameEvent.PISTON_CONTRACT, pos);
+                    world.gameEvent(null, GameEvent.PISTON_CONTRACT, pos);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && state.getValue(FACING) == bs.getValue(FACING)) {
                     if (world.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {

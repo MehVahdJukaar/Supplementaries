@@ -2,14 +2,13 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -754,7 +753,7 @@ public class ServerConfigs {
 
         //items
         public static String ROPE_ARROW_ROPE;
-        public static Block ROPE_ARROW_BLOCK;
+        public static Holder.Reference<Block> ROPE_ARROW_BLOCK;
         public static int ROPE_ARROW_CAPACITY;
         public static boolean ROPE_ARROW_CROSSBOW;
         public static int FLUTE_RADIUS;
@@ -906,8 +905,8 @@ public class ServerConfigs {
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_CROSSBOW = item.ROPE_ARROW_CROSSBOW.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
-            ROPE_ARROW_BLOCK = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ROPE_ARROW_ROPE));
-            if (ROPE_ARROW_BLOCK == Blocks.AIR) ROPE_ARROW_BLOCK = ModRegistry.ROPE.get();
+            ROPE_ARROW_BLOCK = (Holder.Reference<Block>) ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(ROPE_ARROW_ROPE))
+                    .orElse(ForgeRegistries.BLOCKS.getHolder(ModRegistry.ROPE.get()).get());
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();

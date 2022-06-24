@@ -25,7 +25,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.Random;
 
 //TODO: broken on servers
 public class SpringLauncherArmBlockTile extends BlockEntity {

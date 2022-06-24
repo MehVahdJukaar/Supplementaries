@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -59,7 +58,7 @@ public class ClientReceivers {
         if (narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
             Narrator.getNarrator().say(str.getString(), true);
         } else {
-            withPlayerDo((p) -> p.sendMessage(str, Util.NIL_UUID));
+            withPlayerDo((p) -> p.displayClientMessage(str, false));
         }
     }
 
@@ -84,10 +83,10 @@ public class ClientReceivers {
 
                             String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
                             ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-                            link.setStyle(link.getStyle().withClickEvent(click).setUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
+                            link.setStyle(link.getStyle().withClickEvent(click).withUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
 
-                            p.sendMessage(Component.translatable("message.supplementaries.anti_repost", link), Util.NIL_UUID);
-                            p.sendMessage(Component.translatable("message.supplementaries.anti_repost_2"), Util.NIL_UUID);
+                            p.displayClientMessage(Component.translatable("message.supplementaries.anti_repost", link), false);
+                            p.displayClientMessage(Component.translatable("message.supplementaries.anti_repost_2"), false);
                             //player.sendMessage(ForgeHooks.newChatWithLinks(, false), Util.DUMMY_UUID);
                         }
                     }

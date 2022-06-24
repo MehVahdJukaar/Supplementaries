@@ -40,11 +40,11 @@ public interface ICatchableMob {
 
     default boolean canBeCaughtWithJar(){
         return false;
-    };
+    }
 
     default  boolean canBeCaughtWithCage(){
         return true;
-    };
+    }
 
     /**
      * the scale of a mob inside a jar/cage is determined by its hitbox. <br>

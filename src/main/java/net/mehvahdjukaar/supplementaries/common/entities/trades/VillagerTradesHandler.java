@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -22,7 +23,6 @@ import net.minecraftforge.event.village.WandererTradesEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class VillagerTradesHandler {
 
@@ -81,7 +81,7 @@ public class VillagerTradesHandler {
                 ModRegistry.PRESENTS.get(null).get().defaultBlockState());
 
         @Override
-        public MerchantOffer getOffer(Entity entity, Random random) {
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
             MerchantOffer internal = original.getOffer(entity, random);
             if (internal == null) return null;
             DUMMY.setItem(0, internal.getResult());
@@ -113,7 +113,7 @@ public class VillagerTradesHandler {
                                  int maxTrades) implements VillagerTrades.ItemListing {
 
         @Override
-        public MerchantOffer getOffer(Entity entity, Random random) {
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
 
             ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, rockets);
             CompoundTag tag = itemstack.getOrCreateTagElement("Fireworks");
@@ -138,7 +138,7 @@ public class VillagerTradesHandler {
 
     record StarForEmeraldTrade(int price, int maxTrades) implements VillagerTrades.ItemListing {
 
-        public MerchantOffer getOffer(Entity entity, Random random) {
+        public MerchantOffer getOffer(Entity entity, RandomSource random) {
 
             ItemStack itemstack = new ItemStack(Items.FIREWORK_STAR);
             itemstack.addTagElement("Explosion", createRandomFireworkStar(random, List.of()));
@@ -149,7 +149,7 @@ public class VillagerTradesHandler {
     private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE,DyeColor.ORANGE,DyeColor.MAGENTA,DyeColor.LIGHT_BLUE,
             DyeColor.YELLOW,DyeColor.LIME,DyeColor.PINK,DyeColor.CYAN,DyeColor.PURPLE,DyeColor.BLUE,DyeColor.GREEN,DyeColor.RED};
 
-    private static CompoundTag createRandomFireworkStar(Random random, List<FireworkRocketItem.Shape> usedShapes) {
+    private static CompoundTag createRandomFireworkStar(RandomSource random, List<FireworkRocketItem.Shape> usedShapes) {
         CompoundTag tag = new CompoundTag();
         ArrayList<FireworkRocketItem.Shape> possible =  new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
         possible.removeAll(usedShapes);

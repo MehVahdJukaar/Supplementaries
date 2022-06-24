@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
@@ -176,7 +175,7 @@ public class WaySignStructure extends StructureType<NoneFeatureConfiguration> {
         if (set.last() - set.first() > 1) return false;
 
         //TODO add villages here
-        return !context.chunkGenerator().hasFeatureChunkInRange(BuiltinStructureSets.PILLAGER_OUTPOSTS,
+        return !context.chunkGenerator().hasStructureChunkInRange(BuiltinStructureSets.PILLAGER_OUTPOSTS,
                 context.seed(), chunkPos.x, chunkPos.z, 10);
     }
 

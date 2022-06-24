@@ -121,7 +121,7 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
 
     public boolean isUnused(){
         return this.openersCounter.getOpenerCount() == 0;
-    };
+    }
 
     private class ContainerCounter extends ContainerOpenersCounter {
 

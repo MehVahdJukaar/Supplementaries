@@ -96,7 +96,7 @@ public class RopeArrowEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
 
-        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK;
+        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK.get();
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {
@@ -115,7 +115,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 Block hitBlock = hitState.getBlock();
 
                 //knot blocks
-                if (ServerConfigs.cached.ROPE_ARROW_BLOCK == ModRegistry.ROPE.get()) {
+                if (ServerConfigs.cached.ROPE_ARROW_BLOCK.get() == ModRegistry.ROPE.get()) {
                     BlockProperties.PostType knotType = BlockProperties.PostType.get(hitState);
                     if (knotType != null) {
                         BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
@@ -168,7 +168,7 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     private void continueUnwindingRope() {
-        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK;
+        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK.get();
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();

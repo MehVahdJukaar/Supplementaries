@@ -234,8 +234,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return true;
     }
 
-    ;
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);

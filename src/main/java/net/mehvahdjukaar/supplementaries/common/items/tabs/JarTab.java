@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items.tabs;
 
 import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidHolder;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
@@ -27,8 +28,8 @@ public class JarTab extends CreativeModeTab {
     @Override
     public ItemStack makeIcon() {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
-        SoftFluidHolder fluidHolder = new SoftFluidHolder(12);
-        fluidHolder.fill(SoftFluidRegistry.HONEY.get());
+        SoftFluidTank fluidHolder = new SoftFluidTank(12);
+        fluidHolder.fill(VanillaSoftFluids.HONEY.get());
         CompoundTag com = new CompoundTag();
         fluidHolder.save(com);
         icon.addTagElement("BlockEntityTag", com);
@@ -54,7 +55,7 @@ public class JarTab extends CreativeModeTab {
     public static void populateTab(NonNullList<ItemStack> items) {
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-        SoftFluidHolder fluidHolder = new SoftFluidHolder(tempTile.getMaxStackSize());
+        SoftFluidTank fluidHolder = new SoftFluidTank(tempTile.getMaxStackSize());
 
 
         if(ServerConfigs.cached.JAR_CAPTURE) {
@@ -77,8 +78,8 @@ public class JarTab extends CreativeModeTab {
             }
         }
         if(ServerConfigs.cached.JAR_LIQUIDS) {
-            for (SoftFluid s : SoftFluidRegistry.getRegisteredFluids()) {
-                if (s == SoftFluidRegistry.POTION.get() || s.isEmpty()) continue;
+            for (SoftFluid s : SoftFluidRegistry.getValues()) {
+                if (s == VanillaSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
                 fluidHolder.fill(s);
@@ -89,7 +90,7 @@ public class JarTab extends CreativeModeTab {
             for (ResourceLocation potion : net.minecraft.core.Registry.POTION.keySet()) {
                 CompoundTag com = new CompoundTag();
                 com.putString("Potion", potion.toString());
-                fluidHolder.fill(SoftFluidRegistry.POTION.get(), com);
+                fluidHolder.fill(VanillaSoftFluids.POTION.get(), com);
                 CompoundTag com2 = new CompoundTag();
                 fluidHolder.save(com2);
                 tryAdd(items, com2);

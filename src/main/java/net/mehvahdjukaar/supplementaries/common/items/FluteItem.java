@@ -5,8 +5,8 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonSpecialItemRenderer;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
-import net.mehvahdjukaar.moonlight.util.TwoHandedAnimation;
+import net.mehvahdjukaar.moonlight.math.MthUtils;
+import net.mehvahdjukaar.moonlight.misc.DualWeildState;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -210,7 +210,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, false);
             twoHanded.setTwoHanded(true);
@@ -220,7 +220,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, TwoHandedAnimation twoHanded) {
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, true);
             twoHanded.setTwoHanded(true);
@@ -238,8 +238,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         Vec3 by = new Vec3(0, 1, 0);
         Vec3 bz = new Vec3(0, 0, 1);
 
-        float headXRot = RotHlpr.wrapRad(model.head.xRot);
-        float headYRot = RotHlpr.wrapRad(model.head.yRot);
+        float headXRot = MthUtils.wrapRad(model.head.xRot);
+        float headYRot = MthUtils.wrapRad(model.head.yRot);
 
         //head rot + hand offset from flute
         float downFacingRot = Mth.clamp(headXRot, 0f, 0.8f);
@@ -271,8 +271,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         mainHand.xRot = (float) (pitch - Math.PI / 2f);
 
 
-        offHand.yRot = (float) Mth.clamp((RotHlpr.wrapRad(mainHand.yRot) - 1 * mirror) * 0.2, -0.15, 0.15) + 1.1f * mirror;
-        offHand.xRot = RotHlpr.wrapRad(mainHand.xRot - 0.06f);
+        offHand.yRot = (float) Mth.clamp((MthUtils.wrapRad(mainHand.yRot) - 1 * mirror) * 0.2, -0.15, 0.15) + 1.1f * mirror;
+        offHand.xRot = MthUtils.wrapRad(mainHand.xRot - 0.06f);
 
 
         //shoulder joint hackery
@@ -312,7 +312,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
                 //hax
                 float oldRot = head.xRot;
-                head.xRot = getMaxHeadXRot(RotHlpr.wrapRad(oldRot));
+                head.xRot = getMaxHeadXRot(MthUtils.wrapRad(oldRot));
                 head.translateAndRotate(poseStack);
                 head.xRot = oldRot;
 
@@ -336,7 +336,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             //let the model handle it
             //poseStack.translate(0, -0.0625D, 0.0D);
             //poseStack.mulPose(Vector3f.XP.rotationDegrees(-30));
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(entity, stack, transform,
+            Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, stack, transform,
                     leftHand, poseStack, bufferSource, light);
 
             poseStack.popPose();

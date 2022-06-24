@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.map.markers.MapBlockMarker;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -22,7 +23,7 @@ public class NetherPortalMarker extends MapBlockMarker<CustomMapDecoration> {
     @Nullable
     public static NetherPortalMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (world.getBlockState(pos).getBlock() instanceof NetherPortalBlock ||
-                world.getFluidState(pos).getType().getRegistryName().toString().equals("betterportals:portal_fluid")) {
+                Utils.getID(world.getFluidState(pos).getType()).toString().equals("betterportals:portal_fluid")) {
             return new NetherPortalMarker(pos);
         } else {
             return null;

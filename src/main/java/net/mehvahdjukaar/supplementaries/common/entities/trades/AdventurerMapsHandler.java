@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.map.type.IMapDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
@@ -201,7 +200,7 @@ public class AdventurerMapsHandler {
 
         private ItemStack createMap(Level level, BlockPos pos) {
             if (level instanceof ServerLevel serverLevel) {
-                if (!serverLevel.getServer().getWorldData().worldGenSettings().generateFeatures())
+                if (!serverLevel.getServer().getWorldData().worldGenSettings().generateStructures())
                     return ItemStack.EMPTY;
 
                 var found = StructureLocator.findNearestRandomMapFeature(
@@ -256,7 +255,7 @@ public class AdventurerMapsHandler {
 
         if (world instanceof ServerLevel serverLevel) {
 
-            BlockPos toPos = serverLevel.findNearestMapFeature(destination, pos, SEARCH_RADIUS, true);
+            BlockPos toPos = serverLevel.findNearestMapStructure(destination, pos, SEARCH_RADIUS, true);
             if (toPos == null) {
                 return ItemStack.EMPTY;
             } else {

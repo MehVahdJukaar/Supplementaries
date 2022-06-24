@@ -29,7 +29,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class FlaxBlock extends CropBlock implements IBeeGrowable {
     public static final int DOUBLE_AGE = 4; //age at which it grows in block above

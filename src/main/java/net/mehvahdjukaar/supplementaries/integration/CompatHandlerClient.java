@@ -1,10 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 

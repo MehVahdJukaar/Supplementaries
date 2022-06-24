@@ -9,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.server.command.EnumArgument;
 
@@ -61,7 +62,6 @@ public class RecordSongCommand {
     }
 
     public static int start(CommandContext<CommandSourceStack> context, NoteBlockInstrument... whitelist) throws CommandSyntaxException {
-
 
         SongsManager.startRecording(whitelist);
 

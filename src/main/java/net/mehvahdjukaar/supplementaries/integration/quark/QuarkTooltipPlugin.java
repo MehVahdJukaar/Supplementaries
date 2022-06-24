@@ -77,4 +77,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 public class QuarkTooltipPlugin {
     public static void onItemTooltipEvent(ItemTooltipEvent event) {
     }
+
+    public static boolean canRenderTooltip() {
+        return false;
+    }
 }

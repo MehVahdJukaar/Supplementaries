@@ -60,7 +60,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlock {

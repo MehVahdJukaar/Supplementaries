@@ -6,8 +6,6 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
-
 import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.moonlight.misc.AnimationState;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
@@ -37,7 +35,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, IFirstPersonAnimationProvider, IThirdPersonAnimationProvider {

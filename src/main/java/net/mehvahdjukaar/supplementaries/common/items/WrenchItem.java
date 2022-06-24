@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -143,7 +144,7 @@ public class WrenchItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand pUsedHand) {
-        if (entity instanceof ArmorStand || entity.getType().getRegistryName().getNamespace().equals("dummmmmmy")) {
+        if (entity instanceof ArmorStand ||  entity.getType().is(ModTags.ROTATABLE)) {
             boolean shiftDown = player.isShiftKeyDown();
             float inc = 22.5f * (shiftDown ? -1 : 1);
             entity.setYRot(entity.getYRot() + inc);

@@ -16,8 +16,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Random;
-
 public class DoubleCakeBlock extends DirectionalCakeBlock {
 
     protected static final VoxelShape[] SHAPES_WEST = new VoxelShape[]{

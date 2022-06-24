@@ -31,8 +31,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 
-;
-
 /**
  * Creates a tiny explosion that only destroys surrounding blocks if they have 0
  * hardness (like TNT). Also damages entities standing near it a bit.
