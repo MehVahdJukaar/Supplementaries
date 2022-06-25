@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
@@ -25,6 +26,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.client.IItemRenderProperties;
@@ -80,14 +82,13 @@ public class ClientRegistry {
 
 
     static {
-        Validate.isTrue(!WoodTypeRegistry.WOOD_TYPES.values().isEmpty());
         ModRegistry.HANGING_SIGNS.forEach((wood, block) -> HANGING_SIGNS_BLOCK_MODELS
-                .put(wood, Supplementaries.res("block/hanging_signs/" + block.getRegistryName().getPath())));
+                .put(wood, Supplementaries.res("block/hanging_signs/" + Utils.getID(block).getPath())));
 
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
-                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + item.getRegistryName().getPath()))));
+                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));
 
-        for (BannerPattern pattern : BannerPattern.values()) {
+        for (BannerPattern pattern : Registry.BANNER_PATTERN) {
             FLAG_MATERIALS.put(pattern, new Material(Sheets.BANNER_SHEET, Textures.FLAG_TEXTURES.get(pattern)));
         }
 

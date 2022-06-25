@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "simplefarming:squash_soup"
   },
-  "id": "simplefarming:squash_soup",
+  "from_mod": "simplefarming",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

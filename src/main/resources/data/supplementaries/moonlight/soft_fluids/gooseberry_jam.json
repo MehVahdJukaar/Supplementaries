@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "gooseberry_jam:gooseberry_jam_bottle"
   },
-  "id": "bayou_blues:gooseberry_jam",
+  "from_mod": "bayou_blues",
   "still_texture": "moonlight:soft_fluids/soup_liquid",
   "translation_key": "item.bayou_blues.gooseberry_jam_bottle"
 }

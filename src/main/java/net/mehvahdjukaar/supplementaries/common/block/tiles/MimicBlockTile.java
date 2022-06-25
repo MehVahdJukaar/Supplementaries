@@ -23,9 +23,9 @@ import java.util.Objects;
 
 public abstract class MimicBlockTile extends BlockEntity implements IBlockHolder {
 
-    public BlockState mimic = Blocks.AIR.defaultBlockState();
     public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
 
+    public BlockState mimic = Blocks.AIR.defaultBlockState();
 
     public MimicBlockTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -72,20 +72,12 @@ public abstract class MimicBlockTile extends BlockEntity implements IBlockHolder
         if (!Objects.equals(oldMimic, this.mimic)) {
             //not needed cause model data doesn't create new obj. updating old one instead
             ModelDataManager.requestModelDataRefresh(this);
-            //this.data.setData(MIMIC, this.getHeldBlock());
-            if (this.level != null) {
+            if (level != null) {
+                //marks block as changed for re render i think.
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
             }
         }
     }
-
-    // The getUpdateTag()/handleUpdateTag() pair is called whenever the client receives a new chunk
-    // it hasn't seen before. i.e. the chunk is loaded
-
-
-    // The getUpdatePacket()/onDataPacket() pair is used when a block update happens on the client
-    // (a blockstate change or an explicit notificiation of a block update from the server). It's
-    // easiest to implement them based on getUpdateTag()/handleUpdateTag()
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

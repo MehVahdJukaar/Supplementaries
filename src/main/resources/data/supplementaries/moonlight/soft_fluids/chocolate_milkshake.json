@@ -10,7 +10,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/potion_flow",
-  "id": "neapolitan:chocolate_milkshake",
+  "from_mod": "neapolitan",
   "still_texture": "moonlight:soft_fluids/soup_liquid",
   "translation_key": "item.neapolitan.chocolate_milkshake"
 }

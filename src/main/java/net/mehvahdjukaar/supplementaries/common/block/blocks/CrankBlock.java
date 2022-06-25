@@ -173,11 +173,6 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-        return BlockPathTypes.OPEN;
-    }
-
-    @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
         return true;
     }

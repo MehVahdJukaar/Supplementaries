@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "iceandfire:frost_stew"
   },
-  "id": "iceandfire:frost_stew",
+  "from_mod": "iceandfire",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

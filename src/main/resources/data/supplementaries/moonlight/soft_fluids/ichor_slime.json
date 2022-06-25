@@ -13,6 +13,6 @@
     "divider": 1,
     "item": "tconstruct:ichor_slime_ball"
   },
-  "id": "tconstruct:ichor_slime",
+  "from_mod": "tconstruct",
   "still_texture": "tconstruct:block/ichor_congealed_slime"
 }

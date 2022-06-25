@@ -16,7 +16,7 @@
     "divider": 1,
     "item": "create:builders_tea"
   },
-  "id": "minecraft:builders_tea",
+  "from_mod": "minecraft",
   "still_texture": "minecraft:block/water_still",
   "use_texture_from": "create:tea"
 }

@@ -108,4 +108,8 @@ public class QuarkPlugin{
     public static int getSacksInBackpack(ItemStack backpack) {
         return 0;
     }
+
+    public static boolean isVerticalSlabEnabled() {
+        return false;
+    }
 }

@@ -68,11 +68,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         return SHAPES_TOP[state.getValue(AGE)];
     }
 
-    @Override
-    public BlockBehaviour.OffsetType getOffsetType() {
-        return OffsetType.NONE;
-    }
-
     //double plant code
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {

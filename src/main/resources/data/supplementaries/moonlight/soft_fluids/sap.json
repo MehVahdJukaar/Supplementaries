@@ -21,7 +21,7 @@
     "divider": 1,
     "item": "autumnity:sap_bottle"
   },
-  "id": "supplementaries:sap",
+  "from_mod": "supplementaries",
   "still_texture": "moonlight:soft_fluids/honey_liquid",
   "translation_key": "fluid.supplementaries.sap",
   "use_texture_from": "thermal:sap"

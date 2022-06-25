@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -74,7 +75,7 @@ public class SoapItem extends Item {
             double y = entity.getEyeY() + v.y - 0.12;
             double z = entity.getZ() + v.z;
             for(int j = 0; j<4; j++) {
-                Random r = entity.getRandom();
+                RandomSource r = entity.getRandom();
                 v = v.scale(0.1 + r.nextFloat() * 0.1f);
                 double dx = v.x + ((0.5 - r.nextFloat()) * 0.9);
                 double dy = v.y + ((0.5 - r.nextFloat()) * 0.06);
@@ -112,8 +113,10 @@ public class SoapItem extends Item {
         return super.useOn(context);
     }
 
+    //TODO: use tool modifier event instead
     //move all of this into the event so it takes priority
     public static boolean tryCleaning(ItemStack stack, Level level, BlockPos pos, @Nullable Player player) {
+        /*
         BlockState newState = null;
         BlockState oldState = level.getBlockState(pos);
         Block b = oldState.getBlock();
@@ -182,6 +185,8 @@ public class SoapItem extends Item {
             }
         }
         return success;
+        */
+         return false;
     }
 
 }

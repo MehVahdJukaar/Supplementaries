@@ -46,7 +46,6 @@ public class ModSetup {
             FlowerPotHandler::init,
             CMDreg::init,
             WeatheredMap::init,
-            CapturedMobsHelper::refresh,
             NetworkHandler::registerMessages,
             LootTableStuff::init,
             ModSetup::registerCompostables,
@@ -56,13 +55,12 @@ public class ModSetup {
     );
 
     public static void init(final FMLCommonSetupEvent event) {
-
         event.enqueueWork(() -> {
 
             try {
                 Stopwatch watch = Stopwatch.createStarted();
 
-                for(int i = 0; i<MOD_SETUP_WORK.size(); i++){
+                for (int i = 0; i < MOD_SETUP_WORK.size(); i++) {
                     setupStage = i;
                     MOD_SETUP_WORK.get(i).run();
                 }
@@ -110,11 +108,11 @@ public class ModSetup {
             firstTagLoad = true;
             if (!hasFinishedSetup) {
                 //if mod setup fails (without throwing errors) we try to replicate what caused it to crash and printing that error
-                try{
+                try {
                     Supplementaries.LOGGER.error("Something went wrong during mod setup, exiting");
                     MOD_SETUP_WORK.get(setupStage).run();
                     Supplementaries.LOGGER.error("No error found. Weird");
-                }catch (Exception e){
+                } catch (Exception e) {
                     Supplementaries.LOGGER.error(e);
                 }
                 terminateWhenSetupFails();

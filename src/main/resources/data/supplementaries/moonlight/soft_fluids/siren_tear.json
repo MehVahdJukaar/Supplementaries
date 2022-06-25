@@ -10,7 +10,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/milk_liquid",
-  "id": "iceandfire:siren_tear",
+  "from_mod": "iceandfire",
   "still_texture": "moonlight:soft_fluids/milk_liquid",
   "translation_key": "item.iceandfire.siren_tear"
 }

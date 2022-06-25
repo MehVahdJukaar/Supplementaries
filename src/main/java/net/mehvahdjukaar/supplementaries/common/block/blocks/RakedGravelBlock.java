@@ -59,7 +59,7 @@ public class RakedGravelBlock extends GravelBlock {
         return false;
     }
 
-    public static BlockState getConnectedState(BlockState blockstate, Level world, BlockPos pos, Direction front) {
+    public static BlockState getConnectedState(BlockState blockstate, LevelAccessor world, BlockPos pos, Direction front) {
         List<Direction> directionList = new ArrayList<>();
 
         Direction back = front.getOpposite();

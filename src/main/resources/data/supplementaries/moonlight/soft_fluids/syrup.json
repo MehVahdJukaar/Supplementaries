@@ -17,7 +17,7 @@
     "divider": 1,
     "item": "autumnity:syrup_bottle"
   },
-  "id": "autumnity:syrup",
+  "from_mod": "autumnity",
   "still_texture": "moonlight:soft_fluids/honey_liquid",
   "translation_key": "item.autumnity.syrup",
   "use_texture_from": "create:honey"

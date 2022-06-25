@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.moonlight.util.DispenserHelper.AdditionalDispenserBehavior;
@@ -19,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.*;
@@ -27,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -37,11 +40,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
@@ -55,7 +63,7 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
 
         //dispenser minecart
-        if(RegistryConfigs.Reg.DISPENSER_MINECART_ENABLED.get()){
+        if (RegistryConfigs.Reg.DISPENSER_MINECART_ENABLED.get()) {
             DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
         }
 
@@ -68,7 +76,7 @@ public class DispenserRegistry {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
 
-        if(RegistryConfigs.Reg.SACK_ENABLED.get()){
+        if (RegistryConfigs.Reg.SACK_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
         }
 
@@ -84,7 +92,7 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
-            Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h->
+            Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
                     DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(h.value()))
             );
 
@@ -155,12 +163,16 @@ public class DispenserRegistry {
         protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
             ServerLevel level = source.getLevel();
-            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos pos = source.getPos().relative(dir);
             BlockState state = level.getBlockState(pos);
             Block b = state.getBlock();
 
+            FakePlayer fp = FakePlayerFactory.get(level, CommonUtil.DUMMY_PROFILE);
+            fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));
 
-            Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_STRIP));
+            Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_STRIP, false));
             if (optional.isPresent()) {
                 level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlock(pos, optional.get(), 11);
@@ -170,7 +182,7 @@ public class DispenserRegistry {
                 return InteractionResultHolder.success(stack);
             }
 
-            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_SCRAPE));
+            optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_SCRAPE, false));
             if (optional.isPresent()) {
                 level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.levelEvent(null, 3005, pos, 0);
@@ -180,7 +192,7 @@ public class DispenserRegistry {
                 }
                 return InteractionResultHolder.success(stack);
             }
-            optional = Optional.ofNullable(b.getToolModifiedState(state, level, pos, null, stack, ToolActions.AXE_WAX_OFF));
+            optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_WAX_OFF, false));
             if (optional.isPresent()) {
                 level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.levelEvent(null, 3004, pos, 0);
@@ -337,7 +349,7 @@ public class DispenserRegistry {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if (state.getBlock() instanceof PancakeBlock block) {
-                if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidRegistry.HONEY.get(), null, 1)) {
+                if (block.tryAcceptingFluid(world, state, blockpos, VanillaSoftFluids.HONEY.get(), null, 1)) {
                     return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
                 }
                 return InteractionResultHolder.fail(stack);
@@ -407,7 +419,7 @@ public class DispenserRegistry {
 
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 
-            pearl.shoot(direction.getStepX(), (float)direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
+            pearl.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
             level.addFreshEntity(pearl);
 
             stack.shrink(1);

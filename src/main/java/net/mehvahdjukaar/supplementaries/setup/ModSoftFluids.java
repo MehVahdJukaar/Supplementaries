@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.util.ObjectReference;
+import net.mehvahdjukaar.moonlight.misc.ObjectReference;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 
 public class ModSoftFluids {

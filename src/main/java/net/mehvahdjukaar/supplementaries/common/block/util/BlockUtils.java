@@ -61,12 +61,6 @@ public class BlockUtils {
         return targetType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    public static class PlayerLessContext extends BlockPlaceContext {
-        public PlayerLessContext(Level worldIn, @Nullable Player playerIn, InteractionHand handIn, ItemStack stackIn, BlockHitResult rayTraceResultIn) {
-            super(worldIn, playerIn, handIn, stackIn, rayTraceResultIn);
-        }
-    }
-
     //rotation stuff
     //returns rotation direction axis which might be different that the clicked face
     public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {

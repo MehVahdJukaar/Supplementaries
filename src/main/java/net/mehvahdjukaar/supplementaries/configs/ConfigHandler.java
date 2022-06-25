@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
+import net.mehvahdjukaar.moonlight.configs.SyncedCommonConfigs;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
@@ -34,8 +36,15 @@ public class ConfigHandler {
 
     public static void registerBus(IEventBus modBus) {
         ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
+
+        SERVER_CONFIG_OBJECT = new SyncedCommonConfigs(ServerConfigs.SERVER_SPEC,modContainer){
+            @Override
+            public void onRefresh() {
+                ServerConfigs.cached.refresh();
+            }
+        };
         CLIENT_CONFIG_OBJECT = new ModConfig(ModConfig.Type.CLIENT, ClientConfigs.CLIENT_SPEC, modContainer);
-        SERVER_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC, modContainer);
+        //SERVER_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, ServerConfigs.SERVER_SPEC, modContainer);
         REGISTRY_CONFIG_OBJECT = new ModConfig(ModConfig.Type.COMMON, RegistryConfigs.REGISTRY_CONFIG, modContainer, RegistryConfigs.FILE_NAME);
         modContainer.addConfig(CLIENT_CONFIG_OBJECT);
         modContainer.addConfig(SERVER_CONFIG_OBJECT);
@@ -54,38 +63,35 @@ public class ConfigHandler {
                 .apply(mc, mc.screen));
     }
 
-    public static <T> void resetConfigValue(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value) {
-        ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(value.getPath());
-        if (valueSpec == null) Supplementaries.LOGGER.throwing(
-                new Exception("No such config value: " + value + "in config " + spec));
-        value.set((T) valueSpec.getDefault());
-    }
-
-
     public static void reloadConfigsEvent(ModConfigEvent event) {
+        /*
         if (event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {
             //send this configuration to connected clients
             sendSyncedConfigsToAllPlayers();
-            ServerConfigs.cached.refresh();
+            ServerConfigs.cached.refreshVisuals();
         } else if (event.getConfig().getSpec() == ClientConfigs.CLIENT_SPEC)
-            ClientConfigs.cached.refresh();
+            ClientConfigs.cached.refreshVisuals();
+        */
     }
+
 
     @Deprecated
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        /*
         if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
             syncServerConfigs((ServerPlayer) event.getPlayer());
-        }
+        }*/
     }
     @Deprecated
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        /*
         if (event.getPlayer().level.isClientSide) {
             //reload local common configs
             //maybe not needed
             //ServerConfigs.loadLocal();
-            ServerConfigs.cached.refresh();
-        }
+            ServerConfigs.cached.refreshVisuals();
+        }*/
     }
 
 

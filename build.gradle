@@ -137,7 +137,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jei-238222:3835406")
     implementation fg.deobf("curse.maven:configured-457570:3822820")
-    implementation fg.deobf("curse.maven:cc-tweaked-282001:3829191")
+    implementation fg.deobf("curse.maven:cc-tweaked-282001:3845707")
     implementation fg.deobf("curse.maven:curios-309927:3841962")
 
     /*

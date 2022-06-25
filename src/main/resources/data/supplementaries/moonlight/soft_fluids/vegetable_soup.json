@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "farmersdelight:vegetable_soup"
   },
-  "id": "farmersdelight:vegetable_soup",
+  "from_mod": "farmersdelight",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

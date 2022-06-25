@@ -7,7 +7,7 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.math.MthUtils;
-import net.mehvahdjukaar.moonlight.misc.AnimationState;
+import net.mehvahdjukaar.moonlight.misc.DualWeildState;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
@@ -166,7 +166,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             return InteractionResultHolder.fail(itemstack);
         } else {
             player.startUsingItem(hand);
-            player.level.playSound(player,player,
+            player.level.playSound(player, player,
                     getChargeSound(itemstack), SoundSource.PLAYERS, 1.0F,
                     1 * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F)));
             return InteractionResultHolder.consume(itemstack);
@@ -206,7 +206,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, AnimationState twoHanded) {
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
             model.leftArm.yRot = MthUtils.wrapRad(0.1F + model.head.yRot);
@@ -218,7 +218,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     //TODO: finish this
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, AnimationState twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             //twoHanded.setTwoHanded(true);
             model.rightArm.yRot = MthUtils.wrapRad(-0.1F + model.head.yRot);

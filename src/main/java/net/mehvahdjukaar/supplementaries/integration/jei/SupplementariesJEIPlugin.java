@@ -3,18 +3,22 @@ package net.mehvahdjukaar.supplementaries.integration.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.*;
@@ -25,6 +29,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -59,7 +65,7 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
     }
 
     public static class SpikesSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
@@ -263,7 +269,8 @@ public class SupplementariesJEIPlugin implements IModPlugin {
 
             ListTag list = new ListTag();
             CompoundTag compoundTag = new CompoundTag();
-            compoundTag.putString("Pattern", ((BannerPatternItem) Items.MOJANG_BANNER_PATTERN).getBannerPattern().getHashname());
+
+            compoundTag.putString("Pattern", Registry.BANNER_PATTERN.get(BannerPatterns.MOJANG).getHashname());
             compoundTag.putInt("Color", color == DyeColor.WHITE ? DyeColor.BLACK.getId() : DyeColor.WHITE.getId());
             list.add(compoundTag);
 

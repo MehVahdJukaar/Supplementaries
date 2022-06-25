@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "farmersdelight:chicken_soup"
   },
-  "id": "farmersdelight:chicken_soup",
+  "from_mod": "farmersdelight",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

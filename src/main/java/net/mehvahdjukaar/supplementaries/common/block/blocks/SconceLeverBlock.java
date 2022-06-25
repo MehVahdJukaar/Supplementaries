@@ -50,7 +50,7 @@ public class SconceLeverBlock extends SconceWallBlock {
             boolean enabled = blockstate.getValue(POWERED);
             float f = enabled ? 0.6F : 0.5F;
             worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-            worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
+            worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
             return InteractionResult.CONSUME;
         }
     }

@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.protocol.login.ServerLoginPacketListener;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.*;
@@ -52,7 +55,7 @@ public class SpecialPlayers {
         }
         if (isDev) {
             if (onlineId != null) DEVS.add(onlineId);
-            DEVS.add(Player.createPlayerUUID(name));
+            DEVS.add(UUIDUtil.createOfflinePlayerUUID(name));
 
         }
         if (hasGlobe) {

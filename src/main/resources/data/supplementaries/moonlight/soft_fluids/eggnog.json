@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "snowyspirit:eggnog"
   },
-  "id": "snowyspirit:eggnog",
+  "from_mod": "snowyspirit",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.snowyspirit.eggnog"
 }

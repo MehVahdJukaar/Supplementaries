@@ -11,7 +11,7 @@
     }
   ],
   "flowing_texture": "minecraft:block/dirt",
-  "id": "supplementaries:dirt",
+  "from_mod": "supplementaries",
   "still_texture": "minecraft:block/dirt",
   "translation_key": "block.minecraft.dirt"
 }

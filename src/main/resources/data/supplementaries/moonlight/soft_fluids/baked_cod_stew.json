@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "farmersdelight:baked_cod_stew"
   },
-  "id": "farmersdelight:baked_cod_stew",
+  "from_mod": "farmersdelight",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

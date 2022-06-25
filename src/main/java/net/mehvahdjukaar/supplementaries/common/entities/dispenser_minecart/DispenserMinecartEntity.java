@@ -20,9 +20,11 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -34,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class DispenserMinecartEntity extends AbstractMinecart implements Container, MenuProvider {
+public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
 
     private static final BlockState BLOCK_STATE = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.UP);
 
@@ -44,8 +46,11 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
     private boolean powered = false;
 
     public DispenserMinecartEntity(Level level, double x, double y, double z) {
-        super(ModRegistry.DISPENSER_MINECART.get(), level, x, y, z);
-        this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, BLOCK_STATE, this);
+        this(ModRegistry.DISPENSER_MINECART.get(), level);
+        this.setPos(x, y, z);
+        this.xo = x;
+        this.yo = y;
+        this.zo = z;
     }
 
     public DispenserMinecartEntity(EntityType<DispenserMinecartEntity> entityType, Level level) {
@@ -92,7 +97,7 @@ public class DispenserMinecartEntity extends AbstractMinecart implements Contain
 
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
-        InteractionResult ret = super.interact(pPlayer, pHand);
+        InteractionResult ret = InteractionResult.PASS;
         if (ret.consumesAction()) return ret;
         pPlayer.openMenu(this);
         if (!pPlayer.level.isClientSide) {

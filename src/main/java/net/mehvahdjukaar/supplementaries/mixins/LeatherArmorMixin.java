@@ -44,7 +44,7 @@ public abstract class LeatherArmorMixin<T extends LivingEntity, M extends Humano
                        int packedLight, A model, CallbackInfo ci) {
         if (equipmentSlot == EquipmentSlot.CHEST) {
             ItemStack itemStack = entity.getItemBySlot(equipmentSlot);
-            ResourceLocation texture = LeatherPatternTexturesRegistry.getTexture(itemStack);
+            ResourceLocation texture = null ;// LeatherPatternTexturesRegistry.getTexture(itemStack);
             if (texture != null) {
                 this.renderModel(poseStack, bufferSource, packedLight, itemStack.hasFoil(), model, 1.0F, 1.0F, 1.0F, texture);
             }

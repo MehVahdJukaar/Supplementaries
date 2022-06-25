@@ -6,11 +6,13 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.WanderingTraderSpawner;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -31,9 +33,7 @@ import java.util.Random;
 @Mixin(WanderingTraderSpawner.class)
 public abstract class RedMerchantSpawnerMixin {
 
-    @Final
-    @Shadow
-    private Random random;
+    @Shadow @Final private RandomSource random;
     @Final
     @Shadow
     private ServerLevelData serverLevelData;
@@ -64,7 +64,8 @@ public abstract class RedMerchantSpawnerMixin {
                 if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 90) {
 
                     PoiManager poiManager = world.getPoiManager();
-                    Optional<BlockPos> optional = poiManager.find(PoiType.MEETING.getPredicate(), (p_221241_0_) -> true, blockpos, 48, PoiManager.Occupancy.ANY);
+                    Optional<BlockPos> optional = poiManager.find((h) -> h.is(PoiTypes.MEETING),
+                            (pos) -> true, blockpos, 48, PoiManager.Occupancy.ANY);
                     BlockPos targetPos = optional.orElse(blockpos);
                     BlockPos spawnPos = this.findSpawnPositionNear(world, targetPos, 48);
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {

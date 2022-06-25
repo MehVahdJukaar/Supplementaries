@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.DyeColor;
@@ -44,7 +45,7 @@ public class FlagItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (com != null && com.contains("Patterns")) {
             listnbt = com.getList("Patterns", 10);
         }
-        List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
+        List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
         matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
         matrixStackIn.mulPose(RotHlpr.Y90);
         FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);

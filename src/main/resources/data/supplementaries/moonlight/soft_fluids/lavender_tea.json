@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "abundance:lavender_tea"
   },
-  "id": "abundance:lavender_tea",
+  "from_mod": "abundance",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.abundance.lavender_tea"
 }

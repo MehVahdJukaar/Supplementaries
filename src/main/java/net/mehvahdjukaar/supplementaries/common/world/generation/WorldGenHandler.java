@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
+/*
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -64,4 +65,18 @@ public class WorldGenHandler {
         }
     }
 
+}
+*/
+
+import net.minecraftforge.eventbus.api.IEventBus;
+
+public  class WorldGenHandler {
+    public static void onRegisterAdditional() {
+    }
+
+    public static void onInit() {
+    }
+
+    public static void registerBus(IEventBus bus) {
+    }
 }

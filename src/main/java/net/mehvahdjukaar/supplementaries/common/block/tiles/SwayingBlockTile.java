@@ -97,7 +97,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
     public boolean shouldRenderFancy() {
         if (this.currentlyHasTESR != this.shouldHaveTESR && !this.currentlyHasTESR) {
             //makes tesr wait 1 render cycle,
-            // so it's in sync with model data refresh
+            // so it's in sync with model data refreshVisuals
             this.currentlyHasTESR = true;
         }
         return currentlyHasTESR;
@@ -109,7 +109,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
             tile.ticksToSwitchMode--;
             if (tile.ticksToSwitchMode == 0) {
                 //makes tesr wait 1 render cycle,
-                // so it's in sync with model data refresh
+                // so it's in sync with model data refreshVisuals
                 tile.currentlyHasTESR = false;
             }
         }

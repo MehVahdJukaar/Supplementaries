@@ -58,22 +58,11 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         this.registerDefaultState(this.stateDefinition.any().setValue(PANCAKES, 1).setValue(TOPPING, Topping.NONE).setValue(WATERLOGGED, false));
     }
 
-    private Topping getTopping(ItemStack stack) {
-        Item item = stack.getItem();
-        if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
-        if (item instanceof HoneyBottleItem) return BlockProperties.Topping.HONEY;
-        var tag = Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS);
-        if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
-            return Topping.CHOCOLATE;
-        }
-        return Topping.NONE;
-    }
-
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
-        Topping t = getTopping(stack);
+        Topping t = Topping.fromItem(stack);
         if (t != Topping.NONE) {
             if (state.getValue(TOPPING) == Topping.NONE) {
                 if (!worldIn.isClientSide) {
@@ -92,9 +81,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             player.getFoodData().eat(1, 0.1F);
             if (!worldIn.isClientSide) {
 
-
-                removeLayer(state, pos, worldIn, player);
-                player.playNotifySound(SoundEvents.GENERIC_EAT, SoundSource.PLAYERS, 1, 1);
+                this.removeLayer(state, pos, worldIn, player);
+                player.playSound(SoundEvents.GENERIC_EAT, 1, 1);
                 return InteractionResult.CONSUME;
             } else {
                 Minecraft.getInstance().particleEngine.destroy(player.blockPosition().above(1), state);
@@ -105,7 +93,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
 
-    public static void removeLayer(BlockState state, BlockPos pos, Level world, Player player) {
+    private void removeLayer(BlockState state, BlockPos pos, Level world, Player player) {
         int i = state.getValue(PANCAKES);
         if (i == 8) {
             BlockPos up = pos.above();

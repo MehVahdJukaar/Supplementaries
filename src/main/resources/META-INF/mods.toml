@@ -1,7 +1,7 @@
 
 modLoader="javafml" #mandatory
 
-loaderVersion="[39,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
 license="All rights reserved"
 
@@ -35,7 +35,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[40.0.36,)" #mandatory
+    versionRange="[41.0.10,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
@@ -43,7 +43,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,1.19]"
+    versionRange="[1.19,1.20]"
     ordering="NONE"
     side="BOTH"
 
@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="moonlight"
     mandatory=true
-    versionRange="[1.19-1.18.0,]"
+    versionRange="[1.19-1.18.1,]"
     ordering="AFTER"
     side="BOTH"
 

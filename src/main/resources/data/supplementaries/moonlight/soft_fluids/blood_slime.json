@@ -13,6 +13,6 @@
     "divider": 1,
     "item": "tconstruct:blood_slime_ball"
   },
-  "id": "tconstruct:blood_slime",
+  "from_mod": "tconstruct",
   "still_texture": "tconstruct:block/blood_congealed_slime"
 }

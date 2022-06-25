@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
@@ -142,7 +143,8 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             boolean flag = tag.contains("LodestonePos");
             boolean flag1 = tag.contains("LodestoneDimension");
             if (flag && flag1) {
-                Optional<ResourceKey<Level>> optional = CompassItem.getLodestoneDimension(tag);
+                Optional<ResourceKey<Level>> optional =
+                        Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, tag.get("LodestoneDimension")).result();
                 if (optional.isPresent() && world.dimension() == optional.get()) {
                     return NbtUtils.readBlockPos(tag.getCompound("LodestonePos"));
                 }

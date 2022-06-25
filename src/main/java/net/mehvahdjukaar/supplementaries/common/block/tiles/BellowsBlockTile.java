@@ -320,7 +320,7 @@ public class BellowsBlockTile extends BlockEntity {
                 this.tickFurnaces(frontPos, level);
             }
 
-            //refresh fire blocks
+            //refreshVisuals fire blocks
             //refreshTextures more frequently block closed to it
             //fire updates (previous random tick) at a minimum of 30 ticks
             int n = 0;

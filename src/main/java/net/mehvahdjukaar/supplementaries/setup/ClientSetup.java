@@ -115,7 +115,6 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_LANTERN.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_LANTERN.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());
@@ -139,6 +138,7 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
 
 
             ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
@@ -257,7 +257,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
 
-        event.registerBlockEntityRenderer(ModRegistry.HANGING_FLOWER_POT_TILE.get(), HangingFlowerPotBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
         event.registerBlockEntityRenderer(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
@@ -312,7 +311,7 @@ public class ClientSetup {
         ModelLoaderRegistry.registerLoader(Supplementaries.res("flower_box_loader"), new FlowerBoxLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
         ModelLoaderRegistry.registerLoader(Supplementaries.res("blackboard_loader"), new BlackboardBlockLoader());
-        //ModelLoaderRegistry.registerLoader(new ResourceLocation(Supplementaries.MOD_ID, "blackboard_loader"), new BlackboardBlockLoader());
+        ModelLoaderRegistry.registerLoader(Supplementaries.res("hanging_pot_loader"), new HangingPotLoader());
 
         ClientRegistry.registerSpecialModels();
     }

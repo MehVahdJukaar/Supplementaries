@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -31,6 +33,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.model.ModelDataManager;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -69,30 +72,33 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     }
     //TODO: use dynamic block model
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
             Block pot = tile.getHeldBlock().getBlock();
             if (pot instanceof FlowerPotBlock flowerPot) {
                 ItemStack itemstack = player.getItemInHand(handIn); //&& FlowerPotHandler.isEmptyPot(flowerPot)
                 Item item = itemstack.getItem();
                 //mimics flowerPorBlock behavior
                 Block newPot = item instanceof BlockItem bi ? FlowerPotHandler.getFullPot(flowerPot, bi.getBlock()) : Blocks.AIR;
-                /*Block newPot = item instanceof BlockItem ? FlowerPotHelper.FULL_POTS.get(((FlowerPotBlock) pot).getEmptyPot())
-                        .getOrDefault(((BlockItem)item).getBlock().getRegistryName(), Blocks.AIR.delegate).get() : Blocks.AIR;*/
 
                 boolean isEmptyFlower = newPot == Blocks.AIR;
                 boolean isPotEmpty = FlowerPotHandler.isEmptyPot(pot);
 
                 if (isEmptyFlower != isPotEmpty) {
                     if (isPotEmpty) {
-                        tile.setHeldBlock(newPot.defaultBlockState());
+                        if(!level.isClientSide) {
+                            tile.setHeldBlock(newPot.defaultBlockState());
+                            level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                            tile.setChanged();
+                        }
+
                         player.awardStat(Stats.POT_FLOWER);
                         if (!player.getAbilities().instabuild) {
                             itemstack.shrink(1);
                         }
                     } else {
                         //drop item
-                        ItemStack flowerItem = pot.getCloneItemStack(worldIn, pos, state);
+                        ItemStack flowerItem = pot.getCloneItemStack(level, pos, state);
                         if (!flowerItem.equals(new ItemStack(this))) {
                             if (itemstack.isEmpty()) {
                                 player.setItemInHand(handIn, flowerItem);
@@ -100,20 +106,19 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
                                 player.drop(flowerItem, false);
                             }
                         }
-                        tile.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
+                        if(!level.isClientSide) {
+                            tile.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
+                            level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                            tile.setChanged();
+                        }
                     }
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 } else {
                     return InteractionResult.CONSUME;
                 }
             }
         }
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
     }
 
     @Override

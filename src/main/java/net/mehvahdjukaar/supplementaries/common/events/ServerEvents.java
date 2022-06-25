@@ -44,6 +44,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -52,7 +54,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.*;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -92,19 +93,18 @@ public class ServerEvents {
         ItemsOverrideHandler.tryPerformClickedItemOverride(event, playerIn.getItemInHand(event.getHand()));
     }
 
-    //raked gravel
     @SubscribeEvent
-    public static void onHoeUsed(UseHoeEvent event) {
-        UseOnContext context = event.getContext();
-        Level world = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        if (ServerConfigs.cached.RAKED_GRAVEL) {
-            if (world.getBlockState(pos).is(Blocks.GRAVEL)) {
+    public static void toolModification(BlockEvent.BlockToolModificationEvent event){
+        if(event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.cached.RAKED_GRAVEL){
+            LevelAccessor world = event.getWorld();
+            BlockPos pos = event.getPos();
+            if (event.getFinalState().is(Blocks.GRAVEL)) {
                 BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
                 if (raked.canSurvive(world, pos)) {
-                    world.setBlock(pos, RakedGravelBlock.getConnectedState(raked, world, pos, context.getHorizontalDirection()), 11);
-                    world.playSound(context.getPlayer(), pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    event.setResult(Event.Result.ALLOW);
+                    event.setFinalState(RakedGravelBlock.getConnectedState(raked, world, pos, event.getContext().getHorizontalDirection()));
+                    //world.setBlock(pos, RakedGravelBlock.getConnectedState(raked, world, pos, context.getHorizontalDirection()), 11);
+                    //world.playSound(context.getPlayer(), pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    //event.setResult(Event.Result.ALLOW);
                 }
             }
         }
@@ -157,7 +157,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onPistonMoved(final PistonEvent.Post event) {
-
+        //TODO: flint block and steel
         if (event.getPistonMoveType() == PistonEvent.PistonMoveType.RETRACT) {
             LevelAccessor level = event.getWorld();
             var pos = event.getPos();

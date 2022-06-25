@@ -1,14 +1,17 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.common.util.ForgeSoundType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static net.mehvahdjukaar.supplementaries.setup.RegistryHelper.regSound;
-
 public class ModSounds {
+
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
 
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final RegistryObject<SoundEvent> TOM = regSound("block.turntable.cat");
@@ -93,5 +96,10 @@ public class ModSounds {
             ROPE_PLACE,
             ROPE_STEP,
             () -> SoundEvents.WOOL_FALL);
+
+
+    public static RegistryObject<SoundEvent> regSound(String name) {
+        return SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
+    }
 
 }

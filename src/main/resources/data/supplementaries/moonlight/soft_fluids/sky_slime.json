@@ -13,6 +13,6 @@
     "divider": 1,
     "item": "tconstruct:sky_slime_ball"
   },
-  "id": "tconstruct:sky_slime",
+  "from_mod": "tconstruct",
   "still_texture": "tconstruct:block/sky_congealed_slime"
 }

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/door_top",
+  "parent": "minecraft:block/door_top_left",
   "textures": {
     "top": "supplementaries:blocks/netherite_door_top",
     "bottom": "supplementaries:blocks/netherite_door_bottom"

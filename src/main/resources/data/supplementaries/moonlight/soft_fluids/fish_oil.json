@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "alexsmobs:fish_oil"
   },
-  "id": "alexsmobs:fish_oil",
+  "from_mod": "alexsmobs",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.alexsmobs.fish_oil"
 }

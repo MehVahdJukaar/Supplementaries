@@ -9,7 +9,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/milk_liquid",
-  "id": "betteranimalsplus:goat_milk",
+  "from_mod": "betteranimalsplus",
   "still_texture": "moonlight:soft_fluids/milk_liquid",
   "translation_key": "item.betteranimalsplus.goatmilk"
 }

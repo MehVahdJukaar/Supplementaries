@@ -5,33 +5,24 @@ import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.resources.pack.DynamicDataPack;
-import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
@@ -48,7 +39,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return false;
+        return RegistryConfigs.Reg.PACK_DEPENDANT_ASSETS.get();
     }
 
     @Override
@@ -60,18 +51,16 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
         //hanging signs
         {
-            List<ResourceLocation> signs = new ArrayList<>();
-
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
             //loot table
-            ModRegistry.HANGING_SIGNS.forEach((wood, sign)->{
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
                 dynamicPack.addSimpleBlockLootTable(sign);
-                signs.add(Utils.getID(sign));
-
+                builder.addEntry(sign);
                 makeHangingSignRecipe(wood, dynamicPack::addRecipe);
             });
             //tag
-            dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.BLOCK_REGISTRY);
-            dynamicPack.addTag(Supplementaries.res("hanging_signs"), signs, Registry.ITEM_REGISTRY);
+            dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
+            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
         }
         //sing posts
         {
@@ -79,10 +68,12 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
             dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
             //recipes
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign)-> makeSignPostRecipe(wood, dynamicPack::addRecipe));
+            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> makeSignPostRecipe(wood, dynamicPack::addRecipe));
         }
         //way signs tag
         {
+            //TODO: re add
+            /*
             List<ResourceLocation> biomes = new ArrayList<>();
             if(ServerConfigs.spawn.WAY_SIGN_ENABLED.get()) {
                 for (var e : ForgeRegistries.BIOMES.getEntries()) {
@@ -102,6 +93,8 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
                 }
             }
             dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
+            */
+
         }
     }
 
@@ -171,7 +164,6 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             Supplementaries.LOGGER.error("Failed to generate hanging sign recipe for wood type {}", wood);
         }
     }
-
 
 
 }

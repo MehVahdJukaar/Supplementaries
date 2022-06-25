@@ -10,7 +10,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/potion_flow",
-  "id": "alexsmobs:poison",
+  "from_mod": "alexsmobs",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.alexsmobs.poison_bottle"
 }

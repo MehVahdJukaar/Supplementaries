@@ -10,7 +10,12 @@ import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocks
 import net.mehvahdjukaar.supplementaries.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.HoneyBottleItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
@@ -207,8 +212,20 @@ public class BlockProperties {
             if (s == VanillaSoftFluids.HONEY.get()) return HONEY;
             String name = s.getRegistryName().getPath();
             if (name.equals("chocolate")) return CHOCOLATE;
-            if (name.equals("syrup") || name.equals("maple_syrup") || name.equals("holy_syrup") || name.equals("unholy_syrup")) return SYRUP;
+            var containers = s.getFilledContainer(Items.GLASS_BOTTLE);
+            if (containers.isPresent() && containers.get().builtInRegistryHolder().is(ModTags.SYRUP)) return SYRUP;
             return NONE;
+        }
+
+        public static Topping fromItem(ItemStack stack) {
+            Item item = stack.getItem();
+            if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
+            if (item instanceof HoneyBottleItem) return BlockProperties.Topping.HONEY;
+            var tag = Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS);
+            if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
+                return Topping.CHOCOLATE;
+            }
+            return Topping.NONE;
         }
     }
 

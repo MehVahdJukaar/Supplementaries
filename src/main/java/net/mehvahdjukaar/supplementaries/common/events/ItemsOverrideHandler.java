@@ -443,8 +443,6 @@ public class ItemsOverrideHandler {
 
     private static class XpBottlingBehavior extends ItemUseOnBlockOverride {
 
-        private static final JarBlockTile DUMMY_JAR_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-
         @Override
         public boolean isEnabled() {
             return ServerConfigs.cached.BOTTLE_XP;
@@ -457,6 +455,8 @@ public class ItemsOverrideHandler {
 
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+
+            JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
             BlockPos pos = hit.getBlockPos();
             Item i = stack.getItem();
@@ -472,17 +472,17 @@ public class ItemsOverrideHandler {
                     if (i == Items.GLASS_BOTTLE) {
                         returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                     } else if (i instanceof JarItem) {
-                        DUMMY_JAR_TILE.resetHolders();
+                        dummyTile.resetHolders();
                         CompoundTag tag = stack.getTagElement("BlockEntityTag");
                         if (tag != null) {
-                            DUMMY_JAR_TILE.load(tag);
+                            dummyTile.load(tag);
                         }
 
-                        if (DUMMY_JAR_TILE.canInteractWithSoftFluidTank()) {
+                        if (dummyTile.canInteractWithSoftFluidTank()) {
                             ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
-                            ItemStack temp = DUMMY_JAR_TILE.fluidHolder.interactWithItem(tempStack, null, null, false);
+                            ItemStack temp = dummyTile.fluidHolder.interactWithItem(tempStack, null, null, false);
                             if (temp != null && temp.getItem() == Items.GLASS_BOTTLE) {
-                                returnStack = ((JarBlock) ((BlockItem) i).getBlock()).getJarItem(DUMMY_JAR_TILE);
+                                returnStack = ((JarBlock) ((BlockItem) i).getBlock()).getJarItem(dummyTile);
                             }
                         }
                     }

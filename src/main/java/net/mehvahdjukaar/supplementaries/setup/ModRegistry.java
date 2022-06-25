@@ -80,8 +80,6 @@ public class ModRegistry {
     public static final DeferredRegister<PaintingVariant> PAINTINGS = DeferredRegister.create(ForgeRegistries.PAINTING_VARIANTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, Supplementaries.MOD_ID);
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Supplementaries.MOD_ID);
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Supplementaries.MOD_ID);
-
 
     public static void registerBus(IEventBus bus) {
         MOD_TAB = !RegistryConfigs.Reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
@@ -96,7 +94,7 @@ public class ModRegistry {
         PAINTINGS.register(bus);
         ENCHANTMENTS.register(bus);
         EFFECTS.register(bus);
-        SOUNDS.register(bus);
+        ModSounds.SOUNDS.register(bus);
 
         CompatHandler.registerOptionalStuff();
         RegistryHelper.initDynamicRegistry();

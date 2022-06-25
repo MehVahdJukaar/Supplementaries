@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StructureTempBlock;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -58,7 +59,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> pContext) {
 
         WorldGenLevel reader = pContext.level();
-        Random rand = pContext.random();
+        RandomSource rand = pContext.random();
         BlockPos pos = pContext.origin();
 
         /*

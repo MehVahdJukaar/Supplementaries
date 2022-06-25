@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "alexsmobs:sopa_de_macaco"
   },
-  "id": "alexsmobs:sopa_de_macaco",
+  "from_mod": "alexsmobs",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

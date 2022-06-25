@@ -43,19 +43,16 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return ClientConfigs.general.RESOURCE_PACK_SUPPORT.get();
+        return RegistryConfigs.Reg.PACK_DEPENDANT_ASSETS.get();
     }
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
 
-
         //hack. I need this for texture stitch
         WallLanternTexturesRegistry.reloadTextures(manager);
 
         //generate static resources
-
-        //LangBuilder langBuilder = new LangBuilder();
 
         //------hanging signs------
         {

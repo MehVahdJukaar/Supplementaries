@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "simplefarming:vinegar"
   },
-  "id": "simplefarming:vinegar",
+  "from_mod": "simplefarming",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.simplefarming.vinegar"
 }

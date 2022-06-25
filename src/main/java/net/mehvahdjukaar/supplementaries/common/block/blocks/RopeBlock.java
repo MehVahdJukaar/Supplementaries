@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -454,14 +453,14 @@ public class RopeBlock extends WaterBlock {
     public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
 
-        BlockPlaceContext context = new PlayerLessContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
+        BlockPlaceContext context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
             //checks if block below this is hollow
             BlockPos downPos = pos.below();
             //try move block down
             if (!(world.getBlockState(downPos).getMaterial().isReplaceable()
                     && tryMove(pos, downPos, world))) return false;
-            context = new PlayerLessContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
+            context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         }
 
         BlockState state = ItemsUtil.getPlacementState(context, ropeBlock);

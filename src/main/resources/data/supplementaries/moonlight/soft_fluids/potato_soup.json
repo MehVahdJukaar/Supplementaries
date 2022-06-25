@@ -16,7 +16,7 @@
     "divider": 2,
     "item": "inspirations:potato_soup"
   },
-  "id": "inspirations:potato_soup",
+  "from_mod": "inspirations",
   "still_texture": "moonlight:soft_fluids/soup_liquid",
   "use_texture_from": "inspirations:potato_soup"
 }

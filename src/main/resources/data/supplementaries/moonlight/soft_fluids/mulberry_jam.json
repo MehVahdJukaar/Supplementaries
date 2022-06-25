@@ -20,7 +20,7 @@
     "divider": 1,
     "item": "upgrade_aquatic:mulberry_jam_bottle"
   },
-  "id": "upgrade_aquatic:mulberry_jam",
+  "from_mod": "upgrade_aquatic",
   "still_texture": "upgrade_aquatic:block/mulberry_jam_block_top",
   "tint_method": "flowing",
   "translation_key": "item.upgrade_aquatic:mulberry_jam_bottle"

@@ -92,7 +92,6 @@ public class ClientConfigs {
         public static ForgeConfigSpec.BooleanValue TOOLTIP_HINTS;
         public static ForgeConfigSpec.BooleanValue PLACEABLE_TOOLTIP;
         public static ForgeConfigSpec.BooleanValue ANTI_REPOST_WARNING;
-        public static ForgeConfigSpec.BooleanValue RESOURCE_PACK_SUPPORT;
 
         public static ForgeConfigSpec.DoubleValue TEST1;
         public static ForgeConfigSpec.DoubleValue TEST2;
@@ -110,8 +109,6 @@ public class ClientConfigs {
             ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
                             "Set to false if you have manually changed the mod jar name")
                     .define("anti_reposting_warning", true);
-            RESOURCE_PACK_SUPPORT = builder.comment("Allows dynamic resource generations for signs to pick textures from installed resource pack. Will only really work well if those texture pack have a similar format to vanilla otherwise it will result in glitched textures")
-                    .define("dynamic_textures_from_resource_packs", false);
 
             TEST1 = builder.comment("ignore this").defineInRange("test1", 0f, -10, 10);
             TEST2 = builder.comment("ignore this").defineInRange("test2", 0f, -10, 10);
@@ -451,7 +448,7 @@ public class ClientConfigs {
             TURN_PARTICLE_COLOR = Integer.parseUnsignedInt(particle.TURN_INITIAL_COLOR.get().replace("0x", ""), 16);
             TURN_PARTICLE_FADE_COLOR = Integer.parseUnsignedInt(particle.TURN_FADE_COLOR.get().replace("0x", ""), 16);
 
-            CapturedMobsHelper.refresh();
+            CapturedMobsHelper.refreshVisuals();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
 
         }

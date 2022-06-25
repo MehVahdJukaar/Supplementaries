@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "betterendforge:umbrella_cluster_juice"
   },
-  "id": "betterendforge:umbrella_cluster_juice",
+  "from_mod": "betterendforge",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.betterendforge.umbrella_cluster_juice"
 }

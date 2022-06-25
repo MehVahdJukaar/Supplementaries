@@ -10,7 +10,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/potion_flow",
-  "id": "malum:holy_sap",
+  "from_mod": "malum",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.malum:holy_sap"
 }

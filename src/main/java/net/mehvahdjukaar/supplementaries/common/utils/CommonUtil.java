@@ -202,7 +202,7 @@ public class CommonUtil {
         return world.clip(context);
     }
 
-    private static final GameProfile DUMMY_PROFILE = new GameProfile(
+    public static final GameProfile DUMMY_PROFILE = new GameProfile(
             UUID.fromString("9bf808b4-d64a-47f0-9220-e3849f80f35b"), "[player_stando]");
 
     public static Player getEntityStand(Entity copyFrom) {

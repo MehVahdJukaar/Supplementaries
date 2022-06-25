@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "iceandfire:fire_dragon_blood"
   },
-  "id": "iceandfire:fire_dragon_blood",
+  "from_mod": "iceandfire",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.iceandfire.fire_dragon_blood"
 }

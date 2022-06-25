@@ -212,11 +212,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-        return BlockPathTypes.OPEN;
-    }
-
-    @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile) {

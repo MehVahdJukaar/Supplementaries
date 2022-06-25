@@ -135,6 +135,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue DISPENSERS;
         public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
         public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
+        public static ForgeConfigSpec.BooleanValue PACK_DEPENDANT_ASSETS;
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
@@ -183,6 +184,10 @@ public class RegistryConfigs {
 
             DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
                     .define("debug_save_dynamic_pack", false);
+
+            PACK_DEPENDANT_ASSETS = builder.comment("Allows generated assets to depend on installed resource and data packs. " +
+                    "This means that if for example you have a texture pack that changes the planks texture all generated signs textures will be based off that one insted" +
+                    "Disable to have it only use vanilla assets").define("pack_dependant_assets",true);
             builder.pop();
 
 

@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.font.FontSet;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -393,8 +394,7 @@ public class TextUtil {
                     bufferbuilder.vertex(matrix4f, (float) l2, (float) (yOffset + 9), 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float) l2, (float) yOffset, 0.0F).color(0, 0, 255, 255).endVertex();
                     bufferbuilder.vertex(matrix4f, (float) k2, (float) yOffset, 0.0F).color(0, 0, 255, 255).endVertex();
-                    bufferbuilder.end();
-                    BufferUploader.end(bufferbuilder);
+                    BufferUploader.drawWithShader(bufferbuilder.end());
                     RenderSystem.disableColorLogicOp();
                     RenderSystem.enableTexture();
                 }

@@ -10,7 +10,7 @@
     }
   ],
   "flowing_texture": "moonlight:soft_fluids/magma_flow",
-  "id": "minecraft:magma_cream",
+  "from_mod": "minecraft",
   "still_texture": "moonlight:soft_fluids/magma_still",
   "translation_key": "item.minecraft.magma_cream"
 }

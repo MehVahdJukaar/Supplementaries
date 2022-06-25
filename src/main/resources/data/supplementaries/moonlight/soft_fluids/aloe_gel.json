@@ -20,7 +20,7 @@
     "divider": 1,
     "item": "atmospheric:aloe_gel_bottle"
   },
-  "id": "atmospheric:aloe_gel",
+  "from_mod": "atmospheric",
   "still_texture": "atmospheric:block/aloe_gel_block_top",
   "tint_method": "flowing",
   "translation_key": "item.atmospheric:aloe_gel_bottle"

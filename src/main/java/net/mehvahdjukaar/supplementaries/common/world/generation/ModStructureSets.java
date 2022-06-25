@@ -18,6 +18,7 @@ public class ModStructureSets {
 
     //structure sets
 
+    /*
     public static final ResourceKey<StructureSet> WAY_SIGN_SET_KEY =
             ResourceKey.create(Registry.STRUCTURE_SET_REGISTRY, Supplementaries.res(ModStructures.WAY_SIGN_NAME));
 
@@ -41,5 +42,7 @@ public class ModStructureSets {
             StructurePlacement structurePlacement) {
         return register(setResourceKey, new StructureSet(configuredFeature, structurePlacement));
     }
+    */
+
 
 }

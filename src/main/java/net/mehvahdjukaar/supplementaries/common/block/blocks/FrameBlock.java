@@ -76,13 +76,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         return InteractionResult.PASS;
     }
 
-    /*
-        @Override
-        public VoxelShape getInteractionShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
-            return VoxelShapes.block();
-        }
 
-        */
     //TODO: fix face disappearing
     //handles dynamic culling
     @Override

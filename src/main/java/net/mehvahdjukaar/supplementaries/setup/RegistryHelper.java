@@ -99,10 +99,6 @@ public class RegistryHelper {
         return ModRegistry.PARTICLES.register(name, () -> new SimpleParticleType(true));
     }
 
-    public static RegistryObject<SoundEvent> regSound(String name) {
-        return ModRegistry.SOUNDS.register(name, () -> new SoundEvent(Supplementaries.res(name)));
-    }
-
     public static <T extends Entity> RegistryObject<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
         return ModRegistry.ENTITIES.register(name, () -> builder.build(name));
     }

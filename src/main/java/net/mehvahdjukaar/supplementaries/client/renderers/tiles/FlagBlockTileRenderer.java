@@ -92,7 +92,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
                 renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
-                int segmentLen = (minecraft.options.graphicsMode.getId() >= ClientConfigs.cached.FLAG_FANCINESS.ordinal()) ? 1 : w;
+                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.cached.FLAG_FANCINESS.ordinal() ? 1 : w;
                 for (int dX = 0; dX < w; dX += segmentLen) {
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));

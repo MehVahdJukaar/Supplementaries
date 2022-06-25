@@ -39,6 +39,7 @@ public class Supplementaries {
     public Supplementaries() {
 
         //TODO: hanging flower pot baked model
+        // TODO: rE add soap stuff
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

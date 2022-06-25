@@ -14,6 +14,6 @@
     "divider": 2,
     "item": "ecologics:tropical_stew"
   },
-  "id": "ecologics:tropical_stew",
+  "from_mod": "ecologics",
   "still_texture": "moonlight:soft_fluids/soup_liquid"
 }

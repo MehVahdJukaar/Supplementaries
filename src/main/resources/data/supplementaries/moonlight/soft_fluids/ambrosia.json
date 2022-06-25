@@ -14,7 +14,7 @@
     "divider": 2,
     "item": "iceandfire:ambrosia"
   },
-  "id": "iceandfire:ambrosia",
+  "from_mod": "iceandfire",
   "still_texture": "moonlight:soft_fluids/dragon_breath_liquid",
   "translation_key": "item.iceandfire.ambrosia"
 }

@@ -14,7 +14,7 @@
     "divider": 1,
     "item": "betteranimalsplus:horseshoe_crab_blood"
   },
-  "id": "betteranimalsplus:soap",
+  "from_mod": "betteranimalsplus",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.betteranimalsplus.horseshoe_crab_blood"
 }

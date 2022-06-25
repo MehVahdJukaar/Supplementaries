@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.LoomMenu;
@@ -29,7 +30,7 @@ import java.util.List;
 public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMenu> {
 
     @Shadow
-    private List<Pair<BannerPattern, DyeColor>> resultBannerPatterns;
+    private List<Pair<Holder<BannerPattern>, DyeColor>> resultBannerPatterns;
     @Shadow
     private boolean hasMaxPatterns;
     @Shadow

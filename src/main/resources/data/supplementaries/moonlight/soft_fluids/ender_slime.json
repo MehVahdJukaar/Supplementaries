@@ -13,6 +13,6 @@
     "divider": 1,
     "item": "tconstruct:ender_slime_ball"
   },
-  "id": "tconstruct:ender_slime",
+  "from_mod": "tconstruct",
   "still_texture": "tconstruct:block/ender_congealed_slime"
 }
