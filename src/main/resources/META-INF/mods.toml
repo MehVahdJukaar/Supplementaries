@@ -51,7 +51,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="moonlight"
     mandatory=true
-    versionRange="[1.19-1.18.1,]"
+    versionRange="[1.19-1.18.0,]"
     ordering="AFTER"
     side="BOTH"
 

@@ -40,7 +40,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     private boolean firstTick = true;
 
     //TODO: make them not spawn in villages
-    public List<Pair<BlockPos, Holder<Structure>>> threadResult = null;
+    public volatile List<Pair<BlockPos, Holder<Structure>>> threadResult = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);

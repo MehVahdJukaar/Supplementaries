@@ -50,7 +50,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
     public void render(LabelEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, light);
 
-        //debug. refreshVisuals
+        //debug. refresh
         if (entity.tickCount % 500 == 0) {
             ////  RenderedTexturesManager.clearCache();
             //  return;

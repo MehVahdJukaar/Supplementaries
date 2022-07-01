@@ -11,8 +11,11 @@ import net.mehvahdjukaar.supplementaries.setup.ModSetup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,8 +41,8 @@ public class Supplementaries {
 
     public Supplementaries() {
 
-        //TODO: hanging flower pot baked model
-        // TODO: rE add soap stuff
+        //pulley not pulling glass and leaves
+        // TODO: re add soap stuff
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

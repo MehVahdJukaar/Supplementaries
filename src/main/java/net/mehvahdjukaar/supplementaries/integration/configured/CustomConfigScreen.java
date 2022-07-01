@@ -168,7 +168,7 @@ public class CustomConfigScreen extends ConfigScreen {
         super.init();
 
         //replace list with new custom entries
-        boolean reg = this.config == ConfigHandler.REGISTRY_CONFIG_OBJECT && !this.folderEntry.isRoot();
+        boolean reg = this.config == ConfigHandler.REGISTRY_CONFIGS && !this.folderEntry.isRoot();
 
         this.list.replaceEntries(replaceItems(this.list.children(), reg));
         Collection<Item> temp = replaceItems(this.entries, reg);
@@ -214,9 +214,10 @@ public class CustomConfigScreen extends ConfigScreen {
             }
 
             if (this.isChanged(this.folderEntry)) {
-                if (this.config == ConfigHandler.SERVER_CONFIG_OBJECT) {
+                if (this.config == ConfigHandler.SERVER_CONFIGS) {
+                    //TODO: fix. this work but shouldnt be needed and might break servers
                     ConfigHandler.clientRequestServerConfigReload();
-                } else if (this.config == ConfigHandler.CLIENT_CONFIG_OBJECT) {
+                } else if (this.config == ConfigHandler.CLIENT_CONFIGS) {
                     ClientConfigs.cached.refresh();
                 }
             }

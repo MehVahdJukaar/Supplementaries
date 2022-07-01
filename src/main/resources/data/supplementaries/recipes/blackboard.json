@@ -30,7 +30,7 @@
             "item": "minecraft:blackstone"
           },
           "0": {
-            "item": "minecraft:quartz"
+            "tag": "#forge:gems/quartz"
           }
         },
         "result": {

@@ -43,6 +43,7 @@
     "accessors.MineshaftAccessor"
   ],
   "client": [
+    "BlockBehaviourPlanterMixin",
     "BellBlockEntityRendererMixin",
     "BlockEntityRendererDispatcher",
     "FontRendererMixin",

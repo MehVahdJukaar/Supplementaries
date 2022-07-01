@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
+import net.mehvahdjukaar.moonlight.client.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
-import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
@@ -96,7 +96,7 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSpawnBlockParticlePacket(ClientBoundSpawnBlockParticlePacket message) {
+    public static void handleSpawnBlockParticlePacket(ClientBoundParticlePacket message) {
         withLevelDo(l -> {
             //bubble blow
             switch (message.id) {

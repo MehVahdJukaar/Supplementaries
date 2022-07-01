@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -20,12 +21,10 @@ public class RequestConfigReloadPacket {
     public static void handler(RequestConfigReloadPacket message, Supplier<NetworkEvent.Context> ctx) {
         //server
         ctx.get().enqueueWork(() -> {
-            //TODO: fix configs sinking
-            ServerConfigs.loadLocal();
-            ConfigHandler.syncServerConfigs(ctx.get().getSender());
-            ServerConfigs.cached.refresh();
+            ConfigHandler.configScreenReload(ctx.get().getSender());
 
         });
         ctx.get().setPacketHandled(true);
     }
+
 }

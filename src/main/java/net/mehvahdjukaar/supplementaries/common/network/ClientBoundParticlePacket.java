@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
@@ -9,32 +8,32 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 
-public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Message {
+public class ClientBoundParticlePacket implements NetworkHandler.Message {
     public final Vec3 pos;
-    public final ParticleUtil.EventType id;
+    public final EventType id;
 
-    public ClientBoundSpawnBlockParticlePacket(FriendlyByteBuf buffer) {
+    public ClientBoundParticlePacket(FriendlyByteBuf buffer) {
         this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-        this.id = buffer.readEnum(ParticleUtil.EventType.class);
+        this.id = buffer.readEnum(EventType.class);
     }
 
-    public ClientBoundSpawnBlockParticlePacket(BlockPos pos, ParticleUtil.EventType id) {
-        this(Vec3.atCenterOf(pos),id);
+    public ClientBoundParticlePacket(BlockPos pos, EventType id) {
+        this(Vec3.atCenterOf(pos), id);
     }
 
-    public ClientBoundSpawnBlockParticlePacket(Vec3 pos, ParticleUtil.EventType id) {
+    public ClientBoundParticlePacket(Vec3 pos, EventType id) {
         this.pos = pos;
         this.id = id;
     }
 
-    public static void buffer(ClientBoundSpawnBlockParticlePacket message, FriendlyByteBuf buffer) {
+    public static void buffer(ClientBoundParticlePacket message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.pos.x);
         buffer.writeDouble(message.pos.y);
         buffer.writeDouble(message.pos.z);
         buffer.writeEnum(message.id);
     }
 
-    public static void handler(ClientBoundSpawnBlockParticlePacket message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handler(ClientBoundParticlePacket message, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {
             if (context.getDirection().getReceptionSide().isClient()) {
@@ -43,6 +42,12 @@ public class ClientBoundSpawnBlockParticlePacket implements NetworkHandler.Messa
         });
 
         context.setPacketHandled(true);
+    }
+
+    public enum EventType {
+        BUBBLE_BLOW,
+        BUBBLE_CLEAN,
+        DISPENSER_MINECART
     }
 
 }

@@ -26,11 +26,9 @@ public class OpenConfigsPacket {
             //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
             //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
             //ServerConfigs.SERVER_CONFIG.save();
-
-            ServerConfigs.loadLocal();
-
             //if(configured)ConfiguredCustomScreen.openScreen();
 
+            //ServerConfigs.loadLocal();
             ConfigHandler.openModConfigs();
 
         });

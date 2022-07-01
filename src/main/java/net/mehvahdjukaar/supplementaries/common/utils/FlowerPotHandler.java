@@ -168,6 +168,14 @@ public class FlowerPotHandler {
         if (CompatHandler.atmospheric) {
             toAdd.add("atmospheric:barrel_cactus");
         }
+        if (CompatHandler.overweight_farming) {
+            toAdd.add("overweight_farming:overweight_cabbage");
+            toAdd.add("overweight_farming:overweight_potato");
+            toAdd.add("overweight_farming:overweight_poisonous_potato");
+            toAdd.add("overweight_farming:overweight_carrot");
+            toAdd.add("overweight_farming:overweight_onion");
+            toAdd.add("overweight_farming:overweight_cabbage");
+        }
 
         //flower box
 

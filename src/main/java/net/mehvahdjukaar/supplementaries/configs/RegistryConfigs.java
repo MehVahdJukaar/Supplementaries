@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
@@ -24,24 +25,11 @@ public class RegistryConfigs {
     public static ForgeConfigSpec REGISTRY_CONFIG;
 
     public static void createSpec() {
-        ForgeConfigSpec.Builder REGISTRY_BUILDER = new ForgeConfigSpec.Builder();
-        Reg.init(REGISTRY_BUILDER);
-        REGISTRY_CONFIG = REGISTRY_BUILDER.build();
-    }
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        Reg.init(builder);
+        REGISTRY_CONFIG = builder.build();
 
-    @Deprecated(forRemoval = true)
-    //TODO: maybe merge with common
-    //called from mixin config so they can be accessed super early
-    public static void load() {
-        CommentedFileConfig replacementConfig = CommentedFileConfig
-                .builder(FMLPaths.CONFIGDIR.get().resolve(FILE_NAME))
-                .sync()
-                .preserveInsertionOrder()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-        replacementConfig.load();
-        replacementConfig.save();
-        REGISTRY_CONFIG.setConfig(replacementConfig);
+        ConfigHelper.loadConfigFile(FILE_NAME, REGISTRY_CONFIG);
 
         Reg.HAS_MINESHAFT_LANTERN = Reg.COPPER_LANTERN_ENABLED.get();
         Reg.HAS_STRONGHOLD_SCONCE = Reg.SCONCE_ENABLED.get();

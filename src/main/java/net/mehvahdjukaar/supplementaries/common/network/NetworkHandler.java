@@ -92,8 +92,8 @@ public class NetworkHandler {
         register(ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::buffer,
                 ClientBoundSetSongPacket::new, ClientBoundSetSongPacket::handler);
 
-        register(ClientBoundSpawnBlockParticlePacket.class, ClientBoundSpawnBlockParticlePacket::buffer,
-                ClientBoundSpawnBlockParticlePacket::new, ClientBoundSpawnBlockParticlePacket::handler);
+        register(ClientBoundParticlePacket.class, ClientBoundParticlePacket::buffer,
+                ClientBoundParticlePacket::new, ClientBoundParticlePacket::handler);
 
         register(ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::buffer,
                 ClientBoundOpenScreenPacket::new, ClientBoundOpenScreenPacket::handler);

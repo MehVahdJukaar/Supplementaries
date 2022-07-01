@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -40,18 +41,6 @@ public class ServerConfigs {
 
         SERVER_SPEC = builder.build();
     }
-
-    public static void loadLocal() {
-        CommentedFileConfig replacementConfig = CommentedFileConfig
-                .builder(FMLPaths.CONFIGDIR.get().resolve(Supplementaries.MOD_ID + "-common.toml"))
-                .sync()
-                .preserveInsertionOrder()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-        replacementConfig.load();
-        ServerConfigs.SERVER_SPEC.setConfig(replacementConfig);
-    }
-
 
     public static class item {
         public static ForgeConfigSpec.IntValue ROPE_ARROW_CAPACITY;

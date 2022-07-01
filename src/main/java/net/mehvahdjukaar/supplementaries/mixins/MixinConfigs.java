@@ -148,12 +148,6 @@ public class MixinConfigs implements IMixinConfigPlugin {
         } catch (Exception exception) {
             throw new RuntimeException("Failed to create registry configs: " + exception);
         }
-
-        try {
-            RegistryConfigs.load();
-        } catch (Exception exception) {
-            throw new RuntimeException("Failed to load config supplementaries-registry.toml. Try deleting it");
-        }
     }
 
     @Override

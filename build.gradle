@@ -37,7 +37,7 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 minecraft {
 
     if(project.parchment_enabled == "true"){
-        mappings channel: 'parchment', version: "${project.parchment_version}-${project.minecraft_version}"
+        mappings channel: 'parchment', version: "${project.parchment_version}"
     }else{
         mappings channel: 'official', version: "${project.minecraft_version}"
     }

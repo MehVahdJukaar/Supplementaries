@@ -66,11 +66,11 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     private static Map<ModConfig.Type, Set<ModConfig>> createConfigMap() {
         Map<ModConfig.Type, Set<ModConfig>> modConfigMap = new HashMap<>();
         Set<ModConfig> s = new HashSet<>();
-        s.add(ConfigHandler.CLIENT_CONFIG_OBJECT);
+        s.add(ConfigHandler.CLIENT_CONFIGS);
         modConfigMap.put(ModConfig.Type.CLIENT, s);
         Set<ModConfig> s1 = new HashSet<>();
-        s1.add(ConfigHandler.REGISTRY_CONFIG_OBJECT);
-        s1.add(ConfigHandler.SERVER_CONFIG_OBJECT);
+        s1.add(ConfigHandler.REGISTRY_CONFIGS);
+        s1.add(ConfigHandler.SERVER_CONFIGS);
         modConfigMap.put(ModConfig.Type.COMMON, s1);
         return modConfigMap;
     }
@@ -91,9 +91,9 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     }
 
     private ModConfig getConfigFromLabel(String label) {
-        if (label.contains("Common")) return ConfigHandler.SERVER_CONFIG_OBJECT;
-        if (label.contains("Client")) return ConfigHandler.CLIENT_CONFIG_OBJECT;
-        return ConfigHandler.REGISTRY_CONFIG_OBJECT;
+        if (label.contains("Common")) return ConfigHandler.SERVER_CONFIGS;
+        if (label.contains("Client")) return ConfigHandler.CLIENT_CONFIGS;
+        return ConfigHandler.REGISTRY_CONFIGS;
     }
 
     private Button createModifyButton(ModConfig config) {

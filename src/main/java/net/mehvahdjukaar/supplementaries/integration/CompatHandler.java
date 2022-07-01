@@ -41,6 +41,7 @@ public class CompatHandler {
     public static final boolean botania;
     public static final boolean mapatlas;
     public static final boolean waystones;
+    public static final boolean overweight_farming;
 
     static {
         ModList ml = ModList.get();
@@ -79,6 +80,7 @@ public class CompatHandler {
         botania = ml.isLoaded("botania");
         mapatlas = ml.isLoaded("map_atlases");
         waystones = ml.isLoaded("waystones");
+        overweight_farming = ml.isLoaded("overweight_farming");
     }
 
     public static void init() {
