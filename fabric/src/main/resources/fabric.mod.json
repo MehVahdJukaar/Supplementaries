@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "moonlight",
+  "version": "${version}",
+  "name": "Moonlight Library",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "Insert License Here",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mehvahdjukaar.moonlight.fabric.MoonlightFabric"
+    ],
+    "client": [
+      "net.mehvahdjukaar.moonlight.fabric.MoonlightFabricClient"
+    ],
+    "modmenu": [
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19"
+  }
+}
