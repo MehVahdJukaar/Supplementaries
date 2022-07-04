@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
-public class ServerBoundSetBlackboardPacket {
+public class ServerBoundSetBlackboardPacket implements Message {
     private final BlockPos pos;
     private final byte[][] pixels;
 
@@ -28,26 +28,27 @@ public class ServerBoundSetBlackboardPacket {
         this.pixels = pixels;
     }
 
-    public static void buffer(ServerBoundSetBlackboardPacket message, FriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
-        for (int i = 0; i < message.pixels.length; i++) {
-            buf.writeByteArray(message.pixels[i]);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
+        for (byte[] pixel : this.pixels) {
+            buf.writeByteArray(pixel);
         }
     }
 
-    public static void handler(ServerBoundSetBlackboardPacket message, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
+
         // server world
-        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
-        ctx.get().enqueueWork(() -> {
-            BlockPos pos = message.pos;
-            if (world.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
-                world.playSound(null, message.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
-                board.setPixels(message.pixels);
-                //updates client
-                //set changed also sends a block update
-                board.setChanged();
-            }
-        });
-        ctx.get().setPacketHandled(true);
+        Level world = Objects.requireNonNull(context.getSender()).level;
+
+        BlockPos pos = this.pos;
+        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
+            world.playSound(null, this.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
+            board.setPixels(this.pixels);
+            //updates client
+            //set changed also sends a block update
+            board.setChanged();
+        }
     }
 }

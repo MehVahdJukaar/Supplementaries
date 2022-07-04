@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class ClientBoundSetSongPacket {
+public class ClientBoundSetSongPacket implements Message {
     private final ResourceLocation song;
     private final UUID id;
 
@@ -23,20 +23,16 @@ public class ClientBoundSetSongPacket {
         this.id = id;
     }
 
-    public static void buffer(ClientBoundSetSongPacket message, FriendlyByteBuf buf) {
-        buf.writeResourceLocation(message.song);
-        buf.writeUUID(message.id);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(this.song);
+        buf.writeUUID(this.id);
     }
 
-    public static void handler(ClientBoundSetSongPacket message, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // client world
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                SongsManager.setCurrentlyPlaying(message.id, message.song);
-            }
-        });
+        SongsManager.setCurrentlyPlaying(this.id, this.song);
 
-        ctx.get().setPacketHandled(true);
     }
 }

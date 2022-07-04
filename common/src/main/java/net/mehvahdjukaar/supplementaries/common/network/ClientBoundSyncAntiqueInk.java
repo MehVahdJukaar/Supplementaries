@@ -1,15 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 
-public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
-    private final BlockPos pos;
-    private final boolean ink;
+public class ClientBoundSyncAntiqueInk implements Message {
+    public final BlockPos pos;
+    public final boolean ink;
 
     public ClientBoundSyncAntiqueInk(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
@@ -21,26 +20,14 @@ public class ClientBoundSyncAntiqueInk implements NetworkHandler.Message {
         this.ink = ink;
     }
 
-    public static void buffer(ClientBoundSyncAntiqueInk message, FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(message.pos);
-        buffer.writeBoolean(message.ink);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
+        buf.writeBoolean(this.ink);
     }
 
-    public static void handler(ClientBoundSyncAntiqueInk message, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                ClientReceivers.handleSyncAntiqueInkPacket(message);
-            }
-        });
-        context.setPacketHandled(true);
-    }
-
-    public BlockPos getPos() {
-        return pos;
-    }
-
-    public boolean getInk() {
-        return ink;
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        ClientReceivers.handleSyncAntiqueInkPacket(this);
     }
 }

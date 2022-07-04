@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-public class ClientBoundSendKnockbackPacket implements NetworkHandler.Message {
+public class ClientBoundSendKnockbackPacket implements Message {
 
     public final int id;
     public final double knockbackX;
@@ -21,7 +20,8 @@ public class ClientBoundSendKnockbackPacket implements NetworkHandler.Message {
         this.knockbackZ = knockback.z;
     }
 
-    public void buffer(FriendlyByteBuf buf) {
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeInt(this.id);
         buf.writeDouble(this.knockbackX);
         buf.writeDouble(this.knockbackY);
@@ -36,17 +36,10 @@ public class ClientBoundSendKnockbackPacket implements NetworkHandler.Message {
         this.knockbackZ = buf.readDouble();
     }
 
-
-    public static void handler(ClientBoundSendKnockbackPacket msg, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // client world
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                ClientReceivers.handleSendBombKnockbackPacket(msg);
-            }
-        });
-
-        ctx.get().setPacketHandled(true);
+        ClientReceivers.handleSendBombKnockbackPacket(this);
     }
 }
 

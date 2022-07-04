@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 
-public class ClientBoundParticlePacket implements NetworkHandler.Message {
+public class ClientBoundParticlePacket implements Message {
     public final Vec3 pos;
     public final EventType id;
 
@@ -26,22 +25,17 @@ public class ClientBoundParticlePacket implements NetworkHandler.Message {
         this.id = id;
     }
 
-    public static void buffer(ClientBoundParticlePacket message, FriendlyByteBuf buffer) {
-        buffer.writeDouble(message.pos.x);
-        buffer.writeDouble(message.pos.y);
-        buffer.writeDouble(message.pos.z);
-        buffer.writeEnum(message.id);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buffer) {
+        buffer.writeDouble(this.pos.x);
+        buffer.writeDouble(this.pos.y);
+        buffer.writeDouble(this.pos.z);
+        buffer.writeEnum(this.id);
     }
 
-    public static void handler(ClientBoundParticlePacket message, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                ClientReceivers.handleSpawnBlockParticlePacket(message);
-            }
-        });
-
-        context.setPacketHandled(true);
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        ClientReceivers.handleSpawnBlockParticlePacket(this);
     }
 
     public enum EventType {

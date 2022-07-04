@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
-public class ServerBoundSetTrappedPresentPacket {
+public class ServerBoundSetTrappedPresentPacket implements Message {
     private final BlockPos pos;
     private final boolean packed;
 
@@ -25,33 +25,34 @@ public class ServerBoundSetTrappedPresentPacket {
         this.packed = packed;
     }
 
-    public static void buffer(ServerBoundSetTrappedPresentPacket message, FriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
-        buf.writeBoolean(message.packed);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
+        buf.writeBoolean(this.packed);
     }
 
-    public static void handler(ServerBoundSetTrappedPresentPacket message, Supplier<NetworkEvent.Context> ctx) {
+
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // server world
-        ServerPlayer player = Objects.requireNonNull(ctx.get().getSender());
+        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level world = player.level;
-        ctx.get().enqueueWork(() -> {
-            BlockPos pos = message.pos;
-            if (world.getBlockEntity(message.pos) instanceof TrappedPresentBlockTile present) {
-                //TODO: sound here
 
-                present.updateState(message.packed);
+        BlockPos pos = this.pos;
+        if (world.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
+            //TODO: sound here
 
-                BlockState state = world.getBlockState(pos);
-                present.setChanged();
-                //also sends new block to clients. maybe not needed since blockstate changes
-                world.sendBlockUpdated(pos, state, state, 3);
+            present.updateState(this.packed);
 
-                //if I'm packing also closes the gui
-                if (message.packed) {
-                    player.doCloseContainer();
-                }
+            BlockState state = world.getBlockState(pos);
+            present.setChanged();
+            //also sends new block to clients. maybe not needed since blockstate changes
+            world.sendBlockUpdated(pos, state, state, 3);
+
+            //if I'm packing also closes the gui
+            if (this.packed) {
+                player.doCloseContainer();
             }
-        });
-        ctx.get().setPacketHandled(true);
+        }
     }
 }

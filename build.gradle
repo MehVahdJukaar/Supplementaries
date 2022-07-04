@@ -28,8 +28,6 @@ subprojects {
         }
         // The following line declares the yarn mappings you may select this one as well.
         // mappings "net.fabricmc:yarn:1.19+build.4:v2"
-
-        modImplementation("curse.maven:selene-499980:3859470")
     }
 }
 

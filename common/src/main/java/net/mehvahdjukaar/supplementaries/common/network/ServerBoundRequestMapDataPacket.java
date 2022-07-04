@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +19,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ServerBoundRequestMapDataPacket {
+public class ServerBoundRequestMapDataPacket implements Message {
     private final BlockPos pos;
     private final UUID id;
 
@@ -31,34 +33,34 @@ public class ServerBoundRequestMapDataPacket {
         this.id = id;
     }
 
-    public static void buffer(ServerBoundRequestMapDataPacket message, FriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
-        buf.writeUUID(message.id);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
+        buf.writeUUID(this.id);
     }
 
-    public static void handler(ServerBoundRequestMapDataPacket message, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // server world
-        Level world = Objects.requireNonNull(ctx.get().getSender()).level;
+        Level world = Objects.requireNonNull(context.getSender()).level;
 
-        ctx.get().enqueueWork(() -> {
-            if (world instanceof ServerLevel) {
-                Player player = world.getPlayerByUUID(message.id);
-                if (player instanceof ServerPlayer serverPlayer && world.getBlockEntity(message.pos) instanceof IMapDisplay tile) {
-                    ItemStack stack = tile.getMapStack();
-                    if (stack.getItem() instanceof MapItem map) {
-                        MapItemSavedData data = MapItem.getSavedData(stack, world);
-                        if (data != null) {
-                            data.tickCarriedBy(player, stack);
-                            map.update(world, player, data);
-                            Packet<?> updatePacket = map.getUpdatePacket(stack, world, player);
-                            if (updatePacket != null) {
-                                serverPlayer.connection.send(updatePacket);
-                            }
+        if (world instanceof ServerLevel) {
+            Player player = world.getPlayerByUUID(this.id);
+            if (player instanceof ServerPlayer serverPlayer && world.getBlockEntity(this.pos) instanceof IMapDisplay tile) {
+                ItemStack stack = tile.getMapStack();
+                if (stack.getItem() instanceof MapItem map) {
+                    MapItemSavedData data = MapItem.getSavedData(stack, world);
+                    if (data != null) {
+                        data.tickCarriedBy(player, stack);
+                        map.update(world, player, data);
+                        Packet<?> updatePacket = map.getUpdatePacket(stack, world, player);
+                        if (updatePacket != null) {
+                            serverPlayer.connection.send(updatePacket);
                         }
                     }
                 }
             }
-        });
-        ctx.get().setPacketHandled(true);
+        }
+
     }
 }

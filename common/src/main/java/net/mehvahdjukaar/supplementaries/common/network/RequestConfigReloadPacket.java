@@ -1,28 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
 
-import java.util.function.Supplier;
-
-public class RequestConfigReloadPacket {
+public class RequestConfigReloadPacket implements Message {
     public RequestConfigReloadPacket(FriendlyByteBuf buffer) {
     }
 
     public RequestConfigReloadPacket() {
     }
 
-    public static void buffer(RequestConfigReloadPacket message, FriendlyByteBuf buf) {
+    @Override
+    public void writeToBuffer(FriendlyByteBuf friendlyByteBuf) {
     }
 
-    public static void handler(RequestConfigReloadPacket message, Supplier<NetworkEvent.Context> ctx) {
-        //server
-        ctx.get().enqueueWork(() -> {
-            ConfigHandler.configScreenReload(ctx.get().getSender());
-
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        ConfigHandler.configScreenReload((ServerPlayer) context.getSender());
     }
 
 }

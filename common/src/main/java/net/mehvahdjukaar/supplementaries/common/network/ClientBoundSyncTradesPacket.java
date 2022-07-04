@@ -1,19 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.trading.MerchantOffers;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-public class ClientBoundSyncTradesPacket {
-    private final int containerId;
+public class ClientBoundSyncTradesPacket implements Message {
+    public final int containerId;
     public final MerchantOffers offers;
-    private final int villagerLevel;
-    private final int villagerXp;
-    private final boolean showProgress;
-    private final boolean canRestock;
+    public final int villagerLevel;
+    public final int villagerXp;
+    public final boolean showProgress;
+    public final boolean canRestock;
 
     public ClientBoundSyncTradesPacket(FriendlyByteBuf buf) {
         this.containerId = buf.readVarInt();
@@ -33,49 +32,19 @@ public class ClientBoundSyncTradesPacket {
         this.canRestock = canRestock;
     }
 
-    public static void buffer(ClientBoundSyncTradesPacket message, FriendlyByteBuf buf) {
-        buf.writeVarInt(message.containerId);
-        message.offers.writeToStream(buf);
-        buf.writeVarInt(message.villagerLevel);
-        buf.writeVarInt(message.villagerXp);
-        buf.writeBoolean(message.showProgress);
-        buf.writeBoolean(message.canRestock);
-
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeVarInt(this.containerId);
+        this.offers.writeToStream(buf);
+        buf.writeVarInt(this.villagerLevel);
+        buf.writeVarInt(this.villagerXp);
+        buf.writeBoolean(this.showProgress);
+        buf.writeBoolean(this.canRestock);
     }
 
-    public static void handler(ClientBoundSyncTradesPacket message, Supplier<NetworkEvent.Context> ctx) {
-        // client world
-        NetworkEvent.Context context = ctx.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                ClientReceivers.handleSyncTradesPacket(message);
-            }
-        });
-
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        ClientReceivers.handleSyncTradesPacket(this);
     }
 
-    public int getContainerId() {
-        return containerId;
-    }
-
-    public int getVillagerLevel() {
-        return villagerLevel;
-    }
-
-    public int getVillagerXp() {
-        return villagerXp;
-    }
-
-    public MerchantOffers getOffers() {
-        return offers;
-    }
-
-    public boolean isCanRestock() {
-        return canRestock;
-    }
-
-    public boolean isShowProgress() {
-        return showProgress;
-    }
 }

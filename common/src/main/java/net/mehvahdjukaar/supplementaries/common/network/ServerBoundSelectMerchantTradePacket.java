@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-public class ServerBoundSelectMerchantTradePacket implements NetworkHandler.Message {
+public class ServerBoundSelectMerchantTradePacket implements Message {
     private final int item;
 
     public ServerBoundSelectMerchantTradePacket(FriendlyByteBuf buf) {
@@ -19,25 +18,23 @@ public class ServerBoundSelectMerchantTradePacket implements NetworkHandler.Mess
         this.item = slot;
     }
 
-    public static void buffer(ServerBoundSelectMerchantTradePacket message, FriendlyByteBuf buf) {
-        buf.writeVarInt(message.item);
-
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeVarInt(this.item);
     }
 
-    public static void handler(ServerBoundSelectMerchantTradePacket message, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // server world
         //ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER
-        ctx.get().enqueueWork(() -> {
-            AbstractContainerMenu container = ctx.get().getSender().containerMenu;
 
-            int i = message.item;
+        AbstractContainerMenu container = context.getSender().containerMenu;
 
-            if (container instanceof RedMerchantContainerMenu redMerchantContainerMenu) {
-                redMerchantContainerMenu.setSelectionHint(i);
-                redMerchantContainerMenu.tryMoveItems(i);
-            }
+        int i = this.item;
 
-        });
-        ctx.get().setPacketHandled(true);
+        if (container instanceof RedMerchantContainerMenu redMerchantContainerMenu) {
+            redMerchantContainerMenu.setSelectionHint(i);
+            redMerchantContainerMenu.tryMoveItems(i);
+        }
     }
 }

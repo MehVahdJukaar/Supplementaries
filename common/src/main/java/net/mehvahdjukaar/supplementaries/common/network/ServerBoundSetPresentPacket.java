@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
-public class ServerBoundSetPresentPacket {
+public class ServerBoundSetPresentPacket implements Message {
     private final BlockPos pos;
     private final boolean packed;
     private final String sender;
@@ -34,36 +34,37 @@ public class ServerBoundSetPresentPacket {
         this.description = description;
     }
 
-    public static void buffer(ServerBoundSetPresentPacket message, FriendlyByteBuf buf) {
-        buf.writeBlockPos(message.pos);
-        buf.writeBoolean(message.packed);
-        buf.writeUtf(message.recipient);
-        buf.writeUtf(message.sender);
-        buf.writeUtf(message.description);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.pos);
+        buf.writeBoolean(this.packed);
+        buf.writeUtf(this.recipient);
+        buf.writeUtf(this.sender);
+        buf.writeUtf(this.description);
     }
 
-    public static void handler(ServerBoundSetPresentPacket message, Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
         // server world
-        ServerPlayer player = Objects.requireNonNull(ctx.get().getSender());
+        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level world = player.level;
-        ctx.get().enqueueWork(() -> {
-            BlockPos pos = message.pos;
-            if (world.getBlockEntity(message.pos) instanceof PresentBlockTile present) {
-                //TODO: sound here
 
-                present.updateState(message.packed, message.recipient, message.sender, message.description);
+        BlockPos pos = this.pos;
+        if (world.getBlockEntity(this.pos) instanceof PresentBlockTile present) {
+            //TODO: sound here
 
-                BlockState state = world.getBlockState(pos);
-                present.setChanged();
-                //also sends new block to clients. maybe not needed since blockstate changes
-                world.sendBlockUpdated(pos, state, state, 3);
+            present.updateState(this.packed, this.recipient, this.sender, this.description);
 
-                //if I'm packing also closes the gui
-                if (message.packed) {
-                    player.doCloseContainer();
-                }
+            BlockState state = world.getBlockState(pos);
+            present.setChanged();
+            //also sends new block to clients. maybe not needed since blockstate changes
+            world.sendBlockUpdated(pos, state, state, 3);
+
+            //if I'm packing also closes the gui
+            if (this.packed) {
+                player.doCloseContainer();
             }
-        });
-        ctx.get().setPacketHandled(true);
+        }
+
     }
 }

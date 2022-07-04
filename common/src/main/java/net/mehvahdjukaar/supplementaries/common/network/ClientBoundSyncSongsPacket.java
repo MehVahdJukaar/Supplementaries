@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.world.songs.Song;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
-public class ClientBoundSyncSongsPacket {
+public class ClientBoundSyncSongsPacket implements Message {
 
     protected final Map<ResourceLocation, Song> songs;
 
@@ -32,28 +32,25 @@ public class ClientBoundSyncSongsPacket {
         }
     }
 
-    public static void buffer(ClientBoundSyncSongsPacket message, final FriendlyByteBuf buf) {
-        buf.writeInt(message.songs.size());
-        for (var entry : message.songs.entrySet()) {
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeInt(this.songs.size());
+        for (var entry : this.songs.entrySet()) {
             buf.writeResourceLocation(entry.getKey());
             buf.writeNbt(Song.saveToTag(entry.getValue()));
         }
     }
 
-    public static void handler(ClientBoundSyncSongsPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                SongsManager.clearSongs();
-                message.songs.keySet().forEach(k -> {
-                    Song s = message.songs.get(k);
-                    s.processForPlaying();
-                    SongsManager.addSong(k, s);
-                });
-            }
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        //client world
+        SongsManager.clearSongs();
+        this.songs.keySet().forEach(k -> {
+            Song s = this.songs.get(k);
+            s.processForPlaying();
+            SongsManager.addSong(k, s);
         });
 
-        context.setPacketHandled(true);
     }
 
 }

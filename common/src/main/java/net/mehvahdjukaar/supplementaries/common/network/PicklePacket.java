@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PicklePlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +14,7 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class PicklePacket {
+public class PicklePacket implements Message {
 
     private UUID playerID;
     private final boolean on;
@@ -22,10 +24,11 @@ public class PicklePacket {
         this.on = on;
     }
 
-    public static void buffer(PicklePacket pkt, FriendlyByteBuf buf) {
-        buf.writeBoolean(pkt.on);
-        if (pkt.playerID != null) {
-            buf.writeUUID(pkt.playerID);
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeBoolean(this.on);
+        this (pkt.playerID != null) {
+            buf.writeUUID(this.playerID);
         }
     }
 
@@ -36,8 +39,9 @@ public class PicklePacket {
         }
     }
 
-
-    public static void handler(PicklePacket msg, Supplier<NetworkEvent.Context> ctx) {
+    //TODO: split in 2
+    @Override
+    public void handle(ChannelHandler.Context context) {
         if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
             //receive broadcasted message
             ctx.get().enqueueWork(() -> PicklePlayer.PickleData.set(msg.playerID, msg.on));

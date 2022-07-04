@@ -32,65 +32,73 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundSetTextHolderPacket.class, ServerBoundSetTextHolderPacket::new);
 
-        CHANNEL.register(ClientBoundSyncGlobeDataPacket.class, ClientBoundSyncGlobeDataPacket::buffer,
-                ClientBoundSyncGlobeDataPacket::new, ClientBoundSyncGlobeDataPacket::handler);
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncGlobeDataPacket.class, ClientBoundSyncGlobeDataPacket::new);
 
-        CHANNEL.register(ServerBoundRequestMapDataPacket.class, ServerBoundRequestMapDataPacket::buffer,
-                ServerBoundRequestMapDataPacket::new, ServerBoundRequestMapDataPacket::handler);
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundRequestMapDataPacket.class, ServerBoundRequestMapDataPacket::new);
 
-        CHANNEL.register(ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::buffer,
-                ServerBoundSetBlackboardPacket::new, ServerBoundSetBlackboardPacket::handler);
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::new);
 
-        CHANNEL.register(SyncConfigsPacket.class, SyncConfigsPacket::buffer,
-                SyncConfigsPacket::new, SyncConfigsPacket::handler);
 
-        CHANNEL.register(ClientBoundSendLoginPacket.class, ClientBoundSendLoginPacket::buffer,
-                ClientBoundSendLoginPacket::new, ClientBoundSendLoginPacket::handler);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSendLoginPacket.class, ClientBoundSendLoginPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::new);
+
+
+
+
+
+
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundSetTrappedPresentPacket.class, ServerBoundSetTrappedPresentPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSendKnockbackPacket.class, ClientBoundSendKnockbackPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncAntiqueInk.class, ClientBoundSyncAntiqueInk::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncSongsPacket.class, ClientBoundSyncSongsPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundParticlePacket.class, ClientBoundParticlePacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::new);
+
+        CHANNEL.register(PicklePacket.class, PicklePacket::buffer, PicklePacket::new);
+
+
+        //I forgor what these 2 are for
+
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                RequestConfigReloadPacket.class, RequestConfigReloadPacket::new);
 
         CHANNEL.register(OpenConfigsPacket.class, OpenConfigsPacket::buffer,
                 OpenConfigsPacket::new, OpenConfigsPacket::handler);
 
-        CHANNEL.register(RequestConfigReloadPacket.class, RequestConfigReloadPacket::buffer,
-                RequestConfigReloadPacket::new, RequestConfigReloadPacket::handler);
-
-        CHANNEL.register(PicklePacket.class, PicklePacket::buffer,
-                PicklePacket::new, PicklePacket::handler);
-
-        CHANNEL.register(ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::buffer,
-                ClientBoundSyncTradesPacket::new, ClientBoundSyncTradesPacket::handler);
-
-
-        CHANNEL.register(ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::buffer,
-                ServerBoundSetPresentPacket::new, ServerBoundSetPresentPacket::handler);
-
-        CHANNEL.register(ServerBoundSetTrappedPresentPacket.class, ServerBoundSetTrappedPresentPacket::buffer,
-                ServerBoundSetTrappedPresentPacket::new, ServerBoundSetTrappedPresentPacket::handler);
-
-        CHANNEL.register(ClientBoundSendKnockbackPacket.class, ClientBoundSendKnockbackPacket::buffer,
-                ClientBoundSendKnockbackPacket::new, ClientBoundSendKnockbackPacket::handler);
-
-        CHANNEL.register(ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::buffer,
-                ServerBoundSelectMerchantTradePacket::new, ServerBoundSelectMerchantTradePacket::handler);
-
-        CHANNEL.register(ClientBoundSyncAntiqueInk.class, ClientBoundSyncAntiqueInk::buffer,
-                ClientBoundSyncAntiqueInk::new, ClientBoundSyncAntiqueInk::handler);
-
-        CHANNEL.register(ClientBoundSyncSongsPacket.class, ClientBoundSyncSongsPacket::buffer,
-                ClientBoundSyncSongsPacket::new, ClientBoundSyncSongsPacket::handler);
-
-        CHANNEL.register(ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::buffer,
-                ClientBoundSetSongPacket::new, ClientBoundSetSongPacket::handler);
-
-        CHANNEL.register(ClientBoundParticlePacket.class, ClientBoundParticlePacket::buffer,
-                ClientBoundParticlePacket::new, ClientBoundParticlePacket::handler);
-
-        CHANNEL.register(ClientBoundOpenScreenPacket.class, ClientBoundOpenScreenPacket::buffer,
-                ClientBoundOpenScreenPacket::new, ClientBoundOpenScreenPacket::handler);
-
-        CHANNEL.register(ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::buffer,
-                ClientBoundPlaySongNotesPacket::new, ClientBoundPlaySongNotesPacket::handler);
 
     }
+
+    //add these to channel class
 
     public static void sendToAllTrackingClients(Entity entity, ServerLevel world, Message message) {
         world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));

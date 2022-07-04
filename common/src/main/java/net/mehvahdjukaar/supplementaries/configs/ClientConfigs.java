@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -18,7 +19,7 @@ public class ClientConfigs {
     public static Object CLIENT_SPEC;
 
     static {
-        ConfigBuilder builder = ConfigBuilder.create("client", ConfigBuilder.ConfigType.CLIENT);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigBuilder.ConfigType.CLIENT);
 
         block.init(builder);
         particle.init(builder);
@@ -44,8 +45,8 @@ public class ClientConfigs {
             builder.push("slingshot");
 
 
-            //TODO: these lines now need to be included in the translation file
-            SLINGSHOT_OVERLAY = builder.define().comment("Adds an overlay to slingshots in gui displaying currently selected block")
+            //TODO: these lines now need to be included in the translation file (config.category.name.description)
+            SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
                     .define("overlay", true);
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);

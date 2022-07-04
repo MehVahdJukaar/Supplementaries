@@ -1,15 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 
-public class ClientBoundSyncGlobeDataPacket {
+public class ClientBoundSyncGlobeDataPacket implements Message {
     public GlobeData data;
 
     public ClientBoundSyncGlobeDataPacket(FriendlyByteBuf buffer) {
@@ -20,19 +19,15 @@ public class ClientBoundSyncGlobeDataPacket {
         this.data = data;
     }
 
-    public static void buffer(ClientBoundSyncGlobeDataPacket message, FriendlyByteBuf buffer) {
-        buffer.writeNbt(message.data.save(new CompoundTag()));
+    @Override
+    public void writeToBuffer(FriendlyByteBuf buf) {
+        buf.writeNbt(this.data.save(new CompoundTag()));
     }
 
-    public static void handler(ClientBoundSyncGlobeDataPacket message, Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            if (context.getDirection().getReceptionSide().isClient()) {
-                //assigns data to client
-                GlobeData.setClientData(message.data);
-                Supplementaries.LOGGER.info("Synced Globe data");
-            }
-        });
-        context.setPacketHandled(true);
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        //assigns data to client
+        GlobeData.setClientData(this.data);
+        Supplementaries.LOGGER.info("Synced Globe data");
     }
 }
