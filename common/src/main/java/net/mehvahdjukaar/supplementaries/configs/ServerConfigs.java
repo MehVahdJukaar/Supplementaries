@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -12,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.LIST_STRING_CHECK;
 import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.STRING_CHECK;
@@ -24,7 +27,7 @@ public class ServerConfigs {
     public static ForgeConfigSpec SERVER_SPEC;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("server"), ConfigBuilder.ConfigType.COMMON);
 
         block.init(builder);
         spawn.init(builder);
@@ -38,22 +41,22 @@ public class ServerConfigs {
     }
 
     public static class item {
-        public static ForgeConfigSpec.IntValue ROPE_ARROW_CAPACITY;
-        public static ForgeConfigSpec.BooleanValue ROPE_ARROW_CROSSBOW;
+        public static Supplier<Integer> ROPE_ARROW_CAPACITY;
+        public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;
         public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
-        public static ForgeConfigSpec.IntValue FLUTE_RADIUS;
-        public static ForgeConfigSpec.IntValue FLUTE_DISTANCE;
-        public static ForgeConfigSpec.DoubleValue BOMB_RADIUS;
-        public static ForgeConfigSpec.IntValue BOMB_FUSE;
+        public static Supplier<Integer> FLUTE_RADIUS;
+        public static Supplier<Integer> FLUTE_DISTANCE;
+        public static Supplier<Double> BOMB_RADIUS;
+        public static Supplier<Integer> BOMB_FUSE;
         public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BREAKS;
-        public static ForgeConfigSpec.DoubleValue BOMB_BLUE_RADIUS;
+        public static Supplier<Double> BOMB_BLUE_RADIUS;
         public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
-        public static ForgeConfigSpec.DoubleValue SLINGSHOT_RANGE;
-        public static ForgeConfigSpec.IntValue SLINGSHOT_CHARGE;
-        public static ForgeConfigSpec.DoubleValue SLINGSHOT_DECELERATION;
-        public static ForgeConfigSpec.BooleanValue UNRESTRICTED_SLINGSHOT;
+        public static Supplier<Double> SLINGSHOT_RANGE;
+        public static Supplier<Integer> SLINGSHOT_CHARGE;
+        public static Supplier<Double> SLINGSHOT_DECELERATION;
+        public static Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
         public static ForgeConfigSpec.EnumValue<Hands> WRENCH_BYPASS;
-        public static ForgeConfigSpec.IntValue BUBBLE_BLOWER_COST;
+        public static Supplier<Integer> BUBBLE_BLOWER_COST;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.push("items");
@@ -126,41 +129,41 @@ public class ServerConfigs {
     }
 
     public static class tweaks {
-        public static ForgeConfigSpec.BooleanValue ENDER_PEAR_DISPENSERS;
-        public static ForgeConfigSpec.BooleanValue AXE_DISPENSER_BEHAVIORS;
-        public static ForgeConfigSpec.BooleanValue DIRECTIONAL_CAKE;
-        public static ForgeConfigSpec.BooleanValue DOUBLE_CAKE_PLACEMENT;
-        public static ForgeConfigSpec.BooleanValue HANGING_POT_PLACEMENT;
-        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_PLACEMENT;
-        public static ForgeConfigSpec.BooleanValue WALL_LANTERN_HIGH_PRIORITY;
-        public static ForgeConfigSpec.BooleanValue THROWABLE_BRICKS_ENABLED;
+        public static Supplier<Boolean> ENDER_PEAR_DISPENSERS;
+        public static Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
+        public static Supplier<Boolean> DIRECTIONAL_CAKE;
+        public static Supplier<Boolean> DOUBLE_CAKE_PLACEMENT;
+        public static Supplier<Boolean> HANGING_POT_PLACEMENT;
+        public static Supplier<Boolean> WALL_LANTERN_PLACEMENT;
+        public static Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
+        public static Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
         public static ForgeConfigSpec.EnumValue<LightableLanternBlock.FallMode> FALLING_LANTERNS;
-        public static ForgeConfigSpec.BooleanValue BELL_CHAIN;
-        public static ForgeConfigSpec.IntValue BELL_CHAIN_LENGTH;
-        public static ForgeConfigSpec.BooleanValue PLACEABLE_STICKS;
-        public static ForgeConfigSpec.BooleanValue PLACEABLE_RODS;
-        public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL;
-        public static ForgeConfigSpec.BooleanValue BOTTLE_XP;
-        public static ForgeConfigSpec.IntValue BOTTLING_COST;
+        public static Supplier<Boolean> BELL_CHAIN;
+        public static Supplier<Integer> BELL_CHAIN_LENGTH;
+        public static Supplier<Boolean> PLACEABLE_STICKS;
+        public static Supplier<Boolean> PLACEABLE_RODS;
+        public static Supplier<Boolean> RAKED_GRAVEL;
+        public static Supplier<Boolean> BOTTLE_XP;
+        public static Supplier<Integer> BOTTLING_COST;
         public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
-        public static ForgeConfigSpec.BooleanValue RANDOM_ADVENTURER_MAPS;
-        public static ForgeConfigSpec.BooleanValue MAP_MARKERS;
-        public static ForgeConfigSpec.BooleanValue CEILING_BANNERS;
-        public static ForgeConfigSpec.BooleanValue PLACEABLE_BOOKS;
-        public static ForgeConfigSpec.BooleanValue WRITTEN_BOOKS;
-        public static ForgeConfigSpec.DoubleValue BOOK_POWER;
-        public static ForgeConfigSpec.DoubleValue ENCHANTED_BOOK_POWER;
-        public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE;
-        public static ForgeConfigSpec.IntValue ZOMBIE_HORSE_COST;
-        public static ForgeConfigSpec.BooleanValue ZOMBIE_HORSE_UNDERWATER;
-        public static ForgeConfigSpec.BooleanValue PLACEABLE_GUNPOWDER;
-        public static ForgeConfigSpec.IntValue GUNPOWDER_BURN_SPEED;
-        public static ForgeConfigSpec.IntValue GUNPOWDER_SPREAD_AGE;
-        public static ForgeConfigSpec.BooleanValue MIXED_BOOKS;
-        public static ForgeConfigSpec.BooleanValue SKULL_PILES;
-        public static ForgeConfigSpec.BooleanValue SKULL_CANDLES;
-        public static ForgeConfigSpec.BooleanValue SKULL_CANDLES_MULTIPLE;
+        public static Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
+        public static Supplier<Boolean> MAP_MARKERS;
+        public static Supplier<Boolean> CEILING_BANNERS;
+        public static Supplier<Boolean> PLACEABLE_BOOKS;
+        public static Supplier<Boolean> WRITTEN_BOOKS;
+        public static Supplier<Double> BOOK_POWER;
+        public static Supplier<Double> ENCHANTED_BOOK_POWER;
+        public static Supplier<Boolean> ZOMBIE_HORSE;
+        public static Supplier<Integer> ZOMBIE_HORSE_COST;
+        public static Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
+        public static Supplier<Boolean> PLACEABLE_GUNPOWDER;
+        public static Supplier<Integer> GUNPOWDER_BURN_SPEED;
+        public static Supplier<Integer> GUNPOWDER_SPREAD_AGE;
+        public static Supplier<Boolean> MIXED_BOOKS;
+        public static Supplier<Boolean> SKULL_PILES;
+        public static Supplier<Boolean> SKULL_CANDLES;
+        public static Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Vanilla tweaks")
@@ -317,7 +320,7 @@ public class ServerConfigs {
     }
 
     public static class general {
-        public static ForgeConfigSpec.BooleanValue SERVER_PROTECTION;
+        public static Supplier<Boolean> SERVER_PROTECTION;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
@@ -332,83 +335,83 @@ public class ServerConfigs {
 
     public static class block {
 
-        public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ALTERNATIVE;
+        public static Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
 
-        public static ForgeConfigSpec.IntValue BUBBLE_LIFETIME;
-        public static ForgeConfigSpec.BooleanValue BUBBLE_BREAK;
+        public static Supplier<Integer> BUBBLE_LIFETIME;
+        public static Supplier<Boolean> BUBBLE_BREAK;
 
-        public static ForgeConfigSpec.BooleanValue ROPE_UNRESTRICTED;
-        public static ForgeConfigSpec.BooleanValue ROPE_SLIDE;
-        public static ForgeConfigSpec.IntValue GLOBE_TRADES;
+        public static Supplier<Boolean> ROPE_UNRESTRICTED;
+        public static Supplier<Boolean> ROPE_SLIDE;
+        public static Supplier<Integer> GLOBE_TRADES;
 
-        public static ForgeConfigSpec.IntValue SPEAKER_RANGE;
-        public static ForgeConfigSpec.BooleanValue SPEAKER_NARRATOR;
+        public static Supplier<Integer> SPEAKER_RANGE;
+        public static Supplier<Boolean> SPEAKER_NARRATOR;
 
-        public static ForgeConfigSpec.IntValue BELLOWS_PERIOD;
-        public static ForgeConfigSpec.IntValue BELLOWS_POWER_SCALING;
-        public static ForgeConfigSpec.DoubleValue BELLOWS_MAX_VEL;
-        public static ForgeConfigSpec.DoubleValue BELLOWS_BASE_VEL_SCALING;
-        public static ForgeConfigSpec.BooleanValue BELLOWS_FLAG;
-        public static ForgeConfigSpec.IntValue BELLOWS_RANGE;
+        public static Supplier<Integer> BELLOWS_PERIOD;
+        public static Supplier<Integer> BELLOWS_POWER_SCALING;
+        public static Supplier<Double> BELLOWS_MAX_VEL;
+        public static Supplier<Double> BELLOWS_BASE_VEL_SCALING;
+        public static Supplier<Boolean> BELLOWS_FLAG;
+        public static Supplier<Integer> BELLOWS_RANGE;
 
-        public static ForgeConfigSpec.DoubleValue LAUNCHER_VEL;
-        public static ForgeConfigSpec.IntValue LAUNCHER_HEIGHT;
+        public static Supplier<Double> LAUNCHER_VEL;
+        public static Supplier<Integer> LAUNCHER_HEIGHT;
 
-        public static ForgeConfigSpec.BooleanValue TURN_TABLE_ROTATE_ENTITIES;
+        public static Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
 
-        public static ForgeConfigSpec.IntValue JAR_CAPACITY;
-        public static ForgeConfigSpec.BooleanValue JAR_EAT;
-        public static ForgeConfigSpec.BooleanValue JAR_CAPTURE;
-        public static ForgeConfigSpec.BooleanValue JAR_COOKIES;
-        public static ForgeConfigSpec.BooleanValue JAR_LIQUIDS;
-        public static ForgeConfigSpec.BooleanValue JAR_ITEM_DRINK;
-        public static ForgeConfigSpec.BooleanValue JAR_AUTO_DETECT;
-        public static ForgeConfigSpec.BooleanValue GOBLET_DRINK;
-        public static ForgeConfigSpec.BooleanValue CRYSTAL_ENCHANTING;
+        public static Supplier<Integer> JAR_CAPACITY;
+        public static Supplier<Boolean> JAR_EAT;
+        public static Supplier<Boolean> JAR_CAPTURE;
+        public static Supplier<Boolean> JAR_COOKIES;
+        public static Supplier<Boolean> JAR_LIQUIDS;
+        public static Supplier<Boolean> JAR_ITEM_DRINK;
+        public static Supplier<Boolean> JAR_AUTO_DETECT;
+        public static Supplier<Boolean> GOBLET_DRINK;
+        public static Supplier<Boolean> CRYSTAL_ENCHANTING;
 
-        public static ForgeConfigSpec.BooleanValue CAGE_ALL_MOBS;
-        public static ForgeConfigSpec.BooleanValue CAGE_ALL_BABIES;
-        public static ForgeConfigSpec.BooleanValue CAGE_AUTO_DETECT;
-        public static ForgeConfigSpec.BooleanValue CAGE_PERSISTENT_MOBS;
-        public static ForgeConfigSpec.IntValue CAGE_HEALTH_THRESHOLD;
+        public static Supplier<Boolean> CAGE_ALL_MOBS;
+        public static Supplier<Boolean> CAGE_ALL_BABIES;
+        public static Supplier<Boolean> CAGE_AUTO_DETECT;
+        public static Supplier<Boolean> CAGE_PERSISTENT_MOBS;
+        public static Supplier<Integer> CAGE_HEALTH_THRESHOLD;
 
-        public static ForgeConfigSpec.BooleanValue NOTICE_BOARDS_UNRESTRICTED;
+        public static Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
 
-        public static ForgeConfigSpec.BooleanValue SACK_PENALTY;
-        public static ForgeConfigSpec.IntValue SACK_INCREMENT;
-        public static ForgeConfigSpec.IntValue SACK_SLOTS;
+        public static Supplier<Boolean> SACK_PENALTY;
+        public static Supplier<Integer> SACK_INCREMENT;
+        public static Supplier<Integer> SACK_SLOTS;
 
-        public static ForgeConfigSpec.BooleanValue SAFE_UNBREAKABLE;
-        public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
+        public static Supplier<Boolean> SAFE_UNBREAKABLE;
+        public static Supplier<Boolean> SAFE_SIMPLE;
 
-        public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
+        public static Supplier<Boolean> BLACKBOARD_COLOR;
 
-        public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
-        public static ForgeConfigSpec.BooleanValue SWAP_TIMBER_FRAME;
+        public static Supplier<Boolean> REPLACE_DAUB;
+        public static Supplier<Boolean> SWAP_TIMBER_FRAME;
 
-        public static ForgeConfigSpec.IntValue HOURGLASS_DUST;
-        public static ForgeConfigSpec.IntValue HOURGLASS_SAND;
-        public static ForgeConfigSpec.IntValue HOURGLASS_CONCRETE;
-        public static ForgeConfigSpec.IntValue HOURGLASS_BLAZE_POWDER;
-        public static ForgeConfigSpec.IntValue HOURGLASS_GLOWSTONE;
-        public static ForgeConfigSpec.IntValue HOURGLASS_REDSTONE;
-        public static ForgeConfigSpec.IntValue HOURGLASS_SUGAR;
-        public static ForgeConfigSpec.IntValue HOURGLASS_SLIME;
-        public static ForgeConfigSpec.IntValue HOURGLASS_HONEY;
+        public static Supplier<Integer> HOURGLASS_DUST;
+        public static Supplier<Integer> HOURGLASS_SAND;
+        public static Supplier<Integer> HOURGLASS_CONCRETE;
+        public static Supplier<Integer> HOURGLASS_BLAZE_POWDER;
+        public static Supplier<Integer> HOURGLASS_GLOWSTONE;
+        public static Supplier<Integer> HOURGLASS_REDSTONE;
+        public static Supplier<Integer> HOURGLASS_SUGAR;
+        public static Supplier<Integer> HOURGLASS_SLIME;
+        public static Supplier<Integer> HOURGLASS_HONEY;
 
-        public static ForgeConfigSpec.BooleanValue ITEM_SHELF_LADDER;
+        public static Supplier<Boolean> ITEM_SHELF_LADDER;
 
-        public static ForgeConfigSpec.BooleanValue DOUBLE_IRON_GATE;
-        public static ForgeConfigSpec.BooleanValue CONSISTENT_GATE;
+        public static Supplier<Boolean> DOUBLE_IRON_GATE;
+        public static Supplier<Boolean> CONSISTENT_GATE;
 
-        public static ForgeConfigSpec.BooleanValue STICK_POLE;
-        public static ForgeConfigSpec.IntValue STICK_POLE_LENGTH;
+        public static Supplier<Boolean> STICK_POLE;
+        public static Supplier<Integer> STICK_POLE_LENGTH;
 
-        public static ForgeConfigSpec.BooleanValue ASH_BURN;
-        public static ForgeConfigSpec.BooleanValue ASH_RAIN;
+        public static Supplier<Boolean> ASH_BURN;
+        public static Supplier<Boolean> ASH_RAIN;
 
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
@@ -612,28 +615,28 @@ public class ServerConfigs {
     }
 
     public static class spawn {
-        public static ForgeConfigSpec.IntValue FIREFLY_MIN;
-        public static ForgeConfigSpec.IntValue FIREFLY_MAX;
-        public static ForgeConfigSpec.IntValue FIREFLY_WEIGHT;
+        public static Supplier<Integer> FIREFLY_MIN;
+        public static Supplier<Integer> FIREFLY_MAX;
+        public static Supplier<Integer> FIREFLY_WEIGHT;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
-        public static ForgeConfigSpec.BooleanValue DISTANCE_TEXT;
-        public static ForgeConfigSpec.BooleanValue WAY_SIGN_ENABLED;
-        public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_MIN;
-        public static ForgeConfigSpec.IntValue ROAD_SIGN_DISTANCE_AVR;
+        public static Supplier<Boolean> DISTANCE_TEXT;
+        public static Supplier<Boolean> WAY_SIGN_ENABLED;
+        public static Supplier<Integer> ROAD_SIGN_DISTANCE_MIN;
+        public static Supplier<Integer> ROAD_SIGN_DISTANCE_AVR;
 
-        public static ForgeConfigSpec.BooleanValue WILD_FLAX_ENABLED;
-        public static ForgeConfigSpec.IntValue FLAX_PATCH_TRIES;
-        public static ForgeConfigSpec.IntValue FLAX_AVERAGE_EVERY;
+        public static Supplier<Boolean> WILD_FLAX_ENABLED;
+        public static Supplier<Integer> FLAX_PATCH_TRIES;
+        public static Supplier<Integer> FLAX_AVERAGE_EVERY;
 
-        public static ForgeConfigSpec.BooleanValue URN_PILE_ENABLED;
-        public static ForgeConfigSpec.IntValue URN_PATCH_TRIES;
-        public static ForgeConfigSpec.IntValue URN_PER_CHUNK;
+        public static Supplier<Boolean> URN_PILE_ENABLED;
+        public static Supplier<Integer> URN_PATCH_TRIES;
+        public static Supplier<Integer> URN_PER_CHUNK;
         public static ForgeConfigSpec.ConfigValue<List<? extends String>> URN_BIOME_BLACKLIST;
 
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
             builder.push("entities");
@@ -705,9 +708,9 @@ public class ServerConfigs {
     }
 
     public static class entity {
-        public static ForgeConfigSpec.IntValue FIREFLY_PERIOD;
-        public static ForgeConfigSpec.DoubleValue FIREFLY_SPEED;
-        public static ForgeConfigSpec.BooleanValue FIREFLY_DESPAWN;
+        public static Supplier<Integer> FIREFLY_PERIOD;
+        public static Supplier<Double> FIREFLY_SPEED;
+        public static Supplier<Boolean> FIREFLY_DESPAWN;
 
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("entities parameters")

@@ -43,6 +43,7 @@ public class Supplementaries {
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
+        //banner patterns not working
 
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

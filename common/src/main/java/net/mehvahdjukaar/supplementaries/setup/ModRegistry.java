@@ -108,13 +108,16 @@ public class ModRegistry {
     }
 
     //paintings
-    public static final Supplier<PaintingVariant> BOMB_PAINTING = PAINTINGS.register("bombs", () -> new PaintingVariant(32, 32));
+    public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
+            Supplementaries.res("bombs"), () -> new PaintingVariant(32, 32));
 
     //enchantment
-    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = ENCHANTMENTS.register(STASIS_NAME, StasisEnchantment::new);
+    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerEnchantment(
+            Supplementaries.res(STASIS_NAME), StasisEnchantment::new);
 
     //effects
-    public static final Supplier<MobEffect> OVERENCUMBERED = EFFECTS.register("overencumbered", OverencumberedEffect::new);
+    public static final Supplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
+            Supplementaries.res("overencumbered"), OverencumberedEffect::new);
 
 
     public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
@@ -139,8 +142,8 @@ public class ModRegistry {
                     .setUpdateInterval(3)
                     .sized(0.6F, 1.95F));
 
-    public static final Supplier<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = CONTAINERS
-            .register(RED_MERCHANT_NAME, () -> IForgeMenuType.create(RedMerchantContainerMenu::new));
+    public static final Supplier<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(RED_MERCHANT_NAME), RedMerchantContainerMenu::new);
 
     public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
             new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
@@ -322,15 +325,14 @@ public class ModRegistry {
     public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new HashMap<>();
 
     //flags
-    public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.makeFlagBlocks(FLAG_NAME);
+    public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);
     public static final Map<DyeColor, Supplier<Item>> FLAGS_ITEMS = RegUtils.makeFlagItems(FLAG_NAME);
 
-    public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = TILES
-            .register(FLAG_NAME, () -> BlockEntityType.Builder.of(FlagBlockTile::new,
-                    FLAGS.values().stream().map(Supplier::get).toArray(Block[]::new)).build(null));
-
+    public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = regTile(
+            FLAG_NAME, () -> RegHelper.createBlockEntityType(
+                    FlagBlockTile::new, FLAGS.values().stream().map(Supplier::get).toArray(Block[]::new)));
     //ceiling banner
-    public static final Map<DyeColor, Supplier<Block>> CEILING_BANNERS = RegUtils.makeCeilingBanners(CEILING_BANNER_NAME);
+    public static final Map<DyeColor, Supplier<Block>> CEILING_BANNERS = RegUtils.registerCeilingBanners(CEILING_BANNER_NAME);
 
     public static final Supplier<BlockEntityType<CeilingBannerBlockTile>> CEILING_BANNER_TILE = regTile(
             CEILING_BANNER_NAME, () -> RegHelper.createBlockEntityType(
@@ -345,8 +347,8 @@ public class ModRegistry {
                     PresentBlockTile::new, PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
 
-    public static final Supplier<MenuType<PresentContainerMenu>> PRESENT_BLOCK_CONTAINER = CONTAINERS
-            .register(PRESENT_NAME, () -> IForgeMenuType.create(PresentContainerMenu::new));
+    public static final Supplier<MenuType<PresentContainerMenu>> PRESENT_BLOCK_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(PRESENT_NAME), PresentContainerMenu::new);
 
     //trapped presents
 
@@ -357,8 +359,8 @@ public class ModRegistry {
                     TrappedPresentBlockTile::new, TRAPPED_PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
 
-    public static final Supplier<MenuType<TrappedPresentContainerMenu>> TRAPPED_PRESENT_BLOCK_CONTAINER = CONTAINERS
-            .register(TRAPPED_PRESENT_NAME, () -> IForgeMenuType.create(TrappedPresentContainerMenu::new));
+    public static final Supplier<MenuType<TrappedPresentContainerMenu>> TRAPPED_PRESENT_BLOCK_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(TRAPPED_PRESENT_NAME), TrappedPresentContainerMenu::new);
 
 
     //decoration blocks
@@ -389,8 +391,8 @@ public class ModRegistry {
             NOTICE_BOARD_NAME, () -> RegHelper.createBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
 
-    public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = CONTAINERS
-            .register(NOTICE_BOARD_NAME, () -> IForgeMenuType.create(NoticeBoardContainerMenu::new));
+    public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(NOTICE_BOARD_NAME), NoticeBoardContainerMenu::new);
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
@@ -445,8 +447,8 @@ public class ModRegistry {
             SACK_NAME, () -> RegHelper.createBlockEntityType(
                     SackBlockTile::new, SACK.get()));
 
-    public static final Supplier<MenuType<SackContainerMenu>> SACK_CONTAINER = CONTAINERS.register(SACK_NAME, () -> IForgeMenuType.create(
-            SackContainerMenu::new));
+    public static final Supplier<MenuType<SackContainerMenu>> SACK_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(SACK_NAME), SackContainerMenu::new);
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, SACK_NAME)).stacksTo(1)));
@@ -567,10 +569,10 @@ public class ModRegistry {
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14, GREEN_FLAME));
+            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14,ModParticles.GREEN_FLAME));
     public static final Supplier<Block> SCONCE_WALL_GREEN = regBlock("sconce_wall_green", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
-                    .dropsLike(SCONCE_GREEN.get()), GREEN_FLAME));
+                    .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
 
@@ -793,8 +795,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.BARREL)
     ), CreativeModeTab.TAB_DECORATIONS, 300);
 
-    public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK_CONTAINER = CONTAINERS
-            .register(PULLEY_BLOCK_NAME, () -> IForgeMenuType.create(PulleyBlockContainerMenu::new));
+    public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK_CONTAINER = RegHelper.registerMenuType(
+            Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
             PULLEY_BLOCK_NAME, () -> RegHelper.createBlockEntityType(

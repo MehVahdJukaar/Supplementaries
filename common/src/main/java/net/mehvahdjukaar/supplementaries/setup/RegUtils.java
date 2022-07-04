@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -33,9 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -62,25 +60,28 @@ public class RegUtils {
     }
 
     public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
-        return ModList.get().isLoaded(modId) ? getTab(g, regName) : null;
+        return PlatformHelper.isModLoaded(modId) ? getTab(g, regName) : null;
     }
 
 
+    /**
+     * Registers a placeable item for a modded item with the given string
+     */
     public static Supplier<Block> regPlaceableItem(
-            String name, Supplier<? extends Block> sup, String itemLocation, ForgeConfigSpec.BooleanValue config) {
-        Supplier<Item> itemSupp = () -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemLocation));
+            String name, Supplier<? extends Block> sup, String itemLocation, Supplier<Boolean> config) {
+        Supplier<Item> itemSupp = () -> Registry.ITEM.get(new ResourceLocation(itemLocation));
         return regPlaceableItem(name, sup, itemSupp, config);
     }
 
     public static Supplier<Block> regPlaceableItem(String name, Supplier<? extends Block> sup,
                                                    Supplier<? extends Item> itemSupplier,
-                                                   ForgeConfigSpec.BooleanValue config) {
+                                                   Supplier<Boolean> config) {
         Supplier<Block> newSupp = () -> {
             Block b = sup.get();
             BlockPlacerItem.registerPlaceableItem(b, itemSupplier, config);
             return b;
         };
-        return ModRegistry.BLOCKS.register(name, newSupp);
+        return regBlock(name, newSupp);
     }
 
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
@@ -130,40 +131,29 @@ public class RegUtils {
     }
 
     //flags
-    public static Map<DyeColor, Supplier<Block>> makeFlagBlocks(String baseName) {
+    public static Map<DyeColor, Supplier<Block>> registerFlags(String baseName) {
         ImmutableMap.Builder<DyeColor, Supplier<Block>> builder = new ImmutableMap.Builder<>();
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
-            builder.put(color, ModRegistry.BLOCKS.register(name, () -> new FlagBlock(color,
+            Supplier<Block> block = regBlock(name, () -> new FlagBlock(color,
                     BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
                             .strength(1.0F)
                             .noOcclusion()
                             .sound(SoundType.WOOD))
+            );
+            builder.put(color, block);
+
+            regItem(name, () -> new FlagItem(block.get(), new Item.Properties()
+                    .stacksTo(16)
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))
             ));
         }
         return builder.build();
     }
 
-
-    public static Map<DyeColor, Supplier<Item>> makeFlagItems(String baseName) {
-        ImmutableMap.Builder<DyeColor, Supplier<Item>> builder = new ImmutableMap.Builder<>();
-
-        for (var entry : ModRegistry.FLAGS.entrySet()) {
-            DyeColor color = entry.getKey();
-            var regObj = entry.getValue();
-            builder.put(color, ModRegistry.ITEMS.register(regObj.getId().getPath(),
-                    () -> new FlagItem(regObj.get(),
-                            new Item.Properties()
-                                    .stacksTo(16)
-                                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))
-                    )));
-        }
-        return builder.build();
-    }
-
     //ceiling banners
-    public static Map<DyeColor, Supplier<Block>> makeCeilingBanners(String baseName) {
+    public static Map<DyeColor, Supplier<Block>> registerCeilingBanners(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
         //TODO: fix this not working
         for (DyeColor color : DyeColor.values()) {
@@ -181,7 +171,6 @@ public class RegUtils {
     }
 
     //presents
-    //TODO: register items here(merge with below)
     public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
 
