@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.block_set.BlockSetManager;
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.misc.Registrator;
 import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
 import net.mehvahdjukaar.moonlight.util.Utils;
@@ -11,10 +12,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
+import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
+import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -33,11 +36,8 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.Supplier;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -73,8 +73,8 @@ public class RegUtils {
     }
 
     public static Supplier<Block> regPlaceableItem(String name, Supplier<? extends Block> sup,
-                                                         Supplier<? extends Item> itemSupplier,
-                                                         ForgeConfigSpec.BooleanValue config) {
+                                                   Supplier<? extends Item> itemSupplier,
+                                                   ForgeConfigSpec.BooleanValue config) {
         Supplier<Block> newSupp = () -> {
             Block b = sup.get();
             BlockPlacerItem.registerPlaceableItem(b, itemSupplier, config);
@@ -83,25 +83,25 @@ public class RegUtils {
         return ModRegistry.BLOCKS.register(name, newSupp);
     }
 
-    public static< T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
-        return RegHelper.registerItem(Supplementaries.res(name),sup);
+    public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
+        return RegHelper.registerItem(Supplementaries.res(name), sup);
     }
 
-    public static<T extends BlockEntityType<E>, E extends BlockEntity> Supplier<T> regTile(String name, Supplier<T> sup) {
-        return RegHelper.registerBlockEntityType(Supplementaries.res(name),sup);
+    public static <T extends BlockEntityType<E>, E extends BlockEntity> Supplier<T> regTile(String name, Supplier<T> sup) {
+        return RegHelper.registerBlockEntityType(Supplementaries.res(name), sup);
     }
 
-    public static< T extends Block> Supplier<T> regBlock(String name, Supplier<T> sup) {
-        return RegHelper.registerBlock(Supplementaries.res(name),sup);
+    public static <T extends Block> Supplier<T> regBlock(String name, Supplier<T> sup) {
+        return RegHelper.registerBlock(Supplementaries.res(name), sup);
     }
 
 
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
-        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab,name)), 0);
+        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), 0);
     }
 
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab, int burnTime) {
-        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab,name)), burnTime);
+        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), burnTime);
     }
 
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties, int burnTime) {
@@ -110,18 +110,18 @@ public class RegUtils {
         return block;
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> block,  CreativeModeTab tab, String requiredMod) {
+    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> block, CreativeModeTab tab, String requiredMod) {
         CreativeModeTab t = PlatformHelper.isModLoaded(requiredMod) ? tab : null;
         return regWithItem(name, block, t);
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
-        return RegHelper.registerItem(name, () -> burnTime == 0 ? new BlockItem(blockSup.get(), properties) :
+        return RegHelper.registerItem(Supplementaries.res(name), () -> burnTime == 0 ? new BlockItem(blockSup.get(), properties) :
                 new WoodBasedBlockItem(blockSup.get(), properties, burnTime));
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
-        return regBlockItem(name,blockSup, properties, 0);
+        return regBlockItem(name, blockSup, properties, 0);
     }
 
 
@@ -181,44 +181,37 @@ public class RegUtils {
     }
 
     //presents
-    public static Map<DyeColor, Supplier<Block>> makePresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
+    //TODO: register items here(merge with below)
+    public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
-            map.put(color, ModRegistry.BLOCKS.register(name, () -> presentFactory.apply(color,
+            Supplier<Block> block = regBlock(name, () -> presentFactory.apply(color,
                     BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
                             .strength(1.0F)
                             .sound(ModSounds.PRESENT))
-            ));
+            );
+            map.put(color, block);
+            //item
+
+            regItem(name, () ->
+                    new PresentItem(block.get(), (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, name)), map));
         }
-        map.put(null, ModRegistry.BLOCKS.register(baseName, () -> presentFactory.apply(null,
+        Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
-                        .sound(ModSounds.PRESENT))
-        ));
-        return map;
-    }
+                        .sound(ModSounds.PRESENT)));
+        map.put(null, block);
+        regItem(baseName, () ->
+                new PresentItem(block.get(), (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
 
-
-    //presents
-    public static Map<DyeColor, Supplier<Item>> makePresentsItems(Map<DyeColor, Supplier<Block>> presents,
-                                                                        String name, CreativeModeTab tab) {
-        Map<DyeColor, Supplier<Item>> map = new HashMap<>();
-
-        for (var entry : presents.entrySet()) {
-            DyeColor color = entry.getKey();
-            var regObj = entry.getValue();
-            map.put(color, ModRegistry.ITEMS.register(regObj.getId().getPath(),
-                    () -> new PresentItem(regObj.get(), (new Item.Properties())
-                            .tab(getTab(tab, name)), map)));
-        }
         return map;
     }
 
 
     //hanging signs
-    private static void registerHangingSignBlocks(IForgeRegistry<Block> registry, Collection<WoodType> woodTypes) {
+    private static void registerHangingSignBlocks(Registrator<Block> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(RegistryConstants.HANGING_SIGN_NAME);
             HangingSignBlock block = new HangingSignBlock(
@@ -229,12 +222,12 @@ public class RegUtils {
                             .noCollission(),
                     wood
             );
-            registry.register(Supplementaries.res(name), block);
+            event.register(Supplementaries.res(name), block);
             ModRegistry.HANGING_SIGNS.put(wood, block);
         }
     }
 
-    public static void registerHangingSignItems(IForgeRegistry<Item> registry, Collection<WoodType> woodTypes) {
+    public static void registerHangingSignItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (var entry : ModRegistry.HANGING_SIGNS.entrySet()) {
             WoodType wood = entry.getKey();
             //should be there already since this is fired after block reg
@@ -244,14 +237,14 @@ public class RegUtils {
                             getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.HANGING_SIGN_NAME)),
                     wood, 200
             );
-            registry.register(Utils.getID(block), item);
+            event.register(Utils.getID(block), item);
             ModRegistry.HANGING_SIGNS_ITEMS.put(wood, item);
         }
 
     }
 
     //sign posts
-    public static void registerSignPostItems(IForgeRegistry<Item> registry, Collection<WoodType> woodTypes) {
+    public static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(RegistryConstants.SIGN_POST_NAME);
             SignPostItem item = new SignPostItem(
@@ -259,7 +252,7 @@ public class RegUtils {
                             getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.SIGN_POST_NAME)),
                     wood
             );
-            registry.register(Supplementaries.res(name), item);
+            event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }
     }

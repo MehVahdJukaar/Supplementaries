@@ -6,8 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSetup;
+import net.mehvahdjukaar.supplementaries.setup.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -51,7 +50,13 @@ public class Supplementaries {
         CraftingHelper.register(new OptionalRecipeCondition.Serializer());
 
         ConfigHandler.registerBus(bus);
-        ModRegistry.registerBus(bus);
+
+        ModRegistry.init();
+        ModSounds.init();
+        ModRecipes.init();
+        ModParticles.init();
+
+
         WorldGenHandler.registerBus(bus);
 
         var serverRes = new ServerDynamicResourcesHandler();

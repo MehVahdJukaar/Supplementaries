@@ -5,20 +5,24 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class PresentItem extends BlockItem implements IColored {
 
-    private final Map<DyeColor, RegistryObject<Item>> registry;
+    private final Map<DyeColor, Supplier<? extends ItemLike>> registry;
 
-    public PresentItem(Block block, Properties properties, Map<DyeColor, RegistryObject<Item>> registry) {
+    public PresentItem(Block block, Properties properties, Map<DyeColor, Supplier<? extends ItemLike>> registry) {
         super(block, properties);
         this.registry = registry;
     }
@@ -34,19 +38,19 @@ public class PresentItem extends BlockItem implements IColored {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
             CompoundTag t = tag.getCompound("BlockEntityTag");
-            if(!t.isEmpty()){
+            if (!t.isEmpty()) {
                 boolean isPacked = false;
-                if(t.contains("Sender")){
+                if (t.contains("Sender")) {
                     var c = PresentBlockTile.getSenderMessage(t.getString("Sender"));
-                    if(c != null) components.add(c);
+                    if (c != null) components.add(c);
                     isPacked = true;
                 }
-                if(t.contains("Recipient")){
+                if (t.contains("Recipient")) {
                     var c = PresentBlockTile.getRecipientMessage(t.getString("Recipient"));
-                    if(c != null) components.add(c);
+                    if (c != null) components.add(c);
                     isPacked = true;
                 }
-                if(!isPacked && t.contains("Items")){
+                if (!isPacked && t.contains("Items")) {
                     components.add(Component.translatable("message.supplementaries.present.public"));
                 }
             }
@@ -60,7 +64,7 @@ public class PresentItem extends BlockItem implements IColored {
 
     @Nullable
     @Override
-    public  Map<DyeColor, RegistryObject<Item>> getItemColorMap() {
+    public Map<DyeColor, Supplier<? extends ItemLike>> getItemColorMap() {
         return registry;
     }
 

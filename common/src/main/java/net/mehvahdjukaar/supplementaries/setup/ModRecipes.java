@@ -1,34 +1,43 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModRecipes {
 
+    public static void init() {}
 
     //recipes
-    public static final Supplier<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RegHelper.registerRecipeSerializer("blackboard_duplicate", () ->
-            new SimpleRecipeSerializer<>(BlackboardDuplicateRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> BAMBOO_SPIKES_TIPPED_RECIPE = RegHelper.registerRecipeSerializer("bamboo_spikes_tipped", () ->
-            new SimpleRecipeSerializer<>(TippedBambooSpikesRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> ROPE_ARROW_CREATE_RECIPE = RegHelper.registerRecipeSerializer("rope_arrow_create", () ->
-            new SimpleRecipeSerializer<>(RopeArrowCreateRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> ROPE_ARROW_ADD_RECIPE = RegHelper.registerRecipeSerializer("rope_arrow_add", () ->
-            new SimpleRecipeSerializer<>(RopeArrowAddRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> BUBBLE_BLOWER_REPAIR_RECIPE = RegHelper.registerRecipeSerializer("bubble_blower_charge", () ->
-            new SimpleRecipeSerializer<>(RepairBubbleBlowerRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> FLAG_FROM_BANNER_RECIPE = RegHelper.registerRecipeSerializer("flag_from_banner", () ->
-            new SimpleRecipeSerializer<>(FlagFromBannerRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> TREASURE_MAP_RECIPE = RegHelper.registerRecipeSerializer("treasure_map", () ->
-            new SimpleRecipeSerializer<>(WeatheredMapRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> SOAP_CLEARING_RECIPE = RegHelper.registerRecipeSerializer("soap_clearing", () ->
-            new SimpleRecipeSerializer<>(SoapClearRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> PRESENT_DYE_RECIPE = RegHelper.registerRecipeSerializer("present_dye", () ->
-            new SimpleRecipeSerializer<>(PresentDyeRecipe::new));
-    public static final Supplier<RecipeSerializer<?>> TRAPPED_PRESENT_RECIPE = RegHelper.registerRecipeSerializer("trapped_present", () ->
-            new SimpleRecipeSerializer<>(TrappedPresentRecipe::new));
+    public static final Supplier<RecipeSerializer<BlackboardDuplicateRecipe>> BLACKBOARD_DUPLICATE_RECIPE = reg(
+            "blackboard_duplicate", BlackboardDuplicateRecipe::new);
+    public static final Supplier<RecipeSerializer<TippedBambooSpikesRecipe>> BAMBOO_SPIKES_TIPPED_RECIPE = reg(
+            "bamboo_spikes_tipped", TippedBambooSpikesRecipe::new);
+    public static final Supplier<RecipeSerializer<RopeArrowCreateRecipe>> ROPE_ARROW_CREATE_RECIPE = reg(
+            "rope_arrow_create", RopeArrowCreateRecipe::new);
+    public static final Supplier<RecipeSerializer<RopeArrowAddRecipe>> ROPE_ARROW_ADD_RECIPE = reg(
+            "rope_arrow_add", RopeArrowAddRecipe::new);
+    public static final Supplier<RecipeSerializer<RepairBubbleBlowerRecipe>> BUBBLE_BLOWER_REPAIR_RECIPE = reg(
+            "bubble_blower_charge", RepairBubbleBlowerRecipe::new);
+    public static final Supplier<RecipeSerializer<FlagFromBannerRecipe>> FLAG_FROM_BANNER_RECIPE = reg(
+            "flag_from_banner", FlagFromBannerRecipe::new);
+    public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> TREASURE_MAP_RECIPE = reg(
+            "treasure_map", WeatheredMapRecipe::new);
+    public static final Supplier<RecipeSerializer<SoapClearRecipe>> SOAP_CLEARING_RECIPE = reg(
+            "soap_clearing", SoapClearRecipe::new);
+    public static final Supplier<RecipeSerializer<PresentDyeRecipe>> PRESENT_DYE_RECIPE = reg(
+            "present_dye", PresentDyeRecipe::new);
+    public static final Supplier<RecipeSerializer<TrappedPresentRecipe>> TRAPPED_PRESENT_RECIPE = reg(
+            "trapped_present", TrappedPresentRecipe::new);
+
+    private static <T extends Recipe<?>> Supplier<RecipeSerializer<T>> reg(String name, Function<ResourceLocation, T> factory) {
+        return RegHelper.registerRecipeSerializer(Supplementaries.res(name), () -> new SimpleRecipeSerializer<>(factory));
+    }
 }

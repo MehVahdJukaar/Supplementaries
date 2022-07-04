@@ -49,7 +49,7 @@ public class ModTags {
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
-    public static final TagKey<Item> SHULKER_BOXES = ItemTags.create(new ResourceLocation("forge", "shulker_boxes"));
+    public static final TagKey<Item> SHULKER_BOXES = TagKey.create(Registry.ITEM_REGISTRY,new ResourceLocation("forge", "shulker_boxes"));
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> TINTED_JAR_CATCHABLE = entityTag("jar_tinted_catchable");

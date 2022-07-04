@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
+import net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
@@ -14,15 +15,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 //loaded before registry
 public class RegistryConfigs {
 
     public static final String FILE_NAME = Supplementaries.MOD_ID + "-registry.toml";
-    public static ForgeConfigSpec REGISTRY_CONFIG;
+    public static Object REGISTRY_CONFIG;
 
     public static void createSpec() {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigBuilder.ConfigType.COMMON);
         Reg.init(builder);
         REGISTRY_CONFIG = builder.build();
 
@@ -33,99 +35,99 @@ public class RegistryConfigs {
     }
 
     public static class Reg {
-        public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PEDESTAL_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WIND_VANE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ILLUMINATOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue NOTICE_BOARD_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CRANK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue JAR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FAUCET_ENABLED;
-        public static ForgeConfigSpec.BooleanValue TURN_TABLE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PISTON_LAUNCHER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SPEAKER_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SIGN_POST_ENABLED;
-        public static ForgeConfigSpec.BooleanValue HANGING_SIGN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BELLOWS_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SCONCE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SCONCE_GREEN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CAGE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ITEM_SHELF_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SCONCE_LEVER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue COG_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue STONE_LAMP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue END_STONE_LAMP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BLACKSTONE_LAMP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue DEEPSLATE_LAMP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue GLOBE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue HOURGLASS_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLAG_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SACK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BLACKBOARD_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SAFE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue COPPER_LANTERN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLUTE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue GOLD_TRAPDOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue GOLD_DOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BAMBOO_SPIKES_ENABLED;
-        public static ForgeConfigSpec.BooleanValue TIPPED_SPIKES_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CHECKERBOARD_ENABLED;
-        public static ForgeConfigSpec.BooleanValue NETHERITE_TRAPDOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue NETHERITE_DOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PANCAKES_ENABLED;
-        public static ForgeConfigSpec.BooleanValue LOCK_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLAX_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ROPE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ROPE_ARROW_ENABLED;
-        public static ForgeConfigSpec.BooleanValue PULLEY_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FODDER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BOMB_ENABLED;
-        public static ForgeConfigSpec.BooleanValue MAGMA_CREAM_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CRIMSON_LANTERN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue DAUB_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WATTLE_AND_DAUB_ENABLED;
-        public static ForgeConfigSpec.BooleanValue TIMBER_FRAME_ENABLED;
-        public static ForgeConfigSpec.BooleanValue TILE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue GOBLET_ENABLED;
-        public static ForgeConfigSpec.BooleanValue RAKED_GRAVEL_ENABLED;
-        public static ForgeConfigSpec.BooleanValue STATUE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue IRON_GATE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FEATHER_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLINT_BLOCK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SLINGSHOT_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SHULKER_HELMET_ENABLED;
-        public static ForgeConfigSpec.BooleanValue CANDY_ENABLED;
-        public static ForgeConfigSpec.BooleanValue WRENCH_ENABLED;
-        public static ForgeConfigSpec.BooleanValue URN_ENABLED;
-        public static ForgeConfigSpec.BooleanValue ANTIQUE_INK_ENABLED;
-        public static ForgeConfigSpec.BooleanValue DOORMAT_ENABLED;
-        public static ForgeConfigSpec.BooleanValue FLOWER_BOX_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BLACKSTONE_TILE_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SOAP_ENABLED;
-        public static ForgeConfigSpec.BooleanValue BUBBLE_BLOWER_ENABLED;
-        public static ForgeConfigSpec.BooleanValue GLOBE_SEPIA;
-        public static ForgeConfigSpec.BooleanValue PRESENT_ENABLED;
-        public static ForgeConfigSpec.BooleanValue STASIS_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SILVER_TRAPDOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue SILVER_DOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue LEAD_TRAPDOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue LEAD_DOOR_ENABLED;
-        public static ForgeConfigSpec.BooleanValue DISPENSER_MINECART_ENABLED;
+        public static Supplier<Boolean> ASH_ENABLED;
+        public static Supplier<Boolean> ASH_BRICKS_ENABLED;
+        public static Supplier<Boolean> PLANTER_ENABLED;
+        public static Supplier<Boolean> CLOCK_ENABLED;
+        public static Supplier<Boolean> PEDESTAL_ENABLED;
+        public static Supplier<Boolean> WIND_VANE_ENABLED;
+        public static Supplier<Boolean> ILLUMINATOR_ENABLED;
+        public static Supplier<Boolean> NOTICE_BOARD_ENABLED;
+        public static Supplier<Boolean> CRANK_ENABLED;
+        public static Supplier<Boolean> JAR_ENABLED;
+        public static Supplier<Boolean> FAUCET_ENABLED;
+        public static Supplier<Boolean> TURN_TABLE_ENABLED;
+        public static Supplier<Boolean> PISTON_LAUNCHER_ENABLED;
+        public static Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
+        public static Supplier<Boolean> SIGN_POST_ENABLED;
+        public static Supplier<Boolean> HANGING_SIGN_ENABLED;
+        public static Supplier<Boolean> BELLOWS_ENABLED;
+        public static Supplier<Boolean> SCONCE_ENABLED;
+        public static Supplier<Boolean> SCONCE_GREEN_ENABLED;
+        public static Supplier<Boolean> CAGE_ENABLED;
+        public static Supplier<Boolean> ITEM_SHELF_ENABLED;
+        public static Supplier<Boolean> SCONCE_LEVER_ENABLED;
+        public static Supplier<Boolean> COG_BLOCK_ENABLED;
+        public static Supplier<Boolean> STONE_LAMP_ENABLED;
+        public static Supplier<Boolean> END_STONE_LAMP_ENABLED;
+        public static Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
+        public static Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
+        public static Supplier<Boolean> GLOBE_ENABLED;
+        public static Supplier<Boolean> HOURGLASS_ENABLED;
+        public static Supplier<Boolean> FLAG_ENABLED;
+        public static Supplier<Boolean> SACK_ENABLED;
+        public static Supplier<Boolean> BLACKBOARD_ENABLED;
+        public static Supplier<Boolean> SAFE_ENABLED;
+        public static Supplier<Boolean> COPPER_LANTERN_ENABLED;
+        public static Supplier<Boolean> FLUTE_ENABLED;
+        public static Supplier<Boolean> GOLD_TRAPDOOR_ENABLED;
+        public static Supplier<Boolean> GOLD_DOOR_ENABLED;
+        public static Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
+        public static Supplier<Boolean> TIPPED_SPIKES_ENABLED;
+        public static Supplier<Boolean> CHECKERBOARD_ENABLED;
+        public static Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
+        public static Supplier<Boolean> NETHERITE_DOOR_ENABLED;
+        public static Supplier<Boolean> PANCAKES_ENABLED;
+        public static Supplier<Boolean> LOCK_BLOCK_ENABLED;
+        public static Supplier<Boolean> FLAX_ENABLED;
+        public static Supplier<Boolean> ROPE_ENABLED;
+        public static Supplier<Boolean> ROPE_ARROW_ENABLED;
+        public static Supplier<Boolean> PULLEY_ENABLED;
+        public static Supplier<Boolean> FODDER_ENABLED;
+        public static Supplier<Boolean> BOMB_ENABLED;
+        public static Supplier<Boolean> MAGMA_CREAM_BLOCK_ENABLED;
+        public static Supplier<Boolean> CRIMSON_LANTERN_ENABLED;
+        public static Supplier<Boolean> DAUB_ENABLED;
+        public static Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
+        public static Supplier<Boolean> TIMBER_FRAME_ENABLED;
+        public static Supplier<Boolean> TILE_ENABLED;
+        public static Supplier<Boolean> GOBLET_ENABLED;
+        public static Supplier<Boolean> RAKED_GRAVEL_ENABLED;
+        public static Supplier<Boolean> STATUE_ENABLED;
+        public static Supplier<Boolean> IRON_GATE_ENABLED;
+        public static Supplier<Boolean> FEATHER_BLOCK_ENABLED;
+        public static Supplier<Boolean> FLINT_BLOCK_ENABLED;
+        public static Supplier<Boolean> SLINGSHOT_ENABLED;
+        public static Supplier<Boolean> SHULKER_HELMET_ENABLED;
+        public static Supplier<Boolean> CANDY_ENABLED;
+        public static Supplier<Boolean> WRENCH_ENABLED;
+        public static Supplier<Boolean> URN_ENABLED;
+        public static Supplier<Boolean> ANTIQUE_INK_ENABLED;
+        public static Supplier<Boolean> DOORMAT_ENABLED;
+        public static Supplier<Boolean> FLOWER_BOX_ENABLED;
+        public static Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
+        public static Supplier<Boolean> SOAP_ENABLED;
+        public static Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
+        public static Supplier<Boolean> GLOBE_SEPIA;
+        public static Supplier<Boolean> PRESENT_ENABLED;
+        public static Supplier<Boolean> STASIS_ENABLED;
+        public static Supplier<Boolean> SILVER_TRAPDOOR_ENABLED;
+        public static Supplier<Boolean> SILVER_DOOR_ENABLED;
+        public static Supplier<Boolean> LEAD_TRAPDOOR_ENABLED;
+        public static Supplier<Boolean> LEAD_DOOR_ENABLED;
+        public static Supplier<Boolean> DISPENSER_MINECART_ENABLED;
 
-        public static ForgeConfigSpec.BooleanValue JAR_TAB;
-        public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
-        public static ForgeConfigSpec.BooleanValue DISPENSERS;
-        public static ForgeConfigSpec.BooleanValue CUSTOM_CONFIGURED_SCREEN;
-        public static ForgeConfigSpec.BooleanValue DEBUG_RESOURCES;
-        public static ForgeConfigSpec.BooleanValue PACK_DEPENDANT_ASSETS;
+        public static Supplier<Boolean> JAR_TAB;
+        public static Supplier<Boolean> CREATIVE_TAB;
+        public static Supplier<Boolean> DISPENSERS;
+        public static Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+        public static Supplier<Boolean> DEBUG_RESOURCES;
+        public static Supplier<Boolean> PACK_DEPENDANT_ASSETS;
 
         public static boolean HAS_MINESHAFT_LANTERN = false;
         public static boolean HAS_STRONGHOLD_SCONCE = false;
 
-        public static final Map<String, ForgeConfigSpec.BooleanValue> MIXIN_VALUES = new HashMap<>();
+        public static final Map<String, Supplier<Boolean>> MIXIN_VALUES = new HashMap<>();
 
         //oh god what have I done
         public static boolean isEnabled(String path) {
@@ -142,8 +144,8 @@ public class RegistryConfigs {
             }
             for (Field f : Reg.class.getDeclaredFields()) {
                 try {
-                    if (ForgeConfigSpec.BooleanValue.class.isAssignableFrom(f.getType())) {
-                        ForgeConfigSpec.BooleanValue b = (ForgeConfigSpec.BooleanValue) f.get(null);
+                    if (Supplier<Boolean>.class.isAssignableFrom(f.getType())) {
+                        Supplier<Boolean> b = (Supplier<Boolean>) f.get(null);
                         String p = b.getPath().get(b.getPath().size() - 1);
                         if (p.equals(path)) return b.get();
                     }
@@ -153,7 +155,7 @@ public class RegistryConfigs {
             return true;
         }
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
 
             builder.comment("Here are configs that need reloading to take effect");
 
