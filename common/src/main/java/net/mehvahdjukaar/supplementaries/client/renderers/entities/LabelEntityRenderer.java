@@ -14,7 +14,7 @@ import net.mehvahdjukaar.moonlight.client.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.math.colors.HCLColor;
 import net.mehvahdjukaar.moonlight.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
-import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

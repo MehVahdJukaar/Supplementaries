@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.client.renderUtils.LOD;
 import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

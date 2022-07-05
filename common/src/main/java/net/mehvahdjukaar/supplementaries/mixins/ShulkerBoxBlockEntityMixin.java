@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;

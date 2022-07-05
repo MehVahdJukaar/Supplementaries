@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.map.MapHelper;
 import net.minecraft.core.Registry;

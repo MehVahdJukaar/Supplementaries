@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

@@ -2,14 +2,15 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -20,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
@@ -29,7 +29,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     public ServerDynamicResourcesHandler() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = !FMLLoader.isProduction() || RegistryConfigs.Reg.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return RegistryConfigs.Reg.PACK_DEPENDANT_ASSETS.get();
+        return RegistryConfigs.PACK_DEPENDANT_ASSETS.get();
     }
 
     @Override

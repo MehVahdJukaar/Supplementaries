@@ -5,9 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.mixins.MixinConfigs;
-import net.mehvahdjukaar.supplementaries.setup.RegistryConstants;
+import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

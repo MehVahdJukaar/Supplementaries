@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.generation.structure;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StructureTempBlock;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;

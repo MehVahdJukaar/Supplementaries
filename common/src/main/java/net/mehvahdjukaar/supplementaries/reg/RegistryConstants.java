@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 public final class RegistryConstants {
     public static final String STASIS_NAME = "stasis";

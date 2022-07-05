@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

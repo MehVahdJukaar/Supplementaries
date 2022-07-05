@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHa
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncTradesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

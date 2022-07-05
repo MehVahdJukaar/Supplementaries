@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -59,7 +60,8 @@ public class RopeArrowEntity extends AbstractArrow {
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
+        //return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

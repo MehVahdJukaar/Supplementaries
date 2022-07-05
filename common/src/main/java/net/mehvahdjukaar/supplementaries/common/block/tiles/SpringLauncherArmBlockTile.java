@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherArmBl
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;

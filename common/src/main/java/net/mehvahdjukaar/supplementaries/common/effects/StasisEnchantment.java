@@ -13,8 +13,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class StasisEnchantment extends Enchantment {
 
-    public static final boolean ENABLED = RegistryConfigs.Reg.STASIS_ENABLED.get() &&
-            (RegistryConfigs.Reg.SLINGSHOT_ENABLED.get() || RegistryConfigs.Reg.BUBBLE_BLOWER_ENABLED.get());
+    public static final boolean ENABLED = RegistryConfigs.STASIS_ENABLED.get() &&
+            (RegistryConfigs.SLINGSHOT_ENABLED.get() || RegistryConfigs.BUBBLE_BLOWER_ENABLED.get());
 
     public StasisEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});

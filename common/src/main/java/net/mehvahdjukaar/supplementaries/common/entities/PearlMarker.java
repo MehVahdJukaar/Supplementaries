@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;

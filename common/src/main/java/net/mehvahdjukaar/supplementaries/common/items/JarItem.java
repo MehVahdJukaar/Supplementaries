@@ -14,10 +14,10 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -75,7 +75,7 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucket) {
         if (this.isBoat(entity)) {
-            return new ItemStack(ModRegistry.JAR_BOAT_ITEM.get());
+            return new ItemStack(ModRegistry.JAR_BOAT.get());
         } else {
             return super.saveEntityInItem(entity, currentStack, bucket);
         }
@@ -174,7 +174,7 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (RegistryConfigs.Reg.JAR_TAB.get()) {
+        if (RegistryConfigs.JAR_TAB.get()) {
             if (group == ModRegistry.JAR_TAB) {
                 JarTab.populateTab(items);
             }

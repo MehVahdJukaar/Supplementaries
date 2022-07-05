@@ -9,6 +9,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.function.Function;
 
@@ -21,6 +22,7 @@ public class MoonlightFabricClient implements ClientModInitializer {
         SupplementariesClient.onRegisterBlockColors(ColorProviderRegistry.BLOCK::register);
         SupplementariesClient.onRegisterItemColors(ColorProviderRegistry.ITEM::register);
         SupplementariesClient.onRegisterParticles(MoonlightFabricClient::registerParticle);
+
     }
 
     private static <T extends ParticleOptions> void registerParticle(ParticleType<T> type, Function<SpriteSet,

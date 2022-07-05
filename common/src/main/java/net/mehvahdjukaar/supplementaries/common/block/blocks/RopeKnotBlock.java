@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

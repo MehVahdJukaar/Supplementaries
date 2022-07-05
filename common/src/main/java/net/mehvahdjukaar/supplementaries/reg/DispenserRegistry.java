@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.util.DispenserHelper;
@@ -57,30 +57,30 @@ public class DispenserRegistry {
 
     public static void registerBehaviors() {
 
-        if (!RegistryConfigs.Reg.DISPENSERS.get()) return;
+        if (!RegistryConfigs.DISPENSERS.get()) return;
 
         DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
 
         //dispenser minecart
-        if (RegistryConfigs.Reg.DISPENSER_MINECART_ENABLED.get()) {
+        if (RegistryConfigs.DISPENSER_MINECART_ENABLED.get()) {
             DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
         }
 
         //fodder
-        if (RegistryConfigs.Reg.FODDER_ENABLED.get()) {
+        if (RegistryConfigs.FODDER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
         }
         //bubble
-        if (RegistryConfigs.Reg.BUBBLE_BLOWER_ENABLED.get()) {
+        if (RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
 
-        if (RegistryConfigs.Reg.SACK_ENABLED.get()) {
+        if (RegistryConfigs.SACK_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
         }
 
         //jar
-        boolean jar = RegistryConfigs.Reg.JAR_ENABLED.get();
+        boolean jar = RegistryConfigs.JAR_ENABLED.get();
         if (jar) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
             DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
@@ -98,7 +98,7 @@ public class DispenserRegistry {
         }
 
         //bomb
-        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) {
+        if (RegistryConfigs.BOMB_ENABLED.get()) {
             //default behaviors for modded items
             var bombBehavior = new BombsDispenserBehavior();
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), bombBehavior);
@@ -112,7 +112,7 @@ public class DispenserRegistry {
         if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
             DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
-        if (RegistryConfigs.Reg.ROPE_ARROW_ENABLED.get()) {
+        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
 
             DispenserBlock.registerBehavior(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
                 protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
@@ -131,13 +131,13 @@ public class DispenserRegistry {
 
         }
 
-        if (RegistryConfigs.Reg.SOAP_ENABLED.get()) {
+        if (RegistryConfigs.SOAP_ENABLED.get()) {
             DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
         }
 
         boolean axe = ServerConfigs.tweaks.AXE_DISPENSER_BEHAVIORS.get();
         if (axe || jar) {
-            for (Item i : ForgeRegistries.ITEMS) {
+            for (Item i : Registry.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
                         DispenserHelper.registerCustomBehavior(new FishBucketJarDispenserBehavior(i));

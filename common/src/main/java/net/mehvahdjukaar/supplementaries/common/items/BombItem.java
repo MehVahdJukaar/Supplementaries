@@ -23,7 +23,6 @@ public class BombItem extends Item {
 
     public BombItem(Properties builder) {
         this(builder, BombEntity.BombType.NORMAL, false);
-
     }
 
     public BombItem(Properties builder, BombEntity.BombType type, boolean glint) {

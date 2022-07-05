@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.impl.entities.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -43,13 +44,9 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super(ModRegistry.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
-    public ThrowableBrickEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModRegistry.THROWABLE_BRICK.get(), world);
-    }
-
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
     }
 
 
@@ -95,6 +92,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     }
 
     private static boolean isGlass(BlockState s) {
+        //TODO: add supp brick breakable tag that includes these
         try {
             return ((Tags.Blocks.GLASS_PANES != null && s.is(Tags.Blocks.GLASS_PANES))
                     || (Tags.Blocks.GLASS != null && s.is(Tags.Blocks.GLASS)));

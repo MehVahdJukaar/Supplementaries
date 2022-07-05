@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;

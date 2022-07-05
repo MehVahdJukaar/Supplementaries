@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -86,9 +86,4 @@ public class RopeArrowItem extends ArrowItem {
         }
     }
 
-
-    @Override
-    public int getDefaultTooltipHideFlags(@NotNull ItemStack stack) {
-        return super.getDefaultTooltipHideFlags(stack);
-    }
 }

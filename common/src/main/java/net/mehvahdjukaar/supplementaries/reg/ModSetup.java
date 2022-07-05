@@ -1,10 +1,8 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 
 import com.google.common.base.Stopwatch;
-import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -32,7 +30,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModSetup {
 
     //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
@@ -54,7 +51,7 @@ public class ModSetup {
             PresentRegistry::registerBehaviors
     );
 
-    public static void init(final FMLCommonSetupEvent event) {
+    public static void init() {
         event.enqueueWork(() -> {
 
             try {
@@ -127,10 +124,6 @@ public class ModSetup {
         }
     }
 
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        CapabilityHandler.register(event);
-    }
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {

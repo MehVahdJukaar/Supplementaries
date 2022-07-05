@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.moonlight.Moonlight;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
-import net.mehvahdjukaar.supplementaries.setup.*;
+import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -45,7 +44,7 @@ public class Supplementaries {
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
         //banner patterns not working
-        Moonlight
+
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -78,15 +77,17 @@ public class Supplementaries {
         bus.addListener(ModSetup::init);
     }
 
-    //mod registration
+    //mod registration. register additional stuff
     public static void commonRegistration() {
-
+        ModRegistry.registerAdditionalStuff();
     }
 
     //mod setup
     public static void commonSetup() {
-
+        ModSetup.init();
     }
+
+
 
     //yes this is where I write crap. deal with it XD
 

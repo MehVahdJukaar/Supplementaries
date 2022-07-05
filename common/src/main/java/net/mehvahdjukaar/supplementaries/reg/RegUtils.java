@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.block_set.BlockSetManager;

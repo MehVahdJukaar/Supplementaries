@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;

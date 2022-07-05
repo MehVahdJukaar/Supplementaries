@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
@@ -24,14 +24,14 @@ public class LootTableStuff {
 
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
-        if (RegistryConfigs.Reg.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
-        if (RegistryConfigs.Reg.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
-        if (RegistryConfigs.Reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
-        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
-        if (RegistryConfigs.Reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
+        if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
+        if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
+        if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
+        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
+        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
         if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
-        if (RegistryConfigs.Reg.BAMBOO_SPIKES_ENABLED.get() &&
-                RegistryConfigs.Reg.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
+        if (RegistryConfigs.BAMBOO_SPIKES_ENABLED.get() &&
+                RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
     }
 
     public static void injectLootTables(LootTableLoadEvent event) {

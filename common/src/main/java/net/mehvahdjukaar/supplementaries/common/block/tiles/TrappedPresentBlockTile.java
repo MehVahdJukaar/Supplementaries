@@ -7,8 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.util.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
-import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;

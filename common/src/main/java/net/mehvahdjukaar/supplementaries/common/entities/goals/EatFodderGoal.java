@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FodderBlock;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.BlockParticleOption;

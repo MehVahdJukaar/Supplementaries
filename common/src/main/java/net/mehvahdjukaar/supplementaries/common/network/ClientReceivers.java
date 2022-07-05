@@ -9,7 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ public class ClientReceivers {
 
     public static void handleOpenScreenPacket(ClientBoundOpenScreenPacket message) {
         withLevelDo(l -> {
-            BlockPos pos = message.getPos();
+            BlockPos pos = message.pos;
             if (l.getBlockEntity(pos) instanceof IScreenProvider tile) {
                 withPlayerDo((p) -> tile.openScreen(l, pos, p));
             }
@@ -102,12 +103,12 @@ public class ClientReceivers {
             switch (message.id) {
                 case BUBBLE_BLOW -> {
                     ParticleUtil.spawnParticlesOnBlockFaces(l, new BlockPos(message.pos),
-                            ModRegistry.SUDS_PARTICLE.get(),
+                            ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.001f, 0.01f, true);
                 }
                 case BUBBLE_CLEAN -> {
                     ParticleUtil.spawnParticleOnBlockShape(l, new BlockPos(message.pos),
-                            ModRegistry.SUDS_PARTICLE.get(),
+                            ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
                 }
                 case DISPENSER_MINECART ->{
@@ -135,7 +136,7 @@ public class ClientReceivers {
 
     public static void handleSyncAntiqueInkPacket(ClientBoundSyncAntiqueInk message) {
         withLevelDo(l -> {
-            BlockEntity tile = l.getBlockEntity(message.getPos());
+            BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
                 tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> c.setAntiqueInk(message.getInk()));
             }
@@ -145,12 +146,12 @@ public class ClientReceivers {
     public static void handleSyncTradesPacket(ClientBoundSyncTradesPacket message) {
         withPlayerDo(p -> {
             AbstractContainerMenu container = p.containerMenu;
-            if (message.getContainerId() == container.containerId && container instanceof RedMerchantContainerMenu containerMenu) {
+            if (message.containerId == container.containerId && container instanceof RedMerchantContainerMenu containerMenu) {
                 containerMenu.setOffers(new MerchantOffers(message.offers.createTag()));
-                containerMenu.setXp(message.getVillagerXp());
-                containerMenu.setMerchantLevel(message.getVillagerLevel());
-                containerMenu.setShowProgressBar(message.isShowProgress());
-                containerMenu.setCanRestock(message.isCanRestock());
+                containerMenu.setXp(message.villagerXp);
+                containerMenu.setMerchantLevel(message.villagerLevel);
+                containerMenu.setShowProgressBar(message.showProgress);
+                containerMenu.setCanRestock(message.canRestock);
             }
         });
     }

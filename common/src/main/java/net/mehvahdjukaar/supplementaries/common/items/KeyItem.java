@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -16,16 +17,19 @@ public class KeyItem extends Item {
     }
 
     @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return true;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment == Enchantments.VANISHING_CURSE;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         var l = EnchantedBookItem.getEnchantments(book);
         return l.size() == 1 && l.get(0) == Enchantments.VANISHING_CURSE;

@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -31,8 +31,6 @@ import java.util.UUID;
 
 public class CommonUtil {
 
-    public static DamageSource SPIKE_DAMAGE = new DamageSource("supplementaries.bamboo_spikes");
-    public static DamageSource BOTTLING_DAMAGE = new DamageSource("supplementaries.xp_extracting");
 
     public enum Festivity {
         NONE,

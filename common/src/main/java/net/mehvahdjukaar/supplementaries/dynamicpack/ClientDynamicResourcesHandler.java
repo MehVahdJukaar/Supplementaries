@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.client.textures.Palette;
 import net.mehvahdjukaar.moonlight.client.textures.Respriter;
 import net.mehvahdjukaar.moonlight.client.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.client.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.resources.ResType;
 import net.mehvahdjukaar.moonlight.resources.StaticResource;
@@ -15,11 +16,10 @@ import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = !FMLLoader.isProduction() || RegistryConfigs.Reg.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return RegistryConfigs.Reg.PACK_DEPENDANT_ASSETS.get();
+        return RegistryConfigs.PACK_DEPENDANT_ASSETS.get();
     }
 
     @Override

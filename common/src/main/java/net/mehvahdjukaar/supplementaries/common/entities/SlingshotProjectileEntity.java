@@ -2,11 +2,14 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.impl.entities.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.math.MthUtils;
+import net.mehvahdjukaar.moonlight.network.IExtraClientSpawnData;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -40,7 +43,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
+public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     //only client
     public int clientSideReturnTridentTickCount;
@@ -84,7 +87,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
+        //return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -261,7 +265,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     double pz = newPos.z + offset.z;
 
                     movement = movement.scale(0.25);
-                    this.level.addParticle(ModRegistry.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
+                    this.level.addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
                 } else {
                     double interval = 4 / (d * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
@@ -269,7 +273,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                         double x = currentPos.x;
                         double y = currentPos.y;//+ this.getBbHeight() / 2d;
                         double z = currentPos.z;
-                        this.level.addParticle(ModRegistry.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
+                        this.level.addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
                     }
                 }
             }

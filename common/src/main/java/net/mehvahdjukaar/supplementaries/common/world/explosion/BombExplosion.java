@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.setup.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -239,7 +239,7 @@ public class BombExplosion extends Explosion {
 
         if (!level.isClientSide) {
             for (Player player : this.hitPlayers.keySet()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                NetworkHandler.CHANNEL.sendToPlayerClient((ServerPlayer) player,
                         new ClientBoundSendKnockbackPacket(this.hitPlayers.get(player), player.getId()));
             }
         }

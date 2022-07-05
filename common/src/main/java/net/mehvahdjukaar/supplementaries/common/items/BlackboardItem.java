@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
-import net.mehvahdjukaar.supplementaries.setup.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

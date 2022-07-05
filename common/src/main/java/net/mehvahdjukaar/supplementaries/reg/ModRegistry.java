@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.setup;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.impl.blocks.VerticalSlabBlock;
@@ -53,15 +53,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.setup.RegUtils.*;
-import static net.mehvahdjukaar.supplementaries.setup.RegistryConstants.*;
+import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
+import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class ModRegistry {
 
+    //creative tab
+    public static CreativeModeTab MOD_TAB = null;
+    public static CreativeModeTab JAR_TAB = null;
+
     public static void init() {
-        MOD_TAB = !RegistryConfigs.Reg.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
-        JAR_TAB = !RegistryConfigs.Reg.JAR_TAB.get() ? null : new JarTab("jars");
+        MOD_TAB = !RegistryConfigs.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
+        JAR_TAB = !RegistryConfigs.JAR_TAB.get() ? null : new JarTab("jars");
 
 
         CompatHandler.registerOptionalStuff();
@@ -69,35 +73,29 @@ public class ModRegistry {
     }
 
     public static boolean isDisabled(String name) {
-        return !RegistryConfigs.Reg.isEnabled(name);
+        return !RegistryConfigs.isEnabled(name);
     }
-
-    //creative tab
-    public static CreativeModeTab MOD_TAB = null;
-    public static CreativeModeTab JAR_TAB = null;
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
 
 
     //using this to register overwrites and conditional block items
-    @SubscribeEvent
-    public static void registerAdditionalStuff(final RegisterEvent event) {
-        if (event.getRegistryKey() == ForgeRegistries.ITEMS.getRegistryKey()) {
+    public static void registerAdditionalStuff() {
 
-            WorldGenHandler.onRegisterAdditional();
-            Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
+        WorldGenHandler.onRegisterAdditional();
+        Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
 
-            //CompatHandler.registerOptionalItems(event);
-            //shulker shell
-            //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
+        //CompatHandler.registerOptionalItems(event);
+        //shulker shell
+        //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
 
-            if (RegistryConfigs.Reg.SHULKER_HELMET_ENABLED.get()) {
-                event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
-                        new ShulkerShellItem(new Item.Properties()
-                                .stacksTo(64)
-                                .tab(CreativeModeTab.TAB_MATERIALS)));
-            }
+        if (RegistryConfigss.SHULKER_HELMET_ENABLED.get()) {
+            event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
+                    new ShulkerShellItem(new Item.Properties()
+                            .stacksTo(64)
+                            .tab(CreativeModeTab.TAB_MATERIALS)));
         }
+
     }
 
     //entities
@@ -123,7 +121,8 @@ public class ModRegistry {
     public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
             EntityType.Builder.<PearlMarker>of(PearlMarker::new, MobCategory.MISC)
                     .sized(0.999F, 0.999F)
-                    .updateInterval(-1).setShouldReceiveVelocityUpdates(false)
+                    .updateInterval(-1)
+                    .setShouldReceiveVelocityUpdates(false)
                     .clientTrackingRange(4));
 
     //dispenser minecart
@@ -193,14 +192,13 @@ public class ModRegistry {
     //brick
     public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME,
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(ThrowableBrickEntity::new)
+                    //.setCustomClientFactory(ThrowableBrickEntity::new)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     //.size(0.25F, 0.25F).trackingRange(4).updateInterval(10)));
 
     //bomb
     public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME,
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(BombEntity::new)
                     .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
     public static final Supplier<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()
@@ -222,7 +220,6 @@ public class ModRegistry {
     //rope arrow
     public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME, () -> (
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(RopeArrowEntity::new)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
                     .updateInterval(20))
@@ -233,7 +230,6 @@ public class ModRegistry {
     //slingshot projectile
     public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = ENTITIES.register(SLINGSHOT_PROJECTILE_NAME, () -> (
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(SlingshotProjectileEntity::new)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
                     .updateInterval(20))
@@ -301,8 +297,6 @@ public class ModRegistry {
     //dynamic. Handled by wood set handler
     public static final Map<WoodType, HangingSignBlock> HANGING_SIGNS = new LinkedHashMap<>();
 
-    public static final Map<WoodType, Item> HANGING_SIGNS_ITEMS = new LinkedHashMap<>();
-
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
 
     public static final Supplier<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = regTile(
@@ -326,7 +320,6 @@ public class ModRegistry {
 
     //flags
     public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);
-    public static final Map<DyeColor, Supplier<Item>> FLAGS_ITEMS = RegUtils.makeFlagItems(FLAG_NAME);
 
     public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = regTile(
             FLAG_NAME, () -> RegHelper.createBlockEntityType(
