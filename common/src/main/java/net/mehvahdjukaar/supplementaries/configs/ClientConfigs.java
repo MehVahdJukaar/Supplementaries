@@ -1,19 +1,15 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.moonlight.configs.ConfigHelper;
 import net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.STRING_CHECK;
 
 public class ClientConfigs {
     public static Object CLIENT_SPEC;
@@ -51,9 +47,9 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .define("block_outline_color", "ffffff66", ConfigHelper.COLOR_CHECK);
+                    .define("block_outline_color", "ffffff66", ConfigBuilder.COLOR_CHECK);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
-                    .defineInRange("projectile_scale", 0.5, 0, 1);
+                    .define("projectile_scale", 0.5, 0, 1);
             builder.pop();
 
             builder.push("wrench");
@@ -115,9 +111,9 @@ public class ClientConfigs {
                             "Set to false if you have manually changed the mod jar name")
                     .define("anti_reposting_warning", true);
 
-            TEST1 = builder.comment("ignore this").defineInRange("test1", 0f, -10, 10);
-            TEST2 = builder.comment("ignore this").defineInRange("test2", 0f, -10, 10);
-            TEST3 = builder.comment("ignore this").defineInRange("test3", 0f, -10, 10);
+            TEST1 = builder.comment("ignore this").define("test1", 0f, -10, 10);
+            TEST2 = builder.comment("ignore this").define("test2", 0f, -10, 10);
+            TEST3 = builder.comment("ignore this").define("test3", 0f, -10, 10);
             builder.pop();
         }
     }
@@ -193,7 +189,7 @@ public class ClientConfigs {
                              - 10: ice
                              - 11: iceberg/island
                              - 12: mushroom island""")
-                    .defineList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), LIST_STRING_CHECK);
+                    .define("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), ConfigBuilder.LIST_STRING_CHECK);
 
             builder.pop();
 
@@ -205,16 +201,16 @@ public class ClientConfigs {
             PEDESTAL_SPIN = builder.comment("Enable displayed item spin")
                     .define("spin", true);
             PEDESTAL_SPEED = builder.comment("Spin speed")
-                    .defineInRange("speed", 2.0, 0, 100);
+                    .define("speed", 2.0, 0, 100);
             PEDESTAL_SPECIAL = builder.comment("Enable special display types for items like swords, tridents or end crystals")
                     .define("fancy_renderers", true);
             builder.pop();
 
             builder.push("bubble_block");
             BUBBLE_BLOCK_WOBBLE = builder.comment("Wobbling intensity. set to 0 to disable")
-                    .defineInRange("wobble", 0.2, 0, 1);
+                    .define("wobble", 0.2, 0, 1);
             BUBBLE_BLOCK_GROW_SPEED = builder.comment("How fast it grows when created. 1 to be instant")
-                    .defineInRange("grow_speed", 0.4, 0, 1);
+                    .define("grow_speed", 0.4, 0, 1);
             builder.pop();
 
             builder.push("item_shelf");
@@ -233,28 +229,28 @@ public class ClientConfigs {
                              - redstone_power = block redstone power
                             <power_scaling> = how much frequency changes depending on power. 2 means it spins twice as fast each power level (2* for rain, 4* for thunder)
                             increase to have more distinct indication when weather changes""")
-                    .defineInRange("power_scaling", 3.0, 1.0, 100.0);
+                    .define("power_scaling", 3.0, 1.0, 100.0);
             WIND_VANE_ANGLE_1 = builder.comment("Amplitude (maximum angle) of first sine wave")
-                    .defineInRange("max_angle_1", 30.0, 0, 360);
-            WIND_VANE_ANGLE_2 = builder.defineInRange("max_angle_2", 10.0, 0, 360);
+                    .define("max_angle_1", 30.0, 0, 360);
+            WIND_VANE_ANGLE_2 = builder.define("max_angle_2", 10.0, 0, 360);
             WIND_VANE_PERIOD_1 = builder.comment("Base period in ticks at 0 power of first sine wave")
-                    .defineInRange("period_1", 450.0, 0.0, 2000.0);
+                    .define("period_1", 450.0, 0.0, 2000.0);
             WIND_VANE_PERIOD_2 = builder.comment("This should be kept period_1/3 for a symmetric animation")
-                    .defineInRange("period_2", 150.0, 0.0, 2000.0);
+                    .define("period_2", 150.0, 0.0, 2000.0);
             builder.pop();
 
             builder.push("flag");
             FLAG_PERIOD = builder.comment("How slow a flag will oscillate. (Period of oscillation)\n" +
                             "Lower value = faster oscillation")
-                    .defineInRange("slowness", 100, 0, 10000);
+                    .define("slowness", 100, 0, 10000);
             FLAG_WAVELENGTH = builder.comment("How wavy the animation will be in pixels. (Wavelength)")
-                    .defineInRange("wavyness", 4d, 0.001, 100);
+                    .define("wavyness", 4d, 0.001, 100);
             FLAG_AMPLITUDE = builder.comment("How tall the wave lobes will be. (Wave amplitude)")
-                    .defineInRange("intensity", 1d, 0d, 100d);
+                    .define("intensity", 1d, 0d, 100d);
             FLAG_AMPLITUDE_INCREMENT = builder.comment("How much the wave amplitude increases each pixel. (Amplitude increment per pixel)")
-                    .defineInRange("intensity_increment", 0.3d, 0, 10);
+                    .define("intensity_increment", 0.3d, 0, 10);
             FLAG_FANCINESS = builder.comment("At which graphic settings flags will have a fancy renderer: 0=fast, 1=fancy, 2=fabulous")
-                    .defineEnum("fanciness", GraphicsFanciness.FABULOUS);
+                    .define("fanciness", GraphicsFanciness.FABULOUS);
             FLAG_BANNER = builder.comment("Makes flags render as sideways banner. Ignores many of the previously defined configs")
                     .define("render_as_banner", false);
             builder.pop();
@@ -263,7 +259,7 @@ public class ClientConfigs {
             builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
-                    .defineList("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
+                    .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
 
             CAPTURED_MOBS_PROPERTIES = builder.comment("""
                             Here you can customize how mobs are displayed in jars and cages.
@@ -283,7 +279,7 @@ public class ClientConfigs {
                              - any number > 0 to make it render as a 2d fish whose index matches the 'fishies' texture sheet
                              - 0 or any other values will be ignored and treated as default
                             Note that only the first 3 parameters are needed, the others are optional""")
-                    .defineList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, LIST_STRING_CHECK);
+                    .define("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, ConfigBuilder.LIST_STRING_CHECK);
             builder.pop();
 
             builder.push("wall_lantern");
@@ -315,9 +311,9 @@ public class ClientConfigs {
 
             builder.push("rope");
             ROPE_WOBBLE_AMPLITUDE = builder.comment("Amplitude of rope wobbling effect")
-                            .defineInRange("wobbling_amplitude",1.2d,0,20);
+                    .define("wobbling_amplitude", 1.2d, 0, 20);
             ROPE_WOBBLE_PERIOD = builder.comment("Period of rope wobbling effect")
-                    .defineInRange("wobbling_period",12d,0.01,200);
+                    .define("wobbling_period", 12d, 0.01, 200);
             builder.pop();
 
             builder.pop();
@@ -339,9 +335,9 @@ public class ClientConfigs {
                     .push("turn_particle");
 
             TURN_INITIAL_COLOR = builder.comment("An RGBA color")
-                    .define("initial_color", "2a77ea", ConfigHelper.COLOR_CHECK);
+                    .define("initial_color", "2a77ea", ConfigBuilder.COLOR_CHECK);
             TURN_FADE_COLOR = builder.comment("An RGBA color")
-                    .define("fade_color", "32befa", ConfigHelper.COLOR_CHECK);
+                    .define("fade_color", "32befa", ConfigBuilder.COLOR_CHECK);
 
             builder.pop();
 
@@ -418,7 +414,7 @@ public class ClientConfigs {
             CONFIG_BUTTON = general.CONFIG_BUTTON.get();
             //particles
             //blocks
-            ROPE_WOBBLE_AMPLITUDE = (float)(double)block.ROPE_WOBBLE_AMPLITUDE.get();
+            ROPE_WOBBLE_AMPLITUDE = (float) (double) block.ROPE_WOBBLE_AMPLITUDE.get();
             ROPE_WOBBLE_PERIOD = block.ROPE_WOBBLE_PERIOD.get();
             BUBBLE_BLOCK_WOBBLE = (float) (double) block.BUBBLE_BLOCK_WOBBLE.get() / 10f;
             BUBBLE_BLOCK_GROW_SPEED = (float) (double) block.BUBBLE_BLOCK_GROW_SPEED.get();

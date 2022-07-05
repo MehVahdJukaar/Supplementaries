@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.setup;
 
 
 import com.google.common.base.Stopwatch;
+import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;

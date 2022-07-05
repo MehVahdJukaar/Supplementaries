@@ -29,17 +29,15 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    //implementation fg.deobf("curse.maven:cloth-config-348521:3782775")
     modImplementation(include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}")) {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    // modImplementation(include("curse.maven:modmenu-308702:3850113"))
     modImplementation(include("com.terraformersmc:modmenu:${project.modmenu_version}"))
 
-    modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
+    //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
+    //modImplementation("curse.maven:selene-499980:3859239")
 
-    modImplementation("curse.maven:selene-499980:3859239")
-
+    modImplementation ("net.mehvahdjukaar:moonlight-fabric:2.6.0")
 }
 
 

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.moonlight.Moonlight;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
@@ -44,7 +45,7 @@ public class Supplementaries {
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
         //banner patterns not working
-
+        Moonlight
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

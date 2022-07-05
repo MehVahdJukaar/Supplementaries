@@ -151,7 +151,7 @@ dependencies {
 
 
 
-
-
     implementation 'org.jetbrains:annotations:22.0.0'
+
+    modImplementation ("net.mehvahdjukaar:moonlight-forge:2.6.0")
 }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.effects;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.items.BubbleBlower;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -16,7 +17,7 @@ public class StasisEnchantment extends Enchantment {
             (RegistryConfigs.Reg.SLINGSHOT_ENABLED.get() || RegistryConfigs.Reg.BUBBLE_BLOWER_ENABLED.get());
 
     public StasisEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW,new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
+        super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }
 
     @Override
@@ -44,7 +45,8 @@ public class StasisEnchantment extends Enchantment {
         return ENABLED;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isAllowedOnBooks() {
         return ENABLED;
     }
@@ -59,7 +61,8 @@ public class StasisEnchantment extends Enchantment {
         return super.checkCompatibility(enchantment) && enchantment != Enchantments.MULTISHOT;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         Item i = stack.getItem();
         return i instanceof SlingshotItem || i instanceof BubbleBlower;

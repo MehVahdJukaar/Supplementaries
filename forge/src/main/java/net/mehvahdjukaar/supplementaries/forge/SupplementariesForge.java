@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import net.mehvahdjukaar.supplementaries.SupplementariesNewInit;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -11,10 +11,10 @@ import net.minecraftforge.registries.RegisterEvent;
 /**
  * Author: MehVahdJukaar
  */
-@Mod(SupplementariesNewInit.MOD_ID)
+@Mod(Supplementaries.MOD_ID)
 public class SupplementariesForge {
 
-    public static final String MOD_ID = SupplementariesNewInit.MOD_ID;
+    public static final String MOD_ID = Supplementaries.MOD_ID;
 
     public SupplementariesForge() {
 
@@ -43,7 +43,7 @@ public class SupplementariesForge {
 
     public static void init(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            SupplementariesNewInit.commonSetup();
+            Supplementaries.commonSetup();
         });
 
     }
@@ -51,7 +51,7 @@ public class SupplementariesForge {
 
     public static void registerAdditional(RegisterEvent event) {
         if (!event.getRegistryKey().equals(ForgeRegistries.ITEMS.getRegistryKey())) return;
-        SupplementariesNewInit.commonRegistration();
+        Supplementaries.commonRegistration();
     }
 
 

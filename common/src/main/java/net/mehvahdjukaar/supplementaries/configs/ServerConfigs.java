@@ -6,9 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlo
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
@@ -16,15 +16,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.moonlight.configs.ConfigHelper.STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder.STRING_CHECK;
 
 
 public class ServerConfigs {
 
 
     //overwritten by server one
-    public static ForgeConfigSpec SERVER_SPEC;
+    public static Object SERVER_SPEC;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("server"), ConfigBuilder.ConfigType.COMMON);
@@ -43,32 +43,32 @@ public class ServerConfigs {
     public static class item {
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;
-        public static ForgeConfigSpec.ConfigValue<String> ROPE_ARROW_ROPE;
+        public static Supplier<String> ROPE_ARROW_ROPE;
         public static Supplier<Integer> FLUTE_RADIUS;
         public static Supplier<Integer> FLUTE_DISTANCE;
         public static Supplier<Double> BOMB_RADIUS;
         public static Supplier<Integer> BOMB_FUSE;
-        public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BREAKS;
+        public static Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
         public static Supplier<Double> BOMB_BLUE_RADIUS;
-        public static ForgeConfigSpec.EnumValue<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
+        public static Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
         public static Supplier<Double> SLINGSHOT_RANGE;
         public static Supplier<Integer> SLINGSHOT_CHARGE;
         public static Supplier<Double> SLINGSHOT_DECELERATION;
         public static Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
-        public static ForgeConfigSpec.EnumValue<Hands> WRENCH_BYPASS;
+        public static Supplier<Hands> WRENCH_BYPASS;
         public static Supplier<Integer> BUBBLE_BLOWER_COST;
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
             builder.push("items");
 
             builder.push("bubble_blower");
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
-                    .defineInRange("stasis_cost", 5, 1, 25);
+                    .define("stasis_cost", 5, 1, 25);
             builder.pop();
 
             builder.push("wrench");
             WRENCH_BYPASS = builder.comment("Allows wrenches to bypass a block interaction action prioritizing their own when on said hand")
-                    .defineEnum("bypass_when_on", Hands.MAIN_HAND);
+                    .define("bypass_when_on", Hands.MAIN_HAND);
             builder.pop();
 
             //rope arrow
@@ -77,31 +77,31 @@ public class ServerConfigs {
                             "a rope from another mod which will get deployed by rope arrows instead of mine")
                     .define("rope_arrow_override", "supplementaries:rope");
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
-                    .defineInRange("capacity", 32, 1, 256);
+                    .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
                     .define("exclusive_to_crossbows", false);
             builder.pop();
             //flute
             builder.push("flute");
             FLUTE_RADIUS = builder.comment("Radius in which an unbound flute will search pets")
-                    .defineInRange("unbound_radius", 64, 0, 500);
+                    .define("unbound_radius", 64, 0, 500);
             FLUTE_DISTANCE = builder.comment("Max distance at which a bound flute will allow a pet to teleport")
-                    .defineInRange("bound_distance", 64, 0, 500);
+                    .define("bound_distance", 64, 0, 500);
 
             builder.pop();
             //bomb
             builder.push("bomb");
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
-                    .defineInRange("explosion_radius", 2, 0.1, 10);
+                    .define("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
             BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certaom amount of ticks instead than on contact")
-                    .defineInRange("bomb_fuse", 0, 0, 100000);
+                    .define("bomb_fuse", 0, 0, 100000);
             builder.pop();
 
             builder.push("blue_bomb");
             BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
-                    .defineInRange("explosion_radius", 5.15, 0.1, 10);
+                    .define("explosion_radius", 5.15, 0.1, 10);
             BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
 
@@ -109,11 +109,11 @@ public class ServerConfigs {
 
             builder.push("slingshot");
             SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier. Affect the initial projectile speed")
-                    .defineInRange("range_multiplier", 1f, 0, 5);
+                    .define("range_multiplier", 1f, 0, 5);
             SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
-                    .defineInRange("charge_time", 20, 0, 100);
+                    .define("charge_time", 20, 0, 100);
             SLINGSHOT_DECELERATION = builder.comment("Deceleration for the stasis projectile")
-                    .defineInRange("stasis_deceleration", 0.9625, 0.1, 1);
+                    .define("stasis_deceleration", 0.9625, 0.1, 1);
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
             builder.pop();
@@ -137,8 +137,8 @@ public class ServerConfigs {
         public static Supplier<Boolean> WALL_LANTERN_PLACEMENT;
         public static Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
         public static Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> WALL_LANTERN_BLACKLIST;
-        public static ForgeConfigSpec.EnumValue<LightableLanternBlock.FallMode> FALLING_LANTERNS;
+        public static Supplier<List<? extends String>> WALL_LANTERN_BLACKLIST;
+        public static Supplier<LightableLanternBlock.FallMode> FALLING_LANTERNS;
         public static Supplier<Boolean> BELL_CHAIN;
         public static Supplier<Integer> BELL_CHAIN_LENGTH;
         public static Supplier<Boolean> PLACEABLE_STICKS;
@@ -146,7 +146,7 @@ public class ServerConfigs {
         public static Supplier<Boolean> RAKED_GRAVEL;
         public static Supplier<Boolean> BOTTLE_XP;
         public static Supplier<Integer> BOTTLING_COST;
-        public static ForgeConfigSpec.ConfigValue<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
+        public static Supplier<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
         public static Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static Supplier<Boolean> MAP_MARKERS;
         public static Supplier<Boolean> CEILING_BANNERS;
@@ -165,7 +165,7 @@ public class ServerConfigs {
         public static Supplier<Boolean> SKULL_CANDLES;
         public static Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
 
@@ -217,17 +217,17 @@ public class ServerConfigs {
 
             List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct", "enigmaticlegacy");
             WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
-                    .defineList("mod_blacklist", modBlacklist, STRING_CHECK);
+                    .define("mod_blacklist", modBlacklist, STRING_CHECK);
             FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
                             "Additionally if they fall from high enough they will break creating a fire where they land")
-                    .defineEnum("fallin_lanterns", LightableLanternBlock.FallMode.ON);
+                    .define("fallin_lanterns", LightableLanternBlock.FallMode.ON);
             builder.pop();
             //bells
             builder.push("bells_tweaks");
             BELL_CHAIN = builder.comment("Ring a bell by clicking on a chain that's connected to it")
                     .define("chain_ringing", true);
             BELL_CHAIN_LENGTH = builder.comment("Max chain length that allows a bell to ring")
-                    .defineInRange("chain_length", 16, 0, 256);
+                    .define("chain_length", 16, 0, 256);
             builder.pop();
 
             builder.push("placeable_sticks");
@@ -241,9 +241,9 @@ public class ServerConfigs {
             PLACEABLE_GUNPOWDER = builder.comment("Allow placeable gunpowder")
                     .define("enabled", true);
             GUNPOWDER_BURN_SPEED = builder.comment("Number of ticks it takes for gunpowder to burn 1 stage (out of 8). Increase to slow it down")
-                    .defineInRange("speed", 2, 0, 20);
+                    .define("speed", 2, 0, 20);
             GUNPOWDER_SPREAD_AGE = builder.comment("Age at which it spread to the next gunpowder block. Also affects speed")
-                    .defineInRange("spread_age", 2, 0, 8);
+                    .define("spread_age", 2, 0, 8);
             builder.pop();
 
             builder.push("raked_gravel");
@@ -255,7 +255,7 @@ public class ServerConfigs {
             BOTTLE_XP = builder.comment("Allow bottling up xp by using a bottle on an enchanting table")
                     .define("enabled", false);
             BOTTLING_COST = builder.comment("bottling health cost")
-                    .defineInRange("cost", 2, 0, 20);
+                    .define("cost", 2, 0, 20);
             builder.pop();
 
             builder.push("map_tweaks");
@@ -277,7 +277,7 @@ public class ServerConfigs {
                             Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values
                             example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
 
-                    .defineList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
+                    .define("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
 
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
                             "Best kept disabled if you are adding custom adventurer maps with its config")
@@ -297,9 +297,9 @@ public class ServerConfigs {
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
             BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
-                    .defineInRange("book_power", 1d, 0, 5);
+                    .define("book_power", 1d, 0, 5);
             ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
-                    .defineInRange("enchanted_book_power", 1.334d, 0, 5);
+                    .define("enchanted_book_power", 1.334d, 0, 5);
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);
             builder.pop();
@@ -308,7 +308,7 @@ public class ServerConfigs {
             ZOMBIE_HORSE = builder.comment("Feed a stack of rotten flesh to a skeleton horse to buff him up to a zombie horse")
                     .define("zombie_horse_conversion", true);
             ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
-                    .defineInRange("rotten_flesh", 64, 1, 1000);
+                    .define("rotten_flesh", 64, 1, 1000);
             ZOMBIE_HORSE_UNDERWATER = builder.comment("Allows zombie horses to be ridden underwater")
                     .define("rideable_underwater", true);
             builder.pop();
@@ -322,7 +322,7 @@ public class ServerConfigs {
     public static class general {
         public static Supplier<Boolean> SERVER_PROTECTION;
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
             builder.comment("General settings")
                     .push("general");
             SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
@@ -423,7 +423,7 @@ public class ServerConfigs {
 
             builder.push("bubble_block");
             BUBBLE_LIFETIME = builder.comment("Max lifetime of bubble blocks. Set to 10000 to have it infinite")
-                    .defineInRange("lifetime", 20 * 60, 1, 10000);
+                    .define("lifetime", 20 * 60, 1, 10000);
             BUBBLE_BREAK = builder.comment("Can bubble break when stepped on?")
                     .define("break_when_touched", true);
             builder.pop();
@@ -450,7 +450,7 @@ public class ServerConfigs {
             //globe
             builder.push("globe");
             GLOBE_TRADES = builder.comment("how many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
-                    .defineInRange("chance", 2, 0, 50);
+                    .define("chance", 2, 0, 50);
             builder.pop();
 
             //speaker
@@ -458,7 +458,7 @@ public class ServerConfigs {
             SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
                     .define("narrator_enabled", true);
             SPEAKER_RANGE = builder.comment("Maximum block range")
-                    .defineInRange("range", 64, 0, 100000000);
+                    .define("range", 64, 0, 100000000);
             builder.pop();
             //bellows
             builder.push("bellows");
@@ -466,29 +466,29 @@ public class ServerConfigs {
                             bellows pushes air following this equation:\s
                             air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling\s
                             represents base period at 1 power""")
-                    .defineInRange("base_period", 78, 1, 512);
+                    .define("base_period", 78, 1, 512);
             BELLOWS_POWER_SCALING = builder.comment("how much the period changes in relation to the block redstone power")
-                    .defineInRange("power_scaling", 3, 0, 128);
+                    .define("power_scaling", 3, 0, 128);
             BELLOWS_BASE_VEL_SCALING = builder.comment("""
                             velocity increase uses this equation:\s
                             vel = base_vel*((range-entity_distance)/range) with base_vel = base_velocity_scaling/period\s
                             note that the block will push further the faster it's pulsing""")
-                    .defineInRange("base_velocity_scaling", 5.0, 0.0, 64);
+                    .define("base_velocity_scaling", 5.0, 0.0, 64);
             BELLOWS_MAX_VEL = builder.comment("entities with velocity greater than this won't be pushed")
-                    .defineInRange("power_scaling", 2.0, 0.0, 16);
+                    .define("power_scaling", 2.0, 0.0, 16);
             BELLOWS_FLAG = builder.comment("sets velocity changed flag when pushing entities +\n" +
                             "causes pushing animation to be smooth client side but also restricts player movement when being pushed")
                     .define("velocity_changed_flag", true);
             BELLOWS_RANGE = builder.comment("maximum range")
                     .comment("note that it will still only keep alive the two fire blocks closer to it")
-                    .defineInRange("range", 5, 0, 16);
+                    .define("range", 5, 0, 16);
             builder.pop();
             //spring launcher
             builder.push("spring_launcher");
             LAUNCHER_VEL = builder.comment("spring launcher launch speed")
-                    .defineInRange("velocity", 1.5D, 0, 16);
+                    .define("velocity", 1.5D, 0, 16);
             LAUNCHER_HEIGHT = builder.comment("fall distance needed to trigger the automatic spring launch")
-                    .defineInRange("fall_height_required", 5, 0, 512);
+                    .define("fall_height_required", 5, 0, 512);
             builder.pop();
             //turn table
             builder.push("turn_table");
@@ -498,7 +498,7 @@ public class ServerConfigs {
             //jar
             builder.push("jar");
             JAR_CAPACITY = builder.comment("Jar liquid capacity: leave at 12 for pixel accuracy")
-                    .defineInRange("capacity", 12, 0, 1024);
+                    .define("capacity", 12, 0, 1024);
             JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a placed jar.\n" +
                             "Disable if you think this ability is op (honey for example). Cookies are excluded")
                     .define("drink_from_jar", false);
@@ -526,7 +526,7 @@ public class ServerConfigs {
             CAGE_PERSISTENT_MOBS = builder.comment("Makes it so all (hostile) mobs captured by cages and jars will be set to persistent so they won't despawn when released")
                     .define("persistent_mobs", false);
             CAGE_HEALTH_THRESHOLD = builder.comment("Health percentage under which mobs will be allowed to be captured by cages and jars. Leave at 100 to accept any health level")
-                    .defineInRange("health_threshold", 100, 1, 100);
+                    .define("health_threshold", 100, 1, 100);
             builder.pop();
 
             builder.push("goblet");
@@ -543,9 +543,9 @@ public class ServerConfigs {
             SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penalty", true);
             SACK_INCREMENT = builder.comment("Maximum number of sacks after which the overencumbered effect will be applied. Each multiple of this number will increase the effect strength by one")
-                    .defineInRange("sack_increment", 2, 0, 50);
+                    .define("sack_increment", 2, 0, 50);
             SACK_SLOTS = builder.comment("How many slots should a sack have")
-                    .defineInRange("slots", 9, 1, 27);
+                    .define("slots", 9, 1, 27);
             builder.pop();
 
             builder.push("safe");
@@ -571,23 +571,23 @@ public class ServerConfigs {
 
             builder.push("hourglass");
             HOURGLASS_SUGAR = builder.comment("Time in ticks for sugar")
-                    .defineInRange("sugar_time", 40, 0, 10000);
+                    .define("sugar_time", 40, 0, 10000);
             HOURGLASS_SAND = builder.comment("Time in ticks for sand blocks")
-                    .defineInRange("sand_time", 70, 0, 10000);
+                    .define("sand_time", 70, 0, 10000);
             HOURGLASS_CONCRETE = builder.comment("Time in ticks for concrete blocks")
-                    .defineInRange("concrete_time", 105, 0, 10000);
+                    .define("concrete_time", 105, 0, 10000);
             HOURGLASS_DUST = builder.comment("Time in ticks for generic dust")
-                    .defineInRange("dust_time", 150, 0, 10000);
+                    .define("dust_time", 150, 0, 10000);
             HOURGLASS_GLOWSTONE = builder.comment("Time in ticks for glowstone dust")
-                    .defineInRange("glowstone_time", 190, 0, 10000);
+                    .define("glowstone_time", 190, 0, 10000);
             HOURGLASS_BLAZE_POWDER = builder.comment("Time in ticks for blaze powder")
-                    .defineInRange("blaze_powder_time", 277, 0, 10000);
+                    .define("blaze_powder_time", 277, 0, 10000);
             HOURGLASS_REDSTONE = builder.comment("Time in ticks for redstone dust")
-                    .defineInRange("redstone_time", 400, 0, 10000);
+                    .define("redstone_time", 400, 0, 10000);
             HOURGLASS_SLIME = builder.comment("Time in ticks for slime balls")
-                    .defineInRange("slime_time", 1750, 0, 10000);
+                    .define("slime_time", 1750, 0, 10000);
             HOURGLASS_HONEY = builder.comment("Time in ticks for honey")
-                    .defineInRange("honey_time", 2000, 0, 10000);
+                    .define("honey_time", 2000, 0, 10000);
             builder.pop();
 
             builder.push("item_shelf");
@@ -606,7 +606,7 @@ public class ServerConfigs {
             STICK_POLE = builder.comment("Allows right/left clicking on a stick to lower/raise a flag attached to it")
                     .define("stick_pole", true);
             STICK_POLE_LENGTH = builder.comment("Maximum allowed pole length")
-                    .defineInRange("pole_length", 16, 0, 256);
+                    .define("pole_length", 16, 0, 256);
             builder.pop();
 
             builder.pop();
@@ -618,8 +618,8 @@ public class ServerConfigs {
         public static Supplier<Integer> FIREFLY_MIN;
         public static Supplier<Integer> FIREFLY_MAX;
         public static Supplier<Integer> FIREFLY_WEIGHT;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_BIOMES;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> FIREFLY_MOD_WHITELIST;
+        public static Supplier<List<? extends String>> FIREFLY_BIOMES;
+        public static Supplier<List<? extends String>> FIREFLY_MOD_WHITELIST;
 
         public static Supplier<Boolean> DISTANCE_TEXT;
         public static Supplier<Boolean> WAY_SIGN_ENABLED;
@@ -633,13 +633,15 @@ public class ServerConfigs {
         public static Supplier<Boolean> URN_PILE_ENABLED;
         public static Supplier<Integer> URN_PATCH_TRIES;
         public static Supplier<Integer> URN_PER_CHUNK;
-        public static ForgeConfigSpec.ConfigValue<List<? extends String>> URN_BIOME_BLACKLIST;
+        public static Supplier<List<? extends String>> URN_BIOME_BLACKLIST;
 
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
+                    /*
             builder.push("entities");
+
             builder.push("firefly");
             List<String> defaultBiomes = Arrays.asList("minecraft:swamp", "minecraft:swamp_hills", "minecraft:plains",
                     "minecraft:sunflower_plains", "minecraft:dark_forest", "minecraft:dark_forest_hills", "byg:bayou",
@@ -652,29 +654,30 @@ public class ServerConfigs {
             List<String> fireflyModWhitelist = List.of();
 
             FIREFLY_BIOMES = builder.comment("Spawnable biomes")
-                    .defineList("biomes", defaultBiomes, STRING_CHECK);
+                    .define("biomes", defaultBiomes,ConfigBuilder.STRING_CHECK);
             FIREFLY_MOD_WHITELIST = builder.comment("Whitelisted mods. All biomes from said mods will be able to spawn fireflies. Use the one above for more control")
-                    .defineList("mod_whitelist", fireflyModWhitelist, STRING_CHECK);
+                    .define("mod_whitelist", fireflyModWhitelist, STRING_CHECK);
             FIREFLY_WEIGHT = builder.comment("Spawn weight \n" +
                             "Set to 0 to disable spawning entirely")
-                    .defineInRange("weight", 3, 0, 100);
+                    .define("weight", 3, 0, 100);
             FIREFLY_MIN = builder.comment("Minimum group size")
-                    .defineInRange("min", 5, 0, 64);
+                    .define("min", 5, 0, 64);
             FIREFLY_MAX = builder.comment("Maximum group size")
-                    .defineInRange("max", 9, 0, 64);
+                    .define("max", 9, 0, 64);
 
             builder.pop();
 
-            builder.push("owl");
+
             builder.pop();
-            builder.pop();
+                      */
+
 
             builder.push("structures");
             builder.push("way_sign");
             ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts. Has to be larger than minimum_distance of course")
-                    .defineInRange("average_distance", 19, 0, 1000);
+                    .define("average_distance", 19, 0, 1000);
             ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts")
-                    .defineInRange("minimum_distance", 10, 0, 1000);
+                    .define("minimum_distance", 10, 0, 1000);
             WAY_SIGN_ENABLED = builder.comment("Entirely disables them from spawning")
                     .define("enabled", true);
             DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
@@ -685,20 +688,20 @@ public class ServerConfigs {
             builder.push("wild_flax");
             WILD_FLAX_ENABLED = builder.define("enabled", true);
             FLAX_AVERAGE_EVERY = builder.comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
-                    .defineInRange("rarity", 6, 1, 100);
+                    .define("rarity", 6, 1, 100);
             FLAX_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-                    .defineInRange("attempts_per_patch", 35, 1, 100);
+                    .define("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             builder.push("cave_urns");
             URN_PILE_ENABLED = builder.define("enabled", true);
             URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-                    .defineInRange("attempts_per_patch", 4, 1, 100);
+                    .define("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-                    .defineInRange("spawn_attempts", 7, 0, 100);
+                    .define("spawn_attempts", 7, 0, 100);
             List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
-                    .defineList("biome_blacklist", urnBlacklist, STRING_CHECK);
+                    .define("biome_blacklist", urnBlacklist, STRING_CHECK);
             builder.pop();
 
             builder.pop();
@@ -712,7 +715,7 @@ public class ServerConfigs {
         public static Supplier<Double> FIREFLY_SPEED;
         public static Supplier<Boolean> FIREFLY_DESPAWN;
 
-        private static void init(ForgeConfigSpec.Builder builder) {
+        private static void init(ConfigBuilder builder) {
             builder.comment("entities parameters")
                     .push("entities");
             builder.push("firefly");
@@ -721,9 +724,9 @@ public class ServerConfigs {
                             note that actual period will be this + a random number between 0 and 10
                             this needs to be here to allow correct despawning of the entity when it's not glowing
                             check client configs come more animation settings""")
-                    .defineInRange("period", 65, 1, 200);
+                    .define("period", 65, 1, 200);
             FIREFLY_SPEED = builder.comment("firefly flying speed")
-                    .defineInRange("speed", 0.3, 0, 10);
+                    .define("speed", 0.3, 0, 10);
             FIREFLY_DESPAWN = builder.comment("despawn during the day")
                     .define("despawn", true);
             builder.pop();
@@ -860,7 +863,7 @@ public class ServerConfigs {
             ZOMBIE_HORSE_UNDERWATER = tweaks.ZOMBIE_HORSE_UNDERWATER.get();
             BOTTLING_COST = tweaks.BOTTLING_COST.get();
             BOTTLE_XP = tweaks.BOTTLE_XP.get();
-            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.Reg.RAKED_GRAVEL_ENABLED.get();
+            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.RAKED_GRAVEL_ENABLED.get();
             PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
             PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
             DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
@@ -892,8 +895,8 @@ public class ServerConfigs {
             ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
             ROPE_ARROW_CROSSBOW = item.ROPE_ARROW_CROSSBOW.get();
             ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
-            ROPE_ARROW_BLOCK = (Holder.Reference<Block>) ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(ROPE_ARROW_ROPE))
-                    .orElse(ForgeRegistries.BLOCKS.getHolder(ModRegistry.ROPE.get()).get());
+            ROPE_ARROW_BLOCK = (Holder.Reference<Block>) Registry.BLOCK.getHolder(new ResourceLocation(ROPE_ARROW_ROPE))
+                    .orElse(Registry.BLOCK.getHolder(ModRegistry.ROPE.get()).get());
             FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
             FLUTE_RADIUS = item.FLUTE_RADIUS.get();
             BOMB_BREAKS = item.BOMB_BREAKS.get();
