@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
@@ -64,7 +65,7 @@ public class SoapItem extends Item {
                 double dy = v.y + ((0.5 - r.nextFloat()) * 0.06);
                 double dz = v.z + ((0.5 - r.nextFloat()) * 0.9);
 
-                pLevel.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
+                pLevel.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
             }
         }
         return super.finishUsingItem(pStack, pLevel, entity);

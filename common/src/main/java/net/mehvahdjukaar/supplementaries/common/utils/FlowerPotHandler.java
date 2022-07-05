@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -64,7 +66,8 @@ public class FlowerPotHandler {
     }
 
 
-    //flower box
+    //flower box stuff
+
     private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new HashMap<>();
 
     /**
@@ -79,7 +82,7 @@ public class FlowerPotHandler {
 
     private static void registerCompatFlower(String itemRes) {
         var id = new ResourceLocation(itemRes);
-        Item item = ForgeRegistries.ITEMS.getValue(id);
+        Item item = Registry.ITEM.getValue(id);
         if (item != null && item != Items.AIR) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
             CUSTOM_MODELS.add(res);
@@ -96,8 +99,8 @@ public class FlowerPotHandler {
         toAdd.add(Utils.getID(Items.CACTUS).toString());
         toAdd.add(Utils.getID(Items.FLOWERING_AZALEA).toString());
         toAdd.add(Utils.getID(Items.AZALEA).toString());
-        toAdd.add(ModRegistry.FLAX_SEEDS_ITEM.getId().toString());
-        if (ModList.get().isLoaded("snowyspirit")) {
+        toAdd.add(Utils.getID(ModRegistry.FLAX_SEEDS_ITEM).toString());
+        if (CompatHandler.snowyspirit) {
             toAdd.add("snowyspirit:ginger_flower");
         }
 

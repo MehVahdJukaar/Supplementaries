@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -56,7 +57,7 @@ public class FallingLiquidParticle extends TextureSheetParticle {
     protected void updateMotion() {
         if (this.onGround) {
             this.remove();
-            this.level.addParticle(ModRegistry.SPLASHING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
+            this.level.addParticle(ModParticles.SPLASHING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
         }
     }
 

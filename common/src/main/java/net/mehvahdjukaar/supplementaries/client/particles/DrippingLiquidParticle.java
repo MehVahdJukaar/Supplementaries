@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -47,7 +48,7 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
     protected void ageParticle() {
         if (this.lifetime-- <= 0) {
             this.remove();
-            this.level.addParticle(ModRegistry.FALLING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
+            this.level.addParticle(ModParticles.FALLING_LIQUID.get(), this.x, this.y, this.z, this.rCol, this.gCol, this.bCol);
         }
 
     }

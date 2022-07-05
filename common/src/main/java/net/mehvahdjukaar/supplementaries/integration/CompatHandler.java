@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
-import net.minecraftforge.fml.ModList;
 
 public class CompatHandler {
 
@@ -42,45 +42,50 @@ public class CompatHandler {
     public static final boolean mapatlas;
     public static final boolean waystones;
     public static final boolean overweight_farming;
+    public static final boolean snowyspirit;
 
     static {
-        ModList ml = ModList.get();
-        quark = ml.isLoaded("quark");
-        deco_blocks = ml.isLoaded("decorative_blocks");
-        configured = ml.isLoaded("configured");
-        create = ml.isLoaded("create");
-        torchslab = ml.isLoaded("torchslabmod");
-        curios = ml.isLoaded("curios");
-        farmers_delight = ml.isLoaded("farmersdelight");
-        infernalexp = ml.isLoaded("infernalexp");
-        inspirations = ml.isLoaded("inspirations");
-        framedblocks = ml.isLoaded("framedblocks");
-        rgblib = ml.isLoaded("rgblib");
-        endergetic = ml.isLoaded("endergetic");
-        deco_blocks_abnormals = ml.isLoaded("decorative_blocks_abnormals");
-        much_more_mod_compat = ml.isLoaded("muchmoremodcompat");
-        autumnity = ml.isLoaded("autumnity");
-        buzzier_bees = ml.isLoaded("buzzier_bees");
-        flywheel = ml.isLoaded("flywheel");
-        repurposed_structures = ml.isLoaded("repurposed_structures");
-        tetra = ml.isLoaded("tetra");
-        pokecube_legends = ml.isLoaded("pokecube_legends");
-        pokecube = ml.isLoaded("pokecube");
-        dynamictrees = ml.isLoaded("dynamictrees");
-        moreminecarts = ml.isLoaded("moreminecarts");
-        habitat = ml.isLoaded("habitat");
-        simplefarming = ml.isLoaded("simplefarming");
-        atmospheric = ml.isLoaded("atmospheric");
-        enchantedbookredesign = ml.isLoaded("enchantedbookredesign");
-        customvillagertrades = ml.isLoaded("customvillagertrades");
-        computercraft = ml.isLoaded("computercraft");
-        nethersdelight = ml.isLoaded("nethers_delight");
-        doubledoors = ml.isLoaded("doubledoors");
-        malum = ml.isLoaded("malum");
-        botania = ml.isLoaded("botania");
-        mapatlas = ml.isLoaded("map_atlases");
-        waystones = ml.isLoaded("waystones");
-        overweight_farming = ml.isLoaded("overweight_farming");
+        quark = isLoaded("quark");
+        deco_blocks = isLoaded("decorative_blocks");
+        configured = isLoaded("configured");
+        create = isLoaded("create");
+        torchslab = isLoaded("torchslabmod");
+        curios = isLoaded("curios");
+        farmers_delight = isLoaded("farmersdelight");
+        infernalexp = isLoaded("infernalexp");
+        inspirations = isLoaded("inspirations");
+        framedblocks = isLoaded("framedblocks");
+        rgblib = isLoaded("rgblib");
+        endergetic = isLoaded("endergetic");
+        deco_blocks_abnormals = isLoaded("decorative_blocks_abnormals");
+        much_more_mod_compat = isLoaded("muchmoremodcompat");
+        autumnity = isLoaded("autumnity");
+        buzzier_bees = isLoaded("buzzier_bees");
+        flywheel = isLoaded("flywheel");
+        repurposed_structures = isLoaded("repurposed_structures");
+        tetra = isLoaded("tetra");
+        pokecube_legends = isLoaded("pokecube_legends");
+        pokecube = isLoaded("pokecube");
+        dynamictrees = isLoaded("dynamictrees");
+        moreminecarts = isLoaded("moreminecarts");
+        habitat = isLoaded("habitat");
+        simplefarming = isLoaded("simplefarming");
+        atmospheric = isLoaded("atmospheric");
+        enchantedbookredesign = isLoaded("enchantedbookredesign");
+        customvillagertrades = isLoaded("customvillagertrades");
+        computercraft = isLoaded("computercraft");
+        nethersdelight = isLoaded("nethers_delight");
+        doubledoors = isLoaded("doubledoors");
+        malum = isLoaded("malum");
+        botania = isLoaded("botania");
+        mapatlas = isLoaded("map_atlases");
+        waystones = isLoaded("waystones");
+        overweight_farming = isLoaded("overweight_farming");
+        snowyspirit = isLoaded("snowyspirit");
+    }
+    
+    private static boolean isLoaded(String name){
+        return PlatformHelper.isModLoaded(name);
     }
 
     public static void init() {

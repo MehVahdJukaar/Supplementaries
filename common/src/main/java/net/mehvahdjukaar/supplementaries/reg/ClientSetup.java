@@ -62,9 +62,15 @@ import java.util.stream.Collectors;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void init(final FMLClientSetupEvent event) {
+    public static void init(){
+        ClientPlatformHelper.onRegisterEntityRenderers(ClientSetup::registerEntityRenderers);
+        ClientPlatformHelper.onRegisterBlockColors(ClientSetup::registerBlockColors);
+        ClientPlatformHelper.onRegisterItemColors(ClientSetup::registerItemColors);
+        ClientPlatformHelper.onRegisterParticles(ClientSetup::registerParticles);
+    }
+
+
+    public static void setup() {
         event.enqueueWork(() -> {
 
             //compat
@@ -181,29 +187,25 @@ public class ClientSetup {
                     && CrossbowItem.containsChargedProjectile(stack, projectile) ? 1.0F : 0.0F;
         }
     }
-
-    //particles
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
-        particleEngine.register(ModRegistry.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
-        particleEngine.register(ModRegistry.GREEN_FLAME.get(), FlameParticle.Provider::new);
-        particleEngine.register(ModRegistry.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
-        particleEngine.register(ModRegistry.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
-        particleEngine.register(ModRegistry.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
-        particleEngine.register(ModRegistry.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
-        particleEngine.register(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), new BombExplosionEmitterParticle.Factory());
-        particleEngine.register(ModRegistry.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
-        particleEngine.register(ModRegistry.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
-        particleEngine.register(ModRegistry.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
-        particleEngine.register(ModRegistry.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
-        particleEngine.register(ModRegistry.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
-        particleEngine.register(ModRegistry.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
-        particleEngine.register(ModRegistry.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
-        particleEngine.register(ModRegistry.ROTATION_TRAIL_EMITTER.get(), new RotationTrailEmitter.Factory());
-        particleEngine.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
-        particleEngine.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
-        particleEngine.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
+    private static void registerParticles(ClientPlatformHelper.ParticleEvent event) {
+        event.register(ModParticles.SPEAKER_SOUND, SpeakerSoundParticle.Factory::new);
+        event.register(ModParticles.GREEN_FLAME, FlameParticle.Provider::new);
+        event.register(ModParticles.DRIPPING_LIQUID, DrippingLiquidParticle.Factory::new);
+        event.register(ModParticles.FALLING_LIQUID, FallingLiquidParticle.Factory::new);
+        event.register(ModParticles.SPLASHING_LIQUID, SplashingLiquidParticle.Factory::new);
+        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE, BombExplosionParticle.Factory::new);
+        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER, BombExplosionEmitterParticle.Factory::new );
+        event.register(ModParticles.BOMB_SMOKE_PARTICLE, BombSmokeParticle.Factory::new);
+        event.register(ModParticles.BOTTLING_XP_PARTICLE, BottlingXpParticle.Factory::new);
+        event.register(ModParticles.FEATHER_PARTICLE, FeatherParticle.Factory::new);
+        event.register(ModParticles.SLINGSHOT_PARTICLE, SlingshotParticle.Factory::new);
+        event.register(ModParticles.STASIS_PARTICLE, StasisParticle.Factory::new);
+        event.register(ModParticles.CONFETTI_PARTICLE, ConfettiParticle.Factory::new);
+        event.register(ModParticles.ROTATION_TRAIL, RotationTrailParticle.Factory::new);
+        event.register(ModParticles.ROTATION_TRAIL_EMITTER, RotationTrailEmitter.Factory::new);
+        event.register(ModParticles.SUDS_PARTICLE, SudsParticle.Factory::new);
+        event.register(ModParticles.ASH_PARTICLE, AshParticleFactory::new);
+        event.register(ModParticles.BUBBLE_BLOCK_PARTICLE, BubbleBlockParticle.Factory::new);
     }
 
     public static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -219,21 +221,27 @@ public class ClientSetup {
         }
     }
 
-    @SubscribeEvent
-    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+
+    private static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
         CompatHandlerClient.registerEntityRenderers(event);
         //entities
-        event.registerEntityRenderer(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.registerEntityRenderer(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.registerEntityRenderer(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
-        event.registerEntityRenderer(ModRegistry.DISPENSER_MINECART.get(), (c) -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
-        event.registerEntityRenderer(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
-        event.registerEntityRenderer(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
-        event.registerEntityRenderer(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
-        event.registerEntityRenderer(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
-        event.registerEntityRenderer(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
-        event.registerEntityRenderer(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
-        event.registerEntityRenderer(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+        event.register(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
+        event.register(ModRegistry.DISPENSER_MINECART.get(), (c) -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
+        event.register(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
+        event.register(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
+        event.register(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
+        event.register(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
+        event.register(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
+        event.register(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
+        event.register(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+    }
+
+
+    @SubscribeEvent
+    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+
         // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
 
         //tiles
@@ -266,27 +274,22 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
     }
 
-    @SubscribeEvent
-    public static void registerBlockColors(ColorHandlerEvent.Block event) {
-        BlockColors colors = event.getBlockColors();
-        colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
-        colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
-        colors.register(new BrewingStandColor(), Blocks.BREWING_STAND);
-        colors.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
+    private static void registerBlockColors(ClientPlatformHelper.BlockColorEvent event) {
+        event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
+        event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
+        event.register(new BrewingStandColor(), Blocks.BREWING_STAND);
+        event.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
                 ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(),
                 ModRegistry.ROPE_KNOT.get());
-        colors.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
-        colors.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
-        colors.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
-
+        event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
+        event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
+        event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
     }
 
-    @SubscribeEvent
-    public static void registerItemColors(ColorHandlerEvent.Item event) {
-        ItemColors colors = event.getItemColors();
-        colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT_ITEM.get());
-        colors.register(new CrossbowColor(), Items.CROSSBOW);
+    private static void registerItemColors(ClientPlatformHelper.ItemColorEvent event) {
+        event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+        event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
+        event.register(new CrossbowColor(), Items.CROSSBOW);
     }
 
     @SubscribeEvent
@@ -315,6 +318,7 @@ public class ClientSetup {
         ClientRegistry.registerSpecialModels();
     }
 
+    //unused
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
         if (true) return;

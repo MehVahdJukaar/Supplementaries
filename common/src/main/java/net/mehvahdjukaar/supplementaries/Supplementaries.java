@@ -52,8 +52,8 @@ public class Supplementaries {
 
         ConfigHandler.registerBus(bus);
 
-        ModRegistry.init();
         ModSounds.init();
+        ModRegistry.init();
         ModRecipes.init();
         ModParticles.init();
 

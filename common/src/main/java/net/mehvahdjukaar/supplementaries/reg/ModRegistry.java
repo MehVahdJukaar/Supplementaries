@@ -41,11 +41,8 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -562,7 +559,7 @@ public class ModRegistry {
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14,ModParticles.GREEN_FLAME));
+            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14, ModParticles.GREEN_FLAME));
     public static final Supplier<Block> SCONCE_WALL_GREEN = regBlock("sconce_wall_green", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
@@ -984,6 +981,7 @@ public class ModRegistry {
     public static final Supplier<Block> CHECKER_SLAB = regWithItem(CHECKER_SLAB_NAME, () -> new SlabBlock(
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+
     //vertical slab
     public static final Supplier<Block> CHECKER_VERTICAL_SLAB = regWithItem(CHECKER_VERTICAL_SLAB_NAME, () -> new VerticalSlabBlock(
                     BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())

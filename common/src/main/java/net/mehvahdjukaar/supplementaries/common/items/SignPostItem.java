@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.impl.items.WoodBasedItem;
 import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -34,23 +35,10 @@ import net.minecraft.world.level.material.Fluids;
 
 import javax.annotation.Nullable;
 
-public class SignPostItem extends Item {
-    public final WoodType woodType;
+public class SignPostItem extends WoodBasedItem {
 
     public SignPostItem(Properties properties, WoodType wood) {
-        super(properties);
-        woodType = wood;
-    }
-
-    @Override
-    protected boolean allowedIn(CreativeModeTab pCategory) {
-        if (woodType.planks.asItem().getItemCategory() == null) return false;
-        return super.allowedIn(pCategory);
-    }
-
-    @Override
-    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
-        return woodType.canBurn() ? 100 : 0;
+        super(properties, wood, 100);
     }
 
     private AttachType getAttachType(BlockState state) {
@@ -117,13 +105,13 @@ public class SignPostItem extends Item {
                 if (up) {
                     if (tile.up != up) {
                         tile.up = true;
-                        tile.woodTypeUp = this.woodType;
+                        tile.woodTypeUp = this.getBlockType();
                         tile.yawUp = 90 + r * -22.5f;
                         flag = true;
                     }
                 } else if (tile.down == up) {
                     tile.down = true;
-                    tile.woodTypeDown = this.woodType;
+                    tile.woodTypeDown = this.getBlockType();
                     tile.yawDown = 90 + r * -22.5f;
                     flag = true;
                 }
