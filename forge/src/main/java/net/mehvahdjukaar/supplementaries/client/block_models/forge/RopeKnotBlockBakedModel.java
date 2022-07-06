@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;

@@ -21,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
 
@@ -42,7 +41,7 @@ public class DoormatGui extends Screen {
                 .map(Component::getString).toArray(String[]::new);
     }
 
-    public static void open(DoormatBlockTile teSign){
+    public static void open(DoormatBlockTile teSign) {
         Minecraft.getInstance().setScreen(new DoormatGui(teSign));
     }
 
@@ -55,11 +54,11 @@ public class DoormatGui extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        this.scrollText((int)delta);
+        this.scrollText((int) delta);
         return true;
     }
 
-    public void scrollText(int amount){
+    public void scrollText(int amount) {
         this.editLine = Math.floorMod(this.editLine - amount, DoormatBlockTile.MAX_LINES);
         this.textInputUtil.setCursorToEnd();
     }
@@ -100,7 +99,7 @@ public class DoormatGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
         //this.tileSign.setEditable(true);
     }
 
@@ -124,7 +123,7 @@ public class DoormatGui extends Screen {
 
     @Override
 
-    public void render(PoseStack poseStack, int  mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         this.renderBackground(poseStack);
 
@@ -145,12 +144,12 @@ public class DoormatGui extends Screen {
         poseStack.pushPose();
 
         poseStack.mulPose(RotHlpr.Y90);
-        poseStack.translate(0, - 0.5, -0.5);
+        poseStack.translate(0, -0.5, -0.5);
         poseStack.mulPose(RotHlpr.Z90);
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
-        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 
@@ -158,7 +157,7 @@ public class DoormatGui extends Screen {
         //renders text
         boolean blink = this.updateCounter / 6 % 2 == 0;
 
-        poseStack.translate(0, 0.0625-2*0.010416667F, 0.0625 + 0.005);
+        poseStack.translate(0, 0.0625 - 2 * 0.010416667F, 0.0625 + 0.005);
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
         TextUtil.renderGuiText(this.tileSign.textHolder, this.cachedLines, this.font, poseStack, bufferSource,

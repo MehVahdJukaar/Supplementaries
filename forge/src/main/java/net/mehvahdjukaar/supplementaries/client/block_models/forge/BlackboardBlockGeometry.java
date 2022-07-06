@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.block.model.BlockModel;

@@ -39,7 +39,7 @@ public abstract class StrongholdRoomSconceMixin extends StructurePiece {
 
     @Inject(method = "postProcess", at = @At("TAIL"))
         public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource p_229728_, BoundingBox bb, ChunkPos p_229730_, BlockPos p_229731_, CallbackInfo ci) {
-        if (this.type == 0 && RegistryConfigs.Reg.HAS_STRONGHOLD_SCONCE) {
+        if (this.type == 0 && RegistryConfigs.HAS_STRONGHOLD_SCONCE) {
             this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.WEST), 4, 3, 5, bb);
             this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.EAST), 6, 3, 5, bb);
             this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 5, 3, 4, bb);

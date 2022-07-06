@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.impl.entities.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.moonlight.network.IExtraClientSpawnData;
@@ -37,11 +38,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
+
+import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
@@ -50,7 +49,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private float xRotInc;
     private float yRotInc;
     private float particleCooldown = 0;
-    public Lazy<Integer> light = Lazy.of(() -> {
+    public Supplier<Integer> light = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem) {
             Block b = ((BlockItem) item).getBlock();
@@ -73,10 +72,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setYRot(this.random.nextFloat() * 360);
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
-    }
-
-    public SlingshotProjectileEntity(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        this(ModRegistry.SLINGSHOT_PROJECTILE.get(), world);
     }
 
     //client factory
@@ -142,7 +137,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player player && player.getAbilities().mayBuild ) {
+        if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
             ItemStack stack = this.getItem();
             Item item = stack.getItem();

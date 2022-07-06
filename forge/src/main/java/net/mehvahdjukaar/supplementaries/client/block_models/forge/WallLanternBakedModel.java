@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;

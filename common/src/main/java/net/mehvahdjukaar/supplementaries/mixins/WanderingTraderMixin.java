@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -10,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//why cant they open them already shm
+//why can't they open them already shm
 @Mixin(WanderingTrader.class)
 public abstract class WanderingTraderMixin extends AbstractVillager {
 
@@ -23,6 +24,8 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
             at = {@At("RETURN")}
     )
     public void registerGoals(CallbackInfo ci) {
-        this.goalSelector.addGoal(3, new OpenDoorGoal(this, true));
+        if(ServerConfigs.cached.WANDERING_TRADER_DOORS) {
+            this.goalSelector.addGoal(3, new OpenDoorGoal(this, true));
+        }
     }
 }

@@ -6,6 +6,12 @@
   "client": [
   ],
   "mixins": [
+    "SelfFluteItemMixin",
+    "SelfCageItemMixin",
+    "SelfJarItemMixin",
+    "SelfFlagItemMixin",
+    "SelfBlackboardItemMixin",
+    "SelfBubbleBlockItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

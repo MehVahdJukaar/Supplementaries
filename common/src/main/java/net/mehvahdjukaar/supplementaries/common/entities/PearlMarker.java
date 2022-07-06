@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -134,7 +135,7 @@ public class PearlMarker extends Entity {
     @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
     }
 
 

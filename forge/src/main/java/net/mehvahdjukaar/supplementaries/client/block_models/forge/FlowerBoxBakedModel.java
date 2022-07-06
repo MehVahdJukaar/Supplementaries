@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

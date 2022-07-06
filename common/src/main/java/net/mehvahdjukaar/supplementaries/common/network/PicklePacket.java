@@ -27,7 +27,7 @@ public class PicklePacket implements Message {
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeBoolean(this.on);
-        this (pkt.playerID != null) {
+        if (this.playerID != null) {
             buf.writeUUID(this.playerID);
         }
     }

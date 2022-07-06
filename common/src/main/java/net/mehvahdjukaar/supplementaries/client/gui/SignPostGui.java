@@ -25,7 +25,6 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.stream.IntStream;
 
@@ -110,7 +109,7 @@ public class SignPostGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
         //this.tileSign.textHolder.setEditable(true);
     }
 
@@ -199,7 +198,7 @@ public class SignPostGui extends Screen {
         BlockState fence = this.tileSign.mimic;
         if (CompatHandler.framedblocks && tileSign.framed) fence = FramedSignPost.framedFence;
         if (fence != null) {
-            blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+            blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         }
         poseStack.popPose();
 

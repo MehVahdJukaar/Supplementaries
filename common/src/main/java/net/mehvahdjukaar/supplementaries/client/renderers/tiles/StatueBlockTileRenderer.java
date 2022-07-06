@@ -33,7 +33,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -169,7 +168,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             case CANDLE:
                 matrixStackIn.scale(1f, -1f, -1f);
                 matrixStackIn.translate(-0.5, -0.6875, -0.3125);
-                blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+                blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
                 break;
             default:
                 //holding

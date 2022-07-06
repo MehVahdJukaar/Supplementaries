@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BannerItem;
@@ -14,12 +12,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FlagItem extends WoodBasedBlockItem implements IColored {
@@ -37,7 +33,7 @@ public class FlagItem extends WoodBasedBlockItem implements IColored {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }
 
-    //TODO: readd
+    //TODO: turn this into a new cauldron interaction or add back
     /*
     @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -71,11 +67,6 @@ public class FlagItem extends WoodBasedBlockItem implements IColored {
         return super.useOn(context);
     }
      */
-
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, FlagItemRenderer::new);
-    }
 
     @Override
     public @Nullable Map<DyeColor, Supplier<? extends ItemLike>> getItemColorMap() {

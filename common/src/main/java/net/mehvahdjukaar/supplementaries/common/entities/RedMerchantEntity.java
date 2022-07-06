@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
@@ -36,8 +37,6 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -60,7 +59,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -138,7 +137,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         if (optionalint.isPresent() && player instanceof ServerPlayer) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                NetworkHandler.CHANNEL.sendToPlayerClient((ServerPlayer) player,
                         new ClientBoundSyncTradesPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTankProvider;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -21,16 +21,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class GobletBlockTile extends BlockEntity implements ISoftFluidTank, IOwnerProtected {
+public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvider, IOwnerProtected {
 
     private UUID owner = null;
 
-    public SoftFluidTank fluidTank;
+    public ISoftFluidTank fluidTank;
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
         int CAPACITY = 1;
-        this.fluidTank = new SoftFluidTank(CAPACITY);
+        this.fluidTank = ISoftFluidTank.create(CAPACITY);
     }
 
     @Nullable
@@ -106,7 +106,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTank, IOwn
     }
 
     @Override
-    public SoftFluidTank getSoftFluidTank() {
+    public ISoftFluidTank getSoftFluidTank() {
         return this.fluidTank;
     }
 }

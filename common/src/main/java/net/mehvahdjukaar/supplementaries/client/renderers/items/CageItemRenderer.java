@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.UUID;
 
@@ -63,7 +62,7 @@ public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
         matrixStackIn.pushPose();
         BlockItem item = ((BlockItem) stack.getItem());
         BlockState state = item.getBlock().defaultBlockState();
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         matrixStackIn.popPose();
 
         CompoundTag tag = BlockItem.getBlockEntityData(stack);

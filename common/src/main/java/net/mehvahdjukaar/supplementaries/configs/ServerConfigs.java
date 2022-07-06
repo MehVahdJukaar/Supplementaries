@@ -164,10 +164,13 @@ public class ServerConfigs {
         public static Supplier<Boolean> SKULL_PILES;
         public static Supplier<Boolean> SKULL_CANDLES;
         public static Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
+        public static Supplier<Boolean> WANDERING_TRADER_DOORS;
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
+            WANDERING_TRADER_DOORS  = builder.comment("Allows traders to open doors (because they couldnt aparently)")
+                            .define("traders_open_doors",true);
 
             builder.push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
@@ -741,6 +744,7 @@ public class ServerConfigs {
     public static class cached {
 
 
+
         //items
         public static String ROPE_ARROW_ROPE;
         public static Holder.Reference<Block> ROPE_ARROW_BLOCK;
@@ -791,6 +795,7 @@ public class ServerConfigs {
         public static boolean SKULL_PILES;
         public static boolean SKULL_CANDLES;
         public static boolean SKULL_CANDLES_MULTIPLE;
+        public static boolean WANDERING_TRADER_DOORS;
         //spawns
         public static int FIREFLY_MIN;
         public static int FIREFLY_MAX;
@@ -889,6 +894,7 @@ public class ServerConfigs {
             SKULL_PILES = tweaks.SKULL_PILES.get();
             SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
             SKULL_CANDLES_MULTIPLE = tweaks.SKULL_CANDLES_MULTIPLE.get();
+            WANDERING_TRADER_DOORS = tweaks.WANDERING_TRADER_DOORS.get();
 
             BUBBLE_BLOWER_COST = item.BUBBLE_BLOWER_COST.get();
             WRENCH_BYPASS = item.WRENCH_BYPASS.get();

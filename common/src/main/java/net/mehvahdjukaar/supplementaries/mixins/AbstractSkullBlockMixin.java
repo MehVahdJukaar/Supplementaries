@@ -18,8 +18,13 @@ public abstract class AbstractSkullBlockMixin extends BaseEntityBlock {
         super(properties);
     }
 
-    @Override
+    //@Override
     public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, @Nullable Entity entity) {
+        return SoundType.BONE_BLOCK;
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState state) {
         return SoundType.BONE_BLOCK;
     }
 

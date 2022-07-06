@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer<CandleSkullBlockTile> {
 
@@ -29,10 +28,10 @@ public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer
                     .setValue(CandleBlock.CANDLES, blockstate.getValue(CandleBlock.CANDLES));
 
             float yaw = -22.5F * (float) (blockstate.getValue(SkullBlock.ROTATION));
-            this.renderWax(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()),yaw);
+            this.renderWax(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()), yaw);
 
-            poseStack.translate(0,0.5, 0);
-            blockRenderer.renderSingleBlock(candle, poseStack, buffer, pCombinedLight, pCombinedOverlay, EmptyModelData.INSTANCE);
+            poseStack.translate(0, 0.5, 0);
+            blockRenderer.renderSingleBlock(candle, poseStack, buffer, pCombinedLight, pCombinedOverlay);
         }
     }
 

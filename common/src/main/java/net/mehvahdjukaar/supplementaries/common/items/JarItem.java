@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.util.PotionNBTHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
@@ -14,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -41,12 +39,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.IItemRenderProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 public class JarItem extends AbstractMobContainerItem {
 
@@ -199,12 +195,12 @@ public class JarItem extends AbstractMobContainerItem {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null && entity instanceof Player) {
+        if (tag != null && entity instanceof Player player) {
             JarBlockTile temp = new JarBlockTile(entity.getOnPos(), ModRegistry.JAR.get().defaultBlockState());
             temp.load(tag);
-            SoftFluidTank fh = temp.getSoftFluidTank();
+            ISoftFluidTank fh = temp.getSoftFluidTank();
             if (fh.containsFood()) {
-                if (fh.tryDrinkUpFluid((Player) entity, world)) {
+                if (fh.tryDrinkUpFluid(player, world)) {
                     CompoundTag newTag = new CompoundTag();
                     temp.saveAdditional(newTag);
                     stack.addTagElement("BlockEntityTag", newTag);
@@ -233,7 +229,7 @@ public class JarItem extends AbstractMobContainerItem {
                 if (DUMMY_TILE == null)
                     DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                 DUMMY_TILE.load(tag);
-                SoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
+                ISoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
@@ -248,11 +244,6 @@ public class JarItem extends AbstractMobContainerItem {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, JarItemRenderer::new);
     }
 
     @Override

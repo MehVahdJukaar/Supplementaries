@@ -139,18 +139,7 @@ public class ClientRegistry {
         ForgeModelBakery.addSpecialModel(BOAT_MODEL);
     }
 
-    public static void registerISTER(Consumer<IItemRenderProperties> consumer, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> factory) {
-        consumer.accept(new IItemRenderProperties() {
-            final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(
-                    () -> factory.apply(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-                            Minecraft.getInstance().getEntityModels()));
 
-            @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return renderer.get();
-            }
-        });
-    }
 
     //unused
     public static class SlimeLayer extends RenderType {

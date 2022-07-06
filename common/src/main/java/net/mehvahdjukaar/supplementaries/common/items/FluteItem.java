@@ -7,10 +7,8 @@ import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.moonlight.math.MthUtils;
 import net.mehvahdjukaar.moonlight.misc.DualWeildState;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -34,11 +32,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class FluteItem extends InstrumentItem implements IThirdPersonAnimationProvider,
         IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider {
@@ -343,10 +339,6 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         }
     }
 
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, FluteItemRenderer::new);
-    }
     //TODO: fix animation when shifting
 
 }

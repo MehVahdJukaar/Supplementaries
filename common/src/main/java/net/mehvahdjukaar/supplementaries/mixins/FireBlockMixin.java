@@ -19,6 +19,8 @@ public abstract class FireBlockMixin {
     @Unique
     private BlockState bs;
 
+    //TODO: add an event and move to lib
+
     @Inject(method = "tryCatchFire",
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z",

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 
 import com.google.gson.JsonDeserializationContext;
@@ -8,20 +8,16 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
-public class BlackboardBlockLoader implements IModelLoader<BlackboardBlockGeometry> {
+public class HangingPotLoader implements IModelLoader<HangingPotGeometry> {
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-
     }
 
     @Override
-    public BlackboardBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
-
+    public HangingPotGeometry read(JsonDeserializationContext context, JsonObject json) {
         BlockModel model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
-                .getAdapter(BlockModel.class).fromJsonTree(json.get("model"));
-        //SimpleBlockModel model = SimpleBlockModel.deserialize(context, json);
-        return new BlackboardBlockGeometry(model);
+                .getAdapter(BlockModel.class).fromJsonTree(json.get("rope"));
+        return new HangingPotGeometry(model);
     }
-
 }

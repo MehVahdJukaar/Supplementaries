@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 
 import com.google.gson.JsonDeserializationContext;
@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
-public class FlowerBoxLoader implements IModelLoader<FlowerBoxGeometry> {
+public class FrameBlockLoader  implements IModelLoader<FrameBlockGeometry> {
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -16,10 +16,10 @@ public class FlowerBoxLoader implements IModelLoader<FlowerBoxGeometry> {
     }
 
     @Override
-    public FlowerBoxGeometry read(JsonDeserializationContext context, JsonObject json) {
+    public FrameBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
         BlockModel model;
         model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
-                .getAdapter(BlockModel.class).fromJsonTree(json.get("box"));
-        return new FlowerBoxGeometry(model);
+                .getAdapter(BlockModel.class).fromJsonTree(json.get("overlay"));
+        return new FrameBlockGeometry(model);
     }
 }

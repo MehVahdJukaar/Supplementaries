@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -72,14 +72,14 @@ public interface ILightable {
     default boolean interactWithProjectile(Level level, BlockState state, Projectile projectile, BlockPos pos) {
         if (projectile.isOnFire()) {
             Entity entity = projectile.getOwner();
-            if (entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity)) {
+            if (entity == null || entity instanceof Player || PlatformHelper.isMobGriefingOn(level, entity)) {
                 if (lightUp(projectile, state, pos, level, FireSound.FLAMING_ARROW)) {
                     return true;
                 }
             }
         } else if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
             Entity entity = projectile.getOwner();
-            boolean flag = entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity);
+            boolean flag = entity == null || entity instanceof Player || PlatformHelper.isMobGriefingOn(level, entity);
             if (flag && extinguish(projectile, state, pos, level)) {
                 return true;
             }
@@ -114,9 +114,12 @@ public interface ILightable {
 
         public void play(LevelAccessor world, BlockPos pos) {
             switch (this) {
-                case FIRE_CHANGE -> world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
-                case FLAMING_ARROW -> world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.5F, 1.4F);
-                case FLINT_AND_STEEL -> world.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
+                case FIRE_CHANGE ->
+                        world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F + 1.0F);
+                case FLAMING_ARROW ->
+                        world.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.5F, 1.4F);
+                case FLINT_AND_STEEL ->
+                        world.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
             }
         }
     }

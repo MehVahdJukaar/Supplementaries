@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
@@ -31,7 +30,7 @@ public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
         CompoundTag com = stack.getTagElement("BlockEntityTag");
         long[] packed = new long[16];

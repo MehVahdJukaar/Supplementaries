@@ -14,9 +14,6 @@ public class BubbleBlockItem extends BlockItem {
 
     }
 
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, BubbleBlockItemRenderer::new);
-    }
+    //need new class for ISTER
 
 }

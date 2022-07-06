@@ -29,8 +29,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 public class RopeArrowEntity extends AbstractArrow {
     private int charges = 0;
@@ -54,14 +52,9 @@ public class RopeArrowEntity extends AbstractArrow {
         super(ModRegistry.ROPE_ARROW.get(), x, y, z, worldIn);
     }
 
-    public RopeArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModRegistry.ROPE_ARROW.get(), world);
-    }
-
     @Override
     public Packet<?> getAddEntityPacket() {
         return PlatformHelper.getEntitySpawnPacket(this);
-        //return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

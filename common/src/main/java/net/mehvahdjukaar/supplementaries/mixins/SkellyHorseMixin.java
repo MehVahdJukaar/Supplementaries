@@ -160,16 +160,15 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    public void handleEntityEvent(byte p_70103_1_) {
-        if (p_70103_1_ == 16) {
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 16) {
             if (!this.isSilent()) {
                 this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
 
         } else {
-            super.handleEntityEvent(p_70103_1_);
+            super.handleEntityEvent(id);
         }
     }
 

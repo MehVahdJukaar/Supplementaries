@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.impl.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -33,23 +33,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTank {
+public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
 
     private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
 
     public final MobContainer mobContainer;
-    public final SoftFluidTank fluidHolder;
+    public final ISoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state);
-        this.fluidHolder = new SoftFluidTank(CAPACITY);
+        this.fluidHolder = ISoftFluidTank.create(CAPACITY);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight());
     }
 
     @Override
     public void updateTileOnInventoryChanged() {
-        this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
+        this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
         int light = this.fluidHolder.getFluid().getLuminosity();
         if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
@@ -234,7 +234,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public SoftFluidTank getSoftFluidTank() {
+    public ISoftFluidTank getSoftFluidTank() {
         return this.fluidHolder;
     }
 

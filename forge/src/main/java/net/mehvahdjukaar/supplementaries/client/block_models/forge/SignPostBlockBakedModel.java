@@ -1,9 +1,10 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -18,18 +19,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class FrameBlockBakedModel implements IDynamicBakedModel {
-    private final BakedModel overlay;
+public class SignPostBlockBakedModel implements IDynamicBakedModel {
     private final BlockModelShaper blockModelShaper;
 
-    public FrameBlockBakedModel(BakedModel overlay) {
-        this.overlay = overlay;
+    public SignPostBlockBakedModel() {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
@@ -37,36 +37,37 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
 
-        //always on cutout layer
+        try {
+            BlockState mimic = extraData.getData(BlockProperties.MIMIC);
+            Boolean isFramed = extraData.getData(BlockProperties.FRAMED);
 
-        List<BakedQuad> quads = new ArrayList<>();
+            boolean framed = CompatHandler.framedblocks && (isFramed!=null && isFramed);
 
-        if (state != null) {
-            try {
-                BlockState mimic = extraData.getData(BlockProperties.MIMIC);
-                if (mimic == null || (mimic.isAir())) {
-                    BakedModel model = blockModelShaper.getBlockModel(state.setValue(FrameBlock.HAS_BLOCK, false));
-                    quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));
-                    return quads;
+            //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
+            //always solid.
+
+            if (mimic != null && !mimic.isAir()) {
+
+                IModelData data;
+                if (framed) {
+                    data = FramedSignPost.getModelData(mimic);
+                    mimic = FramedSignPost.framedFence;
+                } else {
+                    data = EmptyModelData.INSTANCE;
                 }
+                BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                if (!(mimic.getBlock() instanceof MimicBlock)) {
-                    BakedModel model = blockModelShaper.getBlockModel(mimic);
+                return model.getQuads(mimic, side, rand, data);
 
-                    quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));
-                }
-            } catch (Exception ignored) {
-            }
 
-            //IBakedModel overlay = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(state.setValue(FrameBlock.TILE,2));
-            try {
-                quads.addAll(overlay.getQuads(state, side, rand, EmptyModelData.INSTANCE));
-            } catch (Exception ignored) {
             }
         }
-
-        return quads;
+        catch (Exception ignored){
+            int a = 1;
+        }
+        return Collections.emptyList();
     }
+
 
     @Override
     public boolean useAmbientOcclusion() {
@@ -94,6 +95,20 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
+        BlockState mimic = data.getData(SignPostBlockTile.MIMIC);
+        if (mimic != null && !mimic.isAir()) {
+
+            BakedModel model = blockModelShaper.getBlockModel(mimic);
+            try {
+                return model.getParticleIcon();
+            } catch (Exception ignored) {}
+
+        }
+        return getParticleIcon();
+    }
+
+    @Override
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
@@ -102,6 +117,4 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
     public ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
-
-
 }

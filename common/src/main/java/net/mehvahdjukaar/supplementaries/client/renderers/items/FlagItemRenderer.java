@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class FlagItemRenderer extends BlockEntityWithoutLevelRenderer {
         matrixStackIn.pushPose();
         matrixStackIn.translate(-0.71875, 0, 0);
 
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         CompoundTag com = stack.getTagElement("BlockEntityTag");
         ListTag listnbt = null;
         if (com != null && com.contains("Patterns")) {

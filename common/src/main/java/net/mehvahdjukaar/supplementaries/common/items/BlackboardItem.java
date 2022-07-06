@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -12,21 +10,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class BlackboardItem extends BlockItem {
     public BlackboardItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, BlackboardItemRenderer::new);
     }
 
     @Override

@@ -20,41 +20,6 @@ public class SupplementariesClient {
 
     }
 
-    @FunctionalInterface
-    public interface EntityRendererReg {
-        <E extends Entity> void register(EntityType<? extends E> entity, EntityRendererProvider<E> renderer);
-    }
-
-    public static void onRegisterEntityRenderTypes(EntityRendererReg event) {
-
-    }
-
-    @FunctionalInterface
-    public interface ParticleRendererReg {
-        <T extends ParticleOptions> void register(ParticleType<T> type, Function<SpriteSet, ParticleProvider<T>> particleFactory);
-    }
-
-    public static void onRegisterParticles(ParticleRendererReg event) {
-
-    }
-
-
-    @FunctionalInterface
-    public interface BlockColorReg {
-        void register(BlockColor color, Block block);
-    }
-
-    public static void onRegisterBlockColors(BlockColorReg event) {
-
-    }
-
-    @FunctionalInterface
-    public interface ItemColorReg {
-        void register(ItemColor color, ItemLike... block);
-    }
-
-    public static void onRegisterItemColors(ItemColorReg event) {
-
-    }
+    //TODO: move client setup here
 
 }

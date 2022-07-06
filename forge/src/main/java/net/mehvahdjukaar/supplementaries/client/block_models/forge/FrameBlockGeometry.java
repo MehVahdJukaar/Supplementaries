@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -13,22 +13,22 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public class FlowerBoxGeometry implements IModelGeometry<FlowerBoxGeometry> {
+public class FrameBlockGeometry implements IModelGeometry<FrameBlockGeometry> {
 
-    private final BlockModel box;
+    private final BlockModel overlay;
 
-    protected FlowerBoxGeometry(BlockModel box) {
-        this.box = box;
+    protected FrameBlockGeometry(BlockModel overlay) {
+        this.overlay = overlay;
     }
 
     @Override
     public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
-        BakedModel bakedOverlay = this.box.bake(bakery, box, spriteGetter, modelTransform, modelLocation, true);
-        return new FlowerBoxBakedModel(bakedOverlay);
+        BakedModel bakedOverlay = this.overlay.bake(bakery, overlay, spriteGetter, modelTransform, modelLocation, true);
+        return new FrameBlockBakedModel(bakedOverlay);
     }
 
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return box.getMaterials(modelGetter, missingTextureErrors);
+        return overlay.getMaterials(modelGetter, missingTextureErrors);
     }
 }

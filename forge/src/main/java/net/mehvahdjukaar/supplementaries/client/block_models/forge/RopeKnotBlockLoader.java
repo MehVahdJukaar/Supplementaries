@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models;
+package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 
 import com.google.gson.JsonDeserializationContext;
@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 
-public class WallLanternLoader implements IModelLoader<WallLanternGeometry> {
+public class RopeKnotBlockLoader implements IModelLoader<RopeKnotBlockGeometry> {
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -16,10 +16,10 @@ public class WallLanternLoader implements IModelLoader<WallLanternGeometry> {
     }
 
     @Override
-    public WallLanternGeometry read(JsonDeserializationContext context, JsonObject json) {
+    public RopeKnotBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
         BlockModel model;
         model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
-                .getAdapter(BlockModel.class).fromJsonTree(json.get("support"));
-        return new WallLanternGeometry(model);
+                .getAdapter(BlockModel.class).fromJsonTree(json.get("knot"));
+        return new RopeKnotBlockGeometry(model);
     }
 }

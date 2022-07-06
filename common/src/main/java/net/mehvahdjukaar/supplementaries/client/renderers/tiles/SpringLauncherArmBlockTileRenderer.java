@@ -14,7 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 
 public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<SpringLauncherArmBlockTile> {
@@ -41,7 +40,7 @@ public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<S
         boolean flag1 = tile.getExtending() == tile.age < 2;
         BlockState state = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState().setValue(SpringLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
-        blockRenderer.renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        blockRenderer.renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         matrixStackIn.popPose();
 
     }
