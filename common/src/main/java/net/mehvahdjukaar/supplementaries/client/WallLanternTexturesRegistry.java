@@ -13,13 +13,13 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListene
 
     private static void init() {
         ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
-        for (Block i : ForgeRegistries.BLOCKS) {
+        for (Block i : Registry.BLOCK) {
             if (CommonUtil.isLanternBlock(i)) builder.add(i);
         }
         POSSIBLE_LANTERNS = builder.build();

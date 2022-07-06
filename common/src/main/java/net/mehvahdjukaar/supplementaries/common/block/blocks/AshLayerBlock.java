@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +40,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class AshLayerBlock extends FallingBlock {
         BlockPos pos = pHit.getBlockPos();
         if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
             Entity entity = projectile.getOwner();
-            boolean flag = entity == null || entity instanceof Player || ForgeEventFactory.getMobGriefingEvent(level, entity);
+            boolean flag = entity == null || entity instanceof Player || PlatformHelper.isMobGriefingOn(level, entity);
             if (flag) {
                 this.removeOneLayer(state, pos, level);
             }
@@ -216,7 +217,7 @@ public class AshLayerBlock extends FallingBlock {
             if (count > 0) {
                 int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
                 if (layers != 0) {
-                    ((ServerLevel) level).sendParticles(ModRegistry.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
+                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
                             (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
                             0.5D, 0.5D, 0.5D, 0.0D);
                     return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
@@ -228,7 +229,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     private void addParticle(Entity entity, BlockPos pos, Level level, int layers, float upSpeed) {
-        level.addParticle(ModRegistry.ASH_PARTICLE.get(), entity.getX(), pos.getY() + layers * (1 / 8f), entity.getZ(),
+        level.addParticle(ModParticles.ASH_PARTICLE.get(), entity.getX(), pos.getY() + layers * (1 / 8f), entity.getZ(),
                 Mth.randomBetween(level.random, -1.0F, 1.0F) * 0.083333336F,
                 upSpeed,
                 Mth.randomBetween(level.random, -1.0F, 1.0F) * 0.083333336F);

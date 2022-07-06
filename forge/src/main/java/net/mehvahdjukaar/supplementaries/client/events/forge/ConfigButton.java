@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui.widgets;
+package net.mehvahdjukaar.supplementaries.client.events.forge;
 
 
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;

@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.Nullable;
 
 public class LabelEntity extends HangingEntity {
@@ -46,9 +45,6 @@ public class LabelEntity extends HangingEntity {
         this((EntityType<? extends HangingEntity>) null, world);
     }
 
-    public LabelEntity(PlayMessages.SpawnEntity spawnEntity, Level world) {
-        this(world);
-    }
 
     public LabelEntity(Level level, BlockPos pos, Direction direction) {
         super(ModRegistry.LABEL.get(), level, pos);
@@ -131,7 +127,7 @@ public class LabelEntity extends HangingEntity {
             if (!itemstack.isEmpty() && itemstack.getEntityRepresentation() != this) {
                 itemstack.setEntityRepresentation(this);
             }
-        }else if(pKey.equals(ATTACHMENT)){
+        } else if (pKey.equals(ATTACHMENT)) {
             this.recalculateBoundingBox();
         }
     }

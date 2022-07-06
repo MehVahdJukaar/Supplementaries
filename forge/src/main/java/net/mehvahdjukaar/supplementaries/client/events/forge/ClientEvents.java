@@ -1,9 +1,9 @@
-package net.mehvahdjukaar.supplementaries.common.events;
+package net.mehvahdjukaar.supplementaries.client.events.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.gui.widgets.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkTooltipPlugin;
@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
@@ -57,12 +56,7 @@ public class ClientEvents {
     }
 
 
-    @SubscribeEvent
-    public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
-        if (ClientConfigs.cached.CONFIG_BUTTON && CompatHandler.configured) {
-            ConfigButton.setupConfigButton(event);
-        }
-    }
+
 
     private static float partialTicks;
 
@@ -107,6 +101,14 @@ public class ClientEvents {
                 }
                 event.setRoll(event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.cached.ROPE_WOBBLE_AMPLITUDE);
             }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onGuiInit(ScreenEvent.InitScreenEvent event) {
+        if (ClientConfigs.cached.CONFIG_BUTTON && CompatHandler.configured) {
+            ConfigButton.setupConfigButton(event);
         }
     }
 

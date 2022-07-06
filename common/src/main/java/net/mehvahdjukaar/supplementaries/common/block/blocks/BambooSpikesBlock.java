@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.base.Suppliers;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
@@ -7,8 +9,8 @@ import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,14 +51,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.extensions.IForgeBlock;
-import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
-public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, IForgeBlock, EntityBlock, ISoapWashable {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, ISoapWashable {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -153,9 +154,9 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             if (!worldIn.isClientSide) {
                 if (up && entityIn instanceof Player && entityIn.isShiftKeyDown()) return;
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 3 : 1.5f;
-                entityIn.hurt(CommonUtil.SPIKE_DAMAGE, damage);
+                entityIn.hurt(ModDamageSources.SPIKE_DAMAGE, damage);
                 if (state.getValue(TIPPED)) {
-                    if ( worldIn.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
+                    if (worldIn.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
                         if (te.interactWithEntity(le, worldIn)) {
                             worldIn.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
                         }
@@ -165,12 +166,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
         return BlockPathTypes.DAMAGE_OTHER;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
         return BlockPathTypes.DAMAGE_OTHER;
     }
@@ -227,7 +230,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    public Lazy<Boolean> tippedEnabled = Lazy.of(() -> RegistryConfigs.Reg.TIPPED_SPIKES_ENABLED.get());
+    public Supplier<Boolean> tippedEnabled = Suppliers.memoize(() -> RegistryConfigs.TIPPED_SPIKES_ENABLED.get());
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
