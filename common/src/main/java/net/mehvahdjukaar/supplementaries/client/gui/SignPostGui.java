@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -50,7 +50,7 @@ public class SignPostGui extends Screen {
         editLine = !this.tileSign.up ? 1 : 0;
     }
 
-    public static void open(SignPostBlockTile teSign){
+    public static void open(SignPostBlockTile teSign) {
         Minecraft.getInstance().setScreen(new SignPostGui(teSign));
     }
 

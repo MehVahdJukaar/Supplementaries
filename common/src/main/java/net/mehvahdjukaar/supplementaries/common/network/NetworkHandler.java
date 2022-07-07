@@ -3,13 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class NetworkHandler {
 
@@ -76,6 +69,7 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::new);
 
+        //move to forge since we dont have render events
         CHANNEL.register(PicklePacket.class, PicklePacket::buffer, PicklePacket::new);
 
 
@@ -87,25 +81,6 @@ public class NetworkHandler {
         CHANNEL.register(OpenConfigsPacket.class, OpenConfigsPacket::buffer,
                 OpenConfigsPacket::new, OpenConfigsPacket::handler);
 
-
     }
-
-    //add these to channel class
-
-    public static void sendToAllTrackingClients(Entity entity, ServerLevel world, Message message) {
-        world.getChunkSource().broadcast(entity, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
-    }
-
-    public static void sendToAllInRangeClients(BlockPos pos, ServerLevel level, double distance, Message message) {
-        MinecraftServer currentServer = ServerLifecycleHooks.getCurrentServer();
-        if (currentServer != null) {
-            PlayerList players = currentServer.getPlayerList();
-            var dimension = level.dimension();
-            players.broadcast(null, pos.getX(), pos.getY(), pos.getZ(),
-                    distance,
-                    dimension, INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_CLIENT));
-        }
-    }
-
 
 }

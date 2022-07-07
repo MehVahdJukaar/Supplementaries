@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

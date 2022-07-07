@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
+package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTankProvider;
+import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -35,7 +35,8 @@ import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
 
-    private final int CAPACITY = ServerConfigs.cached.JAR_CAPACITY;
+    //static otherwise causes issues
+    private final int CAPACITY = ServerConfigs.Blocks.JAR_CAPACITY.get();
 
     public final MobContainer mobContainer;
     public final ISoftFluidTank fluidHolder;
@@ -80,7 +81,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (ServerConfigs.cached.JAR_EAT) {
+            if (ServerConfigs.Blocks.JAR_EAT.get()) {
                 if (this.fluidHolder.tryDrinkUpFluid(player, level)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
@@ -164,7 +165,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     //can this item be added?
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if (ServerConfigs.cached.JAR_COOKIES && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
+        if (ServerConfigs.Blocks.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
@@ -211,7 +212,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        if (!ServerConfigs.cached.JAR_COOKIES) return false;
+        if (!ServerConfigs.Blocks.JAR_COOKIES.get()) return false;
         return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
@@ -240,6 +241,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public boolean canInteractWithSoftFluidTank() {
-        return ServerConfigs.cached.JAR_LIQUIDS && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
+        return ServerConfigs.Blocks.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 }

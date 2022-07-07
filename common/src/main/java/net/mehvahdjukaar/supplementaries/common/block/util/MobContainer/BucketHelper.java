@@ -1,14 +1,14 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
+package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -19,7 +19,8 @@ public class BucketHelper {
     //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
     private static final BiMap<Item, String> BUCKET_TO_MOB_MAP = HashBiMap.create();
 
-    private static Method FISH_TYPE = null;
+    private static Method FISH_TYPE = ObfuscationReflectionHelper.findMethod(MobBucketItem.class, "getFishType");
+    ;
 
     //only use this to access the map
     public static @Nullable
@@ -27,23 +28,19 @@ public class BucketHelper {
         if (BUCKET_TO_MOB_MAP.containsKey(bucket)) {
             String mobId = BUCKET_TO_MOB_MAP.get(bucket);
             ResourceLocation res = new ResourceLocation(mobId);
-            if (ForgeRegistries.ENTITIES.containsKey(res)) {
-                EntityType<?> en = ForgeRegistries.ENTITIES.getValue(res);
-                if (en != null) {
-                    return ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mobId));
-                }
-            }
+            var opt = Registry.ENTITY_TYPE.getOptional(res);
+            if (opt.isPresent()) {
+                return opt.get();
+            } else return Registry.ENTITY_TYPE.get(new ResourceLocation(mobId));
         } else if (bucket instanceof MobBucketItem bucketItem) {
             try {
-                if (FISH_TYPE == null) {
-                    FISH_TYPE = ObfuscationReflectionHelper.findMethod(MobBucketItem.class, "getFishType");
-                }
                 EntityType<?> en = (EntityType<?>) FISH_TYPE.invoke(bucketItem);
                 if (en != null) {
                     BUCKET_TO_MOB_MAP.putIfAbsent(bucket, Utils.getID(en).toString());
                     return en;
                 }
             } catch (Exception ignored) {
+                int error = 1;
             }
         }
         //try parsing
@@ -59,12 +56,11 @@ public class BucketHelper {
             }
             if (mobId != null) {
                 ResourceLocation res = new ResourceLocation(mobId);
-                if (ForgeRegistries.ENTITIES.containsKey(res)) {
-                    EntityType<?> en = ForgeRegistries.ENTITIES.getValue(res);
-                    if (en != null) {
-                        BUCKET_TO_MOB_MAP.putIfAbsent(bucket, Utils.getID(en).toString());
-                        return en;
-                    }
+                var opt = Registry.ENTITY_TYPE.getOptional(res);
+                if (opt.isPresent()) {
+                    EntityType<?> en = opt.get();
+                    BUCKET_TO_MOB_MAP.putIfAbsent(bucket, Utils.getID(en).toString());
+                    return en;
                 }
             }
         }
