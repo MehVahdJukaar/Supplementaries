@@ -28,6 +28,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -158,7 +159,7 @@ public class ItemsOverrideHandler {
                 }
             }
         }
-        for (Block block : ForgeRegistries.BLOCKS) {
+        for (Block block : Registry.BLOCK) {
             for (BlockInteractedWithOverride b : actionOnBlock) {
                 if (b.appliesToBlock(block)) {
                     BLOCK_USE_OVERRIDES.put(block, b);
@@ -168,53 +169,46 @@ public class ItemsOverrideHandler {
         }
     }
 
-    public static void tryHighPriorityClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
+    public static InteractionResult tryHighPriorityClickedBlockOverride(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
 
         ItemUseOnBlockOverride override = HP_ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), false);
-            if (result != InteractionResult.PASS) {
-                event.setCanceled(true);
-                event.setCancellationResult(result);
-            }
+            return override.tryPerformingAction(level, player, hand, stack, hit, false);
         }
+        return InteractionResult.PASS;
     }
 
 
     //item clicked on block overrides
-    public static void tryPerformClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
+    public static InteractionResult tryPerformClickedBlockOverride(Player player, Level level, InteractionHand hand, BlockHitResult hit, boolean isRanged) {
+        ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        Player player = event.getPlayer();
 
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), player, event.getHand(), stack, event.getHitVec(), isRanged);
+            InteractionResult result = override.tryPerformingAction(level, player, hand, stack,hit, isRanged);
             if (result != InteractionResult.PASS) {
-                event.setCanceled(true);
-                event.setCancellationResult(result);
-                return;
+                return result;
             }
         }
         //block overrides behaviors (work for any item)
         if (!player.isShiftKeyDown()) {
-            Level world = event.getWorld();
-            BlockPos pos = event.getPos();
-            BlockState state = world.getBlockState(pos);
+            BlockPos pos = hit.getBlockPos();
+            BlockState state = level.getBlockState(pos);
 
             BlockInteractedWithOverride o = BLOCK_USE_OVERRIDES.get(state.getBlock());
             if (o != null && o.isEnabled()) {
 
-                InteractionResult result = o.tryPerformingAction(state, pos, world, player, event.getHand(), stack, event.getHitVec());
-                if (result != InteractionResult.PASS) {
-                    event.setCanceled(true);
-                    event.setCancellationResult(result);
-                }
+                return o.tryPerformingAction(state, pos, level, player,hand, stack, hit);
             }
         }
-        //TODO: add             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
+        return InteractionResult.PASS;
+        //not sure if this is needed
+        //CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, po, heldStack);
     }
 
     //item clicked overrides

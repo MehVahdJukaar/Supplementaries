@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
@@ -31,18 +32,21 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -61,26 +65,25 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.Set;
 
 
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEvents {
 
-    //high priority event to override other wall lanterns
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onRightClickBlockHigh(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getPlayer();
-        if (!player.isSpectator() && !event.isCanceled()) {
-            ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(event, event.getItemStack());
+    //block placement should stay low in priority to allow other more important mod interaction that use the event
+    @EventCalled
+    public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+        if (!player.isSpectator()) {
+           return ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, hand, hitResult, false);
         }
+        return InteractionResult.PASS;
     }
 
-    //block placement should stay low in priority to allow other more important mod interaction that use the event
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getPlayer();
-        if (!player.isSpectator() && !event.isCanceled()) {
-            ItemsOverrideHandler.tryPerformClickedBlockOverride(event, event.getItemStack(), false);
+    @EventCalled
+    public static InteractionResult onRightClickBlockHP(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+        if (!player.isSpectator()) {
+           return ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(player, level, hand, hitResult);
         }
+        return InteractionResult.PASS;
     }
+
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
