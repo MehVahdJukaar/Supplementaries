@@ -34,6 +34,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
@@ -70,7 +71,7 @@ public class ServerEvents {
     //block placement should stay low in priority to allow other more important mod interaction that use the event
     @EventCalled
     public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
-        if (!player.isSpectator()) {
+        if (!player.isSpectator()) { //is this check even needed?
            return ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, hand, hitResult, false);
         }
         return InteractionResult.PASS;
@@ -85,11 +86,14 @@ public class ServerEvents {
     }
 
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        Player playerIn = event.getPlayer();
 
-        ItemsOverrideHandler.tryPerformClickedItemOverride(event, playerIn.getItemInHand(event.getHand()));
+
+    public static InteractionResultHolder<ItemStack> onUseItem(Player player, Level level, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!player.isSpectator()) {
+            return ItemsOverrideHandler.tryPerformClickedItemOverride(player, level, hand, stack);
+        }
+        return InteractionResultHolder.pass(stack);
     }
 
     //TODO: soap tool event

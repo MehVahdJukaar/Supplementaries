@@ -35,4 +35,11 @@ public class ServerEventsImpl {
             }
         }
     }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onUseItem(PlayerInteractEvent.RightClickItem event){
+        if(!event.isCanceled()){
+            ServerEvents.onUseItem(event.getPlayer(),event.getWorld(),event.getHand());
+        }
+    }
 }

@@ -173,7 +173,7 @@ public class CapturedMobsHelper {
     public static void refreshVisuals() {
         TYPES.clear();
 
-        List<? extends List<String>> config = ClientConfigs.block.CAPTURED_MOBS_PROPERTIES.get();
+        List<? extends List<String>> config = ClientConfigs.Blocks.CAPTURED_MOBS_PROPERTIES.get();
         for (List<String> l : config) {
             try {
                 int size = l.size();

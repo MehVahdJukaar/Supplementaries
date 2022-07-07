@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +14,7 @@ public class ServerEventsImpl {
     public static void init(){
         UseBlockCallback.EVENT.register(ServerEvents::onRightClickBlockHP);
         UseBlockCallback.EVENT.register(ServerEvents::onRightClickBlock);
+        UseItemCallback.EVENT.register(ServerEvents::onUseItem);
 
     }
 

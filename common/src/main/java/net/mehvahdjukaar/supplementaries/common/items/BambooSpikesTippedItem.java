@@ -76,7 +76,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if(ClientConfigs.block.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+        if(ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
             if (this.allowedIn(group)) {
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));
