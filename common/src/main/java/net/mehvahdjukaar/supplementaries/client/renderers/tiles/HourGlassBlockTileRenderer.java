@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;

@@ -36,11 +36,10 @@ public class ClientConfigs {
         public static Supplier<Boolean> FLUTE_PARTICLES;
 
         private static void init(ConfigBuilder builder) {
-            builder.push("items");
+            builder.pushForge("items");
 
             builder.push("slingshot");
-
-
+            //actually no they are added automatically lol
             //TODO: these lines now need to be included in the translation file (config.category.name.description)
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
                     .define("overlay", true);
@@ -149,7 +148,7 @@ public class ClientConfigs {
         public static Supplier<Double> FLAG_AMPLITUDE;
         public static Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
         public static Supplier<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
-        public static Supplier<List<? extends String>> TICKABLE_MOBS;
+        public static Supplier<List<String>> TICKABLE_MOBS;
 
         public static Supplier<Boolean> FAST_SIGNS;
         public static Supplier<Boolean> FAST_LANTERNS;
@@ -189,7 +188,7 @@ public class ClientConfigs {
                              - 10: ice
                              - 11: iceberg/island
                              - 12: mushroom island""")
-                    .define("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), ConfigBuilder.LIST_STRING_CHECK);
+                    .defineForgeList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), ConfigBuilder.LIST_STRING_CHECK);
 
             builder.pop();
 
@@ -259,7 +258,7 @@ public class ClientConfigs {
             builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
-                    .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"), STRING_CHECK);
+                    .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"));
 
             CAPTURED_MOBS_PROPERTIES = builder.comment("""
                             Here you can customize how mobs are displayed in jars and cages.
@@ -279,7 +278,7 @@ public class ClientConfigs {
                              - any number > 0 to make it render as a 2d fish whose index matches the 'fishies' texture sheet
                              - 0 or any other values will be ignored and treated as default
                             Note that only the first 3 parameters are needed, the others are optional""")
-                    .define("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, ConfigBuilder.LIST_STRING_CHECK);
+                    .defineForgeList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, ConfigBuilder.LIST_STRING_CHECK);
             builder.pop();
 
             builder.push("wall_lantern");
@@ -358,7 +357,7 @@ public class ClientConfigs {
     }
 
 
-    //TODO: remove
+    //TODO: remove, forge config specs are cached internally already
     public static class cached {
         public static int TURN_PARTICLE_FADE_COLOR;
         public static int TURN_PARTICLE_COLOR;

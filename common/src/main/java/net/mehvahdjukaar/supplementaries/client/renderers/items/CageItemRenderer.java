@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
 import net.minecraft.client.Minecraft;

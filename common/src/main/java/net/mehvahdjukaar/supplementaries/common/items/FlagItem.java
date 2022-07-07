@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
-import net.mehvahdjukaar.moonlight.client.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.client.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;

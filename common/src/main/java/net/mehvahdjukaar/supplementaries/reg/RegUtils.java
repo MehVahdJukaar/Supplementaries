@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;

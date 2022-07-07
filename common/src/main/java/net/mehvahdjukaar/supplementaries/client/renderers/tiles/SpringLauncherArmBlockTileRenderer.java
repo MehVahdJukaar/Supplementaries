@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;

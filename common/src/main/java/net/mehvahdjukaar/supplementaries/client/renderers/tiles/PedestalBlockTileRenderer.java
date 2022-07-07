@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
