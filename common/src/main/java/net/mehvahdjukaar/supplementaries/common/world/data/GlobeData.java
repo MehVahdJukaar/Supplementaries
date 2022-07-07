@@ -8,8 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -50,7 +48,7 @@ public class GlobeData extends SavedData {
     public void sendToClient(Level world) {
         this.setDirty();
         if (!world.isClientSide)
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncGlobeDataPacket(this));
+            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncGlobeDataPacket(this));
     }
 
     //data received from network is stored here
@@ -76,14 +74,12 @@ public class GlobeData extends SavedData {
         GlobeTextureManager.refreshTextures();
     }
 
-    public static void sendGlobeData(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().level.isClientSide) {
-            GlobeData data = GlobeData.get(event.getPlayer().level);
-            if (data != null) {
-                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
-                        new ClientBoundSyncGlobeDataPacket(data));
-            }
+    public static void sendGlobeData(ServerPlayer player) {
+        GlobeData data = GlobeData.get(player.level);
+        if (data != null) {
+            NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
         }
+
     }
 }
 

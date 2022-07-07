@@ -3,14 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -42,16 +39,11 @@ public class NetworkHandler {
                 ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::new);
 
 
-
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSendLoginPacket.class, ClientBoundSendLoginPacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::new);
-
-
-
-
 
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
@@ -115,13 +107,5 @@ public class NetworkHandler {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void sendToServerPlayer(Message message) {
-        Minecraft.getInstance().getConnection().send(
-                INSTANCE.toVanillaPacket(message, NetworkDirection.PLAY_TO_SERVER));
-    }
-
-
-    //TODO: check out how these work internally
 
 }

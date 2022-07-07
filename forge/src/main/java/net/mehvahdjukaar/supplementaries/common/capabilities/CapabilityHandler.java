@@ -25,7 +25,7 @@ public class CapabilityHandler {
         event.register(IAntiqueTextProvider.class);
     }
 
-    public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.Reg.ANTIQUE_INK_ENABLED.get();
+    public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.ANTIQUE_INK_ENABLED.get();
 
     public static void attachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (ANTIQUE_CAP_ENABLED && event.getObject() instanceof SignBlockEntity) {
