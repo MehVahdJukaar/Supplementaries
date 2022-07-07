@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -78,21 +78,21 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             long time = tile.getLevel().getGameTime();
 
-            double l = ClientConfigs.cached.FLAG_WAVELENGTH;
-            long period = ClientConfigs.cached.FLAG_PERIOD;
-            double wavyness = ClientConfigs.cached.FLAG_AMPLITUDE;
-            double invdamping = ClientConfigs.cached.FLAG_AMPLITUDE_INCREMENT;
+            double l = ClientConfigs.block.FLAG_WAVELENGTH.get();
+            long period = ClientConfigs.block.FLAG_PERIOD.get();
+            double wavyness = ClientConfigs.block.FLAG_AMPLITUDE.get();
+            double invdamping = ClientConfigs.block.FLAG_AMPLITUDE_INCREMENT.get();
 
             BlockPos bp = tile.getBlockPos();
             //always from 0 to 1
             float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
-            if (ClientConfigs.cached.FLAG_BANNER) {
+            if (ClientConfigs.block.FLAG_BANNER.get()) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) ((((w / l) - t * 2 * (float) Math.PI)))));
                 renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
-                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.cached.FLAG_FANCINESS.ordinal() ? 1 : w;
+                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.block.FLAG_FANCINESS.get().ordinal() ? 1 : w;
                 for (int dX = 0; dX < w; dX += segmentLen) {
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));

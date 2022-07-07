@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.moonlight.math.MthUtils;
-import net.mehvahdjukaar.moonlight.network.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -53,7 +53,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem) {
             Block b = ((BlockItem) item).getBlock();
-            return b.getLightEmission(b.defaultBlockState(), this.level, this.blockPosition());
+            return b.getLightBlock(b.defaultBlockState(), this.level, this.blockPosition());
         }
         return 0;
     });
@@ -119,7 +119,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Item item = this.getItem().getItem();
             if (item instanceof BlockItem bi) {
                 Block block = bi.getBlock();
-                if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || ServerConfigs.cached.UNRESTRICTED_SLINGSHOT) {
+                if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || ServerConfigs.Items.UNRESTRICTED_SLINGSHOT.get()) {
                     if (enderman.getCarriedBlock() == null) {
                         enderman.setCarriedBlock(block.defaultBlockState());
                         this.remove(RemovalReason.DISCARDED);
@@ -277,7 +277,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     protected float getDeceleration() {
-        return this.isNoGravity() ? ServerConfigs.cached.SLINGSHOT_DECELERATION : super.getDeceleration();
+        return this.isNoGravity() ? ServerConfigs.Items.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
     }
 
     @Override

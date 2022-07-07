@@ -21,22 +21,18 @@ public abstract class FireBlockMixin {
 
     //TODO: add an event and move to lib
 
-    @Inject(method = "tryCatchFire",
+    @Inject(method = "checkBurnOut",
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z",
             shift = At.Shift.AFTER))
-    private void afterRemoveBlock(Level pLevel, BlockPos pPos, int pChance, RandomSource pRandom, int pAge, Direction face, CallbackInfo ci) {
-        AshLayerBlock.tryConvertToAsh(pLevel, pPos, bs);
+    private void afterRemoveBlock(Level level, BlockPos blockPos, int i, RandomSource randomSource, int j, CallbackInfo ci) {
+        AshLayerBlock.tryConvertToAsh(level, blockPos, bs);
     }
 
-    @Inject(method = "tryCatchFire",
+    @Inject(method = "checkBurnOut",
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/level/Level.removeBlock (Lnet/minecraft/core/BlockPos;Z)Z"))
-    private void beforeRemoveBlock(Level pLevel, BlockPos pPos, int pChance, RandomSource pRandom, int pAge, Direction face, CallbackInfo ci) {
-        bs = pLevel.getBlockState(pPos);
+    private void beforeRemoveBlock(Level level, BlockPos blockPos, int i, RandomSource randomSource, int j, CallbackInfo ci) {
+        bs = level.getBlockState(blockPos);
     }
-
-    
-
-
 }

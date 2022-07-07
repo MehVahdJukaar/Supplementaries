@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class FaucetBlock extends WaterBlock implements EntityBlock {
@@ -226,7 +226,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
             float r = FastColor.ARGB32.red(color) / 255f;
             float g = FastColor.ARGB32.green(color) / 255f;
             float b = FastColor.ARGB32.blue(color) / 255f;
-            world.addParticle(ModRegistry.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
+            world.addParticle(ModParticles.DRIPPING_LIQUID.get(), x, y, z, r, g, b);
         }
     }
 

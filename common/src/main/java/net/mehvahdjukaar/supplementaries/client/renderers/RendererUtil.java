@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -207,7 +207,7 @@ public class RendererUtil {
         int cDsw = setColorForAge(time, 0.65f);
 
 
-        float amp = ClientConfigs.cached.BUBBLE_BLOCK_WOBBLE;
+        float amp = ClientConfigs.block.BUBBLE_BLOCK_WOBBLE.get();
         w = w - 2 * amp;
         //long time = System.currentTimeMillis();
         float unw = amp * Mth.cos(((float) Math.PI * 2F) * (time + 0));
@@ -486,7 +486,7 @@ public class RendererUtil {
 
         renderer.blitOffset = renderer.blitOffset + 50.0F;
 
-        Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

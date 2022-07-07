@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
@@ -96,7 +96,7 @@ public class JarItemRenderer extends CageItemRenderer {
     }
 
     public static float getHeight(float count, float maxHeight) {
-        return maxHeight * count / (float) ServerConfigs.cached.JAR_CAPACITY;
+        return maxHeight * count / (float) ServerConfigs.Blocks.JAR_CAPACITY.get();
     }
 }
 

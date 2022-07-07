@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.moonlight.math.MthUtils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -41,8 +41,8 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.setSize(0.01F, 0.01F);
         this.quadSize *= 0.625F;
         this.lifetime = LIFE;
-        this.setColor(ClientConfigs.cached.TURN_PARTICLE_COLOR);
-        this.setFadeColor(ClientConfigs.cached.TURN_PARTICLE_FADE_COLOR);
+        this.setColor(ClientConfigs.particle.TURN_INITIAL_COLOR.get());
+        this.setFadeColor(ClientConfigs.particle.TURN_FADE_COLOR.get());
         this.setSpriteFromAge(sprite);
         this.alpha = al;
         this.hasPhysics = false;

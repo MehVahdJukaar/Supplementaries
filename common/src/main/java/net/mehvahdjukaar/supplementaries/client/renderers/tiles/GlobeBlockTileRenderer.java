@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.api.client.renderUtils.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -123,7 +123,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         if (data == null) return;
         poseStack.pushPose();
         poseStack.mulPose(RotHlpr.X180);
-        ResourceLocation texture = ClientConfigs.cached.GLOBE_RANDOM ? data.getSecond() : GlobeBlockTile.GlobeType.EARTH.texture;
+        ResourceLocation texture = ClientConfigs.block.GLOBE_RANDOM.get() ? data.getSecond() : GlobeBlockTile.GlobeType.EARTH.texture;
 
         ModelPart model = this.models.get(data.getFirst());
 

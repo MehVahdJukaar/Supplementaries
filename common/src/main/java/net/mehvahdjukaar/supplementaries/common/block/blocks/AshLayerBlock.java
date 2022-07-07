@@ -174,7 +174,7 @@ public class AshLayerBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, RandomSource pRandom) {
-        if (ServerConfigs.cached.ASH_RAIN) {
+        if (ServerConfigs.Blocks.ASH_RAIN.get()) {
             if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -184,7 +184,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if (ServerConfigs.cached.ASH_RAIN) {
+        if (ServerConfigs.Blocks.ASH_RAIN.get()) {
             if (level.random.nextInt(2) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -208,7 +208,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     public static boolean tryConvertToAsh(Level level, BlockPos pPos, BlockState state) {
-        if (ServerConfigs.cached.ASH_BURN) {
+        if (ServerConfigs.Blocks.ASH_BURN.get()) {
 
             Item i = state.getBlock().asItem();
             int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
