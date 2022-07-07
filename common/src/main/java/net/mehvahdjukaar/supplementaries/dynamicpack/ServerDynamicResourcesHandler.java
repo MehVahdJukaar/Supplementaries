@@ -98,6 +98,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
         }
     }
 
+    //TODO: remove these in favor of copying the oak one in json
     private void makeConditionalRec(FinishedRecipe r, Consumer<FinishedRecipe> consumer, String name) {
         ConditionalRecipe.builder()
                 .addCondition(new OptionalRecipeCondition(name))

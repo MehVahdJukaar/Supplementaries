@@ -22,12 +22,15 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -40,6 +43,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
@@ -158,7 +162,7 @@ public class ItemsOverrideHandler {
                 }
             }
         }
-        for (Block block : ForgeRegistries.BLOCKS) {
+        for (Block block : Registry.BLOCK) {
             for (BlockInteractedWithOverride b : actionOnBlock) {
                 if (b.appliesToBlock(block)) {
                     BLOCK_USE_OVERRIDES.put(block, b);
@@ -168,69 +172,63 @@ public class ItemsOverrideHandler {
         }
     }
 
-    public static void tryHighPriorityClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack) {
+    public static InteractionResult tryHighPriorityClickedBlockOverride(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
 
         ItemUseOnBlockOverride override = HP_ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, event.getHitVec(), false);
-            if (result != InteractionResult.PASS) {
-                event.setCanceled(true);
-                event.setCancellationResult(result);
-            }
+            return override.tryPerformingAction(level, player, hand, stack, hit, false);
         }
+        return InteractionResult.PASS;
     }
 
 
     //item clicked on block overrides
-    public static void tryPerformClickedBlockOverride(PlayerInteractEvent.RightClickBlock event, ItemStack stack, boolean isRanged) {
+    public static InteractionResult tryPerformClickedBlockOverride(Player player, Level level, InteractionHand hand, BlockHitResult hit, boolean isRanged) {
+        ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        Player player = event.getPlayer();
 
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), player, event.getHand(), stack, event.getHitVec(), isRanged);
+            InteractionResult result = override.tryPerformingAction(level, player, hand, stack,hit, isRanged);
             if (result != InteractionResult.PASS) {
-                event.setCanceled(true);
-                event.setCancellationResult(result);
-                return;
+                return result;
             }
         }
         //block overrides behaviors (work for any item)
         if (!player.isShiftKeyDown()) {
-            Level world = event.getWorld();
-            BlockPos pos = event.getPos();
-            BlockState state = world.getBlockState(pos);
+            BlockPos pos = hit.getBlockPos();
+            BlockState state = level.getBlockState(pos);
 
             BlockInteractedWithOverride o = BLOCK_USE_OVERRIDES.get(state.getBlock());
             if (o != null && o.isEnabled()) {
 
-                InteractionResult result = o.tryPerformingAction(state, pos, world, player, event.getHand(), stack, event.getHitVec());
-                if (result != InteractionResult.PASS) {
-                    event.setCanceled(true);
-                    event.setCancellationResult(result);
-                }
+                return o.tryPerformingAction(state, pos, level, player,hand, stack, hit);
             }
         }
-        //TODO: add             CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, heldStack);
+        return InteractionResult.PASS;
+        //not sure if this is needed
+        //CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, po, heldStack);
     }
 
     //item clicked overrides
-    public static void tryPerformClickedItemOverride(PlayerInteractEvent.RightClickItem event, ItemStack stack) {
+    public static InteractionResultHolder<ItemStack> tryPerformClickedItemOverride(Player player, Level level, InteractionHand hand, ItemStack stack) {
         Item item = stack.getItem();
 
         ItemUseOverride override = ITEM_USE_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(event.getWorld(), event.getPlayer(), event.getHand(), stack, null, false);
-            if (result != InteractionResult.PASS) {
-                event.setCanceled(true);
-                event.setCancellationResult(result);
-            }
-
+            var ret =  override.tryPerformingAction(level, player, hand, stack, null, false);
+            return switch (ret){
+                case CONSUME -> InteractionResultHolder.consume(stack);
+                default-> InteractionResultHolder.pass(stack);
+                case FAIL -> InteractionResultHolder.fail(stack);
+            };
         }
+        return InteractionResultHolder.pass(stack);
     }
 
     public static void addOverrideTooltips(ItemTooltipEvent event) {
@@ -294,7 +292,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ClientConfigs.cached.CLOCK_CLICK;
+            return ClientConfigs.Tweaks.CLOCK_CLICK.get();
         }
 
         @Override
@@ -315,7 +313,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.THROWABLE_BRICKS_ENABLED;
+            return ServerConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get();
         }
 
         @Nullable
@@ -351,12 +349,12 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.DIRECTIONAL_CAKE;
+            return ServerConfigs.Tweaks.DIRECTIONAL_CAKE.get();
         }
 
         @Override
         public boolean appliesToBlock(Block block) {
-            return block == Blocks.CAKE || (block.builtInRegistryHolder().is(BlockTags.CANDLE_CAKES) && Utils.getID(block).getNamespace().equals("minecraft"));
+            return block == net.minecraft.world.level.block.Blocks.CAKE || (block.builtInRegistryHolder().is(BlockTags.CANDLE_CAKES) && Utils.getID(block).getNamespace().equals("minecraft"));
         }
 
         @Override
@@ -365,10 +363,10 @@ public class ItemsOverrideHandler {
             if (state.is(BlockTags.CANDLE_CAKES) && stack.is(ItemTags.CANDLES)) {
                 return InteractionResult.PASS;
             }
-            if (state.is(Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || player.getDirection() == Direction.EAST || state.getValue(CakeBlock.BITES) != 0)) {
+            if (state.is(net.minecraft.world.level.block.Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || player.getDirection() == Direction.EAST || state.getValue(CakeBlock.BITES) != 0)) {
                 return InteractionResult.PASS;
             }
-            if (!(ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT && stack.is(Items.CAKE))) {
+            if (!(ServerConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get() && stack.is(Items.CAKE))) {
                 //for candles. normal cakes have no drops
                 BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
                 if (world.isClientSide) world.setBlock(pos, newState, 3);
@@ -423,7 +421,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.MAP_MARKERS;
+            return ServerConfigs.Tweaks.MAP_MARKERS.get();
         }
 
         @Override
@@ -445,7 +443,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.BOTTLE_XP;
+            return ServerConfigs.Tweaks.BOTTLE_XP.get();
         }
 
         @Override
@@ -488,14 +486,14 @@ public class ItemsOverrideHandler {
                     }
 
                     if (returnStack != null) {
-                        player.hurt(CommonUtil.BOTTLING_DAMAGE, ServerConfigs.cached.BOTTLING_COST);
+                        player.hurt(ModDamageSources.BOTTLING_DAMAGE, ServerConfigs.Tweaks.BOTTLING_COST.get());
                         Utils.swapItem(player, hand, returnStack);
 
                         if (!player.isCreative())
                             player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random));
 
                         if (world.isClientSide) {
-                            Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModRegistry.BOTTLING_XP_PARTICLE.get(), 1);
+                            Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModParticles.BOTTLING_XP_PARTICLE.get(), 1);
                         }
                         world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundSource.BLOCKS, 1, 1);
 
@@ -528,7 +526,7 @@ public class ItemsOverrideHandler {
         private InteractionResult placeDoubleCake(Player player, ItemStack stack, BlockPos pos, Level world, BlockState state, boolean isRanged) {
             boolean isDirectional = state.getBlock() == ModRegistry.DIRECTIONAL_CAKE.get();
 
-            if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == Blocks.CAKE.defaultBlockState()) {
+            if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == net.minecraft.world.level.block.Blocks.CAKE.defaultBlockState()) {
 
                 return replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(), player, stack, pos, world, state,
                         null, DoubleCakeBlock.FACING);
@@ -542,10 +540,10 @@ public class ItemsOverrideHandler {
                 BlockPos pos = hit.getBlockPos();
                 BlockState state = world.getBlockState(pos);
                 Block b = state.getBlock();
-                if (b == Blocks.CAKE || b == ModRegistry.DIRECTIONAL_CAKE.get()) {
+                if (b == net.minecraft.world.level.block.Blocks.CAKE || b == ModRegistry.DIRECTIONAL_CAKE.get()) {
                     InteractionResult result = InteractionResult.FAIL;
 
-                    if (ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT) {
+                    if (ServerConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get()) {
                         result = placeDoubleCake(player, stack, pos, world, state, isRanged);
                     }
                     return result;
@@ -557,7 +555,7 @@ public class ItemsOverrideHandler {
 
     private static class SoapClearBehavior extends ItemUseOnBlockOverride {
 
-        boolean enabled = RegistryConfigs.Reg.SOAP_ENABLED.get();
+        boolean enabled = RegistryConfigs.SOAP_ENABLED.get();
 
         @Override
         public boolean isEnabled() {
@@ -668,7 +666,7 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
-                var h = ServerConfigs.cached.WRENCH_BYPASS;
+                var h = ServerConfigs.Items.WRENCH_BYPASS.get();
                 if ((h == ServerConfigs.Hands.MAIN_HAND && hand == InteractionHand.MAIN_HAND) ||
                         (h == ServerConfigs.Hands.OFF_HAND && hand == InteractionHand.OFF_HAND) || h == ServerConfigs.Hands.BOTH) {
 
@@ -689,7 +687,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.SKULL_PILES;
+            return ServerConfigs.Tweaks.SKULL_PILES.get();
         }
 
         @Override

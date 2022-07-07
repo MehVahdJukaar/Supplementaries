@@ -145,7 +145,7 @@ public class GlobeTextureManager {
         public static void refreshColorsFromConfig() {
             DIMENSION_COLOR_MAP.clear();
             try {
-                List<? extends List<String>> customColors = ClientConfigs.block.GLOBE_COLORS.get();
+                List<? extends List<String>> customColors = ClientConfigs.Blocks.GLOBE_COLORS.get();
 
                 for (List<String> l : customColors) {
                     if (l.size() >= 13) {

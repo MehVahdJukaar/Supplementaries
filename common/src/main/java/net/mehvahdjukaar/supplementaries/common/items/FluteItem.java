@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
@@ -23,6 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -56,8 +58,9 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         return tag.contains("Pet") || super.isFoil(pStack);
     }
 
-    /*
+    //forge calls from event
     @Override
+    @PlatformOnly(PlatformOnly.FABRIC)
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
         if (interactWithPet(stack, playerIn, target, hand)) {
             return InteractionResult.sidedSuccess(playerIn.level.isClientSide);
@@ -65,6 +68,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         return super.interactLivingEntity(stack, playerIn, target, hand);
     }
 
+    /*
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {

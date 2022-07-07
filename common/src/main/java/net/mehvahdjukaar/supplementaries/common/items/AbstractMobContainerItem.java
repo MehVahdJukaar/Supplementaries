@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
@@ -86,13 +87,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return tag != null && tag.contains("BlockEntityTag");
     }
 
-    //called from event now
-    /*
+    //called from event on forge for better compat
     @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player, LivingEntity entity, InteractionHand hand) {
+    @PlatformOnly(PlatformOnly.FABRIC)
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
         if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
-    }*/
+    }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
@@ -114,7 +115,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 return !pet.isTame() || pet.isOwnedBy(player);
             }
 
-            int p = ServerConfigs.cached.CAGE_HEALTH_THRESHOLD;
+            int p = ServerConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
             if (p != 100) {
                 return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
             }
@@ -126,7 +127,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     private <T extends Entity> boolean canCatch(T e) {
         String name = Utils.getID(e.getType()).toString();
         if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (ServerConfigs.cached.CAGE_ALL_MOBS || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
+        if (ServerConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }
         ICatchableMob cap = MobContainer.getCap(e);
@@ -286,7 +287,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
 
         if (hand == null) {
-            int a = 1;
             return InteractionResult.PASS;
         }
         if (this.isEntityValid(entity, player)) {

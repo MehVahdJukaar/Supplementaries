@@ -105,7 +105,7 @@ public class DefaultCatchableMobCap<T extends Entity> extends BaseCatchableMobCa
     }
 
     public static <E extends Entity> ICatchableMob getDefaultCap(E e) {
-        if (e.level.isClientSide && e instanceof LivingEntity le && ClientConfigs.block.TICKABLE_MOBS.get()
+        if (e.level.isClientSide && e instanceof LivingEntity le && ClientConfigs.Blocks.TICKABLE_MOBS.get()
                 .contains(Utils.getID(e.getType()).toString())) return new ClientTickableAnim(le);
         else if (e instanceof Squid s) return new DoubleSideTickableAnim(s);
             //else if (e instanceof WaterMobEntity) return WATER_MOB;

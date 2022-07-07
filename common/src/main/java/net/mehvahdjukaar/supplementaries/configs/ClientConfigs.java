@@ -19,7 +19,7 @@ public class ClientConfigs {
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
 
-        block.init(builder);
+        Blocks.init(builder);
         particle.init(builder);
         Entity.init(builder);
         General.init(builder);
@@ -125,7 +125,7 @@ public class ClientConfigs {
         FABULOUS
     }
 
-    public static class block {
+    public static class Blocks {
 
         public static Supplier<Double> BUBBLE_BLOCK_WOBBLE;
         public static Supplier<Double> BUBBLE_BLOCK_GROW_SPEED;

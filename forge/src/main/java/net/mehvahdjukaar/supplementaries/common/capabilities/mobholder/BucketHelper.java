@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
