@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;

@@ -66,7 +66,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         //hours
         matrixStackIn.pushPose();
 
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(Mth.rotLerp(partialTicks, tile.prevRoll, tile.roll)));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(tile.getRoll(partialTicks)));
         matrixStackIn.translate(0, -1.5, -0.5 + 0.02083333);
 
         this.hourHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
@@ -76,7 +76,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         //minutes
         matrixStackIn.pushPose();
 
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(Mth.rotLerp(partialTicks, tile.sPrevRoll, tile.sRoll)));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(tile.getRollS(partialTicks)));
         matrixStackIn.translate(0, -1.5, -0.5 + 0.04166667);
 
         this.minuteHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);

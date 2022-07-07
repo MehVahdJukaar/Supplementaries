@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.botania;
 
 /*
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.RegistryHelper;

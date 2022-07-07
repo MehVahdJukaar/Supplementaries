@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;

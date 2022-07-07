@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.impl.blocks.VerticalSlabBlock;
-import net.mehvahdjukaar.moonlight.impl.entities.ImprovedFallingBlockEntity;
-import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.block.VerticalSlabBlock;
+import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;

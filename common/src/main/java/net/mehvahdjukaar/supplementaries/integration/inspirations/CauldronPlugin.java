@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.inspirations;
 
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Supplier;

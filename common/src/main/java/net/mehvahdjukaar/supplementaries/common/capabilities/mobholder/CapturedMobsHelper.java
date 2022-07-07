@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
 
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.resources.ResourceLocation;

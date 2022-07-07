@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.moonlight.impl.blocks.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;

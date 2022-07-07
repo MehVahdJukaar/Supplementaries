@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -413,6 +413,8 @@ public class ServerConfigs {
         public static Supplier<Boolean> ASH_BURN;
         public static Supplier<Boolean> ASH_RAIN;
 
+        public static Supplier<Boolean> PLANTER_BREAKS;
+
 
         private static void init(ConfigBuilder builder) {
 
@@ -422,6 +424,11 @@ public class ServerConfigs {
             builder.push("bamboo_spikes");
             BAMBOO_SPIKES_ALTERNATIVE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("alternative_mode", true);
+            builder.pop();
+
+            builder.push("planter");
+            PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
+                            .define("broken_by_sapling",true);
             builder.pop();
 
             builder.push("bubble_block");

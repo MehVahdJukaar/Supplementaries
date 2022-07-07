@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.common.base.Preconditions;
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.resources.pack.DynamicDataPack;

@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
-import net.mehvahdjukaar.moonlight.api.IOwnerProtected;
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;

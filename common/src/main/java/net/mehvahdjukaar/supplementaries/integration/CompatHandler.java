@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 
 public class CompatHandler {

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;

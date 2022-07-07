@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;

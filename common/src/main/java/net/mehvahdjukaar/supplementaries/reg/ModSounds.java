@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;

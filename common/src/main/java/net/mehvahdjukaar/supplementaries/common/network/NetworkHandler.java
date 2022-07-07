@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler;
-import net.mehvahdjukaar.moonlight.platform.network.ChannelHandler.NetworkDir;
+import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

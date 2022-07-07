@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.moonlight.block_set.BlockSetManager;
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.BlockSetManager;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.impl.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.misc.Registrator;
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.platform.registry.RegHelper;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;

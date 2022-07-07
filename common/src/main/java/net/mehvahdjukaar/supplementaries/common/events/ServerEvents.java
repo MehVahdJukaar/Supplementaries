@@ -88,6 +88,7 @@ public class ServerEvents {
         ItemsOverrideHandler.tryPerformClickedItemOverride(event, playerIn.getItemInHand(event.getHand()));
     }
 
+    //TODO: soap tool event
     @SubscribeEvent
     public static void toolModification(BlockEvent.BlockToolModificationEvent event){
         if(event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.cached.RAKED_GRAVEL){
@@ -118,7 +119,7 @@ public class ServerEvents {
         }
     }
 
-    private static final boolean FODDER_ENABLED = RegistryConfigs.Reg.FODDER_ENABLED.get();
+    private static final boolean FODDER_ENABLED = RegistryConfigs.FODDER_ENABLED.get();
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
@@ -137,7 +138,7 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         try {
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getPlayer()),
+            NetworkHandler.CHANNEL.sendToPlayerClient((ServerPlayer) event.getPlayer(),
                     new ClientBoundSendLoginPacket(UsernameCache.getMap()));
         } catch (Exception exception) {
             Supplementaries.LOGGER.warn("failed to end login message: " + exception);
@@ -148,15 +149,6 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onAddReloadListeners(final AddReloadListenerEvent event) {
         event.addListener(new FluteSongsReloadListener());
-    }
-
-    @SubscribeEvent
-    public static void onPistonMoved(final PistonEvent.Post event) {
-        //TODO: flint block and steel
-        if (event.getPistonMoveType() == PistonEvent.PistonMoveType.RETRACT) {
-            LevelAccessor level = event.getWorld();
-            var pos = event.getPos();
-        }
     }
 
     @SubscribeEvent
@@ -194,13 +186,15 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onSaplingGrow(SaplingGrowTreeEvent event) {
-        LevelAccessor level = event.getWorld();
-        BlockPos pos = event.getPos();
-        BlockState state = level.getBlockState(pos.below());
-        if (state.getBlock() instanceof PlanterBlock) {
-            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), Block.getId(state));
-            level.setBlock(pos.below(), Blocks.ROOTED_DIRT.defaultBlockState(), 2);
-            level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
+        if(ServerConfigs.block.PLANTER_BREAKS.get()) {
+            LevelAccessor level = event.getWorld();
+            BlockPos pos = event.getPos();
+            BlockState state = level.getBlockState(pos.below());
+            if (state.getBlock() instanceof PlanterBlock) {
+                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), Block.getId(state));
+                level.setBlock(pos.below(), Blocks.ROOTED_DIRT.defaultBlockState(), 2);
+                level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
+            }
         }
 
     }
@@ -216,7 +210,6 @@ public class ServerEvents {
             MovableFakePlayer.unloadLevel(serverLevel);
     }
 
-    //TODO: Use for cages
     //for flute and cage
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {

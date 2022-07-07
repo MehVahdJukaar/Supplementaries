@@ -44,6 +44,7 @@ public class Supplementaries {
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
         //banner patterns not working
+        //potions in jars are bugged ;_;
 
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -101,7 +102,7 @@ public class Supplementaries {
 
     //clicking on cage with lead will put the leashed animal inside
     //bug: tipped spikes not getting placed. rope not playing up sound
-
+    //TODO: flint block and steel
     //wrench rotation overlay
     //TODO: dynamic soap undye recipe
     //create moving dynamic blocks like rope knot

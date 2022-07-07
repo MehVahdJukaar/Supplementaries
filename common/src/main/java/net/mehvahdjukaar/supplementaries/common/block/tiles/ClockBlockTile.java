@@ -19,18 +19,22 @@ import javax.annotation.Nonnull;
 
 public class ClockBlockTile extends BlockEntity {
 
-    public float roll = 0;
-    public float prevRoll = 0;
-    public float targetRoll = 0;
+    private float roll = 0;
+    private float prevRoll = 0;
+    private float targetRoll = 0;
 
-    public float sRoll = 0;
-    public float sPrevRoll = 0;
-    public float sTargetRoll = 0;
+    private float sRoll = 0;
+    private float sPrevRoll = 0;
+    private float sTargetRoll = 0;
 
-    public int power = 0;
+    private int power = 0;
 
     public ClockBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.CLOCK_BLOCK_TILE.get(), pos, state);
+    }
+
+    public int getPower() {
+        return power;
     }
 
     @Override
@@ -153,6 +157,13 @@ public class ClockBlockTile extends BlockEntity {
 
     public Direction getDirection() {
         return this.getBlockState().getValue(ClockBlock.FACING);
+    }
+
+    public float getRollS(float partialTicks) {
+        return Mth.rotLerp(partialTicks, this.sPrevRoll, this.sRoll);
+    }
+    public float getRoll(float partialTicks) {
+        return Mth.rotLerp(partialTicks, this.prevRoll, this.roll);
     }
 }
 

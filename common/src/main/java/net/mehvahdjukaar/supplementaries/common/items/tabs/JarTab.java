@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items.tabs;
 
-import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;

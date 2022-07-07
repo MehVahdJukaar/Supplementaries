@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.malum;
 /*
 import com.sammy.malum.common.block.SapFilledLogBlock;
 import com.sammy.malum.core.helper.BlockHelper;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.setup.ModSoftFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

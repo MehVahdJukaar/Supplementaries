@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.moonlight.block_set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlas;

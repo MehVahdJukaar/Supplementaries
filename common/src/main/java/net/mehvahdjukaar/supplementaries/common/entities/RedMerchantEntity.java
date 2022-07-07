@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;

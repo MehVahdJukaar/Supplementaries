@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.collect.Maps;
-import net.mehvahdjukaar.moonlight.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

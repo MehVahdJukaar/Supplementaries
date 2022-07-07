@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -105,6 +106,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     }
 
     @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         Direction dir = this.getDirection();
         return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(

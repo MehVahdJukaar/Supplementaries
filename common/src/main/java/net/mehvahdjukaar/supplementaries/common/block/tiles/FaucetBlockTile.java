@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.ISoftFluidProvider;
-import net.mehvahdjukaar.moonlight.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.moonlight.util.Utils;
+import net.mehvahdjukaar.moonlight.api.fluids.*;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -63,7 +61,8 @@ public class FaucetBlockTile extends BlockEntity {
         }
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(getBlockPos().offset(0, -1, 0), getBlockPos().offset(1, 1, 1));
     }
@@ -96,7 +95,7 @@ public class FaucetBlockTile extends BlockEntity {
         return r;
     }
 
-    //TODO: fix trasnfer to cauldrons
+    //TODO: fix transfer to cauldrons
     @SuppressWarnings("ConstantConditions")
     private boolean tryExtract(Level level, BlockPos pos, BlockState state, boolean doTransfer) {
         Direction dir = state.getValue(FaucetBlock.FACING);
@@ -194,7 +193,7 @@ public class FaucetBlockTile extends BlockEntity {
         //soft fluid holders
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
-            if (tileBack instanceof ISoftFluidTank holder && holder.canInteractWithSoftFluidTank()) {
+            if (tileBack instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
                 ISoftFluidTank fluidHolder = holder.getSoftFluidTank();
                 this.tempFluidHolder.copy(fluidHolder);
                 this.tempFluidHolder.setCount(2);
@@ -235,7 +234,7 @@ public class FaucetBlockTile extends BlockEntity {
         if (!doTransfer) return !this.tempFluidHolder.isEmpty();
         return false;
     }
-    //TODO: maybe add registry block-> interaction
+    //TODO: maybe add a registry for block -> interaction like dispenser one
 
     private void prepareToTransferBottle(SoftFluid softFluid) {
         this.tempFluidHolder.fill(softFluid);
@@ -332,7 +331,7 @@ public class FaucetBlockTile extends BlockEntity {
         boolean result;
         //soft fluid holders
         BlockEntity tileBelow = level.getBlockEntity(below);
-        if (tileBelow instanceof ISoftFluidTank holder) {
+        if (tileBelow instanceof ISoftFluidTankProvider holder) {
             ISoftFluidTank fluidHolder = holder.getSoftFluidTank();
             result = this.tempFluidHolder.tryTransferFluid(fluidHolder, this.tempFluidHolder.getCount() - 1);
             if (result) {
