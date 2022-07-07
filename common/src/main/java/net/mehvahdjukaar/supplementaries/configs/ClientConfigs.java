@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.configs.IConfigSpec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -12,10 +14,10 @@ import java.util.function.Supplier;
 
 
 public class ClientConfigs {
-    public static Object CLIENT_SPEC;
+    public static IConfigSpec CLIENT_SPEC;
 
     static {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigBuilder.ConfigType.CLIENT);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
 
         block.init(builder);
         particle.init(builder);
@@ -30,13 +32,13 @@ public class ClientConfigs {
     public static class items {
         public static Supplier<Boolean> SLINGSHOT_OVERLAY;
         public static Supplier<Boolean> SLINGSHOT_OUTLINE;
-        public static Supplier<String> SLINGSHOT_OUTLINE_COLOR;
+        public static Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
         public static Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
         public static Supplier<Boolean> WRENCH_PARTICLES;
         public static Supplier<Boolean> FLUTE_PARTICLES;
 
         private static void init(ConfigBuilder builder) {
-            builder.pushForge("items");
+            builder.push("items");
 
             builder.push("slingshot");
             //actually no they are added automatically lol
@@ -46,7 +48,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .define("block_outline_color", "ffffff66", ConfigBuilder.COLOR_CHECK);
+                    .defineColor("block_outline_color", 0xffffff66);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .define("projectile_scale", 0.5, 0, 1);
             builder.pop();
@@ -321,8 +323,8 @@ public class ClientConfigs {
 
 
     public static class particle {
-        private static Supplier<String> TURN_INITIAL_COLOR;
-        private static Supplier<String> TURN_FADE_COLOR;
+        private static Supplier<Integer> TURN_INITIAL_COLOR;
+        private static Supplier<Integer> TURN_FADE_COLOR;
 
 
         private static void init(ConfigBuilder builder) {
@@ -334,9 +336,9 @@ public class ClientConfigs {
                     .push("turn_particle");
 
             TURN_INITIAL_COLOR = builder.comment("An RGBA color")
-                    .define("initial_color", "2a77ea", ConfigBuilder.COLOR_CHECK);
+                    .defineColor("initial_color", 0x2a77ea);
             TURN_FADE_COLOR = builder.comment("An RGBA color")
-                    .define("fade_color", "32befa", ConfigBuilder.COLOR_CHECK);
+                    .defineColor("fade_color", 0x32befa);
 
             builder.pop();
 
@@ -440,14 +442,14 @@ public class ClientConfigs {
             SPEAKER_BLOCK_MUTE = block.SPEAKER_BLOCK_MUTE.get();
             //items
             SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
-            SLINGSHOT_OUTLINE_COLOR = Integer.parseUnsignedInt(items.SLINGSHOT_OUTLINE_COLOR.get().replace("0x", ""), 16);
+            SLINGSHOT_OUTLINE_COLOR = items.SLINGSHOT_OUTLINE_COLOR.get();
             SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
             SLINGSHOT_PROJECTILE_SCALE = (float) ((double) items.SLINGSHOT_PROJECTILE_SCALE.get());
             WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
             FLUTE_PARTICLES = items.FLUTE_PARTICLES.get();
 
-            TURN_PARTICLE_COLOR = Integer.parseUnsignedInt(particle.TURN_INITIAL_COLOR.get().replace("0x", ""), 16);
-            TURN_PARTICLE_FADE_COLOR = Integer.parseUnsignedInt(particle.TURN_FADE_COLOR.get().replace("0x", ""), 16);
+            TURN_PARTICLE_COLOR = particle.TURN_INITIAL_COLOR.get();
+            TURN_PARTICLE_FADE_COLOR = particle.TURN_FADE_COLOR.get();
 
             CapturedMobsHelper.refreshVisuals();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();

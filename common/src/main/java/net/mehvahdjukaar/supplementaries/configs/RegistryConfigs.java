@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.configs.IConfigSpec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
@@ -15,16 +17,15 @@ import java.util.function.Supplier;
 //loaded before registry
 public class RegistryConfigs {
 
-    public static final String FILE_NAME = Supplementaries.MOD_ID + "-registry.toml";
-    public static Object REGISTRY_CONFIG;
+    public static IConfigSpec REGISTRY_CONFIG;
 
     public static void createSpec() {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigBuilder.ConfigType.COMMON);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
         init(builder);
 
         REGISTRY_CONFIG = builder.build();
 
-        ConfigHelper.loadConfigFile(FILE_NAME, REGISTRY_CONFIG);
+        REGISTRY_CONFIG.loadFromFile();
 
         HAS_MINESHAFT_LANTERN = COPPER_LANTERN_ENABLED.get();
         HAS_STRONGHOLD_SCONCE = SCONCE_ENABLED.get();

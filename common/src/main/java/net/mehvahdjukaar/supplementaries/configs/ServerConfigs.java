@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -16,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.moonlight.platform.configs.ConfigBuilder.STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
+import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.STRING_CHECK;
 
 
 public class ServerConfigs {
@@ -27,7 +28,7 @@ public class ServerConfigs {
     public static Object SERVER_SPEC;
 
     static {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("server"), ConfigBuilder.ConfigType.COMMON);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
 
         block.init(builder);
         spawn.init(builder);
@@ -94,7 +95,7 @@ public class ServerConfigs {
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .define("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
-                    .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
+                    .define("break_blocks", BombEntity.BreakingMode.WEAK);
             BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certaom amount of ticks instead than on contact")
                     .define("bomb_fuse", 0, 0, 100000);
             builder.pop();
@@ -103,7 +104,7 @@ public class ServerConfigs {
             BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .define("explosion_radius", 5.15, 0.1, 10);
             BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
-                    .defineEnum("break_blocks", BombEntity.BreakingMode.WEAK);
+                    .define("break_blocks", BombEntity.BreakingMode.WEAK);
 
             builder.pop();
 
@@ -137,7 +138,7 @@ public class ServerConfigs {
         public static Supplier<Boolean> WALL_LANTERN_PLACEMENT;
         public static Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
         public static Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
-        public static Supplier<List<? extends String>> WALL_LANTERN_BLACKLIST;
+        public static Supplier<List<String>> WALL_LANTERN_BLACKLIST;
         public static Supplier<LightableLanternBlock.FallMode> FALLING_LANTERNS;
         public static Supplier<Boolean> BELL_CHAIN;
         public static Supplier<Integer> BELL_CHAIN_LENGTH;
@@ -220,7 +221,7 @@ public class ServerConfigs {
 
             List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct", "enigmaticlegacy");
             WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
-                    .define("mod_blacklist", modBlacklist, STRING_CHECK);
+                    .define("mod_blacklist", modBlacklist);
             FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
                             "Additionally if they fall from high enough they will break creating a fire where they land")
                     .define("fallin_lanterns", LightableLanternBlock.FallMode.ON);
@@ -280,7 +281,7 @@ public class ServerConfigs {
                             Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values
                             example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
 
-                    .define("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
+                    .defineForgeList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
 
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
                             "Best kept disabled if you are adding custom adventurer maps with its config")
@@ -625,12 +626,6 @@ public class ServerConfigs {
     }
 
     public static class spawn {
-        public static Supplier<Integer> FIREFLY_MIN;
-        public static Supplier<Integer> FIREFLY_MAX;
-        public static Supplier<Integer> FIREFLY_WEIGHT;
-        public static Supplier<List<? extends String>> FIREFLY_BIOMES;
-        public static Supplier<List<? extends String>> FIREFLY_MOD_WHITELIST;
-
         public static Supplier<Boolean> DISTANCE_TEXT;
         public static Supplier<Boolean> WAY_SIGN_ENABLED;
         public static Supplier<Integer> ROAD_SIGN_DISTANCE_MIN;
@@ -643,46 +638,14 @@ public class ServerConfigs {
         public static Supplier<Boolean> URN_PILE_ENABLED;
         public static Supplier<Integer> URN_PATCH_TRIES;
         public static Supplier<Integer> URN_PER_CHUNK;
-        public static Supplier<List<? extends String>> URN_BIOME_BLACKLIST;
+        public static Supplier<List<String>> URN_BIOME_BLACKLIST;
 
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
-                    /*
-            builder.push("entities");
-
-            builder.push("firefly");
-            List<String> defaultBiomes = Arrays.asList("minecraft:swamp", "minecraft:swamp_hills", "minecraft:plains",
-                    "minecraft:sunflower_plains", "minecraft:dark_forest", "minecraft:dark_forest_hills", "byg:bayou",
-                    "byg:cypress_swamplands", "byg:glowshroom_bayou", "byg:mangrove_marshes", "byg:vibrant_swamplands",
-                    "byg:fresh_water_lake", "byg:grassland_plateau", "byg:wooded_grassland_plateau", "byg:flowering_grove",
-                    "byg:guiana_shield", "byg:guiana_clearing", "byg:meadow", "byg:orchard", "byg:seasonal_birch_forest",
-                    "byg:seasonal_deciduous_forest", "byg:seasonal_forest", "biomesoplenty:flower_meadow", "biomesoplenty:fir_clearing",
-                    "biomesoplenty:grove_lakes", "biomesoplenty:grove", "biomesoplenty:highland_moor", "biomesoplenty:wetland_marsh",
-                    "biomesoplenty:deep_bayou", "biomesoplenty:wetland");
-            List<String> fireflyModWhitelist = List.of();
-
-            FIREFLY_BIOMES = builder.comment("Spawnable biomes")
-                    .define("biomes", defaultBiomes,ConfigBuilder.STRING_CHECK);
-            FIREFLY_MOD_WHITELIST = builder.comment("Whitelisted mods. All biomes from said mods will be able to spawn fireflies. Use the one above for more control")
-                    .define("mod_whitelist", fireflyModWhitelist, STRING_CHECK);
-            FIREFLY_WEIGHT = builder.comment("Spawn weight \n" +
-                            "Set to 0 to disable spawning entirely")
-                    .define("weight", 3, 0, 100);
-            FIREFLY_MIN = builder.comment("Minimum group size")
-                    .define("min", 5, 0, 64);
-            FIREFLY_MAX = builder.comment("Maximum group size")
-                    .define("max", 9, 0, 64);
-
-            builder.pop();
 
 
-            builder.pop();
-                      */
-
-
-            builder.push("structures");
             builder.push("way_sign");
             ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts. Has to be larger than minimum_distance of course")
                     .define("average_distance", 19, 0, 1000);
@@ -711,10 +674,10 @@ public class ServerConfigs {
                     .define("spawn_attempts", 7, 0, 100);
             List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
-                    .define("biome_blacklist", urnBlacklist, STRING_CHECK);
+                    .define("biome_blacklist", urnBlacklist);
             builder.pop();
 
-            builder.pop();
+
 
             builder.pop();
         }
@@ -804,11 +767,6 @@ public class ServerConfigs {
         public static boolean SKULL_CANDLES_MULTIPLE;
         public static boolean WANDERING_TRADER_DOORS;
         //spawns
-        public static int FIREFLY_MIN;
-        public static int FIREFLY_MAX;
-        public static int FIREFLY_WEIGHT;
-        public static List<? extends String> FIREFLY_BIOMES;
-        public static List<? extends String> FIREFLY_MOD_WHITELIST;
         public static boolean FIREFLY_DESPAWN;
         public static boolean DISTANCE_TEXT;
         //blocks
@@ -921,12 +879,6 @@ public class ServerConfigs {
             SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
             SLINGSHOT_DECELERATION = (float) (0f + item.SLINGSHOT_DECELERATION.get());
             UNRESTRICTED_SLINGSHOT = item.UNRESTRICTED_SLINGSHOT.get();
-
-            FIREFLY_MIN = spawn.FIREFLY_MIN.get();
-            FIREFLY_MAX = spawn.FIREFLY_MAX.get();
-            FIREFLY_WEIGHT = spawn.FIREFLY_WEIGHT.get();
-            FIREFLY_BIOMES = spawn.FIREFLY_BIOMES.get();
-            FIREFLY_MOD_WHITELIST = spawn.FIREFLY_MOD_WHITELIST.get();
 
             DISTANCE_TEXT = spawn.DISTANCE_TEXT.get();
 
