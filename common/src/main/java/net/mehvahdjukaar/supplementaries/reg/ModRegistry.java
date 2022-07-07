@@ -954,7 +954,7 @@ public class ModRegistry {
     //hanging flower pot
     public static final Supplier<Block> HANGING_FLOWER_POT = regPlaceableItem(HANGING_FLOWER_POT_NAME,
             () -> new HangingFlowerPotBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)),
-            () -> Items.FLOWER_POT, ServerConfigs.tweaks.HANGING_POT_PLACEMENT);
+            () -> Items.FLOWER_POT, ServerConfigs.Tweaks.HANGING_POT_PLACEMENT);
 
     public static final Supplier<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = regTile(
             HANGING_FLOWER_POT_NAME, () -> RegHelper.createBlockEntityType(
@@ -1065,19 +1065,19 @@ public class ModRegistry {
     public static final Supplier<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD), 60), () -> Items.STICK, ServerConfigs.tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD), 60), () -> Items.STICK, ServerConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", ServerConfigs.tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", ServerConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> PRISMARINE_ROD_BLOCK = regPlaceableItem("prismarine_rod", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", ServerConfigs.tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", ServerConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> PROPELPLANT_ROD_BLOCK = regPlaceableItem("propelplant_cane", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", ServerConfigs.tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", ServerConfigs.Tweaks.PLACEABLE_STICKS);
 
     //blaze rod
     //TODO: blaze sound
@@ -1087,7 +1087,7 @@ public class ModRegistry {
                             .lightLevel(state -> 12)
                             .emissiveRendering((p, w, s) -> true)
                             .sound(SoundType.GILDED_BLACKSTONE)),
-            () -> Items.BLAZE_ROD, ServerConfigs.tweaks.PLACEABLE_RODS
+            () -> Items.BLAZE_ROD, ServerConfigs.Tweaks.PLACEABLE_RODS
     );
 
     //daub
@@ -1210,17 +1210,17 @@ public class ModRegistry {
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
                     BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)),
-            () -> Items.GUNPOWDER, ServerConfigs.tweaks.PLACEABLE_GUNPOWDER);
+            () -> Items.GUNPOWDER, ServerConfigs.Tweaks.PLACEABLE_GUNPOWDER);
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regPlaceableItem(BOOK_PILE_NAME, () -> new BookPileBlock(
                     BlockBehaviour.Properties.of(Material.DECORATION).strength(0.5F).sound(SoundType.WOOD)),
-            () -> Items.ENCHANTED_BOOK, ServerConfigs.tweaks.PLACEABLE_BOOKS);
+            () -> Items.ENCHANTED_BOOK, ServerConfigs.Tweaks.PLACEABLE_BOOKS);
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE_H = regPlaceableItem(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
                     BlockBehaviour.Properties.copy(BOOK_PILE.get())),
-            () -> Items.BOOK, ServerConfigs.tweaks.PLACEABLE_BOOKS);
+            () -> Items.BOOK, ServerConfigs.Tweaks.PLACEABLE_BOOKS);
 
     public static final Supplier<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = regTile(
             BOOK_PILE_NAME, () -> RegHelper.createBlockEntityType(

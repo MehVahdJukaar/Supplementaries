@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainer
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -75,7 +74,7 @@ public class ClientReceivers {
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
         withPlayerDo(p -> {
             PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache;
-            if (ClientConfigs.general.ANTI_REPOST_WARNING.get()) {
+            if (ClientConfigs.General.ANTI_REPOST_WARNING.get()) {
                 try {
                     String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
                     if (fileName.contains(".jar")) {

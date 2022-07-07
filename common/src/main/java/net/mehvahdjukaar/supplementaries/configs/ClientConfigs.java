@@ -21,15 +21,15 @@ public class ClientConfigs {
 
         block.init(builder);
         particle.init(builder);
-        entity.init(builder);
-        general.init(builder);
-        tweaks.init(builder);
-        items.init(builder);
+        Entity.init(builder);
+        General.init(builder);
+        Tweaks.init(builder);
+        Items.init(builder);
 
         CLIENT_SPEC = builder.buildAndRegister();
     }
 
-    public static class items {
+    public static class Items {
         public static Supplier<Boolean> SLINGSHOT_OVERLAY;
         public static Supplier<Boolean> SLINGSHOT_OUTLINE;
         public static Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
@@ -67,7 +67,7 @@ public class ClientConfigs {
         }
     }
 
-    public static class tweaks {
+    public static class Tweaks {
         public static Supplier<Boolean> COLORED_ARROWS;
         public static Supplier<Boolean> COLORED_BREWING_STAND;
         public static Supplier<Boolean> CLOCK_CLICK;
@@ -89,7 +89,7 @@ public class ClientConfigs {
         }
     }
 
-    public static class general {
+    public static class General {
         public static Supplier<Boolean> CONFIG_BUTTON;
         public static Supplier<Boolean> TOOLTIP_HINTS;
         public static Supplier<Boolean> PLACEABLE_TOOLTIP;
@@ -346,7 +346,7 @@ public class ClientConfigs {
         }
     }
 
-    public static class entity {
+    public static class Entity {
 
 
         private static void init(ConfigBuilder builder) {
@@ -357,105 +357,5 @@ public class ClientConfigs {
             builder.pop();
         }
     }
-
-
-    //TODO: remove, forge config specs are cached internally already
-    public static class cached {
-        public static int TURN_PARTICLE_FADE_COLOR;
-        public static int TURN_PARTICLE_COLOR;
-        public static boolean COLORED_ARROWS;
-        public static boolean COLORED_BREWING_STAND;
-        public static boolean CLOCK_CLICK;
-        public static boolean TOOLTIP_HINTS;
-        public static boolean PLACEABLE_TOOLTIPS;
-
-        public static boolean PEDESTAL_SPIN;
-        public static double PEDESTAL_SPEED;
-        public static boolean PEDESTAL_SPECIAL;
-        public static boolean SHELF_TRANSLATE;
-        public static double WIND_VANE_POWER_SCALING;
-        public static double WIND_VANE_ANGLE_1;
-        public static double WIND_VANE_ANGLE_2;
-        public static double WIND_VANE_PERIOD_1;
-        public static double WIND_VANE_PERIOD_2;
-        public static boolean CLOCK_24H;
-        public static boolean GLOBE_RANDOM;
-        public static boolean CONFIG_BUTTON;
-        public static boolean FLAG_BANNER;
-        public static int FLAG_PERIOD;
-        public static double FLAG_WAVELENGTH;
-        public static double FLAG_AMPLITUDE;
-        public static double FLAG_AMPLITUDE_INCREMENT;
-        public static GraphicsFanciness FLAG_FANCINESS;
-        public static boolean FAST_LANTERNS;
-        public static boolean FAST_SIGNS;
-        public static boolean SLINGSHOT_OUTLINE;
-        public static int SLINGSHOT_OUTLINE_COLOR;
-        public static boolean SLINGSHOT_OVERLAY;
-        public static float SLINGSHOT_PROJECTILE_SCALE;
-        public static boolean BOOK_GLINT;
-        public static boolean TURN_TABLE_PARTICLES;
-        public static boolean WRENCH_PARTICLES;
-        public static boolean FLUTE_PARTICLES;
-        public static boolean SPEAKER_BLOCK_MUTE;
-        public static float BUBBLE_BLOCK_WOBBLE;
-        public static float BUBBLE_BLOCK_GROW_SPEED;
-        public static float ROPE_WOBBLE_AMPLITUDE;
-        public static double ROPE_WOBBLE_PERIOD;
-
-        public static void refresh() {
-            //tweaks
-            COLORED_BREWING_STAND = tweaks.COLORED_BREWING_STAND.get();
-            COLORED_ARROWS = tweaks.COLORED_ARROWS.get();
-            CLOCK_CLICK = tweaks.CLOCK_CLICK.get();
-            BOOK_GLINT = tweaks.BOOK_GLINT.get();
-            //general
-            TOOLTIP_HINTS = general.TOOLTIP_HINTS.get();
-            PLACEABLE_TOOLTIPS = general.PLACEABLE_TOOLTIP.get();
-            CONFIG_BUTTON = general.CONFIG_BUTTON.get();
-            //particles
-            //blocks
-            ROPE_WOBBLE_AMPLITUDE = (float) (double) block.ROPE_WOBBLE_AMPLITUDE.get();
-            ROPE_WOBBLE_PERIOD = block.ROPE_WOBBLE_PERIOD.get();
-            BUBBLE_BLOCK_WOBBLE = (float) (double) block.BUBBLE_BLOCK_WOBBLE.get() / 10f;
-            BUBBLE_BLOCK_GROW_SPEED = (float) (double) block.BUBBLE_BLOCK_GROW_SPEED.get();
-            PEDESTAL_SPIN = block.PEDESTAL_SPIN.get();
-            PEDESTAL_SPEED = block.PEDESTAL_SPEED.get();
-            PEDESTAL_SPECIAL = block.PEDESTAL_SPECIAL.get();
-            SHELF_TRANSLATE = block.SHELF_TRANSLATE.get();
-            WIND_VANE_POWER_SCALING = block.WIND_VANE_POWER_SCALING.get();
-            WIND_VANE_ANGLE_1 = block.WIND_VANE_ANGLE_1.get();
-            WIND_VANE_ANGLE_2 = block.WIND_VANE_ANGLE_2.get();
-            WIND_VANE_PERIOD_1 = block.WIND_VANE_PERIOD_1.get();
-            WIND_VANE_PERIOD_2 = block.WIND_VANE_PERIOD_2.get();
-            CLOCK_24H = block.CLOCK_24H.get();
-            GLOBE_RANDOM = block.GLOBE_RANDOM.get();
-            FLAG_AMPLITUDE = block.FLAG_AMPLITUDE.get();
-            FLAG_AMPLITUDE_INCREMENT = block.FLAG_AMPLITUDE_INCREMENT.get();
-            FLAG_BANNER = block.FLAG_BANNER.get();
-            FLAG_PERIOD = block.FLAG_PERIOD.get();
-            FLAG_WAVELENGTH = block.FLAG_WAVELENGTH.get();
-            FLAG_FANCINESS = block.FLAG_FANCINESS.get();
-            FAST_LANTERNS = block.FAST_LANTERNS.get();
-            FAST_SIGNS = block.FAST_SIGNS.get();
-            TURN_TABLE_PARTICLES = block.TURN_TABLE_PARTICLES.get();
-            SPEAKER_BLOCK_MUTE = block.SPEAKER_BLOCK_MUTE.get();
-            //items
-            SLINGSHOT_OUTLINE = items.SLINGSHOT_OUTLINE.get();
-            SLINGSHOT_OUTLINE_COLOR = items.SLINGSHOT_OUTLINE_COLOR.get();
-            SLINGSHOT_OVERLAY = items.SLINGSHOT_OVERLAY.get();
-            SLINGSHOT_PROJECTILE_SCALE = (float) ((double) items.SLINGSHOT_PROJECTILE_SCALE.get());
-            WRENCH_PARTICLES = items.WRENCH_PARTICLES.get();
-            FLUTE_PARTICLES = items.FLUTE_PARTICLES.get();
-
-            TURN_PARTICLE_COLOR = particle.TURN_INITIAL_COLOR.get();
-            TURN_PARTICLE_FADE_COLOR = particle.TURN_FADE_COLOR.get();
-
-            CapturedMobsHelper.refreshVisuals();
-            GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
-
-        }
-    }
-
 
 }

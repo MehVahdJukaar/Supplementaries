@@ -50,7 +50,7 @@ public class ModConfiguredFeatures {
 
     public static final Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> WILD_FLAX_PATCH =
             FeatureUtils.register("supplementaries:wild_flax", Feature.RANDOM_PATCH,
-                    getPatchConfiguration(ServerConfigs.spawn.FLAX_PATCH_TRIES.get(), 4, 0,
+                    getPatchConfiguration(ServerConfigs.Spawns.FLAX_PATCH_TRIES.get(), 4, 0,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
                             FLAX_PLACEMENT));
@@ -58,7 +58,7 @@ public class ModConfiguredFeatures {
 
     public static final Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> CAVE_URNS_PATCH =
             FeatureUtils.register("supplementaries:cave_urns", Feature.RANDOM_PATCH,
-                    getPatchConfiguration(ServerConfigs.spawn.URN_PATCH_TRIES.get(), 4, 1,
+                    getPatchConfiguration(ServerConfigs.Spawns.URN_PATCH_TRIES.get(), 4, 1,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
                             URN_PLACEMENT));

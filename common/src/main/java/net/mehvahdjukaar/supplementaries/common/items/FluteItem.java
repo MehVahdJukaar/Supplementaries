@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.IThirdPersonSpecialItemRenderer;
-import net.mehvahdjukaar.moonlight.math.MthUtils;
-import net.mehvahdjukaar.moonlight.misc.DualWeildState;
+import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
+import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -106,11 +107,11 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             double x = playerIn.getX();
             double y = playerIn.getY();
             double z = playerIn.getZ();
-            int r = ServerConfigs.cached.FLUTE_RADIUS;
+            int r = ServerConfigs.Items.FLUTE_RADIUS.get();
             CompoundTag com = stack.getTagElement("Pet");
             if (com != null) {
                 Entity entity = worldIn.getEntity(com.getInt("ID"));
-                int maxDist = ServerConfigs.cached.FLUTE_DISTANCE * ServerConfigs.cached.FLUTE_DISTANCE;
+                int maxDist = ServerConfigs.Items.FLUTE_DISTANCE.get() * ServerConfigs.Items.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
                     if (pet.level == playerIn.level && pet.distanceToSqr(playerIn) < maxDist) {
                         if (pet.randomTeleport(x, y, z, false)) {
@@ -152,7 +153,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
     @Override
     public void spawnNoteParticle(Level level, LivingEntity entity, int note) {
-        if (!ClientConfigs.cached.FLUTE_PARTICLES) return;
+        if (!ClientConfigs.Items.FLUTE_PARTICLES.get()) return;
         //default base
         Vec3 bx = new Vec3(1, 0, 0);
         Vec3 by = new Vec3(0, 1, 0);
@@ -182,7 +183,9 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         double y = entity.getEyeY() + newV.y;
         double z = entity.getZ() + newV.z;
 
-        level.addParticle(ParticleTypes.NOTE, x, y, z, (double) level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+        SimpleParticleType particle = entity.isUnderWater() ? ParticleTypes.BUBBLE : ParticleTypes.NOTE;
+
+        level.addParticle(particle, x, y, z, (double) level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
     }
 
     @Override

@@ -164,7 +164,7 @@ public class RegUtils {
                                     .noCollission()
                                     .sound(SoundType.WOOD)
                                     .lootFrom(() -> BannerBlock.byColor(color))
-                    ), color.getName() + "_banner", ServerConfigs.tweaks.CEILING_BANNERS
+                    ), color.getName() + "_banner", ServerConfigs.Tweaks.CEILING_BANNERS
             ));
         }
         return map;

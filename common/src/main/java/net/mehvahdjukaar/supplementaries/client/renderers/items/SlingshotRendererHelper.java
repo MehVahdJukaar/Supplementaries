@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +32,7 @@ public class SlingshotRendererHelper {
                 CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 
                 ItemStack findAmmo = player.getProjectile(cannon);
-                if (findAmmo.getItem() != Items.ARROW) {
+                if (findAmmo.getItem() != net.minecraft.world.item.Items.ARROW) {
                     CLIENT_CURRENT_AMMO = findAmmo;
                 }
             }
@@ -76,7 +75,7 @@ public class SlingshotRendererHelper {
                 double pY = vector3d.y();
                 double pZ = vector3d.z();
 
-                int color = ClientConfigs.cached.SLINGSHOT_OUTLINE_COLOR;
+                int color = ClientConfigs.Items.SLINGSHOT_OUTLINE_COLOR.get();
 
                 float a = NativeImage.getR(color) / 255f;
                 float b = NativeImage.getG(color) / 255f;

@@ -111,7 +111,7 @@ public class AdventurerMapsHandler {
         if (!CUSTOM_MAPS_TRADES.isEmpty()) return;
 
         try {
-            List<? extends List<String>> tradeData = ServerConfigs.tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
+            List<? extends List<String>> tradeData = ServerConfigs.Tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
 
             for (List<String> l : tradeData) {
                 int s = l.size();
@@ -173,7 +173,7 @@ public class AdventurerMapsHandler {
                     }
 
             }
-            if (ServerConfigs.tweaks.RANDOM_ADVENTURER_MAPS.get()) {
+            if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
                 trades.get(2).add(new RandomAdventureMapTrade());
             }
         }

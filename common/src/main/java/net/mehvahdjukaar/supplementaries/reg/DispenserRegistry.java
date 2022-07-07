@@ -135,7 +135,7 @@ public class DispenserRegistry {
             DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
         }
 
-        boolean axe = ServerConfigs.tweaks.AXE_DISPENSER_BEHAVIORS.get();
+        boolean axe = ServerConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         if (axe || jar) {
             for (Item i : Registry.ITEM) {
                 try {

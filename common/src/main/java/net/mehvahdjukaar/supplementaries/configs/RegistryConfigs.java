@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
-import net.mehvahdjukaar.moonlight.api.platform.configs.IConfigSpec;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 //loaded before registry
 public class RegistryConfigs {
 
-    public static IConfigSpec REGISTRY_CONFIG;
+    public static ConfigSpec REGISTRY_CONFIG;
 
     public static void createSpec() {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
@@ -25,14 +25,15 @@ public class RegistryConfigs {
 
         REGISTRY_CONFIG = builder.build();
 
+        //load early
         REGISTRY_CONFIG.loadFromFile();
 
         HAS_MINESHAFT_LANTERN = COPPER_LANTERN_ENABLED.get();
         HAS_STRONGHOLD_SCONCE = SCONCE_ENABLED.get();
     }
 
-    
-    public static boolean isEnabled(String key){
+
+    public static boolean isEnabled(String key) {
         return switch (key) {
             case "vertical_slabs" -> CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
             case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
@@ -51,7 +52,7 @@ public class RegistryConfigs {
     }
 
     private static final Map<String, Supplier<Boolean>> CONFIGS = new HashMap<>();
-    
+
     public static Supplier<Boolean> ASH_ENABLED;
     public static Supplier<Boolean> ASH_BRICKS_ENABLED;
     public static Supplier<Boolean> PLANTER_ENABLED;
@@ -145,7 +146,7 @@ public class RegistryConfigs {
     public static boolean HAS_STRONGHOLD_SCONCE = false;
 
     public static final Map<String, Supplier<Boolean>> MIXIN_VALUES = new HashMap<>();
-    
+
     private static void init(ConfigBuilder builder) {
 
         builder.comment("Here are configs that need reloading to take effect");
@@ -275,8 +276,6 @@ public class RegistryConfigs {
         builder.pop();
 
     }
-    
-
 
 
 }

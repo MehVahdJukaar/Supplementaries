@@ -142,16 +142,16 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     public enum HourGlassSandType {
         DEFAULT(null, null, 0),
-        SAND(SAND_TEXTURE, null, ServerConfigs.block.HOURGLASS_SAND.get()),
-        CONCRETE(WHITE_CONCRETE_TEXTURE, null, ServerConfigs.block.HOURGLASS_CONCRETE.get()),
-        GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, ServerConfigs.block.HOURGLASS_DUST.get()),
-        SUGAR(HOURGLASS_SUGAR, Items.SUGAR, ServerConfigs.block.HOURGLASS_SUGAR.get()),
-        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, ServerConfigs.block.HOURGLASS_GLOWSTONE.get()),
-        REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, ServerConfigs.block.HOURGLASS_REDSTONE.get()),
-        BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, ServerConfigs.block.HOURGLASS_BLAZE_POWDER.get()),
-        FORGE_DUST(HOURGLASS_GUNPOWDER, null, ServerConfigs.block.HOURGLASS_DUST.get()),
-        HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, ServerConfigs.block.HOURGLASS_HONEY.get()),
-        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, ServerConfigs.block.HOURGLASS_SLIME.get());
+        SAND(SAND_TEXTURE, null, ServerConfigs.Blocks.HOURGLASS_SAND.get()),
+        CONCRETE(WHITE_CONCRETE_TEXTURE, null, ServerConfigs.Blocks.HOURGLASS_CONCRETE.get()),
+        GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, ServerConfigs.Blocks.HOURGLASS_DUST.get()),
+        SUGAR(HOURGLASS_SUGAR, Items.SUGAR, ServerConfigs.Blocks.HOURGLASS_SUGAR.get()),
+        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, ServerConfigs.Blocks.HOURGLASS_GLOWSTONE.get()),
+        REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, ServerConfigs.Blocks.HOURGLASS_REDSTONE.get()),
+        BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, ServerConfigs.Blocks.HOURGLASS_BLAZE_POWDER.get()),
+        FORGE_DUST(HOURGLASS_GUNPOWDER, null, ServerConfigs.Blocks.HOURGLASS_DUST.get()),
+        HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, ServerConfigs.Blocks.HOURGLASS_HONEY.get()),
+        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, ServerConfigs.Blocks.HOURGLASS_SLIME.get());
 
         @Nullable
         public final ResourceLocation texture;

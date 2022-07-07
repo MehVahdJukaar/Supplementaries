@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
@@ -17,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -35,8 +38,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -94,7 +95,7 @@ public class ServerEvents {
         if(event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.cached.RAKED_GRAVEL){
             LevelAccessor world = event.getWorld();
             BlockPos pos = event.getPos();
-            if (event.getFinalState().is(Blocks.GRAVEL)) {
+            if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
                 BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
                 if (raked.canSurvive(world, pos)) {
                     event.setFinalState(RakedGravelBlock.getConnectedState(raked, world, pos, event.getContext().getHorizontalDirection()));
@@ -186,13 +187,13 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void onSaplingGrow(SaplingGrowTreeEvent event) {
-        if(ServerConfigs.block.PLANTER_BREAKS.get()) {
+        if(ServerConfigs.Blocks.PLANTER_BREAKS.get()) {
             LevelAccessor level = event.getWorld();
             BlockPos pos = event.getPos();
             BlockState state = level.getBlockState(pos.below());
             if (state.getBlock() instanceof PlanterBlock) {
-                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), Block.getId(state));
-                level.setBlock(pos.below(), Blocks.ROOTED_DIRT.defaultBlockState(), 2);
+                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), net.minecraft.world.level.block.Block.getId(state));
+                level.setBlock(pos.below(), net.minecraft.world.level.block.Blocks.ROOTED_DIRT.defaultBlockState(), 2);
                 level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
             }
         }
@@ -228,6 +229,22 @@ public class ServerEvents {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void reloadConfigsEvent(ModConfigEvent event) {
+
+        if (event.getConfig().getSpec() == ServerConfigs.SERVER_SPEC) {
+            //send this configuration to connected clients
+
+            // sendSyncedConfigsToAllPlayers();
+            // ServerConfigs.cached.refresh();
+        } else if (event.getConfig().getSpec() == ClientConfigs.CLIENT_SPEC){
+            CapturedMobsHelper.refreshVisuals();
+            GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
+
+        }
+
     }
 
 }

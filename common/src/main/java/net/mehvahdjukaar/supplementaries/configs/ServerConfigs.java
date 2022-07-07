@@ -1,16 +1,11 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,30 +13,26 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
-import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.STRING_CHECK;
-
 
 public class ServerConfigs {
 
-
-    //overwritten by server one
-    public static Object SERVER_SPEC;
+    public static ConfigSpec SERVER_SPEC;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
 
-        block.init(builder);
-        spawn.init(builder);
-        entity.init(builder);
-        entity.init(builder);
-        tweaks.init(builder);
-        item.init(builder);
-        general.init(builder);
+        Blocks.init(builder);
+        Spawns.init(builder);
+        Tweaks.init(builder);
+        Items.init(builder);
+        General.init(builder);
 
-        SERVER_SPEC = builder.build();
+        builder.setSynced();
+
+        SERVER_SPEC = builder.buildAndRegister();
     }
 
-    public static class item {
+    public static class Items {
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;
         public static Supplier<String> ROPE_ARROW_ROPE;
@@ -129,7 +120,7 @@ public class ServerConfigs {
         MAIN_HAND, OFF_HAND, BOTH, NONE
     }
 
-    public static class tweaks {
+    public static class Tweaks {
         public static Supplier<Boolean> ENDER_PEAR_DISPENSERS;
         public static Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
         public static Supplier<Boolean> DIRECTIONAL_CAKE;
@@ -170,8 +161,8 @@ public class ServerConfigs {
         private static void init(ConfigBuilder builder) {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
-            WANDERING_TRADER_DOORS  = builder.comment("Allows traders to open doors (because they couldnt aparently)")
-                            .define("traders_open_doors",true);
+            WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldnt aparently)")
+                    .define("traders_open_doors", true);
 
             builder.push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
@@ -323,7 +314,7 @@ public class ServerConfigs {
 
     }
 
-    public static class general {
+    public static class General {
         public static Supplier<Boolean> SERVER_PROTECTION;
 
         private static void init(ConfigBuilder builder) {
@@ -337,7 +328,7 @@ public class ServerConfigs {
         }
     }
 
-    public static class block {
+    public static class Blocks {
 
         public static Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
 
@@ -429,7 +420,7 @@ public class ServerConfigs {
 
             builder.push("planter");
             PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
-                            .define("broken_by_sapling",true);
+                    .define("broken_by_sapling", true);
             builder.pop();
 
             builder.push("bubble_block");
@@ -625,7 +616,7 @@ public class ServerConfigs {
         }
     }
 
-    public static class spawn {
+    public static class Spawns {
         public static Supplier<Boolean> DISTANCE_TEXT;
         public static Supplier<Boolean> WAY_SIGN_ENABLED;
         public static Supplier<Integer> ROAD_SIGN_DISTANCE_MIN;
@@ -677,279 +668,8 @@ public class ServerConfigs {
                     .define("biome_blacklist", urnBlacklist);
             builder.pop();
 
-
-
             builder.pop();
         }
     }
 
-    public static class entity {
-        public static Supplier<Integer> FIREFLY_PERIOD;
-        public static Supplier<Double> FIREFLY_SPEED;
-        public static Supplier<Boolean> FIREFLY_DESPAWN;
-
-        private static void init(ConfigBuilder builder) {
-            builder.comment("entities parameters")
-                    .push("entities");
-            builder.push("firefly");
-            FIREFLY_PERIOD = builder.comment("""
-                            firefly animation period
-                            note that actual period will be this + a random number between 0 and 10
-                            this needs to be here to allow correct despawning of the entity when it's not glowing
-                            check client configs come more animation settings""")
-                    .define("period", 65, 1, 200);
-            FIREFLY_SPEED = builder.comment("firefly flying speed")
-                    .define("speed", 0.3, 0, 10);
-            FIREFLY_DESPAWN = builder.comment("despawn during the day")
-                    .define("despawn", true);
-            builder.pop();
-
-            builder.pop();
-        }
-    }
-
-
-    //TODO: yeet these
-    //maybe not need but hey
-    public static class cached {
-
-
-
-        //items
-        public static String ROPE_ARROW_ROPE;
-        public static Holder.Reference<Block> ROPE_ARROW_BLOCK;
-        public static int ROPE_ARROW_CAPACITY;
-        public static boolean ROPE_ARROW_CROSSBOW;
-        public static int FLUTE_RADIUS;
-        public static int FLUTE_DISTANCE;
-        public static float BOMB_RADIUS;
-        public static int BOMB_FUSE;
-        public static BombEntity.BreakingMode BOMB_BREAKS;
-        public static float BOMB_BLUE_RADIUS;
-        public static BombEntity.BreakingMode BOMB_BLUE_BREAKS;
-        public static double SLINGSHOT_RANGE;
-        public static int SLINGSHOT_CHARGE;
-        public static float SLINGSHOT_DECELERATION;
-        public static boolean UNRESTRICTED_SLINGSHOT;
-        public static Hands WRENCH_BYPASS;
-        public static int BUBBLE_BLOWER_COST;
-        //tweaks
-        public static int ZOMBIE_HORSE_COST;
-        public static boolean ZOMBIE_HORSE;
-        public static boolean ZOMBIE_HORSE_UNDERWATER;
-        public static boolean DIRECTIONAL_CAKE;
-        public static boolean DOUBLE_CAKE_PLACEMENT;
-        public static boolean HANGING_POT_PLACEMENT;
-        public static boolean THROWABLE_BRICKS_ENABLED;
-        public static boolean WALL_LANTERN_PLACEMENT;
-        public static boolean WALL_LANTERN_HIGH_PRIORITY;
-        public static List<? extends String> WALL_LANTERN_BLACKLIST;
-        public static LightableLanternBlock.FallMode FALLING_LANTERNS;
-        public static boolean BELL_CHAIN;
-        public static int BELL_CHAIN_LENGTH;
-        public static boolean PLACEABLE_STICKS;
-        public static boolean PLACEABLE_RODS;
-        public static boolean RAKED_GRAVEL;
-        public static boolean BOTTLE_XP;
-        public static int BOTTLING_COST;
-        public static boolean MAP_MARKERS;
-        public static boolean CEILING_BANNERS;
-        public static boolean PLACEABLE_BOOKS;
-        public static boolean WRITTEN_BOOKS;
-        public static float ENCHANTED_BOOK_POWER;
-        public static float BOOK_POWER;
-        public static boolean MIXED_BOOKS;
-        public static boolean PLACEABLE_GUNPOWDER;
-        public static int GUNPOWDER_BURN_SPEED;
-        public static int GUNPOWDER_SPREAD_AGE;
-        public static boolean SKULL_PILES;
-        public static boolean SKULL_CANDLES;
-        public static boolean SKULL_CANDLES_MULTIPLE;
-        public static boolean WANDERING_TRADER_DOORS;
-        //spawns
-        public static boolean FIREFLY_DESPAWN;
-        public static boolean DISTANCE_TEXT;
-        //blocks
-        public static int BUBBLE_LIFETIME;
-        public static boolean BUBBLE_BREAK;
-        public static int SPEAKER_RANGE;
-        public static boolean SPEAKER_NARRATOR;
-        public static boolean ASH_BURN;
-        public static boolean ASH_RAIN;
-        public static int BELLOWS_BASE_PERIOD;
-        public static int BELLOWS_POWER_SCALING;
-        public static double BELLOWS_MAX_VEL;
-        public static double BELLOWS_BASE_VEL_SCALING;
-        public static boolean BELLOWS_FLAG;
-        public static int BELLOWS_RANGE;
-        public static double LAUNCHER_VEL;
-        public static int LAUNCHER_HEIGHT;
-        public static boolean TURN_TABLE_ROTATE_ENTITIES;
-        public static int JAR_CAPACITY;
-        public static boolean JAR_EAT;
-        public static boolean JAR_CAPTURE;
-        public static boolean JAR_COOKIES;
-        public static boolean JAR_LIQUIDS;
-        public static boolean JAR_ITEM_DRINK;
-        public static boolean JAR_AUTO_DETECT;
-        public static boolean NOTICE_BOARDS_UNRESTRICTED;
-        public static boolean CAGE_ALL_MOBS;
-        public static boolean CAGE_ALL_BABIES;
-        public static boolean CAGE_AUTO_DETECT;
-        public static int SACK_INCREMENT;
-        public static boolean SACK_PENALTY;
-        public static int SACK_SLOTS;
-        public static boolean SAFE_UNBREAKABLE;
-        public static boolean SAFE_SIMPLE;
-        public static int GLOBE_TRADES;
-        public static boolean BLACKBOARD_COLOR;
-        public static boolean REPLACE_DAUB;
-        public static boolean SWAP_TIMBER_FRAME;
-        public static boolean ITEM_SHELF_LADDER;
-        public static boolean DOUBLE_IRON_GATE;
-        public static boolean CONSISTENT_GATE;
-        public static boolean STICK_POLE;
-        public static int STICK_POLE_LENGTH;
-        public static boolean GOBLET_DRINK;
-        public static boolean CAGE_PERSISTENT_MOBS;
-        public static int CAGE_HEALTH_THRESHOLD;
-        public static boolean CRYSTAL_ENCHANTING;
-        public static boolean ROPE_UNRESTRICTED;
-        public static boolean ROPE_SLIDE;
-        public static boolean BAMBOO_SPIKES_ALTERNATIVE;
-
-
-        public static boolean SERVER_PROTECTION;
-
-        //entity
-        public static int FIREFLY_PERIOD;
-        public static double FIREFLY_SPEED;
-
-        public static void refresh() {
-
-
-            ZOMBIE_HORSE_COST = tweaks.ZOMBIE_HORSE_COST.get();
-            ZOMBIE_HORSE = tweaks.ZOMBIE_HORSE.get();
-            ZOMBIE_HORSE_UNDERWATER = tweaks.ZOMBIE_HORSE_UNDERWATER.get();
-            BOTTLING_COST = tweaks.BOTTLING_COST.get();
-            BOTTLE_XP = tweaks.BOTTLE_XP.get();
-            RAKED_GRAVEL = tweaks.RAKED_GRAVEL.get() && RegistryConfigs.RAKED_GRAVEL_ENABLED.get();
-            PLACEABLE_RODS = tweaks.PLACEABLE_RODS.get();
-            PLACEABLE_STICKS = tweaks.PLACEABLE_STICKS.get();
-            DIRECTIONAL_CAKE = tweaks.DIRECTIONAL_CAKE.get();
-            DOUBLE_CAKE_PLACEMENT = tweaks.DOUBLE_CAKE_PLACEMENT.get();
-            HANGING_POT_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
-            WALL_LANTERN_PLACEMENT = tweaks.WALL_LANTERN_PLACEMENT.get();
-            WALL_LANTERN_HIGH_PRIORITY = tweaks.WALL_LANTERN_HIGH_PRIORITY.get();
-            WALL_LANTERN_BLACKLIST = tweaks.WALL_LANTERN_BLACKLIST.get();
-            FALLING_LANTERNS = tweaks.FALLING_LANTERNS.get();
-            THROWABLE_BRICKS_ENABLED = tweaks.THROWABLE_BRICKS_ENABLED.get();
-            BELL_CHAIN = tweaks.BELL_CHAIN.get();
-            BELL_CHAIN_LENGTH = tweaks.BELL_CHAIN_LENGTH.get();
-            MAP_MARKERS = tweaks.MAP_MARKERS.get();
-            CEILING_BANNERS = tweaks.CEILING_BANNERS.get();
-            PLACEABLE_BOOKS = tweaks.PLACEABLE_BOOKS.get();
-            WRITTEN_BOOKS = tweaks.WRITTEN_BOOKS.get();
-            MIXED_BOOKS = tweaks.MIXED_BOOKS.get();
-            BOOK_POWER = (float) ((double) tweaks.BOOK_POWER.get());
-            ENCHANTED_BOOK_POWER = (float) ((double) tweaks.ENCHANTED_BOOK_POWER.get());
-            PLACEABLE_GUNPOWDER = tweaks.PLACEABLE_GUNPOWDER.get();
-            GUNPOWDER_BURN_SPEED = tweaks.GUNPOWDER_BURN_SPEED.get();
-            GUNPOWDER_SPREAD_AGE = tweaks.GUNPOWDER_SPREAD_AGE.get();
-            SKULL_PILES = tweaks.SKULL_PILES.get();
-            SKULL_CANDLES = tweaks.SKULL_CANDLES.get();
-            SKULL_CANDLES_MULTIPLE = tweaks.SKULL_CANDLES_MULTIPLE.get();
-            WANDERING_TRADER_DOORS = tweaks.WANDERING_TRADER_DOORS.get();
-
-            BUBBLE_BLOWER_COST = item.BUBBLE_BLOWER_COST.get();
-            WRENCH_BYPASS = item.WRENCH_BYPASS.get();
-            ROPE_ARROW_CAPACITY = item.ROPE_ARROW_CAPACITY.get();
-            ROPE_ARROW_CROSSBOW = item.ROPE_ARROW_CROSSBOW.get();
-            ROPE_ARROW_ROPE = item.ROPE_ARROW_ROPE.get();
-            ROPE_ARROW_BLOCK = (Holder.Reference<Block>) Registry.BLOCK.getHolder(new ResourceLocation(ROPE_ARROW_ROPE))
-                    .orElse(Registry.BLOCK.getHolder(ModRegistry.ROPE.get()).get());
-            FLUTE_DISTANCE = item.FLUTE_DISTANCE.get();
-            FLUTE_RADIUS = item.FLUTE_RADIUS.get();
-            BOMB_BREAKS = item.BOMB_BREAKS.get();
-            BOMB_RADIUS = (float) (item.BOMB_RADIUS.get() + 0f);
-            BOMB_FUSE = item.BOMB_FUSE.get();
-            BOMB_BLUE_BREAKS = item.BOMB_BLUE_BREAKS.get();
-            BOMB_BLUE_RADIUS = (float) (item.BOMB_BLUE_RADIUS.get() + 0f);
-            SLINGSHOT_RANGE = item.SLINGSHOT_RANGE.get();
-            SLINGSHOT_CHARGE = item.SLINGSHOT_CHARGE.get();
-            SLINGSHOT_DECELERATION = (float) (0f + item.SLINGSHOT_DECELERATION.get());
-            UNRESTRICTED_SLINGSHOT = item.UNRESTRICTED_SLINGSHOT.get();
-
-            DISTANCE_TEXT = spawn.DISTANCE_TEXT.get();
-
-            GLOBE_TRADES = block.GLOBE_TRADES.get();
-
-            SPEAKER_RANGE = block.SPEAKER_RANGE.get();
-            SPEAKER_NARRATOR = block.SPEAKER_NARRATOR.get();
-
-            BELLOWS_BASE_PERIOD = block.BELLOWS_PERIOD.get();
-            BELLOWS_POWER_SCALING = block.BELLOWS_POWER_SCALING.get();
-            BELLOWS_MAX_VEL = block.BELLOWS_MAX_VEL.get();
-            BELLOWS_BASE_VEL_SCALING = block.BELLOWS_BASE_VEL_SCALING.get();
-            BELLOWS_FLAG = block.BELLOWS_FLAG.get();
-            BELLOWS_RANGE = block.BELLOWS_RANGE.get();
-
-            LAUNCHER_VEL = block.LAUNCHER_VEL.get();
-            LAUNCHER_HEIGHT = block.LAUNCHER_HEIGHT.get();
-
-            TURN_TABLE_ROTATE_ENTITIES = block.TURN_TABLE_ROTATE_ENTITIES.get();
-
-            JAR_CAPACITY = block.JAR_CAPACITY.get();
-            JAR_EAT = block.JAR_EAT.get();
-            JAR_CAPTURE = block.JAR_CAPTURE.get();
-            JAR_COOKIES = block.JAR_COOKIES.get();
-            JAR_LIQUIDS = block.JAR_LIQUIDS.get();
-            JAR_ITEM_DRINK = block.JAR_ITEM_DRINK.get();
-            JAR_AUTO_DETECT = block.JAR_AUTO_DETECT.get();
-
-            NOTICE_BOARDS_UNRESTRICTED = block.NOTICE_BOARDS_UNRESTRICTED.get();
-
-            CAGE_ALL_MOBS = block.CAGE_ALL_MOBS.get();
-            CAGE_ALL_BABIES = block.CAGE_ALL_BABIES.get();
-            CAGE_AUTO_DETECT = block.CAGE_AUTO_DETECT.get();
-            CAGE_PERSISTENT_MOBS = block.CAGE_PERSISTENT_MOBS.get();
-            CAGE_HEALTH_THRESHOLD = block.CAGE_HEALTH_THRESHOLD.get();
-
-            SACK_INCREMENT = block.SACK_INCREMENT.get();
-            SACK_PENALTY = block.SACK_PENALTY.get();
-            SACK_SLOTS = block.SACK_SLOTS.get();
-
-            SAFE_UNBREAKABLE = block.SAFE_UNBREAKABLE.get();
-            SAFE_SIMPLE = block.SAFE_SIMPLE.get();
-
-            BLACKBOARD_COLOR = block.BLACKBOARD_COLOR.get();
-
-            REPLACE_DAUB = block.REPLACE_DAUB.get();
-            SWAP_TIMBER_FRAME = block.SWAP_TIMBER_FRAME.get();
-
-            ITEM_SHELF_LADDER = block.ITEM_SHELF_LADDER.get();
-
-            DOUBLE_IRON_GATE = block.DOUBLE_IRON_GATE.get();
-            CONSISTENT_GATE = block.CONSISTENT_GATE.get();
-
-            STICK_POLE = block.STICK_POLE.get();
-            STICK_POLE_LENGTH = block.STICK_POLE_LENGTH.get();
-
-            GOBLET_DRINK = block.GOBLET_DRINK.get();
-            CRYSTAL_ENCHANTING = block.CRYSTAL_ENCHANTING.get();
-            ROPE_UNRESTRICTED = block.ROPE_UNRESTRICTED.get();
-            ROPE_SLIDE = block.ROPE_SLIDE.get();
-            ASH_BURN = block.ASH_BURN.get();
-            ASH_RAIN = block.ASH_RAIN.get();
-            BUBBLE_LIFETIME = block.BUBBLE_LIFETIME.get();
-            BUBBLE_BREAK = block.BUBBLE_BREAK.get();
-            BAMBOO_SPIKES_ALTERNATIVE = block.BAMBOO_SPIKES_ALTERNATIVE.get();
-
-            FIREFLY_PERIOD = entity.FIREFLY_PERIOD.get();
-            FIREFLY_SPEED = entity.FIREFLY_SPEED.get();
-            FIREFLY_DESPAWN = entity.FIREFLY_DESPAWN.get();
-
-            SERVER_PROTECTION = general.SERVER_PROTECTION.get();
-        }
-    }
 }
