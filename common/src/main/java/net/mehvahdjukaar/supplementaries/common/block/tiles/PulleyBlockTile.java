@@ -107,7 +107,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
         boolean success = RopeBlock.removeRope(pos.below(), (Level) world, ropeBlock);
         if (success) {
-            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
+            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             world.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             if (addNewItem) this.setDisplayedItem(stack);
             else stack.grow(1);
@@ -124,7 +124,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
         boolean success = RopeBlock.addRope(pos.below(), (Level) world, null, InteractionHand.MAIN_HAND, ropeBlock);
         if (success) {
-            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType(world, pos, null);
+            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             stack.shrink(1);
             this.setChanged();

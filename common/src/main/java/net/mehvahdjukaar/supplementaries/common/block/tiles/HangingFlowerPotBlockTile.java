@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,9 +43,8 @@ public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerP
         this.loadOwner(compound);
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
     }
-
 }

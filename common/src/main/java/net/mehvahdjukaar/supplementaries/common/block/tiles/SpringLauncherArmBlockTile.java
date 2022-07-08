@@ -114,7 +114,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
                             double d1 = vec3d.x;
                             double d2 = vec3d.y;
                             double d3 = vec3d.z;
-                            double speed = ServerConfigs.cached.LAUNCHER_VEL;
+                            double speed = ServerConfigs.Blocks.LAUNCHER_VEL.get();
                             if (tile.dx != 0) {
                                 d1 = tile.dx * speed;
                             }
