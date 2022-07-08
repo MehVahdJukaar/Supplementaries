@@ -105,7 +105,6 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         return this.saveWithoutMetadata();
     }
 
-    @Override
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         Direction dir = this.getDirection();

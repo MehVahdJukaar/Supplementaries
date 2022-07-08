@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -21,7 +22,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
         super(ModRegistry.PEDESTAL_TILE.get(), pos, state);
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(worldPosition, worldPosition.offset(1, 2, 1));
     }

@@ -67,7 +67,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
 
         this.message = compound.getString("Message");
-        if (!ServerConfigs.cached.SPEAKER_NARRATOR) this.narrator = false;
+        if (!ServerConfigs.Blocks.SPEAKER_NARRATOR.get()) this.narrator = false;
         else this.narrator = compound.getBoolean("Narrator");
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);
@@ -100,7 +100,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
                     .withStyle(style);
 
             NetworkHandler.sendToAllInRangeClients(pos, server,
-                    ServerConfigs.cached.SPEAKER_RANGE * this.volume,
+                    ServerConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
                     new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
         }

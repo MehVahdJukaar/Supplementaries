@@ -44,11 +44,11 @@ public class WindVaneBlockTile extends BlockEntity {
             float tp = (float) (2f * Math.PI);
             //float offset = 3f * (MathHelper.sin(0.1f*this.pos.getX()) + 0.1f*MathHelper.sin(this.pos.getZ()) + 0.1f*MathHelper.sin(this.pos.getY()));
             float t = pLevel.getGameTime() % 24000 + tile.offset;
-            float b = (float) Math.max(1, (power * ClientConfigs.cached.WIND_VANE_POWER_SCALING));
-            float max_angle_1 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_1;
-            float max_angle_2 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_2;
-            float period_1 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_1;
-            float period_2 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_2;
+            float b = (float) Math.max(1, (power * ClientConfigs.Blocks.WIND_VANE_POWER_SCALING.get()));
+            float max_angle_1 = (float) ClientConfigs.Blocks.WIND_VANE_ANGLE_1.get();
+            float max_angle_2 = (float) ClientConfigs.Blocks.WIND_VANE_ANGLE_2.get();
+            float period_1 = (float) ClientConfigs.Blocks.WIND_VANE_PERIOD_1.get();
+            float period_2 = (float) ClientConfigs.Blocks.WIND_VANE_PERIOD_2.get();
             float newYaw = max_angle_1 * Mth.sin(tp * ((t * b / period_1) % 360))
                     + max_angle_2 * Mth.sin(tp * ((t * b / period_2) % 360));
             tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);

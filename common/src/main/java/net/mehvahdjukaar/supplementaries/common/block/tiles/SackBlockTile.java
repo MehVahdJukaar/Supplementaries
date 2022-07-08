@@ -79,7 +79,7 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public int getUnlockedSlots() {
-        return ServerConfigs.cached.SACK_SLOTS;
+        return ServerConfigs.Blocks.SACK_SLOTS.get();
     }
 
     public boolean isSlotUnlocked(int ind) {

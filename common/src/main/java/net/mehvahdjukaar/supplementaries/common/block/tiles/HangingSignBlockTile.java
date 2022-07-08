@@ -55,7 +55,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     @Override
     public boolean isAlwaysFast() {
-        return ClientConfigs.cached.FAST_SIGNS;
+        return ClientConfigs.Blocks.FAST_SIGNS.get();
     }
 
     @Override
