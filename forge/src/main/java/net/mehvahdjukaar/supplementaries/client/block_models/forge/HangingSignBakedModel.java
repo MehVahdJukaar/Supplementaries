@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -18,9 +19,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,7 +67,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
 
         List<BakedQuad> quads = new ArrayList<>();
 
@@ -73,7 +75,7 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
             //support & connections
             try {
                 var a = state.getValue(HangingSignBlock.ATTACHMENT);
-                attachmentMap.get(a).forEach(b -> quads.addAll(b.getQuads(state, side, rand, EmptyModelData.INSTANCE)));
+                attachmentMap.get(a).forEach(b -> quads.addAll(b.getQuads(state, side, rand, ModelData.EMPTY, renderType)));
 
             } catch (Exception ignored) {
             }
@@ -81,12 +83,12 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
 
             //static sign
             try {
-                boolean fancy = Boolean.TRUE.equals(extraData.getData(BlockProperties.FANCY));
+                boolean fancy = Boolean.TRUE.equals(extraData.get(BlockProperties.FANCY));
                 if (!fancy) {
 
                     BakedModel model = blockModelShaper.getModelManager().getModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
                     if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
-                    var signQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+                    var signQuads = model.getQuads(state, side, rand, ModelData.EMPTY, renderType);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;
                     boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == BlockProperties.SignAttachment.CEILING;
                     if (flipped || ceiling) {

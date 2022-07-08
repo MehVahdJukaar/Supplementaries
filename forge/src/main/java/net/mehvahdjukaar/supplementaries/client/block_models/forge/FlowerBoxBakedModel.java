@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -19,9 +20,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,13 +42,13 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
 
         List<BakedQuad> quads = new ArrayList<>();
 
         //box
         try {
-            quads.addAll(box.getQuads(state, side, rand, EmptyModelData.INSTANCE));
+            quads.addAll(box.getQuads(state, side, rand, ModelData.EMPTY, renderType));
         } catch (Exception ignored) {
         }
 
@@ -55,9 +57,9 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
             if(state != null) {
                 BlockState[] flowers = new BlockState[]{
-                        extraData.getData(FlowerBoxBlockTile.FLOWER_0),
-                        extraData.getData(FlowerBoxBlockTile.FLOWER_1),
-                        extraData.getData(FlowerBoxBlockTile.FLOWER_2)
+                        extraData.get(FlowerBoxBlockTile.FLOWER_0),
+                        extraData.get(FlowerBoxBlockTile.FLOWER_1),
+                        extraData.get(FlowerBoxBlockTile.FLOWER_2)
                 };
 
                 PoseStack matrixStack = new PoseStack();
@@ -115,7 +117,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
             model = blockModelShaper.getBlockModel(state);
         }
 
-        List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+        List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, ModelData.EMPTY);
         for (BakedQuad q : mimicQuads) {
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 

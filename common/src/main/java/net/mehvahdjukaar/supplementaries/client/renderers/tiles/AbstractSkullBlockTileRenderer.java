@@ -50,7 +50,7 @@ public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBloc
             renderInner(inner, pPartialTicks, poseStack, buffer, pCombinedLight, pCombinedOverlay);
 
 
-            //blockRenderer.renderSingleBlock(blockstate, poseStack, buffer, pCombinedLight, pCombinedOverlay, EmptyModelData.INSTANCE);
+            //blockRenderer.renderSingleBlock(blockstate, poseStack, buffer, pCombinedLight, pCombinedOverlay, ModelData.EMPTY);
         }
         //leaves the matrix rotated for wax
     }

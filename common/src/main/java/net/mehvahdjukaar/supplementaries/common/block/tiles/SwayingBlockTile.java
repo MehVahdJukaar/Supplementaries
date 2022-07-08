@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 
@@ -63,7 +63,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
 
     //called when data is actually refreshed
     @Override
-    public IModelData getModelData() {
+    public ModelData getModelData() {
         this.ticksToSwitchMode = 2;
         return new ModelDataMap.Builder()
                 .withInitial(FANCY, this.shouldHaveTESR)

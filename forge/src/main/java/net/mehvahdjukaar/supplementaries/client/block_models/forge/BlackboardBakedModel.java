@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManag
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -21,10 +22,9 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     //model cache used when switching frequently between models
     // data needed to rebake
 
-    private final IModelConfiguration owner;
+    private final IGeometryBakingContext owner;
     private final ModelBakery bakery;
     private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
@@ -44,7 +44,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
 
     private final BakedModel back;
 
-    public BlackboardBakedModel(BakedModel unbaked, IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
+    public BlackboardBakedModel(BakedModel unbaked, IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
         this.back = unbaked;
         this.owner = owner;
         this.bakery = bakery;
@@ -76,7 +76,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return spriteGetter.apply(owner.resolveTexture("particle"));
+        return spriteGetter.apply(owner.getMaterial("particle"));
     }
 
     @Override
@@ -91,14 +91,14 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
 
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random, IModelData data) {
-        List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, direction, random, data));
-        if (data != EmptyModelData.INSTANCE && state != null && direction == null) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random, ModelData data, RenderType renderType) {
+        List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, direction, random, data, renderType));
+        if (data != ModelData.EMPTY && state != null && direction == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
-            BlackboardKey key = data.getData(BlackboardBlockTile.BLACKBOARD);
+            BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
                 quads.addAll(BlackboardTextureManager.getBlackboardInstance(key)
-                  .getModel(dir, b -> generateQuads(b, this.modelTransform)));
+                        .getModel(dir, b -> generateQuads(b, this.modelTransform)));
             }
         }
 
@@ -106,8 +106,8 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     }
 
     private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform) {
-        TextureAtlasSprite black = spriteGetter.apply(owner.resolveTexture("black"));
-        TextureAtlasSprite white = spriteGetter.apply(owner.resolveTexture("white"));
+        TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
+        TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"));
         List<BakedQuad> quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();
 
@@ -129,7 +129,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
                 //draws prev quad
                 int tint = BlackboardBlock.colorFromByte(prevColor);
                 TextureAtlasSprite sprite = prevColor == 0 ? black : white;
-                quads.add(createPixelQuad((15-x) / 16f, (16-length-startY) / 16f, 1 - 0.3125f, 1 / 16f, length / 16f, sprite, tint, rotation));
+                quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f, 1 / 16f, length / 16f, sprite, tint, rotation));
                 startY = y;
                 if (current != null) {
                     prevColor = current;
@@ -155,13 +155,13 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         builder.setQuadOrientation(Direction.getNearest(normal.x(), normal.y(), normal.z()));
 
         putVertex(builder, normal, x + width, y + height, z,
-                u0+ tu, v0+ tv, sprite, color, transform);
+                u0 + tu, v0 + tv, sprite, color, transform);
         putVertex(builder, normal, x + width, y, z,
                 u0 + tu, v0, sprite, color, transform);
         putVertex(builder, normal, x, y, z,
-                u0 , v0 , sprite, color, transform);
+                u0, v0, sprite, color, transform);
         putVertex(builder, normal, x, y + height, z,
-                u0 , v0 + tv, sprite, color, transform);
+                u0, v0 + tv, sprite, color, transform);
         return builder.build();
     }
 

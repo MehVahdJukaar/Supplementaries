@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -16,9 +17,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -40,20 +42,20 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
 
         List<BakedQuad> quads = new ArrayList<>();
 
         BlockState mimic = null;
         try {
-            mimic = extraData.getData(BlockProperties.MIMIC);
+            mimic = extraData.get(BlockProperties.MIMIC);
         } catch (Exception ignored) {
         }
 
         //support
         try {
 
-            var supportQuads = support.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+            var supportQuads = support.getQuads(state, side, rand, ModelData.EMPTY);
             if(!supportQuads.isEmpty()){
                 if (mimic != null) {
                     var sprite = WallLanternTexturesRegistry.getTextureForLantern(mimic.getBlock());
@@ -81,7 +83,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
                     }
                     BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                    List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE);
+                    List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand, ModelData.EMPTY);
 
                     TextureAtlasSprite texture = this.getParticleIcon();
                     for (BakedQuad q : mimicQuads) {
@@ -127,7 +129,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
         BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 

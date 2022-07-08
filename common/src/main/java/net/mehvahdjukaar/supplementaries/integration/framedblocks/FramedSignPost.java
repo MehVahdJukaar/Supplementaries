@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import xfacthd.framedblocks.api.block.FramedBlockEntity;
 import xfacthd.framedblocks.api.block.IFramedBlock;
 import xfacthd.framedblocks.api.util.FramedBlockData;
@@ -28,7 +28,7 @@ public class FramedSignPost {
 
     public static final Item framedHammer = FBContent.itemFramedHammer.get();
 
-    public static IModelData getModelData(BlockState mimic) {
+    public static ModelData getModelData(BlockState mimic) {
         FramedBlockData date = new FramedBlockData(false);
         date.setCamoState(mimic);
 
@@ -94,13 +94,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class FramedSignPost {
     public static BlockState framedFence = Blocks.OAK_FENCE.defaultBlockState();
 
-    public static IModelData getModelData(BlockState mimic) {
-        return EmptyModelData.INSTANCE;
+    public static ModelData getModelData(BlockState mimic) {
+        return ModelData.EMPTY;
     }
 
     public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {

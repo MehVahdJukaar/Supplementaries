@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
@@ -31,7 +33,7 @@ import java.util.function.Supplier;
 
 public class FrameBlockTile extends MimicBlockTile {
 
-    public final Lazy<BlockState> WATTLE_AND_DAUB = Lazy.of(() -> ((FrameBlock) this.getBlockState().getBlock()).daub.get().defaultBlockState());
+    public final Supplier<BlockState> WATTLE_AND_DAUB = Suppliers.memoize(() -> ((FrameBlock) this.getBlockState().getBlock()).daub.get().defaultBlockState());
 
     public FrameBlockTile(BlockPos pos, BlockState state) {
         this(pos, state, () -> null);
@@ -69,7 +71,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public BlockState acceptBlock(BlockState state) {
         Block b = state.getBlock();
 
-        if (b == ModRegistry.DAUB.get() && ServerConfigs.cached.REPLACE_DAUB) {
+        if (b == ModRegistry.DAUB.get() && ServerConfigs.Blocks.REPLACE_DAUB.get()) {
             if (level != null && !this.level.isClientSide) {
                 state = WATTLE_AND_DAUB.get();
                 if (this.getBlockState().hasProperty(BlockProperties.FLIPPED)) {

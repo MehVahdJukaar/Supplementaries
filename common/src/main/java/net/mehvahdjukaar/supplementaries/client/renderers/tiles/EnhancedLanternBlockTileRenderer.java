@@ -38,7 +38,7 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         // render block
 
         RendererUtil.renderBlockState(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ModelData.EMPTY);
         matrixStackIn.popPose();
     }
 
