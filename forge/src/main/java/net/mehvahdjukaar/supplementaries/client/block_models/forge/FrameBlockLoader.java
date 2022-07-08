@@ -3,22 +3,16 @@ package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.ExtendedBlockModelDeserializer;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class FrameBlockLoader  implements IModelLoader<FrameBlockGeometry> {
-
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-
-    }
+public class FrameBlockLoader implements IGeometryLoader<FrameBlockGeometry> {
 
     @Override
-    public FrameBlockGeometry read(JsonDeserializationContext context, JsonObject json) {
-        BlockModel model;
-        model = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+    public FrameBlockGeometry read(JsonObject json, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        BlockModel model = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("overlay"));
         return new FrameBlockGeometry(model);
     }

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
+import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardKey.class);
+    public static final ModelDataKey<BlackboardKey> BLACKBOARD = BlockProperties.BLACKBOARD;
 
     private UUID owner = null;
     private boolean waxed = false;

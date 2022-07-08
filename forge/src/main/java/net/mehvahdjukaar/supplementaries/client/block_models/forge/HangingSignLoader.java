@@ -3,40 +3,36 @@ package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraftforge.client.model.IModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.ExtendedBlockModelDeserializer;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
-public class HangingSignLoader implements IModelLoader<HangingSignGeometry> {
-
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-    }
+public class HangingSignLoader implements IGeometryLoader<HangingSignGeometry> {
 
     @Override
-    public HangingSignGeometry read(JsonDeserializationContext context, JsonObject json) {
-        BlockModel stick = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+    public HangingSignGeometry read(JsonObject json, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        BlockModel stick = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("stick"));
-        BlockModel leftFence = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel leftFence = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("left_post"));
-        BlockModel leftPalisade = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel leftPalisade = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("left_palisade"));
-        BlockModel leftWall = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel leftWall = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("left_wall"));
-        BlockModel leftBeam = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel leftBeam = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("left_beam"));
-        BlockModel rightFence = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel rightFence = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_post"));
-        BlockModel rightPalisade = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel rightPalisade = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_palisade"));
-        BlockModel rightWall = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel rightWall = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_wall"));
-        BlockModel rightBeam = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel rightBeam = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_beam"));
-        BlockModel leftStick = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel leftStick = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("left_stick"));
-        BlockModel rightStick = ModelLoaderRegistry.ExpandedBlockModelDeserializer.INSTANCE
+        BlockModel rightStick = ExtendedBlockModelDeserializer.INSTANCE
                 .getAdapter(BlockModel.class).fromJsonTree(json.get("right_stick"));
         return new HangingSignGeometry(stick, leftFence, leftPalisade, leftWall, leftBeam, leftStick,
                 rightFence, rightPalisade, rightWall, rightBeam, rightStick);

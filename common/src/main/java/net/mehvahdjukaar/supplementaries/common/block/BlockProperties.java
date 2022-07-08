@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -69,6 +68,9 @@ public class BlockProperties {
     public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC;
     public static final ModelDataKey<Boolean> FANCY = new ModelDataKey<>(Boolean.class);
     public static final ModelDataKey<Boolean> FRAMED = new ModelDataKey<>(Boolean.class);
+    public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
+    public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
+    public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlackboardTextureManager.BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardTextureManager.BlackboardKey.class);
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
@@ -180,7 +182,7 @@ public class BlockProperties {
                                 !state.getValue(StickBlock.AXIS_X) :
                                 !state.getValue(StickBlock.AXIS_Z))) ||
                         (state.getBlock() instanceof EndRodBlock &&
-                                state.getValue(EndRodBlock.FACING).getAxis()== Direction.Axis.Y)) return STICK;
+                                state.getValue(EndRodBlock.FACING).getAxis() == Direction.Axis.Y)) return STICK;
                 return null;
             }
             return switch (postType) {

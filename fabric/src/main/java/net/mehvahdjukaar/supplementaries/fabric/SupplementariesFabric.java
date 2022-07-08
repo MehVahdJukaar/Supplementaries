@@ -109,13 +109,13 @@ public class SupplementariesFabric implements ModInitializer {
 
         @Nonnull
         @Override
-        public List<BakedQuad> getQuads(@javax.annotation.Nullable BlockState state, @javax.annotation.Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+        public List<BakedQuad> getQuads(@javax.annotation.Nullable BlockState state, @javax.annotation.Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData) {
 
             List<BakedQuad> quads = new ArrayList<>();
 
             //box
             try {
-                quads.addAll(box.getQuads(state, side, rand, EmptyModelData.INSTANCE));
+                quads.addAll(box.getQuads(state, side, rand, ModelData.EMPTY));
             } catch (Exception ignored) {
             }
 
@@ -184,7 +184,7 @@ public class SupplementariesFabric implements ModInitializer {
                 model = blockModelShaper.getBlockModel(state);
             }
 
-            List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+            List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, ModelData.EMPTY);
             for (BakedQuad q : mimicQuads) {
                 int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 

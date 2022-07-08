@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.geometry.IModelGeometry;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,11 +25,11 @@ public record HangingSignGeometry(BlockModel stick,
                                   BlockModel rightPalisade,
                                   BlockModel rightWall,
                                   BlockModel rightBeam,
-                                  BlockModel rightStick) implements IModelGeometry<HangingSignGeometry> {
+                                  BlockModel rightStick) implements IUnbakedGeometry<HangingSignGeometry> {
 
 
     @Override
-    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
+    public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
         BakedModel bakedStick = this.stick.bake(bakery, stick, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedLeftFence = this.leftFence.bake(bakery, leftFence, spriteGetter, modelTransform, modelLocation, true);
         BakedModel bakedLeftPalisade = this.leftPalisade.bake(bakery, leftPalisade, spriteGetter, modelTransform, modelLocation, true);
@@ -48,7 +48,7 @@ public record HangingSignGeometry(BlockModel stick,
     }
 
     @Override
-    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
+    public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
         List<Material> list = new ArrayList<>();
         list.addAll(stick.getMaterials(modelGetter, missingTextureErrors));
         list.addAll(leftFence.getMaterials(modelGetter, missingTextureErrors));

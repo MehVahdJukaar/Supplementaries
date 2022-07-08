@@ -13,7 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData) {
 
         //always on cutout layer
         List<BakedQuad> quads = new ArrayList<>();
@@ -43,13 +43,13 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
 
                 if (mimic != null) {
                     BakedModel model = blockModelShaper.getBlockModel(mimic);
-                    quads.addAll(model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE));
+                    quads.addAll(model.getQuads(mimic, side, rand, ModelData.EMPTY));
                 }
             } catch (Exception ignored) {
             }
 
             try {
-                quads.addAll(rope.getQuads(state, side, rand, EmptyModelData.INSTANCE));
+                quads.addAll(rope.getQuads(state, side, rand, ModelData.EMPTY));
             } catch (Exception ignored) {
             }
         }
@@ -82,7 +82,7 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
    }
 
     @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
         BlockState mimic = data.getData(BlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
             BakedModel model = blockModelShaper.getBlockModel(mimic);

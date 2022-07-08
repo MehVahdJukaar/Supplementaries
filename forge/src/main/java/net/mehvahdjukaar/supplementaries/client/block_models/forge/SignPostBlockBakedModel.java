@@ -18,7 +18,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData) {
 
         try {
             BlockState mimic = extraData.getData(BlockProperties.MIMIC);
@@ -48,12 +48,12 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
 
             if (mimic != null && !mimic.isAir()) {
 
-                IModelData data;
+                ModelData data;
                 if (framed) {
                     data = FramedSignPost.getModelData(mimic);
                     mimic = FramedSignPost.framedFence;
                 } else {
-                    data = EmptyModelData.INSTANCE;
+                    data = ModelData.EMPTY;
                 }
                 BakedModel model = blockModelShaper.getBlockModel(mimic);
 
@@ -95,7 +95,7 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
         BlockState mimic = data.getData(SignPostBlockTile.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
