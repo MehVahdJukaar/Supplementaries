@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IPlantable;
 
 public class PlanterBlock extends WaterBlock {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D), Shapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
@@ -69,13 +69,8 @@ public class PlanterBlock extends WaterBlock {
         return (connect && !(b instanceof StemBlock) && !(b instanceof CropBlock));
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isFertile(BlockState state, BlockGetter world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction direction, IPlantable plantable) {
         return true;
     }
 }

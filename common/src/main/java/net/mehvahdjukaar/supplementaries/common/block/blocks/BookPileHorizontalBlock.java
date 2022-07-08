@@ -79,7 +79,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     }
 
     public boolean isAcceptedItem(Item i) {
-        return isNormalBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isEnchantedBook(i));
+        return isNormalBook(i) || (ServerConfigs.Tweaks.MIXED_BOOKS.get() && isEnchantedBook(i));
     }
 
     @Override

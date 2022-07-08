@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.ChatFormatting;
@@ -43,7 +44,7 @@ public class MagmaCreamBlock extends HalfTransparentBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (CompatHandler.quark) return;
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
+        if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
         tooltip.add(Component.translatable("message.supplementaries.magma_cream_block").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
@@ -70,17 +71,17 @@ public class MagmaCreamBlock extends HalfTransparentBlock {
     }
 
     //piston push fix
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isSlimeBlock(BlockState state) {
         return true;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isStickyBlock(BlockState state) {
         return true;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean canStickTo(BlockState state, BlockState other) {
         return true;
     }

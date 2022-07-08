@@ -192,9 +192,9 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
-        if (world.getBlockEntity(pos) instanceof SackBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
             CompoundTag compoundTag = new CompoundTag();
             tile.saveAdditional(compoundTag);
             if (!compoundTag.isEmpty()) {

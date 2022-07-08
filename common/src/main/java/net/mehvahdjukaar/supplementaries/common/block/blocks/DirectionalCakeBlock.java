@@ -132,16 +132,15 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
     public void removeSlice(BlockState state, BlockPos pos, LevelAccessor world, Direction dir) {
         int i = state.getValue(BITES);
         if (i < 6) {
-            if (i == 0 && ServerConfigs.cached.DIRECTIONAL_CAKE) state = state.setValue(FACING, dir);
+            if (i == 0 && ServerConfigs.Tweaks.DIRECTIONAL_CAKE.get()) state = state.setValue(FACING, dir);
             world.setBlock(pos, state.setValue(BITES, i + 1), 3);
         } else {
             world.removeBlock(pos, false);
         }
     }
 
-
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         return new ItemStack(Items.CAKE);
     }
 

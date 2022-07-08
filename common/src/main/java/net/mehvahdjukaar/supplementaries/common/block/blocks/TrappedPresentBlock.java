@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
@@ -48,11 +50,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -152,9 +151,9 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
-        if (world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
             return tile.getPresentItem(this);
         }
         return itemstack;
@@ -245,7 +244,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
         var particleEngine = Minecraft.getInstance().particleEngine;
         VoxelShape voxelshape = PresentBlock.SHAPE_LID;

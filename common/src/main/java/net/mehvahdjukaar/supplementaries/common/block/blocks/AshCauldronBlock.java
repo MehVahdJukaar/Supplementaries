@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class AshCauldronBlock extends LayeredCauldronBlock {
-    public AshCauldronBlock(Properties properties,
-                            Predicate<Biome.Precipitation> predicate,
-                            Map<Item, CauldronInteraction> interactionMap) {
+    public AshCauldronBlock(Predicate<Biome.Precipitation> predicate, Map<Item, CauldronInteraction> interactionMap) {
         super(Properties.copy(Blocks.CAULDRON), predicate, interactionMap);
     }
 
@@ -26,5 +24,4 @@ public class AshCauldronBlock extends LayeredCauldronBlock {
             pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, pState.getValue(LEVEL)-1));
 
     }
-
 }

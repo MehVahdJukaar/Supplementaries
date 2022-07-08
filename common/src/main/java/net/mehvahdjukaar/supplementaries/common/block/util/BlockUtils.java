@@ -40,13 +40,13 @@ public class BlockUtils {
     }
 
     public static <T extends BlockEntity & IOwnerProtected> void addOptionalOwnership(LivingEntity placer, T tileEntity) {
-        if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof Player) {
+        if (ServerConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
             tileEntity.setOwner(placer.getUUID());
         }
     }
 
     public static void addOptionalOwnership(LivingEntity placer, Level world, BlockPos pos) {
-        if (ServerConfigs.cached.SERVER_PROTECTION && placer instanceof Player) {
+        if (ServerConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
             if (world.getBlockEntity(pos) instanceof IOwnerProtected tile) {
                 tile.setOwner(placer.getUUID());
             }
@@ -125,10 +125,10 @@ public class BlockUtils {
             if (block == Blocks.CAKE) {
                 int bites = state.getValue(CakeBlock.BITES);
                 if (bites != 0) return Optional.of(ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
-                        .setValue(CakeBlock.BITES, bites).rotate(world, targetPos, rot));
+                        .setValue(CakeBlock.BITES, bites).rotate(rot));
             }
 
-            BlockState rotated = state.rotate(world, targetPos, rot);
+            BlockState rotated = state.rotate(rot);
             //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
             //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
             if (rotated == state) {
@@ -269,11 +269,11 @@ public class BlockUtils {
             }
         }
         if (b instanceof BedBlock) {
-            BlockState newBed = state.rotate(level, pos, rot);
+            BlockState newBed = state.rotate(rot);
             BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
             BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
             if (level.getBlockState(targetPos).getMaterial().isReplaceable()) {
-                level.setBlock(targetPos, level.getBlockState(oldPos).rotate(level, oldPos, rot), 2);
+                level.setBlock(targetPos, level.getBlockState(oldPos).rotate(rot), 2);
                 level.setBlock(pos, newBed, 2);
                 level.removeBlock(oldPos, false);
                 return Optional.of(face);
