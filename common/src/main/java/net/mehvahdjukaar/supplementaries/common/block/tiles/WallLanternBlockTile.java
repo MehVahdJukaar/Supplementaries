@@ -1,35 +1,30 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.UUID;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected {
+public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
-    public static final ModelProperty<BlockState> MIMIC = BlockProperties.MIMIC;
+    public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC;
+
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
-
 
     //for charm compat
     public boolean isRedstoneLantern = false;
@@ -49,26 +44,11 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     }
 
     @Override
-    public IModelData getModelData() {
-        //return data;
-        return new ModelDataMap.Builder()
-                .withInitial(MIMIC, this.getHeldBlock())
-                .withInitial(FANCY, this.shouldHaveTESR)
+    public ExtraModelData getExtraModelData() {
+        return ExtraModelData.builder()
+                .withProperty(MIMIC, this.getHeldBlock())
+                .withProperty(FANCY, this.shouldHaveTESR)
                 .build();
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        BlockState oldMimic = this.mimic;
-        CompoundTag tag = pkt.getTag();
-        //this calls load
-        handleUpdateTag(tag);
-        if (!Objects.equals(oldMimic, this.mimic)) {
-            //not needed cause model data doesn't create new obj. updating old one instead
-            ModelDataManager.requestModelDataRefresh(this);
-            //this.data.setData(MIMIC, this.getHeldBlock());
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-        }
     }
 
     @Override
@@ -92,7 +72,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
     @Override
     public boolean setHeldBlock(BlockState state, int index) {
-        if(state.hasProperty(LanternBlock.HANGING)){
+        if (state.hasProperty(LanternBlock.HANGING)) {
             state = state.setValue(LanternBlock.HANGING, false);
         }
         this.mimic = state;

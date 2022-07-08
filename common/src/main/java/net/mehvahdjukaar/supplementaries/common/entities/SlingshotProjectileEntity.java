@@ -55,7 +55,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem) {
             Block b = ((BlockItem) item).getBlock();
-            return b.getLightEmission(b.defaultBlockState(), this.level, this.blockPosition());
+            return b.defaultBlockState().getLightEmission();
         }
         return 0;
     });
@@ -229,7 +229,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             super.reachedEndOfLife();
         }
     }
-
 
     @Override
     protected void updateRotation() {

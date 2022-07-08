@@ -75,7 +75,6 @@ public class EnhancedSkullBlockTile extends BlockEntity {
         return ItemStack.EMPTY;
     }
 
-
     public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player, InteractionHand hand) {
         // this.setOwner(oldTile.getOwnerProfile());
         this.innerTile = (SkullBlockEntity) oldTile.getType().create(this.getBlockPos(), oldTile.getBlockState());
@@ -94,27 +93,4 @@ public class EnhancedSkullBlockTile extends BlockEntity {
         return innerTile;
     }
 
-
-    //player head stuff
-/*
-
-
-    @Nullable
-    public GameProfile getOwnerProfile() {
-        return this.owner;
-    }
-
-    public void setOwner(@Nullable GameProfile pOwner) {
-        synchronized (this) {
-            this.owner = pOwner;
-        }
-        this.updateOwnerProfile();
-    }
-
-    private void updateOwnerProfile() {
-        SkullBlockEntity.updateGameprofile(this.owner, (gameProfile) -> {
-            this.owner = gameProfile;
-            this.setChanged();
-        });
-    }*/
 }

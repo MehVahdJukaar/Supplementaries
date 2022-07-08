@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
@@ -36,7 +40,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     //is holding a framed fence (for framed blocks mod compat)
     public boolean framed = false;
-    public static final ModelProperty<Boolean> FRAMED = BlockProperties.FRAMED;
+    public static final ModelDataKey<Boolean> FRAMED = BlockProperties.FRAMED;
 
     public TextHolder textHolder;
 
@@ -60,13 +64,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public IModelData getModelData() {
-        //return data;
-        return new ModelDataMap.Builder()
-                .withInitial(FRAMED, this.framed)
-                .withInitial(MIMIC, this.getHeldBlock())
+    public ExtraModelData getExtraModelData() {
+        return ExtraModelData.builder()
+                .withProperty(FRAMED, this.framed)
+                .withProperty(MIMIC, this.getHeldBlock())
                 .build();
     }
+
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {

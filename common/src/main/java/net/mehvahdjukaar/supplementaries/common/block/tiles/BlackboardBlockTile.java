@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
-import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.gui.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -19,16 +20,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider {
+public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelProperty<BlackboardKey> BLACKBOARD = BlockProperties.BLACKBOARD;
+    public static final ModelDataKey<BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardKey.class);
 
     private UUID owner = null;
     private boolean waxed = false;
@@ -43,12 +41,12 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     @Override
-    public IModelData getModelData() {
-        //return data;
-        return new ModelDataMap.Builder()
-                .withInitial(BLACKBOARD, getTextureKey())
+    public ExtraModelData getExtraModelData() {
+        return ExtraModelData.builder()
+                .withProperty(BLACKBOARD, getTextureKey())
                 .build();
     }
+
 
     public BlackboardKey getTextureKey() {
         if (textureKey == null) refreshTexture();

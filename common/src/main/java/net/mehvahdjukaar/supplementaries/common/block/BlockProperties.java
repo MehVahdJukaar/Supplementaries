@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
@@ -64,10 +66,10 @@ public class BlockProperties {
     public static final EnumProperty<BlockAttachment> BLOCK_ATTACHMENT = EnumProperty.create("attachment", BlockAttachment.class);
 
     //model properties
-    public static final ModelProperty<BlockState> MIMIC = new ModelProperty<>();
-    public static final ModelProperty<Boolean> FANCY = new ModelProperty<>();
-    public static final ModelProperty<Boolean> FRAMED = new ModelProperty<>();
-    public static final ModelProperty<BlackboardTextureManager.BlackboardKey> BLACKBOARD = new ModelProperty<>();
+    public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC;
+    public static final ModelDataKey<Boolean> FANCY = new ModelDataKey<>(Boolean.class);
+    public static final ModelDataKey<Boolean> FRAMED = new ModelDataKey<>(Boolean.class);
+    public static final ModelDataKey<BlackboardTextureManager.BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardTextureManager.BlackboardKey.class);
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 
