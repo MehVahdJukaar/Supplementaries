@@ -8,6 +8,8 @@ out/
 output/
 bin/
 libs/
+logs/
+.architectury-transformer/
 
 .classpath
 .project
@@ -17,7 +19,3 @@ classes/
 .vscode
 .settings
 *.launch
-/gradlew
-/.gitignore
-/gradlew.bat
-/gradle/wrapper/

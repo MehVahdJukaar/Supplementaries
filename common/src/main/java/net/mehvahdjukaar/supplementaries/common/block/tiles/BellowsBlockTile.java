@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.client.ParticleUtil;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -17,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
@@ -50,7 +52,8 @@ public class BellowsBlockTile extends BlockEntity {
         super(ModRegistry.BELLOWS_TILE.get(), pos, state);
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
     }
@@ -102,8 +105,8 @@ public class BellowsBlockTile extends BlockEntity {
 
     private void pushEntities(Direction facing, float period, float range, Level level) {
 
-        double velocity = ServerConfigs.cached.BELLOWS_BASE_VEL_SCALING / period; // Affects acceleration
-        double maxVelocity = ServerConfigs.cached.BELLOWS_MAX_VEL; // Affects max speed
+        double velocity = ServerConfigs.Blocks.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
+        double maxVelocity = ServerConfigs.Blocks.BELLOWS_MAX_VEL.get(); // Affects max speed
 
         AABB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int) range);
         List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
@@ -152,7 +155,7 @@ public class BellowsBlockTile extends BlockEntity {
 
             if (Math.abs(entity.getDeltaMovement().get(facing.getAxis())) < maxVelocity) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity));
-                if (ServerConfigs.cached.BELLOWS_FLAG) entity.hurtMarked = true;
+                if (ServerConfigs.Blocks.BELLOWS_FLAG.get()) entity.hurtMarked = true;
             }
         }
     }
@@ -232,7 +235,7 @@ public class BellowsBlockTile extends BlockEntity {
     }
 
     private float getPeriodForPower(int power) {
-        return ((float) ServerConfigs.cached.BELLOWS_BASE_PERIOD) - (power - 1) * ((float) ServerConfigs.cached.BELLOWS_POWER_SCALING);
+        return ((float) ServerConfigs.Blocks.BELLOWS_PERIOD.get()) - (power - 1) * ((float) ServerConfigs.Blocks.BELLOWS_POWER_SCALING.get());
     }
 
     //TODO: optimize this (also for flywheel)
@@ -309,7 +312,7 @@ public class BellowsBlockTile extends BlockEntity {
         }
         //server
         else if (fluid.isEmpty()) {
-            float range = ServerConfigs.cached.BELLOWS_RANGE;
+            float range = ServerConfigs.Blocks.BELLOWS_RANGE.get();
             //push entities (only if pushing air)
             if (airIntensity > 0) {
                 this.pushEntities(facing, period, range, level);
@@ -353,7 +356,7 @@ public class BellowsBlockTile extends BlockEntity {
     public void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
         if (airType == AirType.SOAP) {
             for (int m = 0; m < (1 + world.random.nextInt(3)); m++) {
-                ParticleUtil.spawnParticleOnFace(world, pos, dir, ModRegistry.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);
+                ParticleUtils.spawnParticleOnFace(world, pos, dir, ModParticles.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);
             }
 
         } else {

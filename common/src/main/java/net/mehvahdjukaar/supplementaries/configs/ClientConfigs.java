@@ -323,8 +323,8 @@ public class ClientConfigs {
 
 
     public static class particle {
-        private static Supplier<Integer> TURN_INITIAL_COLOR;
-        private static Supplier<Integer> TURN_FADE_COLOR;
+        public static Supplier<Integer> TURN_INITIAL_COLOR;
+        public static Supplier<Integer> TURN_FADE_COLOR;
 
 
         private static void init(ConfigBuilder builder) {

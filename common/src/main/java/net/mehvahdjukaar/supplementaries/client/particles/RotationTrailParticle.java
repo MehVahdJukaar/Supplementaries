@@ -41,8 +41,8 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.setSize(0.01F, 0.01F);
         this.quadSize *= 0.625F;
         this.lifetime = LIFE;
-        this.setColor(ClientConfigs.cached.TURN_PARTICLE_COLOR);
-        this.setFadeColor(ClientConfigs.cached.TURN_PARTICLE_FADE_COLOR);
+        this.setColor(ClientConfigs.particle.TURN_INITIAL_COLOR.get());
+        this.setFadeColor(ClientConfigs.particle.TURN_FADE_COLOR.get());
         this.setSpriteFromAge(sprite);
         this.alpha = al;
         this.hasPhysics = false;

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.map.ExpandedMapData;
+import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

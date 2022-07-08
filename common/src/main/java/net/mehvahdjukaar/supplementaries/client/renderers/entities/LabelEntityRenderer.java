@@ -11,8 +11,8 @@ import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesM
 import net.mehvahdjukaar.moonlight.api.client.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.client.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.client.textures.TextureImage;
-import net.mehvahdjukaar.moonlight.math.colors.HCLColor;
-import net.mehvahdjukaar.moonlight.math.colors.RGBColor;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.HCLColor;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
