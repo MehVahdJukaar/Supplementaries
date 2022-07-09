@@ -5,10 +5,13 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockT
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class ForgeHelperImpl {
 
@@ -27,5 +30,9 @@ public class ForgeHelperImpl {
 
     public static boolean onExplosionStart(Level level, Explosion explosion) {
         return true;
+    }
+
+    // TODO: fabric
+    public static void onExplosionDetonate(Level level, Explosion explosion, List<Entity> entities, double diameter) {
     }
 }

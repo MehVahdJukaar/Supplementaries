@@ -18,7 +18,8 @@
     "SelfFrameMixin",
     "SelfGunpowderMixin",
     "SelfMimicMixin",
-    "SelfSafeMixin"
+    "SelfSafeMixin",
+    "SelfWrenchItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.explosion;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class GunpowderExplosion extends Explosion {
 
         this.radius *= 2.0F;
 
-        ForgeEventFactory.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
+        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
 
         explodeBlock(x + 1, y, z);
         explodeBlock(x - 1, y, z);

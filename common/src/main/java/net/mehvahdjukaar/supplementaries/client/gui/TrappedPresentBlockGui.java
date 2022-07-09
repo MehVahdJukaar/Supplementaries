@@ -90,7 +90,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
 
         if (hasChanged) {
 
-            NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
+            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
                     this.primed));
             this.tile.updateState(this.primed);
 

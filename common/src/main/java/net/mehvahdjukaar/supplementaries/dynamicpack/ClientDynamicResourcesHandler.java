@@ -1,17 +1,16 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import net.mehvahdjukaar.moonlight.api.client.language.AfterLanguageLoadEvent;
-import net.mehvahdjukaar.moonlight.api.client.language.LangBuilder;
-import net.mehvahdjukaar.moonlight.api.client.textures.Palette;
-import net.mehvahdjukaar.moonlight.api.client.textures.Respriter;
-import net.mehvahdjukaar.moonlight.api.client.textures.SpriteUtils;
-import net.mehvahdjukaar.moonlight.api.client.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
+import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
+import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
+import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
+import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
