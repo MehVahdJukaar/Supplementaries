@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.integration.inspirations;
 
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Supplier;
 
 public class CauldronPlugin {
 
-    public static boolean doStuff(BlockEntity cauldronTile, SoftFluidTank faucetFluidHolder, boolean doTransfer, Supplier<Boolean> transferBelow) {
+    public static boolean doStuff(BlockEntity cauldronTile, ISoftFluidTank faucetFluidHolder, boolean doTransfer, Supplier<Boolean> transferBelow) {
 //        if (cauldronTile instanceof CauldronTileEntity) {
 //            CauldronTileEntity te = (CauldronTileEntity) cauldronTile;
 //
@@ -54,7 +54,7 @@ public class CauldronPlugin {
     }
 
     //TODO: find workaround for soups
-    public static boolean tryAddFluid(BlockEntity cauldronTile, SoftFluidTank faucetFluidHolder) {
+    public static boolean tryAddFluid(BlockEntity cauldronTile, ISoftFluidTank faucetFluidHolder) {
 //        if (cauldronTile instanceof CauldronTileEntity) {
 //            CauldronTileEntity te = (CauldronTileEntity) cauldronTile;
 //

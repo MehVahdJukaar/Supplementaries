@@ -1,34 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.items.tabs;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class JarTab extends CreativeModeTab {
 
     public JarTab(String label) {
-        super(label);
+        super(label); //forge does not want a second parameter as id are handled intenrally
     }
 
     @Override
     public ItemStack makeIcon() {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
-        SoftFluidTank fluidHolder = new SoftFluidTank(12);
+        ISoftFluidTank fluidHolder = ISoftFluidTank.create(12);
         fluidHolder.fill(VanillaSoftFluids.HONEY.get());
         CompoundTag com = new CompoundTag();
         fluidHolder.save(com);
@@ -36,7 +38,8 @@ public class JarTab extends CreativeModeTab {
         return icon;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean hasSearchBar() {
         return true;
     }
@@ -55,10 +58,10 @@ public class JarTab extends CreativeModeTab {
     public static void populateTab(NonNullList<ItemStack> items) {
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-        SoftFluidTank fluidHolder = new SoftFluidTank(tempTile.getMaxStackSize());
+        ISoftFluidTank fluidHolder = ISoftFluidTank.create(tempTile.getMaxStackSize());
 
 
-        if(ServerConfigs.cached.JAR_CAPTURE) {
+        if (ServerConfigs.Blocks.JAR_CAPTURE.get()) {
             for (Item i : BucketHelper.getValidBuckets()) {
                 CompoundTag com = new CompoundTag();
                 MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
@@ -66,8 +69,9 @@ public class JarTab extends CreativeModeTab {
                 tryAdd(items, com);
             }
         }
-        if(ServerConfigs.cached.JAR_COOKIES) {
-            for (Item i : ForgeRegistries.ITEMS) {
+        if (ServerConfigs.Blocks.JAR_COOKIES.get()) {
+            //TODO: use this elsewhere
+            for (var i : Registry.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
                 ItemStack regItem = new ItemStack(i);
                 CompoundTag com = new CompoundTag();
                 if (tempTile.canPlaceItem(0, regItem)) {
@@ -77,7 +81,7 @@ public class JarTab extends CreativeModeTab {
                 }
             }
         }
-        if(ServerConfigs.cached.JAR_LIQUIDS) {
+        if (ServerConfigs.Blocks.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
                 if (s == VanillaSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
@@ -96,8 +100,6 @@ public class JarTab extends CreativeModeTab {
                 tryAdd(items, com2);
             }
         }
-
-
     }
 
 

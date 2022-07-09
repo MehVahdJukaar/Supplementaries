@@ -195,7 +195,7 @@ public class RendererUtil {
         int cDsw = setColorForAge(time, 0.65f);
 
 
-        float amp = ClientConfigs.block.BUBBLE_BLOCK_WOBBLE.get();
+        float amp = (float)(double)ClientConfigs.Blocks.BUBBLE_BLOCK_WOBBLE.get();
         w = w - 2 * amp;
         //long time = System.currentTimeMillis();
         float unw = amp * Mth.cos(((float) Math.PI * 2F) * (time + 0));

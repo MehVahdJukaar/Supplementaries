@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.collect.Maps;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -82,11 +80,11 @@ public class FlowerPotHandler {
 
     private static void registerCompatFlower(String itemRes) {
         var id = new ResourceLocation(itemRes);
-        Item item = Registry.ITEM.getValue(id);
-        if (item != null && item != Items.AIR) {
+        var opt = Registry.ITEM.getOptional(id);
+        if (opt.isPresent()) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
             CUSTOM_MODELS.add(res);
-            registerCustomFlower(item, res);
+            registerCustomFlower(opt.get(), res);
         }
     }
 

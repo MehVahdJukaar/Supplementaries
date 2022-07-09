@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -119,7 +118,7 @@ public class CommonUtil {
             Block b = blockItem.getBlock();
             String namespace = Utils.getID(b).getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
-            if (b instanceof LanternBlock && !ServerConfigs.cached.WALL_LANTERN_BLACKLIST.contains(namespace)) {
+            if (b instanceof LanternBlock && !ServerConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)) {
                 return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
             }
         }

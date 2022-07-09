@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FlameParticle;
@@ -25,14 +26,17 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +55,15 @@ public class ClientSetup {
         ClientPlatformHelper.addBlockColorsRegistration(ClientSetup::registerBlockColors);
         ClientPlatformHelper.addItemColorsRegistration(ClientSetup::registerItemColors);
         ClientPlatformHelper.addParticleRegistration(ClientSetup::registerParticles);
+        ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e->{
+            Textures.getTexturesForBlockAtlas().forEach(e::addSprite);
+        });
+        ClientPlatformHelper.addAtlasTextureCallback(Sheets.SHULKER_SHEET, e->{
+            Textures.getTexturesForShulkerAtlas().forEach(e::addSprite);
+        });
+        ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e->{
+            Textures.getTexturesForBannerAtlas().forEach(e::addSprite);
+        });
     }
 
 
@@ -275,12 +288,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void layerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         ClientRegistry.registerLayerDefinitions(event);
-    }
-
-    //textures
-    @SubscribeEvent
-    public static void onTextureStitch(TextureStitchEvent.Pre event) {
-        Textures.stitchTextures(event);
     }
 
     @SubscribeEvent

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.moonlight.map.markers.NamedMapBlockMarker;
+import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ColoredDecoration;
@@ -22,7 +22,7 @@ public class CeilingBannerMarker extends NamedMapBlockMarker<ColoredDecoration> 
     }
 
     public CeilingBannerMarker(BlockPos pos, DyeColor color, @Nullable Component name) {
-        super(CMDreg.BANNER_DECORATION_TYPE,pos);
+        super(CMDreg.BANNER_DECORATION_TYPE, pos);
         this.color = color;
         this.name = name;
     }

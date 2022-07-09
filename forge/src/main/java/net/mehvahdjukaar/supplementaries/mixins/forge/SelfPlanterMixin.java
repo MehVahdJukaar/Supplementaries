@@ -10,7 +10,7 @@ import net.minecraftforge.common.IPlantable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PlanterBlock.class)
-public class SelfPlanterMixin extends Block {
+public abstract class SelfPlanterMixin extends Block {
 
     public SelfPlanterMixin(Properties arg) {
         super(arg);

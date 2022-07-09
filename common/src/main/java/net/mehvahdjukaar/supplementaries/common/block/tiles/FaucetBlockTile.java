@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
+import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.*;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -139,7 +141,7 @@ public class FaucetBlockTile extends BlockEntity {
         }
         //sap log
         else if (CompatHandler.autumnity && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
-            this.prepareToTransferBottle(ModSoftFluids.SAP);
+            this.prepareToTransferBottle(ModSoftFluids.SAP.get());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 Optional<Block> log = Registry.BLOCK.getOptional(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
                 log.ifPresent(block -> level.setBlock(behind, block.withPropertiesOf(backState), 3));

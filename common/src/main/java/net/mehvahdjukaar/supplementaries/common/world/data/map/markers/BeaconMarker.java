@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
-import net.mehvahdjukaar.moonlight.map.CustomMapDecoration;
-import net.mehvahdjukaar.moonlight.map.markers.NamedMapBlockMarker;
+import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
+import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ public class BeaconMarker extends NamedMapBlockMarker<CustomMapDecoration> {
     @Nullable
     public static BeaconMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof BeaconBlockEntity tile) {
-            Component name = tile.name;
+            Component name = tile.name; //!=getName
             return new BeaconMarker(pos, name);
         } else {
             return null;

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(GunpowderBlock.class)
-public class SelfGunpowderMixin extends LightUpBlock {
+public abstract class SelfGunpowderMixin extends LightUpBlock {
     public SelfGunpowderMixin(Properties arg) {
         super(arg);
     }

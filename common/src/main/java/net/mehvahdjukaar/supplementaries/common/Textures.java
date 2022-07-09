@@ -4,15 +4,13 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,39 +101,40 @@ public class Textures {
         SKULL_CANDLES_TEXTURES.put(null, Supplementaries.res("textures/entity/skull_candles/default.png"));
     }
 
-    public static void stitchTextures(TextureStitchEvent.Pre event) {
-        List<ResourceLocation> blocks = List.of(
+    public static List<ResourceLocation> getTexturesForBlockAtlas() {
+        List<ResourceLocation> blocks = new ArrayList<>(List.of(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE,
                 HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
-                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE);
+                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
 
-        ResourceLocation loc = event.getAtlas().location();
-
-        if (loc.equals(TextureAtlas.LOCATION_BLOCKS)) {
-            for (ResourceLocation r : blocks) {
-                event.addSprite(r);
-            }
-            for (var s : ClientRegistry.SIGN_POSTS_MATERIALS.values()) {
-                event.addSprite(s.texture());
-            }
-            for (var w : WallLanternTexturesRegistry.SPECIAL_TEXTURES.values()) {
-                event.addSprite(w);
-            }
-        } else if (loc.equals(Sheets.BANNER_SHEET)) {
-            try {
-                Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
-                        .forEach(event::addSprite);
-            } catch (Exception ignored) {
-            }
-        } else if (loc.equals(Sheets.SHULKER_SHEET)) {
-            event.addSprite(Textures.BOOK_ENCHANTED_TEXTURES);
-            event.addSprite(Textures.BOOK_TOME_TEXTURES);
-            event.addSprite(Textures.BOOK_WRITTEN_TEXTURES);
-            event.addSprite(Textures.BOOK_AND_QUILL_TEXTURES);
-            event.addSprite(Textures.BOOK_ANTIQUE_TEXTURES);
-            Textures.BOOK_TEXTURES.values().forEach(event::addSprite);
+        for (var s : ClientRegistry.SIGN_POSTS_MATERIALS.values()) {
+            blocks.add(s.texture());
         }
+        blocks.addAll(WallLanternTexturesRegistry.SPECIAL_TEXTURES.values());
+        return blocks;
     }
 
+    public static List<ResourceLocation> getTexturesForBannerAtlas() {
+        List<ResourceLocation> list = new ArrayList<>();
+        try {
+            Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
+                    .forEach(list::add);
+        } catch (Exception ignored) {
+        }
+        return list;
+    }
+
+    public static List<ResourceLocation> getTexturesForShulkerAtlas() {
+        List<ResourceLocation> list = new ArrayList<>();
+
+        list.add(Textures.BOOK_ENCHANTED_TEXTURES);
+        list.add(Textures.BOOK_TOME_TEXTURES);
+        list.add(Textures.BOOK_WRITTEN_TEXTURES);
+        list.add(Textures.BOOK_AND_QUILL_TEXTURES);
+        list.add(Textures.BOOK_ANTIQUE_TEXTURES);
+        list.addAll(Textures.BOOK_TEXTURES.values());
+
+        return list;
+    }
 
 }

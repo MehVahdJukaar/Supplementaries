@@ -1,36 +1,26 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
+import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
 
-import java.util.function.Supplier;
-
-public class OpenConfigsPacket {
+public class OpenConfigsPacket implements Message {
     public OpenConfigsPacket(FriendlyByteBuf buffer) {
     }
 
     public OpenConfigsPacket() {
     }
 
-    public static void buffer(OpenConfigsPacket message, FriendlyByteBuf buf) {
+
+    @Override
+    public void writeToBuffer(FriendlyByteBuf friendlyByteBuf) {
     }
 
-    public static void handler(OpenConfigsPacket message, Supplier<NetworkEvent.Context> ctx) {
-        // client world
-        ctx.get().enqueueWork(() -> {
-
-            //FileConfig f = FileConfig.of(ConfigHandler.getServerConfigPath());
-            //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
-            //ServerConfigs.SERVER_CONFIG.getSpec().apply(ConfigHandler.getServerConfigPath().toString());
-            //ServerConfigs.SERVER_CONFIG.save();
-            //if(configured)ConfiguredCustomScreen.openScreen();
-
-            //ServerConfigs.loadLocal();
-            ConfigUtils.openModConfigs();
-
-        });
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        ConfigUtils.openModConfigs();
     }
+
 }

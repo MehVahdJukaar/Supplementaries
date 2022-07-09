@@ -28,9 +28,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
@@ -80,7 +77,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         if (!this.level.isClientSide) {
             Entity entity = this.getOwner();
             if (entity instanceof Player && !((Player) entity).mayBuild()) return;
-            if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+            if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatformHelper.isMobGriefingOn(this.level, this)) {
 
                 BlockPos pos = rayTraceResult.getBlockPos();
                 if (level.getBlockState(pos).getBlock() instanceof JarBlock) {

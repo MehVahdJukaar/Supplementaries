@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
@@ -30,7 +31,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
@@ -97,7 +97,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         if (this.isUnused() &&
                 Mth.abs(time - lastActivated) > 10) {
             if (this.canOpen(player)) {
-                NetworkHooks.openGui(player, this, pos);
+                ForgeHelper.openGui(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 detonate(player.getLevel(), pos);

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler.NetworkDir;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 
 public class NetworkHandler {
@@ -69,17 +69,18 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::new);
 
-        //move to forge since we dont have render events
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                OpenConfigsPacket.class, OpenConfigsPacket::new);
+
+        //move to forge since we dont have render events anyways
         CHANNEL.register(PicklePacket.class, PicklePacket::buffer, PicklePacket::new);
 
 
-        //I forgor what these 2 are for
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 RequestConfigReloadPacket.class, RequestConfigReloadPacket::new);
 
-        CHANNEL.register(OpenConfigsPacket.class, OpenConfigsPacket::buffer,
-                OpenConfigsPacket::new, OpenConfigsPacket::handler);
+
 
     }
 

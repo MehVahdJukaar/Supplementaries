@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(FrameBlock.class)
-public class SelfFrameMixin extends Block {
+public abstract class SelfFrameMixin extends Block {
 
     public SelfFrameMixin(Properties arg) {
         super(arg);

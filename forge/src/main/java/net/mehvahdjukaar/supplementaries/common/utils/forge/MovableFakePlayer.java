@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import com.google.common.collect.Maps;
 import com.mojang.authlib.GameProfile;

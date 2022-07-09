@@ -16,27 +16,19 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.common.util.NonNullLazy;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
@@ -140,7 +132,6 @@ public class ClientRegistry {
     }
 
 
-
     //unused
     public static class SlimeLayer extends RenderType {
 
@@ -167,6 +158,6 @@ public class ClientRegistry {
                 createGenericRenderType("test_texture", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
                         VertexFormat.Mode.QUADS, RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER,
                         RenderStateShard.TRANSLUCENT_TRANSPARENCY,
-                        new TextureStateShard(texture,false, false)));
+                        new TextureStateShard(texture, false, false)));
     }
 }

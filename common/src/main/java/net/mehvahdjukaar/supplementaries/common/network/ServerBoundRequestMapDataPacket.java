@@ -13,11 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class ServerBoundRequestMapDataPacket implements Message {
     private final BlockPos pos;

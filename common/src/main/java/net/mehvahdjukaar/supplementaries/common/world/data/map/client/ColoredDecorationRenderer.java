@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map.client;
 
+import net.mehvahdjukaar.moonlight.api.map.client.DecorationRenderer;
 import net.mehvahdjukaar.moonlight.map.client.DecorationRenderer;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ColoredDecoration;
 import net.minecraft.resources.ResourceLocation;

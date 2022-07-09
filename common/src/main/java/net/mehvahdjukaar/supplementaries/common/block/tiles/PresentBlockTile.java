@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
@@ -29,7 +30,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class PresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
@@ -131,7 +131,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         if (this.isUnused()) {
             if (this.canOpen(player)) {
-                NetworkHooks.openGui(player, this, pos);
+                ForgeHelper.openGui(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);
