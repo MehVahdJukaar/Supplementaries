@@ -121,9 +121,9 @@ public class PresentBlock extends WaterBlock implements EntityBlock, IColored {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        ItemStack itemstack =  super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof PresentBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
+        if (world.getBlockEntity(pos) instanceof PresentBlockTile tile) {
             return tile.getPresentItem(this);
         }
         return itemstack;

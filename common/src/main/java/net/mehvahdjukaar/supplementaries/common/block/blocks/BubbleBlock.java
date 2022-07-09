@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -65,7 +64,7 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (ServerConfigs.Blocks.BUBBLE_BREAK.get() && level instanceof ServerLevel serverLevel) {
+        if (ServerConfigs.cached.BUBBLE_BREAK && level instanceof ServerLevel serverLevel) {
             breakBubble(serverLevel, pos,state);
         }
     }
@@ -77,11 +76,11 @@ public class BubbleBlock extends Block implements EntityBlock {
     }
 
     private void playBreakSound(BlockState state, Level level, BlockPos pos, Player player){
-        SoundType soundtype = state.getSoundType();
+        SoundType soundtype = state.getSoundType(level, pos, null);
         level.playSound(player,pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @Override
     public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
         return true;
     }
@@ -103,14 +102,14 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (ServerConfigs.Blocks.BUBBLE_BREAK.get()) level.scheduleTick(pos, this, 5);
+        if (ServerConfigs.cached.BUBBLE_BREAK) level.scheduleTick(pos, this, 5);
         super.stepOn(level, pos, state, entity);
     }
 
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity p_152429_, float v) {
         super.fallOn(level, state, pos, p_152429_, v);
-        if (!level.isClientSide && ServerConfigs.Blocks.BUBBLE_BREAK.get()) {
+        if (!level.isClientSide && ServerConfigs.cached.BUBBLE_BREAK) {
             if (v > 3) breakBubble((ServerLevel) level, pos, state);
             else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
 

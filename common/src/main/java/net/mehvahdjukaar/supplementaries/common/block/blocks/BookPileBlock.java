@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -56,7 +55,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public boolean isAcceptedItem(Item i) {
-        return isEnchantedBook(i) || (ServerConfigs.Tweaks.MIXED_BOOKS.get() && isNormalBook(i));
+        return isEnchantedBook(i) || (ServerConfigs.cached.MIXED_BOOKS && isNormalBook(i));
     }
 
     public static boolean isEnchantedBook(Item i) {
@@ -64,7 +63,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isNormalBook(Item i) {
-        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (ServerConfigs.Tweaks.WRITTEN_BOOKS.get() && isWrittenBook(i));
+        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (ServerConfigs.cached.WRITTEN_BOOKS && isWrittenBook(i));
     }
 
     public static boolean isWrittenBook(Item i) {
@@ -142,7 +141,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         };
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             return tile.getEnchantPower();

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -123,7 +124,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     public static DyeColor getStackChalkColor(ItemStack stack) {
         Item item = stack.getItem();
         DyeColor color = null;
-        if (ServerConfigs.Blocks.BLACKBOARD_COLOR.get()) {
+        if (ServerConfigs.cached.BLACKBOARD_COLOR) {
             var id = Utils.getID(item);
             if (id.getNamespace().equals("chalk")) {
                 color = DyeColor.byName(id.getPath().replace("_chalk", ""), DyeColor.WHITE);
@@ -206,11 +207,11 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
             return this.getBlackboardItem(te);
         }
-        return super.getCloneItemStack(level, pos, state);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
@@ -66,7 +65,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         return 0xffffff;
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @Override
     public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
         int color = getJarLiquidColor(pos, world);
         if (color == -1) return null;
@@ -87,7 +86,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
                 }
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-            if(ServerConfigs.Blocks.JAR_CAPTURE.get()) {
+            if(ServerConfigs.cached.JAR_CAPTURE) {
                 return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
             }
         }
@@ -138,11 +137,11 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof JarBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        if (world.getBlockEntity(pos) instanceof JarBlockTile tile) {
             return this.getJarItem(tile);
         }
-        return super.getCloneItemStack(level, pos, state);
+        return super.getCloneItemStack(state, target, world, pos, player);
     }
 
     // end shoulker box code

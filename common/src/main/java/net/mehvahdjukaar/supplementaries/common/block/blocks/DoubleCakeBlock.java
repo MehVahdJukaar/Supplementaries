@@ -97,10 +97,10 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     public void removeSlice(BlockState state, BlockPos pos, LevelAccessor world, Direction dir) {
         int i = state.getValue(BITES);
         if (i < 6) {
-            if (i == 0 && ServerConfigs.Tweaks.DIRECTIONAL_CAKE.get()) state = state.setValue(FACING, dir);
+            if (i == 0 && ServerConfigs.cached.DIRECTIONAL_CAKE) state = state.setValue(FACING, dir);
             world.setBlock(pos, state.setValue(BITES, i + 1), 3);
         } else {
-            if (state.getValue(WATERLOGGED) && ServerConfigs.Tweaks.DIRECTIONAL_CAKE.get()) {
+            if (state.getValue(WATERLOGGED) && ServerConfigs.cached.DIRECTIONAL_CAKE) {
                 world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
                         .setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)), 3);
             } else {
