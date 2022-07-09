@@ -39,10 +39,10 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
         return SHAPE;
     }
 
-    @Override
+     /* @Override
     public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation) {
         return super.rotate(state, world, pos, rotation);
-    }
+    } */
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
@@ -84,7 +84,7 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
 
     @Override
     public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
-        return Optional.of(this.rotate(state, world, pos, rotation));
+        return Optional.of(this.rotate(state, rotation));
     }
 
     @Override

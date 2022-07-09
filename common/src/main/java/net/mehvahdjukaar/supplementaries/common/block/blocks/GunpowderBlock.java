@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
@@ -36,7 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -67,11 +67,11 @@ public class GunpowderBlock extends LightUpBlock {
     private final BlockState crossState;
 
     private static int getDelay() {
-        return ServerConfigs.cached.GUNPOWDER_BURN_SPEED;
+        return ServerConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
     }
 
     private static int getSpreadAge() {
-        return ServerConfigs.cached.GUNPOWDER_SPREAD_AGE;
+        return ServerConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
     }
 
     public GunpowderBlock(Properties properties) {
@@ -480,19 +480,6 @@ public class GunpowderBlock extends LightUpBlock {
         return world.getFluidState(pos).getType() == Fluids.LAVA;
     }
 
-    /**
-     * Called upon the block being destroyed by an explosion
-     */
-    @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
-        if (!world.isClientSide && this.canSurvive(state, world, pos)) {
-            this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
-        } else {
-            super.onBlockExploded(state, world, pos, explosion);
-        }
-    }
-
-
     //TODO: this is not working
     @Override
     public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
@@ -505,17 +492,17 @@ public class GunpowderBlock extends LightUpBlock {
     //----- light up block ------
 
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 60;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 300;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 

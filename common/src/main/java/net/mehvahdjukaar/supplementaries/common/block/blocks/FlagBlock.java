@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -44,12 +46,13 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
-    @Override
+    // TODO fabric
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
@@ -130,7 +133,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             } else if (itemstack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
-                if (ServerConfigs.cached.STICK_POLE) {
+                if (ServerConfigs.Blocks.STICK_POLE.get()) {
                     if (world.isClientSide) return InteractionResult.SUCCESS;
                     else {
                         Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;

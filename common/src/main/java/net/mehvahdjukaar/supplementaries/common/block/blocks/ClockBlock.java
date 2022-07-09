@@ -58,7 +58,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         int m = (int) (((time % 1000f) / 1000f) * 60);
         int h = time / 1000;
         String a = "";
-        if (!ClientConfigs.cached.CLOCK_24H) {
+        if (!ClientConfigs.Blocks.CLOCK_24H.get()) {
             a = time < 12000 ? " AM" : " PM";
             h = h % 12;
             if (h == 0) h = 12;
@@ -132,7 +132,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         if (world.dimensionType().natural()) {
             if (world.getBlockEntity(pos) instanceof ClockBlockTile tile) {
-                return tile.power;
+                return tile.getPower();
             }
         }
         return 0;

@@ -12,7 +12,9 @@
     "SelfJarItemMixin",
     "SelfFlagItemMixin",
     "SelfBlackboardItemMixin",
-    "SelfBubbleBlockItemMixin"
+    "SelfBubbleBlockItemMixin",
+    "SelfFrameMixin",
+    "SelfGunpowderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
