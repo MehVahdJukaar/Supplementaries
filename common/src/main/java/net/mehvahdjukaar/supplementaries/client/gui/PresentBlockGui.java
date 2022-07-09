@@ -142,7 +142,7 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
             String sender = Minecraft.getInstance().player.getName().getString();
             String recipient = this.recipient.getText();
             String description = this.descriptionBox.getText();
-            NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
+            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
                     this.packed, recipient, sender, description));
             this.tile.updateState(this.packed, recipient, sender, description);
 

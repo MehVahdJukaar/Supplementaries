@@ -21,7 +21,7 @@ public class ForgeHelperImpl {
         return ForgeHooks.canEntityDestroy(level, blockPos, animal);
     }
 
-    public static void openGui(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
+    public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
         NetworkHooks.openGui(player, menuProvider, pos);
     }
 

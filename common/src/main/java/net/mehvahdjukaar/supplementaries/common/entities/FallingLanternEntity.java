@@ -37,7 +37,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
     @Override
     public boolean causeFallDamage(float height, float amount, DamageSource source) {
         boolean r = super.causeFallDamage(height, amount, source);
-        if (ServerConfigs.cached.FALLING_LANTERNS.hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
+        if (ServerConfigs.Tweaks.FALLING_LANTERNS.get().hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
             BlockState state = this.getBlockState();
 
             BlockPos pos = new BlockPos(this.getX(), this.getY() + 0.25, this.getZ());

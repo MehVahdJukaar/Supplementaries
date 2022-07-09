@@ -6,22 +6,16 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Nameable;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -36,11 +30,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPEAKER_BLOCK_TILE.get(), pos, state);
-        if (CompatHandler.computercraft) {
-            this.peripheral = CCPlugin.getPeripheralSupplier(this);
-        } else {
-            this.peripheral = LazyOptional.empty();
-        }
     }
 
     public void setCustomName(Component name) {
@@ -99,7 +88,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Component message = Component.literal(this.getName().getString() + ": " + this.message)
                     .withStyle(style);
 
-            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server,pos,
+            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
                     ServerConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
                     new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
@@ -117,11 +106,5 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         this.owner = owner;
     }
 
-    @NotNull
-    public LazyOptional<Object> getPeripheral(@NotNull Level world, @NotNull BlockPos pos, @NotNull Direction side) {
-        return peripheral;
-    }
-
-    private final LazyOptional<Object> peripheral;
 
 }

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -17,7 +16,7 @@ public class ForgeHelper {
     }
     //TODO: fabric
     @ExpectPlatform
-    public static void openGui(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
+    public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
         throw new AssertionError();
     }
 

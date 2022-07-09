@@ -97,7 +97,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         if (this.isUnused() &&
                 Mth.abs(time - lastActivated) > 10) {
             if (this.canOpen(player)) {
-                ForgeHelper.openGui(player, this, pos);
+                ForgeHelper.openContainerScreen(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 detonate(player.getLevel(), pos);

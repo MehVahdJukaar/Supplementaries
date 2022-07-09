@@ -48,7 +48,7 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
             matrixStack.mulPose(Vector3f.YN.rotationDegrees(180 - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
             matrixStack.mulPose(Vector3f.ZN.rotationDegrees(Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot())));
 
-            float scale = ClientConfigs.cached.SLINGSHOT_PROJECTILE_SCALE;
+            float scale = (float)(double)ClientConfigs.Items.SLINGSHOT_PROJECTILE_SCALE.get();
             matrixStack.scale(scale, scale, scale);
 
             this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.NONE, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer, 0);

@@ -46,7 +46,7 @@ public class SackItem extends BlockItem {
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!ServerConfigs.cached.SACK_PENALTY) return;
+        if (!ServerConfigs.Blocks.SACK_PENALTY.get()) return;
         if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator()) {
             //if (player.hasEffect(ModRegistry.OVERENCUMBERED.get())) return;
 
@@ -69,7 +69,7 @@ public class SackItem extends BlockItem {
                     amount += QuarkPlugin.getSacksInBackpack(backpack);
                 }
             }
-            int inc = ServerConfigs.cached.SACK_INCREMENT;
+            int inc = ServerConfigs.Blocks.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
                         20 * 10, ((amount-1)/inc)-1, false, false, true));

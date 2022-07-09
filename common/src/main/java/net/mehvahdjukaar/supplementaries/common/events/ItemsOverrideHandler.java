@@ -102,7 +102,7 @@ public class ItemsOverrideHandler {
         HPItemActionOnBlock.add(new WrenchBehavior());
         HPItemActionOnBlock.add(new SkullCandlesBehavior());
 
-        //maybe move in mixin system (cant for cakes as block interaction has priority)
+        //maybe move in mixin system (can't for cakes as block interaction has priority)
         itemActionOnBlock.add(new SkullPileBehavior());
 
         itemActionOnBlock.add(new EnhancedCakeBehavior());
@@ -129,7 +129,7 @@ public class ItemsOverrideHandler {
                     continue;
                 }
             }
-            //block items dont work here
+            //block items don't work here
             /*
             if (ServerConfigs.cached.SKULL_CANDLES) {
                 if (i.builtInRegistryHolder().is(ItemTags.CANDLES) &&
@@ -184,7 +184,11 @@ public class ItemsOverrideHandler {
 
     //item clicked on block overrides
     public static InteractionResult tryPerformClickedBlockOverride(Player player, Level level, InteractionHand hand, BlockHitResult hit, boolean isRanged) {
-        ItemStack stack = player.getItemInHand(hand);
+        return tryPerformClickedBlockOverride(player, level, player.getItemInHand(hand), hand, hit, isRanged);
+    }
+
+    public static InteractionResult tryPerformClickedBlockOverride(Player player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hit, boolean isRanged) {
+
         Item item = stack.getItem();
 
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.mehvahdjukaar.moonlight.math.Vec2i;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -99,8 +99,8 @@ public class StructureLocator {
             if (placement instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
                 //calling this for concentric ring (stronghold) features. Other ones use custom method
                 Pair<BlockPos, Holder<Structure>> foundPair = chunkGenerator.getNearestGeneratedStructure(entry.getValue(), level,
-                                structuremanager, pos, newlyGenerated, concentricringsstructureplacement);
-                if(foundPair != null) {
+                        structuremanager, pos, newlyGenerated, concentricringsstructureplacement);
+                if (foundPair != null) {
                     double d1 = pos.distSqr(foundPair.getFirst());
                     if (d1 < maxDist) {
                         maxDist = d1;
@@ -225,7 +225,7 @@ public class StructureLocator {
 
                 ChunkAccess chunkaccess = level.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
                 StructureStart structurestart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkaccess), holder.value(), chunkaccess);
-                if (structurestart != null && structurestart.isValid() && (!newChunk ||  tryAddReference(structureManager, structurestart))) {
+                if (structurestart != null && structurestart.isValid() && (!newChunk || tryAddReference(structureManager, structurestart))) {
                     foundStructures.add(Pair.of(placement.getLocatePos(structurestart.getChunkPos()), holder));
                 }
             }

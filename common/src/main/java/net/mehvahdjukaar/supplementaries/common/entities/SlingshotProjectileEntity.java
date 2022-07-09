@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.function.Supplier;
 
@@ -51,8 +51,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private float particleCooldown = 0;
     public Supplier<Integer> light = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
-        if (item instanceof BlockItem) {
-            Block b = ((BlockItem) item).getBlock();
+        if (item instanceof BlockItem blockItem) {
+            Block b = blockItem.getBlock();
             return b.defaultBlockState().getLightEmission();
         }
         return 0;
@@ -83,7 +83,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     public Packet<?> getAddEntityPacket() {
         return PlatformHelper.getEntitySpawnPacket(this);
-        //return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
@@ -142,13 +141,14 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
             //block override. mimic forge event
-            PlayerInteractEvent.RightClickBlock blockPlaceEvent = new PlayerInteractEvent.RightClickBlock(player, InteractionHand.MAIN_HAND, hit.getBlockPos(), hit);
-            ItemsOverrideHandler.tryPerformClickedBlockOverride(blockPlaceEvent, stack, true);
 
-            if (blockPlaceEvent.isCanceled() && blockPlaceEvent.getCancellationResult().consumesAction()) {
+            InteractionResult overrideResult = ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
+
+            if (overrideResult.consumesAction()) {
                 success = true;
             }
             if (!success) {
+                //TODO: remove this hack when we test it and see if sounds still does not play
                 //null player so sound always plays
                 //hackeries because for some god damn reason after 1.17 just using player here does not play the sound 50% of the times
                 Player p = CommonUtil.getEntityStand(this, player);

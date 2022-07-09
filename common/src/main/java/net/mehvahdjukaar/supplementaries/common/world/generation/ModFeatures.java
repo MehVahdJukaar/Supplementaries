@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
+import dev.architectury.registry.registries.DeferredRegister;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.RoadSignFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+
 
 public class ModFeatures {
 

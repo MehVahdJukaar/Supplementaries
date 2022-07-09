@@ -99,7 +99,6 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.volume = this.volumeSlider.getValue();
         //refreshTextures server tile
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
-
     }
 
     private void onDone() {

@@ -15,7 +15,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -80,7 +79,7 @@ public class PicklePlayer {
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
         UUID id = event.getPlayer().getGameProfile().getId();
 
-        if (PickleData.isActiveAndTick(id, event.getRenderer()) )  {
+        if (PickleData.isActiveAndTick(id, event.getRenderer())) {
             event.setCanceled(true);
 
             float rot = Mth.rotLerp(event.getPlayer().yRotO, event.getPlayer().getYRot(), event.getPartialTick());

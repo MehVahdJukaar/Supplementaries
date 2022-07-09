@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.moonlight.misc.DualWeildState;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -79,7 +77,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
                             boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
                             InteractionHand hand = player.getUsedItemHand();
-                            power *= (ServerConfigs.cached.SLINGSHOT_RANGE + (stasis ? 0.5 : 0)) * 1.1;
+                            power *= (ServerConfigs.Items.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1;
                             shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
                         }
                     }
@@ -146,16 +144,9 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     //actual use duration
     public static int getChargeDuration(ItemStack stack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
-        int maxCharge = ServerConfigs.cached.SLINGSHOT_CHARGE;
+        int maxCharge = ServerConfigs.Items.SLINGSHOT_CHARGE.get();
         return i == 0 ? maxCharge : maxCharge - (maxCharge / 4) * i;
     }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(
-                Enchantments.QUICK_CHARGE, Enchantments.MULTISHOT, Enchantments.LOYALTY).contains(enchantment);
-    }
-
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {

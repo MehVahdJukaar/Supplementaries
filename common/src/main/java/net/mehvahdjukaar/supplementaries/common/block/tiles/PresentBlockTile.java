@@ -27,8 +27,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.SignBlock;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,7 +129,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         if (this.isUnused()) {
             if (this.canOpen(player)) {
-                ForgeHelper.openGui(player, this, pos);
+                ForgeHelper.openContainerScreen(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);
