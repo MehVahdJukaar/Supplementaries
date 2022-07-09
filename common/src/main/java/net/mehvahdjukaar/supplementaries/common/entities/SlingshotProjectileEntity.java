@@ -3,10 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.moonlight.math.MthUtils;
-import net.mehvahdjukaar.moonlight.network.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -278,7 +276,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     protected float getDeceleration() {
-        return this.isNoGravity() ? (float)(double)ServerConfigs.Items.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
+        return this.isNoGravity() ? (float) (double) ServerConfigs.Items.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
     }
 
     @Override

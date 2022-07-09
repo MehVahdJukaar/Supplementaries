@@ -267,7 +267,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
                         double d7 = d4 * d1 + p_172273_;
                         double d8 = d5 * d2 + p_172274_;
                         double d9 = d6 * d3 + p_172275_;
-                        particleEngine.add(new TerrainParticle((ClientLevel) level, (double) pPos.getX() + d7, (double) pPos.getY() + d8, (double) pPos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, pState, pPos).updateSprite(pState, pPos));
+                        particleEngine.add(new TerrainParticle((ClientLevel) level, (double) pPos.getX() + d7, (double) pPos.getY() + d8, (double) pPos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, pState, pPos));
                     }
                 }
             }

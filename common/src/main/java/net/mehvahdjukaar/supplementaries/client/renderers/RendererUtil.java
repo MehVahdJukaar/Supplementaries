@@ -47,18 +47,6 @@ import java.util.function.BiConsumer;
 public class RendererUtil {
     //centered on x,z. aligned on y=0
 
-    //stuff that falling sand uses. for some reason renderBlock doesn't use correct light level
-    public static void renderBlockState(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
-                                        BlockRenderDispatcher blockRenderer, Level world, BlockPos pos) {
-        try {
-            for (RenderType type : RenderType.chunkBufferLayers()) {
-                if (ItemBlockRenderTypes.canRenderInLayer(state, type)) {
-                    renderBlockState(state, matrixStack, buffer, blockRenderer, world, pos, type);
-                }
-            }
-        } catch (Exception ignored) {
-        }
-    }
 
     public static void renderBlockState(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, Level world, BlockPos pos, RenderType type) {

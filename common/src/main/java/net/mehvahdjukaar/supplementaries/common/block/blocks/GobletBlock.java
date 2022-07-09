@@ -4,6 +4,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -36,7 +38,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
 
     public GobletBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
+        super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false));
     }
 

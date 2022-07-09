@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -75,7 +76,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(),
                 Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
         //not sure if needed here
-        this.requestModelDataUpdate();
+        this.requestModelReload();
         this.collisionShape = null;
         this.shape = null;
         super.setChanged();

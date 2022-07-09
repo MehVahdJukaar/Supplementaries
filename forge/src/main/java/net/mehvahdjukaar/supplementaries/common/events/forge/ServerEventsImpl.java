@@ -1,17 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import com.electronwill.nightconfig.core.utils.ConfigWrapper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
-import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -19,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,25 +29,29 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.UsernameCache;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class ServerEventsImpl {
 
@@ -89,8 +96,8 @@ public class ServerEventsImpl {
 
     //TODO: soap tool event
     @SubscribeEvent
-    public static void toolModification(BlockEvent.BlockToolModificationEvent event){
-        if(event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.Tweaks.RAKED_GRAVEL.get()){
+    public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
+        if (event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.Tweaks.RAKED_GRAVEL.get()) {
             LevelAccessor world = event.getWorld();
             BlockPos pos = event.getPos();
             if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
@@ -101,20 +108,53 @@ public class ServerEventsImpl {
             }
         }
     }
+
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if(event.getPlayer() instanceof ServerPlayer player) ServerEvents.onPlayerLoggedIn(player);
+        if (event.getPlayer() instanceof ServerPlayer player){
+            try {
+                NetworkHandler.CHANNEL.sendToClientPlayer(player,
+                        new ClientBoundSendLoginPacket(UsernameCache.getMap()));
+            } catch (Exception exception) {
+                Supplementaries.LOGGER.warn("failed to send login message: " + exception);
+            }
+            ServerEvents.onPlayerLoggedIn(player);
+        }
     }
 
+    @SubscribeEvent
+    public static void onAddReloadListeners(final AddReloadListenerEvent event) {
+        event.addListener(new FluteSongsReloadListener());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onDimensionUnload(WorldEvent.Unload event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel) {
+            ServerEvents.onWorldUnload(ServerLifecycleHooks.getCurrentServer(), serverLevel);
+        }
+    }
+
+    //for flute and cage. fabric calls directly
+    @SubscribeEvent
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        var res = ServerEvents.onRightClickEntity(event.getPlayer(), event.getWorld(), event.getHand(), event.getEntity(), null);
+        if (res != InteractionResult.PASS) {
+            event.setCanceled(true);
+            event.setCancellationResult(res);
+        }
+    }
 
     //TODO: add these on fabric
     //forge only
 
-
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onProjectileImpact(final ProjectileImpactEvent event) {
+        PearlMarker.onProjectileImpact(event.getProjectile(),event.getRayTraceResult());
+    }
 
     @SubscribeEvent
     public static void onSaplingGrow(SaplingGrowTreeEvent event) {
-        if(ServerConfigs.Blocks.PLANTER_BREAKS.get()) {
+        if (ServerConfigs.Blocks.PLANTER_BREAKS.get()) {
             LevelAccessor level = event.getWorld();
             BlockPos pos = event.getPos();
             BlockState state = level.getBlockState(pos.below());
@@ -128,7 +168,7 @@ public class ServerEventsImpl {
 
     @SubscribeEvent
     public static void reloadConfigsEvent(ModConfigEvent event) {
-        if (event.getConfig().getSpec() == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getSpec()){
+        if (event.getConfig().getSpec() == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getSpec()) {
             CapturedMobsHelper.refreshVisuals();
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
         }
@@ -162,24 +202,5 @@ public class ServerEventsImpl {
         SongsManager.recordNote(event.getWorld(), event.getPos());
     }
 
-    //for flute and cage. fabric calls directly
-    @SubscribeEvent
-    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof FluteItem) {
-            if (FluteItem.interactWithPet(stack, event.getPlayer(), event.getTarget(), event.getHand())) {
-                event.setCancellationResult(InteractionResult.SUCCESS); // we need this for event to be actually cancelled
-                event.setCanceled(true);
-            }
-        } else if (stack.getItem() instanceof AbstractMobContainerItem containerItem) {
-            if (!containerItem.isFull(stack)) {
-                var res = containerItem.doInteract(stack, event.getPlayer(), event.getTarget(), event.getHand());
-                if (res.consumesAction()){
-                    event.setCancellationResult(InteractionResult.SUCCESS);
-                    event.setCanceled(true);
-                }
-            }
-        }
-    }
 
 }

@@ -21,8 +21,6 @@ import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -35,12 +33,6 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     public SafeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SAFE_TILE.get(), pos, state, 27);
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @org.jetbrains.annotations.Nullable Direction facing) {
-        //if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
-        return super.getCapability(capability, facing);
     }
 
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {

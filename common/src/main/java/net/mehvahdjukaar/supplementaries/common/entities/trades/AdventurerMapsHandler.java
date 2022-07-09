@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.mehvahdjukaar.moonlight.map.MapDecorationRegistry;
-import net.mehvahdjukaar.moonlight.map.MapHelper;
-import net.mehvahdjukaar.moonlight.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapHelper;
+import net.mehvahdjukaar.moonlight.api.map.type.IMapDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.generation.structure.StructureLocator;
@@ -55,7 +55,6 @@ public class AdventurerMapsHandler {
 
     static {
         //tags here
-
         addStructureDecoration(StructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
         addStructureDecoration(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
         addStructureDecoration(StructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
