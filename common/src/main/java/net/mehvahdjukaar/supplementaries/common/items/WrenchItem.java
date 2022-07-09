@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -15,32 +15,26 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 public class WrenchItem extends Item {
     private final float attackDamage;
     /**
-     * Modifiers applied when the item is in the mainhand of a user.
+     * Modifiers applied when the item is in the mainland of a user.
      */
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
@@ -55,14 +49,10 @@ public class WrenchItem extends Item {
         this.defaultModifiers = builder.build();
     }
 
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public float getDamage() {
         return this.attackDamage;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(
-                Enchantments.KNOCKBACK).contains(enchantment);
     }
 
     @Override
@@ -128,10 +118,10 @@ public class WrenchItem extends Item {
         return InteractionResult.FAIL;
     }
 
-    private void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
-        if (ClientConfigs.cached.WRENCH_PARTICLES) {
+    public static void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
+        if (ClientConfigs.Items.WRENCH_PARTICLES.get()) {
             if (dir == Direction.DOWN) shiftDown = !shiftDown;
-            level.addParticle(ModRegistry.ROTATION_TRAIL_EMITTER.get(),
+            level.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
                     pos.getX() + 0.5D, pos.getY() + 0.5, pos.getZ() + 0.5D,
                     dir.get3DDataValue(),
                     0.71, shiftDown ? 1 : -1);
@@ -144,7 +134,7 @@ public class WrenchItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand pUsedHand) {
-        if (entity instanceof ArmorStand ||  entity.getType().is(ModTags.ROTATABLE)) {
+        if (entity instanceof ArmorStand || entity.getType().is(ModTags.ROTATABLE)) {
             boolean shiftDown = player.isShiftKeyDown();
             float inc = 22.5f * (shiftDown ? -1 : 1);
             entity.setYRot(entity.getYRot() + inc);
@@ -158,33 +148,4 @@ public class WrenchItem extends Item {
         return InteractionResult.PASS;
     }
 
-    private static Method SET_DIRECTION = null;
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        boolean shiftDown = player.isShiftKeyDown();
-        if (entity instanceof HangingEntity hangingEntity && hangingEntity.getDirection().getAxis().isHorizontal()) {
-            //hangingEntity.rotate(player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90);
-            Direction dir = hangingEntity.getDirection();
-            dir = shiftDown ? dir.getCounterClockWise() : dir.getClockWise();
-            try {
-                if (SET_DIRECTION == null)
-                    SET_DIRECTION = ObfuscationReflectionHelper.findMethod(HangingEntity.class, "setDirection", Direction.class);
-                SET_DIRECTION.setAccessible(true);
-                SET_DIRECTION.invoke(hangingEntity, dir);
-
-                if (player.level.isClientSide)
-                    playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level, player);
-
-                stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
-                return true;
-            } catch (Exception ignored) {
-            }
-        } else if (entity instanceof ArmorStand armorStand) {
-            this.interactLivingEntity(stack, player, armorStand, InteractionHand.MAIN_HAND);
-
-            return true;
-        }
-        return super.onLeftClickEntity(stack, player, entity);
-    }
 }

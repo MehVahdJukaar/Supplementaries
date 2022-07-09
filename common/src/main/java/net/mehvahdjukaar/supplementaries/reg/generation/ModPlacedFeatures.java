@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.world.generation;
+package net.mehvahdjukaar.supplementaries.reg.generation;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.Holder;

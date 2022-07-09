@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.world.generation;
+package net.mehvahdjukaar.supplementaries.reg.generation;
 
 /*
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -68,7 +68,7 @@ public class WorldGenHandler {
 }
 */
 
-import net.minecraftforge.eventbus.api.IEventBus;
+
 
 public  class WorldGenHandler {
     public static void onRegisterAdditional() {
@@ -77,6 +77,6 @@ public  class WorldGenHandler {
     public static void onInit() {
     }
 
-    public static void registerBus(IEventBus bus) {
+    public static void registerBus() {
     }
 }

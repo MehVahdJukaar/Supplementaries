@@ -3,14 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.world.songs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,19 +49,12 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
 
         //Supplementaries.LOGGER.debug("Loaded  " + SongsManager.SONGS.size() + " songs: " + SongsManager.SONGS.keySet());
 
-        //SongsManager.SONGS.values().forEach(Song::processForPlaying);
-
-
-        if (EffectiveSide.get().isServer() && ServerLifecycleHooks.getCurrentServer() != null) {
-            //only need for particles
-            SongsManager.sendSongsToClient();
-        }
         temp.forEach(Song::processForPlaying);
     }
 
     public static void saveRecordedSong(Song song) {
 
-        File folder = FMLPaths.GAMEDIR.get().resolve("recorded_songs").toFile();
+        File folder = PlatformHelper.getGamePath().resolve("recorded_songs").toFile();
 
         if (!folder.exists()) {
             folder.mkdir();

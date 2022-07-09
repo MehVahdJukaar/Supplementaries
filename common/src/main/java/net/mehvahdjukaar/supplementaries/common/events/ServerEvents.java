@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
+import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
@@ -85,9 +86,10 @@ public class ServerEvents {
         return InteractionResult.PASS;
     }
 
+    //on data load?
     @EventCalled
     public static void onWorldUnload(MinecraftServer minecraftServer, ServerLevel serverLevel) {
-
+        SongsManager.sendSongsToClient();
     }
 
     private static final boolean FODDER_ENABLED = RegistryConfigs.FODDER_ENABLED.get();
@@ -109,6 +111,8 @@ public class ServerEvents {
     public static void injectLootTables(LootTables lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
         LootTablesInjects.injectLootTables(name, builder);
     }
+
+
 
 
 }

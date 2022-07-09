@@ -16,7 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
-import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
+import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

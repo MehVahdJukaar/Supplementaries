@@ -42,7 +42,7 @@ public class SongsManager {
     }
 
     public static void sendSongsToClient() {
-        NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+        NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS));
     }
 
     public static Song setCurrentlyPlaying(UUID id, ResourceLocation songKey) {
@@ -103,7 +103,7 @@ public class SongsManager {
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
             if(notes.size()>0 && notes.getInt(0)>0){
-                NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity),
+                NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
                 played = true;
@@ -198,7 +198,7 @@ public class SongsManager {
         song.processForPlaying();
         SONGS.put(Supplementaries.res(name), song);
         if (!level.isClientSide) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS));
         }
 
         RECORDING.clear();

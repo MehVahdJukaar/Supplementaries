@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.world.generation.structure;
+package net.mehvahdjukaar.supplementaries.reg.generation.structure;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StructureTempBlock;
