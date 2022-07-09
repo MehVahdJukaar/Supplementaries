@@ -54,9 +54,9 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     public ExtraModelData getExtraModelData() {
         //return data;
         return ExtraModelData.builder()
-                .with(FLOWER_0, flowerStates[0])
-                .with(FLOWER_1, flowerStates[1])
-                .with(FLOWER_2, flowerStates[2])
+                .withProperty(FLOWER_0, flowerStates[0])
+                .withProperty(FLOWER_1, flowerStates[1])
+                .withProperty(FLOWER_2, flowerStates[2])
                 .build();
     }
 
