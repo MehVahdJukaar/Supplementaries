@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.function.Supplier;
 
@@ -417,8 +416,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
         public void afterExploded(BombExplosion exp, Level level) {
             if (this == SPIKY) {
-                Vec3 pos = exp.getPosition();
-                Entity e = exp.getExploder();
+                Vec3 pos = exp.getDamageSource().getSourcePosition();
+                Entity e = exp.getSourceMob();
                 if (e == null) return;
                 for (Entity entity : level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
                         pos.x + 30, pos.y + 4, pos.z + 30))) {

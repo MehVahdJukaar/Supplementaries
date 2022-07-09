@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -187,8 +188,8 @@ public class BombExplosion extends Explosion {
         int i1 = Mth.floor(this.y + (double) f2 + 1.0D);
         int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
         int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
-        List<Entity> list = this.level.getEntities(this.getExploder(), new AABB(k1, i2, j2, l1, i1, j1));
-        ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
+        List<Entity> list = this.level.getEntities(this.getSourceMob(), new AABB(k1, i2, j2, l1, i1, j1));
+        ForgeHelper.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {

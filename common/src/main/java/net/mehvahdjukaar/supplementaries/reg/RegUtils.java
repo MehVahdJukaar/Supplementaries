@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.moonlight.api.set.BlockSetManager;
+import net.mehvahdjukaar.moonlight.api.misc.Registrator;
+import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
-import net.mehvahdjukaar.moonlight.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -46,9 +46,9 @@ import java.util.function.Supplier;
 public class RegUtils {
 
     public static void initDynamicRegistry() {
-        BlockSetManager.addDynamicBlockRegistration(RegUtils::registerHangingSignBlocks, WoodType.class);
-        BlockSetManager.addDynamicItemRegistration(RegUtils::registerHangingSignItems, WoodType.class);
-        BlockSetManager.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
+        BlockSetAPI.addDynamicBlockRegistration(RegUtils::registerHangingSignBlocks, WoodType.class);
+        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerHangingSignItems, WoodType.class);
+        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
     }
 
     //gets the tab given or null if the item is disabled
