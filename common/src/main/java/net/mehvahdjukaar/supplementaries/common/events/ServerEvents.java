@@ -9,7 +9,9 @@ import net.mehvahdjukaar.supplementaries.common.utils.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
+import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,9 +24,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 
 public class ServerEvents {
@@ -99,4 +105,13 @@ public class ServerEvents {
             }
         }
     }
+
+    @EventCalled
+    public static void injectLootTables(LootTables lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
+        LootTablesInjects.injectLootTables(name,builder);
+    }
+
+
+
+
 }

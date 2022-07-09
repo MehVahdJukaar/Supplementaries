@@ -32,6 +32,7 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -105,7 +106,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer player){
+        if (event.getPlayer() instanceof ServerPlayer player) {
             try {
                 NetworkHandler.CHANNEL.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
@@ -141,9 +142,14 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinWorldEvent event) {
         var level = event.getWorld();
-        if(level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             ServerEvents.onEntityLoad(event.getEntity(), serverLevel);
         }
+    }
+
+    @SubscribeEvent
+    public static void onAddLootTables(LootTableLoadEvent event) {
+        ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
     }
 
     //TODO: add these on fabric
@@ -151,7 +157,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onProjectileImpact(final ProjectileImpactEvent event) {
-        PearlMarker.onProjectileImpact(event.getProjectile(),event.getRayTraceResult());
+        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
     }
 
     @SubscribeEvent

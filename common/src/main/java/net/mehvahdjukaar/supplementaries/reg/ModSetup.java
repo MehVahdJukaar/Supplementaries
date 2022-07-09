@@ -44,7 +44,7 @@ public class ModSetup {
             CMDreg::init,
             WeatheredMap::init,
             NetworkHandler::registerMessages,
-            LootTableStuff::init,
+            LootTablesInjects::init,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,
@@ -138,11 +138,6 @@ public class ModSetup {
     @SubscribeEvent
     public static void registerWanderingTraderTrades(WandererTradesEvent event) {
         VillagerTradesHandler.registerWanderingTraderTrades(event);
-    }
-
-    @SubscribeEvent
-    public static void onLootLoad(LootTableLoadEvent e) {
-        LootTableStuff.injectLootTables(e);
     }
 
 

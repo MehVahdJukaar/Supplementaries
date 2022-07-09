@@ -8,39 +8,38 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
-import net.minecraftforge.event.LootTableLoadEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-public class LootTableStuff {
+public class LootTablesInjects {
 
-    //TODO: find out how to register these so the dont throw errors or use glm
+    //TODO: find out how to register these so the don't throw errors or use glm
 
-    private static final List<BiConsumer<LootTableLoadEvent, TableType>> LOOT_INJECTS = new ArrayList<>();
+    private static final List<BiConsumer<Consumer<LootPool.Builder>, TableType>> LOOT_INJECTS = new ArrayList<>();
 
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
-        if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
-        if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
-        if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
-        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
-        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBomb);
-        if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTableStuff::tryInjectStasis);
+        if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
+        if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
+        if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
+        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBlueBomb);
+        if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBomb);
+        if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTablesInjects::tryInjectStasis);
         if (RegistryConfigs.BAMBOO_SPIKES_ENABLED.get() &&
-                RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectSpikes);
+                RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectSpikes);
     }
 
-    public static void injectLootTables(LootTableLoadEvent event) {
-        ResourceLocation res = event.getName();
-        String nameSpace = res.getNamespace();
+    public static void injectLootTables(ResourceLocation name, Consumer<LootPool.Builder> builder) {
+        String nameSpace = name.getNamespace();
         if (nameSpace.equals("minecraft") || nameSpace.equals("repurposed_structures")) {
-            TableType type = LootHelper.getType(res.toString());
+            TableType type = LootHelper.getType(name.toString());
             if (type != TableType.OTHER) {
-                LOOT_INJECTS.forEach(i -> i.accept(event, type));
+                LOOT_INJECTS.forEach(i -> i.accept(builder, type));
             }
         }
     }
@@ -131,53 +130,54 @@ public class LootTableStuff {
         }
     }
 
-    private static void injectLootPool(LootTableLoadEvent event, TableType type, String name) {
+    private static void injectLootPool(Consumer<LootPool.Builder> consumer, TableType type, String name) {
         String id = type.toString().toLowerCase(Locale.ROOT) + "_" + name;
-        LootPool pool = LootPool.lootPool().add(
+        LootPool.Builder pool = LootPool.lootPool().add(
                         LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)))
-                .name("supp_" + name).build();
-        event.getTable().addPool(pool);
+                .name("supp_" + name);
+        //fabric uses a different loot builder and forge has extra params.. todo:split
+        consumer.accept(pool);
     }
 
-    public static void tryInjectGlobe(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectGlobe(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.SHIPWRECK_TREASURE) {
             injectLootPool(e, type, "globe");
         }
     }
 
-    public static void tryInjectRope(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectRope(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.MINESHAFT) {
             injectLootPool(e, type, "rope");
         }
     }
 
-    public static void tryInjectFlax(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectFlax(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.MINESHAFT || type == TableType.DUNGEON || type == TableType.SHIPWRECK_STORAGE || type == TableType.PILLAGER) {
             injectLootPool(e, type, "flax");
         }
     }
 
-    public static void tryInjectBlueBomb(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectBlueBomb(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.STRONGHOLD || type == TableType.MINESHAFT || type == TableType.TEMPLE
                 || type == TableType.FORTRESS || type == TableType.DUNGEON) {
             injectLootPool(e, type, "blue_bomb");
         }
     }
 
-    public static void tryInjectBomb(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectBomb(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.STRONGHOLD || type == TableType.MINESHAFT || type == TableType.TEMPLE
                 || type == TableType.FORTRESS) {
             injectLootPool(e, type, "bomb");
         }
     }
 
-    public static void tryInjectSpikes(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectSpikes(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.TEMPLE) {
             injectLootPool(e, type, "spikes");
         }
     }
 
-    public static void tryInjectStasis(LootTableLoadEvent e, TableType type) {
+    public static void tryInjectStasis(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.END_CITY) {
             injectLootPool(e, type, "stasis");
         }
