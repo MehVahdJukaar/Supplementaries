@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -126,6 +127,7 @@ public class ServerEventsForge {
     public static void onDimensionUnload(WorldEvent.Unload event) {
         if (event.getWorld() instanceof ServerLevel serverLevel) {
             ServerEvents.onWorldUnload(ServerLifecycleHooks.getCurrentServer(), serverLevel);
+            MovableFakePlayer.unloadLevel(serverLevel);
         }
     }
 

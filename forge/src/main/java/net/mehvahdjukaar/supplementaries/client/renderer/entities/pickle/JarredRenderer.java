@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -28,9 +28,9 @@ import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 
-public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, PickleModel<AbstractClientPlayer>> {
-    public PickleRenderer(EntityRendererProvider.Context context) {
-        super(context, new PickleModel<>(context.bakeLayer(ClientRegistry.PICKLE_MODEL)), 0.0125F);
+public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, JarredModel<AbstractClientPlayer>> {
+    public JarredRenderer(EntityRendererProvider.Context context) {
+        super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)),0);
 
         this.shadowStrength = 0;
         this.shadowRadius = 0;
@@ -48,7 +48,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
 
     @Override
     public ResourceLocation getTextureLocation(AbstractClientPlayer player) {
-        return Textures.SEA_PICKLE_RICK;
+        return Textures.JAR_MAN;
     }
 
     @Override
@@ -58,38 +58,38 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
 
     @Override
     protected void scale(AbstractClientPlayer player, PoseStack stack, float partialTickTime) {
-        stack.scale(0.5f, 0.5f, 0.5f);
+        stack.scale(1f, 1f, 1f);
     }
 
     @Override
     public void render(AbstractClientPlayer player, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource p_225623_5_, int p_225623_6_) {
-        this.model.partialTicks = partialTicks;
         this.setModelProperties(player);
 
         if (this.wasCrouching) {
             float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(f));
+            matrixStack.translate(0, -0.125, 0);
         }
         super.render(player, p_225623_2_, partialTicks, matrixStack, p_225623_5_, p_225623_6_);
     }
 
-
     @Override
     public Vec3 getRenderOffset(AbstractClientPlayer player, float p_225627_2_) {
-        return new Vec3(0.0D, -0.25D, 0.0D);
+        return player.isCrouching() ? new Vec3(0.0D, -0.5D, 0.0D) : new Vec3(0.0D, -0.25D, 0.0D);
     }
+
 
     private void setModelProperties(AbstractClientPlayer player) {
         PlayerModel<AbstractClientPlayer> playermodel = this.getModel();
         playermodel.setAllVisible(false);
         boolean c = player.isCrouching();
         playermodel.body.visible = true;
-        playermodel.leftArm.visible = !c;
-        playermodel.rightArm.visible = !c;
+        playermodel.head.visible = true;
+        //playermodel.leftArm.visible = !c;
+        //playermodel.rightArm.visible = !c;
         playermodel.leftLeg.visible = !c;
         playermodel.rightLeg.visible = !c;
-        playermodel.head.visible = !c;
-        playermodel.hat.visible = !c;
+
 
         if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
         this.wasCrouching = c;
@@ -110,6 +110,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
             playermodel.rightArmPose = poseLeftArm;
             playermodel.leftArmPose = poseRightArm;
         }
+
     }
 
     protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
@@ -164,19 +165,18 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         matrixStack.popPose();
     }
 
-    //same as vanilla
     @Override
-    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float partialTicks) {
-        float f = player.getSwimAmount(partialTicks);
+    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
+        float f = player.getSwimAmount(p_225621_5_);
         if (player.isFallFlying()) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
-            float f1 = (float) player.getFallFlyingTicks() + partialTicks;
-            float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
+            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
+            float f1 = (float) player.getFallFlyingTicks() + p_225621_5_;
+            float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
-                matrixStack.mulPose(Vector3f.XP.rotationDegrees(inclination * (-90.0F - player.getXRot())));
+                matrixStack.mulPose(Vector3f.XP.rotationDegrees(f2 * (-90.0F - player.getXRot())));
             }
 
-            Vec3 vector3d = player.getViewVector(partialTicks);
+            Vec3 vector3d = player.getViewVector(p_225621_5_);
             Vec3 vector3d1 = player.getDeltaMovement();
             double d0 = vector3d1.horizontalDistanceSqr();
             double d1 = vector3d.horizontalDistanceSqr();
@@ -186,7 +186,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
                 matrixStack.mulPose(Vector3f.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
+            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
             float f3 = player.isInWater() ? -90.0F - player.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(f4));
@@ -194,8 +194,11 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
                 matrixStack.translate(0.0D, -0.25, 0.25);
             }
         } else {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
+            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
         }
+
+
     }
+
 
 }

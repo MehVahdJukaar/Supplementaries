@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;

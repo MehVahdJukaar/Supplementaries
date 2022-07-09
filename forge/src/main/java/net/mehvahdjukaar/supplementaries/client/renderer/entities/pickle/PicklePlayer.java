@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -20,7 +20,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class PicklePlayer {
     private static boolean jarvis = false;
 
     @SubscribeEvent
-    public static void onLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         PickleData.onPlayerLogOff();
     }
 
@@ -66,7 +65,7 @@ public class PicklePlayer {
                 }
 
                 PickleData.set(id, turnOn);
-                NetworkHandler.INSTANCE.sendToServer(new PicklePacket(id, turnOn));
+                NetworkHandler.CHANNEL.sendToServer(new PicklePacket.ServerBound(id, turnOn));
             }
         }
     }
@@ -119,8 +118,8 @@ public class PicklePlayer {
                 boolean on = PICKLE_PLAYERS.get(id).isOn();
                 if (on) {
                     //to client
-                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                            new PicklePacket(id, on));
+                    NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
+                            new PicklePacket.ClientBound(id, on));
                 }
             }
         }

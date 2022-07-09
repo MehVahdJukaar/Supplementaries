@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
