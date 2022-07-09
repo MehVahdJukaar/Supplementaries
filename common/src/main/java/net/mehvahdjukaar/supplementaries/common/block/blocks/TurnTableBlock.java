@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.Advancement;
@@ -152,7 +151,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity e) {
         super.stepOn(world, pos, state, e);
-        if (!ServerConfigs.Blocks.TURN_TABLE_ROTATE_ENTITIES.get()) return;
+        if (!ServerConfigs.cached.TURN_TABLE_ROTATE_ENTITIES) return;
         if (!e.isOnGround()) return;
         if (state.getValue(POWER) != 0 && state.getValue(FACING) == Direction.UP) {
             float period = getPeriod(state) + 1;
@@ -221,11 +220,11 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Override
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
         if (eventID == 0) {
-            if (world.isClientSide && ClientConfigs.Blocks.TURN_TABLE_PARTICLES.get()) {
+            if (world.isClientSide && ClientConfigs.cached.TURN_TABLE_PARTICLES) {
                 Direction dir = state.getValue(TurnTableBlock.FACING);
                 BlockPos front = pos.relative(dir);
 
-                world.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
+                world.addParticle(ModRegistry.ROTATION_TRAIL_EMITTER.get(),
                         front.getX() + 0.5D, front.getY() + 0.5, front.getZ() + 0.5D,
                         dir.get3DDataValue(),
                         0.71, (state.getValue(INVERTED) ? 1 : -1));

@@ -157,8 +157,8 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        if (world.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
             return new ItemStack(te.getHeldBlock().getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);

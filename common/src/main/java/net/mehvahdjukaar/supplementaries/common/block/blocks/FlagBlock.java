@@ -46,6 +46,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
+    // TODO fabric
     @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;

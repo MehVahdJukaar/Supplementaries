@@ -148,7 +148,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 //clear ownership with tripwire
                 boolean cleared = false;
-                if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+                if (ServerConfigs.cached.SAFE_SIMPLE) {
                     if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
                             (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
@@ -170,7 +170,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 BlockPos p = pos.relative(state.getValue(FACING));
                 if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
-                    if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+                    if (ServerConfigs.cached.SAFE_SIMPLE) {
                         UUID owner = tile.owner;
                         if (owner == null) {
                             owner = player.getUUID();
@@ -210,7 +210,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag != null) {
-            if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+            if (ServerConfigs.cached.SAFE_SIMPLE) {
                 if (compoundTag.contains("Owner")) {
                     UUID id = compoundTag.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
@@ -273,7 +273,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     //break protection
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (ServerConfigs.Blocks.SAFE_UNBREAKABLE.get()) {
+        if (ServerConfigs.cached.SAFE_UNBREAKABLE) {
             if (world.getBlockEntity(pos) instanceof SafeBlockTile tile) {
                 if (!tile.canPlayerOpen(player, true)) return false;
             }
@@ -309,13 +309,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
+        if (world.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             return getSafeItem(tile);
         }
         return itemstack;
     }
+
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {

@@ -80,7 +80,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             boolean flag = world.hasNeighborSignal(pos);
             if (state.getValue(POWERED) != flag) {
                 state = state.setValue(POWERED, flag);
-                if (!gold || !ServerConfigs.Blocks.CONSISTENT_GATE.get()) {
+                if (!gold || !ServerConfigs.cached.CONSISTENT_GATE) {
                     if (state.getValue(OPEN) != flag) {
                         world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
                         world.gameEvent(null, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
@@ -111,11 +111,11 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
 
-        if (!state.getValue(POWERED) && gold || !ServerConfigs.Blocks.CONSISTENT_GATE.get()) {
+        if (!state.getValue(POWERED) && gold || !ServerConfigs.cached.CONSISTENT_GATE) {
             Direction dir = player.getDirection();
 
 
-            if (ServerConfigs.Blocks.DOUBLE_IRON_GATE.get()) {
+            if (ServerConfigs.cached.DOUBLE_IRON_GATE) {
                 BlockPos up = pos.above();
                 BlockState stateUp = world.getBlockState(up);
                 if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))

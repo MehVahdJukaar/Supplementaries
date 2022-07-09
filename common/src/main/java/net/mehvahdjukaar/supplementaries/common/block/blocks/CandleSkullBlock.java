@@ -146,11 +146,11 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(ItemTags.CANDLES) && stack.getItem() instanceof BlockItem blockItem) {
                 int count = state.getValue(CANDLES);
-                if (count < 4 && ServerConfigs.Tweaks.SKULL_CANDLES_MULTIPLE.get() &&
+                if (count < 4 && ServerConfigs.cached.SKULL_CANDLES_MULTIPLE &&
                         level.getBlockEntity(pos) instanceof CandleSkullBlockTile tile
                         && tile.getCandle().getBlock().asItem() == stack.getItem()) {
 
-                    SoundType sound = blockItem.getBlock().defaultBlockState().getSoundType();
+                    SoundType sound = blockItem.getBlock().defaultBlockState().getSoundType(level, pos, player);
                     level.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);

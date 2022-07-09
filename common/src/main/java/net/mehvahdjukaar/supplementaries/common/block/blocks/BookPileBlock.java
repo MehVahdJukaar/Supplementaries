@@ -118,7 +118,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    @Override
+    // TODO find a way to make this work on Fabric
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             double f = 5 * (target.getLocation().y - pos.getY()) / SHAPE_4.bounds().maxY;

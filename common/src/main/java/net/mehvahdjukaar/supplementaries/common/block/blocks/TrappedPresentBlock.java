@@ -151,9 +151,9 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
+        if (world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
             return tile.getPresentItem(this);
         }
         return itemstack;
@@ -244,7 +244,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
         var particleEngine = Minecraft.getInstance().particleEngine;
         VoxelShape voxelshape = PresentBlock.SHAPE_LID;

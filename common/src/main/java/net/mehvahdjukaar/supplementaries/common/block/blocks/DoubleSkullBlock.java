@@ -39,6 +39,11 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
         return SHAPE;
     }
 
+     /* @Override
+    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation) {
+        return super.rotate(state, world, pos, rotation);
+    } */
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new DoubleSkullBlockTile(pPos, pState);

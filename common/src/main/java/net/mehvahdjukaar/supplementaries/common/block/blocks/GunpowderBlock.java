@@ -37,7 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -480,19 +479,6 @@ public class GunpowderBlock extends LightUpBlock {
         }
         return world.getFluidState(pos).getType() == Fluids.LAVA;
     }
-
-    /**
-     * Called upon the block being destroyed by an explosion
-     */
-    @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
-        if (!world.isClientSide && this.canSurvive(state, world, pos)) {
-            this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
-        } else {
-            super.onBlockExploded(state, world, pos, explosion);
-        }
-    }
-
 
     //TODO: this is not working
     @Override

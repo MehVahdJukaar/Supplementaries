@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -34,7 +33,7 @@ public class TimberFrameItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (ServerConfigs.Blocks.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
+        if (ServerConfigs.cached.SWAP_TIMBER_FRAME && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);
@@ -43,7 +42,7 @@ public class TimberFrameItem extends BlockItem {
                 if(frame != null) {
                     world.setBlockAndUpdate(pos, frame);
                     if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-                        SoundType s = frame.getSoundType();
+                        SoundType s = frame.getSoundType(world, pos, player);
                         tile.acceptBlock(clicked);
                         world.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                         if (!player.isCreative() && !world.isClientSide()) {
@@ -59,7 +58,7 @@ public class TimberFrameItem extends BlockItem {
         return super.useOn(context);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
         return 200;
     }
@@ -67,7 +66,7 @@ public class TimberFrameItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
+        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
         tooltip.add((Component.translatable("message.supplementaries.timber_frame")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 }

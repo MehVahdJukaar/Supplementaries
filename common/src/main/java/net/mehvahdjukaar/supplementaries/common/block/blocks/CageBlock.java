@@ -86,6 +86,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
 
     //for pick block
 
+
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof CageBlockTile tile) {

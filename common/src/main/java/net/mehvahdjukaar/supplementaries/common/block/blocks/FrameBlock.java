@@ -154,12 +154,4 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         }
         return 0;
     }
-
-    @Override
-    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-            tile.getHeldBlock().getEnchantPowerBonus(world, pos);
-        }
-        return 0;
-    }
 }

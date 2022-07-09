@@ -289,7 +289,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
             if (!world.isClientSide) {
                 if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-                    popResource(world, pos, new ItemStack(ModRegistry.ROPE.get()));
+                    popResource(world, pos, new ItemStack(ModRegistry.ROPE_ITEM.get()));
                     world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundSource.PLAYERS, 0.8F, 1.3F);
                     world.setBlock(pos, tile.getHeldBlock(), 3);
                 }
