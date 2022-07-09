@@ -97,7 +97,7 @@ public class FrameBlockTile extends MimicBlockTile {
 
                 BlockState newState = this.acceptBlock(toPlace);
 
-                SoundType s = newState.getSoundType(level, worldPosition, player);
+                SoundType s = newState.getSoundType();
                 this.level.gameEvent(player, GameEvent.BLOCK_CHANGE, this.worldPosition);
                 this.level.playSound(player, this.worldPosition, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
                 if (!player.isCreative() && !level.isClientSide()) {

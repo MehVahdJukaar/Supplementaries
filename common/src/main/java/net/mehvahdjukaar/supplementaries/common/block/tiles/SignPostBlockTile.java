@@ -62,8 +62,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(FRAMED, this.framed)
-                .with(MIMIC, this.getHeldBlock())
+                .withProperty(FRAMED, this.framed)
+                .withProperty(MIMIC, this.getHeldBlock())
                 .build();
     }
 
