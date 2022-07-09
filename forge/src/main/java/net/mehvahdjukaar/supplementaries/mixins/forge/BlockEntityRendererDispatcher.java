@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;

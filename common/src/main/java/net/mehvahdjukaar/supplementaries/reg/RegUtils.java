@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.moonlight.api.misc.Registrator;
-import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
@@ -53,7 +53,7 @@ public class RegUtils {
 
     //gets the tab given or null if the item is disabled
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (RegistryConfigs.Reg.isEnabled(regName)) {
+        if (RegistryConfigs.isEnabled(regName)) {
             return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;
         }
         return null;
@@ -127,7 +127,7 @@ public class RegUtils {
 
 
     public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
-        return ModRegistry.ENTITIES.register(name, () -> builder.build(name));
+        return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.build(name));
     }
 
     //flags
@@ -163,7 +163,7 @@ public class RegUtils {
                                     .strength(1.0F)
                                     .noCollission()
                                     .sound(SoundType.WOOD)
-                                    .lootFrom(() -> BannerBlock.byColor(color))
+                                    .lootFrom(() -> BannerBlock.byColor(color)) //oof add proper loot table
                     ), color.getName() + "_banner", ServerConfigs.Tweaks.CEILING_BANNERS
             ));
         }
@@ -184,8 +184,8 @@ public class RegUtils {
             map.put(color, block);
             //item
 
-            regItem(name, () ->
-                    new PresentItem(block.get(), (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, name)), map));
+            regItem(name, () -> new PresentItem(block.get(), (new Item.Properties())
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, name)), map));
         }
         Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
@@ -227,9 +227,7 @@ public class RegUtils {
                     wood, 200
             );
             event.register(Utils.getID(block), item);
-            ModRegistry.HANGING_SIGNS_ITEMS.put(wood, item);
         }
-
     }
 
     //sign posts

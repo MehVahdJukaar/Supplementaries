@@ -11,7 +11,7 @@ public class CompatHandlerClient {
     public static void init() {
         if (CompatHandler.configured && RegistryConfigs.CUSTOM_CONFIGURED_SCREEN.get()) {
             try {
-                CustomConfigSelectScreen.registerScreen();
+                //CustomConfigSelectScreen.registerScreen();
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("Failed to register custom configured screen: " + e);
             }

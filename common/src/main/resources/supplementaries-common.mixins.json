@@ -22,7 +22,7 @@
     "BrewingStandMixin",
     "CampfireBlockMixin",
     "CatSitOnBlockGoalMixin",
-    "ChunkHolderMixin",
+    "forge.ChunkHolderMixin",
     "CrossbowItemRopeMixin",
     "EntityMixin",
     "GrindstoneInputSlotMixin",

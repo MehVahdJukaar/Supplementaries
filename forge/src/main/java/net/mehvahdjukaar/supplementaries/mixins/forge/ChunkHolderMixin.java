@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
