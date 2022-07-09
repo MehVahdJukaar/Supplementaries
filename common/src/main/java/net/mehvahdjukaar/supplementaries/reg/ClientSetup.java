@@ -77,7 +77,7 @@ public class ClientSetup {
             MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
             //map markers
-            CMDclient.init(event);
+            CMDclient.init();
 
             //overlay
             //SlimedGuiOverlay.register();

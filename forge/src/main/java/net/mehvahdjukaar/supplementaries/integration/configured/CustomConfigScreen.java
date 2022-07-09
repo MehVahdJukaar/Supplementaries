@@ -8,11 +8,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -58,7 +61,7 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("tweaks", ModRegistry.WRENCH.get());
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
-        addIcon("flag", ModRegistry.FLAGS_ITEMS.get(DyeColor.WHITE).get());
+        addIcon("flag", ModRegistry.FLAGS.get(DyeColor.WHITE).get());
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("bells tweaks", Items.BELL);
         addIcon("cake tweaks", Items.CAKE);
@@ -74,22 +77,22 @@ public class CustomConfigScreen extends ConfigScreen {
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
         addIcon("map tweaks", Items.FILLED_MAP);
         addIcon("ceiling banners", Items.RED_BANNER);
-        addIcon("initialization", ModRegistry.COG_BLOCK_ITEM.get());
+        addIcon("initialization", ModRegistry.COG_BLOCK.get());
         addIcon("zombie horse", Items.ZOMBIE_HORSE_SPAWN_EGG);
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("mixins", Items.HOPPER);
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
         addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
-        addIcon("wattle and daub", ModRegistry.DAUB_BRACE_ITEM.get());
+        addIcon("wattle and daub", ModRegistry.DAUB_BRACE.get());
         addIcon("shulker shell", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging sign", ModRegistry.HANGING_SIGNS_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        addIcon("hanging sign", ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("cave urns", ModRegistry.URN_ITEM.get());
+        addIcon("cave urns", ModRegistry.URN.get());
         addIcon("structures", Items.BRICKS);
         addIcon("soap", ModRegistry.SOAP_BLOCK.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
@@ -168,7 +171,7 @@ public class CustomConfigScreen extends ConfigScreen {
         super.init();
 
         //replace list with new custom entries
-        boolean reg = this.config == ConfigUtils.REGISTRY_CONFIGS && !this.folderEntry.isRoot();
+        boolean reg = this.config == ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_CONFIG).getModConfig() && !this.folderEntry.isRoot();
 
         this.list.replaceEntries(replaceItems(this.list.children(), reg));
         Collection<Item> temp = replaceItems(this.entries, reg);
@@ -214,11 +217,11 @@ public class CustomConfigScreen extends ConfigScreen {
             }
 
             if (this.isChanged(this.folderEntry)) {
-                if (this.config == ConfigUtils.SERVER_CONFIGS) {
+                if (this.config == ((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig()) {
                     //TODO: fix. this work but shouldnt be needed and might break servers
                     ConfigUtils.clientRequestServerConfigReload();
-                } else if (this.config == ConfigUtils.CLIENT_CONFIGS) {
-                    ClientConfigs.cached.refresh();
+                } else if (this.config == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig()) {
+                    //ClientConfigs.cached.refresh();
                 }
             }
         }

@@ -1,16 +1,15 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CompatHandlerClient {
 
-    public static void init(final FMLClientSetupEvent event) {
-        if (CompatHandler.configured && RegistryConfigs.Reg.CUSTOM_CONFIGURED_SCREEN.get()) {
+    public static void init() {
+        if (CompatHandler.configured && RegistryConfigs.CUSTOM_CONFIGURED_SCREEN.get()) {
             try {
                 CustomConfigSelectScreen.registerScreen();
             } catch (Exception e) {
@@ -32,7 +31,7 @@ public class CompatHandlerClient {
         }*/
     }
 
-    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-       // if (CompatHandler.botania) BotaniaCompatClient.registerEntityRenderers(event);
+    public static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
+        // if (CompatHandler.botania) BotaniaCompatClient.registerEntityRenderers(event);
     }
 }

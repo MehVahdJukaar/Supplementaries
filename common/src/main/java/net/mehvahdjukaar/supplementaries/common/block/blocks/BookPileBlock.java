@@ -72,7 +72,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isQuarkTome(Item i) {
-        return CompatHandler.quark && QuarkPlugin.isTome(i);
+        return CompatHandler.quark && CompatHandler.isQuarkTome(i);
     }
 
     @Override

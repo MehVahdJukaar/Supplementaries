@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.enchantedbooks.EnchantedBookRedesignRenderer;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -67,11 +66,11 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
             Item item = this.getItem(i).getItem();
-            if (BookPileBlock.isNormalBook(item)) this.enchantPower += ServerConfigs.cached.BOOK_POWER / 4f;
+            if (BookPileBlock.isNormalBook(item)) this.enchantPower += ServerConfigs.Tweaks.BOOK_POWER.get() / 4f;
             else if (BookPileBlock.isQuarkTome(item))
-                this.enchantPower += (ServerConfigs.cached.BOOK_POWER / 4f) * 2;
+                this.enchantPower += (ServerConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2;
             else if (BookPileBlock.isEnchantedBook(item))
-                this.enchantPower += ServerConfigs.cached.ENCHANTED_BOOK_POWER / 4f;
+                this.enchantPower += ServerConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
         }
     }
 
@@ -145,10 +144,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
         }
 
         public VertexConsumer getBuilder(MultiBufferSource buffer) {
-            if (this.isEnchanted && ClientConfigs.cached.BOOK_GLINT) {
+            if (this.isEnchanted && ClientConfigs.Tweaks.BOOK_GLINT.get()) {
                 VertexConsumer foilBuilder = null;
                 if (CompatHandler.enchantedbookredesign) {
-                    foilBuilder = EnchantedBookRedesignRenderer.getColoredFoil(this.stack, buffer);
+                    foilBuilder = CompatHandler.getBookColoredFoil(this.stack, buffer);
                 }
                 if (foilBuilder == null) {
                     foilBuilder = buffer.getBuffer(RenderType.entityGlint());

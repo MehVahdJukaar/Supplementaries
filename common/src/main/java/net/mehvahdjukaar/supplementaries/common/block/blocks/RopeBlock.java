@@ -9,8 +9,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -205,7 +203,7 @@ public class RopeBlock extends WaterBlock {
 
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
-            RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
+            CompatHandler.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -232,7 +230,7 @@ public class RopeBlock extends WaterBlock {
             worldIn.scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
                 BlockPos down = pos.below();
-                RopeChandelierBlock.tryConverting(worldIn.getBlockState(down), worldIn, down);
+                CompatHandler.tryConvertingRopeChandelier(worldIn.getBlockState(down), worldIn, down);
             }
         }
     }
@@ -506,7 +504,7 @@ public class RopeBlock extends WaterBlock {
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
                 //moves everything if quark is not enabled. bad :/ install quark guys
-                if (CompatHandler.quark && !QuarkPistonPlugin.canMoveTile(state)) {
+                if (CompatHandler.canMoveTile(state)) {
                     return false;
                 } else {
                     tile.setRemoved();

@@ -5,10 +5,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -307,7 +305,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 }
             }
             //safety check since some mods like to give a null bucket...
-            if (bucket == null || bucket.isEmpty()){
+            if (bucket == null || bucket.isEmpty()) {
                 bucket = ItemStack.EMPTY;
             } else {
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
@@ -334,9 +332,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
                 entity.remove(Entity.RemovalReason.DISCARDED);
                 return InteractionResult.CONSUME;
-            }
-            else if(player.getLevel().isClientSide){
-                player.displayClientMessage(Component.translatable(  "message.supplementaries.cage.fail"),true);
+            } else if (player.getLevel().isClientSide) {
+                player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
             }
         }
 

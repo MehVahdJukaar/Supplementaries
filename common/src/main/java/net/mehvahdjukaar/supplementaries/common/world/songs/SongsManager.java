@@ -18,7 +18,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -65,22 +64,22 @@ public class SongsManager {
 
     //called on server only
     public static void playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,
-                                         long timeSinceStarted) {
+                                      long timeSinceStarted) {
         UUID id = entity.getUUID();
         Song song;
         if (!CURRENTLY_PAYING.containsKey(id)) {
 
             ResourceLocation res = null;
-            if(stack.hasCustomHoverName()){
-                String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT).replace(" ","_");
-                for(var v : SONGS.keySet()){
-                    if(v.getPath().equals(name)){
+            if (stack.hasCustomHoverName()) {
+                String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT).replace(" ", "_");
+                for (var v : SONGS.keySet()) {
+                    if (v.getPath().equals(name)) {
                         res = v;
                         break;
                     }
                 }
             }
-            if(res == null) res = selectRandomSong(entity.level.random);
+            if (res == null) res = selectRandomSong(entity.level.random);
 
             song = setCurrentlyPlaying(id, res);
 
@@ -102,7 +101,7 @@ public class SongsManager {
         boolean played = false;
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
-            if(notes.size()>0 && notes.getInt(0)>0){
+            if (notes.size() > 0 && notes.getInt(0) > 0) {
                 NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
@@ -207,7 +206,7 @@ public class SongsManager {
     }
 
     public static void recordNote(LevelAccessor levelAccessor, BlockPos pos) {
-        if (levelAccessor instanceof Level level &&  IS_RECORDING) {
+        if (levelAccessor instanceof Level level && IS_RECORDING) {
             BlockState state = level.getBlockState(pos);
             recordNote(level, state.getValue(NoteBlock.NOTE) + 1, state.getValue(NoteBlock.INSTRUMENT));
         }

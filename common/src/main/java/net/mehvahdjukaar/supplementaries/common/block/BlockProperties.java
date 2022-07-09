@@ -119,7 +119,7 @@ public class BlockProperties {
             //if (state.getBlock().hasTileEntity(state)) return type;
             if (state.is(ModTags.POSTS)) {
                 type = PostType.POST;
-            } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isPalisade(state))) {
+            } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && CompatHandler.isPalisade(state))) {
                 type = PostType.PALISADE;
             } else if (state.is(ModTags.WALLS)) {
                 if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {

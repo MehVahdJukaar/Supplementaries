@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.dynamictrees.DynamicTreesCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -76,7 +75,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
             if (item instanceof BlockItem) {
                 b = ((BlockItem) item).getBlock();
             } else if (CompatHandler.dynamictrees) {
-                b = DynamicTreesCompat.getOptionalDynamicSapling(item, this.level, this.worldPosition);
+                b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
             }
             if (b == null) b = Blocks.AIR;
             this.flowerStates[n] = b.defaultBlockState();

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.curios.SupplementariesCuriosPlugin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -60,7 +59,7 @@ public class KeyLockableTile extends BlockEntity {
         if (key == null) return KeyStatus.CORRECT_KEY;
         KeyStatus found = KeyStatus.INCORRECT_KEY;
         if (CompatHandler.curios) {
-            found = SupplementariesCuriosPlugin.isKeyInCurio(player, key);
+            found = CompatHandler.isKeyInCurio(player, key);
             if (found == KeyStatus.CORRECT_KEY) return found;
         }
 

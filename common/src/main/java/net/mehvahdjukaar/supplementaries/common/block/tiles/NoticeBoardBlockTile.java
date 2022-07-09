@@ -115,15 +115,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             }
 
         } else if (CompatHandler.computercraft) {
-            if (CCPlugin.checkForPrintedBook(item)) {
+            if (CompatHandler.isCCprintedBook(item)) {
 
                 if (com != null) {
-                    int pages = CCPlugin.getPages(itemstack);
+                    int pages = CompatHandler.CCgetPages(itemstack);
 
                     if (this.pageNumber >= pages) {
                         this.pageNumber = this.pageNumber % pages;
                     }
-                    String[] text = CCPlugin.getText(itemstack);
+                    String[] text = CompatHandler.CCgetText(itemstack);
                     StringBuilder combined = new StringBuilder();
                     for (int i = 0; i < 21; i++) {
                         int ind = this.pageNumber * 21 + i;

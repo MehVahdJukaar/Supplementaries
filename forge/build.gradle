@@ -15,8 +15,8 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig  "moonlight-common.mixins.json"
-        mixinConfig  "moonlight.mixins.json"
+        mixinConfig  "supplementaries-common.mixins.json"
+        mixinConfig  "supplementaries.mixins.json"
     }
 }
 
@@ -154,4 +154,11 @@ dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
 
     modImplementation ("net.mehvahdjukaar:moonlight-forge:2.0.0")
+
+    implementation ("curse.maven:jei-238222:3835406")
+    implementation ("curse.maven:configured-457570:3822820")
+    implementation ("curse.maven:cc-tweaked-282001:3845707")
+    implementation ("curse.maven:curios-309927:3841962")
+    implementation ("curse.maven:autoreglib-250363:3857246")
+    implementation ("curse.maven:curios-309927:3841962")
 }

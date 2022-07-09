@@ -35,7 +35,7 @@ public class RegistryConfigs {
 
     public static boolean isEnabled(String key) {
         return switch (key) {
-            case "vertical_slabs" -> CompatHandler.quark && QuarkPlugin.isVerticalSlabEnabled();
+            case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
             case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
             case RegistryConstants.FLAX_WILD_NAME -> FLAX_ENABLED.get();
             case RegistryConstants.KEY_NAME ->

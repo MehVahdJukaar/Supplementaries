@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -93,7 +91,7 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
         Item item = itemstack.getItem();
 
         if (CompatHandler.farmers_delight) {
-            InteractionResult res = FDCompatRegistry.onCakeInteraction(state, pos, level, itemstack);
+            InteractionResult res = CompatHandler.FDonCakeInteraction(state, pos, level, itemstack);
             if (res.consumesAction()) return res;
         }
 

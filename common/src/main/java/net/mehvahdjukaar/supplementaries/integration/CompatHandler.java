@@ -1,8 +1,22 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CompatHandler {
 
@@ -83,8 +97,8 @@ public class CompatHandler {
         overweight_farming = isLoaded("overweight_farming");
         snowyspirit = isLoaded("snowyspirit");
     }
-    
-    private static boolean isLoaded(String name){
+
+    private static boolean isLoaded(String name) {
         return PlatformHelper.isModLoaded(name);
     }
 
@@ -103,5 +117,68 @@ public class CompatHandler {
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 
+    //compat methods
+    public static boolean isVerticalSlabEnabled() {
+        return true;
+        //CompatHandler.quark
+    }
 
+
+    public static boolean canRenderBlackboardTooltip() {
+        return true;
+    }
+
+    public static boolean shouldHaveButtonOnRight() {
+        return false;
+    }
+
+    public static Block DynTreesGetOptionalDynamicSapling(Item item, Level level, BlockPos worldPosition) {
+        return null;
+    }
+
+    public static boolean interactWithFramedSignPost(SignPostBlockTile tile, Player player, InteractionHand handIn, ItemStack itemstack, Level level, BlockPos pos) {
+        return false;
+    }
+
+    //TODO: fix when there are multiple keys
+    public static KeyLockableTile.KeyStatus isKeyInCurio(Player player, String key) {
+        return KeyLockableTile.KeyStatus.NO_KEY;
+    }
+
+    //use compat blocks
+    public static boolean isQuarkTome(Item i) {
+        return false;
+    }
+
+    public static InteractionResult FDonCakeInteraction(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
+        return InteractionResult.PASS;
+    }
+
+    public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos) {
+    }
+
+    public static boolean canMoveTile(BlockState state) {
+        //use quark logic if installed
+        return true;
+    }
+
+    public static boolean isCCprintedBook(Item item) {
+    }
+
+    public static int CCgetPages(ItemStack itemstack) {
+    }
+
+    public static String[] CCgetText(ItemStack itemstack) {
+    }
+
+    //arent these tagged?
+    public static boolean isPalisade(BlockState state) {
+    }
+
+    public static VertexConsumer getBookColoredFoil(ItemStack stack, MultiBufferSource buffer) {
+        return null;
+    }
+
+    public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {
+    }
 }
