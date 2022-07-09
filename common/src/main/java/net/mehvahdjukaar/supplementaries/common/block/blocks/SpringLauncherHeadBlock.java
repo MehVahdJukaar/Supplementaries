@@ -88,7 +88,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         } else {
             entityIn.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
             //TODO: add falling block entity support
-            if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.cached.LAUNCHER_HEIGHT){
+            if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.Blocks.LAUNCHER_HEIGHT.get()){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 if(worldIn.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile launcherArmBlockTile){
@@ -148,7 +148,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         return new ItemStack(ModRegistry.SPRING_LAUNCHER.get());
     }
 

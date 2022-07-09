@@ -14,7 +14,9 @@
     "SelfBlackboardItemMixin",
     "SelfBubbleBlockItemMixin",
     "SelfFrameMixin",
-    "SelfGunpowderMixin"
+    "SelfGunpowderMixin",
+    "SelfMimicMixin",
+    "SelfSafeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

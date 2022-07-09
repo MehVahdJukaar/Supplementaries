@@ -35,11 +35,6 @@ public class StructureTempBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-        return super.canHarvestBlock(state, world, pos, player);
-    }
-
-    @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         return super.canBeReplaced(pState, pUseContext);
     }

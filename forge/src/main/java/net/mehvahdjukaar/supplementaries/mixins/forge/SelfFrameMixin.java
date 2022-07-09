@@ -19,7 +19,7 @@ public abstract class SelfFrameMixin extends Block {
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-            tile.getHeldBlock().getEnchantPowerBonus(world, pos);
+            return tile.getHeldBlock().getEnchantPowerBonus(world, pos);
         }
         return 0;
     }

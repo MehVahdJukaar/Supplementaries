@@ -157,8 +157,8 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        if (world.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
             return new ItemStack(te.getHeldBlock().getBlock());
         }
         return new ItemStack(Blocks.LANTERN, 1);
@@ -243,13 +243,13 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
         return BlockUtils.getTicker(pBlockEntityType, ModRegistry.WALL_LANTERN_TILE.get(), pLevel.isClientSide ? SwayingBlockTile::clientTick : null);
     }
 
-    @Override
+   /* @Override
     public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, @Nullable Entity entity) {
         if (world.getBlockEntity(pos) instanceof WallLanternBlockTile te) {
             return te.getHeldBlock().getSoundType();
         }
         return super.getSoundType(state, world, pos, entity);
-    }
+    } */
 
     public void placeOn(BlockState lantern, BlockPos onPos, Direction face, Level world) {
         BlockState state = getConnectedState(this.defaultBlockState(), world.getBlockState(onPos), world, onPos, face)

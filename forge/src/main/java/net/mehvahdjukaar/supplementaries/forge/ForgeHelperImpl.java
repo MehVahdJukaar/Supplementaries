@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 
 public class ForgeHelperImpl {
@@ -22,5 +23,9 @@ public class ForgeHelperImpl {
 
     public static void openGui(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
         NetworkHooks.openGui(player, menuProvider, pos);
+    }
+
+    public static boolean onExplosionStart(Level level, Explosion explosion) {
+        return ForgeEventFactory.onExplosionStart(level, explosion);
     }
 }

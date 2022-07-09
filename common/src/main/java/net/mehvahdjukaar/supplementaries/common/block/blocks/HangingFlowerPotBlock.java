@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -107,7 +108,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
                             }
                         }
                         if(!level.isClientSide) {
-                            tile.setHeldBlock(((FlowerPotBlock) pot).getEmptyPot().defaultBlockState());
+                            tile.setHeldBlock(((FlowerPotBlock) pot).defaultBlockState());
                             level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
                             tile.setChanged();
                         }
@@ -133,24 +134,24 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-
-        if (world.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile te) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile te) {
             if (te.getHeldBlock().getBlock() instanceof FlowerPotBlock b) {
                 Block flower = b.getContent();
-                if (flower == Blocks.AIR) return new ItemStack(b.getEmptyPot());
+                if (flower == Blocks.AIR) return new ItemStack(Blocks.FLOWER_POT, 1);
                 return new ItemStack(flower);
             }
         }
         return new ItemStack(Blocks.FLOWER_POT, 1);
     }
 
+
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof HangingFlowerPotBlockTile tile) {
             Block b = tile.getHeldBlock().getBlock();
             if (b instanceof FlowerPotBlock)
-                return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(((FlowerPotBlock) b).getEmptyPot()));
+                return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(Items.FLOWER_POT));
         }
         return super.getDrops(state, builder);
     }

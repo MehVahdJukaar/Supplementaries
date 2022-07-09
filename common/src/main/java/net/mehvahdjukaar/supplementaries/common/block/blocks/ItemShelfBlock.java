@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -50,9 +51,9 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
         return true;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
-        return ServerConfigs.cached.ITEM_SHELF_LADDER;
+        return ServerConfigs.Blocks.ITEM_SHELF_LADDER.get();
     }
 
     @Override

@@ -126,7 +126,7 @@ public class LightableLanternBlock extends LanternBlock {
     //called by mixin
     public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader worldIn) {
         if (!RopeBlock.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
-            if (ServerConfigs.cached.FALLING_LANTERNS.isOn() && l.getBlockState(pos).is(state.getBlock())) {
+            if (ServerConfigs.Tweaks.FALLING_LANTERNS.get().isOn() && l.getBlockState(pos).is(state.getBlock())) {
                 return createFallingLantern(state, pos, l);
             }
             return false;

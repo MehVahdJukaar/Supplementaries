@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
@@ -409,7 +410,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
         GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
-        if (ForgeEventFactory.onExplosionStart(world, explosion)) return;
+        if (ForgeHelper.onExplosionStart(world, explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(alwaysFire);
     }
