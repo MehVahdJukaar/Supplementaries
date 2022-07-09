@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
@@ -21,22 +20,20 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     public static Map<Integer, Integer> cachedColors1 = new HashMap<>();
 
     public static int getCachedColor(int base, int tint) {
-        return switch (tint){
+        return switch (tint) {
             default -> -1;
             case 1 -> {
                 if (!cachedColors0.containsKey(base)) {
-                    int c = getProcessedColor(base, 0);
                     //cachedColors0.put(base, c);
-                    yield c;
+                    yield getProcessedColor(base, 0);
                 } else {
                     yield cachedColors0.get(base);
                 }
             }
             case 2 -> {
                 if (!cachedColors1.containsKey(base)) {
-                    int c = getProcessedColor(base, 1);
-                   // cachedColors1.put(base, c);
-                    yield c;
+                    // cachedColors1.put(base, c);
+                    yield getProcessedColor(base, 1);
                 } else {
                     yield cachedColors1.get(base);
                 }
@@ -56,7 +53,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
             //not actually sure why I need this since quark seems to handle moving tiles pretty well
             else if (CompatHandler.quark) {
                 if (world instanceof Level level) {
-                    if (QuarkPistonPlugin.getMovingTile(pos, level) instanceof BambooSpikesBlockTile tile) {
+                    if (CompatHandler.getQuarkMovingTile(pos, level) instanceof BambooSpikesBlockTile tile) {
                         int color = tile.getColor();
                         //return getProcessedColor(color, tint);
                         return getCachedColor(color, tint);

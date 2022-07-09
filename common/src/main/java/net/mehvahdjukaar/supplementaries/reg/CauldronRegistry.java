@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.map.MapHelper;
+import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.resources.ResourceLocation;
@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.LayeredCauldronBlock;
 public class CauldronRegistry {
 
     public static void registerInteractions() {
-        for (var item : ModRegistry.FLAGS_ITEMS.values()) {
-            CauldronInteraction.WATER.put(item.get(), CauldronInteraction.BANNER);
+        for (var item : ModRegistry.FLAGS.values()) {
+            CauldronInteraction.WATER.put(item.get().asItem(), CauldronInteraction.BANNER);
         }
 
         var atlas = Registry.ITEM.getOptional(new ResourceLocation("map_atlases:atlas"));

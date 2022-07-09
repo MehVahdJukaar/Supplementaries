@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.util.ICustomDataHolder;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.nbt.CompoundTag;
@@ -18,8 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,9 +61,9 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (ServerConfigs.cached.ZOMBIE_HORSE && this.isTamed() && !this.isBaby()) {
+        if (ServerConfigs.Tweaks.ZOMBIE_HORSE.get() && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
-            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.cached.ZOMBIE_HORSE_COST) {
+            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
                 this.feedRottenFlesh(player, hand, stack);
                 cir.cancel();
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level.isClientSide));
@@ -72,20 +71,6 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
     }
 
-
-    /*
-    @Redirect(method ="mobInteract",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"
-            ))
-    public boolean mobInteract(ItemStack stack) {
-        boolean empty = stack.isEmpty();
-
-        if(!empty && stack.getItem() == Items.ROTTEN_FLESH){
-            fleshCount
-        }
-        return empty;
-    }*/
 
     @Override
     @Nullable
@@ -103,7 +88,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         this.setEating(true);
         this.fleshCount++;
 
-        if (this.fleshCount >= ServerConfigs.cached.ZOMBIE_HORSE_COST) {
+        if (this.fleshCount >= ServerConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
             this.conversionTime = 200;
             this.level.broadcastEntityEvent(this, (byte) 16);
         }
@@ -139,20 +124,20 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
             if (this.isSaddled()) {
                 newHorse.equipSaddle(null);
             }
-            for (EquipmentSlot equipmentslottype : EquipmentSlot.values()) {
-                ItemStack itemstack = this.getItemBySlot(equipmentslottype);
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                ItemStack itemstack = this.getItemBySlot(slot);
                 if (!itemstack.isEmpty()) {
                     if (EnchantmentHelper.hasBindingCurse(itemstack)) {
-                        newHorse.getSlot(equipmentslottype.getIndex() + 300).set(itemstack);
+                        newHorse.getSlot(slot.getIndex() + 300).set(itemstack);
                     } else {
-                        double d0 = this.getEquipmentDropChance(equipmentslottype);
+                        double d0 = this.getEquipmentDropChance(slot);
                         if (d0 > 1.0D) {
                             this.spawnAtLocation(itemstack);
                         }
                     }
                 }
             }
-            net.minecraftforge.event.ForgeEventFactory.onLivingConvert(this, newHorse);
+            ForgeHelper.onLivingConvert(this, newHorse);
         }
 
         if (!this.isSilent()) {
@@ -172,6 +157,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void tick() {
         super.tick();
@@ -179,7 +165,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
             if (this.isConverting()) {
                 --this.conversionTime;
 
-                if (this.conversionTime == 0) {
+                if (this.conversionTime <= 0 && ForgeHelper.canLivingConvert(this, EntityType.ZOMBIE_HORSE, (timer) -> this.conversionTime = timer)) {
                     this.doZombieConversion();
                 }
             }

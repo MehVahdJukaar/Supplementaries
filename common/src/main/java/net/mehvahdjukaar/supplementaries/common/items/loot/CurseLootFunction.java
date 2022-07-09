@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -14,19 +15,20 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CurseLootFunction extends LootItemConditionalFunction {
 
-    private static final List<Enchantment> CURSES;
+    private static final List<Enchantment> CURSES = new ArrayList<>();
 
-    static {
-        CURSES = ForgeRegistries.ENCHANTMENTS.getEntries().stream().filter(e -> e.getValue().isCurse())
-                .map(Map.Entry::getValue).collect(Collectors.toList());
+    //call on mod setup
+    public static void setup() {
+        for (var e : Registry.ENCHANTMENT) {
+            if (e.isCurse()) CURSES.add(e);
+        }
     }
 
     final double chance;

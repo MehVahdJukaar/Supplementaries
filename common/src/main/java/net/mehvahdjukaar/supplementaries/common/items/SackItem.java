@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkTooltipPlugin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -58,7 +56,7 @@ public class SackItem extends BlockItem {
                     ItemStack slotItem = reference.get().getStackInSlot(_idx);
                     if (slotItem.getItem() instanceof SackItem) {
                         CompoundTag tag = stack.getTag();
-                        if(tag != null && tag.contains("BlockEntityTag")) {
+                        if (tag != null && tag.contains("BlockEntityTag")) {
                             amount++;
                         }
                     }
@@ -66,13 +64,13 @@ public class SackItem extends BlockItem {
 
                 if (CompatHandler.quark) {
                     ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
-                    amount += QuarkPlugin.getSacksInBackpack(backpack);
+                    amount += CompatHandler.getSacksInBackpack(backpack);
                 }
             }
             int inc = ServerConfigs.Blocks.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
-                        20 * 10, ((amount-1)/inc)-1, false, false, true));
+                        20 * 10, ((amount - 1) / inc) - 1, false, false, true));
             }
         }
     }
@@ -81,7 +79,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if (!CompatHandler.quark || !QuarkTooltipPlugin.canRenderTooltip()) {
+        if (!CompatHandler.quark || !CompatHandler.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (tag.contains("LootTable", 8)) {
@@ -140,15 +138,16 @@ public class SackItem extends BlockItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.quark && QuarkTooltipPlugin.canRenderTooltip()) {
+        if (CompatHandler.quark && CompatHandler.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, ServerConfigs.cached.SACK_SLOTS));
+                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, ServerConfigs.Blocks.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();
     }
 
+    //TODO: add these
     private void playRemoveOneSound(Entity p_186343_) {
         p_186343_.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + p_186343_.getLevel().getRandom().nextFloat() * 0.4F);
     }

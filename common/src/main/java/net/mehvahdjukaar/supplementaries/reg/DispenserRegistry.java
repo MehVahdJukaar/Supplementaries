@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
@@ -59,44 +60,27 @@ public class DispenserRegistry {
 
         if (!RegistryConfigs.DISPENSERS.get()) return;
 
-        DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
-
-        //dispenser minecart
-        if (RegistryConfigs.DISPENSER_MINECART_ENABLED.get()) {
-            DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
+        if(ServerConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
+            DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
         }
+        DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
 
-        //fodder
-        if (RegistryConfigs.FODDER_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
-        }
-        //bubble
-        if (RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
-        }
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
 
-        if (RegistryConfigs.SACK_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
-        }
-
-        //jar
-        boolean jar = RegistryConfigs.JAR_ENABLED.get();
-        if (jar) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
-            DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
-        }
-
+        DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
         DispenserHelper.registerCustomBehavior(new BambooSpikesDispenserBehavior(Items.LINGERING_POTION));
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
+        DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
 
-        if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
+        if (ServerConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
             Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
                     DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(h.value()))
             );
-
         }
-
         //bomb
         if (RegistryConfigs.BOMB_ENABLED.get()) {
             //default behaviors for modded items
@@ -109,7 +93,7 @@ public class DispenserRegistry {
             DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
         }
         //gunpowder
-        if (ServerConfigs.cached.PLACEABLE_GUNPOWDER) {
+        if (ServerConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
             DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
         if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
@@ -128,14 +112,10 @@ public class DispenserRegistry {
                     return arrow;
                 }
             });
-
-        }
-
-        if (RegistryConfigs.SOAP_ENABLED.get()) {
-            DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
         }
 
         boolean axe = ServerConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
+        boolean jar = RegistryConfigs.JAR_ENABLED.get();
         if (axe || jar) {
             for (Item i : Registry.ITEM) {
                 try {

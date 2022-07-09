@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CompatHandler {
@@ -128,6 +129,10 @@ public class CompatHandler {
         return true;
     }
 
+    public static boolean canRenderQuarkTooltip() {
+        return true;
+    }
+
     public static boolean shouldHaveButtonOnRight() {
         return false;
     }
@@ -180,5 +185,12 @@ public class CompatHandler {
     }
 
     public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {
+    }
+
+    public static int getSacksInBackpack(ItemStack backpack) {
+    }
+
+
+    public static BlockEntity getQuarkMovingTile(BlockPos pos, Level level) {
     }
 }

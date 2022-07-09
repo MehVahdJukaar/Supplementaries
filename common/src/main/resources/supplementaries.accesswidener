@@ -8,5 +8,7 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator getPlacementsFo
 #fox sleeping for cages
 accessible method net/minecraft/world/entity/animal/Fox setSleeping (Z)V
 
+accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
+
 
 

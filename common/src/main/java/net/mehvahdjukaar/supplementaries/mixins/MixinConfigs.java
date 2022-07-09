@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.minecraftforge.common.ForgeConfigSpec;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -11,6 +10,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class MixinConfigs implements IMixinConfigPlugin {
@@ -31,7 +31,6 @@ public class MixinConfigs implements IMixinConfigPlugin {
             return Collections.emptyList();
         }
     }
-
 
 
     /**
@@ -55,7 +54,8 @@ public class MixinConfigs implements IMixinConfigPlugin {
             assert classLoaderResource != null;
             File dir = new File(classLoaderResource.toURI().toURL().getFile());
             dirs.add(dir);
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
 
 
         while (resources.hasMoreElements()) {
@@ -158,7 +158,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String truncatedName = mixinClassName.substring(this.getClass().getPackage().getName().length() + 1);
-        ForgeConfigSpec.BooleanValue config = RegistryConfigs.Reg.MIXIN_VALUES.get(truncatedName);
+        Supplier<Boolean> config = RegistryConfigs.MIXIN_VALUES.get(truncatedName);
         return config == null || config.get();
     }
 
