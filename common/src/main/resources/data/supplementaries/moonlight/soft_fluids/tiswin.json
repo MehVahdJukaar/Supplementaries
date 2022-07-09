@@ -1,0 +1,20 @@
+{
+  "color": "#dc5826",
+  "containers": [
+    {
+      "filled": [
+        "simplefarming:tiswin"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "divider": 1,
+    "item": "simplefarming:tiswin"
+  },
+  "from_mod": "simplefarming",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.simplefarming.tiswin"
+}

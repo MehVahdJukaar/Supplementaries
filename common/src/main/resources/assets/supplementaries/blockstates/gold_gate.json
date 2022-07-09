@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,in_wall=false,open=false": {
+      "y": 270,
+      "model": "supplementaries:block/gold_gate_top"
+    },
+    "facing=east,in_wall=false,open=true": {
+      "y": 270,
+      "model": "supplementaries:block/gold_gate_top_open"
+    },
+    "facing=east,in_wall=true,open=false": {
+      "y": 270,
+      "model": "supplementaries:block/gold_gate_bottom"
+    },
+    "facing=east,in_wall=true,open=true": {
+      "y": 270,
+      "model": "supplementaries:block/gold_gate_bottom_open"
+    },
+    "facing=north,in_wall=false,open=false": {
+      "y": 180,
+      "model": "supplementaries:block/gold_gate_top"
+    },
+    "facing=north,in_wall=false,open=true": {
+      "y": 180,
+      "model": "supplementaries:block/gold_gate_top_open"
+    },
+    "facing=north,in_wall=true,open=false": {
+      "y": 180,
+      "model": "supplementaries:block/gold_gate_bottom"
+    },
+    "facing=north,in_wall=true,open=true": {
+      "y": 180,
+      "model": "supplementaries:block/gold_gate_bottom_open"
+    },
+    "facing=south,in_wall=false,open=false": {
+      "model": "supplementaries:block/gold_gate_top"
+    },
+    "facing=south,in_wall=false,open=true": {
+      "model": "supplementaries:block/gold_gate_top_open"
+    },
+    "facing=south,in_wall=true,open=false": {
+      "model": "supplementaries:block/gold_gate_bottom"
+    },
+    "facing=south,in_wall=true,open=true": {
+      "model": "supplementaries:block/gold_gate_bottom_open"
+    },
+    "facing=west,in_wall=false,open=false": {
+      "y": 90,
+      "model": "supplementaries:block/gold_gate_top"
+    },
+    "facing=west,in_wall=false,open=true": {
+      "y": 90,
+      "model": "supplementaries:block/gold_gate_top_open"
+    },
+    "facing=west,in_wall=true,open=false": {
+      "y": 90,
+      "model": "supplementaries:block/gold_gate_bottom"
+    },
+    "facing=west,in_wall=true,open=true": {
+      "y": 90,
+      "model": "supplementaries:block/gold_gate_bottom_open"
+    }
+  }
+}

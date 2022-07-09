@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "supplementaries:blocks/notice_board_top",
+    "front": "supplementaries:blocks/notice_board_front",
+    "side": "supplementaries:blocks/notice_board_side"
+  }
+}

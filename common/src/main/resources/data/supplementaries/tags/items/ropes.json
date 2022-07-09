@@ -1,0 +1,15 @@
+
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:rope","required":false},
+    {"id":"quark:rope","required":false},
+    {"id":"xercamod:rope","required":false},
+    {"id":"druidcraft:rope","required":false},
+    {"id":"inspirations:vine","required":false},
+    {"id":"inspirations:rope","required":false},
+    {"id":"farmersdelight:rope","required":false},
+    {"id":"buildersdelight:chain_2","required":false},
+    {"id":"darkerdepths:rope","required":false}
+  ]
+}

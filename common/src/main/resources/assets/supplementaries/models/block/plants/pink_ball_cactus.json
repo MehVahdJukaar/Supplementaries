@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:block/plants/ball_cactus_template",
+  "textures": {
+    "petal": "habitat:block/pink_ball_cactus_flower"
+  }
+}

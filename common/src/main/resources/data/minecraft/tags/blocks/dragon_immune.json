@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:spring_launcher_arm",
+	"supplementaries:safe"
+  ]
+}

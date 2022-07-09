@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -41,7 +40,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
 
     public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
-        float opacity = 1;//tile.liquidType.opacity;
+        float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         // TODO:remove breaking animation
@@ -97,7 +96,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
-                matrixStackIn.translate(0, -0.2, -0.335 * (liquidParams.x()/0.5f));
+                matrixStackIn.translate(0, -0.2, -0.335 * (liquidParams.x() / 0.5f));
                 int fishType = data.getFishIndex();
 
                 //overlay
@@ -116,7 +115,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
                 SoftFluid s = VanillaSoftFluids.WATER.get();
-                renderFluid(9/12f, s.getTintColor(), 0, s.getStillTexture(),
+                renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
                 matrixStackIn.popPose();
             }

@@ -23,16 +23,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.model.ModelDataManager;
 
 public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlockState> FLOWER_0 = BlockProperties.FLOWER_0;
-
     public static final ModelDataKey<BlockState> FLOWER_1 = BlockProperties.FLOWER_1;
-
     public static final ModelDataKey<BlockState> FLOWER_2 = BlockProperties.FLOWER_2;
-
 
     private final BlockState[] flowerStates = new BlockState[]{Blocks.AIR.defaultBlockState(),
             Blocks.AIR.defaultBlockState(), Blocks.AIR.defaultBlockState()};
@@ -63,7 +59,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
                 .with(FLOWER_2, flowerStates[2])
                 .build();
     }
-
 
     //TODO: check
     //@Override

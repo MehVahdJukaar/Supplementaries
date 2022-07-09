@@ -1,0 +1,20 @@
+{
+  "color": "#f8a0db",
+  "containers": [
+    {
+      "filled": [
+        "iceandfire:ambrosia"
+      ],
+      "empty": "minecraft:bowl",
+      "capacity": 2
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 2,
+    "item": "iceandfire:ambrosia"
+  },
+  "from_mod": "iceandfire",
+  "still_texture": "moonlight:soft_fluids/dragon_breath_liquid",
+  "translation_key": "item.iceandfire.ambrosia"
+}

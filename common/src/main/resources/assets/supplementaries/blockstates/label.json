@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=block": {
+      "model": "supplementaries:block/label"
+    },
+    "type=chest": {
+      "model": "supplementaries:block/label_chest"
+    },
+    "type=jar": {
+      "model": "supplementaries:block/label_jar"
+    }
+  }
+}

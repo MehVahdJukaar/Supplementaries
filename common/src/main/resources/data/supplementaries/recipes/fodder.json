@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:hay_block"
+    },
+    {
+      "item": "supplementaries:flax_block"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:fodder",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fodder"
+    }
+  ]
+}

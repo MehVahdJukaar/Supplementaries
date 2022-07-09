@@ -28,6 +28,7 @@ public class ModTags {
     public static final TagKey<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
+    public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable");
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final TagKey<Item> COOKIES = itemTag("cookies");

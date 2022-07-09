@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "333"
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:rods/wooden"
+    },
+    "3": {
+      "item": "minecraft:cobblestone_slab"
+    }
+  },
+  "result": {
+    "item": "supplementaries:crank",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "crank"
+    }
+  ]
+}

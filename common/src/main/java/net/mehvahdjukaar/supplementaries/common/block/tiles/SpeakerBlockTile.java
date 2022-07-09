@@ -99,7 +99,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Component message = Component.literal(this.getName().getString() + ": " + this.message)
                     .withStyle(style);
 
-            NetworkHandler.sendToAllInRangeClients(pos, server,
+            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server,pos,
                     ServerConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
                     new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 

@@ -1,0 +1,20 @@
+{
+  "color": "#4ee13b",
+  "containers": [
+    {
+      "filled": [
+        "atmospheric:yucca_juice"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "atmospheric:yucca_juice"
+  },
+  "from_mod": "atmospheric",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.atmospheric:yucca_juice"
+}

@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.IFirstPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.moonlight.misc.DualWeildState;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.client.model.AnimationUtils;
@@ -192,7 +193,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             double dy = v.y + ((0.5 - r.nextFloat()) * 0.04);
             double dz = v.z + ((0.5 - r.nextFloat()) * 0.08);
 
-            level.addParticle(ModRegistry.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
+            level.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
         }
     }
 

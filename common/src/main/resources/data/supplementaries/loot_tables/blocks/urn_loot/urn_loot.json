@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "weight": 60,
+          "quality": -5,
+          "name": "supplementaries:blocks/urn_loot/common"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 32,
+          "quality": -2,
+          "name": "supplementaries:blocks/urn_loot/uncommon"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 7,
+          "quality": 2,
+          "name": "supplementaries:blocks/urn_loot/rare"
+        },
+        {
+          "type": "minecraft:loot_table",
+          "weight": 1,
+          "quality": 5,
+          "name": "supplementaries:blocks/urn_loot/epic"
+        }
+      ]
+    }
+  ]
+}

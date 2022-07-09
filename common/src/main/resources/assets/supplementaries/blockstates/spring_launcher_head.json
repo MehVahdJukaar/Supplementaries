@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,short=false": {
+      "model": "supplementaries:block/spring_launcher_head"
+    },
+    "facing=north,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small"
+    },
+    "facing=east,short=false": {
+      "model": "supplementaries:block/spring_launcher_head",
+      "y": 90
+    },
+    "facing=east,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small",
+      "y": 90
+    },
+    "facing=south,short=false": {
+      "model": "supplementaries:block/spring_launcher_head",
+      "y": 180
+    },
+    "facing=south,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small",
+      "y": 180
+    },
+    "facing=west,short=false": {
+      "model": "supplementaries:block/spring_launcher_head",
+      "y": 270
+    },
+    "facing=west,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small",
+      "y": 270
+    },
+    "facing=up,short=false": {
+      "model": "supplementaries:block/spring_launcher_head",
+      "x": 270
+    },
+    "facing=up,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small",
+      "x": 270
+    },
+    "facing=down,short=false": {
+      "model": "supplementaries:block/spring_launcher_head",
+      "x": 90
+    },
+    "facing=down,short=true": {
+      "model": "supplementaries:block/spring_launcher_head_small",
+      "x": 90
+    }
+  }
+}

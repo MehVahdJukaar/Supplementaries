@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "packed=false": {
+      "model": "supplementaries:block/presents/present_opened"},
+    "packed=true": {
+      "model": "supplementaries:block/presents/present_closed"
+    }
+  }
+}

@@ -30,9 +30,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,12 +49,6 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
     @Override
     public int getMaxStackSize() {
         return 1;
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
-        return super.getCapability(capability, facing);
     }
 
     @Override
@@ -182,5 +173,15 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         }
         return itemstack;
     }
+
+    //this shouldnt be needed
+    //TODO: check
+    /*
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        return super.getCapability(capability, facing);
+    }
+    */
 
 }

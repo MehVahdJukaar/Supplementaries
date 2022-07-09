@@ -2,10 +2,14 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.utils.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,6 +17,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -79,5 +85,18 @@ public class ServerEvents {
         MovableFakePlayer.unloadLevel(serverLevel);
     }
 
+    private static final boolean FODDER_ENABLED = RegistryConfigs.FODDER_ENABLED.get();
 
+    @EventCalled
+    public static void onEntityLoad(Entity entity, ServerLevel serverLevel) {
+        if (FODDER_ENABLED) {
+            if (entity instanceof Animal animal) {
+                EntityType<?> type = entity.getType();
+                if (type.is(ModTags.EATS_FODDER)) {
+                    ((MobAccessor) animal).getGoalSelector().addGoal(3,
+                            new EatFodderGoal(animal, 1, 8, 2, 30));
+                }
+            }
+        }
+    }
 }

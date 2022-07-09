@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:checker_block"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "checker_block"
+    }
+  ],
+  "result": "supplementaries:checker_slab",
+  "count": 2
+}

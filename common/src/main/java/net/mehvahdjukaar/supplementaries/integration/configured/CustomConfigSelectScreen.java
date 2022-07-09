@@ -12,7 +12,7 @@ import com.mrcrayfish.configured.util.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -66,11 +66,11 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     private static Map<ModConfig.Type, Set<ModConfig>> createConfigMap() {
         Map<ModConfig.Type, Set<ModConfig>> modConfigMap = new HashMap<>();
         Set<ModConfig> s = new HashSet<>();
-        s.add(ConfigHandler.CLIENT_CONFIGS);
+        s.add(ConfigUtils.CLIENT_CONFIGS);
         modConfigMap.put(ModConfig.Type.CLIENT, s);
         Set<ModConfig> s1 = new HashSet<>();
-        s1.add(ConfigHandler.REGISTRY_CONFIGS);
-        s1.add(ConfigHandler.SERVER_CONFIGS);
+        s1.add(ConfigUtils.REGISTRY_CONFIGS);
+        s1.add(ConfigUtils.SERVER_CONFIGS);
         modConfigMap.put(ModConfig.Type.COMMON, s1);
         return modConfigMap;
     }
@@ -91,9 +91,9 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     }
 
     private ModConfig getConfigFromLabel(String label) {
-        if (label.contains("Common")) return ConfigHandler.SERVER_CONFIGS;
-        if (label.contains("Client")) return ConfigHandler.CLIENT_CONFIGS;
-        return ConfigHandler.REGISTRY_CONFIGS;
+        if (label.contains("Common")) return ConfigUtils.SERVER_CONFIGS;
+        if (label.contains("Client")) return ConfigUtils.CLIENT_CONFIGS;
+        return ConfigUtils.REGISTRY_CONFIGS;
     }
 
     private Button createModifyButton(ModConfig config) {

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "supplementaries:block/fodder_2"
+    },
+    "layers=2": {
+      "model": "supplementaries:block/fodder_4"
+    },
+    "layers=3": {
+      "model": "supplementaries:block/fodder_6"
+    },
+    "layers=4": {
+      "model": "supplementaries:block/fodder_8"
+    },
+    "layers=5": {
+      "model": "supplementaries:block/fodder_10"
+    },
+    "layers=6": {
+      "model": "supplementaries:block/fodder_12"
+    },
+    "layers=7": {
+      "model": "supplementaries:block/fodder_14"
+    },
+    "layers=8": {
+      "model": "supplementaries:block/fodder_16"
+    }
+  }
+}

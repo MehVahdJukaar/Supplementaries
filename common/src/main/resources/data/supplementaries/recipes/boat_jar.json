@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:jar"
+    },
+    {
+      "tag": "minecraft:boats"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:jar_boat",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ]
+}

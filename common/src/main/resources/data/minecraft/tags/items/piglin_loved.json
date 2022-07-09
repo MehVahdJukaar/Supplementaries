@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:hourglass",
+    "supplementaries:gold_door",
+    "supplementaries:gold_trapdoor",
+    "supplementaries:gold_gate",
+    "supplementaries:clock_block",
+    "supplementaries:crimson_lantern",
+    "supplementaries:key"
+  ]
+}

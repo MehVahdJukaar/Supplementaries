@@ -36,7 +36,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -222,7 +221,7 @@ public class BombExplosion extends Explosion {
                         if (entity instanceof LivingEntity livingEntity) {
 
                             if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())) {
-                                bombType.applyStatusEffects(livingEntity,distSq);
+                                bombType.applyStatusEffects(livingEntity, distSq);
                             }
 
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
@@ -239,7 +238,7 @@ public class BombExplosion extends Explosion {
 
         if (!level.isClientSide) {
             for (Player player : this.hitPlayers.keySet()) {
-                NetworkHandler.CHANNEL.sendToPlayerClient((ServerPlayer) player,
+                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
                         new ClientBoundSendKnockbackPacket(this.hitPlayers.get(player), player.getId()));
             }
         }

@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "shape=east_west": {
+      "model": "supplementaries:block/raked_gravel",
+      "y": 90
+    },
+    "shape=north_east": {
+      "model": "supplementaries:block/raked_gravel_corner",
+      "y": 270
+    },
+    "shape=north_south": {
+      "model": "supplementaries:block/raked_gravel"
+    },
+    "shape=north_west": {
+      "model": "supplementaries:block/raked_gravel_corner",
+      "y": 180
+    },
+    "shape=south_east": {
+      "model": "supplementaries:block/raked_gravel_corner"
+    },
+    "shape=south_west": {
+      "model": "supplementaries:block/raked_gravel_corner",
+      "y": 90
+    }
+  }
+}

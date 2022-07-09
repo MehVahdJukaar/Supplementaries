@@ -1,0 +1,16 @@
+{
+  "color": "#ffa100",
+  "containers": [
+    {
+      "filled": [
+        "minecraft:magma_cream"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/magma_flow",
+  "from_mod": "minecraft",
+  "still_texture": "moonlight:soft_fluids/magma_still",
+  "translation_key": "item.minecraft.magma_cream"
+}

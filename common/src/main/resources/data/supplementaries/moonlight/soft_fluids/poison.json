@@ -1,0 +1,16 @@
+{
+  "color": "#8aeb67",
+  "containers": [
+    {
+      "filled": [
+        "alexsmobs:poison_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "from_mod": "alexsmobs",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.alexsmobs.poison_bottle"
+}

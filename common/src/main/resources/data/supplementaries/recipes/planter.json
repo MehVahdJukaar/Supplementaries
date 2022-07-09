@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "020",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:brick"
+    },
+    "1": {
+      "item": "minecraft:bone_meal"
+    },
+    "2": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "result": {
+    "item": "supplementaries:planter",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    }
+  ]
+}

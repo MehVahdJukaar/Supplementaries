@@ -45,6 +45,7 @@
     "WanderingTraderMixin",
     "ZombieHorseMixin",
     "accessors.MineshaftAccessor",
+    "accessors.MobAccessor",
     "net.mehvahdjukaar.moonlight.mixins.LevelChunkMixin"
   ],
   "injectors": {

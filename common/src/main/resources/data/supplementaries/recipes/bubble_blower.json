@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 11",
+    " 11",
+    "0  "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "supplementaries:bubble_blower",
+    "count": 1,
+    "nbt": {
+      "Damage": 250
+    }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bubble_blower"
+    }
+  ]
+}

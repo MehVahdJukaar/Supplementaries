@@ -1,0 +1,17 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "minecraft:dirt"
+      ],
+      "fill_sound": "minecraft:block.gravel.place",
+      "empty_sound": "minecraft:block.gravel.break",
+      "empty": "minecraft:air",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "minecraft:block/dirt",
+  "from_mod": "supplementaries",
+  "still_texture": "minecraft:block/dirt",
+  "translation_key": "block.minecraft.dirt"
+}

@@ -1,0 +1,36 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "supplementaries:blocks/wind_vane",
+		"particle": "supplementaries:blocks/wind_vane"
+	},
+	"elements": [
+		{
+			"from": [8, 5, 3],
+			"to": [8, 15, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15.5, 14, 13]},
+			"faces": {
+				"north": {"uv": [12, 10, 13, 11], "texture": "#0"},
+				"east": {"uv": [1, 0, 12, 11], "texture": "#0"},
+				"south": {"uv": [3, 10, 4, 11], "texture": "#0"},
+				"west": {"uv": [12, 0, 1, 11], "texture": "#0"},
+				"up": {"uv": [3, 10, 13, 11], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [3, 10, 13, 11], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		}
+	},
+	"groups": [
+		{
+			"name": "group",
+			"origin": [16, 17, 11],
+			"children": [0]
+		}
+	]
+}

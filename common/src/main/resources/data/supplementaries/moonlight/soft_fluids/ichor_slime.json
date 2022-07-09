@@ -1,0 +1,18 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "tconstruct:ichor_slime_ball"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "tconstruct:block/ichor_congealed_slime",
+  "food": {
+    "divider": 1,
+    "item": "tconstruct:ichor_slime_ball"
+  },
+  "from_mod": "tconstruct",
+  "still_texture": "tconstruct:block/ichor_congealed_slime"
+}

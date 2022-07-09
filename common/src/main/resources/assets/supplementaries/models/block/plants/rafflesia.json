@@ -1,0 +1,59 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"particle": "minecraft:block/flower_pot",
+		"plant": "habitat:block/potted_rafflesia"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 2, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 3, 8]},
+			"faces": {
+				"north": {"uv": [6, 14, 10, 16], "texture": "#plant"},
+				"east": {"uv": [6, 14, 10, 16], "texture": "#plant"},
+				"south": {"uv": [6, 14, 10, 16], "texture": "#plant"},
+				"west": {"uv": [6, 14, 10, 16], "texture": "#plant"},
+				"up": {"uv": [6, 10, 10, 14], "texture": "#plant"},
+				"down": {"uv": [6, 10, 10, 14], "texture": "#plant", "cullface": "down"}
+			}
+		},
+		{
+			"from": [4, 1, 5],
+			"to": [6, 1, 11],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [6, 1, 8]},
+			"faces": {
+				"up": {"uv": [5, 8, 11, 10], "rotation": 270, "texture": "#plant"},
+				"down": {"uv": [5, 8, 11, 10], "rotation": 270, "texture": "#plant"}
+			}
+		},
+		{
+			"from": [10, 1, 5],
+			"to": [12, 1, 11],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [10, 1, 8]},
+			"faces": {
+				"up": {"uv": [5, 8, 11, 10], "rotation": 90, "texture": "#plant"},
+				"down": {"uv": [5, 8, 11, 10], "rotation": 90, "texture": "#plant"}
+			}
+		},
+		{
+			"from": [5, 1, 4],
+			"to": [11, 1, 6],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 1, 6]},
+			"faces": {
+				"up": {"uv": [5, 8, 11, 10], "texture": "#plant"},
+				"down": {"uv": [5, 8, 11, 10], "rotation": 180, "texture": "#plant"}
+			}
+		},
+		{
+			"from": [5, 1, 10],
+			"to": [11, 1, 12],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 1, 10]},
+			"faces": {
+				"up": {"uv": [5, 8, 11, 10], "rotation": 180, "texture": "#plant"},
+				"down": {"uv": [5, 8, 11, 10], "texture": "#plant"}
+			}
+		}
+	]
+}

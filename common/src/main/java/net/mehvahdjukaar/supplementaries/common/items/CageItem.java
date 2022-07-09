@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -14,9 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.IItemRenderProperties;
-
-import java.util.function.Consumer;
 
 public class CageItem extends AbstractMobContainerItem {
 
@@ -41,19 +36,15 @@ public class CageItem extends AbstractMobContainerItem {
 
     @Override
     public boolean canItemCatch(Entity e) {
-        if (ServerConfigs.cached.CAGE_AUTO_DETECT && this.canFitEntity(e)) return true;
+        if (ServerConfigs.Blocks.CAGE_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
 
         EntityType<?> type = e.getType();
 
         boolean isBaby = e instanceof LivingEntity le && le.isBaby();
-        return ((ServerConfigs.cached.CAGE_ALL_BABIES && isBaby) ||
+        return ((ServerConfigs.Blocks.CAGE_ALL_BABIES.get() && isBaby) ||
                 type.is(ModTags.CAGE_CATCHABLE) ||
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
     }
 
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        ClientRegistry.registerISTER(consumer, CageItemRenderer::new);
-    }
 
 }

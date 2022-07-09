@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "minecraft:stone_bricks"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
+  "result": "supplementaries:stone_tile",
+  "count": 1
+}

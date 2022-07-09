@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "supplementaries:blocks/stone_lamp_top",
+    "side": "supplementaries:blocks/stone_lamp"
+  }
+}

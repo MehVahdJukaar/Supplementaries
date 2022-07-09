@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:blackstone_tile"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
+  "result": "supplementaries:blackstone_tile_slab",
+  "count": 2
+}

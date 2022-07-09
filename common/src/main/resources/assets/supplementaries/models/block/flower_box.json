@@ -1,0 +1,12 @@
+{
+	"loader": "supplementaries:flower_box_loader",
+	"box": {
+		"parent": "supplementaries:block/flower_box_model",
+		"textures": {
+			"2": "supplementaries:blocks/flower_box_top",
+			"particle": "supplementaries:blocks/flower_box_sides",
+			"flowerpot": "supplementaries:blocks/flower_box_sides",
+			"dirt": "minecraft:block/dirt"
+		}
+	}
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "supplementaries:block/plants/cross_template",
+    "textures": {
+        "plant": "quark:block/potted/lilac"
+    }
+}

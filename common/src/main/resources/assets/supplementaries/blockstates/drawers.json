@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "tile=false,facing=north": {
+      "model": "supplementaries:block/drawers_shelf"
+    },
+    "tile=false,facing=east": {
+      "model": "supplementaries:block/drawers_shelf",
+      "y": 90
+    },
+    "tile=false,facing=south": {
+      "model": "supplementaries:block/drawers_shelf",
+      "y": 180
+    },
+    "tile=false,facing=west": {
+      "model": "supplementaries:block/drawers_shelf",
+      "y": 270
+    },
+    "tile=true,facing=north": {
+      "model": "supplementaries:block/drawer"
+    },
+    "tile=true,facing=east": {
+      "model": "supplementaries:block/drawer",
+      "y": 90
+    },
+    "tile=true,facing=south": {
+      "model": "supplementaries:block/drawer",
+      "y": 180
+    },
+    "tile=true,facing=west": {
+      "model": "supplementaries:block/drawer",
+      "y": 270
+    }
+  }
+}

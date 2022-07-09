@@ -1,0 +1,29 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "supplementaries:blocks/statue_base",
+		"particle": "supplementaries:blocks/statue_base"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 4],
+			"to": [12, 1, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 8, 18]},
+			"faces": {
+				"north": {"uv": [4, 12, 12, 13], "texture": "#1"},
+				"east": {"uv": [4, 12, 12, 13], "texture": "#1"},
+				"south": {"uv": [4, 12, 12, 13], "texture": "#1"},
+				"west": {"uv": [4, 12, 12, 13], "texture": "#1"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#1"},
+				"down": {"uv": [4, 4, 12, 12], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [15, 11, 17],
+			"children": [0]
+		}
+	]
+}

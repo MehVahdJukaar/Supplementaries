@@ -15,7 +15,7 @@ public  abstract class SelfFluteItemMixin extends Item {
     public SelfFluteItemMixin(Properties properties) {
         super(properties);
     }
-//TODO: use new item model that can change depending on context
+//TODO: use new item model that can change depending on context SeparatePerspectiveModel
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         SupplementariesForgeClient.registerISTER(consumer, FluteItemRenderer::new);

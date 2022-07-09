@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "supplementaries:block/blackboard"
+    },
+    "facing=east": {
+      "model": "supplementaries:block/blackboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "supplementaries:block/blackboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "supplementaries:block/blackboard",
+      "y": 270
+    }
+  }
+}

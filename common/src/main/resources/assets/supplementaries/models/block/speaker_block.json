@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "supplementaries:blocks/speaker_bottom",
+    "up": "supplementaries:blocks/speaker_bottom",
+    "north": "supplementaries:blocks/speaker_front",
+    "east": "supplementaries:blocks/speaker_side",
+    "south": "supplementaries:blocks/speaker_side",
+    "west": "supplementaries:blocks/speaker_side",
+    "particle": "supplementaries:blocks/speaker_front"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "supplementaries:gold_trapdoor"
+  },
+  "addition": {
+    "item": "minecraft:netherite_scrap"
+  },
+  "result": {
+    "item": "supplementaries:netherite_trapdoor"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "netherite_trapdoor"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": {
+      "item": "supplementaries:sign_post_oak"
+    },
+    "title": {
+      "translate":   "advancements.adventure.way_sign.title"
+    },
+    "description": {
+      "translate":   "advancements.adventure.way_sign.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "way_sign": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "location": {
+          "feature": "supplementaries:way_sign"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "way_sign"
+    ]
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "supplementaries:block/ash_1"
+    },
+    "layers=2": {
+      "model": "supplementaries:block/ash_2"
+    },
+    "layers=3": {
+      "model": "supplementaries:block/ash_3"
+    },
+    "layers=4": {
+      "model": "supplementaries:block/ash_4"
+    },
+    "layers=5": {
+      "model": "supplementaries:block/ash_5"
+    },
+    "layers=6": {
+      "model": "supplementaries:block/ash_6"
+    },
+    "layers=7": {
+      "model": "supplementaries:block/ash_7"
+    },
+    "layers=8": {
+      "model": "supplementaries:block/ash_8"
+    }
+  }
+}

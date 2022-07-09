@@ -1,0 +1,33 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cog_block"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "111",
+          "121",
+          "111"
+        ],
+        "key": {
+          "1": {
+            "tag": "forge:ingots/copper"
+          },
+          "2": {
+            "item": "minecraft:redstone_block"
+          }
+        },
+        "result": {
+          "item": "supplementaries:cog_block",
+          "count": 6
+        }
+      }
+    }
+  ]
+}

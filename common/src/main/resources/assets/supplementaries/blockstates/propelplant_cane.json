@@ -1,0 +1,32 @@
+{
+    "variants": {
+        "axis_y=true,axis_x=false,axis_z=false": {
+            "model": "supplementaries:block/propelplant_cane_y"
+        },
+        "axis_y=false,axis_x=false,axis_z=true": {
+            "model": "supplementaries:block/propelplant_cane_y",
+            "x": 90
+        },
+        "axis_y=false,axis_x=true,axis_z=false": {
+            "model": "supplementaries:block/propelplant_cane_y",
+            "x": 90,
+            "y": 90
+        },
+        "axis_y=true,axis_x=true,axis_z=false": {
+            "model": "supplementaries:block/propelplant_cane_cross"
+        },
+        "axis_y=true,axis_x=false,axis_z=true": {
+            "model": "supplementaries:block/propelplant_cane_cross_f"
+        },
+        "axis_y=false,axis_x=true,axis_z=true": {
+            "model": "supplementaries:block/propelplant_cane_cross",
+            "x": 90
+        },
+        "axis_y=true,axis_x=true,axis_z=true": {
+            "model": "supplementaries:block/propelplant_cane_cross_2"
+        },
+        "axis_y=false,axis_x=false,axis_z=false": {
+            "model": "supplementaries:block/propelplant_cane_cross_2"
+        }
+    }
+}

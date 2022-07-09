@@ -1,0 +1,20 @@
+{
+  "color": "#bbdf62",
+  "containers": [
+    {
+      "filled": [
+        "gooseberry_jam:gooseberry_juice_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "gooseberry_jam:gooseberry_juice_bottle"
+  },
+  "from_mod": "bayou_blues",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.bayou_blues.gooseberry_juice_bottle"
+}

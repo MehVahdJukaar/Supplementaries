@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    " 2 ",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:stone_brick_slab"
+    },
+    "2": [
+      {
+        "item": "minecraft:stone_bricks"
+      },
+      {
+        "item": "minecraft:chiseled_stone_bricks"
+      }
+    ]
+  },
+  "result": {
+    "item": "supplementaries:pedestal",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "pedestal"
+    }
+  ]
+}

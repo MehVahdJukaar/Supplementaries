@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+{"id":"minecraft:book","required":false},
+{"id":"minecraft:enchanted_book","required":false},
+{"id":"inspirations:white_book","required":false},
+{"id":"inspirations:orange_book","required":false},
+{"id":"inspirations:magenta_book","required":false},
+{"id":"inspirations:light_blue_book","required":false},
+{"id":"inspirations:yellow_book","required":false},
+{"id":"inspirations:lime_book","required":false},
+{"id":"inspirations:pink_book","required":false},
+{"id":"inspirations:gray_book","required":false},
+{"id":"inspirations:light_gray_book","required":false},
+{"id":"inspirations:cyan_book","required":false},
+{"id":"inspirations:purple_book","required":false},
+{"id":"inspirations:blue_book","required":false},
+{"id":"inspirations:brown_book","required":false},
+{"id":"inspirations:green_book","required":false},
+{"id":"inspirations:red_book","required":false},
+{"id":"inspirations:black_book","required":false}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id" :"create:bar_of_chocolate",
+      "required": false
+    },
+    {
+      "id" :"neapolitan:chocolate_bar",
+      "required": false
+    },
+    {
+      "id" :"fluffy_farmer:chocolate_bar",
+      "required": false
+    },
+    {
+      "id" :"xercamod:item_chocolate",
+      "required": false
+    },
+    {
+      "id" :"simplefarming:chocolate",
+      "required": false
+    },
+    {
+      "id" :"vanillacookbook:chocolate",
+      "required": false
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FodderBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.EnumSet;
 
@@ -37,16 +37,16 @@ public class EatFodderGoal extends MoveToBlockGoal {
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean canUse() {
         if (!this.animal.canFallInLove() || this.animal.getAge() > 0) return false;
         if (this.nextStartTick > 0) {
             --this.nextStartTick;
             return false;
-        } else if (this.blockPos != BlockPos.ZERO && !ForgeHooks.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
+        } else if (this.blockPos != BlockPos.ZERO && !ForgeHelper.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
             return false;
-        }
-        else if (this.tryFindBlock()) {
+        } else if (this.tryFindBlock()) {
             //cooldown between attempts if blocks are around
             this.nextStartTick = 600;
             return true;
@@ -60,7 +60,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
     //TODO: finish this. still buggy. improve
     @Override
     public boolean canContinueToUse() {
-        //try is low so they dont get stuck
+        //try is low so they don't get stuck
         return this.tryTicks >= -100 && this.tryTicks <= 200 && this.isValidTarget(this.mob.level, this.blockPos);
     }
 
@@ -133,7 +133,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
             //break block
             if (this.ticksSinceReachedGoal > this.blockBreakingTime) {
                 BlockState state = world.getBlockState(targetPos);
-                if(state.is(ModRegistry.FODDER.get())) {
+                if (state.is(ModRegistry.FODDER.get())) {
                     int layers = state.getValue(FodderBlock.LAYERS);
                     if (layers > 1) {
                         world.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));

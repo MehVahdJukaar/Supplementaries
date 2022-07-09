@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
@@ -19,50 +18,39 @@ import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SnowflakeParticle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.util.stream.Collectors;
-
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
-    public static void init(){
-        ClientPlatformHelper.onRegisterEntityRenderers(ClientSetup::registerEntityRenderers);
-        ClientPlatformHelper.onRegisterBlockColors(ClientSetup::registerBlockColors);
-        ClientPlatformHelper.onRegisterItemColors(ClientSetup::registerItemColors);
-        ClientPlatformHelper.onRegisterParticles(ClientSetup::registerParticles);
+    public static void init() {
+        ClientPlatformHelper.addEntityRenderersRegistration(ClientSetup::registerEntityRenderers);
+        ClientPlatformHelper.addBlockEntityRenderersRegistration(ClientSetup::registerBlockEntityRenderers);
+        ClientPlatformHelper.addBlockColorsRegistration(ClientSetup::registerBlockColors);
+        ClientPlatformHelper.addItemColorsRegistration(ClientSetup::registerItemColors);
+        ClientPlatformHelper.addParticleRegistration(ClientSetup::registerParticles);
     }
 
 
@@ -161,10 +149,10 @@ public class ClientSetup {
                     (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
 
 
-            ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
+            ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
                     (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
 
-            ModRegistry.TRAPPED_PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
+            ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
                     (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
             ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
@@ -183,25 +171,27 @@ public class ClientSetup {
                     && CrossbowItem.containsChargedProjectile(stack, projectile) ? 1.0F : 0.0F;
         }
     }
+
+    @EventCalled
     private static void registerParticles(ClientPlatformHelper.ParticleEvent event) {
-        event.register(ModParticles.SPEAKER_SOUND, SpeakerSoundParticle.Factory::new);
-        event.register(ModParticles.GREEN_FLAME, FlameParticle.Provider::new);
-        event.register(ModParticles.DRIPPING_LIQUID, DrippingLiquidParticle.Factory::new);
-        event.register(ModParticles.FALLING_LIQUID, FallingLiquidParticle.Factory::new);
-        event.register(ModParticles.SPLASHING_LIQUID, SplashingLiquidParticle.Factory::new);
-        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE, BombExplosionParticle.Factory::new);
-        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER, BombExplosionEmitterParticle.Factory::new );
-        event.register(ModParticles.BOMB_SMOKE_PARTICLE, BombSmokeParticle.Factory::new);
-        event.register(ModParticles.BOTTLING_XP_PARTICLE, BottlingXpParticle.Factory::new);
-        event.register(ModParticles.FEATHER_PARTICLE, FeatherParticle.Factory::new);
-        event.register(ModParticles.SLINGSHOT_PARTICLE, SlingshotParticle.Factory::new);
-        event.register(ModParticles.STASIS_PARTICLE, StasisParticle.Factory::new);
-        event.register(ModParticles.CONFETTI_PARTICLE, ConfettiParticle.Factory::new);
-        event.register(ModParticles.ROTATION_TRAIL, RotationTrailParticle.Factory::new);
-        event.register(ModParticles.ROTATION_TRAIL_EMITTER, RotationTrailEmitter.Factory::new);
-        event.register(ModParticles.SUDS_PARTICLE, SudsParticle.Factory::new);
-        event.register(ModParticles.ASH_PARTICLE, AshParticleFactory::new);
-        event.register(ModParticles.BUBBLE_BLOCK_PARTICLE, BubbleBlockParticle.Factory::new);
+        event.register(ModParticles.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
+        event.register(ModParticles.GREEN_FLAME.get(), FlameParticle.Provider::new);
+        event.register(ModParticles.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
+        event.register(ModParticles.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
+        event.register(ModParticles.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
+        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
+        event.register(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), BombExplosionEmitterParticle.Factory::new);
+        event.register(ModParticles.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
+        event.register(ModParticles.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
+        event.register(ModParticles.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
+        event.register(ModParticles.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
+        event.register(ModParticles.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
+        event.register(ModParticles.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+        event.register(ModParticles.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
+        event.register(ModParticles.ROTATION_TRAIL_EMITTER.get(), RotationTrailEmitter.Factory::new);
+        event.register(ModParticles.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
+        event.register(ModParticles.ASH_PARTICLE.get(), AshParticleFactory::new);
+        event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
     }
 
     public static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -232,42 +222,36 @@ public class ClientSetup {
         event.register(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+        // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
     }
 
-
-    @SubscribeEvent
-    public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-
-        // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
-
-        //tiles
-        event.registerBlockEntityRenderer(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.CAGE_TILE.get(), CageBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-
-        event.registerBlockEntityRenderer(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTileRenderer::new);
-        event.registerBlockEntityRenderer(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
+    public static void registerBlockEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
+        event.register(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
+        event.register(ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
+        event.register(ModRegistry.PEDESTAL_TILE.get(), PedestalBlockTileRenderer::new);
+        event.register(ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
+        event.register(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
+        event.register(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
+        event.register(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
+        event.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
+        event.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
+        event.register(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
+        event.register(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
+        event.register(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
+        event.register(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
+        event.register(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
+        event.register(ModRegistry.CAGE_TILE.get(), CageBlockTileRenderer::new);
+        event.register(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
+        event.register(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
+        event.register(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
+        event.register(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
+        event.register(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
+        event.register(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
+        event.register(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
+        event.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
+        event.register(ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTileRenderer::new);
+        event.register(ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTileRenderer::new);
+        event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
     }
 
     private static void registerBlockColors(ClientPlatformHelper.BlockColorEvent event) {
@@ -314,6 +298,7 @@ public class ClientSetup {
         ClientRegistry.registerSpecialModels();
     }
 
+    /*
     //unused
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
@@ -348,5 +333,5 @@ public class ClientSetup {
         event.registerShader(new ShaderInstance(event.getResourceManager(), Supplementaries.res("banner_mask"),
                         DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), s -> instance = s);
     }
-
+ */
 }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:gold_trapdoor",
+    "supplementaries:netherite_trapdoor",
+    "supplementaries:silver_trapdoor",
+    "supplementaries:lead_trapdoor"
+  ]
+}

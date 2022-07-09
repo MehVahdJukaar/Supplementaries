@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
@@ -48,10 +48,6 @@ public class Supplementaries {
 
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        CraftingHelper.register(new OptionalRecipeCondition.Serializer());
-
-        ConfigHandler.registerBus(bus);
 
         ModSounds.init();
         ModRegistry.init();

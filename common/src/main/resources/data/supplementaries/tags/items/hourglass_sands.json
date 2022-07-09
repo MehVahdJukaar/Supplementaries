@@ -1,0 +1,14 @@
+
+{
+  "replace": false,
+  "values": [
+    {
+      "id":"#forge:sand",
+      "required":false
+    },
+  {"id":"#minecraft:sand","required":false},
+  {"id":"thermal:sawdust_block","required":false},
+  {"id":"infernalexp:glowdust_sand","required":false},
+  {"id":"create:limesand","required":false}
+  ]
+}

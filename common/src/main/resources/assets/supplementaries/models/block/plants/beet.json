@@ -1,0 +1,41 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "beet": "moreminecarts:block/pot_beet",
+		"particle": "minecraft:block/flower_pot"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 6, 4.2, 6 ], 
+            "to": [ 10, 8.2, 10 ], 
+            "faces": {
+                "north": { "texture": "#beet", "uv": [ 8, 3, 12, 7 ] },
+                "east": { "texture": "#beet", "uv": [ 8, 3, 12, 7 ] },
+                "south": { "texture": "#beet", "uv": [ 8, 3, 12, 7 ] },
+                "west": { "texture": "#beet", "uv": [ 8, 3, 12, 7 ] },
+                "up": { "texture": "#beet", "uv": [ 12, 3, 16, 7 ] }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [ 6.5, 8, 8 ], 
+            "to": [ 9.5, 14, 8 ], 
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45.0 },
+            "faces": {
+                "north": { "texture": "#beet", "uv": [ 0, 0, 6, 3 ], "rotation": 270 },
+                "south": { "texture": "#beet", "uv": [ 0, 0, 6, 3 ], "rotation": 270 }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [ 6.5, 8, 8 ], 
+            "to": [ 9.5, 14, 8 ], 
+            "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": -45.0 },
+            "faces": {
+                "north": { "texture": "#beet", "uv": [ 0, 0, 6, 3 ], "rotation": 270 },
+                "south": { "texture": "#beet", "uv": [ 0, 0, 6, 3 ], "rotation": 270 }
+            }
+        }
+    ]
+}

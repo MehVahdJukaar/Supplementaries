@@ -299,7 +299,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     private void createExplosion() {
 
         boolean breaks = this.getOwner() instanceof Player ||
-                ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
+                PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
 
         if (this.superCharged) {
             //second explosion when supercharged
@@ -311,7 +311,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 return canBreakBlock(state, type);
             }
         },
-                this.getX(), this.getY() + 0.25, this.getZ(), type.getRadius(),
+                this.getX(), this.getY() + 0.25, this.getZ(), (float)type.getRadius(),
                 this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
 
         explosion.explode();

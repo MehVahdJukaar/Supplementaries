@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "101",
+    "101"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_nugget"
+    },
+    "0": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "supplementaries:iron_gate",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "iron_gate"
+    }
+  ]
+}

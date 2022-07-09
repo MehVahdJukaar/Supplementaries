@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:ash_bricks"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "result": "supplementaries:ash_bricks_slab",
+  "count": 2
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "101",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "0": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "result": {
+    "item": "supplementaries:flower_box",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flower_box"
+    }
+  ]
+}

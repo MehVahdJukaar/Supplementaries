@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:present","required":false},
+    {"id":"supplementaries:present_white","required":false},
+    {"id":"supplementaries:present_orange","required":false},
+    {"id":"supplementaries:present_yellow","required":false},
+    {"id":"supplementaries:present_red","required":false},
+    {"id":"supplementaries:present_blue","required":false},
+    {"id":"supplementaries:present_cyan","required":false},
+    {"id":"supplementaries:present_light_blue","required":false},
+    {"id":"supplementaries:present_lime","required":false},
+    {"id":"supplementaries:present_green","required":false},
+    {"id":"supplementaries:present_magenta","required":false},
+    {"id":"supplementaries:present_pink","required":false},
+    {"id":"supplementaries:present_purple","required":false},
+    {"id":"supplementaries:present_black","required":false},
+    {"id":"supplementaries:present_gray","required":false},
+    {"id":"supplementaries:present_light_gray","required":false},
+    {"id":"supplementaries:present_brown","required":false}
+  ]
+}

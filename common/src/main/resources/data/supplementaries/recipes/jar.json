@@ -1,0 +1,27 @@
+{
+  "group": "jar",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "212",
+    "2 2",
+    "222"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "2": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "supplementaries:jar",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ]
+}

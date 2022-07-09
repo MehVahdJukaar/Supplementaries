@@ -58,7 +58,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -229,20 +228,18 @@ public class ItemsOverrideHandler {
         return InteractionResultHolder.pass(stack);
     }
 
-    public static void addOverrideTooltips(ItemTooltipEvent event) {
-        Item item = event.getItemStack().getItem();
+    public static void addOverrideTooltips(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
+        Item item = itemStack.getItem();
 
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
-            List<Component> tooltip = event.getToolTip();
             MutableComponent t = override.getTooltip();
-            if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            if (t != null) components.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         } else {
             ItemUseOverride o = ITEM_USE_OVERRIDES.get(item);
             if (o != null && o.isEnabled()) {
-                List<Component> tooltip = event.getToolTip();
                 MutableComponent t = o.getTooltip();
-                if (t != null) tooltip.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+                if (t != null) components.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
             }
         }
     }
@@ -653,7 +650,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return RegistryConfigs.Reg.WRENCH_ENABLED.get();
+            return RegistryConfigs.WRENCH_ENABLED.get();
         }
 
         @Override
@@ -725,7 +722,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.SKULL_CANDLES;
+            return ServerConfigs.Tweaks.SKULL_CANDLES.get();
         }
 
         @Override
@@ -782,7 +779,7 @@ public class ItemsOverrideHandler {
         }
         world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 
-        if (sound == null) sound = newState.getSoundType(world, pos, player);
+        if (sound == null) sound = newState.getSoundType();
         world.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
         if (player == null || !player.getAbilities().instabuild) {
             stack.shrink(1);

@@ -1,0 +1,78 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:not",
+          "value": {
+          "modid": "chalk",
+          "type": "forge:mod_loaded"
+          }
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackboard"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "12 ",
+          "120",
+          "12 "
+        ],
+        "key": {
+          "1": {
+            "tag": "minecraft:wooden_slabs"
+          },
+          "2": {
+            "item": "minecraft:blackstone"
+          },
+          "0": {
+            "tag": "forge:gems/quartz"
+          }
+        },
+        "result": {
+          "item": "supplementaries:blackboard",
+          "count": 2
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackboard"
+        },
+        {
+          "modid": "chalk",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "12 ",
+          "120",
+          "12 "
+        ],
+        "key": {
+          "1": {
+            "tag": "minecraft:wooden_slabs"
+          },
+          "2": {
+            "item": "minecraft:blackstone"
+          },
+          "0": {
+            "item": "chalk:white_chalk"
+          }
+        },
+        "result": {
+          "item": "supplementaries:blackboard",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

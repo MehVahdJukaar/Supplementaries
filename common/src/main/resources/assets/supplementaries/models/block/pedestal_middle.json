@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "supplementaries:blocks/pedestal_top",
+		"2": "supplementaries:blocks/pedestal_full",
+		"particle": "supplementaries:blocks/pedestal_full"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 16, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [12, 10, 12]},
+			"faces": {
+				"north": {"uv": [3, 0, 13, 16], "texture": "#2"},
+				"east": {"uv": [3, 0, 13, 16], "texture": "#2"},
+				"south": {"uv": [3, 0, 13, 16], "texture": "#2"},
+				"west": {"uv": [3, 0, 13, 16], "texture": "#2"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#0", "cullface": "down"}
+			}
+		}
+	]
+}

@@ -1,0 +1,299 @@
+{
+  "block.clock.tick_1": {
+    "subtitle": "subtitle.supplementaries.clock_tick",
+    "sounds": [
+      "supplementaries:block/clock_tick_1"
+    ]
+  },
+  "block.clock.tick_2": {
+    "subtitle": "subtitle.supplementaries.clock_tick",
+    "sounds": [
+      "supplementaries:block/clock_tick_2"
+    ]
+  },
+  "block.turntable.cat": {
+    "subtitle": "subtitle.supplementaries.turntable.cat",
+    "sounds": [
+      {
+        "name": "supplementaries:block/tom",
+        "stream": true
+      }
+    ]
+  },
+  "block.gunpowder.ignite": {
+    "subtitle": "subtitle.supplementaries.gunpowder.ignite",
+    "sounds": [
+      "supplementaries:block/fizzle"
+    ]
+  },
+  "item.bomb": {
+    "subtitle": "subtitle.supplementaries.bomb",
+    "sounds": [
+      "supplementaries:item/bomb_explosion_0",
+      "supplementaries:item/bomb_explosion_1",
+      "supplementaries:item/bomb_explosion_2",
+      "supplementaries:item/bomb_explosion_3"
+    ]
+  },
+  "music.pancake": {
+    "sounds": [
+      {
+        "name": "supplementaries:music/pancake",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitle.supplementaries.music.pancake"
+  },
+  "block.sack.break": {
+    "sounds": [
+      "supplementaries:block/sack_break_0",
+      "supplementaries:block/sack_break_1",
+      "supplementaries:block/sack_break_2",
+      "supplementaries:block/sack_break_3"
+    ]
+  },
+  "block.sack.place": {
+    "sounds": [
+      "supplementaries:block/sack_place_0",
+      "supplementaries:block/sack_place_1",
+      "supplementaries:block/sack_place_2",
+      "supplementaries:block/sack_place_3"
+    ]
+  },
+  "block.sack.open": {
+    "sounds": [
+      "supplementaries:block/sack_open"
+    ],
+    "subtitle": "subtitle.supplementaries.sack.open"
+  },
+  "block.rope.break": {
+    "sounds": [
+      "supplementaries:block/rope_break_0",
+      "supplementaries:block/rope_break_1",
+      "supplementaries:block/rope_break_2",
+      "supplementaries:block/rope_break_3"
+    ]
+  },
+  "block.rope.place": {
+    "sounds": [
+      "supplementaries:block/rope_place_0",
+      "supplementaries:block/rope_place_1",
+      "supplementaries:block/rope_place_2",
+      "supplementaries:block/rope_place_3"
+    ]
+  },
+  "block.bubble_block.break": {
+    "sounds": [
+      "supplementaries:block/bubble_pop_0",
+      "supplementaries:block/bubble_pop_1",
+      "supplementaries:block/bubble_pop_2",
+      "supplementaries:block/bubble_pop_3"
+    ],
+    "subtitle": "subtitle.supplementaries.bubble.pop"
+  },
+  "block.bubble_block.place": {
+    "sounds": [
+      "supplementaries:block/bubble_place_0",
+      "supplementaries:block/bubble_place_1",
+      "supplementaries:block/bubble_place_2",
+      "supplementaries:block/bubble_place_3"
+    ],
+    "subtitle": "subtitle.supplementaries.bubble.blow"
+  },
+  "item.bubble_blower": {
+    "sounds": [
+      "supplementaries:item/bubble_blow"
+    ],
+    "subtitle": "subtitle.supplementaries.bubble.blow"
+  },
+  "block.present.place": {
+    "sounds": [
+      "supplementaries:block/present_place_0",
+      "supplementaries:block/present_place_1",
+      "supplementaries:block/present_place_2",
+      "supplementaries:block/present_place_3"
+    ]
+  },
+  "block.present.break": {
+    "sounds": [
+      "supplementaries:block/present_break_1",
+      "supplementaries:block/present_break_2",
+      "supplementaries:block/present_break_3",
+      "supplementaries:block/present_break_0"
+    ]
+  },
+  "block.present.open": {
+    "subtitle": "subtitle.supplementaries.present.open",
+    "sounds": [
+      "supplementaries:block/present_open"
+    ]
+  },
+  "block.present.pack": {
+    "subtitle": "subtitle.supplementaries.present.pack",
+    "sounds": [
+      "supplementaries:block/present_pack"
+    ]
+  },
+  "block.crank": {
+    "subtitle": "subtitle.supplementaries.crank.turn",
+    "sounds": [
+      "supplementaries:block/crank"
+    ]
+  },
+  "block.jar.place": {
+    "sounds": [
+      "supplementaries:block/jar_place_0",
+      "supplementaries:block/jar_place_1",
+      "supplementaries:block/jar_place_2",
+      "supplementaries:block/jar_place_3"
+    ]
+  },
+  "block.jar.break": {
+    "sounds": [
+      "supplementaries:block/jar_break_0",
+      "supplementaries:block/jar_break_1",
+      "supplementaries:block/jar_break_2",
+      "supplementaries:block/jar_break_3"
+    ]
+  },
+  "block.jar.cookie": {
+    "subtitle": "subtitle.supplementaries.jar.cookie",
+    "sounds": [
+      "supplementaries:block/jar_cookie"
+    ]
+  },
+  "block.bellows.retract": {
+    "subtitle": "subtitle.supplementaries.bellows.retract",
+    "sounds": [
+      "supplementaries:block/bellows_retract"
+    ]
+  },
+  "block.bellows.blow": {
+    "subtitle": "subtitle.supplementaries.bellows.blow",
+    "sounds": [
+      "supplementaries:block/bellows_blow"
+    ]
+  },
+  "block.globe.spin": {
+    "subtitle": "subtitle.supplementaries.globe.spin",
+    "sounds": [
+      "supplementaries:block/globe_spin"
+    ]
+  },
+  "block.faucet.turn": {
+    "subtitle": "subtitle.supplementaries.faucet.turn",
+    "sounds": [
+      "supplementaries:block/faucet"
+    ]
+  },
+  "item.slingshot.charge_0": {
+    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "sounds": [
+      "supplementaries:item/slingshot_charge_0"
+    ]
+  },
+  "item.slingshot.charge_1": {
+    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "sounds": [
+      "supplementaries:item/slingshot_charge_1"
+    ]
+  },
+  "item.slingshot.charge_3": {
+    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "sounds": [
+      "supplementaries:item/slingshot_charge_3"
+    ]
+  },
+  "item.slingshot.charge_2": {
+    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "sounds": [
+      "supplementaries:item/slingshot_charge_2"
+    ]
+  },
+  "item.slingshot.release": {
+    "subtitle": "subtitle.supplementaries.slingshot.release",
+    "sounds": [
+      "supplementaries:item/slingshot_release"
+    ]
+  },
+  "block.rope.slide": {
+    "subtitle": "subtitle.supplementaries.rope.slide",
+    "sounds": [
+      "supplementaries:block/rope_slide"
+    ]
+  },
+  "block.rope.step": {
+    "sounds": [
+      "supplementaries:block/rope_step_0",
+      "supplementaries:block/rope_step_1",
+      "supplementaries:block/rope_step_2",
+      "supplementaries:block/rope_step_3"
+    ]
+  },
+  "block.rotate": {
+    "subtitle": "subtitle.supplementaries.rotate_block",
+    "sounds": [
+      {
+        "name": "minecraft:entity/itemframe/rotate_item1",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item2",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item3",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item4",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "item.wrench.rotate": {
+    "subtitle": "subtitle.supplementaries.wrench.rotate",
+    "sounds": [
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.8
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.6
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.9
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 2.1
+      }
+    ]
+  },
+  "item.wrench.fail": {
+    "subtitle": "subtitle.supplementaries.wrench.fail",
+    "sounds": [
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.8
+      },
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.72
+      },
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
+  }
+}

@@ -44,7 +44,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .withProperty(BLACKBOARD, getTextureKey())
+                .with(BLACKBOARD, getTextureKey())
                 .build();
     }
 

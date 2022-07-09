@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:ash_bricks"
+    }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:ash_bricks_wall",
+    "count": 6
+  }
+}

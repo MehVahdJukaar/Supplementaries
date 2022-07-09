@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "supplementaries:blocks/deepslate_lamp",
+    "north": "supplementaries:blocks/deepslate_lamp",
+    "south": "supplementaries:blocks/deepslate_lamp",
+    "east": "supplementaries:blocks/deepslate_lamp",
+    "west": "supplementaries:blocks/deepslate_lamp",
+    "up": "supplementaries:blocks/deepslate_lamp_top",
+    "down": "supplementaries:blocks/deepslate_lamp_top"
+  }
+}

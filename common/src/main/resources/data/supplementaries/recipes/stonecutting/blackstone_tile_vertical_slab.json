@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:blackstone_tile"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "quark",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "result": "supplementaries:blackstone_tile_vertical_slab",
+  "count": 2
+}

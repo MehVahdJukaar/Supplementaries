@@ -1,0 +1,82 @@
+{
+  "variants": {
+    "rune=a": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_a"
+    },
+    "rune=b": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_b"
+    },
+    "rune=c": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_c"
+    },
+    "rune=d": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_d"
+    },
+    "rune=e": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_e"
+    },
+    "rune=f": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_f"
+    },
+    "rune=g": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_g"
+    },
+    "rune=h": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_h"
+    },
+    "rune=i": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_i"
+    },
+    "rune=j": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_j"
+    },
+    "rune=k": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_k"
+    },
+    "rune=l": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_l"
+    },
+    "rune=m": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_m"
+    },
+    "rune=n": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_n"
+    },
+    "rune=o": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_o"
+    },
+    "rune=p": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_p"
+    },
+    "rune=q": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_q"
+    },
+    "rune=r": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_r"
+    },
+    "rune=s": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_s"
+    },
+    "rune=t": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_t"
+    },
+    "rune=u": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_u"
+    },
+	"rune=v": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_v"
+    },
+    "rune=w": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_w"
+    },
+    "rune=x": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_x"
+    },
+    "rune=y": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_y"
+    },
+    "rune=z": {
+      "model": "supplementaries:block/end_lamps/end_stone_lamp_z"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "color": "#969f1c",
+  "containers": [
+    {
+      "filled": [
+        "simplefarming:olive_oil"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "divider": 1,
+    "item": "simplefarming:olive_oil"
+  },
+  "from_mod": "simplefarming",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.simplefarming.olive_oil"
+}

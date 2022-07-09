@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"farmersdelight:basket","required":false},
+    {"id":"#adorn:kitchen_sinks","required":false},
+    {"id":"minecraft:composter","required":false}
+  ]
+}

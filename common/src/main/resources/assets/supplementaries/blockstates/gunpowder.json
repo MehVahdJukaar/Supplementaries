@@ -1,0 +1,104 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "OR": [
+          {
+            "east": "none",
+            "west": "none",
+            "south": "none",
+            "north": "none"
+          },
+          {
+            "east": "side|up",
+            "north": "side|up"
+          },
+          {
+            "east": "side|up",
+            "south": "side|up"
+          },
+          {
+            "west": "side|up",
+            "south": "side|up"
+          },
+          {
+            "west": "side|up",
+            "north": "side|up"
+          }
+        ]
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_dot"
+      }
+    },
+    {
+      "when": {
+        "north": "side|up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_side0"
+      }
+    },
+    {
+      "when": {
+        "south": "side|up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_alt0"
+      }
+    },
+    {
+      "when": {
+        "east": "side|up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_alt1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "side|up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_side1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "north": "up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_up"
+      }
+    },
+    {
+      "when": {
+        "east": "up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_up",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_up",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "up"
+      },
+      "apply": {
+        "model": "supplementaries:block/gunpowder_up",
+        "y": 270
+      }
+    }
+  ]
+}

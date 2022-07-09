@@ -1,0 +1,32 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "immersive_weathering",
+          "type": "forge:mod_loaded"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "immersive_weathering:soot"
+          },
+          {
+            "item": "immersive_weathering:soot"
+          }
+        ],
+        "result": {
+          "item": "supplementaries:ash",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

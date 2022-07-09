@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/sconce_wall",
+	"textures": {
+		"0": "supplementaries:blocks/sconce_soul",
+		"1": "supplementaries:blocks/sconce_fire_soul",
+		"particle": "supplementaries:blocks/sconce_soul"
+	}
+}

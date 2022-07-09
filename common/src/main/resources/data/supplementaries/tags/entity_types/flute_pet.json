@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:horse","required":false},
+    {"id":"minecraft:llama","required":false},
+    {"id":"minecraft:mule","required":false},
+    {"id":"minecraft:donkey","required":false},
+    {"id":"minecraft:fox","required":false}
+  ]
+}
+

@@ -26,10 +26,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,12 +48,6 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     @Override
     public boolean canHoldItems() {
         return this.isPacked();
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
-        return super.getCapability(capability, facing);
     }
 
     @Override
@@ -155,17 +148,14 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
 
     @Override
     protected void updateBlockState(BlockState state, boolean b) {
-
     }
 
     @Override
     protected void playOpenSound(BlockState state) {
-
     }
 
     @Override
     protected void playCloseSound(BlockState state) {
-
     }
 
     @Override
@@ -202,7 +192,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int p_19235_, ItemStack p_19236_, @Nullable Direction p_19237_) {
+    public boolean canPlaceItemThroughFace(int p_19235_, ItemStack p_19236_, @Nullable Direction direction) {
         return false;
     }
 
@@ -257,4 +247,13 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
             return Component.translatable("message.supplementaries.present.to", recipient);
         }
     }
+
+    //this shouldn't be needed
+    //TODO: check
+    /*
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        return super.getCapability(capability, facing);
+    }*/
 }

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "345",
+    " 7 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:redstone"
+    },
+    "3": {
+      "item": "minecraft:redstone"
+    },
+    "4": {
+      "item": "minecraft:sea_lantern"
+    },
+    "5": {
+      "item": "minecraft:redstone"
+    },
+    "7": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "supplementaries:redstone_illuminator",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "redstone_illuminator"
+    }
+  ]
+}

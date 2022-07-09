@@ -1,0 +1,13 @@
+{
+  "loader": "supplementaries:hanging_pot_loader",
+  "rope": {
+    "parent": "supplementaries:block/hanging_flower_pot_rope",
+    "textures": {
+      "3": "supplementaries:blocks/hanging_flower_pot",
+      "particle": "block/flower_pot"
+    }
+  },
+  "textures": {
+    "particle": "block/flower_pot"
+  }
+}

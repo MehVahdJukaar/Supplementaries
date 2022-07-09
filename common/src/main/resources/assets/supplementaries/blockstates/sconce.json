@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "supplementaries:block/sconce"
+    },
+    "lit=false": {
+      "model": "supplementaries:block/sconce_off"
+    }
+  }
+}

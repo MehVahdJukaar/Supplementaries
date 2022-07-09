@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"melon": "supplementaries:blocks/plants/cantaloupe_block",
+		"particle": "minecraft:block/flower_pot"
+	},
+	"elements": [
+		{
+			"from": [5.5, 4, 5.5],
+			"to": [10.5, 9, 10.5],
+			"faces": {
+				"north": {"uv": [11, 11, 16, 16], "texture": "#melon"},
+				"east": {"uv": [11, 11, 16, 16], "texture": "#melon"},
+				"south": {"uv": [11, 11, 16, 16], "texture": "#melon"},
+				"west": {"uv": [11, 11, 16, 16], "texture": "#melon"},
+				"up": {"uv": [11, 6, 16, 11], "texture": "#melon"}
+			}
+		}
+	]
+}

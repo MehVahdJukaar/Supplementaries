@@ -1,0 +1,20 @@
+{
+  "color": "#970c1f",
+  "containers": [
+    {
+      "filled": [
+        "simplefarming:jam"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/honey_liquid",
+  "food": {
+    "divider": 1,
+    "item": "simplefarming:jam"
+  },
+  "from_mod": "simplefarming",
+  "still_texture": "moonlight:soft_fluids/honey_liquid",
+  "translation_key": "item.simplefarming.jam"
+}

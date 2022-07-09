@@ -1,0 +1,20 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "supplementaries:blocks/rope_extension",
+		"particle": "supplementaries:blocks/rope"
+	},
+	"elements": [
+		{
+			"from": [7, 10, 0],
+			"to": [9, 12, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 19, 8]},
+			"faces": {
+				"east": {"uv": [7.75, 0.25, 8.25, 2.25], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [7.75, 13.75, 8.25, 15.75], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [7.75, 1.75, 8.25, 3.75], "texture": "#1"},
+				"down": {"uv": [7.75, 12.25, 8.25, 14.25], "texture": "#1"}
+			}
+		}
+	]
+}

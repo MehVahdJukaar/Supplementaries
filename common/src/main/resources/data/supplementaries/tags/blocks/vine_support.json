@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:campfires","required":false}
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:block/plants/cross_template",
+  "textures": {
+    "plant": "endergetic:block/tall_poise_bush_pot"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "tconstruct:sky_slime_ball"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "tconstruct:block/sky_congealed_slime",
+  "food": {
+    "divider": 1,
+    "item": "tconstruct:sky_slime_ball"
+  },
+  "from_mod": "tconstruct",
+  "still_texture": "tconstruct:block/sky_congealed_slime"
+}

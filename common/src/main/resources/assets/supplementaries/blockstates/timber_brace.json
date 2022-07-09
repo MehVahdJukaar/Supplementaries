@@ -1,0 +1,17 @@
+
+{
+  "variants": {
+    "has_block=false,flipped=true": {
+      "model": "supplementaries:block/timber_brace_f"
+    },
+    "has_block=true,flipped=true": {
+      "model": "supplementaries:block/timber_brace_loader_f"
+    },
+    "has_block=false,flipped=false": {
+      "model": "supplementaries:block/timber_brace"
+    },
+    "has_block=true,flipped=false": {
+      "model": "supplementaries:block/timber_brace_loader"
+    }
+  }
+}

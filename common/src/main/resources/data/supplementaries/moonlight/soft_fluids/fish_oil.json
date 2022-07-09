@@ -1,0 +1,20 @@
+{
+  "color": "#ffe89c",
+  "containers": [
+    {
+      "filled": [
+        "alexsmobs:fish_oil"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "divider": 1,
+    "item": "alexsmobs:fish_oil"
+  },
+  "from_mod": "alexsmobs",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.alexsmobs.fish_oil"
+}

@@ -1,0 +1,68 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"cactus": "habitat:block/growing_ball_cactus",
+		"petal": "texture"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 4, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 7, 4, 11], "texture": "#cactus"},
+				"east": {"uv": [0, 7, 4, 11], "texture": "#cactus"},
+				"south": {"uv": [0, 7, 4, 11], "texture": "#cactus"},
+				"west": {"uv": [0, 7, 4, 11], "texture": "#cactus"},
+				"up": {"uv": [0, 10, 4, 14], "texture": "#cactus"},
+				"down": {"uv": [8, 10, 12, 14], "texture": "#cactus", "cullface": "down"}
+			}
+		},
+		{
+			"from": [7.5, 4.1, 7.5],
+			"to": [8.5, 4.1, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 3, 8]},
+			"faces": {
+				"up": {"uv": [8, 16, 6, 14], "texture": "#petal"},
+				"down": {"uv": [10, 14, 8, 16], "texture": "#petal", "cullface": "down"}
+			}
+		},
+		{
+			"from": [6.5, 4, 5.6],
+			"to": [9.5, 4, 7.6],
+			"rotation": {"angle": 45, "axis": "x", "origin": [8, 4, 7.6], "rescale": true},
+			"faces": {
+				"up": {"uv": [8, 14, 4, 11], "rotation": 180, "texture": "#petal"},
+				"down": {"uv": [8, 11, 12, 14], "rotation": 180, "texture": "#petal"}
+			}
+		},
+		{
+			"from": [8.4, 4, 6.5],
+			"to": [10.4, 4, 9.5],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8.4, 4, 8], "rescale": true},
+			"faces": {
+				"up": {"uv": [8, 14, 4, 11], "rotation": 270, "texture": "#petal"},
+				"down": {"uv": [12, 11, 8, 14], "rotation": 90, "texture": "#petal"}
+			}
+		},
+		{
+			"from": [5.6, 4, 6.5],
+			"to": [7.6, 4, 9.5],
+			"rotation": {"angle": -45, "axis": "z", "origin": [7.6, 4, 8], "rescale": true},
+			"faces": {
+				"up": {"uv": [8, 14, 4, 11], "rotation": 90, "texture": "#petal"},
+				"down": {"uv": [12, 11, 8, 14], "rotation": 270, "texture": "#petal"}
+			}
+		},
+		{
+			"from": [6.5, 4, 8.4],
+			"to": [9.5, 4, 10.4],
+			"rotation": {"angle": -45, "axis": "x", "origin": [8, 4, 8.4], "rescale": true},
+			"faces": {
+				"up": {"uv": [8, 14, 4, 11], "texture": "#petal"},
+				"down": {"uv": [8, 14, 12, 11], "rotation": 180, "texture": "#petal"}
+			}
+		}
+	]
+}

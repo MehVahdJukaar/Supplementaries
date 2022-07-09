@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:hanging_sign_dark_oak","required":false},
+    {"id":"supplementaries:hanging_sign_oak","required":false},
+    {"id":"supplementaries:hanging_sign_acacia","required":false},
+    {"id":"supplementaries:hanging_sign_jungle","required":false},
+    {"id":"supplementaries:hanging_sign_spruce","required":false},
+    {"id":"supplementaries:hanging_sign_birch","required":false},
+    {"id":"supplementaries:hanging_sign_crimson","required":false},
+    {"id":"supplementaries:hanging_sign_warped","required":false}
+  ]
+}

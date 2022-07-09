@@ -1,0 +1,76 @@
+{
+  "variants": {
+    "axis=x,flipped=false,winding=none": {
+      "model": "supplementaries:block/pulley_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=false,winding=none": {
+      "model": "supplementaries:block/pulley_block"
+    },
+    "axis=z,flipped=false,winding=none": {
+      "model": "supplementaries:block/pulley_block",
+      "x": 90
+    },
+    "axis=x,flipped=true,winding=none": {
+      "model": "supplementaries:block/pulley_block_f",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=true,winding=none": {
+      "model": "supplementaries:block/pulley_block_f"
+    },
+    "axis=z,flipped=true,winding=none": {
+      "model": "supplementaries:block/pulley_block_f",
+      "x": 90
+    },
+    "axis=x,flipped=false,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=false,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope"
+    },
+    "axis=z,flipped=false,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope",
+      "x": 90
+    },
+    "axis=x,flipped=true,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope_f",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=true,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope_f"
+    },
+    "axis=z,flipped=true,winding=rope": {
+      "model": "supplementaries:block/pulley_block_rope_f",
+      "x": 90
+    },
+    "axis=x,flipped=false,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=false,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain"
+    },
+    "axis=z,flipped=false,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain",
+      "x": 90
+    },
+    "axis=x,flipped=true,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain_f",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,flipped=true,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain_f"
+    },
+    "axis=z,flipped=true,winding=chain": {
+      "model": "supplementaries:block/pulley_block_chain_f",
+      "x": 90
+    }
+  }
+}

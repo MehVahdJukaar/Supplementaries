@@ -1,0 +1,18 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "supplementaries:items/speedometer_0"
+    },
+    "overrides": [
+        { "predicate": { "speed": 0.0 }, "model": "supplementaries:item/speedometer" },
+        { "predicate": { "speed": 0.1 }, "model": "supplementaries:item/speedometer_1" },
+        { "predicate": { "speed": 0.2 }, "model": "supplementaries:item/speedometer_2" },
+        { "predicate": { "speed": 0.3 }, "model": "supplementaries:item/speedometer_3" },
+        { "predicate": { "speed": 0.4 }, "model": "supplementaries:item/speedometer_4" },
+        { "predicate": { "speed": 0.5 }, "model": "supplementaries:item/speedometer_5" },
+        { "predicate": { "speed": 0.6 }, "model": "supplementaries:item/speedometer_6" },
+        { "predicate": { "speed": 0.7 }, "model": "supplementaries:item/speedometer_7" },
+        { "predicate": { "speed": 0.8 }, "model": "supplementaries:item/speedometer_8" },
+        { "predicate": { "speed": 0.9 }, "model": "supplementaries:item/speedometer_9" }
+    ]
+}

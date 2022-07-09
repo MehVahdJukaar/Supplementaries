@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:end_portal_frame","required":false}
+  ]
+}

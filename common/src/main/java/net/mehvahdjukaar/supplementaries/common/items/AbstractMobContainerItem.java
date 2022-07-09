@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
@@ -320,7 +321,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 this.playCatchSound(player);
                 this.angerNearbyEntities(entity, player);
 
-                if (ServerConfigs.cached.CAGE_PERSISTENT_MOBS && entity instanceof Mob mob) {
+                if (ServerConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                     mob.setPersistenceRequired();
                 }
 

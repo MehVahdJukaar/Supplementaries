@@ -1,0 +1,27 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "upgrade_aquatic:mulberry_jam_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    },
+    {
+      "filled": [
+        "item.upgrade_aquatic:mulberry_jam_block"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "upgrade_aquatic:mulberry_jam_bottle"
+  },
+  "from_mod": "upgrade_aquatic",
+  "still_texture": "upgrade_aquatic:block/mulberry_jam_block_top",
+  "tint_method": "flowing",
+  "translation_key": "item.upgrade_aquatic:mulberry_jam_bottle"
+}

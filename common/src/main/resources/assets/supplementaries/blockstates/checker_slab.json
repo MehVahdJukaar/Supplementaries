@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "supplementaries:block/checker_slab"
+    },
+    "type=double": {
+      "model": "supplementaries:block/checker_block"
+    },
+    "type=top": {
+      "model": "supplementaries:block/checker_slab_top"
+    }
+  }
+}

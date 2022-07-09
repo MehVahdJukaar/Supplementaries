@@ -19,8 +19,9 @@ public class BucketHelper {
     //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
     private static final BiMap<Item, String> BUCKET_TO_MOB_MAP = HashBiMap.create();
 
-    private static Method FISH_TYPE = ObfuscationReflectionHelper.findMethod(MobBucketItem.class, "getFishType");
-    ;
+
+    private static Method FISH_TYPE = ObfuscationReflectionHelper.findMethod(MobBucketItem.class, "getFishType");    //this is a forge method
+
 
     //only use this to access the map
     public static @Nullable
@@ -67,7 +68,7 @@ public class BucketHelper {
         return null;
     }
 
-    //TODO: rething all this and remove this one
+    //TODO: rethink all this and remove this one
     public static void tryAddingFromEntityId(String id) {
         //EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
         //  if (en != null && !BUCKET_TO_MOB_MAP.containsValue(en)) {

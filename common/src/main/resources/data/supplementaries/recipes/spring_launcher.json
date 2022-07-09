@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "020",
+    "030"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "1": {
+      "item": "minecraft:slime_block"
+    },
+    "2": {
+      "item": "minecraft:sticky_piston"
+    },
+    "3": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "item": "supplementaries:spring_launcher",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "spring_launcher"
+    }
+  ]
+}

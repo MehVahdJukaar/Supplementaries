@@ -1,0 +1,15 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "betteranimalsplus:goatmilk"
+      ],
+      "empty": "minecraft:bucket",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/milk_liquid",
+  "from_mod": "betteranimalsplus",
+  "still_texture": "moonlight:soft_fluids/milk_liquid",
+  "translation_key": "item.betteranimalsplus.goatmilk"
+}

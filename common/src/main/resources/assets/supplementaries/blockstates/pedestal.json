@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "up=false,down=false": {
+      "model": "supplementaries:block/pedestal"
+    },
+    "up=true,down=false": {
+      "model": "supplementaries:block/pedestal_up"
+    },
+    "up=false,down=true": {
+      "model": "supplementaries:block/pedestal_down"
+    },
+    "up=true,down=true": {
+      "model": "supplementaries:block/pedestal_middle"
+    }
+  }
+}

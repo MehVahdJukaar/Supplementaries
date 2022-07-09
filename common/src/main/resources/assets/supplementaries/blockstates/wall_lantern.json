@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=north,attachment=block": {
+      "model": "supplementaries:block/wall_lantern"
+    },
+    "facing=east,attachment=block": {
+      "model": "supplementaries:block/wall_lantern",
+      "y": 90
+    },
+    "facing=south,attachment=block": {
+      "model": "supplementaries:block/wall_lantern",
+      "y": 180
+    },
+    "facing=west,attachment=block": {
+      "model": "supplementaries:block/wall_lantern",
+      "y": 270
+    },
+    "facing=north,attachment=post": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,attachment=post": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,attachment=post": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,attachment=post": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 270
+    },
+    "facing=north,attachment=wall": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,attachment=wall": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,attachment=wall": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,attachment=wall": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 270
+    },
+    "facing=north,attachment=beam": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,attachment=beam": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,attachment=beam": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,attachment=beam": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 270
+    },
+    "facing=north,attachment=palisade": {
+      "model": "supplementaries:block/wall_lantern_long"
+    },
+    "facing=east,attachment=palisade": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 90
+    },
+    "facing=south,attachment=palisade": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 180
+    },
+    "facing=west,attachment=palisade": {
+      "model": "supplementaries:block/wall_lantern_long",
+      "y": 270
+    },
+    "facing=north,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer"
+    },
+    "facing=east,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 90
+    },
+    "facing=south,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 180
+    },
+    "facing=west,attachment=stick": {
+      "model": "supplementaries:block/wall_lantern_longer",
+      "y": 270
+    }
+  }
+}

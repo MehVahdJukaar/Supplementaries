@@ -1,0 +1,51 @@
+{
+  "variants": {
+    "facing=north,extended=false": {
+      "model": "supplementaries:block/spring_launcher"
+    },
+    "facing=north,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base"
+    },
+    "facing=east,extended=false": {
+      "model": "supplementaries:block/spring_launcher",
+      "y": 90
+    },
+    "facing=east,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base",
+      "y": 90
+    },
+    "facing=south,extended=false": {
+      "model": "supplementaries:block/spring_launcher",
+      "y": 180
+    },
+    "facing=south,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base",
+      "y": 180
+    },
+
+    "facing=west,extended=false": {
+      "model": "supplementaries:block/spring_launcher",
+      "y": 270
+    },
+    "facing=west,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base",
+      "y": 270
+    },
+    "facing=up,extended=false": {
+      "model": "supplementaries:block/spring_launcher",
+      "x": 270
+    },
+    "facing=up,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base",
+      "x": 270
+    },
+    "facing=down,extended=false": {
+      "model": "supplementaries:block/spring_launcher",
+      "x": 90
+    },
+    "facing=down,extended=true": {
+      "model": "supplementaries:block/spring_launcher_base",
+      "x": 90
+    }
+  }
+}

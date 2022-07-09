@@ -1,0 +1,12 @@
+
+{
+  "parent": "supplementaries:block/presents/trapped_present_opened_brown",
+  "overrides": [
+    {
+      "predicate": {
+        "primed": 1
+      },
+      "model":  "supplementaries:block/presents/trapped_present_closed_brown"
+    }
+  ]
+}

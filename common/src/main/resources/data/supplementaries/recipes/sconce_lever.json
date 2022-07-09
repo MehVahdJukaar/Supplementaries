@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " 1 ",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:sconce"
+    },
+    "2": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "supplementaries:sconce_lever",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce_lever"
+    }
+  ]
+}

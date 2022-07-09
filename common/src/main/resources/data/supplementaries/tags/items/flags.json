@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:flag_white","required":false},
+    {"id":"supplementaries:flag_orange","required":false},
+    {"id":"supplementaries:flag_yellow","required":false},
+    {"id":"supplementaries:flag_red","required":false},
+    {"id":"supplementaries:flag_blue","required":false},
+    {"id":"supplementaries:flag_cyan","required":false},
+    {"id":"supplementaries:flag_light_blue","required":false},
+    {"id":"supplementaries:flag_lime","required":false},
+    {"id":"supplementaries:flag_green","required":false},
+    {"id":"supplementaries:flag_magenta","required":false},
+    {"id":"supplementaries:flag_pink","required":false},
+    {"id":"supplementaries:flag_purple","required":false},
+    {"id":"supplementaries:flag_black","required":false},
+    {"id":"supplementaries:flag_gray","required":false},
+    {"id":"supplementaries:flag_light_gray","required":false},
+    {"id":"supplementaries:flag_brown","required":false}
+  ]
+}

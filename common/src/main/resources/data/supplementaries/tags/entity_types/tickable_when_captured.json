@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:endermite","required":false},
+    {"id":"feywild:spring_pixie","required":false},
+    {"id":"feywild:autumn_pixie","required":false},
+    {"id":"feywild:summer_pixie","required":false},
+    {"id":"feywild:winter_pixie","required":false},
+
+    {"id":"alexsmobs:mimicube","required":false},
+    {"id":"iceandfire:pixie","required":false},
+
+    {"id":"druidcraft:lunar_moth","required":false},
+    {"id":"druidcraft:dreadfish","required":false}
+
+  ]
+}
+

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes"
+    },
+    "facing=east,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 90
+    },
+    "facing=south,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 180
+    },
+    "facing=west,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "y": 270
+    },
+    "facing=up,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "x": 270
+    },
+    "facing=down,tipped=false": {
+      "model": "supplementaries:block/bamboo_spikes",
+      "x": 90
+    },
+    "facing=north,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped"
+    },
+    "facing=east,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 90
+    },
+    "facing=south,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 180
+    },
+    "facing=west,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "y": 270
+    },
+    "facing=up,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 270
+    },
+    "facing=down,tipped=true": {
+      "model": "supplementaries:block/bamboo_spikes_tipped",
+      "x": 90
+    }
+  }
+}

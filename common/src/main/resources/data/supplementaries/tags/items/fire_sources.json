@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:flint_and_steel","required":false},
+    {"id":"tconstruct:flint_and_bronze","required":false},
+    {"id":"simply_steel:flint_and_iron","required":false},
+    {"id":"simply_steel:quartz_and_iron","required":false},
+    {"id":"simply_steel:quartz_and_steel","required":false},
+    {"id":"realistictorches:matchbox","required":false},
+    {"id":"lotr:match","required":false}
+  ]
+}

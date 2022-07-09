@@ -1,0 +1,31 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "gold_door",
+          "type": "supplementaries:flag"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "group": "iron_door",
+        "pattern": [
+          "11 ",
+          "11 ",
+          "11 "
+        ],
+        "key": {
+          "1": {
+            "item": "minecraft:gold_ingot"
+          }
+        },
+        "result": {
+          "item": "supplementaries:gold_door",
+          "count": 3
+        }
+      }
+    }
+  ]
+}

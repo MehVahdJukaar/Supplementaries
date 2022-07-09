@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "supplementaries:block/blackstone_lamp",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "supplementaries:block/blackstone_lamp"
+    },
+    "axis=z": {
+      "model": "supplementaries:block/blackstone_lamp",
+      "x": 90
+    }
+  }
+}

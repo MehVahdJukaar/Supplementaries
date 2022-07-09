@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "supplementaries:flags"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+
+  ],
+  "result": {
+    "item": "supplementaries:flag_white",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ]
+}

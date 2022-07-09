@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:ash_bricks"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "quark",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "result": "supplementaries:ash_bricks_vertical_slab",
+  "count": 2
+}

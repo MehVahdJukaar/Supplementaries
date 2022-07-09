@@ -1,0 +1,34 @@
+
+
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "flag": "flag",
+          "type": "supplementaries:flag"
+        },
+        {
+          "modid": "inspirations",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+
+        "type": "supplementaries:cauldron_flag_clear",
+        "conditions": [
+          {
+            "prop": "recipes_module",
+            "type": "inspirations:config"
+          },
+          {
+            "prop": "cauldron_dyeing",
+            "type": "inspirations:config"
+          }
+        ]
+
+      }
+    }
+  ]
+}

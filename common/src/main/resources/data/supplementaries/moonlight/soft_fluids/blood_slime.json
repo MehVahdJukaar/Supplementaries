@@ -1,0 +1,18 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "tconstruct:blood_slime_ball"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "tconstruct:block/blood_congealed_slime",
+  "food": {
+    "divider": 1,
+    "item": "tconstruct:blood_slime_ball"
+  },
+  "from_mod": "tconstruct",
+  "still_texture": "tconstruct:block/blood_congealed_slime"
+}

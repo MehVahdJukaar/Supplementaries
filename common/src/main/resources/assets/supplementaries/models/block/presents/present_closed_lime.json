@@ -1,0 +1,10 @@
+{
+	"parent": "supplementaries:block/present_closed_template",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"bottom": "supplementaries:blocks/presents/present_bottom_lime",
+		"top": "supplementaries:blocks/presents/present_top_lime",
+		"particle": "supplementaries:blocks/presents/present_side_lime",
+		"side": "supplementaries:blocks/presents/present_side_lime"
+	}
+}

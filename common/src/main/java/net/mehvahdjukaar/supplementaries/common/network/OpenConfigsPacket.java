@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
-import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
+import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -28,7 +28,7 @@ public class OpenConfigsPacket {
             //if(configured)ConfiguredCustomScreen.openScreen();
 
             //ServerConfigs.loadLocal();
-            ConfigHandler.openModConfigs();
+            ConfigUtils.openModConfigs();
 
         });
         ctx.get().setPacketHandled(true);

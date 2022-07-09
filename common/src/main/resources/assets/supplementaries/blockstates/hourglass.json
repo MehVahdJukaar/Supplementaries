@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "supplementaries:block/hourglass"
+    },
+    "facing=east": {
+      "model": "supplementaries:block/hourglass",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "supplementaries:block/hourglass"
+    },
+    "facing=west": {
+      "model": "supplementaries:block/hourglass",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "supplementaries:block/hourglass",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "supplementaries:block/hourglass",
+      "x": 270
+    }
+  }
+}

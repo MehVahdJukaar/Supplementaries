@@ -1,0 +1,9 @@
+{
+	"loader": "supplementaries:wall_lantern_loader",
+	"support": {
+		"parent": "supplementaries:block/wall_lantern_long_template",
+		"textures": {
+			"1": "supplementaries:blocks/wall_lanterns/wall_lantern"
+		}
+	}
+}

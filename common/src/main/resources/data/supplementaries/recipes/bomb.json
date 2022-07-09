@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "bomb",
+  "pattern": [
+    " 12",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:tnt"
+    },
+    "1": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "supplementaries:bomb",
+    "count": 4
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ]
+}

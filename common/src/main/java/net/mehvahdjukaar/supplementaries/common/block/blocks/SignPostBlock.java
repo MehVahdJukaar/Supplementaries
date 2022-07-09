@@ -161,8 +161,8 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                 world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn()) : null;
     }
 
-
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             double y = target.getLocation().y;
@@ -173,7 +173,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                 return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(tile.woodTypeDown));
             } else return new ItemStack(tile.mimic.getBlock());
         }
-        return super.getCloneItemStack(state, target, world, pos, player);
+        return super.getCloneItemStack(world, pos, state);
     }
 
     @Override

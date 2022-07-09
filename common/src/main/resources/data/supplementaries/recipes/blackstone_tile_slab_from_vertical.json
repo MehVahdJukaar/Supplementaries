@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:blackstone_tile_vertical_slab"
+    }
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:blackstone_tile_slab",
+    "count": 1
+  }
+}

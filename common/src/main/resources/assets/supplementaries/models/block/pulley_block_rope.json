@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "supplementaries:blocks/pulley_top",
+		"side": "supplementaries:blocks/pulley_side_rope"
+	}
+}

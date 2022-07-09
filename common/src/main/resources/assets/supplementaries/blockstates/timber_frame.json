@@ -1,0 +1,11 @@
+
+{
+  "variants": {
+    "has_block=false": {
+      "model": "supplementaries:block/timber_frame"
+    },
+    "has_block=true": {
+      "model": "supplementaries:block/timber_frame_loader"
+    }
+  }
+}

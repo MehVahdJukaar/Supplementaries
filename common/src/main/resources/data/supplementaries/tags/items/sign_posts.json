@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:sign_post_dark_oak","required":false},
+    {"id":"supplementaries:sign_post_oak","required":false},
+    {"id":"supplementaries:sign_post_acacia","required":false},
+    {"id":"supplementaries:sign_post_jungle","required":false},
+    {"id":"supplementaries:sign_post_spruce","required":false},
+    {"id":"supplementaries:sign_post_birch","required":false},
+    {"id":"supplementaries:sign_post_crimson","required":false},
+    {"id":"supplementaries:sign_post_warped","required":false}
+  ]
+}

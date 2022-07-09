@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "0 0",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "item": "supplementaries:present",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "present"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,packed=false": {
+      "model": "supplementaries:block/presents/trapped_present_opened"
+    },
+    "facing=east,packed=false": {
+      "model": "supplementaries:block/presents/trapped_present_opened",
+      "y": 90
+    },
+    "facing=south,packed=false": {
+      "model": "supplementaries:block/presents/trapped_present_opened",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west,packed=false": {
+      "model": "supplementaries:block/presents/trapped_present_opened",
+      "y": 270
+    },
+    "facing=north,packed=true": {
+      "model": "supplementaries:block/presents/trapped_present_closed"
+    },
+    "facing=east,packed=true": {
+      "model": "supplementaries:block/presents/trapped_present_closed",
+      "y": 90
+    },
+    "facing=south,packed=true": {
+      "model": "supplementaries:block/presents/trapped_present_closed",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=west,packed=true": {
+      "model": "supplementaries:block/presents/trapped_present_closed",
+      "y": 270
+    }
+  }
+}

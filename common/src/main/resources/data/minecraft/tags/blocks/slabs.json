@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+	"supplementaries:checker_slab",
+    "supplementaries:stone_tile_slab",
+    "supplementaries:blackstone_tile_slab",
+    "supplementaries:ash_bricks_slab"
+  ]
+}

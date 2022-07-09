@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"minecraft:quartz","required":false},
+  {"id":"chalk:white_chalk","required":false}
+  ]
+}

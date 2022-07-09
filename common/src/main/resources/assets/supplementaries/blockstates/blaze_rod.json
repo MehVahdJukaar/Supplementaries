@@ -1,0 +1,37 @@
+{
+    "variants": {
+        "axis_y=true,axis_x=false,axis_z=false": {
+            "model": "supplementaries:block/blaze_rod_y"
+        },
+        "axis_y=false,axis_x=false,axis_z=true": {
+            "model": "supplementaries:block/blaze_rod_y",
+            "x": 90
+        },
+        "axis_y=false,axis_x=true,axis_z=false": {
+            "model": "supplementaries:block/blaze_rod_y",
+            "x": 90,
+            "y": 90
+        },
+        "axis_y=true,axis_x=true,axis_z=false": {
+            "model": "supplementaries:block/blaze_rod_cross"
+        },
+        "axis_y=true,axis_x=false,axis_z=true": {
+            "model": "supplementaries:block/blaze_rod_cross_f2",
+			 "y": 90
+			
+        },
+        "axis_y=false,axis_x=true,axis_z=true": {
+            "model": "supplementaries:block/blaze_rod_cross_f",
+            "x": 90
+        },
+        "axis_y=true,axis_x=true,axis_z=true": {
+            "model": "supplementaries:block/blaze_rod_cross_2",
+						 "y": -90
+			
+        },
+        "axis_y=false,axis_x=false,axis_z=false": {
+            "model": "supplementaries:block/blaze_rod_cross_2",
+						 "y": -90
+        }
+    }
+}

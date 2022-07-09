@@ -1,0 +1,9 @@
+{
+  "parent": "supplementaries:item/spring_launcher",
+  "textures": {
+    "0": "supplementaries:blocks/turn_table_bottom",
+    "1": "supplementaries:blocks/turn_table_side_left",
+    "2": "supplementaries:blocks/turn_table_top",
+    "particle": "supplementaries:blocks/turn_table_side_left"
+  }
+}

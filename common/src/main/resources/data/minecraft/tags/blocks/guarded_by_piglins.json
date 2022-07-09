@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:sack",
+    "supplementaries:gold_door",
+    "supplementaries:gold_trapdoor",
+    "supplementaries:gold_gate"
+  ]
+}

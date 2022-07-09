@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 1 ",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:bamboo"
+    }
+  },
+  "result": {
+    "item": "supplementaries:flute",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flute"
+    }
+  ]
+}

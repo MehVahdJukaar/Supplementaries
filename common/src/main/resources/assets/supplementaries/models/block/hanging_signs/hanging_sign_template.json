@@ -1,0 +1,38 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 16],
+	"textures": {
+		"1": "supplementaries:blocks/hanging_signs/hanging_sign_oak",
+		"particle": "supplementaries:blocks/hanging_signs/hanging_sign_oak"
+	},
+	"elements": [
+		{
+			"from": [8, 12, 1],
+			"to": [8, 14, 15],
+			"faces": {
+				"east": {"uv": [8, 0, 15, 2], "texture": "#1"},
+				"west": {"uv": [8, 0, 15, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [7, -2, 1],
+			"to": [9, 12, 15],
+			"faces": {
+				"north": {"uv": [7, 0, 8, 14], "texture": "#1"},
+				"east": {"uv": [0, 0, 7, 14], "texture": "#1"},
+				"south": {"uv": [7, 0, 8, 14], "texture": "#1"},
+				"west": {"uv": [0, 0, 7, 14], "texture": "#1"},
+				"up": {"uv": [0, 14, 7, 16], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [0, 14, 7, 16], "rotation": 90, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 19, 15],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

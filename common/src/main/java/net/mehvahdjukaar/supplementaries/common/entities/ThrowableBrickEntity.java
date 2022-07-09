@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -64,10 +65,10 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 3) {
-            ParticleOptions iparticledata = this.makeParticle();
+            ParticleOptions particle = this.makeParticle();
 
             for (int i = 0; i < 8; ++i) {
-                this.level.addParticle(iparticledata, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level.addParticle(particle, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -91,21 +92,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         }
     }
 
-    private static boolean isGlass(BlockState s) {
-        //TODO: add supp brick breakable tag that includes these
-        try {
-            return ((Tags.Blocks.GLASS_PANES != null && s.is(Tags.Blocks.GLASS_PANES))
-                    || (Tags.Blocks.GLASS != null && s.is(Tags.Blocks.GLASS)));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private void breakGlass(BlockPos pos, int chance) {
         int c = chance - 1 - this.random.nextInt(4);
         BlockState state = level.getBlockState(pos);
         if (state.getBlock().getExplosionResistance() > 3) return;
-        if (c < 0 || !isGlass(state)) return;
+        if (c < 0 || !state.is(ModTags.BRICK_BREAKABLE_GLASS)) return;
 
         level.destroyBlock(pos, true);
         breakGlass(pos.above(), c);

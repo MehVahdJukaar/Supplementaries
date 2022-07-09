@@ -1,0 +1,37 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "alexsmobs",
+          "type": "forge:mod_loaded"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "copper_lantern"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          " 1 ",
+          " 2 ",
+          " 1 "
+        ],
+        "key": {
+          "1": {
+            "tag": "forge:ingots/copper"
+          },
+          "2": {
+            "item": "alexsmobs:fish_oil"
+          }
+        },
+        "result": {
+          "item": "supplementaries:copper_lantern",
+          "count": 2
+        }
+      }
+    }
+  ]
+}

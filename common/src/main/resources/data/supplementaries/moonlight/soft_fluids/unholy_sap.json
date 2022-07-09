@@ -1,0 +1,16 @@
+{
+  "color": "#762550",
+  "containers": [
+    {
+      "filled": [
+        "malum:unholy_sap"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "from_mod": "malum",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.malum:unholy_sap"
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:urn","required":false},
+    {"id":"minecraft:tnt","required":false},
+    {"id":"immersive_weathering:icicle","required":false}
+  ]
+}
