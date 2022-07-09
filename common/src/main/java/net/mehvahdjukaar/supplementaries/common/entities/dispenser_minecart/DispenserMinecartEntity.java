@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.DispenserAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -31,7 +32,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
@@ -58,7 +58,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
     }
 
     @Override

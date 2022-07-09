@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.base.Suppliers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleType;
@@ -15,24 +16,24 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.Lazy;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class SconceBlock extends LightUpWaterBlock {
     protected static final VoxelShape SHAPE = box(6.0D, 0.0D, 6.0D, 10.0D, 11.0D, 10.0D);
-    protected final Lazy<SimpleParticleType> particleData;
+    protected final Supplier<SimpleParticleType> particleData;
 
     public <T extends ParticleType<?>> SconceBlock(Properties properties, Supplier<T> particleData) {
         super(properties);
-        this.particleData = Lazy.of(() -> {
+        this.particleData = Suppliers.memoize(() -> {
             SimpleParticleType data = (SimpleParticleType) particleData.get();
             if (data == null) data = ParticleTypes.FLAME;
             return data;
         });
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, true));
     }
+
     public <T extends ParticleType<?>> SconceBlock(Properties properties, int lightLevel, Supplier<T> particleData) {
         this(properties.lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? lightLevel : 0), particleData);
     }
@@ -53,7 +54,6 @@ public class SconceBlock extends LightUpWaterBlock {
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
-
 
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if (stateIn.getValue(LIT)) {

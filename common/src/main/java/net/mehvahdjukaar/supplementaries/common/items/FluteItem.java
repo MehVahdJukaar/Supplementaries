@@ -60,7 +60,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         return tag.contains("Pet") || super.isFoil(pStack);
     }
 
-    //forge calls from event
+    /*
     @Override
     @PlatformOnly(PlatformOnly.FABRIC)
     public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
@@ -70,7 +70,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         return super.interactLivingEntity(stack, playerIn, target, hand);
     }
 
-    /*
+
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
@@ -349,9 +349,5 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
     //TODO: fix animation when shifting
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        ClientRegistry.registerISTER(consumer, FluteItemRenderer::new);
-    }
 
 }

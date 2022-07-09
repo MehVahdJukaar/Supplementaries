@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     }
 
     public void saveToNbt(ItemStack stack) {
-        if(!this.mobContainer.isEmpty()) {
+        if (!this.mobContainer.isEmpty()) {
             CompoundTag compound = new CompoundTag();
             this.saveAdditional(compound);
             stack.addTagElement("BlockEntityTag", compound);

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -60,7 +61,7 @@ public class SpeakerBlockGui extends Screen {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
-        int range = ServerConfigs.cached.SPEAKER_RANGE;
+        int range = ServerConfigs.Blocks.SPEAKER_RANGE.get();
 
         double currentValue = this.tileSpeaker.volume * range;
         this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20, VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
@@ -73,7 +74,7 @@ public class SpeakerBlockGui extends Screen {
             this.toggleMode();
             this.updateMode();
         }));
-        if (!ServerConfigs.cached.SPEAKER_NARRATOR) {
+        if (!ServerConfigs.Blocks.SPEAKER_NARRATOR.get()) {
             this.modeBtn.active = false;
         }
 
@@ -97,7 +98,7 @@ public class SpeakerBlockGui extends Screen {
         this.tileSpeaker.narrator = this.narrator;
         this.tileSpeaker.volume = this.volumeSlider.getValue();
         //refreshTextures server tile
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
 
     }
 

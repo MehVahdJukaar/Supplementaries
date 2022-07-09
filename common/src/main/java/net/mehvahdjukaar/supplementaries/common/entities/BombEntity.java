@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -35,15 +38,13 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.RegistryObject;
 
-public class BombEntity extends ImprovedProjectileEntity implements IEntityAdditionalSpawnData {
+import java.util.function.Supplier;
 
-    private final boolean hasFuse = ServerConfigs.cached.BOMB_FUSE != 0;
+public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
+
+    private final boolean hasFuse = ServerConfigs.Items.BOMB_FUSE.get() != 0;
     private BombType type;
     private boolean active = true;
     private int changeTimer = -1;
@@ -51,25 +52,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
-        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
+        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
         super(ModRegistry.BOMB.get(), throwerIn, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
+        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModRegistry.BOMB.get(), x, y, z, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? ServerConfigs.cached.BOMB_FUSE : 200);
-    }
-
-    public BombEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModRegistry.BOMB.get(), world);
-        this.maxAge = 200;
-        //packet.getAdditionalData().rea
+        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     //data to be saved when the entity gets unloaded
@@ -102,7 +97,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return PlatformHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -129,9 +124,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             case 10 -> {
                 spawnBreakParticles();
                 if (CommonUtil.FESTIVITY.isBirthday()) {
-                    this.spawnParticleInASphere(ModRegistry.CONFETTI_PARTICLE.get(), 55, 0.3f);
+                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 } else {
-                    level.addParticle(ModRegistry.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
+                    level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
                             this.type.getRadius(), 0, 0);
                 }
                 type.spawnExtraParticles(this);
@@ -200,7 +195,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             int s = 4;
             for (int i = 0; i < s; ++i) {
                 double j = i / (double) s;
-                this.level.addParticle(ModRegistry.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+                this.level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
             }
         }
     }
@@ -336,10 +331,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
         BLUE(ModRegistry.BOMB_BLUE_ITEM, ModRegistry.BOMB_BLUE_ITEM_ON),
         SPIKY(ModRegistry.BOMB_SPIKY_ITEM, ModRegistry.BOMB_SPIKY_ITEM_ON);
 
-        public RegistryObject<Item> item;
-        public RegistryObject<Item> item_on;
+        public final Supplier<Item> item;
+        public final Supplier<Item> item_on;
 
-        BombType(RegistryObject<Item> item, RegistryObject<Item> item_on) {
+        BombType(Supplier<Item> item, Supplier<Item> item_on) {
             this.item = item;
             this.item_on = item_on;
         }
@@ -348,12 +343,12 @@ public class BombEntity extends ImprovedProjectileEntity implements IEntityAddit
             return (active ? item_on : item).get().getDefaultInstance();
         }
 
-        public float getRadius() {
-            return this == BLUE ? ServerConfigs.cached.BOMB_BLUE_RADIUS : ServerConfigs.cached.BOMB_RADIUS;
+        public double getRadius() {
+            return this == BLUE ? ServerConfigs.Items.BOMB_BLUE_RADIUS.get() : ServerConfigs.Items.BOMB_RADIUS.get();
         }
 
         public BreakingMode breakMode() {
-            return this == BLUE ? ServerConfigs.cached.BOMB_BLUE_BREAKS : ServerConfigs.cached.BOMB_BREAKS;
+            return this == BLUE ? ServerConfigs.Items.BOMB_BLUE_BREAKS.get() : ServerConfigs.Items.BOMB_BREAKS.get();
         }
 
         public float volume() {

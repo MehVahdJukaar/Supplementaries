@@ -36,8 +36,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -230,14 +228,12 @@ public class PearlMarker extends Entity {
         this.setPos(pX, pY, pZ);
     }
 
-    public static void onProjectileImpact(final ProjectileImpactEvent event) {
-        Projectile throwable = event.getProjectile();
-        HitResult trace = event.getRayTraceResult();
-        Level level = throwable.level;
-        if (!level.isClientSide && throwable instanceof ThrownEnderpearl pearl &&
-                throwable.getOwner() instanceof PearlMarker markerEntity && throwable.removeTag("dispensed")) {
+    public static void onProjectileImpact(Projectile projectile, HitResult hitResult) {
+        Level level = projectile.level;
+        if (!level.isClientSide && projectile instanceof ThrownEnderpearl pearl &&
+                projectile.getOwner() instanceof PearlMarker markerEntity && projectile.removeTag("dispensed")) {
 
-            markerEntity.event = Pair.of(pearl, trace);
+            markerEntity.event = Pair.of(pearl, hitResult);
         }
     }
 

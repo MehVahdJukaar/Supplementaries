@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
-import net.mehvahdjukaar.moonlight.builtincompat.MapAtlasPlugin;
-import net.mehvahdjukaar.moonlight.map.MapHelper;
+import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.core.builtincompat.MapAtlasPlugin;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
@@ -59,8 +59,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -113,20 +111,20 @@ public class ItemsOverrideHandler {
         itemActionOnBlock.add(new MapMarkerBehavior());
         itemActionOnBlock.add(new XpBottlingBehavior());
 
-        if (ServerConfigs.cached.WRITTEN_BOOKS) {
+        if (ServerConfigs.Tweaks.WRITTEN_BOOKS.get()) {
             ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
             ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
         }
         outer:
-        for (Item i : ForgeRegistries.ITEMS) {
+        for (Item i : Registry.ITEM) {
 
-            if (ServerConfigs.cached.WALL_LANTERN_PLACEMENT) {
+            if (ServerConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
                 if (i instanceof BlockItem bi && CommonUtil.isLanternBlock(bi.getBlock())) {
                     ((IExtendedItem) i).addAdditionalBehavior(new WallLanternPlacement());
                     continue;
                 }
             }
-            if (ServerConfigs.cached.PLACEABLE_BOOKS) {
+            if (ServerConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
                 if (BookPileBlock.isQuarkTome(i)) {
                     ((IExtendedItem) i).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
                     continue;
@@ -193,7 +191,7 @@ public class ItemsOverrideHandler {
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            InteractionResult result = override.tryPerformingAction(level, player, hand, stack,hit, isRanged);
+            InteractionResult result = override.tryPerformingAction(level, player, hand, stack, hit, isRanged);
             if (result != InteractionResult.PASS) {
                 return result;
             }
@@ -206,7 +204,7 @@ public class ItemsOverrideHandler {
             BlockInteractedWithOverride o = BLOCK_USE_OVERRIDES.get(state.getBlock());
             if (o != null && o.isEnabled()) {
 
-                return o.tryPerformingAction(state, pos, level, player,hand, stack, hit);
+                return o.tryPerformingAction(state, pos, level, player, hand, stack, hit);
             }
         }
         return InteractionResult.PASS;
@@ -221,10 +219,10 @@ public class ItemsOverrideHandler {
         ItemUseOverride override = ITEM_USE_OVERRIDES.get(item);
         if (override != null && override.isEnabled()) {
 
-            var ret =  override.tryPerformingAction(level, player, hand, stack, null, false);
-            return switch (ret){
+            var ret = override.tryPerformingAction(level, player, hand, stack, null, false);
+            return switch (ret) {
                 case CONSUME -> InteractionResultHolder.consume(stack);
-                default-> InteractionResultHolder.pass(stack);
+                default -> InteractionResultHolder.pass(stack);
                 case FAIL -> InteractionResultHolder.fail(stack);
             };
         }
@@ -396,7 +394,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.cached.BELL_CHAIN;
+            return ServerConfigs.Tweaks.BELL_CHAIN.get();
         }
 
         @Override

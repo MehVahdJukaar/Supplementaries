@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -35,7 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected, IExtraModelDataProvider {
+
     private UUID owner = null;
 
     //is holding a framed fence (for framed blocks mod compat)
@@ -66,11 +68,10 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .withProperty(FRAMED, this.framed)
-                .withProperty(MIMIC, this.getHeldBlock())
+                .with(FRAMED, this.framed)
+                .with(MIMIC, this.getHeldBlock())
                 .build();
     }
-
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
@@ -83,7 +84,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return this.textHolder;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(this.getBlockPos().offset(-0.25, 0, -0.25), this.getBlockPos().offset(1.25, 1, 1.25));
     }
@@ -171,13 +173,14 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return false;
     }
 
+    //TODO: add antique ink cap also
+    /*
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-//TODO: add antique ink cap also
         //if(cap == CapabilityHandler.ANTIQUE_TEXT_CAP) return LazyOptional.of(()->this.textHolder);
         return super.getCapability(cap, side);
-    }
+    }*/
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {

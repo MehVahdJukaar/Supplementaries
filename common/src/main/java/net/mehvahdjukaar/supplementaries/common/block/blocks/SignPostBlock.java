@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -159,6 +161,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                 world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn()) : null;
     }
 
+
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
@@ -193,7 +196,8 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     }
 
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         return state;
     }

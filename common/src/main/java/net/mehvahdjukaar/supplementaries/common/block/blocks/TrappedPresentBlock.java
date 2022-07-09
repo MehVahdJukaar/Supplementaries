@@ -85,7 +85,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.get(pStack.getItem());
     }
 
-
     @Nullable
     @Override
     public DyeColor getColor() {
@@ -107,7 +106,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new TrappedPresentBlockTile(pPos, pState);
     }
-
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -245,7 +243,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
         var particleEngine = Minecraft.getInstance().particleEngine;
         VoxelShape voxelshape = PresentBlock.SHAPE_LID;

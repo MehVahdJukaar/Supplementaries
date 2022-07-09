@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -40,7 +40,7 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
         }
     }
 
-    public static void renderMobStatic(Entity mob, float scale, EntityRenderDispatcher renderer, PoseStack matrixStack, float partialTicks,  MultiBufferSource bufferIn, int combinedLightIn, float rot){
+    public static void renderMobStatic(Entity mob, float scale, EntityRenderDispatcher renderer, PoseStack matrixStack, float partialTicks, MultiBufferSource bufferIn, int combinedLightIn, float rot) {
 
         double y = Mth.lerp(partialTicks, mob.yOld, mob.getY());//0;//mobHolder.getYOffset(partialTicks);
         double x = mob.getX();
@@ -72,6 +72,6 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
                        int combinedOverlayIn) {
         this.renderMob(tile.getMobContainer(), partialTicks, matrixStackIn, bufferIn, combinedLightIn, tile.getDirection());
 
-   }
+    }
 }
 

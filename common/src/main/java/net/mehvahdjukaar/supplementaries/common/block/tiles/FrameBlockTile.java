@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.common.util.Lazy;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -82,7 +80,7 @@ public class FrameBlockTile extends MimicBlockTile {
         } else {
             this.setHeldBlock(state);
             if (level != null && level.isClientSide()) {
-                ModelDataManager.requestModelDataRefresh(this);
+                this.requestModelReload();
             }
         }
         return state;

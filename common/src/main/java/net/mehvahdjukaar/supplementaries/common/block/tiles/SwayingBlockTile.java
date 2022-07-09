@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -20,15 +23,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 import java.util.Random;
 
-public abstract class SwayingBlockTile extends BlockEntity {
+public abstract class SwayingBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
-    public static final ModelProperty<Boolean> FANCY = BlockProperties.FANCY;
+    public static final ModelDataKey<Boolean> FANCY = BlockProperties.FANCY;
 
     //maximum allowed swing
     protected static float maxSwingAngle = 45f;
@@ -58,15 +58,15 @@ public abstract class SwayingBlockTile extends BlockEntity {
     }
 
     public boolean isAlwaysFast() {
-        return ClientConfigs.cached.FAST_LANTERNS;
+        return ClientConfigs.Blocks.FAST_LANTERNS.get();
     }
 
     //called when data is actually refreshed
     @Override
-    public ModelData getModelData() {
+    public ExtraModelData getExtraModelData() {
         this.ticksToSwitchMode = 2;
-        return new ModelDataMap.Builder()
-                .withInitial(FANCY, this.shouldHaveTESR)
+        return ExtraModelData.builder()
+                .withProperty(FANCY, this.shouldHaveTESR)
                 .build();
     }
 
@@ -82,7 +82,7 @@ public abstract class SwayingBlockTile extends BlockEntity {
             this.shouldHaveTESR = fancy;
             //model data doesn't like other levels. linked to crashes with other mods
             if (this.level == Minecraft.getInstance().level) {
-                this.requestModelDataUpdate();
+                this.requestModelReload();
                 this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_IMMEDIATE);
             }
             if (!fancy) this.animationCounter = 800;

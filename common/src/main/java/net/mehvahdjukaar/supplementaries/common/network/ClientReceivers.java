@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
@@ -55,7 +56,7 @@ public class ClientReceivers {
         //TODO: add @p command support
         boolean narrator = message.narrator;
         Component str = message.str;
-        if (narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
+        if (narrator && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
             Narrator.getNarrator().say(str.getString(), true);
         } else {
             withPlayerDo((p) -> p.displayClientMessage(str, false));

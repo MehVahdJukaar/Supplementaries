@@ -15,13 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
 public abstract class OpeneableContainerBlockEntity extends RandomizableContainerBlockEntity implements WorldlyContainer {
@@ -76,22 +70,6 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
         return this.saveWithoutMetadata();
     }
 
-    private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return handlers[facing.ordinal()].cast();
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        for (LazyOptional<? extends IItemHandler> handler : handlers)
-            handler.invalidate();
-    }
-
     @Override
     public void startOpen(Player player) {
         if (!this.remove && !player.isSpectator()) {
@@ -119,7 +97,7 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
 
     protected abstract void playCloseSound(BlockState state);
 
-    public boolean isUnused(){
+    public boolean isUnused() {
         return this.openersCounter.getOpenerCount() == 0;
     }
 

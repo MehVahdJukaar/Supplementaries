@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.MobContainer;
@@ -87,15 +88,17 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return tag != null && tag.contains("BlockEntityTag");
     }
 
-    //called from event on forge for better compat
+    //called from event for better compat
+    /*
     @Override
     @PlatformOnly(PlatformOnly.FABRIC)
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
         if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
-    }
+    }*/
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (this.isFull(stack)) return false;
         InteractionHand hand = player.getUsedItemHand();
@@ -191,7 +194,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
                         entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
-                        if (ServerConfigs.cached.CAGE_PERSISTENT_MOBS && entity instanceof Mob mob) {
+                        if (ServerConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                             mob.setPersistenceRequired();
                         }
 

@@ -37,7 +37,6 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     // data needed to rebake
 
     private final IGeometryBakingContext owner;
-    private final ModelBakery bakery;
     private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
     private final ItemOverrides overrides;
@@ -47,7 +46,6 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     public BlackboardBakedModel(BakedModel unbaked, IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
         this.back = unbaked;
         this.owner = owner;
-        this.bakery = bakery;
         this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
         this.overrides = overrides;
@@ -106,39 +104,43 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     }
 
     private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform) {
-        TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
-        TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"));
-        List<BakedQuad> quads = new ArrayList<>();
-        var rotation = modelTransform.getRotation();
+        List<BakedQuad> quads;
+        try (TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
+            TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {
+            quads = new ArrayList<>();
+            var rotation = modelTransform.getRotation();
 
-        for (int x = 0; x < pixels.length; x++) {
-            int length = 0;
-            int startY = 0;
-            byte prevColor = pixels[0][x];
-            for (int y = 0; y <= pixels[x].length; y++) {
-                Byte current = null;
-                if (y < pixels[x].length) {
-                    byte b = pixels[x][y];
-                    if (prevColor == b) {
-                        length++;
-                        continue;
+            for (int x = 0; x < pixels.length; x++) {
+                int length = 0;
+                int startY = 0;
+                byte prevColor = pixels[0][x];
+                for (int y = 0; y <= pixels[x].length; y++) {
+                    Byte current = null;
+                    if (y < pixels[x].length) {
+                        byte b = pixels[x][y];
+                        if (prevColor == b) {
+                            length++;
+                            continue;
+                        }
+                        current = b;
                     }
-                    current = b;
+                    //block uv is oncorrectly flipped on both axis... too bai
+                    //draws prev quad
+                    int tint = BlackboardBlock.colorFromByte(prevColor);
+                    TextureAtlasSprite sprite = prevColor == 0 ? black : white;
+                    quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f, 1 / 16f, length / 16f, sprite, tint, rotation));
+                    startY = y;
+                    if (current != null) {
+                        prevColor = current;
+                    }
+                    length = 1;
                 }
-                //block uv is oncorrectly flipped on both axis... too bai
-                //draws prev quad
-                int tint = BlackboardBlock.colorFromByte(prevColor);
-                TextureAtlasSprite sprite = prevColor == 0 ? black : white;
-                quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f, 1 / 16f, length / 16f, sprite, tint, rotation));
-                startY = y;
-                if (current != null) {
-                    prevColor = current;
-                }
-                length = 1;
             }
         }
         return quads;
     }
+
+    //TODO: forge has builtin code for all this
 
     //MCjty code
 

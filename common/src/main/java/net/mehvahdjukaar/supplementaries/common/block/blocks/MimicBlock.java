@@ -16,11 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraftforge.common.extensions.IForgeBlock;
 
 import java.util.List;
 
-public abstract class MimicBlock extends Block implements IForgeBlock {
+public abstract class MimicBlock extends Block  {
     public MimicBlock(Properties properties) {
         super(properties);
     }

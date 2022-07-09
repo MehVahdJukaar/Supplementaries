@@ -39,7 +39,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -211,7 +210,7 @@ public class AshLayerBlock extends FallingBlock {
         if (ServerConfigs.Blocks.ASH_BURN.get()) {
 
             Item i = state.getBlock().asItem();
-            int count = ForgeHooks.getBurnTime(i.getDefaultInstance(), null) / 100;
+            int count = PlatformHelper.getBurnTime(i.getDefaultInstance()) / 100;
             if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
 
             if (count > 0) {

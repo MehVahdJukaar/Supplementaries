@@ -67,11 +67,11 @@ public class GunpowderBlock extends LightUpBlock {
     private final BlockState crossState;
 
     private static int getDelay() {
-        return ServerConfigs.cached.GUNPOWDER_BURN_SPEED;
+        return ServerConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
     }
 
     private static int getSpreadAge() {
-        return ServerConfigs.cached.GUNPOWDER_SPREAD_AGE;
+        return ServerConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
     }
 
     public GunpowderBlock(Properties properties) {
@@ -528,11 +528,6 @@ public class GunpowderBlock extends LightUpBlock {
     public BlockState toggleLitState(BlockState state, boolean lit) {
         return state.setValue(BURNING, lit ? 1 : 0);
     }
-
-   // @Override
-   // public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-   //     return new ItemStack(Items.GUNPOWDER);
-   // }
 
     //client
 
