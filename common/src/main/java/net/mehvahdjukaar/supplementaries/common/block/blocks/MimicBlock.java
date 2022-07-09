@@ -41,7 +41,7 @@ public abstract class MimicBlock extends Block  {
     public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
         if (world.getBlockEntity(pos) instanceof IBlockHolder tile) {
             BlockState mimicState = tile.getHeldBlock();
-            if (!mimicState.isAir()) return mimicState.getSoundType(world, pos, entity);
+            if (!mimicState.isAir()) return mimicState.getSoundType();
         }
         return super.getSoundType(state, world, pos, entity);
     }
@@ -65,16 +65,7 @@ public abstract class MimicBlock extends Block  {
         return drops;
     }
 
-    @Override
-    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
-        if (world.getBlockEntity(pos) instanceof IBlockHolder tile) {
-            BlockState mimicState = tile.getHeldBlock();
-            if (!mimicState.isAir()) {
-                return mimicState.getExplosionResistance(world, pos, explosion);
-            }
-        }
-        return 2;
-    }
+
 
     /*
     @Override
