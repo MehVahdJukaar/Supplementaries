@@ -85,6 +85,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.get(pStack.getItem());
     }
 
+
     @Nullable
     @Override
     public DyeColor getColor() {
@@ -106,6 +107,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new TrappedPresentBlockTile(pPos, pState);
     }
+
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -150,9 +152,9 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        ItemStack itemstack = super.getCloneItemStack(state, target, world, pos, player);
-        if (world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
             return tile.getPresentItem(this);
         }
         return itemstack;
@@ -243,7 +245,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-
+    @Environment(EnvType.CLIENT)
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
         var particleEngine = Minecraft.getInstance().particleEngine;
         VoxelShape voxelshape = PresentBlock.SHAPE_LID;
@@ -265,7 +267,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
                         double d7 = d4 * d1 + p_172273_;
                         double d8 = d5 * d2 + p_172274_;
                         double d9 = d6 * d3 + p_172275_;
-                        particleEngine.add(new TerrainParticle((ClientLevel) level, (double) pPos.getX() + d7, (double) pPos.getY() + d8, (double) pPos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, pState, pPos).updateSprite(pState, pPos));
+                        particleEngine.add(new TerrainParticle((ClientLevel) level, (double) pPos.getX() + d7, (double) pPos.getY() + d8, (double) pPos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, pState, pPos));
                     }
                 }
             }

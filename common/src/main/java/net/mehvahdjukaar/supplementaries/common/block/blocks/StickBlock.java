@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -74,12 +75,12 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
     }
@@ -138,7 +139,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
-            if (ServerConfigs.cached.STICK_POLE) {
+            if (ServerConfigs.Blocks.STICK_POLE.get()) {
                 if (this.material != Material.WOOD) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
@@ -157,7 +158,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     public static boolean findConnectedFlag(Level world, BlockPos pos, Direction searchDir, Direction moveDir, int it) {
-        if (it > ServerConfigs.cached.STICK_POLE_LENGTH) return false;
+        if (it > ServerConfigs.Blocks.STICK_POLE_LENGTH.get()) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (b == ModRegistry.STICK_BLOCK.get() && isVertical(state)) {

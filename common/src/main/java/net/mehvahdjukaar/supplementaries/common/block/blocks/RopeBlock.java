@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -142,7 +143,7 @@ public class RopeBlock extends WaterBlock {
         builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, WATERLOGGED, DISTANCE, KNOT);
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
         return state.getValue(DOWN) && (state.getValue(UP) || entity.position().y() - pos.getY() < (13 / 16f));
     }
@@ -177,7 +178,7 @@ public class RopeBlock extends WaterBlock {
                 return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
             }
             default -> {
-                if (ServerConfigs.cached.ROPE_UNRESTRICTED && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
+                if (ServerConfigs.Blocks.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
                     return true;
                 }
                 if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
@@ -318,19 +319,19 @@ public class RopeBlock extends WaterBlock {
         }
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
     }
 
     public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
 
-        if (it > ServerConfigs.cached.BELL_CHAIN_LENGTH) return false;
+        if (it > ServerConfigs.Tweaks.BELL_CHAIN_LENGTH.get()) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (predicate.test(state)) {
@@ -354,7 +355,7 @@ public class RopeBlock extends WaterBlock {
         } else if (b instanceof PulleyBlock pulley && it != 0) {
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
                 if (tile.isEmpty() && !player.isShiftKeyDown()) {
-                    tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE_ITEM.get()));
+                    tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE.get()));
                     boolean ret = pulley.windPulley(state, pos, world, rot, null);
                     tile.getDisplayedItem().shrink(1);
                     return ret;
@@ -379,7 +380,7 @@ public class RopeBlock extends WaterBlock {
                     world.setBlock(pos, state, 0);
                 }
                 if (addRope(pos.below(), world, player, handIn, this)) {
-                    SoundType soundtype = state.getSoundType(world, pos, player);
+                    SoundType soundtype = state.getSoundType();
                     world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
@@ -390,7 +391,7 @@ public class RopeBlock extends WaterBlock {
             return InteractionResult.PASS;
         } else if (stack.isEmpty()) {
             if (state.getValue(UP)) {
-                if (ServerConfigs.cached.BELL_CHAIN && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
+                if (ServerConfigs.Tweaks.BELL_CHAIN.get() && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 else if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
                     return InteractionResult.sidedSuccess(world.isClientSide);

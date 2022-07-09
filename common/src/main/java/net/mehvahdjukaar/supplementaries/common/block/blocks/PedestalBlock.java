@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -61,9 +62,9 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
                 .setValue(DOWN, false).setValue(WATERLOGGED, false).setValue(HAS_ITEM, false));
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        if (ServerConfigs.cached.CRYSTAL_ENCHANTING && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
+        if (ServerConfigs.Blocks.CRYSTAL_ENCHANTING.get() && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
             if (te.type == PedestalBlockTile.DisplayType.CRYSTAL) return 3;
         }
         return 0;
