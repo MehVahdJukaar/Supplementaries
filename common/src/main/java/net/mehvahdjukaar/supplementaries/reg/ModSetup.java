@@ -47,7 +47,9 @@ public class ModSetup {
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,
-            PresentRegistry::registerBehaviors
+            PresentRegistry::registerBehaviors,
+            VillagerTradesHandler::registerVillagerTrades,
+            VillagerTradesHandler::registerWanderingTraderTrades
     );
 
     public static void init() {

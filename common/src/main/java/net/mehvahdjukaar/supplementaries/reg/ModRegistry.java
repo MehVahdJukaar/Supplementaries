@@ -21,7 +21,6 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -86,7 +85,7 @@ public class ModRegistry {
         //shulker shell
         //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
 
-        if (RegistryConfigss.SHULKER_HELMET_ENABLED.get()) {
+        if (RegistryConfigs.SHULKER_HELMET_ENABLED.get()) {
             event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
                     new ShulkerShellItem(new Item.Properties()
                             .stacksTo(64)

@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.collect.Lists;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -16,9 +18,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.BasicItemListing;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,6 +146,43 @@ public class VillagerTradesHandler {
         }
     }
 
+    public static class BasicItemListing implements VillagerTrades.ItemListing {
+
+        protected final ItemStack price;
+        protected final ItemStack price2;
+        protected final ItemStack forSale;
+        protected final int maxTrades;
+        protected final int xp;
+        protected final float priceMult;
+
+        public BasicItemListing(ItemStack price, ItemStack price2, ItemStack forSale, int maxTrades, int xp, float priceMult) {
+            this.price = price;
+            this.price2 = price2;
+            this.forSale = forSale;
+            this.maxTrades = maxTrades;
+            this.xp = xp;
+            this.priceMult = priceMult;
+        }
+
+        public BasicItemListing(ItemStack price, ItemStack forSale, int maxTrades, int xp, float priceMult) {
+            this(price, ItemStack.EMPTY, forSale, maxTrades, xp, priceMult);
+        }
+
+        public BasicItemListing(int emeralds, ItemStack forSale, int maxTrades, int xp, float mult) {
+            this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, mult);
+        }
+
+        public BasicItemListing(int emeralds, ItemStack forSale, int maxTrades, int xp) {
+            this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, 1);
+        }
+
+        @Nullable
+        @Override
+        public MerchantOffer getOffer(Entity entity, RandomSource randomSource) {
+            return new MerchantOffer(price, price2, forSale, maxTrades, xp, priceMult);
+        }
+    }
+
     private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE,DyeColor.ORANGE,DyeColor.MAGENTA,DyeColor.LIGHT_BLUE,
             DyeColor.YELLOW,DyeColor.LIME,DyeColor.PINK,DyeColor.CYAN,DyeColor.PURPLE,DyeColor.BLUE,DyeColor.GREEN,DyeColor.RED};
 
@@ -183,28 +220,28 @@ public class VillagerTradesHandler {
         return tag;
     }
 
-    public static void registerWanderingTraderTrades(WandererTradesEvent event) {
-
+    public static void registerWanderingTraderTrades() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) {
             //adding twice cause it's showing up too rarely
             for (int i = 0; i < ServerConfigs.Blocks.GLOBE_TRADES.get(); i++) {
-                event.getRareTrades().add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
+                RegHelper.registerWanderingTraderTrades(2, itemListings -> itemListings.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3)));
             }
         }
         if (RegistryConfigs.FLAX_ENABLED.get()) {
             for (int i = 0; i < 2; i++) {
-                event.getGenericTrades().add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
+                RegHelper.registerWanderingTraderTrades(1, itemListings -> itemListings.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8)));
             }
         }
     }
 
-    public static void registerVillagerTrades(VillagerTradesEvent event) {
-        if (RegistryConfigs.FLAX_ENABLED.get()) {
-            if (event.getType().equals(VillagerProfession.FARMER)) {
-                event.getTrades().get(3).add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
-            }
-        }
+
+
+    public static void registerVillagerTrades() {
+        RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
+            if (RegistryConfigs.FLAX_ENABLED.get())
+                itemListings.add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
+        });
         AdventurerMapsHandler.loadCustomTrades();
-        AdventurerMapsHandler.addTrades(event);
+        AdventurerMapsHandler.addTrades();
     }
 }

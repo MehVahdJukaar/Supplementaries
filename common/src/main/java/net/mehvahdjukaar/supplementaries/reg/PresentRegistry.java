@@ -11,6 +11,7 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -35,7 +35,7 @@ import java.util.Optional;
 public class PresentRegistry {
 
     public static void registerBehaviors() {
-        for (Item i : ForgeRegistries.ITEMS) {
+        for (Item i : Registry.ITEM) {
             if (i instanceof BlockItem bi && bi.getBlock() instanceof TntBlock) {
                 TrappedPresentBlock.registerBehavior(i, TNT_BEHAVIOR);
             }
