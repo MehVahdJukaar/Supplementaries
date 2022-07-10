@@ -18,11 +18,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,16 +123,4 @@ public class ModSetup {
     public static void registerCommands(RegisterCommandsEvent event) {
         ModCommands.register(event.getDispatcher());
     }
-
-    @SubscribeEvent
-    public static void villagerTradesEvent(VillagerTradesEvent event) {
-        VillagerTradesHandler.registerVillagerTrades(event);
-    }
-
-    @SubscribeEvent
-    public static void registerWanderingTraderTrades(WandererTradesEvent event) {
-        VillagerTradesHandler.registerWanderingTraderTrades(event);
-    }
-
-
 }
