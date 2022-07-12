@@ -127,15 +127,5 @@ public class ModSetup {
         ModCommands.register(event.getDispatcher());
     }
 
-    @SubscribeEvent
-    public static void villagerTradesEvent(VillagerTradesEvent event) {
-        VillagerTradesHandler.registerVillagerTrades(event);
-    }
-
-    @SubscribeEvent
-    public static void registerWanderingTraderTrades(WandererTradesEvent event) {
-        VillagerTradesHandler.registerWanderingTraderTrades(event);
-    }
-
 
 }

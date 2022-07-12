@@ -8,9 +8,11 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableSource;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
@@ -45,9 +47,17 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new FabricFluteReload());
+
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricFluteReload());
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new FabricWallLanternReload());
     }
 
+    public static class FabricWallLanternReload extends WallLanternTexturesRegistry implements IdentifiableResourceReloadListener{
+        @Override
+        public ResourceLocation getFabricId() {
+            return Supplementaries.res("wall_lantern_textures");
+        }
+    }
 
     public static class FabricFluteReload extends FluteSongsReloadListener implements IdentifiableResourceReloadListener {
         @Override

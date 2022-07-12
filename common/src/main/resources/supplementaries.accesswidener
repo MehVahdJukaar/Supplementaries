@@ -8,8 +8,12 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator getPlacementsFo
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 #fox sleeping for cages
 accessible method net/minecraft/world/entity/animal/Fox setSleeping (Z)V
-
+#food items
+mutable field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
+
+accessible field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
+mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 
 
 

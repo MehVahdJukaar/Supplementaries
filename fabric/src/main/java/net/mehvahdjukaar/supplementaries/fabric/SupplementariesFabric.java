@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -45,7 +46,7 @@ public class SupplementariesFabric implements ModInitializer {
 
         Supplementaries.commonInit();
         Supplementaries.commonRegistration();
-
+        TradeOfferHelper.registerVillagerOffers();
         ServerLifecycleEvents.SERVER_STARTING.register(s -> Supplementaries.commonSetup());
     }
 
@@ -90,10 +91,9 @@ public class SupplementariesFabric implements ModInitializer {
             super.emitItemQuads(stack, randomSupplier, context);
 
             var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
-            if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
-                var blackboard = Blackboard.fromNbt(nbt);
-                context.meshConsumer().accept(blackboard.buildMesh(Direction.NORTH, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : 0));
-            }
+
+            context.meshConsumer().accept(mesh);
+
         }
 
 

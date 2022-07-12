@@ -30,13 +30,12 @@ public abstract class ChunkHolderMixin {
                 BlockPos pos = te.getBlockPos();
 
                 server.tell(new TickTask(server.getTickCount(), () -> {
-                    var c = cap.orElse(null);
-                    if (c != null) {
+                    cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
                                 NetworkHandler.CHANNEL.sendToClientPlayer(p,
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
-                    }
+                    });
                 }));
             }
         }

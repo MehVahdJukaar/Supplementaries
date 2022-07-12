@@ -39,6 +39,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
@@ -118,6 +119,7 @@ public class ServerEventsForge {
         }
     }
 
+    //server reload listeners
     @SubscribeEvent
     public static void onAddReloadListeners(final AddReloadListenerEvent event) {
         event.addListener(new FluteSongsReloadListener());
@@ -152,6 +154,16 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onAddLootTables(LootTableLoadEvent event) {
         ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
+    }
+
+    @SubscribeEvent
+    public static void onAddLootTables(VillagerTradesEvent event) {
+        for(int level : event.getTrades().keySet()){
+            ServerEvents.addVillagerTrades(event.getType(),level, l->{
+                var list = event.getTrades().get(level);
+                list.addAll(l);
+            });
+        }
     }
 
     //TODO: add these on fabric

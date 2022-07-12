@@ -18,7 +18,7 @@ public class RegistryConfigs {
 
     public static ConfigSpec REGISTRY_CONFIG;
 
-    public static void createSpec() {
+    public static void superEarlyLoad() {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
         init(builder);
 
