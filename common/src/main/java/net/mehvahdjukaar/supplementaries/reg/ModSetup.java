@@ -18,11 +18,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +42,9 @@ public class ModSetup {
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,
-            PresentRegistry::registerBehaviors
+            PresentRegistry::registerBehaviors,
+            VillagerTradesHandler::registerVillagerTrades,
+            VillagerTradesHandler::registerWanderingTraderTrades
     );
 
     public static void init() {

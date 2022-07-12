@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.reg.generation.structure.StructureLocator;
@@ -30,7 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraftforge.event.village.VillagerTradesEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,7 +107,6 @@ public class AdventurerMapsHandler {
     public static void loadCustomTrades() {
         //only called once when server starts
         if (!CUSTOM_MAPS_TRADES.isEmpty()) return;
-
         try {
             List<? extends List<String>> tradeData = ServerConfigs.Tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
 
@@ -159,22 +157,17 @@ public class AdventurerMapsHandler {
                              @Nullable String mapName, int mapColor, @Nullable ResourceLocation marker) {
     }
 
-
-    public static void addTrades(VillagerTradesEvent event) {
-        if (event.getType() == VillagerProfession.CARTOGRAPHER) {
-            Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-            for (TradeData data : CUSTOM_MAPS_TRADES) {
-                if (data != null)
-                    try {
-                        trades.get(data.level).add(new AdventureMapTrade(data));
-                    } catch (Exception e) {
-                        Supplementaries.LOGGER.warn("failed to load custom adventurer map trade map for structure " + data.structure.toString());
-                    }
-
-            }
-            if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
-                trades.get(2).add(new RandomAdventureMapTrade());
-            }
+    public static void addTrades() {
+        for (TradeData data : CUSTOM_MAPS_TRADES) {
+            if (data != null)
+                try {
+                    RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, data.level, itemListings -> itemListings.add(new AdventureMapTrade(data)));
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.warn("Failed to load custom adventurer map for structure " + data.structure.toString());
+                }
+        }
+        if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
+            RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> itemListings.add(new RandomAdventureMapTrade()));
         }
     }
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.collect.Lists;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -17,7 +18,7 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.BasicItemListing;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,7 +122,7 @@ public class VillagerTradesHandler {
             int stars = 0;
             List<FireworkRocketItem.Shape> usedShapes = new ArrayList<>();
             do {
-                listTag.add(createRandomFireworkStar(random, usedShapes));
+                listTag.add(createRandomFireworkStar(random,usedShapes));
                 stars++;
             } while (random.nextFloat() < 0.42f && stars < 7);
 
@@ -145,17 +146,54 @@ public class VillagerTradesHandler {
         }
     }
 
-    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE, DyeColor.ORANGE, DyeColor.MAGENTA, DyeColor.LIGHT_BLUE,
-            DyeColor.YELLOW, DyeColor.LIME, DyeColor.PINK, DyeColor.CYAN, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.GREEN, DyeColor.RED};
+    public static class BasicItemListing implements VillagerTrades.ItemListing {
+
+        protected final ItemStack price;
+        protected final ItemStack price2;
+        protected final ItemStack forSale;
+        protected final int maxTrades;
+        protected final int xp;
+        protected final float priceMult;
+
+        public BasicItemListing(ItemStack price, ItemStack price2, ItemStack forSale, int maxTrades, int xp, float priceMult) {
+            this.price = price;
+            this.price2 = price2;
+            this.forSale = forSale;
+            this.maxTrades = maxTrades;
+            this.xp = xp;
+            this.priceMult = priceMult;
+        }
+
+        public BasicItemListing(ItemStack price, ItemStack forSale, int maxTrades, int xp, float priceMult) {
+            this(price, ItemStack.EMPTY, forSale, maxTrades, xp, priceMult);
+        }
+
+        public BasicItemListing(int emeralds, ItemStack forSale, int maxTrades, int xp, float mult) {
+            this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, mult);
+        }
+
+        public BasicItemListing(int emeralds, ItemStack forSale, int maxTrades, int xp) {
+            this(new ItemStack(Items.EMERALD, emeralds), forSale, maxTrades, xp, 1);
+        }
+
+        @Nullable
+        @Override
+        public MerchantOffer getOffer(Entity entity, RandomSource randomSource) {
+            return new MerchantOffer(price, price2, forSale, maxTrades, xp, priceMult);
+        }
+    }
+
+    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE,DyeColor.ORANGE,DyeColor.MAGENTA,DyeColor.LIGHT_BLUE,
+            DyeColor.YELLOW,DyeColor.LIME,DyeColor.PINK,DyeColor.CYAN,DyeColor.PURPLE,DyeColor.BLUE,DyeColor.GREEN,DyeColor.RED};
 
     private static CompoundTag createRandomFireworkStar(RandomSource random, List<FireworkRocketItem.Shape> usedShapes) {
         CompoundTag tag = new CompoundTag();
-        ArrayList<FireworkRocketItem.Shape> possible = new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
+        ArrayList<FireworkRocketItem.Shape> possible =  new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
         possible.removeAll(usedShapes);
-        if (possible.isEmpty()) {
+        if(possible.isEmpty()) {
             tag.putByte("Type", (byte) FireworkRocketItem.Shape.values()
                     [random.nextInt(FireworkRocketItem.Shape.values().length)].getId());
-        } else {
+        }else{
             tag.putByte("Type", (byte) possible.get(random.nextInt(possible.size())).getId());
         }
         tag.putBoolean("Flicker", random.nextFloat() < 0.42f);
@@ -182,30 +220,28 @@ public class VillagerTradesHandler {
         return tag;
     }
 
-    public static void init() {
-        if (RegistryConfigs.FLAX_ENABLED.get()) {
-            RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 4, l -> {
-                l.add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
-            });
-        }
-        AdventurerMapsHandler.loadCustomTrades();
-
-        //0 = common, 1 = rare
+    public static void registerWanderingTraderTrades() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) {
-            RegHelper.registerWanderingTraderTrades(1, l -> {
-                //adding twice cause it's showing up too rarely
-                for (int i = 0; i < ServerConfigs.Blocks.GLOBE_TRADES.get(); i++) {
-                    l.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
-                }
-            });
+            //adding twice cause it's showing up too rarely
+            for (int i = 0; i < ServerConfigs.Blocks.GLOBE_TRADES.get(); i++) {
+                RegHelper.registerWanderingTraderTrades(2, itemListings -> itemListings.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3)));
+            }
         }
         if (RegistryConfigs.FLAX_ENABLED.get()) {
-            RegHelper.registerWanderingTraderTrades(0, l -> {
-                for (int i = 0; i < 2; i++) {
-                    l.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
-                }
-            });
+            for (int i = 0; i < 2; i++) {
+                RegHelper.registerWanderingTraderTrades(1, itemListings -> itemListings.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8)));
+            }
         }
+    }
 
+
+
+    public static void registerVillagerTrades() {
+        RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
+            if (RegistryConfigs.FLAX_ENABLED.get())
+                itemListings.add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
+        });
+        AdventurerMapsHandler.loadCustomTrades();
+        AdventurerMapsHandler.addTrades();
     }
 }

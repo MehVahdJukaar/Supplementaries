@@ -6,7 +6,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraftforge.common.util.ForgeSoundType;
 
 import java.util.function.Supplier;
 
@@ -63,40 +62,40 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_3 = regSound("item.slingshot.charge_3");
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
-    public static final SoundType JAR = new ForgeSoundType(1.0F, 1.0F,
-            JAR_BREAK,
-            () -> SoundEvents.GLASS_STEP,
-            JAR_PLACE,
-            () -> SoundEvents.GLASS_HIT,
-            () -> SoundEvents.GLASS_FALL);
+    public static final SoundType JAR = new SoundType(1.0F, 1.0F,
+            JAR_BREAK.get(),
+            SoundEvents.GLASS_STEP,
+            JAR_PLACE.get(),
+            SoundEvents.GLASS_HIT,
+            SoundEvents.GLASS_FALL);
 
-    public static final SoundType BUBBLE_BLOCK = new ForgeSoundType(1.0F, 1.0F,
-            BUBBLE_POP,
-            () -> SoundEvents.HONEY_BLOCK_STEP,
-            BUBBLE_PLACE,
-            () -> SoundEvents.HONEY_BLOCK_HIT,
-            () -> SoundEvents.HONEY_BLOCK_FALL);
+    public static final SoundType BUBBLE_BLOCK = new SoundType(1.0F, 1.0F,
+            BUBBLE_POP.get(),
+            SoundEvents.HONEY_BLOCK_STEP,
+            BUBBLE_PLACE.get(),
+            SoundEvents.HONEY_BLOCK_HIT,
+            SoundEvents.HONEY_BLOCK_FALL);
 
-    public static final SoundType PRESENT = new ForgeSoundType(1.0F, 1.0F,
-            PRESENT_BREAK,
-            () -> SoundEvents.WOOL_STEP,
-            PRESENT_PLACE,
-            () -> SoundEvents.WOOL_HIT,
-            () -> SoundEvents.WOOL_FALL);
+    public static final SoundType PRESENT = new SoundType(1.0F, 1.0F,
+            PRESENT_BREAK.get(),
+            SoundEvents.WOOL_STEP,
+            PRESENT_PLACE.get(),
+            SoundEvents.WOOL_HIT,
+            SoundEvents.WOOL_FALL);
 
-    public static final SoundType SACK = new ForgeSoundType(1.0F, 1.0F,
-            SACK_BREAK,
-            () -> SoundEvents.WOOL_STEP,
-            SACK_PLACE,
-            () -> SoundEvents.WOOL_HIT,
-            () -> SoundEvents.WOOL_FALL);
+    public static final SoundType SACK = new SoundType(1.0F, 1.0F,
+            SACK_BREAK.get(),
+            SoundEvents.WOOL_STEP,
+            SACK_PLACE.get(),
+            SoundEvents.WOOL_HIT,
+            SoundEvents.WOOL_FALL);
 
-    public static final SoundType ROPE = new ForgeSoundType(1.0F, 1.0F,
-            ROPE_BREAK,
-            ROPE_STEP,
-            ROPE_PLACE,
-            ROPE_STEP,
-            () -> SoundEvents.WOOL_FALL);
+    public static final SoundType ROPE = new SoundType(1.0F, 1.0F,
+            ROPE_BREAK.get(),
+            ROPE_STEP.get(),
+            ROPE_PLACE.get(),
+            ROPE_STEP.get(),
+            SoundEvents.WOOL_FALL);
 
 
     public static Supplier<SoundEvent> regSound(String name) {
