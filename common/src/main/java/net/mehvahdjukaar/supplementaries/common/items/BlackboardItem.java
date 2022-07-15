@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -15,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class BlackboardItem extends BlockItem {
+public class BlackboardItem extends BlockItem implements ICustomItemRendererProvider {
     public BlackboardItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
@@ -36,6 +39,11 @@ public class BlackboardItem extends BlockItem {
             return Optional.of(new BlackboardTooltip(cmp.getLongArray("Pixels")));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public ItemStackRenderer createRenderer() {
+        return new BlackboardItemRenderer();
     }
 
     public record BlackboardTooltip(long[] packed) implements TooltipComponent {

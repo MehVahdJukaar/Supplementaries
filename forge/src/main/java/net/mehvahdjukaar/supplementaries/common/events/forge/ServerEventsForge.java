@@ -156,16 +156,6 @@ public class ServerEventsForge {
         ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
     }
 
-    @SubscribeEvent
-    public static void onAddLootTables(VillagerTradesEvent event) {
-        for(int level : event.getTrades().keySet()){
-            ServerEvents.addVillagerTrades(event.getType(),level, l->{
-                var list = event.getTrades().get(level);
-                list.addAll(l);
-            });
-        }
-    }
-
     //TODO: add these on fabric
     //forge only
 

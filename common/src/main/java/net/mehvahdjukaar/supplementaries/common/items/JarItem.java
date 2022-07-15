@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
@@ -44,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class JarItem extends AbstractMobContainerItem {
+public class JarItem extends AbstractMobContainerItem implements ICustomItemRendererProvider {
 
     public JarItem(Block blockIn, Properties properties) {
         super(blockIn, properties, 0.625f, 0.875f, true);
@@ -105,7 +108,7 @@ public class JarItem extends AbstractMobContainerItem {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag == null) {
-            if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
+            if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
             tooltip.add(Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
             if (compoundTag.contains("LootTable", 8)) {
@@ -223,7 +226,7 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (ServerConfigs.cached.JAR_ITEM_DRINK) {
+        if (ServerConfigs.Blocks.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (DUMMY_TILE == null)
@@ -240,7 +243,7 @@ public class JarItem extends AbstractMobContainerItem {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        if (ServerConfigs.cached.JAR_ITEM_DRINK) {
+        if (ServerConfigs.Blocks.JAR_ITEM_DRINK.get()) {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;
@@ -255,5 +258,8 @@ public class JarItem extends AbstractMobContainerItem {
         return super.useOn(context);
     }
 
-
+    @Override
+    public ItemStackRenderer createRenderer() {
+        return new JarItemRenderer();
+    }
 }

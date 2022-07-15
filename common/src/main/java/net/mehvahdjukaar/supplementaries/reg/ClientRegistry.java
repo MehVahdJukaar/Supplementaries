@@ -50,7 +50,6 @@ public class ClientRegistry {
     public static final Material BOOK_TOME_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(Sheets.SHULKER_SHEET, Textures.BOOK_AND_QUILL_TEXTURES);
-
     public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
     public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
@@ -62,9 +61,7 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation HANGING_POT_BLOCK_MODEL = Supplementaries.res("block/hanging_flower_pot");
-
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
-
     public static final Map<LabelEntity.AttachType, ResourceLocation> LABEL_MODELS = new HashMap<>() {{
         put(LabelEntity.AttachType.BLOCK, Supplementaries.res("block/label"));
         put(LabelEntity.AttachType.CHEST, Supplementaries.res("block/label_chest"));
@@ -88,34 +85,6 @@ public class ClientRegistry {
         }
     }
 
-    //entity models
-    public static ModelLayerLocation BELLOWS_MODEL = loc("bellows");
-    public static ModelLayerLocation BOOK_MODEL = loc("book");
-    public static ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
-    public static ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
-    public static ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
-    public static ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
-    public static ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
-    public static ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
-    public static ModelLayerLocation JARVIS_MODEL = loc("jarvis");
-    public static ModelLayerLocation PICKLE_MODEL = loc("pickle");
-    //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
-
-    //TODO: merge with materials and client setup
-
-    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
-        event.registerLayerDefinition(BOOK_MODEL, BookPileBlockTileRenderer::createMesh);
-        event.registerLayerDefinition(CLOCK_HANDS_MODEL, ClockBlockTileRenderer::createMesh);
-        event.registerLayerDefinition(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
-        event.registerLayerDefinition(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
-        event.registerLayerDefinition(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
-        event.registerLayerDefinition(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
-        event.registerLayerDefinition(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
-        event.registerLayerDefinition(JARVIS_MODEL, JarredModel::createMesh);
-        event.registerLayerDefinition(PICKLE_MODEL, PickleModel::createMesh);
-        //event.registerLayerDefinition(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
-    }
 
     public static void registerSpecialModels() {
         FlowerPotHandler.CUSTOM_MODELS.forEach(ForgeModelBakery::addSpecialModel);

@@ -2,15 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -21,13 +19,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.UUID;
 
 
-public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class CageItemRenderer extends ItemStackRenderer {
 
-    public CageItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
+    @Override
+    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        //render block
+        matrixStackIn.pushPose();
+        BlockItem item = ((BlockItem) stack.getItem());
+        BlockState state = item.getBlock().defaultBlockState();
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        matrixStackIn.popPose();
+
+        CompoundTag tag = BlockItem.getBlockEntityData(stack);
+        if (tag != null) {
+            this.renderContent(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        }
     }
 
-    public void renderTileStuff(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderContent(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         //render mob
         if (tag.contains("MobHolder")) {
@@ -53,23 +62,8 @@ public class CageItemRenderer extends BlockEntityWithoutLevelRenderer {
                 }
             }
         }
-
     }
 
-    @Override
-    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        //render block
-        matrixStackIn.pushPose();
-        BlockItem item = ((BlockItem) stack.getItem());
-        BlockState state = item.getBlock().defaultBlockState();
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-        matrixStackIn.popPose();
 
-        CompoundTag tag = BlockItem.getBlockEntityData(stack);
-        if (tag != null) {
-            this.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-        }
-
-    }
 }
 

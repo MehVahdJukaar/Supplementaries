@@ -25,7 +25,7 @@ import java.util.List;
 //Merge with supplementaries main class
 public class ModSetup {
 
-    //damn I hate this. If setup fails forge doesn't do anything and it keeps on going quietly
+    //damn I hate this. If setup fails forge doesn't do anything, and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
     public static boolean firstTagLoad = false;
@@ -33,18 +33,16 @@ public class ModSetup {
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CurseLootFunction::setup,
             WorldGenHandler::onInit,
-            CompatHandler::init,
-            FlowerPotHandler::init,
-            CMDreg::init,
-            WeatheredMap::init,
+            CompatHandler::setup,
+            FlowerPotHandler::setup,
+            CMDreg::setup,
+            WeatheredMap::setup,
             NetworkHandler::registerMessages,
             LootTablesInjects::init,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,
-            PresentRegistry::registerBehaviors,
-            VillagerTradesHandler::registerVillagerTrades,
-            VillagerTradesHandler::registerWanderingTraderTrades
+            PresentRegistry::registerBehaviors
     );
 
     public static void init() {

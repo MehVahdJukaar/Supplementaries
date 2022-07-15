@@ -30,14 +30,10 @@ public class JarItemRenderer extends CageItemRenderer {
 
     private static final Random RAND = new Random(420);
 
-    public JarItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
-    }
-
     @Override
-    public void renderTileStuff(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderContent(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        super.renderTileStuff(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        super.renderContent(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
         if (tag.contains("MobHolder") || tag.contains("BucketHolder")) {
             CompoundTag com = tag.getCompound("BucketHolder");

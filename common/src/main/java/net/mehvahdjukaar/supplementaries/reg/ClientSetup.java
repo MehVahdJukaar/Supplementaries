@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -19,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FlameParticle;
@@ -49,6 +51,23 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClientSetup {
 
+    //entity models
+    public static ModelLayerLocation BELLOWS_MODEL = loc("bellows");
+    public static ModelLayerLocation BOOK_MODEL = loc("book");
+    public static ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
+    public static ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
+    public static ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
+    public static ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
+    public static ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
+    public static ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
+    public static ModelLayerLocation JARVIS_MODEL = loc("jarvis");
+    public static ModelLayerLocation PICKLE_MODEL = loc("pickle");
+    //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
+
+    private static ModelLayerLocation loc(String name) {
+        return new ModelLayerLocation(Supplementaries.res(name), name);
+    }
+
     public static void init() {
         ClientPlatformHelper.addEntityRenderersRegistration(ClientSetup::registerEntityRenderers);
         ClientPlatformHelper.addBlockEntityRenderersRegistration(ClientSetup::registerBlockEntityRenderers);
@@ -64,116 +83,117 @@ public class ClientSetup {
         ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e->{
             Textures.getTexturesForBannerAtlas().forEach(e::addSprite);
         });
+        ClientPlatformHelper.addModelLayerRegistration(ClientSetup::registerModelLayers);
     }
 
 
+
     public static void setup() {
-        event.enqueueWork(() -> {
+        //compat
+        CompatHandlerClient.init(event);
 
-            //compat
-            CompatHandlerClient.init(event);
+        //tooltips
+        MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
 
-            //tooltips
-            MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
+        //map markers
+        CMDclient.init();
 
-            //map markers
-            CMDclient.init();
+        //overlay
+        //SlimedGuiOverlay.register();
 
-            //overlay
-            //SlimedGuiOverlay.register();
+        ClientPlatformHelper.registerScreen(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
+        ClientPlatformHelper.registerScreen(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
+        ClientPlatformHelper.registerScreen(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
+        ClientPlatformHelper.registerScreen(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        ClientPlatformHelper.registerScreen(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
+        ClientPlatformHelper.registerScreen(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
 
-            MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
-            MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
-            MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
-            MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
-            MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
-            MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
-            ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientPlatformHelper.registerRenderType(s, RenderType.cutout()));
+        ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientPlatformHelper.registerRenderType(s, RenderType.cutout()));
 
-            ClientPlatformHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.JAR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.FAUCET.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_SOUL.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_SOUL.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_ENDER.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.CAGE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.HOURGLASS.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.NETHERITE_DOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.NETHERITE_TRAPDOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.ROPE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.FLAX.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.FLAX_WILD.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.FLAX_POT.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
-            ClientPlatformHelper.registerRenderType(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_FRAME.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_BRACE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.COG_BLOCK.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.IRON_GATE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
-            ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
-
-
-            ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
-                    new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
-
-            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
-                    (stack, world, entity, s) -> {
-                        if (entity == null || entity.getUseItem() != stack) {
-                            return 0.0F;
-                        } else {
-                            return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
-                        }
-                    });
-
-            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
-                    (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
-
-            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
-                    (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
+        ClientPlatformHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.JAR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.FAUCET.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_SOUL.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_SOUL.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_ENDER.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.CAGE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.HOURGLASS.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.NETHERITE_DOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.NETHERITE_TRAPDOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.ROPE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.FLAX.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.FLAX_WILD.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.FLAX_POT.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
+        ClientPlatformHelper.registerRenderType(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_FRAME.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_BRACE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.TIMBER_CROSS_BRACE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.COG_BLOCK.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.IRON_GATE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
 
 
-            ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
-                    (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
+        ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+                new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-            ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
-                    (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
+        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+                (stack, world, entity, s) -> {
+                    if (entity == null || entity.getUseItem() != stack) {
+                        return 0.0F;
+                    } else {
+                        return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
+                    }
+                });
 
-            ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
-                    (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
-            //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
-            //       new SpeedometerItem.SpeedometerItemProperty());
-        });
+        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
+
+
+        ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
+                (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
+
+        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
+                (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
+
+        ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+                (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+
+        //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
+        //       new SpeedometerItem.SpeedometerItemProperty());
+
     }
 
     public record CrossbowProperty(Item projectile) implements ItemPropertyFunction {
@@ -220,7 +240,7 @@ public class ClientSetup {
         }
     }
 
-
+    @EventCalled
     private static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
         CompatHandlerClient.registerEntityRenderers(event);
         //entities
@@ -238,6 +258,7 @@ public class ClientSetup {
         // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
     }
 
+    @EventCalled
     public static void registerBlockEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
         event.register(ModRegistry.DOORMAT_TILE.get(), DoormatBlockTileRenderer::new);
         event.register(ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTileRenderer::new);
@@ -267,6 +288,7 @@ public class ClientSetup {
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
     }
 
+    @EventCalled
     private static void registerBlockColors(ClientPlatformHelper.BlockColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
@@ -279,11 +301,28 @@ public class ClientSetup {
         event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
     }
 
+    @EventCalled
     private static void registerItemColors(ClientPlatformHelper.ItemColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
     }
+
+    @EventCalled
+    private static void registerModelLayers(ClientPlatformHelper.ModelLayerEvent event) {
+        event.register(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
+        event.register(BOOK_MODEL, BookPileBlockTileRenderer::createMesh);
+        event.register(CLOCK_HANDS_MODEL, ClockBlockTileRenderer::createMesh);
+        event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
+        event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
+        event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
+        event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
+        event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
+        event.register(JARVIS_MODEL, JarredModel::createMesh);
+        event.register(PICKLE_MODEL, PickleModel::createMesh);
+        //event.register(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
+    }
+
 
     @SubscribeEvent
     public static void layerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {

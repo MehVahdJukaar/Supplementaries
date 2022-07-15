@@ -13,7 +13,7 @@ dependencies {
 
     //implementation fileTree(dir: 'mods', include: '*.jar')
 
-    modImplementation ("net.mehvahdjukaar:moonlight:2.0.0")
+    modImplementation ("net.mehvahdjukaar:moonlight:1.19-2.0.2")
     //modImplementation("curse.maven:selene-499980:3859470")
 }
 

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -46,7 +47,7 @@ public class SupplementariesFabric implements ModInitializer {
 
         Supplementaries.commonInit();
         Supplementaries.commonRegistration();
-        TradeOfferHelper.registerVillagerOffers();
+
         ServerLifecycleEvents.SERVER_STARTING.register(s -> Supplementaries.commonSetup());
     }
 

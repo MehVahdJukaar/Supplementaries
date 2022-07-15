@@ -58,11 +58,13 @@ public class CompatHandler {
     public static final boolean waystones;
     public static final boolean overweight_farming;
     public static final boolean snowyspirit;
+    public static final boolean oreganized;
 
     static {
         quark = isLoaded("quark");
         deco_blocks = isLoaded("decorative_blocks");
         configured = isLoaded("configured");
+        oreganized = isLoaded("oreganized");
         create = isLoaded("create");
         torchslab = isLoaded("torchslabmod");
         curios = isLoaded("curios");
@@ -103,7 +105,7 @@ public class CompatHandler {
         return PlatformHelper.isModLoaded(name);
     }
 
-    public static void init() {
+    public static void setup() {
         // if (create) CreatePlugin.initialize();
         if (computercraft) CCPlugin.initialize();
 

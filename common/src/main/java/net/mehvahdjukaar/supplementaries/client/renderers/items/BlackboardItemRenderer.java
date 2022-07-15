@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
@@ -18,12 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 
-public class BlackboardItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class BlackboardItemRenderer extends ItemStackRenderer {
     private static final BlockState STATE = ModRegistry.BLACKBOARD.get().defaultBlockState();
-
-    public BlackboardItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
-    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

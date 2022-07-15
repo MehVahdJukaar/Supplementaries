@@ -37,7 +37,7 @@ public class WeatheredMap {
     private static final String ANTIQUE_KEY = "antique";
     private static final ResourceLocation ANTIQUE_ID = Supplementaries.res(ANTIQUE_KEY);
 
-    public static void init() {
+    public static void setup() {
         MapDecorationRegistry.registerCustomMapSavedData(
                 ANTIQUE_ID,
                 boolean.class,

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -43,6 +44,9 @@ public class VillagerTradesHandler {
         }
         if (RegistryConfigs.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
+            if(CompatHandler.oreganized){
+                trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
+            }
         }
         trades.add(new StarForEmeraldTrade(2, 8));
         trades.add(new RocketForEmeraldTrade(3, 1, 3, 8));
@@ -56,7 +60,9 @@ public class VillagerTradesHandler {
         }
         if (RegistryConfigs.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
+
         }
+
 
 
         RED_MERCHANT_TRADES = trades.toArray(new VillagerTrades.ItemListing[0]);
@@ -220,9 +226,9 @@ public class VillagerTradesHandler {
         return tag;
     }
 
-    public static void registerWanderingTraderTrades() {
+    private static void registerWanderingTraderTrades() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) {
-            //adding twice cause it's showing up too rarely
+            //adding twice because it's showing up too rarely
             for (int i = 0; i < ServerConfigs.Blocks.GLOBE_TRADES.get(); i++) {
                 RegHelper.registerWanderingTraderTrades(2, itemListings -> itemListings.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3)));
             }
@@ -234,14 +240,18 @@ public class VillagerTradesHandler {
         }
     }
 
-
-
-    public static void registerVillagerTrades() {
+    private static void registerVillagerTrades() {
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
             if (RegistryConfigs.FLAX_ENABLED.get())
                 itemListings.add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
         AdventurerMapsHandler.loadCustomTrades();
         AdventurerMapsHandler.addTrades();
+    }
+
+    //runs on init since we need to be early enough to register stuff to forge busses
+    public static void init(){
+        registerVillagerTrades();
+        registerWanderingTraderTrades();
     }
 }

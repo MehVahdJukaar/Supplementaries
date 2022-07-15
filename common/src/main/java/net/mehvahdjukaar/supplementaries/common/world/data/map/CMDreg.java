@@ -56,7 +56,7 @@ public class CMDreg {
     public static final ResourceLocation SWAMP_HUT_TYPE = Supplementaries.res("swamp_hut");
     public static final ResourceLocation OCEAN_RUIN_TYPE = Supplementaries.res("ocean_ruin");
 
-    public static void init() {
+    public static void setup() {
         MapDecorationRegistry.register(SIGN_POST_DECORATION_TYPE);
         MapDecorationRegistry.register(BED_DECORATION_TYPE);
         MapDecorationRegistry.register(FLAG_DECORATION_TYPE);

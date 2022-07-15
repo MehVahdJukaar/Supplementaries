@@ -45,15 +45,16 @@ public class FlowerPotHandler {
         return (FULL_POTS != null && b != null && FULL_POTS.containsKey(b));
     }
 
-    public static void init() {
+    //move to forge
+    public static void setup() {
         //registers pots
-        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ModRegistry.FLAX_ITEM.getId(), ModRegistry.FLAX_POT);
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM), ModRegistry.FLAX_POT);
 
         //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
         Set<FlowerPotBlock> emptyPots = new HashSet<>();
         for (Block b : ForgeRegistries.BLOCKS) {
-            if (b instanceof FlowerPotBlock) {
-                emptyPots.add(((FlowerPotBlock) b).getEmptyPot());
+            if (b instanceof FlowerPotBlock flowerPotBlock) {
+                emptyPots.add(flowerPotBlock.getEmptyPot());
             }
         }
         FULL_POTS = Maps.newHashMap();
