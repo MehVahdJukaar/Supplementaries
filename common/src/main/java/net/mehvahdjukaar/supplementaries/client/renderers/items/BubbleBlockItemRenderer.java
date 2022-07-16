@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -16,11 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 
 
-public class BubbleBlockItemRenderer extends BlockEntityWithoutLevelRenderer {
-
-    public BubbleBlockItemRenderer(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
-    }
+public class BubbleBlockItemRenderer extends ItemStackRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack,

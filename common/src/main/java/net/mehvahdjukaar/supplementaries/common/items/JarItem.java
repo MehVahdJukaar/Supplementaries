@@ -57,7 +57,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
         if (e instanceof Monster) return false;
-        if (ServerConfigs.cached.JAR_AUTO_DETECT && this.canFitEntity(e)) return true;
+        if (ServerConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
         return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
     }
 
@@ -87,18 +87,22 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
         //capture mob
-        if (!ServerConfigs.cached.JAR_CAPTURE) return InteractionResult.PASS;
+        if (!captureEnabled()) return InteractionResult.PASS;
         return super.doInteract(stack, player, entity, hand);
+    }
+
+    private Boolean captureEnabled() {
+        return ServerConfigs.Blocks.JAR_CAPTURE.get();
     }
 
     @Override
     public boolean blocksPlacement() {
-        return ServerConfigs.cached.JAR_CAPTURE;
+        return captureEnabled();
     }
 
     @Override
     public void addPlacementTooltip(List<Component> tooltip) {
-        if (ServerConfigs.cached.JAR_CAPTURE)
+        if (captureEnabled())
             super.addPlacementTooltip(tooltip);
     }
 

@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "SelfSlingshotMixin",
     "SelfWrenchMixin",
     "SelfSpeakerMixin",
     "SerfOpeneableContainerMixin",
