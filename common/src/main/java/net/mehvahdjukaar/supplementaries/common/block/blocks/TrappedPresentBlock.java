@@ -84,7 +84,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.get(pStack.getItem());
     }
 
-
     @Nullable
     @Override
     public DyeColor getColor() {
@@ -106,7 +105,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new TrappedPresentBlockTile(pPos, pState);
     }
-
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -244,7 +242,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-    @Environment(EnvType.CLIENT.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
         var particleEngine = Minecraft.getInstance().particleEngine;
         VoxelShape voxelshape = PresentBlock.SHAPE_LID;
@@ -286,8 +284,8 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
-        super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos p_220069_5_, boolean p_220069_6_) {
+        super.neighborChanged(state, world, pos, block, p_220069_5_, p_220069_6_);
         boolean isPowered = world.hasNeighborSignal(pos);
         if (world instanceof ServerLevel serverLevel && isPowered && state.getValue(PRIMED)
                 && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {

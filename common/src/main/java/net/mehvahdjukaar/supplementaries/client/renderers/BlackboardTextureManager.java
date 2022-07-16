@@ -29,7 +29,7 @@ import java.util.function.Function;
 
 public class BlackboardTextureManager {
 
-    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().textureManager;
+    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
     private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)

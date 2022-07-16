@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.reg;
+package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.resources.ResourceLocation;

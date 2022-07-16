@@ -1,29 +1,15 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.google.common.base.Preconditions;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Registry;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.common.crafting.ConditionalRecipe;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import org.apache.logging.log4j.Logger;
-
-import java.util.function.Consumer;
 
 public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
@@ -56,7 +42,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
                 dynamicPack.addSimpleBlockLootTable(sign);
                 builder.addEntry(sign);
-                makeHangingSignRecipe(wood, dynamicPack::addRecipe);
+                // makeHangingSignRecipe(wood, dynamicPack::addRecipe);
             });
             //tag
             dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
@@ -68,8 +54,11 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
             dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
             //recipes
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> makeSignPostRecipe(wood, dynamicPack::addRecipe));
+            //  ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> makeSignPostRecipe(wood, dynamicPack::addRecipe));
         }
+        //TODO: add recipes
+
+
         //way signs tag
         {
             //TODO: re add
@@ -95,74 +84,6 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
             */
 
-        }
-    }
-
-    //TODO: remove these in favor of copying the oak one in json
-    private void makeConditionalRec(FinishedRecipe r, Consumer<FinishedRecipe> consumer, String name) {
-        ConditionalRecipe.builder()
-                .addCondition(new OptionalRecipeCondition(name))
-                .addRecipe(r)
-                .build(consumer, "supplementaries", name);
-    }
-
-    private void makeConditionalWoodRec(FinishedRecipe r, WoodType wood, Consumer<FinishedRecipe> consumer, String name) {
-
-        ConditionalRecipe.builder().addCondition(new OptionalRecipeCondition(name))
-                .addCondition(new ModLoadedCondition(wood.getNamespace()))
-                .addRecipe(r)
-                .generateAdvancement()
-                .build(consumer, "supplementaries", name + "_" + wood.getAppendableId());
-    }
-
-    private void makeSignPostRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
-        try {
-            Item plank = wood.planks.asItem();
-            Preconditions.checkArgument(plank != Items.AIR);
-
-            Item sign = wood.getItemOfThis("sign");
-            if (sign != null) {
-                ShapelessRecipeBuilder.shapeless(ModRegistry.SIGN_POST_ITEMS.get(wood), 2)
-                        .requires(sign)
-                        .group(RegistryConstants.SIGN_POST_NAME)
-                        .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
-                        //.build(consumer);
-                        .save((s) -> makeConditionalWoodRec(s, wood, consumer, RegistryConstants.SIGN_POST_NAME)); //
-            } else {
-                ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(wood), 3)
-                        .pattern("   ")
-                        .pattern("222")
-                        .pattern(" 1 ")
-                        .define('1', Items.STICK)
-                        .define('2', plank)
-                        .group(RegistryConstants.SIGN_POST_NAME)
-                        .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
-                        //.build(consumer);
-                        .save((s) -> makeConditionalWoodRec(s, wood, consumer, RegistryConstants.SIGN_POST_NAME)); //
-            }
-        } catch (Exception ignored) {
-            Supplementaries.LOGGER.error("Failed to generate sign post recipe for wood type {}", wood);
-        }
-    }
-
-    private void makeHangingSignRecipe(WoodType wood, Consumer<FinishedRecipe> consumer) {
-        try {
-            Item plank = wood.planks.asItem();
-            Preconditions.checkArgument(plank != Items.AIR);
-            ShapedRecipeBuilder.shaped(ModRegistry.HANGING_SIGNS.get(wood), 2)
-                    .pattern("010")
-                    .pattern("222")
-                    .pattern("222")
-                    .define('0', Items.IRON_NUGGET)
-                    .define('1', Items.STICK)
-                    .define('2', plank)
-                    .group(RegistryConstants.HANGING_SIGN_NAME)
-                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(plank))
-                    //.build(consumer);
-                    .save((s) -> makeConditionalWoodRec(s, wood, consumer, RegistryConstants.HANGING_SIGN_NAME)); //
-
-        } catch (Exception ignored) {
-            Supplementaries.LOGGER.error("Failed to generate hanging sign recipe for wood type {}", wood);
         }
     }
 

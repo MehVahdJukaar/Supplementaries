@@ -47,4 +47,8 @@ public class ForgeHelperImpl {
     public static boolean canLivingConvert(LivingEntity entity, EntityType<? extends LivingEntity> outcome, Consumer<Integer> timer) {
         return true;
     }
+
+    public static double getReachDistance(LivingEntity entity) {
+        return 4.5;
+    }
 }

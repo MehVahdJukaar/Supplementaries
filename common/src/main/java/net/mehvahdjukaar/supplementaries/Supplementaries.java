@@ -1,20 +1,12 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,16 +37,12 @@ public class Supplementaries {
         //potions in jars are bugged ;_;
 
 
-
         ModSounds.init();
         ModRegistry.init();
         ModRecipes.init();
         ModParticles.init();
 
-        VillagerTradesHandler.init();
-
-
-        WorldGenHandler.registerBus(bus);
+        WorldGenHandler.registerBus();
 
         var serverRes = new ServerDynamicResourcesHandler();
         serverRes.register();
@@ -63,8 +51,6 @@ public class Supplementaries {
             var clientRes = new ClientDynamicResourcesHandler();
             clientRes.register();
         }
-
-        bus.addListener(ModSetup::init);
     }
 
     //mod registration. register additional stuff

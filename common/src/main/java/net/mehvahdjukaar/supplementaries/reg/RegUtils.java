@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -126,8 +126,8 @@ public class RegUtils {
     }
 
 
-    public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, EntityType.Builder<T> builder) {
-        return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.build(name));
+    public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, Supplier<EntityType.Builder<T>> builder) {
+        return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.get().build(name));
     }
 
     //flags

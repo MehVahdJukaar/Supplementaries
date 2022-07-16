@@ -1,12 +1,10 @@
-package net.mehvahdjukaar.supplementaries.common.network.commands;
+package net.mehvahdjukaar.supplementaries.common.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.collect.Lists;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -44,7 +43,7 @@ public class VillagerTradesHandler {
         }
         if (RegistryConfigs.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
-            if(CompatHandler.oreganized){
+            if (CompatHandler.oreganized) {
                 trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
             }
         }
@@ -62,7 +61,6 @@ public class VillagerTradesHandler {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
 
         }
-
 
 
         RED_MERCHANT_TRADES = trades.toArray(new VillagerTrades.ItemListing[0]);
@@ -128,7 +126,7 @@ public class VillagerTradesHandler {
             int stars = 0;
             List<FireworkRocketItem.Shape> usedShapes = new ArrayList<>();
             do {
-                listTag.add(createRandomFireworkStar(random,usedShapes));
+                listTag.add(createRandomFireworkStar(random, usedShapes));
                 stars++;
             } while (random.nextFloat() < 0.42f && stars < 7);
 
@@ -189,17 +187,17 @@ public class VillagerTradesHandler {
         }
     }
 
-    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE,DyeColor.ORANGE,DyeColor.MAGENTA,DyeColor.LIGHT_BLUE,
-            DyeColor.YELLOW,DyeColor.LIME,DyeColor.PINK,DyeColor.CYAN,DyeColor.PURPLE,DyeColor.BLUE,DyeColor.GREEN,DyeColor.RED};
+    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE, DyeColor.ORANGE, DyeColor.MAGENTA, DyeColor.LIGHT_BLUE,
+            DyeColor.YELLOW, DyeColor.LIME, DyeColor.PINK, DyeColor.CYAN, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.GREEN, DyeColor.RED};
 
     private static CompoundTag createRandomFireworkStar(RandomSource random, List<FireworkRocketItem.Shape> usedShapes) {
         CompoundTag tag = new CompoundTag();
-        ArrayList<FireworkRocketItem.Shape> possible =  new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
+        ArrayList<FireworkRocketItem.Shape> possible = new ArrayList<>(List.of(FireworkRocketItem.Shape.values()));
         possible.removeAll(usedShapes);
-        if(possible.isEmpty()) {
+        if (possible.isEmpty()) {
             tag.putByte("Type", (byte) FireworkRocketItem.Shape.values()
                     [random.nextInt(FireworkRocketItem.Shape.values().length)].getId());
-        }else{
+        } else {
             tag.putByte("Type", (byte) possible.get(random.nextInt(possible.size())).getId());
         }
         tag.putBoolean("Flicker", random.nextFloat() < 0.42f);
@@ -245,13 +243,14 @@ public class VillagerTradesHandler {
             if (RegistryConfigs.FLAX_ENABLED.get())
                 itemListings.add(new BasicItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
-        AdventurerMapsHandler.loadCustomTrades();
-        AdventurerMapsHandler.addTrades();
     }
 
     //runs on init since we need to be early enough to register stuff to forge busses
-    public static void init(){
+    public static void registerTrades() {
         registerVillagerTrades();
         registerWanderingTraderTrades();
+
+        AdventurerMapsHandler.loadCustomTrades();
+        AdventurerMapsHandler.addTrades();
     }
 }

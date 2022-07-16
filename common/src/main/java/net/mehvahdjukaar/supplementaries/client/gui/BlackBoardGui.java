@@ -49,7 +49,7 @@ public class BlackBoardGui extends Screen {
                 pixels[xx][yy] = (this.buttons[xx][yy].color);
             }
         }
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetBlackboardPacket(this.tileBoard.getBlockPos(), pixels));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tileBoard.getBlockPos(), pixels));
     }
 
     private void close() {

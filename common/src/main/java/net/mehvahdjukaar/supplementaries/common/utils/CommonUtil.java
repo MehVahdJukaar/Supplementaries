@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -188,7 +188,7 @@ public class CommonUtil {
 
 
     public static HitResult rayTrace(LivingEntity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
-        return rayTrace(entity, world, blockMode, fluidMode, entity.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue());
+        return rayTrace(entity, world, blockMode, fluidMode, ForgeHelper.getReachDistance(entity));
     }
 
     public static HitResult rayTrace(Entity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {

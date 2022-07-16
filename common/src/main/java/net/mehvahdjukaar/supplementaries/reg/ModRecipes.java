@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
 import net.minecraft.resources.ResourceLocation;

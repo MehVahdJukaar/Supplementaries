@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -40,5 +42,9 @@ public class ForgeHelperImpl {
 
     public static boolean canLivingConvert(LivingEntity entity, EntityType<? extends LivingEntity> outcome, Consumer<Integer> timer) {
         return ForgeEventFactory.canLivingConvert(entity, outcome, timer);
+    }
+
+    public static double getReachDistance(LivingEntity entity) {
+        return entity.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
     }
 }

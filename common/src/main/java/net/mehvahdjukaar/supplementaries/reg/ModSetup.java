@@ -3,11 +3,10 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.network.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
@@ -76,7 +75,7 @@ public class ModSetup {
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
         Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());
 
-        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()), new ItemStack(ModRegistry.FLAX_BLOCK_ITEM.get())));
+        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()), new ItemStack(ModRegistry.FLAX_BLOCK.get())));
         horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
         AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
     }
@@ -88,7 +87,7 @@ public class ModSetup {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK.get(), 1);
     }
 
-    //events on setup
+    //events on setup. fire on world load
     @SubscribeEvent
     public static void onTagLoad(TagsUpdatedEvent event) {
         if (!firstTagLoad) {
@@ -114,13 +113,5 @@ public class ModSetup {
             Supplementaries.LOGGER.info("Finished additional setup in {} seconds", watch.elapsed().toSeconds());
         }
     }
-
-
-    //move to mod event? are these fired on forge bus?
-    @SubscribeEvent
-    public static void registerCommands(RegisterCommandsEvent event) {
-        ModCommands.register(event.getDispatcher());
-    }
-
 
 }

@@ -2,12 +2,15 @@ accessWidener   v2  named
 
 #set direction for wrench
 accessible method net/minecraft/world/entity/decoration/HangingEntity setDirection (Lnet/minecraft/core/Direction;)V
+
 #structure locator stuff
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/level/levelgen/structure/placement/ConcentricRingsStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getPlacementsForStructure (Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/RandomState;)Ljava/util/List;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
+
 #fox sleeping for cages
 accessible method net/minecraft/world/entity/animal/Fox setSleeping (Z)V
+
 #food items
 mutable field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
@@ -15,5 +18,6 @@ accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minec
 accessible field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 
-
+#item properties
+transitive-accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.network.commands;
+package net.mehvahdjukaar.supplementaries.common.commands.forge;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -13,38 +13,37 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.server.command.EnumArgument;
 
-public class RecordSongCommand {
-
+public class RecordSongCommandImpl {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("record")
                 .requires(cs -> cs.hasPermission(2))
-                .then(Commands.literal("stop").executes(c -> RecordSongCommand.stop(c, "", 0))
+                .then(Commands.literal("stop").executes(c -> RecordSongCommandImpl.stop(c, "", 0))
                         .then(Commands.argument("name", StringArgumentType.word())
-                                .executes(c -> RecordSongCommand.stop(c, StringArgumentType.getString(c, "name"), 0))
+                                .executes(c -> RecordSongCommandImpl.stop(c, StringArgumentType.getString(c, "name"), 0))
                                 .then(Commands.argument("speed_up_by", IntegerArgumentType.integer())
-                                        .executes(c -> RecordSongCommand.stop(c,
+                                        .executes(c -> RecordSongCommandImpl.stop(c,
                                                 StringArgumentType.getString(c, "name"),
                                                 IntegerArgumentType.getInteger(c, "speed_up_by")))
                                 )))
-                .then(Commands.literal("start").executes(RecordSongCommand::start)
+                .then(Commands.literal("start").executes(RecordSongCommandImpl::start)
                         .then(Commands.argument("instrument_0",
                                         EnumArgument.enumArgument(NoteBlockInstrument.class))
-                                .executes(c -> RecordSongCommand.start(c, c.getArgument("instrument_0", NoteBlockInstrument.class)))
+                                .executes(c -> RecordSongCommandImpl.start(c, c.getArgument("instrument_0", NoteBlockInstrument.class)))
                                 .then(Commands.argument("instrument_1",
                                                 EnumArgument.enumArgument(NoteBlockInstrument.class))
-                                        .executes(c -> RecordSongCommand.start(c,
+                                        .executes(c -> RecordSongCommandImpl.start(c,
                                                 c.getArgument("instrument_0", NoteBlockInstrument.class),
                                                 c.getArgument("instrument_1", NoteBlockInstrument.class)))
                                         .then(Commands.argument("instrument_2",
                                                         EnumArgument.enumArgument(NoteBlockInstrument.class))
-                                                .executes(c -> RecordSongCommand.start(c,
+                                                .executes(c -> RecordSongCommandImpl.start(c,
                                                         c.getArgument("instrument_0", NoteBlockInstrument.class),
                                                         c.getArgument("instrument_1", NoteBlockInstrument.class),
                                                         c.getArgument("instrument_2", NoteBlockInstrument.class)))
                                                 .then(Commands.argument("instrument_3",
                                                                 EnumArgument.enumArgument(NoteBlockInstrument.class))
-                                                        .executes(c -> RecordSongCommand.start(c,
+                                                        .executes(c -> RecordSongCommandImpl.start(c,
                                                                 c.getArgument("instrument_0", NoteBlockInstrument.class),
                                                                 c.getArgument("instrument_1", NoteBlockInstrument.class),
                                                                 c.getArgument("instrument_2", NoteBlockInstrument.class),

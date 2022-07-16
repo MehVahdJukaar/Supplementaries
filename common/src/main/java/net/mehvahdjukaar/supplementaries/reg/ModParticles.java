@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.particles.SimpleParticleType;
 
@@ -9,8 +9,9 @@ import java.util.function.Supplier;
 
 public class ModParticles {
 
-    public static void init(){};
-    
+    public static void init() {
+    }
+
     //particles
     public static final Supplier<SimpleParticleType> SPEAKER_SOUND = reg("speaker_sound");
     public static final Supplier<SimpleParticleType> GREEN_FLAME = reg("green_flame");
@@ -30,9 +31,9 @@ public class ModParticles {
     public static final Supplier<SimpleParticleType> SUDS_PARTICLE = reg("suds");
     public static final Supplier<SimpleParticleType> ASH_PARTICLE = reg("ash");
     public static final Supplier<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = reg("bubble_block");
-    
-    
-    private static Supplier<SimpleParticleType> reg(String string){
+
+
+    private static Supplier<SimpleParticleType> reg(String string) {
         return RegHelper.registerParticle(Supplementaries.res(string));
     }
 }

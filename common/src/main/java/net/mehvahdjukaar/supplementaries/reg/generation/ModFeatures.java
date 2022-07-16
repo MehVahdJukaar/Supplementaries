@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg.generation;
 
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.generation.structure.RoadSignFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;

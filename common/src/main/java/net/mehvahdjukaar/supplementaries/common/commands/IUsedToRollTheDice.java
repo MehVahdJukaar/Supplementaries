@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.network.commands;
+package net.mehvahdjukaar.supplementaries.common.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;

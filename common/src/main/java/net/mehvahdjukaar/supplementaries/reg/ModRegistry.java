@@ -1,26 +1,30 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.block.VerticalSlabBlock;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
-import net.mehvahdjukaar.moonlight.api.platform.registry.RegHelper;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.effects.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
-import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -39,9 +43,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -66,6 +67,10 @@ public class ModRegistry {
 
         CompatHandler.registerOptionalStuff();
         RegUtils.initDynamicRegistry();
+        RegHelper.addMiscRegistration(ModRegistry::registerAdditionalStuff);
+        RegHelper.addAttributeRegistration(ModRegistry::registerEntityAttributes);
+        RegHelper.addCommandRegistration(ModCommands::register);
+        VillagerTradesHandler.registerTrades();
     }
 
     public static boolean isDisabled(String name) {
@@ -74,8 +79,8 @@ public class ModRegistry {
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
 
-
     //using this to register overwrites and conditional block items
+    @EventCalled
     public static void registerAdditionalStuff() {
 
         WorldGenHandler.onRegisterAdditional();
@@ -91,14 +96,11 @@ public class ModRegistry {
                             .stacksTo(64)
                             .tab(CreativeModeTab.TAB_MATERIALS)));
         }
-
     }
 
-    //entities
-    @SubscribeEvent
-    public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes().build());
-        //  event.put(ModRegistry.FIREFLY_TYPE.get(), FireflyEntity.setCustomAttributes().build());
+    @EventCalled
+    public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
+        event.register(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes());
     }
 
     //paintings
@@ -122,7 +124,7 @@ public class ModRegistry {
                     .clientTrackingRange(4));
 
     //dispenser minecart
-    public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME,
+    public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
             EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.7F).clientTrackingRange(8));
 
@@ -141,31 +143,31 @@ public class ModRegistry {
             Supplementaries.res(RED_MERCHANT_NAME), RedMerchantContainerMenu::new);
 
     public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
-            new ForgeSpawnEggItem(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
+            PlatformHelper.newSpawnEgg(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
                     new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
 
     //urn
-    public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME,
+    public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME, () ->
             EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
                     .updateInterval(20));
 
     //ash
-    public static final Supplier<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME,
+    public static final Supplier<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME, () ->
             EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
                     .updateInterval(20));
 
     //ash
-    public static final Supplier<EntityType<FallingLanternEntity>> FALLING_LANTERN = regEntity(FALLING_LANTERN_NAME,
+    public static final Supplier<EntityType<FallingLanternEntity>> FALLING_LANTERN = regEntity(FALLING_LANTERN_NAME, () ->
             EntityType.Builder.<FallingLanternEntity>of(FallingLanternEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
                     .updateInterval(20));
 
-    public static final Supplier<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME,
+    public static final Supplier<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME, () ->
             EntityType.Builder.<ImprovedFallingBlockEntity>of(ImprovedFallingBlockEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.98F)
                     .clientTrackingRange(10)
@@ -186,14 +188,12 @@ public class ModRegistry {
 //                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
 
     //brick
-    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME,
+    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME,()->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    //.setCustomClientFactory(ThrowableBrickEntity::new)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
-    //.size(0.25F, 0.25F).trackingRange(4).updateInterval(10)));
 
     //bomb
-    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME,
+    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME,()->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
@@ -214,23 +214,21 @@ public class ModRegistry {
             .tab(null), BombEntity.BombType.SPIKY, false));
 
     //rope arrow
-    public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = ENTITIES.register(ROPE_ARROW_NAME, () -> (
+    public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
-                    .updateInterval(20))
-            .build(ROPE_ARROW_NAME));
+                    .updateInterval(20));
+
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(24).setNoRepair()));
 
     //slingshot projectile
-    public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = ENTITIES.register(SLINGSHOT_PROJECTILE_NAME, () -> (
+    public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
-                    .updateInterval(20))
-            .build(SLINGSHOT_PROJECTILE_NAME));
-
+                    .updateInterval(20));
 
     //label
 
@@ -297,7 +295,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = regTile(
             HANGING_SIGN_NAME + "_oak", () -> RegHelper.createBlockEntityType(
-                    HangingSignBlockTile::new, HANGING_SIGNS.values().stream().toArray(Block[]::new)));
+                    HangingSignBlockTile::new, HANGING_SIGNS.values().toArray(Block[]::new)));
 
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
@@ -1182,8 +1180,8 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : */new FlowerBoxBlock(p);
     }, CreativeModeTab.TAB_DECORATIONS);
 
-    public static final Supplier<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = regTile(FLOWER_BOX_NAME, () -> BlockEntityType.Builder.of(
-            FlowerBoxBlockTile::new, FLOWER_BOX.get()).build(null));
+    public static final Supplier<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = regTile(FLOWER_BOX_NAME, () ->
+            RegHelper.createBlockEntityType(FlowerBoxBlockTile::new, FLOWER_BOX.get()));
 
     //statue
     public static final Supplier<Block> STATUE = regWithItem(STATUE_NAME, () -> new StatueBlock(
