@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
@@ -46,9 +47,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -99,20 +97,20 @@ public class ClientRegistry {
         ClientPlatformHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
 
-        ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e->{
+        ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             Textures.getTexturesForBlockAtlas().forEach(e::addSprite);
         });
-        ClientPlatformHelper.addAtlasTextureCallback(Sheets.SHULKER_SHEET, e->{
+        ClientPlatformHelper.addAtlasTextureCallback(Sheets.SHULKER_SHEET, e -> {
             Textures.getTexturesForShulkerAtlas().forEach(e::addSprite);
         });
-        ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e->{
+        ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e -> {
             Textures.getTexturesForBannerAtlas().forEach(e::addSprite);
         });
 
     }
 
 
-
+    @SuppressWarnings("ConstantConditions")
     public static void setup() {
         //compat
         CompatHandlerClient.init();
@@ -200,8 +198,9 @@ public class ClientRegistry {
         ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
+
         ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
-                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ForgeHelper.areStacksEqual(stack, entity.getUseItem(), true) ? 1.0F : 0.0F);
 
 
         ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), new ResourceLocation("packed"),
@@ -213,7 +212,6 @@ public class ClientRegistry {
         ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
                 (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
-        
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
@@ -331,7 +329,7 @@ public class ClientRegistry {
     }
 
     @EventCalled
-    private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event){
+    private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
     }
 
@@ -365,8 +363,8 @@ public class ClientRegistry {
         event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
-        event.register(JARVIS_MODEL, JarredModel::createMesh);
-        event.register(PICKLE_MODEL, PickleModel::createMesh);
+        //event.register(JARVIS_MODEL, JarredModel::createMesh);
+        // event.register(PICKLE_MODEL, PickleModel::createMesh);
         //event.register(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
     }
 

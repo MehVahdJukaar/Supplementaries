@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -11,8 +13,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,6 +54,31 @@ public class ForgeHelper {
 
     @ExpectPlatform
     public static double getReachDistance(LivingEntity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static float getExplosionResistance(BlockState state, Level level, BlockPos pos, Explosion explosion) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void onBlockExploded(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean areStacksEqual(ItemStack stack, ItemStack other, boolean sameNbt) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean isFireSource(BlockState blockState, Level level, BlockPos pos, Direction up) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean canDropFromExplosion(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
         throw new AssertionError();
     }
 }

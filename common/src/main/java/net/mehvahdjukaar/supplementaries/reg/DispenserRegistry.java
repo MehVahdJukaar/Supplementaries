@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
@@ -50,7 +49,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -60,7 +58,7 @@ public class DispenserRegistry {
 
         if (!RegistryConfigs.DISPENSERS.get()) return;
 
-        if(ServerConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
+        if (ServerConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
             DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
         }
         DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);

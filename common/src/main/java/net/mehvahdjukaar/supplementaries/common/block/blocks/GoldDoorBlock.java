@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -67,8 +67,9 @@ public class GoldDoorBlock extends DoorBlock {
 
     //double door stuff
 
+    @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoor(Level world, BlockState state, BlockPos pos) {
-        if ((CompatHandler.quark && QuarkPlugin.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
+        if ((CompatHandler.quark && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
             Direction direction = state.getValue(DoorBlock.FACING);
             boolean isOpen = state.getValue(DoorBlock.OPEN);
             DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
@@ -83,8 +84,9 @@ public class GoldDoorBlock extends DoorBlock {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand) {
-        if ((CompatHandler.quark && QuarkPlugin.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
+        if ((CompatHandler.quark && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
             Direction direction = state.getValue(DoorBlock.FACING);
             boolean isOpen = state.getValue(DoorBlock.OPEN);
             DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);

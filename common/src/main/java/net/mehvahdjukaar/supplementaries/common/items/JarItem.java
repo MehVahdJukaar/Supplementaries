@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.botania.BotaniaCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -256,7 +256,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
-            InteractionResult r = BotaniaCompatRegistry.tryCaptureTater(this, context);
+            InteractionResult r = QuarkCompat.tryCaptureTater(this, context);
             if (r.consumesAction()) return r;
         }
         return super.useOn(context);

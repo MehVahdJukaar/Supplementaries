@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.block.util.IInstanceTick;
-import net.mehvahdjukaar.supplementaries.integration.quark.BambooSpikesPistonMovement;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -24,13 +24,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlockHolder, IInstanceTick {
 
 
-    @Shadow private Direction direction;
-    @Shadow private float progress;
-    @Shadow private float progressO;
+    @Shadow
+    private Direction direction;
+    @Shadow
+    private float progress;
+    @Shadow
+    private float progressO;
 
-    @Shadow public abstract BlockState getMovedState();
+    @Shadow
+    public abstract BlockState getMovedState();
 
-    @Shadow private BlockState movedState;
+    @Shadow
+    private BlockState movedState;
 
     public PistonBlockEntityMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
@@ -48,7 +53,7 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
 
     @Inject(method = "tick", at = @At("TAIL"))
     private static void tick(Level pLevel, BlockPos pPos, BlockState pState, PistonMovingBlockEntity tile, CallbackInfo info) {
-        if(tile instanceof IInstanceTick t){
+        if (tile instanceof IInstanceTick t) {
             t.instanceTick(pLevel, pPos);
         }
     }
@@ -57,13 +62,13 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
         if (this.progressO < 1.0F && this.getMovedState().getBlock() instanceof BambooSpikesBlock) {
             boolean sameDir = (this.getMovedState().getValue(BambooSpikesBlock.FACING).equals(this.getMovementDirection()));
             AABB aabb = this.moveByPositionAndProgress(pos, Shapes.block().bounds());
-            BambooSpikesPistonMovement.tick(level, pos, aabb, sameDir, this);
+            QuarkCompat.tickPiston(level, pos, aabb, sameDir, this);
         }
     }
 
     private AABB moveByPositionAndProgress(BlockPos pos, AABB aabb) {
         double d0 = this.getExtendedProgress(this.progress);
-        return aabb.move((double)pos.getX() + d0 * (double)this.direction.getStepX(), (double)pos.getY() + d0 * (double)this.direction.getStepY(), (double)pos.getZ() + d0 * (double)this.direction.getStepZ());
+        return aabb.move((double) pos.getX() + d0 * (double) this.direction.getStepX(), (double) pos.getY() + d0 * (double) this.direction.getStepY(), (double) pos.getZ() + d0 * (double) this.direction.getStepZ());
     }
 
     @Shadow

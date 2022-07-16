@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkTooltipPlugin;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -34,7 +34,7 @@ public class ClientEvents {
         }
 
         if (CompatHandler.quark) {
-            QuarkTooltipPlugin.onItemTooltipEvent(itemStack, tooltipFlag, components);
+            QuarkCompat.onItemTooltipEvent(itemStack, tooltipFlag, components);
         }
 
         Item item = itemStack.getItem();

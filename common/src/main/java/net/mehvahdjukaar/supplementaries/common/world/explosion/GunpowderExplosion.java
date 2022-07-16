@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -80,8 +80,8 @@ public class GunpowderExplosion extends Explosion {
         BlockPos pos = new BlockPos(x, y, z);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
         BlockState s = level.getBlockState(pos);
-        if(s.getMaterial().isReplaceable() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
-            if (this.hasFlammableNeighbours(pos) || this.level.getBlockState(pos.below()).isFireSource(level, pos, Direction.UP)
+        if (s.getMaterial().isReplaceable() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
+            if (this.hasFlammableNeighbours(pos) || ForgeHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
                     || newFire.getBlock() != Blocks.FIRE) {
                 this.level.setBlockAndUpdate(pos, newFire);
             }
@@ -102,7 +102,7 @@ public class GunpowderExplosion extends Explosion {
     }
 
 
-    public void explodeBlock(int i, int j, int k) {
+    private void explodeBlock(int i, int j, int k) {
         BlockPos pos = new BlockPos(i, j, k);
         FluidState fluidstate = this.level.getFluidState(pos);
         if (fluidstate.getType() == Fluids.EMPTY) {
@@ -110,7 +110,7 @@ public class GunpowderExplosion extends Explosion {
             Block block = state.getBlock();
 
 
-            if (block.getExplosionResistance(state, this.level, pos, this) == 0) {
+            if (ForgeHelper.getExplosionResistance(state, this.level, pos, this) == 0) {
                 if (block instanceof TntBlock) {
                     this.toBlow.add(pos);
                 }
@@ -120,7 +120,7 @@ public class GunpowderExplosion extends Explosion {
                 lightable.lightUp(null, state, pos, this.level, ILightable.FireSound.FLAMING_ARROW);
             } else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
                     (state.getBlock() instanceof AbstractCandleBlock && !AbstractCandleBlock.isLit(state)) ||
-                    (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.canLightBrazier(state))) {
+                    (CompatHandler.deco_blocks && DecoBlocksCompat.canLightBrazier(state))) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
                 ILightable.FireSound.FLAMING_ARROW.play(level, pos);
             }
@@ -139,7 +139,7 @@ public class GunpowderExplosion extends Explosion {
 
             BlockPos immutable = blockpos.immutable();
             this.level.getProfiler().push("explosion_blocks");
-            if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerLevel) {
+            if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel) {
                 BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
                 LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(this.level.random)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
@@ -150,7 +150,7 @@ public class GunpowderExplosion extends Explosion {
                 blockstate.getDrops(builder).forEach((d) -> addBlockDrops(drops, d, immutable));
             }
 
-            blockstate.onBlockExploded(this.level, blockpos, this);
+            ForgeHelper.onBlockExploded(blockstate, this.level, blockpos, this);
             this.level.getProfiler().pop();
 
         }

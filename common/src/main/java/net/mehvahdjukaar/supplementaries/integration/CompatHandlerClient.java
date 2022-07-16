@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
 
 public class CompatHandlerClient {
 

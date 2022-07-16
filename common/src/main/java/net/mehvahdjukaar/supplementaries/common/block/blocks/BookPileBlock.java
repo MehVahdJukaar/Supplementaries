@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -118,11 +117,19 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    // TODO find a way to make this work on Fabric
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
+            tile.getItem(state.getValue(BOOKS) - 1);
+        }
+        return Items.BOOK.getDefaultInstance();
+    }
+
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             double f = 5 * (target.getLocation().y - pos.getY()) / SHAPE_4.bounds().maxY;
-            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS)-1));
+            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS) - 1));
         }
         return Items.BOOK.getDefaultInstance();
     }

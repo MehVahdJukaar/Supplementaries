@@ -3,13 +3,14 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -89,6 +93,7 @@ public class GunpowderBlock extends LightUpBlock {
                 this.SHAPES_CACHE.put(blockstate, this.calculateVoxelShape(blockstate));
             }
         }
+        RegHelper.registerBlockFlammability(this, 60, 300);
     }
 
     @Override
@@ -212,8 +217,8 @@ public class GunpowderBlock extends LightUpBlock {
                 mutable.setWithOffset(pos, direction).move(Direction.UP);
                 BlockState blockstate3 = world.getBlockState(mutable);
                 if (!blockstate3.is(Blocks.OBSERVER)) {
-                    BlockPos blockpos1 = mutable.relative(direction.getOpposite());
-                    BlockState blockstate2 = blockstate3.updateShape(direction.getOpposite(), world.getBlockState(blockpos1), world, mutable, blockpos1);
+                    BlockPos pos1 = mutable.relative(direction.getOpposite());
+                    BlockState blockstate2 = blockstate3.updateShape(direction.getOpposite(), world.getBlockState(pos1), world, mutable, pos1);
                     updateOrDestroy(blockstate3, blockstate2, world, mutable, var1, var2);
                 }
             }
@@ -252,18 +257,22 @@ public class GunpowderBlock extends LightUpBlock {
         return state.isFaceSturdy(world, pos, Direction.UP) || state.is(Blocks.HOPPER);
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
         return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock || b instanceof AbstractCandleBlock ||
-                (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b));
+                (CompatHandler.deco_blocks && DecoBlocksCompat.isBrazier(b));
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return switch (rotation) {
-            case CLOCKWISE_180 -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
-            case COUNTERCLOCKWISE_90 -> state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
-            case CLOCKWISE_90 -> state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
+            case CLOCKWISE_180 ->
+                    state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
             default -> state;
         };
     }
@@ -429,7 +438,6 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
 
-
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor world) {
         if (!isLit(state)) {
@@ -467,6 +475,7 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean isFireSource(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
@@ -475,7 +484,7 @@ public class GunpowderBlock extends LightUpBlock {
         if (b instanceof FireBlock || b instanceof MagmaBlock || (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock)) ||
                 b == ModRegistry.BLAZE_ROD_BLOCK.get())
             return true;
-        if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompatRegistry.isBrazier(b))) {
+        if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompat.isBrazier(b))) {
             return state.getValue(CampfireBlock.LIT);
         }
         return world.getFluidState(pos).getType() == Fluids.LAVA;

@@ -88,8 +88,8 @@ public class ModSetup {
     }
 
     //events on setup. fire on world load
-    @SubscribeEvent
-    public static void onTagLoad(TagsUpdatedEvent event) {
+    //TODO: add
+    public static void onWorldLoad() {
         if (!firstTagLoad) {
             firstTagLoad = true;
             if (!hasFinishedSetup) {

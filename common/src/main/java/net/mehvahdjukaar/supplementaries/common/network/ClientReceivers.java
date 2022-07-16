@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
@@ -26,7 +27,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fml.ModList;
 
 import java.util.function.Consumer;
 
@@ -76,7 +76,7 @@ public class ClientReceivers {
             PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache;
             if (ClientConfigs.General.ANTI_REPOST_WARNING.get()) {
                 try {
-                    String fileName = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile().getFileName();
+                    String fileName = PlatformHelper.getModFilePath(Supplementaries.MOD_ID).getFileName().toString();
                     if (fileName.contains(".jar")) {
                         if (fileName.contains("-Mod-1")) {
                             MutableComponent link = Component.translatable("message.supplementaries.anti_repost_link");

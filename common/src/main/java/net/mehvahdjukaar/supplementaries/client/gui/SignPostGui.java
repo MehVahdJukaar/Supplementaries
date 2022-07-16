@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
+import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -197,7 +197,7 @@ public class SignPostGui extends Screen {
         //render fence
         poseStack.translate(-0.5, -0.5, -0.5);
         BlockState fence = this.tileSign.mimic;
-        if (CompatHandler.framedblocks && tileSign.framed) fence = FramedSignPost.framedFence;
+        if (CompatHandler.framedblocks && tileSign.framed) fence = FramedBlocksCompat.getFramedFence();
         if (fence != null) {
             blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         }

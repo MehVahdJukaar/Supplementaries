@@ -1,18 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.util.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -96,7 +97,10 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if (item instanceof BannerPatternItem bannerPatternItem) {
-            this.cachedPattern = ClientRegistry.FLAG_MATERIALS.get(bannerPatternItem.getBannerPattern());
+            for (var e : Registry.BANNER_PATTERN.getTag(bannerPatternItem.getBannerPattern()).get()) {
+                this.cachedPattern = ModMaterials.FLAG_MATERIALS.get(e.value());
+                break;
+            }
         }
 
         this.needsVisualRefresh = true;
@@ -164,8 +168,9 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return this.isEmpty() && (ServerConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static boolean isPageItem(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCPlugin.checkForPrintedBook(item));
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCCompat.checkForPrintedBook(item));
     }
 
     @Override

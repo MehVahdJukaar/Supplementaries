@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.cctweaked.CCPlugin;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -107,7 +106,7 @@ public class CompatHandler {
 
     public static void setup() {
         // if (create) CreatePlugin.initialize();
-        if (computercraft) CCPlugin.initialize();
+        if (computercraft) CCCompat.initialize();
 
         //var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
         // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());

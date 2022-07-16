@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -197,6 +197,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
                                   BlockPos facingPos) {
@@ -218,7 +219,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             BlockState newHeld = null;
 
             if (CompatHandler.quark) {
-                newHeld = QuarkPlugin.updateWoodPostShape(oldHeld, facing, facingState);
+                newHeld = QuarkCompat.updateWoodPostShape(oldHeld, facing, facingState);
             }
             if (newHeld == null) {
                 newHeld = oldHeld.updateShape(facing, facingState, world, currentPos, facingPos);

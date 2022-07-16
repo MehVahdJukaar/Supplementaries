@@ -36,7 +36,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -94,20 +93,25 @@ public class BombExplosion extends Explosion {
             if (!blockstate.isAir()) {
                 BlockPos immutable = blockpos.immutable();
                 this.level.getProfiler().push("explosion_blocks");
-                if (blockstate.canDropFromExplosion(this.level, blockpos, this) && this.level instanceof ServerLevel) {
+                if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel) {
                     BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(this.level.random).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.getExploder());
+                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level))
+                            .withRandom(this.level.random)
+                            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos))
+                            .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+                            .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity)
+                            .withOptionalParameter(LootContextParams.THIS_ENTITY, this.getExploder());
 
                     if (this.mode == BlockInteraction.DESTROY) {
                         builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                     }
 
-                    blockstate.getDrops(builder).forEach((p_229977_2_) -> {
-                        addBlockDrops(drops, p_229977_2_, immutable);
+                    blockstate.getDrops(builder).forEach((stack) -> {
+                        addBlockDrops(drops, stack, immutable);
                     });
                 }
 
-                blockstate.onBlockExploded(this.level, blockpos, this);
+                ForgeHelper.onBlockExploded(blockstate, this.level, blockpos, this);
                 this.level.getProfiler().pop();
             }
         }
