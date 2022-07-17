@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.DecoBlocksCompatRegistry;
+import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -119,7 +119,7 @@ public class BlockProperties {
             //if (state.getBlock().hasTileEntity(state)) return type;
             if (state.is(ModTags.POSTS)) {
                 type = PostType.POST;
-            } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && CompatHandler.isPalisade(state))) {
+            } else if (state.is(ModTags.PALISADES) || (CompatHandler.deco_blocks && DecoBlocksCompat.isPalisade(state))) {
                 type = PostType.PALISADE;
             } else if (state.is(ModTags.WALLS)) {
                 if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {

@@ -22,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
@@ -91,10 +92,12 @@ public class ModRegistry {
         //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
 
         if (RegistryConfigs.SHULKER_HELMET_ENABLED.get()) {
+            //TODO: re add
+            /*
             event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
                     new ShulkerShellItem(new Item.Properties()
                             .stacksTo(64)
-                            .tab(CreativeModeTab.TAB_MATERIALS)));
+                            .tab(CreativeModeTab.TAB_MATERIALS)));*/
         }
     }
 
@@ -117,11 +120,7 @@ public class ModRegistry {
 
 
     public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
-            EntityType.Builder.<PearlMarker>of(PearlMarker::new, MobCategory.MISC)
-                    .sized(0.999F, 0.999F)
-                    .updateInterval(-1)
-                    .setShouldReceiveVelocityUpdates(false)
-                    .clientTrackingRange(4));
+        PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
 
     //dispenser minecart
     public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
@@ -133,11 +132,7 @@ public class ModRegistry {
 
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
-            EntityType.Builder.<RedMerchantEntity>of(RedMerchantEntity::new, MobCategory.CREATURE)
-                    .setShouldReceiveVelocityUpdates(true)
-                    .clientTrackingRange(10)
-                    .setUpdateInterval(3)
-                    .sized(0.6F, 1.95F));
+            RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);
 
     public static final Supplier<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = RegHelper.registerMenuType(
             Supplementaries.res(RED_MERCHANT_NAME), RedMerchantContainerMenu::new);
@@ -188,12 +183,12 @@ public class ModRegistry {
 //                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
 
     //brick
-    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME,()->
+    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 
     //bomb
-    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME,()->
+    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
@@ -221,7 +216,7 @@ public class ModRegistry {
                     .updateInterval(20));
 
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(24).setNoRepair()));
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(32)));
 
     //slingshot projectile
     public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
@@ -294,7 +289,7 @@ public class ModRegistry {
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
 
     public static final Supplier<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = regTile(
-            HANGING_SIGN_NAME + "_oak", () -> RegHelper.createBlockEntityType(
+            HANGING_SIGN_NAME + "_oak", () -> PlatformHelper.newBlockEntityType(
                     HangingSignBlockTile::new, HANGING_SIGNS.values().toArray(Block[]::new)));
 
     //sign posts
@@ -307,7 +302,7 @@ public class ModRegistry {
     });
 
     public static final Supplier<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = regTile(
-            SIGN_POST_NAME, () -> RegHelper.createBlockEntityType(
+            SIGN_POST_NAME, () -> PlatformHelper.newBlockEntityType(
                     SignPostBlockTile::new, SIGN_POST.get()));
 
     public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new HashMap<>();
@@ -316,13 +311,13 @@ public class ModRegistry {
     public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);
 
     public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = regTile(
-            FLAG_NAME, () -> RegHelper.createBlockEntityType(
+            FLAG_NAME, () -> PlatformHelper.newBlockEntityType(
                     FlagBlockTile::new, FLAGS.values().stream().map(Supplier::get).toArray(Block[]::new)));
     //ceiling banner
     public static final Map<DyeColor, Supplier<Block>> CEILING_BANNERS = RegUtils.registerCeilingBanners(CEILING_BANNER_NAME);
 
     public static final Supplier<BlockEntityType<CeilingBannerBlockTile>> CEILING_BANNER_TILE = regTile(
-            CEILING_BANNER_NAME, () -> RegHelper.createBlockEntityType(
+            CEILING_BANNER_NAME, () -> PlatformHelper.newBlockEntityType(
                     CeilingBannerBlockTile::new, CEILING_BANNERS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
     //presents
@@ -330,7 +325,7 @@ public class ModRegistry {
     public static final Map<DyeColor, Supplier<Block>> PRESENTS = RegUtils.registerPresents(PRESENT_NAME, PresentBlock::new);
 
     public static final Supplier<BlockEntityType<PresentBlockTile>> PRESENT_TILE = regTile(
-            PRESENT_NAME, () -> RegHelper.createBlockEntityType(
+            PRESENT_NAME, () -> PlatformHelper.newBlockEntityType(
                     PresentBlockTile::new, PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
 
@@ -342,7 +337,7 @@ public class ModRegistry {
     public static final Map<DyeColor, Supplier<Block>> TRAPPED_PRESENTS = RegUtils.registerPresents(TRAPPED_PRESENT_NAME, TrappedPresentBlock::new);
 
     public static final Supplier<BlockEntityType<TrappedPresentBlockTile>> TRAPPED_PRESENT_TILE = regTile(
-            TRAPPED_PRESENT_NAME, () -> RegHelper.createBlockEntityType(
+            TRAPPED_PRESENT_NAME, () -> PlatformHelper.newBlockEntityType(
                     TrappedPresentBlockTile::new, TRAPPED_PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
 
@@ -365,7 +360,7 @@ public class ModRegistry {
             CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<PedestalBlockTile>> PEDESTAL_TILE = regTile(
-            PEDESTAL_NAME, () -> RegHelper.createBlockEntityType(
+            PEDESTAL_NAME, () -> PlatformHelper.newBlockEntityType(
                     PedestalBlockTile::new, PEDESTAL.get()));
 
 
@@ -375,7 +370,7 @@ public class ModRegistry {
             CreativeModeTab.TAB_DECORATIONS, 300);
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
-            NOTICE_BOARD_NAME, () -> RegHelper.createBlockEntityType(
+            NOTICE_BOARD_NAME, () -> PlatformHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
 
     public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = RegHelper.registerMenuType(
@@ -386,7 +381,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
     ));
     public static final Supplier<BlockEntityType<SafeBlockTile>> SAFE_TILE = regTile(
-            SAFE_NAME, () -> RegHelper.createBlockEntityType(
+            SAFE_NAME, () -> PlatformHelper.newBlockEntityType(
                     SafeBlockTile::new, SAFE.get()));
 
 
@@ -401,7 +396,7 @@ public class ModRegistry {
     ));
 
     public static final Supplier<BlockEntityType<CageBlockTile>> CAGE_TILE = regTile(
-            CAGE_NAME, () -> RegHelper.createBlockEntityType(
+            CAGE_NAME, () -> PlatformHelper.newBlockEntityType(
                     CageBlockTile::new, CAGE.get()));
 
     public static final Supplier<Item> CAGE_ITEM = regItem(CAGE_NAME, () -> new CageItem(CAGE.get(),
@@ -417,7 +412,7 @@ public class ModRegistry {
     ));
 
     public static final Supplier<BlockEntityType<JarBlockTile>> JAR_TILE = regTile(
-            JAR_NAME, () -> RegHelper.createBlockEntityType(
+            JAR_NAME, () -> PlatformHelper.newBlockEntityType(
                     JarBlockTile::new, JAR.get()));
 
     public static final Supplier<Item> JAR_ITEM = regItem(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
@@ -431,7 +426,7 @@ public class ModRegistry {
                     .sound(ModSounds.SACK)
     ));
     public static final Supplier<BlockEntityType<SackBlockTile>> SACK_TILE = regTile(
-            SACK_NAME, () -> RegHelper.createBlockEntityType(
+            SACK_NAME, () -> PlatformHelper.newBlockEntityType(
                     SackBlockTile::new, SACK.get()));
 
     public static final Supplier<MenuType<SackContainerMenu>> SACK_CONTAINER = RegHelper.registerMenuType(
@@ -446,7 +441,7 @@ public class ModRegistry {
                     .strength(2, 3)
     ));
     public static final Supplier<BlockEntityType<BlackboardBlockTile>> BLACKBOARD_TILE = regTile(
-            BLACKBOARD_NAME, () -> RegHelper.createBlockEntityType(
+            BLACKBOARD_NAME, () -> PlatformHelper.newBlockEntityType(
                     BlackboardBlockTile::new, BLACKBOARD.get()));
 
     public static final Supplier<Item> BLACKBOARD_ITEM = regItem(BLACKBOARD_NAME, () -> new BlackboardItem(BLACKBOARD.get(),
@@ -469,7 +464,7 @@ public class ModRegistry {
 
 
     public static final Supplier<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = regTile(
-            GLOBE_NAME, () -> RegHelper.createBlockEntityType(
+            GLOBE_NAME, () -> PlatformHelper.newBlockEntityType(
                     GlobeBlockTile::new, GLOBE.get()));
 
     /*
@@ -580,7 +575,7 @@ public class ModRegistry {
                     Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),
                     Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D))));
 
-    public static final Supplier<Item> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN,
+    public static final Supplier<BlockItem> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN_NAME, BRASS_LANTERN,
             getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME), "forge:ingots/brass");
 
     //crimson lantern
@@ -599,7 +594,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
             Block.box(4.0D, 0.0D, 4.0D, 12.0D, 9.0D, 12.0D)));
 
-    public static final Supplier<Item> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN,
+    public static final Supplier<BlockItem> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN_NAME, SILVER_LANTERN,
             getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME), "forge:ingots/silver");
 
     //lead lantern
@@ -608,7 +603,7 @@ public class ModRegistry {
             Shapes.or(Block.box(4.0D, 4.0D, 4.0D, 12.0D, 7.0D, 12.0D),
                     Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D))));
 
-    public static final Supplier<Item> LEAD_LANTERN_ITEM = regBlockItem(LEAD_LANTERN,
+    public static final Supplier<BlockItem> LEAD_LANTERN_ITEM = regBlockItem(LEAD_LANTERN_NAME, LEAD_LANTERN,
             getTab(CreativeModeTab.TAB_DECORATIONS, LEAD_LANTERN_NAME), "forge:ingots/lead");
 
 
@@ -625,7 +620,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
 
     public static final Supplier<BlockEntityType<RopeKnotBlockTile>> ROPE_KNOT_TILE = regTile(
-            ROPE_KNOT_NAME, () -> RegHelper.createBlockEntityType(
+            ROPE_KNOT_NAME, () -> PlatformHelper.newBlockEntityType(
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
     //spikes
@@ -637,14 +632,14 @@ public class ModRegistry {
                     .noOcclusion()));
 
     public static final Supplier<BlockEntityType<BambooSpikesBlockTile>> BAMBOO_SPIKES_TILE = regTile(
-            BAMBOO_SPIKES_NAME, () -> RegHelper.createBlockEntityType(
+            BAMBOO_SPIKES_NAME, () -> PlatformHelper.newBlockEntityType(
                     BambooSpikesBlockTile::new, BAMBOO_SPIKES.get()));
 
     public static final Supplier<Item> BAMBOO_SPIKES_ITEM = regItem(BAMBOO_SPIKES_NAME, () -> new BambooSpikesItem(BAMBOO_SPIKES.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, BAMBOO_SPIKES_NAME))));
 
     public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).defaultDurability(BambooSpikesBlockTile.MAX_CHARGES).setNoRepair().tab(getTab(CreativeModeTab.TAB_BREWING, TIPPED_SPIKES_NAME))));
+            (new Item.Properties()).defaultDurability(BambooSpikesBlockTile.MAX_CHARGES).tab(getTab(CreativeModeTab.TAB_BREWING, TIPPED_SPIKES_NAME))));
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
@@ -654,7 +649,7 @@ public class ModRegistry {
             CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<GobletBlockTile>> GOBLET_TILE = regTile(
-            GOBLET_NAME, () -> RegHelper.createBlockEntityType(
+            GOBLET_NAME, () -> PlatformHelper.newBlockEntityType(
                     GobletBlockTile::new, GOBLET.get()));
 
     //hourglass
@@ -666,7 +661,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<HourGlassBlockTile>> HOURGLASS_TILE = regTile(
-            HOURGLASS_NAME, () -> RegHelper.createBlockEntityType(
+            HOURGLASS_NAME, () -> PlatformHelper.newBlockEntityType(
                     HourGlassBlockTile::new, HOURGLASS.get()));
 
     //item shelf
@@ -679,7 +674,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS, 100);
 
     public static final Supplier<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = regTile(
-            ITEM_SHELF_NAME, () -> RegHelper.createBlockEntityType(
+            ITEM_SHELF_NAME, () -> PlatformHelper.newBlockEntityType(
                     ItemShelfBlockTile::new, ITEM_SHELF.get()));
 
     //doormat
@@ -691,7 +686,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS, 134);
 
     public static final Supplier<BlockEntityType<DoormatBlockTile>> DOORMAT_TILE = regTile(
-            DOORMAT_NAME, () -> RegHelper.createBlockEntityType(
+            DOORMAT_NAME, () -> PlatformHelper.newBlockEntityType(
                     DoormatBlockTile::new, DOORMAT.get()));
 
     //magma cream block
@@ -744,7 +739,7 @@ public class ModRegistry {
                     .noLootTable()
     ));
     public static final Supplier<BlockEntityType<SpringLauncherArmBlockTile>> SPRING_LAUNCHER_ARM_TILE = regTile(
-            PISTON_LAUNCHER_ARM_NAME, () -> RegHelper.createBlockEntityType(
+            PISTON_LAUNCHER_ARM_NAME, () -> PlatformHelper.newBlockEntityType(
                     SpringLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()));
 
     //speaker Block
@@ -752,11 +747,11 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
-        return CompatHandler.computercraft ? CCPlugin.makeSpeaker(p) : new SpeakerBlock(p);
+        return CompatHandler.computercraft ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
     }, CreativeModeTab.TAB_REDSTONE, 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
-            SPEAKER_BLOCK_NAME, () -> RegHelper.createBlockEntityType(
+            SPEAKER_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     SpeakerBlockTile::new, SPEAKER_BLOCK.get()));
 
     //turn table
@@ -767,7 +762,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     public static final Supplier<BlockEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = regTile(
-            TURN_TABLE_NAME, () -> RegHelper.createBlockEntityType(
+            TURN_TABLE_NAME, () -> PlatformHelper.newBlockEntityType(
                     TurnTableBlockTile::new, TURN_TABLE.get()));
 
     //illuminator
@@ -786,7 +781,7 @@ public class ModRegistry {
             Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
-            PULLEY_BLOCK_NAME, () -> RegHelper.createBlockEntityType(
+            PULLEY_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     PulleyBlockTile::new, PULLEY_BLOCK.get()));
 
     //lock block
@@ -806,7 +801,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE, 300);
 
     public static final Supplier<BlockEntityType<BellowsBlockTile>> BELLOWS_TILE = regTile(
-            BELLOWS_NAME, () -> RegHelper.createBlockEntityType(
+            BELLOWS_NAME, () -> PlatformHelper.newBlockEntityType(
                     BellowsBlockTile::new, BELLOWS.get()));
 
     //clock
@@ -818,7 +813,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     public static final Supplier<BlockEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = regTile(
-            CLOCK_BLOCK_NAME, () -> RegHelper.createBlockEntityType(
+            CLOCK_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     ClockBlockTile::new, BELLOWS.get()));
 
     //sconce lever
@@ -845,7 +840,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     public static final Supplier<BlockEntityType<WindVaneBlockTile>> WIND_VANE_TILE = regTile(
-            WIND_VANE_NAME, () -> RegHelper.createBlockEntityType(
+            WIND_VANE_NAME, () -> PlatformHelper.newBlockEntityType(
                     WindVaneBlockTile::new, WIND_VANE.get()));
 
     //faucet
@@ -857,7 +852,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     public static final Supplier<BlockEntityType<FaucetBlockTile>> FAUCET_TILE = regTile(
-            FAUCET_NAME, () -> RegHelper.createBlockEntityType(
+            FAUCET_NAME, () -> PlatformHelper.newBlockEntityType(
                     FaucetBlockTile::new, FAUCET.get()));
 
     //gold door
@@ -878,14 +873,14 @@ public class ModRegistry {
                     .strength(4.0F, 5.0F)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final Supplier<Item> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR,
+    public static final Supplier<BlockItem> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR_NAME, SILVER_DOOR,
             getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME), "forge:ingots/silver");
 
     //silver trapdoor
     public static final Supplier<Block> SILVER_TRAPDOOR = regBlock(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
             BlockBehaviour.Properties.copy(SILVER_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final Supplier<Item> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR,
+    public static final Supplier<BlockItem> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR_NAME, SILVER_TRAPDOOR,
             getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME), "forge:ingots/silver");
 
     //lead door
@@ -894,14 +889,14 @@ public class ModRegistry {
                     .strength(5.0f, 6.0f)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final Supplier<Item> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR,
+    public static final Supplier<BlockItem> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR_NAME, LEAD_DOOR,
             getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME), "forge:ingots/lead");
 
     //lead trapdoor
     public static final Supplier<Block> LEAD_TRAPDOOR = regBlock(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
             BlockBehaviour.Properties.copy(LEAD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final Supplier<Item> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR,
+    public static final Supplier<BlockItem> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR_NAME, LEAD_TRAPDOOR,
             getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME), "forge:ingots/lead");
 
 
@@ -922,7 +917,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_TRAPDOOR_NAME)).fireResistant()));
 
     public static final Supplier<BlockEntityType<KeyLockableTile>> KEY_LOCKABLE_TILE = regTile(
-            "key_lockable_tile", () -> RegHelper.createBlockEntityType(
+            "key_lockable_tile", () -> PlatformHelper.newBlockEntityType(
                     KeyLockableTile::new, NETHERITE_DOOR.get(), NETHERITE_TRAPDOOR.get(), LOCK_BLOCK.get()));
 
     //iron gate
@@ -944,7 +939,7 @@ public class ModRegistry {
     });
 
     public static final Supplier<BlockEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = regTile(
-            WALL_LANTERN_NAME, () -> RegHelper.createBlockEntityType(
+            WALL_LANTERN_NAME, () -> PlatformHelper.newBlockEntityType(
                     WallLanternBlockTile::new, WALL_LANTERN.get()));
 
 
@@ -954,7 +949,7 @@ public class ModRegistry {
             () -> Items.FLOWER_POT, ServerConfigs.Tweaks.HANGING_POT_PLACEMENT);
 
     public static final Supplier<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = regTile(
-            HANGING_FLOWER_POT_NAME, () -> RegHelper.createBlockEntityType(
+            HANGING_FLOWER_POT_NAME, () -> PlatformHelper.newBlockEntityType(
                     HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()));
 
     //double cake
@@ -995,7 +990,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_FOOD, PANCAKE_NAME))
     ));
     public static final Supplier<Item> PANCAKE_DISC = regItem("pancake_disc",
-            () -> new RecordItem(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null)));
+            () -> PlatformHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null)));
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
@@ -1016,7 +1011,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS);
 
     //pot
-    public static final Supplier<Block> FLAX_POT = regBlock("potted_flax", () -> new FlowerPotBlock(
+    public static final Supplier<Block> FLAX_POT = regBlock("potted_flax", () -> PlatformHelper.newFlowerPot(
             () -> (FlowerPotBlock) Blocks.FLOWER_POT, FLAX, BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)));
 
     //fodder
@@ -1037,7 +1032,7 @@ public class ModRegistry {
     ), (CreativeModeTab) null);
 
     public static final Supplier<BlockEntityType<JarBoatTile>> JAR_BOAT_TILE = regTile(
-            JAR_BOAT_NAME, () -> RegHelper.createBlockEntityType(
+            JAR_BOAT_NAME, () -> PlatformHelper.newBlockEntityType(
                     JarBoatTile::new, JAR_BOAT.get()));
 
     //block generator
@@ -1045,7 +1040,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE).strength(0).noLootTable().noCollission().noOcclusion()));
 
     public static final Supplier<BlockEntityType<StructureTempBlockTile>> STRUCTURE_TEMP_TILE = regTile(
-            STRUCTURE_TEMP_NAME, () -> RegHelper.createBlockEntityType(
+            STRUCTURE_TEMP_NAME, () -> PlatformHelper.newBlockEntityType(
                     StructureTempBlockTile::new, STRUCTURE_TEMP.get()));
 
     public static final Supplier<BlockPlacerItem> BLOCK_PLACER = regItem("placeable_item", () -> new BlockPlacerItem(STRUCTURE_TEMP.get(),
@@ -1055,7 +1050,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));
 
     public static final Supplier<BlockEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = regTile(
-            BLOCK_GENERATOR_NAME, () -> RegHelper.createBlockEntityType(
+            BLOCK_GENERATOR_NAME, () -> PlatformHelper.newBlockEntityType(
                     BlockGeneratorBlockTile::new, BLOCK_GENERATOR.get()));
 
     //sticks
@@ -1133,7 +1128,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
-            TIMBER_FRAME_NAME, () -> RegHelper.createBlockEntityType(
+            TIMBER_FRAME_NAME, () -> PlatformHelper.newBlockEntityType(
                     FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()));
 
     //ashen bricks
@@ -1181,7 +1176,7 @@ public class ModRegistry {
     }, CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = regTile(FLOWER_BOX_NAME, () ->
-            RegHelper.createBlockEntityType(FlowerBoxBlockTile::new, FLOWER_BOX.get()));
+            PlatformHelper.newBlockEntityType(FlowerBoxBlockTile::new, FLOWER_BOX.get()));
 
     //statue
     public static final Supplier<Block> STATUE = regWithItem(STATUE_NAME, () -> new StatueBlock(
@@ -1190,7 +1185,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<StatueBlockTile>> STATUE_TILE = regTile(
-            STATUE_NAME, () -> RegHelper.createBlockEntityType(
+            STATUE_NAME, () -> PlatformHelper.newBlockEntityType(
                     StatueBlockTile::new, STATUE.get()));
 
     //feather block
@@ -1220,7 +1215,7 @@ public class ModRegistry {
             () -> Items.BOOK, ServerConfigs.Tweaks.PLACEABLE_BOOKS);
 
     public static final Supplier<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = regTile(
-            BOOK_PILE_NAME, () -> RegHelper.createBlockEntityType(
+            BOOK_PILE_NAME, () -> PlatformHelper.newBlockEntityType(
                     BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()));
 
     //urn
@@ -1231,7 +1226,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_DECORATIONS);
 
     public static final Supplier<BlockEntityType<UrnBlockTile>> URN_TILE = regTile(
-            URN_NAME, () -> RegHelper.createBlockEntityType(
+            URN_NAME, () -> PlatformHelper.newBlockEntityType(
                     UrnBlockTile::new, URN.get()));
 
     //ash
@@ -1264,7 +1259,7 @@ public class ModRegistry {
     });
 
     public static final Supplier<BlockEntityType<DoubleSkullBlockTile>> SKULL_PILE_TILE = regTile(
-            SKULL_PILE_NAME, () -> RegHelper.createBlockEntityType(
+            SKULL_PILE_NAME, () -> PlatformHelper.newBlockEntityType(
                     DoubleSkullBlockTile::new, SKULL_PILE.get()));
 
     //skulls candles
@@ -1274,7 +1269,7 @@ public class ModRegistry {
     });
 
     public static final Supplier<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = regTile(
-            SKULL_CANDLE_NAME, () -> RegHelper.createBlockEntityType(
+            SKULL_CANDLE_NAME, () -> PlatformHelper.newBlockEntityType(
                     CandleSkullBlockTile::new, SKULL_CANDLE.get()));
 
     //bubble
@@ -1291,7 +1286,7 @@ public class ModRegistry {
             BUBBLE_BLOCK.get(), (new Item.Properties()).tab(null)));
 
     public static final Supplier<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = regTile(
-            BUBBLE_BLOCK_NAME, () -> RegHelper.createBlockEntityType(
+            BUBBLE_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     BubbleBlockTile::new, BUBBLE_BLOCK.get()));
 
     //public static final String CRE

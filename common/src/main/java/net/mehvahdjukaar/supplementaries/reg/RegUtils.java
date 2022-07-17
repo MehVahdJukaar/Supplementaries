@@ -12,16 +12,14 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
-import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -116,6 +114,11 @@ public class RegUtils {
         return regWithItem(name, block, t);
     }
 
+    //TODO: these wont work on fabric
+    public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
+        return RegHelper.registerItem(Supplementaries.res(name), ()-> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
+    }
+
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
         return RegHelper.registerItem(Supplementaries.res(name), () -> burnTime == 0 ? new BlockItem(blockSup.get(), properties) :
                 new WoodBasedBlockItem(blockSup.get(), properties, burnTime));
@@ -128,6 +131,14 @@ public class RegUtils {
 
     public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, Supplier<EntityType.Builder<T>> builder) {
         return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.get().build(name));
+    }
+
+    public static <T extends Entity> Supplier<EntityType<T>> regEntity(
+            String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height,
+            int clientTrackingRange, boolean velocityUpdates, int updateInterval) {
+        return RegHelper.registerEntityType(Supplementaries.res(name), () ->
+                PlatformHelper.newEntityType(name, factory, category, width, height,
+                        clientTrackingRange, velocityUpdates, updateInterval));
     }
 
     //flags
@@ -163,7 +174,6 @@ public class RegUtils {
                                     .strength(1.0F)
                                     .noCollission()
                                     .sound(SoundType.WOOD)
-                                    .lootFrom(() -> BannerBlock.byColor(color)) //oof add proper loot table
                     ), color.getName() + "_banner", ServerConfigs.Tweaks.CEILING_BANNERS
             ));
         }

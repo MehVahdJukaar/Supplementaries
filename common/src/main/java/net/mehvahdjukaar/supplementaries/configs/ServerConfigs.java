@@ -29,7 +29,7 @@ public class ServerConfigs {
 
         builder.setSynced();
 
-        SERVER_SPEC = builder.buildAndRegister();
+        SERVER_SPEC = builder.buildAndRegister(); //add on change callback
     }
 
     public static class Items {

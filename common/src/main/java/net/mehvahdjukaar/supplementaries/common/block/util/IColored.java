@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public interface IColored {
+public interface IColored<T extends ItemLike> {
 
     @Nullable
     DyeColor getColor();
@@ -18,7 +18,7 @@ public interface IColored {
     }
 
     @Nullable
-    default Map<DyeColor, Supplier<? extends ItemLike>> getItemColorMap() {
+    default Map<DyeColor, Supplier<T>> getItemColorMap() {
         return null;
     }
 

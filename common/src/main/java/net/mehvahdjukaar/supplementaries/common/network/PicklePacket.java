@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.pickle.PicklePlayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -50,10 +50,10 @@ public abstract class PicklePacket implements Message {
             //gets id from server just to be sure
             Player player = context.getSender();
             UUID id = player.getGameProfile().getId();
-            if (PicklePlayer.PickleData.isDev(id)) { //validate if it is indeed a dev
+            if (PickleData.isDev(id)) { //validate if it is indeed a dev
 
                 //stores value server side
-                PicklePlayer.PickleData.set(id, this.on);
+                PickleData.set(id, this.on);
                 this.playerID = id;
                 //broadcast to all players
                 for (ServerPlayer p : player.getServer().getPlayerList().getPlayers()) {
@@ -78,7 +78,7 @@ public abstract class PicklePacket implements Message {
         @Override
         public void handle(ChannelHandler.Context context) {
             //receive broadcasted message
-            PicklePlayer.PickleData.set(this.playerID, this.on);
+            PickleData.set(this.playerID, this.on);
         }
     }
 }

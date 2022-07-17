@@ -4,7 +4,9 @@ import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,7 +22,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void itemTooltip(ItemTooltipEvent event) {
-        if (event.getPlayer() != null) {
+        if (event.getEntity() != null) {
             ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
         }
     }
@@ -31,7 +33,7 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void clientTIck(TickEvent.ClientTickEvent event) {
+    public static void clientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null) {
             ClientEvents.onClientTick(Minecraft.getInstance());
         }

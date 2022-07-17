@@ -1,7 +1,8 @@
-package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -143,10 +144,10 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
             super.render(matrixStack, buffer, p_225628_3_, entity, p_225628_5_, p_225628_6_, p_225628_7_, p_225628_8_, p_225628_9_, p_225628_10_);
         }
 
-        @Override
+        //@Override
+        @PlatformOnly(PlatformOnly.FORGE)
         public boolean shouldRender(ItemStack stack, T entity) {
-            if (entity.isCrouching()) return false;
-            return super.shouldRender(stack, entity);
+            return !entity.isCrouching();
         }
     }
 }

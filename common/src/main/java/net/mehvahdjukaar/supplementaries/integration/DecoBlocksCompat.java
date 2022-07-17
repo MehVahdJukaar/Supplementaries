@@ -15,4 +15,9 @@ public class DecoBlocksCompat {
     public static boolean canLightBrazier(BlockState state) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static boolean isPalisade(BlockState state) {
+        throw new AssertionError();
+    }
 }

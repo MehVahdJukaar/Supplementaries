@@ -13,14 +13,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -44,7 +41,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .withProperty(BLACKBOARD, getTextureKey())
+                .with(BLACKBOARD, getTextureKey())
                 .build();
     }
 
@@ -58,6 +55,8 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         this.textureKey = new BlackboardKey(this.pixels);
     }
 
+    //TODO: add back
+    /*
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
@@ -66,6 +65,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         //update other clients (we are already on the client here)
         this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
     }//if(this.level != null && this.level.isClientSide) refreshTexture();
+*/
 
     //I need this for when it's changed manually
     @Override

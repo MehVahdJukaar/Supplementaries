@@ -24,11 +24,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class CeilingBannerBlock extends AbstractBannerBlock {
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
@@ -39,6 +41,12 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     public CeilingBannerBlock(DyeColor color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ATTACHED, false));
+    }
+
+    //I hate this but so it works on fabric...
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        return BannerBlock.byColor(this.getColor()).getDrops(state, builder);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -29,6 +29,9 @@ import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 
 public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, PickleModel<AbstractClientPlayer>> {
+
+    public static PickleRenderer INSTANCE = null;
+
     public PickleRenderer(EntityRendererProvider.Context context) {
         super(context, new PickleModel<>(context.bakeLayer(ClientRegistry.PICKLE_MODEL)), 0.0125F);
 

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -29,13 +30,27 @@ public class RopeArrowItem extends ArrowItem {
         return new RopeArrowEntity(world, shooter, charges);
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public int getMaxDamage(ItemStack stack) {
-        return ServerConfigs.cached.ROPE_ARROW_CAPACITY;
+        return ServerConfigs.Items.ROPE_ARROW_CAPACITY.get();
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isInfinite(ItemStack stack, ItemStack bow, Player player) {
+        return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
 
@@ -69,18 +84,15 @@ public class RopeArrowItem extends ArrowItem {
         return false;
     }
 
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
+
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
-        if (!ClientConfigs.cached.TOOLTIP_HINTS || !flagIn.isAdvanced()) return;
+        if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
-        var override = ServerConfigs.cached.ROPE_ARROW_BLOCK.key().location();
+        var override = ServerConfigs.Items.ROPE_ARROW_ROPE.key().location();
         if (!override.equals(ModRegistry.ROPE.getId())) {
             tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }

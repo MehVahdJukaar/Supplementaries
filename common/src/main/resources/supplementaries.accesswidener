@@ -19,5 +19,11 @@ accessible field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEM
 mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 
 #item properties
-transitive-accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
+accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 
+
+#explosions
+accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
+
+#shadow radius
+accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadius F

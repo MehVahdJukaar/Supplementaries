@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -8,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -38,6 +40,11 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
 
     @Override
     public int getBarColor(ItemStack stack) {
@@ -47,11 +54,11 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !ServerConfigs.cached.BAMBOO_SPIKES_ALTERNATIVE;
+        return !ServerConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get();
     }
 
     public static boolean areEffectsValid(List<MobEffectInstance> effects){
-        if(ServerConfigs.cached.BAMBOO_SPIKES_ALTERNATIVE){
+        if(ServerConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get()){
             for(var e: effects){
                 if(e.getEffect().isBeneficial()) return false;
             }
@@ -69,7 +76,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return false;
     }
 
-    @Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }

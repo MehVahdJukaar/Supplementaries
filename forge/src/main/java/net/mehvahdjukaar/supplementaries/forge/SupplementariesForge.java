@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.item.crafting.forge.OptionalRecipeCondition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -29,7 +30,7 @@ public class SupplementariesForge {
     public SupplementariesForge() {
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
+        FlowerPotBlock
 
         Supplementaries.commonInit();
 

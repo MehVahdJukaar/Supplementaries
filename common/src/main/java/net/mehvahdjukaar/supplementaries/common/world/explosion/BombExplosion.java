@@ -100,15 +100,13 @@ public class BombExplosion extends Explosion {
                             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos))
                             .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                             .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity)
-                            .withOptionalParameter(LootContextParams.THIS_ENTITY, this.getExploder());
+                            .withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
 
                     if (this.mode == BlockInteraction.DESTROY) {
                         builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                     }
 
-                    blockstate.getDrops(builder).forEach((stack) -> {
-                        addBlockDrops(drops, stack, immutable);
-                    });
+                    blockstate.getDrops(builder).forEach((stack) -> addBlockDrops(drops, stack, immutable));
                 }
 
                 ForgeHelper.onBlockExploded(blockstate, this.level, blockpos, this);
@@ -140,7 +138,7 @@ public class BombExplosion extends Explosion {
 
     @Override
     public void explode() {
-        this.level.gameEvent(this.getExploder(), GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
+        this.level.gameEvent(this.source, GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
         int i = 16;
 

@@ -2,11 +2,13 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.block_models.forge.*;
+import net.mehvahdjukaar.supplementaries.client.renderer.entities.funny.forge.PicklePlayer;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -25,7 +27,6 @@ public class SupplementariesForgeClient {
     public static void init(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ClientRegistry.init();
-
         });
     }
 

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderer.entities.pickle;
+package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -29,6 +29,9 @@ import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 
 public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, JarredModel<AbstractClientPlayer>> {
+
+    public static JarredRenderer INSTANCE = null;
+
     public JarredRenderer(EntityRendererProvider.Context context) {
         super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)),0);
 

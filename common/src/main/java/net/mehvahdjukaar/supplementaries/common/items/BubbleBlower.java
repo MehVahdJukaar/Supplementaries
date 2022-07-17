@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
@@ -47,10 +48,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
     //bubble block
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
 
     public InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
         HitResult result = player.getAbilities().instabuild ? CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
@@ -89,8 +86,15 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         return true;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return false;
     }
 
@@ -114,7 +118,8 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         return 0;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         ListTag enchantments = EnchantedBookItem.getEnchantments(book);
         return enchantments.size() == 1 &&
