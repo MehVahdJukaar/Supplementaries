@@ -16,7 +16,7 @@ public class KeyItem extends Item {
         super(properties);
     }
 
-    @Override
+    //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return true;

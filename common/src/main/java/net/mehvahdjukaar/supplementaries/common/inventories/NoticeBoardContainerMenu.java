@@ -45,7 +45,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return(ServerConfigs.cached.NOTICE_BOARDS_UNRESTRICTED || NoticeBoardBlockTile.isPageItem(stack.getItem()));
+                return(ServerConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 

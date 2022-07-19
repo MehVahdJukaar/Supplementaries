@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
@@ -10,14 +10,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
 
 public class PresentDyeRecipe extends CustomRecipe {
     public PresentDyeRecipe(ResourceLocation resourceLocation) {
         super(resourceLocation);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean matches(CraftingContainer craftingContainer, Level level) {
         int i = 0;
         int j = 0;
@@ -28,7 +29,7 @@ public class PresentDyeRecipe extends CustomRecipe {
                 if (itemstack.getItem() instanceof PresentItem) {
                     ++i;
                 } else {
-                    if (!itemstack.is(Tags.Items.DYES)) {
+                    if (!ForgeHelper.isDye(itemstack)) {
                         return false;
                     }
 
@@ -55,13 +56,15 @@ public class PresentDyeRecipe extends CustomRecipe {
                 if (item instanceof PresentItem) {
                     itemstack = stack;
                 } else {
-                    DyeColor tmp = DyeColor.getColor(stack);
+                    DyeColor tmp = ForgeHelper.getColor(stack);
                     if (tmp != null) dyecolor = tmp;
                 }
             }
         }
 
-        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem()).getItemColorMap().get(dyecolor).get());
+        //improve this is crap
+        ItemStack result = new ItemStack(((PresentItem<ItemLike>) itemstack.getItem())
+                .getItemColorMap().get(dyecolor).get().asItem());
 
         if (itemstack.hasTag()) {
             result.setTag(itemstack.getTag().copy());

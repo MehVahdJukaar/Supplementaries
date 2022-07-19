@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +82,7 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.BAMBOO_SPIKES_TIPPED_RECIPE.get();
+        return ModRecipes.BAMBOO_SPIKES_TIPPED_RECIPE.get();
     }
 
 

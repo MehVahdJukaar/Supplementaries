@@ -178,7 +178,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                         }
 
 
-                        if (ServerConfigs.Blocks.DISTANCE_TEXT) {
+                        if (ServerConfigs.Spawns.DISTANCE_TEXT.get()) {
                             sign.textHolder.setLine(0, getSignText(dist1));
                             if (twoSigns)
                                 sign.textHolder.setLine(1, getSignText(dist2));

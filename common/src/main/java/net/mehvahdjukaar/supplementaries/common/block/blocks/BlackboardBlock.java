@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
@@ -34,11 +35,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 
@@ -119,21 +118,18 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
         return new Pair<>(x, y);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Nullable
     public static DyeColor getStackChalkColor(ItemStack stack) {
-        Item item = stack.getItem();
         DyeColor color = null;
         if (ServerConfigs.Blocks.BLACKBOARD_COLOR.get()) {
-            var id = Utils.getID(item);
-            if (id.getNamespace().equals("chalk")) {
-                color = DyeColor.byName(id.getPath().replace("_chalk", ""), DyeColor.WHITE);
-            } else color = DyeColor.getColor(stack);
+            color = ForgeHelper.getColor(stack);
         }
         if (color == null) {
 
-            if (stack.is(ModTags.CHALK) || stack.is(Tags.Items.DYES_WHITE)) {
+            if (stack.is(ModTags.BLACKBOARD_WHITE)) {
                 color = DyeColor.WHITE;
-            } else if (item == Items.COAL || item == Items.CHARCOAL || stack.is(Tags.Items.DYES_BLACK)) {
+            } else if (stack.is(ModTags.BLACKBOARD_BLACK)) {
                 color = DyeColor.BLACK;
             }
         }

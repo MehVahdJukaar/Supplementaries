@@ -1,14 +1,13 @@
-package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.ModList;
 
 import java.util.*;
 
@@ -27,7 +26,7 @@ public class CapturedMobsHelper {
     private static final CapturedMobConfigProperties MODDED_FISH = new CapturedMobConfigProperties("420", 0, 0, 0, 1, AnimationCategory.DEFAULT);
 
 
-    public static boolean is2DFish(EntityType<?> type){
+    public static boolean is2DFish(EntityType<?> type) {
         return FISHES_2D.contains(Utils.getID(type).toString());
     }
 
@@ -133,26 +132,27 @@ public class CapturedMobsHelper {
                 if (f > 0 && !d.get(0).equals("")) FISHES_2D.add(d.get(0));
             }
         }
-        for(String id : FISHES_2D){
+        for (String id : FISHES_2D) {
             BucketHelper.tryAddingFromEntityId(id);
         }
     }
 
     public static CapturedMobConfigProperties getTypeFromBucket(Item bucket) {
         EntityType<?> t = BucketHelper.getEntityType(bucket);
-        if(t != null) return getType(t);
+        if (t != null) return getType(t);
         return getType("minecraft:fish");
     }
 
     public static CapturedMobConfigProperties getType(Entity mob) {
         return getType(mob.getType());
     }
+
     public static CapturedMobConfigProperties getType(EntityType<?> type) {
         return getType(Utils.getID(type).toString());
     }
 
     public static CapturedMobConfigProperties getType(String mobId) {
-        if(TYPES.containsKey(mobId)) return TYPES.get(mobId);
+        if (TYPES.containsKey(mobId)) return TYPES.get(mobId);
         //else if(BucketHelper.isBucketableEntity(mobId)) return getType("minecraft:fish");
         return TYPES.getOrDefault(mobId, DEFAULT);
     }
@@ -200,7 +200,8 @@ public class CapturedMobsHelper {
                     }
                 }
                 //skip if mod isn't loaded
-                if(!ModList.get().isLoaded(new ResourceLocation(id).getNamespace()) && cat != AnimationCategory.FISH) continue;
+                if (!PlatformHelper.isModLoaded(new ResourceLocation(id).getNamespace()) && cat != AnimationCategory.FISH)
+                    continue;
                 /*
                 if(size>5) {
                     addValidBucket(l.get(5));
@@ -281,7 +282,7 @@ public class CapturedMobsHelper {
             return super.toString().toLowerCase(Locale.ROOT);
         }
 
-        public boolean canBe2dFish(){
+        public boolean canBe2dFish() {
             return this == DEFAULT || this.is2DFish();
         }
     }
@@ -309,7 +310,6 @@ public class CapturedMobsHelper {
             return this == FISH;
         }
     }
-
 
 
 }

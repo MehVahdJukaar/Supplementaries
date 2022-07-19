@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -107,7 +108,7 @@ public class Textures {
                 HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
 
-        for (var s : ClientRegistry.SIGN_POSTS_MATERIALS.values()) {
+        for (var s : ModMaterials.SIGN_POSTS_MATERIALS.values()) {
             blocks.add(s.texture());
         }
         blocks.addAll(WallLanternTexturesRegistry.SPECIAL_TEXTURES.values());

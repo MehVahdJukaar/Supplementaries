@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import com.google.common.collect.Maps;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
@@ -12,56 +12,29 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 
 public class FlowerPotHandler {
 
-    //vanilla pot flower pots
-    //empty pot, map(flower item registry name, full block provider)
-    private static Map<Block, Map<ResourceLocation, Supplier<? extends Block>>> FULL_POTS;
 
-    private static final List<BlockState> FULL_POTs_BLOCKSTATES_LIST = new ArrayList<>();
-
-    public static BlockState getAprilPot() {
-        int ind = (int) ((System.currentTimeMillis() / 15000) % FULL_POTs_BLOCKSTATES_LIST.size());
-        return FULL_POTs_BLOCKSTATES_LIST.get(ind);
-    }
-
+    @ExpectPlatform
     public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
-        return FULL_POTS.get(emptyPot.getEmptyPot()).getOrDefault(Utils.getID(flowerBlock), () -> Blocks.AIR).get();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static boolean isEmptyPot(Block b) {
-        //return (emptyPots!=null&&b!=null&&emptyPots.contains(b));
-        return (FULL_POTS != null && b != null && FULL_POTS.containsKey(b));
+        throw new AssertionError();
     }
 
     //move to forge
+    @ExpectPlatform
     public static void setup() {
-        //registers pots
-        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM), ModRegistry.FLAX_POT);
-
-        //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
-        Set<FlowerPotBlock> emptyPots = new HashSet<>();
-        for (Block b : ForgeRegistries.BLOCKS) {
-            if (b instanceof FlowerPotBlock flowerPotBlock) {
-                emptyPots.add(flowerPotBlock.getEmptyPot());
-            }
-        }
-        FULL_POTS = Maps.newHashMap();
-        for (FlowerPotBlock pot : emptyPots) {
-            FULL_POTS.put(pot, pot.getFullPotsView());
-            FULL_POTs_BLOCKSTATES_LIST.addAll((pot.getFullPotsView()).values().stream().map(s -> s.get().defaultBlockState()).collect(Collectors.toList()));
-        }
+        throw new AssertionError();
     }
 
 

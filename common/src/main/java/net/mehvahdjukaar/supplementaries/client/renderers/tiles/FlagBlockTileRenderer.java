@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -78,21 +79,21 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             long time = tile.getLevel().getGameTime();
 
-            double l = ClientConfigs.block.FLAG_WAVELENGTH.get();
-            long period = ClientConfigs.block.FLAG_PERIOD.get();
-            double wavyness = ClientConfigs.block.FLAG_AMPLITUDE.get();
-            double invdamping = ClientConfigs.block.FLAG_AMPLITUDE_INCREMENT.get();
+            double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
+            long period = ClientConfigs.Blocks.FLAG_PERIOD.get();
+            double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
+            double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
 
             BlockPos bp = tile.getBlockPos();
             //always from 0 to 1
             float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
-            if (ClientConfigs.block.FLAG_BANNER.get()) {
+            if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) ((((w / l) - t * 2 * (float) Math.PI)))));
                 renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
-                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.block.FLAG_FANCINESS.get().ordinal() ? 1 : w;
+                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
                 for (int dX = 0; dX < w; dX += segmentLen) {
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
@@ -119,7 +120,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         for (int p = 0; p < list.size(); p++) {
 
-            Material material = ClientRegistry.FLAG_MATERIALS.get(list.get(p).getFirst().value());
+            Material material = ModMaterials.FLAG_MATERIALS.get(list.get(p).getFirst().value());
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();

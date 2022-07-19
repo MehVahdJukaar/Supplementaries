@@ -95,7 +95,9 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
                 : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @Override
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {
@@ -103,7 +105,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
                 if (!i.isEmpty()) return i;
             }
         }
-        return super.getCloneItemStack(state, target, world, pos, player);
+        return super.getCloneItemStack(world, pos, state);
 
     }
 

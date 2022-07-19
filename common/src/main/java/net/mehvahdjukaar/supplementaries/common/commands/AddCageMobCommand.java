@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntitySummonArgument;

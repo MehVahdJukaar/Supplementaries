@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.util;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -156,7 +157,7 @@ public class TextHolder implements IAntiqueTextProvider {
                 }
                 //else return InteractionResult.FAIL;
             } else {
-                DyeColor color = DyeColor.getColor(stack);
+                DyeColor color = ForgeHelper.getColor(stack);
                 if (color != null) {
                     if (this.setTextColor(color)) {
                         level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);

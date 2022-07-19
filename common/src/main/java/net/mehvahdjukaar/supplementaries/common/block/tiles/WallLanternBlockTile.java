@@ -46,8 +46,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .withProperty(MIMIC, this.getHeldBlock())
-                .withProperty(FANCY, this.shouldHaveTESR)
+                .with(MIMIC, this.getHeldBlock())
+                .with(FANCY, this.shouldHaveTESR)
                 .build();
     }
 

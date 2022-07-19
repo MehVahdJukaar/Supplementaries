@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
@@ -62,7 +64,7 @@ public class SoapClearRecipe extends CustomRecipe {
         if (i instanceof IColored colored) {
             var map = colored.getItemColorMap();
             if (map != null) {
-                result = map.get(colored.supportsBlankColor() ? null : DyeColor.WHITE).get().getDefaultInstance();
+                result = ((ItemLike) map.get(colored.supportsBlankColor() ? null : DyeColor.WHITE)).asItem().getDefaultInstance();
             } else {
                 result = itemstack.copy();
             }
@@ -84,7 +86,7 @@ public class SoapClearRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.SOAP_CLEARING_RECIPE.get();
+        return ModRecipes.SOAP_CLEARING_RECIPE.get();
     }
 }
 

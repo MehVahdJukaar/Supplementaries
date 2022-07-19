@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.IMobContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

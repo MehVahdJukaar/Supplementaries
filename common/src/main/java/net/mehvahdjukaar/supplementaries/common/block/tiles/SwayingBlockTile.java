@@ -66,7 +66,7 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     public ExtraModelData getExtraModelData() {
         this.ticksToSwitchMode = 2;
         return ExtraModelData.builder()
-                .withProperty(FANCY, this.shouldHaveTESR)
+                .with(FANCY, this.shouldHaveTESR)
                 .build();
     }
 

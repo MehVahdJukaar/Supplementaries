@@ -19,7 +19,7 @@ public abstract class BowMixin {
             value = "RETURN"),
             cancellable = true)
     public void getAllSupportedProjectiles(CallbackInfoReturnable<Predicate<ItemStack>> cir) {
-        if(ServerConfigs.cached.ROPE_ARROW_CROSSBOW){
+        if(ServerConfigs.Items.ROPE_ARROW_CROSSBOW.get()){
             var v = cir.getReturnValue();
             cir.setReturnValue((s)->{
                 if(s.getItem() instanceof RopeArrowItem) return false;

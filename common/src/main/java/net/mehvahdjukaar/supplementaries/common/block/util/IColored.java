@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
+//TODO: this is shit fix
 public interface IColored<T extends ItemLike> {
 
     @Nullable

@@ -158,7 +158,7 @@ public class PresentRegistry {
             }
             serverLevel.addFreshEntityWithPassengers(entity);
             //update client velocity
-            NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 48,
+            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange( serverLevel, pos,48,
                     new ClientBoundSendKnockbackPacket(entity.getDeltaMovement(), entity.getId()));
         }
         return entity;

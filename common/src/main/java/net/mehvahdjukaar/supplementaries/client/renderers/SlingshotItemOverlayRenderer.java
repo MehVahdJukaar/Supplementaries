@@ -13,8 +13,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class SlingshotItemOverlayRenderer {
 
     public static void render(ItemStack stack, int x, int y, float blitOffset) {
-        boolean overlay = ClientConfigs.cached.SLINGSHOT_OVERLAY;
-        boolean outline = ClientConfigs.cached.SLINGSHOT_OUTLINE;
+        boolean overlay = ClientConfigs.Items.SLINGSHOT_OVERLAY.get();
+        boolean outline = ClientConfigs.Items.SLINGSHOT_OUTLINE.get();
         if (overlay || outline) {
             LocalPlayer player = Minecraft.getInstance().player;
 

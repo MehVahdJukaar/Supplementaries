@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
@@ -110,7 +111,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                 } else if (item instanceof BannerPatternItem) {
 
                     //TODO: cache or not like notice board
-                    Material renderMaterial = ClientRegistry.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material renderMaterial = ModMaterials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
 
                     VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 

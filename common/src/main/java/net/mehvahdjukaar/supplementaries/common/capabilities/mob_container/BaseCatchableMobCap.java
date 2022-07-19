@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.minecraft.world.entity.Entity;

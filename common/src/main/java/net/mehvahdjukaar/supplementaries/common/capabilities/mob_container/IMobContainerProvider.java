@@ -1,7 +1,6 @@
-package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.minecraft.core.Direction;
 
 public interface IMobContainerProvider {

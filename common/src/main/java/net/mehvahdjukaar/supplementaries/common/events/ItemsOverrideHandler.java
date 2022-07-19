@@ -10,13 +10,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -64,7 +62,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ItemsOverrideHandler {
 
@@ -552,6 +549,8 @@ public class ItemsOverrideHandler {
         }
     }
 
+    //TODO: re add
+    /*
     private static class SoapClearBehavior extends ItemUseOnBlockOverride {
 
         boolean enabled = RegistryConfigs.SOAP_ENABLED.get();
@@ -601,12 +600,13 @@ public class ItemsOverrideHandler {
             return InteractionResult.PASS;
         }
     }
+    */
 
     private static class AntiqueInkBehavior extends ItemUseOnBlockOverride {
 
         @Override
         public boolean isEnabled() {
-            return CapabilityHandler.ANTIQUE_CAP_ENABLED;
+            return AntiqueInkHandler.isEnabled();
         }
 
         @Override
@@ -621,26 +621,7 @@ public class ItemsOverrideHandler {
                 BlockPos pos = hit.getBlockPos();
                 BlockEntity tile = world.getBlockEntity(pos);
                 if (tile != null && (!(tile instanceof IOwnerProtected op) || op.isAccessibleBy(player))) {
-                    var cap = tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-                    AtomicBoolean success = new AtomicBoolean(false);
-                    cap.ifPresent(c -> {
-                        if (c.hasAntiqueInk() != newState) {
-                            c.setAntiqueInk(newState);
-                            tile.setChanged();
-                            if (world instanceof ServerLevel serverLevel) {
-                                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
-                                        new ClientBoundSyncAntiqueInk(pos, newState));
-                            }
-                            success.set(true);
-                        }
-                    });
-                    if (success.get()) {
-                        if (newState) {
-                            world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        } else {
-                            world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        }
-                        if (!player.isCreative()) stack.shrink(1);
+                    if (AntiqueInkHandler.toggleAntiqueInkOnSigns(world, player, stack, newState, pos, tile)) {
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }

@@ -26,7 +26,7 @@ public class DoubleCakePlacement implements AdditionalPlacement {
     }
 
     private boolean isValidCake(BlockState state) {
-        if (!ServerConfigs.cached.DOUBLE_CAKE_PLACEMENT) return false;
+        if (!ServerConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get()) return false;
         Block block = state.getBlock();
         return (block == Blocks.CAKE || block == ModRegistry.DIRECTIONAL_CAKE.get()) && state.getValue(CakeBlock.BITES) == 0;
     }

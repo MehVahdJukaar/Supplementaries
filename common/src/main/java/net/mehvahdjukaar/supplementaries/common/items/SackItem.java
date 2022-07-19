@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,13 +27,10 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SackItem extends BlockItem {
     public SackItem(Block blockIn, Properties builder) {
@@ -49,24 +45,7 @@ public class SackItem extends BlockItem {
             //if (player.hasEffect(ModRegistry.OVERENCUMBERED.get())) return;
 
             int amount = 0;
-            AtomicReference<IItemHandler> reference = new AtomicReference<>();
-            entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
-            if (reference.get() != null) {
-                for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
-                    ItemStack slotItem = reference.get().getStackInSlot(_idx);
-                    if (slotItem.getItem() instanceof SackItem) {
-                        CompoundTag tag = stack.getTag();
-                        if (tag != null && tag.contains("BlockEntityTag")) {
-                            amount++;
-                        }
-                    }
-                }
-
-                if (CompatHandler.quark) {
-                    ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
-                    amount += CompatHandler.getSacksInBackpack(backpack);
-                }
-            }
+            amount = ItemsUtil.getAllSacksInInventory(stack, entityIn, player, amount);
             int inc = ServerConfigs.Blocks.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
@@ -74,6 +53,7 @@ public class SackItem extends BlockItem {
             }
         }
     }
+
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {

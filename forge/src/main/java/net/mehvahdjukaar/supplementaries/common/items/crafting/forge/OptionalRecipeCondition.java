@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.item.crafting.forge;
+package net.mehvahdjukaar.supplementaries.common.items.crafting.forge;
 
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

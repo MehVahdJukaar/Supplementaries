@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
@@ -37,7 +38,8 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
 
         // render block
 
-        RendererUtil.renderBlockState(state, matrixStackIn, bufferIn, blockRenderer, tile.getLevel(), tile.getBlockPos());
+        ClientPlatformHelper.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
+
         //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ModelData.EMPTY);
         matrixStackIn.popPose();
     }

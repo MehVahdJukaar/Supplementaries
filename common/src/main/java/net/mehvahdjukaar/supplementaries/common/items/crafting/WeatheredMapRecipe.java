@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -82,7 +83,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.TREASURE_MAP_RECIPE.get();
+        return ModRecipes.TREASURE_MAP_RECIPE.get();
     }
 
 

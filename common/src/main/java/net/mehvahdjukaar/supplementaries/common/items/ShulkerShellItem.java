@@ -8,6 +8,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+//forge only. dont bother for fabric
 public class ShulkerShellItem extends ArmorItem {
     public ShulkerShellItem(Properties properties) {
         super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);

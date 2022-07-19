@@ -9,9 +9,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -68,5 +71,20 @@ public class ForgeHelperImpl {
 
     public static boolean canDropFromExplosion(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
         return blockstate.getBlock().dropFromExplosion(explosion);
+    }
+
+    public static boolean isDye(ItemStack itemstack) {
+        return itemstack.getItem() instanceof DyeItem;
+    }
+
+    public static DyeColor getColor(ItemStack stack) {
+        if (stack.getItem() instanceof DyeItem dyeItem) {
+            return dyeItem.getDyeColor();
+        }
+        return null;
+    }
+
+    public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
+        return state.rotate(rot);
     }
 }

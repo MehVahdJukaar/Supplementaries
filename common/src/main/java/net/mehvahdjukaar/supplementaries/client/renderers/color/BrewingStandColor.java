@@ -22,7 +22,7 @@ public class BrewingStandColor implements BlockColor {
             if (te instanceof BrewingStandBlockEntity) {
                 ItemStack item = ((Container) te).getItem(tint-1);
                 if (!item.isEmpty()) {
-                    if (!ClientConfigs.cached.COLORED_BREWING_STAND) return 0xff3434;
+                    if (!ClientConfigs.Tweaks.COLORED_BREWING_STAND.get()) return 0xff3434;
                     return PotionUtils.getColor(item);
                 }
             }

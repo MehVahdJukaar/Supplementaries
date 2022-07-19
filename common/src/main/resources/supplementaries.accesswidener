@@ -23,7 +23,22 @@ accessible method net/minecraft/client/renderer/item/ItemProperties register (Ln
 
 
 #explosions
-accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
+accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity
 
 #shadow radius
 accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadius F
+
+#touching water
+accessible field net/minecraft/world/entity/Entity wasTouchingWater Z
+
+#concrete
+accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/state/BlockState
+
+#font stuff
+accessible class net/minecraft/client/gui/Font$StringRenderOutput
+accessible field net/minecraft/client/gui/Font$StringRenderOutput x F
+accessible field net/minecraft/client/gui/Font$StringRenderOutput y F
+accessible method net/minecraft/client/gui/Font getFontSet (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/gui/font/FontSet;
+
+#beacon name
+accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity name Lnet/minecraft/network/chat/Component;

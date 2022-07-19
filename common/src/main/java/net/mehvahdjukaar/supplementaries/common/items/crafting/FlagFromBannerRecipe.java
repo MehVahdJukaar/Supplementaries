@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -139,7 +140,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.FLAG_FROM_BANNER_RECIPE.get();
+        return ModRecipes.FLAG_FROM_BANNER_RECIPE.get();
     }
 
     @Override

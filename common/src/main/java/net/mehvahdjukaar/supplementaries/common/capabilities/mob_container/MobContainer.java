@@ -1,10 +1,10 @@
-package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -27,7 +27,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -53,15 +52,9 @@ public class MobContainer {
         this.height = height;
     }
 
+    @ExpectPlatform
     public static <E extends Entity> ICatchableMob getCap(E entity) {
-        if (entity == null) return null;
-        ICatchableMob cap;
-        if (entity instanceof ICatchableMob) cap = (ICatchableMob) entity;
-        else {
-            LazyOptional<ICatchableMob> opt = entity.getCapability(CapabilityHandler.CATCHABLE_MOB_CAP);
-            cap = opt.orElseGet(() -> DefaultCatchableMobCap.getDefaultCap(entity));
-        }
-        return cap;
+        throw new AssertionError();
     }
 
     public CompoundTag save(CompoundTag tag) {

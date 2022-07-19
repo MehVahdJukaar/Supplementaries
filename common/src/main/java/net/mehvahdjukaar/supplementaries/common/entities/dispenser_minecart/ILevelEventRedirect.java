@@ -13,7 +13,7 @@ public interface ILevelEventRedirect {
 
     static boolean tryRedirect(ILevelEventRedirect serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
         if (pType == 2000) {
-            NetworkHandler.sendToAllInRangeClients(pPos, (ServerLevel) serverLevel, 64,
+            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange((ServerLevel) serverLevel, pPos, 64,
                     new ClientBoundParticlePacket(vec3, ClientBoundParticlePacket.EventType.DISPENSER_MINECART));
             return true;
         }

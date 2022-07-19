@@ -35,7 +35,7 @@ public abstract class EntityMixin {
     private void playStepSound(BlockPos pPos, BlockState state, CallbackInfo ci) {
         //adds it for ash like snow
         if (cachedBlockState.is(ModRegistry.ASH_BLOCK.get())) {
-            SoundType soundtype = cachedBlockState.getSoundType(this.getLevel(), pPos, (Entity) (Object) this);
+            SoundType soundtype = cachedBlockState.getSoundType();
             this.playSound(soundtype.getStepSound(), soundtype.getVolume() * 0.15F, soundtype.getPitch());
             ci.cancel();
             return;

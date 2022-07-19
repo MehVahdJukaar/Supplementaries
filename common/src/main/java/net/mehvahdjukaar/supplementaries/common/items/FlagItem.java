@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class FlagItem extends WoodBasedBlockItem implements IColored {
+public class FlagItem extends WoodBasedBlockItem implements IColored<Block> {
 
     public FlagItem(Block block, Properties properties) {
         super(block, properties, 300);
@@ -69,7 +69,7 @@ public class FlagItem extends WoodBasedBlockItem implements IColored {
      */
 
     @Override
-    public @Nullable Map<DyeColor, Supplier<? extends ItemLike>> getItemColorMap() {
+    public @Nullable Map<DyeColor, Supplier<Block>> getItemColorMap() {
         return ModRegistry.FLAGS;
     }
 }

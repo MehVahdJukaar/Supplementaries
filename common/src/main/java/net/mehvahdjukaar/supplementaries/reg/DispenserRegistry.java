@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.BucketHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.*;
@@ -28,7 +27,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -39,18 +37,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
-
-import java.util.Optional;
 
 public class DispenserRegistry {
 
@@ -139,6 +128,7 @@ public class DispenserRegistry {
         @Override
         protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
+            /*
             ServerLevel level = source.getLevel();
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos pos = source.getPos().relative(dir);
@@ -178,7 +168,8 @@ public class DispenserRegistry {
                     stack.setCount(0);
                 }
                 return InteractionResultHolder.success(stack);
-            }
+            }*/
+            //TODO: add back
 
             return InteractionResultHolder.fail(stack);
         }

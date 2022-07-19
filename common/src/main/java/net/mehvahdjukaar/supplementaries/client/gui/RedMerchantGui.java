@@ -44,7 +44,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
         this.menu.setSelectionHint(this.shopItem);
         this.menu.tryMoveItems(this.shopItem);
 
-        NetworkHandler.sendToServerPlayer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
     }
 
     protected void init() {

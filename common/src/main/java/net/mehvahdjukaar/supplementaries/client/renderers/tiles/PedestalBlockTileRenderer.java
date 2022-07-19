@@ -86,7 +86,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
             ItemStack stack = tile.getDisplayedItem();
 
-            if (ClientConfigs.block.PEDESTAL_SPECIAL.get()) {
+            if (ClientConfigs.Blocks.PEDESTAL_SPECIAL.get()) {
                 switch (tile.type) {
                     case SWORD -> {
                         matrixStackIn.translate(0, -0.03125, 0);
@@ -105,7 +105,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                     }
                     default -> {
 
-                        if (ClientConfigs.block.PEDESTAL_SPIN.get()) {
+                        if (ClientConfigs.Blocks.PEDESTAL_SPIN.get()) {
                             matrixStackIn.translate(0, 6 / 16f, 0);
                             matrixStackIn.scale(1.5f, 1.5f, 1.5f);
 
@@ -121,7 +121,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
                             //long t = blockoffset + time;
 
-                            int scale = (int) (ClientConfigs.block.PEDESTAL_SPEED.get() * 360f);
+                            int scale = (int) (ClientConfigs.Blocks.PEDESTAL_SPEED.get() * 360f);
                             long time = tile.getLevel().getGameTime();
                             float angle = ((float) Math.floorMod(time, (long) scale) + partialTicks) / (float) scale;
                             // float angle = (time % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;

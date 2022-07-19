@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -101,7 +102,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
+                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
                 //sanity check. can happen when log detection fails across versions
                 if(material != null) {
                     VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
@@ -143,7 +144,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = ClientRegistry.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
+                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
                 VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

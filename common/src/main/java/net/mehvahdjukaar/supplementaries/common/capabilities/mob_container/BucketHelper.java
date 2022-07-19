@@ -1,27 +1,22 @@
-package net.mehvahdjukaar.supplementaries.common.block.util.MobContainer;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.MobBucketItem;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 //this is still a mess
 public class BucketHelper {
     //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
     private static final BiMap<Item, String> BUCKET_TO_MOB_MAP = HashBiMap.create();
-
-
-    private static Method FISH_TYPE = ObfuscationReflectionHelper.findMethod(MobBucketItem.class, "getFishType");    //this is a forge method
-
 
     //only use this to access the map
     public static @Nullable
@@ -34,14 +29,10 @@ public class BucketHelper {
                 return opt.get();
             } else return Registry.ENTITY_TYPE.get(new ResourceLocation(mobId));
         } else if (bucket instanceof MobBucketItem bucketItem) {
-            try {
-                EntityType<?> en = (EntityType<?>) FISH_TYPE.invoke(bucketItem);
-                if (en != null) {
-                    BUCKET_TO_MOB_MAP.putIfAbsent(bucket, Utils.getID(en).toString());
-                    return en;
-                }
-            } catch (Exception ignored) {
-                int error = 1;
+            EntityType<?> en = ForgeHelper.getFishType(bucketItem);
+            if (en != null) {
+                BUCKET_TO_MOB_MAP.putIfAbsent(bucket, Utils.getID(en).toString());
+                return en;
             }
         }
         //try parsing

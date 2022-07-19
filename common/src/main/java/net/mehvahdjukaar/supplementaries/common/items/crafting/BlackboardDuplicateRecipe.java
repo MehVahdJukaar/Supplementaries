@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -90,7 +91,7 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.BLACKBOARD_DUPLICATE_RECIPE.get();
+        return ModRecipes.BLACKBOARD_DUPLICATE_RECIPE.get();
     }
 
 

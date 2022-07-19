@@ -24,7 +24,7 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
             at = {@At("RETURN")}
     )
     public void registerGoals(CallbackInfo ci) {
-        if(ServerConfigs.cached.WANDERING_TRADER_DOORS) {
+        if(ServerConfigs.Tweaks.WANDERING_TRADER_DOORS.get()) {
             this.goalSelector.addGoal(3, new OpenDoorGoal(this, true));
         }
     }

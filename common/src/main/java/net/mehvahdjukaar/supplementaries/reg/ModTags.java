@@ -40,7 +40,8 @@ public class ModTags {
     public static final TagKey<Item> CHOCOLATE_BARS = itemTag("chocolate_bars");
     public static final TagKey<Item> FLINT_AND_STEELS = ILightable.FLINT_AND_STEELS;
     public static final TagKey<Item> FLOWER_BOX_PLANTABLE = itemTag("flower_box_plantable");
-    public static final TagKey<Item> CHALK = itemTag("chalk");
+    public static final TagKey<Item> BLACKBOARD_WHITE = itemTag("blackboard_white");
+    public static final TagKey<Item> BLACKBOARD_BLACK = itemTag("blackboard_black");
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");
     public static final TagKey<Item> DUSTS = itemTag("hourglass_dusts");
     public static final TagKey<Item> SANDS = itemTag("hourglass_sands");

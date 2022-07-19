@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

@@ -6,9 +6,9 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.ChatFormatting;
@@ -137,7 +137,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
-                tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> c.setAntiqueInk(message.getInk()));
+                AntiqueInkHandler.setAntiqueInk(tile, message.ink);
             }
         });
     }

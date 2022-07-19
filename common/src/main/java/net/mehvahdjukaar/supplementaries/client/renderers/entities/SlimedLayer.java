@@ -23,7 +23,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
 
         if (true) {
 
-            VertexConsumer buffer = bufferIn.getBuffer(SlimedRenderType.SLIMED_RENDER_TYPE);
+           // VertexConsumer buffer = bufferIn.getBuffer(SlimedRenderType.SLIMED_RENDER_TYPE);
 
 
             int i = entity.tickCount;
@@ -32,8 +32,8 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
 
             float alpha = f1;
             matrixStackIn.pushPose();
-            this.getParentModel().renderToBuffer(matrixStackIn, buffer, packedLightIn,
-                    LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1, 1.0F, alpha);
+           // this.getParentModel().renderToBuffer(matrixStackIn, buffer, packedLightIn,
+           //         LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1, 1.0F, alpha);
             matrixStackIn.popPose();
         }
 

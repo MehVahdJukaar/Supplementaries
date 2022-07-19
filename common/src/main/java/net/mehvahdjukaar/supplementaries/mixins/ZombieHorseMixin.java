@@ -16,6 +16,6 @@ public abstract class ZombieHorseMixin extends AbstractHorse {
 
     @Override
     public boolean rideableUnderWater() {
-        return ServerConfigs.cached.ZOMBIE_HORSE_UNDERWATER;
+        return ServerConfigs.Tweaks.ZOMBIE_HORSE_UNDERWATER.get();
     }
 }

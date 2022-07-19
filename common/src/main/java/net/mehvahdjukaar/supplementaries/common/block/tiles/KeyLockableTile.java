@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -15,11 +15,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class KeyLockableTile extends BlockEntity {
 
@@ -55,30 +52,8 @@ public class KeyLockableTile extends BlockEntity {
         NO_KEY
     }
 
-    public static KeyStatus hasKeyInInventory(Player player, String key) {
-        if (key == null) return KeyStatus.CORRECT_KEY;
-        KeyStatus found = KeyStatus.INCORRECT_KEY;
-        if (CompatHandler.curios) {
-            found = CompatHandler.isKeyInCurio(player, key);
-            if (found == KeyStatus.CORRECT_KEY) return found;
-        }
-
-        AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);
-        if (itemHandler.get() != null) {
-            for (int _idx = 0; _idx < itemHandler.get().getSlots(); _idx++) {
-                ItemStack stack = itemHandler.get().getStackInSlot(_idx);
-                if (stack.is(ModTags.KEY)) {
-                    found = KeyStatus.INCORRECT_KEY;
-                    if (isCorrectKey(stack, key)) return KeyStatus.CORRECT_KEY;
-                }
-            }
-        }
-        return found;
-    }
-
     public static boolean doesPlayerHaveKeyToOpen(Player player, String lockPassword, boolean feedbackMessage, @Nullable String translName) {
-        KeyStatus key = hasKeyInInventory(player, lockPassword);
+        KeyStatus key = ItemsUtil.hasKeyInInventory(player, lockPassword);
         if (key == KeyStatus.INCORRECT_KEY) {
             if (feedbackMessage)
                 player.displayClientMessage(Component.translatable("message.supplementaries.safe.incorrect_key"), true);

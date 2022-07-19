@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -80,11 +81,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         float p = 1 / 16f;
                         float x = pair.getFirst() * p;
                         float y = pair.getSecond() * p;
-                        VertexConsumer builder2 = ClientRegistry.BLACKBOARD_OUTLINE.buffer(bufferIn, RenderType::entityCutout);
+                        VertexConsumer builder2 = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferIn, RenderType::entityCutout);
                         matrixStackIn.pushPose();
 
                         matrixStackIn.translate(x,1 - y - p, 0.001);
-                        RendererUtil.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, ClientRegistry.BLACKBOARD_OUTLINE.sprite());
+                        RendererUtil.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
                         matrixStackIn.popPose();
                     }
                 }

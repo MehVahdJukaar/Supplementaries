@@ -1,9 +1,7 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mobholder;
+package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.block.util.MobContainer.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;

@@ -29,7 +29,7 @@ public class WallLanternPlacement implements AdditionalPlacement {
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        if (ClientConfigs.cached.PLACEABLE_TOOLTIPS) {
+        if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
             pTooltipComponents.add(Component.translatable("message.supplementaries.wall_lantern").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }

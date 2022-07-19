@@ -4,13 +4,18 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
-import net.mehvahdjukaar.moonlight.api.fluids.*;
+import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.inspirations.CauldronPlugin;
+import net.mehvahdjukaar.supplementaries.integration.InspirationCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.minecraft.core.BlockPos;
@@ -23,8 +28,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,10 +37,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
@@ -159,7 +158,7 @@ public class FaucetBlockTile extends BlockEntity {
             int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (waterLevel > 0) {
                 if (CompatHandler.inspirations) {
-                    return CauldronPlugin.doStuff(level.getBlockEntity(behind), this.tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
+                    return InspirationCompat.doCauldronStuff(level.getBlockEntity(behind), this.tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
                 }
 
                 this.prepareToTransferBottle(VanillaSoftFluids.WATER.get());
@@ -206,18 +205,8 @@ public class FaucetBlockTile extends BlockEntity {
             }
             //forge tanks
             else {
-                IFluidHandler handlerBack = tileBack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).orElse(null);
-                //TODO: fix create fluid int bug
-                if (handlerBack != null && !Utils.getID(backBlock).getPath().equals("fluid_interface")) {
-                    //only works in 250 increment
-                    if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
-                    this.tempFluidHolder.copy(handlerBack);
-                    this.tempFluidHolder.setCount(2);
-                    if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                        handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
-                        tileBack.setChanged();
-                        return true;
-                    }
+                if (FluidsUtil.tryExtractFromFluidHandler(tileBack, backBlock, dir, tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos))) {
+                    return true;
                 }
             }
             if (!doTransfer) return !this.tempFluidHolder.isEmpty();
@@ -298,7 +287,7 @@ public class FaucetBlockTile extends BlockEntity {
         } else if (belowBlock instanceof AbstractCauldronBlock) {
             //if any other mod adds a cauldron tile this will crash
             if (CompatHandler.inspirations) {
-                return CauldronPlugin.tryAddFluid(level.getBlockEntity(below), this.tempFluidHolder);
+                return InspirationCompat.tryAddFluid(level.getBlockEntity(below), this.tempFluidHolder);
             } else if (softFluid == VanillaSoftFluids.WATER.get()) {
                 //TODO: finish
                 if (belowBlock == Blocks.WATER_CAULDRON) {
@@ -343,19 +332,11 @@ public class FaucetBlockTile extends BlockEntity {
         }
         if (tileBelow != null) {
             //forge tanks
-            IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
-            if (handlerDown != null) {
-                result = this.tempFluidHolder.tryTransferToFluidTank(handlerDown, this.tempFluidHolder.getCount() - 1);
-                if (result) {
-                    tileBelow.setChanged();
-                    this.tempFluidHolder.fillCount();
-                }
-                return result;
-            }
+            return FluidsUtil.tryFillFluidTank(tileBelow, tempFluidHolder);
         }
-
         return false;
     }
+
 
     private void dropXP(Level level, BlockPos pos) {
         int i = 3 + level.random.nextInt(5) + level.random.nextInt(5);
@@ -391,28 +372,9 @@ public class FaucetBlockTile extends BlockEntity {
     public boolean spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         //TODO: maybe add here insertion in containers below
         if (this.isConnectedBelow()) return false;
-        IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).orElse(null);
-        if (itemHandler != null) {
-            for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-                ItemStack itemstack = itemHandler.getStackInSlot(slot);
-                if (!itemstack.isEmpty()) {
-                    ItemStack extracted = itemHandler.extractItem(slot, 1, false);
-                    //empty stack means it can't extract from inventory
-                    if (!extracted.isEmpty()) {
-                        tile.setChanged();
-                        ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
-                        drop.setDeltaMovement(new Vec3(0, 0, 0));
-                        level.addFreshEntity(drop);
-                        float f = (level.random.nextFloat() - 0.5f) / 4f;
-                        level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        return false;
+        return ItemsUtil.faucetSpillItems(level, pos, dir, tile);
     }
+
 
     @Override
     public void load(CompoundTag compound) {

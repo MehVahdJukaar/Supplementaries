@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -122,23 +123,23 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 }
                 colors.remove(this.color);
 
-                this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);
+                this.material = ModMaterials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
             } else if (Utils.getID(item).getNamespace().equals("inspirations")) {
                 String colName = Utils.getID(item).getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
-                this.material = ClientRegistry.BOOK_MATERIALS.get(this.color);
+                this.material = ModMaterials.BOOK_MATERIALS.get(this.color);
                 this.isEnchanted = false;
             } else if (BookPileBlock.isWrittenBook(item)) {
                 this.color = null;
-                this.material = item instanceof WritableBookItem ? ClientRegistry.BOOK_AND_QUILL_MATERIAL : ClientRegistry.BOOK_WRITTEN_MATERIAL;
+                this.material = item instanceof WritableBookItem ? ModMaterials.BOOK_AND_QUILL_MATERIAL : ModMaterials.BOOK_WRITTEN_MATERIAL;
 
                 this.isEnchanted = false;
             } else {
                 this.color = null;
 
-                this.material = BookPileBlock.isQuarkTome(item) ? ClientRegistry.BOOK_TOME_MATERIAL : ClientRegistry.BOOK_ENCHANTED_MATERIAL;
+                this.material = BookPileBlock.isQuarkTome(item) ? ModMaterials.BOOK_TOME_MATERIAL : ModMaterials.BOOK_ENCHANTED_MATERIAL;
                 this.isEnchanted = true;
             }
         }

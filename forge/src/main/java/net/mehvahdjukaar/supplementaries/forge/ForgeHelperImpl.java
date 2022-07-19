@@ -10,12 +10,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -29,7 +32,7 @@ public class ForgeHelperImpl {
     }
 
     public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        NetworkHooks.openGui(player, menuProvider, pos);
+        NetworkHooks.openScreen(player, menuProvider, pos);
     }
 
     public static boolean onExplosionStart(Level level, Explosion explosion) {
@@ -70,5 +73,17 @@ public class ForgeHelperImpl {
 
     public static boolean canDropFromExplosion(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
     return blockstate.canDropFromExplosion(level, blockpos, explosion);
+    }
+
+    public static boolean isDye(ItemStack itemstack) {
+       return  itemstack.is(Tags.Items.DYES);
+    }
+
+    public static DyeColor getColor(ItemStack stack) {
+        return DyeColor.getColor(stack);
+    }
+
+    public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
+        return state.rotate(world, targetPos, rot);
     }
 }

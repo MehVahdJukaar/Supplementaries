@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -25,7 +26,7 @@ public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockT
         float scale = Mth.lerp(partialTicks, tile.prevScale, tile.scale);
         poseStack.scale(scale, scale, scale);
 
-        TextureAtlasSprite sprite = ClientRegistry.BUBBLE_BLOCK_MATERIAL.sprite();
+        TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
 
         RendererUtil.renderBubble(buffer.getBuffer(RenderType.translucent()), poseStack, 1, sprite, light,
                 false, tile.getBlockPos(), tile.getLevel(), partialTicks);

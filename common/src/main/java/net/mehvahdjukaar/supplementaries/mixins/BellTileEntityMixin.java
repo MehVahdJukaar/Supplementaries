@@ -63,7 +63,7 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
         return this.saveWithoutMetadata();
     }
 
-    @Override
+    //@Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition);
     }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
@@ -67,7 +68,7 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.ROPE_ARROW_CREATE_RECIPE.get();
+        return ModRecipes.ROPE_ARROW_CREATE_RECIPE.get();
     }
 
 

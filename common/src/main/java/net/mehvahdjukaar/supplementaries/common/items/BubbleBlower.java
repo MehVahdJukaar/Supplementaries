@@ -63,7 +63,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             if (first.getMaterial().isReplaceable()) {
                 BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
 
-                SoundType soundtype = bubble.getSoundType(level, pos, player);
+                SoundType soundtype = bubble.getSoundType();
                 level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 if (!level.isClientSide) {

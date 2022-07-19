@@ -15,12 +15,12 @@ public class CrossbowColor implements ItemColor {
     @Override
     public int getColor(ItemStack stack, int tint) {
         CompoundTag tag = stack.getTag();
-        if (tint == 1 && ClientConfigs.cached.COLORED_ARROWS) {
+        if (tint == 1 && ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
             if (tag != null && tag.contains("ChargedProjectiles", 9)) {
                 ListTag chargedProjectiles = tag.getList("ChargedProjectiles", 10);
                 if (chargedProjectiles.size() > 0) {
-                    CompoundTag compoundnbt1 = chargedProjectiles.getCompound(0);
-                    ItemStack arrow = ItemStack.of(compoundnbt1);
+                    CompoundTag compound = chargedProjectiles.getCompound(0);
+                    ItemStack arrow = ItemStack.of(compound);
                     Item i = arrow.getItem();
                     if (i == Items.TIPPED_ARROW) return PotionUtils.getColor(arrow);
                     else if (i == Items.SPECTRAL_ARROW) return 0xFFAA00;

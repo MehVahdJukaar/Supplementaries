@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -65,7 +66,7 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.BUBBLE_BLOWER_REPAIR_RECIPE.get();
+        return ModRecipes.BUBBLE_BLOWER_REPAIR_RECIPE.get();
     }
 
 

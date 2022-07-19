@@ -13,11 +13,15 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -79,6 +83,26 @@ public class ForgeHelper {
 
     @ExpectPlatform
     public static boolean canDropFromExplosion(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean isDye(ItemStack itemstack) {
+        throw new AssertionError();
+    }
+    @Nullable
+    @ExpectPlatform
+    public static DyeColor getColor(ItemStack stack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static EntityType<?> getFishType(MobBucketItem bucketItem) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
         throw new AssertionError();
     }
 }

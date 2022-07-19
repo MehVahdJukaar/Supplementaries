@@ -91,7 +91,7 @@ public class RopeArrowEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
 
-        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK.get();
+        Block ropeBlock = ServerConfigs.Blocks.ROPE_ARROW_BLOCK.get();
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -63,7 +64,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
                 }
             }
         }
-        ItemStack result = new ItemStack(ModRegistry.TRAPPED_PRESENTS_ITEMS.get(dyecolor).get());
+        ItemStack result = new ItemStack(ModRegistry.TRAPPED_PRESENTS.get(dyecolor).get());
 
         if (itemstack.hasTag()) {
             var tag = itemstack.getTag().copy();
@@ -83,7 +84,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRegistry.TRAPPED_PRESENT_RECIPE.get();
+        return ModRecipes.TRAPPED_PRESENT_RECIPE.get();
     }
 }
 

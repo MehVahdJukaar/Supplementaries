@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableList;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -114,14 +115,24 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
         return super.getDrops(state, builder);
     }
 
+    //crappy for fabric
     @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
+            return tile.getSkullItem();
+        }
+        return super.getCloneItemStack(level, pos, state);
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
             double y = hitResult.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;
-            return up ? tile.getCandle().getBlock().getCloneItemStack(state, hitResult, world, pos, player) : tile.getSkullItem();
+            return up ? tile.getCandle().getBlock().getCloneItemStack(world, pos, state) : tile.getSkullItem();
         }
-        return super.getCloneItemStack(state, hitResult, world, pos, player);
+        return super.getCloneItemStack(world, pos, state);
     }
 
     @Override
@@ -146,11 +157,11 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(ItemTags.CANDLES) && stack.getItem() instanceof BlockItem blockItem) {
                 int count = state.getValue(CANDLES);
-                if (count < 4 && ServerConfigs.cached.SKULL_CANDLES_MULTIPLE &&
+                if (count < 4 && ServerConfigs.Tweaks.SKULL_CANDLES_MULTIPLE.get() &&
                         level.getBlockEntity(pos) instanceof CandleSkullBlockTile tile
                         && tile.getCandle().getBlock().asItem() == stack.getItem()) {
 
-                    SoundType sound = blockItem.getBlock().defaultBlockState().getSoundType(level, pos, player);
+                    SoundType sound = blockItem.getBlock().defaultBlockState().getSoundType();
                     level.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);

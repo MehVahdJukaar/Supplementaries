@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,13 +38,14 @@ public abstract class MimicBlock extends Block  {
     }
 
     //might cause lag when breaking?
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
         if (world.getBlockEntity(pos) instanceof IBlockHolder tile) {
             BlockState mimicState = tile.getHeldBlock();
             if (!mimicState.isAir()) return mimicState.getSoundType();
         }
-        return super.getSoundType(state, world, pos, entity);
+        return super.getSoundType(state);
     }
 
     @Override
@@ -64,21 +66,6 @@ public abstract class MimicBlock extends Block  {
         }
         return drops;
     }
-
-
-
-    /*
-    @Override
-    public float getSlipperiness(BlockState state, IWorldReader world, BlockPos pos, @org.jetbrains.annotations.Nullable Entity entity) {
-        TileEntity te = world.getBlockEntity(pos);
-        if (te instanceof IBlockHolder) {
-            BlockState mimicState = ((IBlockHolder) te).getHeldBlock();
-            if (!mimicState.isAir()) {
-                return mimicState.getSlipperiness(world, pos, entity);
-            }
-        }
-        return super.getSlipperiness(state,world,pos,entity);
-    }*/
 
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {

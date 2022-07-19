@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;

@@ -1,8 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -12,17 +9,16 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,13 +26,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.RenderProperties;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,25 +39,14 @@ public class RendererUtil {
     //centered on x,z. aligned on y=0
 
 
-    public static void renderBlockState(BlockState state, PoseStack matrixStack, MultiBufferSource buffer,
-                                        BlockRenderDispatcher blockRenderer, Level world, BlockPos pos, RenderType type) {
-
-        ForgeHooksClient.setRenderType(type);
-        blockRenderer.getModelRenderer().tesselateBlock(world,
-                blockRenderer.getBlockModel(state), state, pos, matrixStack,
-                buffer.getBuffer(type), false, world.random, 0,
-                OverlayTexture.NO_OVERLAY);
-        ForgeHooksClient.setRenderType(null);
-    }
-
     //from resource location
     public static void renderBlockModel(ResourceLocation modelLocation, PoseStack matrixStack, MultiBufferSource buffer,
                                         BlockRenderDispatcher blockRenderer, int light, int overlay, boolean cutout) {
 
         blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
                 buffer.getBuffer(cutout ? Sheets.cutoutBlockSheet() : Sheets.solidBlockSheet()),
-                null,
-                blockRenderer.getBlockModelShaper().getModelManager().getModel(modelLocation),
+                null, //TODO: fix
+                blockRenderer.getBlockModelShaper().getModelManager().getModel(new ModelResourceLocation(modelLocation,"")),
                 1.0F, 1.0F, 1.0F,
                 light, overlay);
     }
@@ -195,7 +175,7 @@ public class RendererUtil {
         int cDsw = setColorForAge(time, 0.65f);
 
 
-        float amp = (float)(double)ClientConfigs.Blocks.BUBBLE_BLOCK_WOBBLE.get();
+        float amp = (float) (double) ClientConfigs.Blocks.BUBBLE_BLOCK_WOBBLE.get();
         w = w - 2 * amp;
         //long time = System.currentTimeMillis();
         float unw = amp * Mth.cos(((float) Math.PI * 2F) * (time + 0));
@@ -363,8 +343,9 @@ public class RendererUtil {
     }
 
     private static int getFormatLength(TextureAtlasSprite sprite) {
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        return builder.getVertexFormat().getIntegerSize();
+        return 8; //TODO: re add
+        // BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        // return builder.getVertexFormat().getIntegerSize();
     }
 
 
@@ -470,92 +451,92 @@ public class RendererUtil {
     public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
                                              BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay) {
 
-        BakedModel model = renderer.getModel(stack, null, null, 0);
-
-        renderer.blitOffset = renderer.blitOffset + 50.0F;
-
-        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.pushPose();
-        posestack.translate(x, y, 100.0F + renderer.blitOffset);
-        posestack.translate(8.0D, 8.0D, 0.0D);
-        posestack.scale(1.0F, -1.0F, 1.0F);
-        posestack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.applyModelViewMatrix();
-
-        PoseStack matrixStack = new PoseStack();
-
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean flag = !model.usesBlockLight();
-        if (flag) {
-            Lighting.setupForFlatItems();
-        }
-
-        //-----render---
-
-        ItemTransforms.TransformType pTransformType = ItemTransforms.TransformType.GUI;
-
-        matrixStack.pushPose();
-
-        if (stack.is(Items.TRIDENT)) {
-            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
-        } else if (stack.is(Items.SPYGLASS)) {
-            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:spyglass#inventory"));
-        }
-
-        model = ForgeHooksClient.handleCameraTransforms(matrixStack, model, pTransformType, false);
-
-
-        //custom rotation
-        movement.accept(matrixStack, model.isGui3d() && stack.getItem() != ModRegistry.FLUTE_ITEM.get());
-
-        matrixStack.translate(-0.5D, -0.5D, -0.5D);
-
-        if (!model.isCustomRenderer() && (!stack.is(Items.TRIDENT) || flag)) {
-
-
-            if (model.isLayered()) {
-                ForgeHooksClient.drawItemLayered(renderer, model, stack, matrixStack, bufferSource, combinedLight, pCombinedOverlay, true);
-            } else {
-                RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
-                VertexConsumer vertexconsumer;
-                if (stack.is(Items.COMPASS) && stack.hasFoil()) {
-                    matrixStack.pushPose();
-                    PoseStack.Pose pose = matrixStack.last();
-                    pose.pose().multiply(0.5F);
-
-                    vertexconsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, pose);
-
-                    matrixStack.popPose();
-                } else {
-                    vertexconsumer = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, stack.hasFoil());
-                }
-
-                renderer.renderModelLists(model, stack, combinedLight, pCombinedOverlay, matrixStack, vertexconsumer);
-            }
-        } else {
-            RenderProperties.get(stack).getItemStackRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
-        }
-
-        matrixStack.popPose();
-
-
-        //----end-render---
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        if (flag) {
-            Lighting.setupFor3DItems();
-        }
-
-        posestack.popPose();
-        RenderSystem.applyModelViewMatrix();
-
-        renderer.blitOffset = renderer.blitOffset - 50.0F;
+//        BakedModel model = renderer.getModel(stack, null, null, 0);
+//
+//        renderer.blitOffset = renderer.blitOffset + 50.0F;
+//
+//        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+//        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+//        RenderSystem.enableBlend();
+//        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        PoseStack posestack = RenderSystem.getModelViewStack();
+//        posestack.pushPose();
+//        posestack.translate(x, y, 100.0F + renderer.blitOffset);
+//        posestack.translate(8.0D, 8.0D, 0.0D);
+//        posestack.scale(1.0F, -1.0F, 1.0F);
+//        posestack.scale(16.0F, 16.0F, 16.0F);
+//        RenderSystem.applyModelViewMatrix();
+//
+//        PoseStack matrixStack = new PoseStack();
+//
+//        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+//        boolean flag = !model.usesBlockLight();
+//        if (flag) {
+//            Lighting.setupForFlatItems();
+//        }
+//
+//        //-----render---
+//
+//        ItemTransforms.TransformType pTransformType = ItemTransforms.TransformType.GUI;
+//
+//        matrixStack.pushPose();
+//
+//        if (stack.is(Items.TRIDENT)) {
+//            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+//        } else if (stack.is(Items.SPYGLASS)) {
+//            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:spyglass#inventory"));
+//        }
+//
+//        model = ForgeHooksClient.handleCameraTransforms(matrixStack, model, pTransformType, false);
+//
+//
+//        //custom rotation
+//        movement.accept(matrixStack, model.isGui3d() && stack.getItem() != ModRegistry.FLUTE_ITEM.get());
+//
+//        matrixStack.translate(-0.5D, -0.5D, -0.5D);
+//
+//        if (!model.isCustomRenderer() && (!stack.is(Items.TRIDENT) || flag)) {
+//
+//
+//            if (model.isLayered()) {
+//                ForgeHooksClient.drawItemLayered(renderer, model, stack, matrixStack, bufferSource, combinedLight, pCombinedOverlay, true);
+//            } else {
+//                RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
+//                VertexConsumer vertexconsumer;
+//                if (stack.is(Items.COMPASS) && stack.hasFoil()) {
+//                    matrixStack.pushPose();
+//                    PoseStack.Pose pose = matrixStack.last();
+//                    pose.pose().multiply(0.5F);
+//
+//                    vertexconsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, rendertype, pose);
+//
+//                    matrixStack.popPose();
+//                } else {
+//                    vertexconsumer = ItemRenderer.getFoilBufferDirect(bufferSource, rendertype, true, stack.hasFoil());
+//                }
+//
+//                renderer.renderModelLists(model, stack, combinedLight, pCombinedOverlay, matrixStack, vertexconsumer);
+//            }
+//        } else {
+//            RenderProperties.get(stack).getItemStackRenderer().renderByItem(stack, pTransformType, matrixStack, bufferSource, combinedLight, pCombinedOverlay);
+//        }
+//
+//        matrixStack.popPose();
+//
+//
+//        //----end-render---
+//
+//        bufferSource.endBatch();
+//        RenderSystem.enableDepthTest();
+//        if (flag) {
+//            Lighting.setupFor3DItems();
+//        }
+//
+//        posestack.popPose();
+//        RenderSystem.applyModelViewMatrix();
+//
+//        renderer.blitOffset = renderer.blitOffset - 50.0F;
 
     }
 

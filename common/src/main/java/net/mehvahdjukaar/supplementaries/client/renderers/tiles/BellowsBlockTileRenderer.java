@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -65,7 +66,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
     @Override
     public void render(BellowsBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        VertexConsumer builder = ClientRegistry.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
+        VertexConsumer builder = ModMaterials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 
         float dh = Mth.lerp(partialTicks, tile.prevHeight, tile.height);

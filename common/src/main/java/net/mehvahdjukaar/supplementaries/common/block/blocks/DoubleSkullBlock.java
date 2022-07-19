@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.minecraft.core.BlockPos;
@@ -72,14 +73,21 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
         return super.getDrops(pState, builder);
     }
 
+    //crappy for fabric
     @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        return super.getCloneItemStack(level, pos, state);
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult hitResult, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
             double y = hitResult.getLocation().y;
             boolean up = y % ((int) y) > 0.5d;
             return up ? tile.getSkullItemUp() : tile.getSkullItem();
         }
-        return super.getCloneItemStack(state, hitResult, world, pos, player);
+        return super.getCloneItemStack(world, pos, state);
     }
 
     @Override
@@ -107,7 +115,6 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
                     }
                 }
             }
-
             //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
             tile.setChanged();
             if (world instanceof Level level) {
@@ -118,7 +125,6 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
         }
         return Optional.empty();
     }
-
 
     @Override
     public BlockState updateShape(BlockState pState, Direction dir, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {

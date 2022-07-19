@@ -10,7 +10,10 @@ import java.util.OptionalDouble;
 import java.util.function.BiFunction;
 
 public class GlowRenderType extends RenderType {
-
+    public GlowRenderType(String string, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean bl, boolean bl2, Runnable runnable, Runnable runnable2) {
+        super(string, vertexFormat, mode, i, bl, bl2, runnable, runnable2);
+    }
+/*
     public GlowRenderType(String p_173178_, VertexFormat p_173179_, VertexFormat.Mode p_173180_, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
@@ -53,5 +56,5 @@ public class GlowRenderType extends RenderType {
     public static RenderType getRenderType(ResourceLocation resourceLocation, boolean a, boolean b, boolean c) {
 
         return GlowRenderType.outline(resourceLocation);
-    }
+    }*/
 }

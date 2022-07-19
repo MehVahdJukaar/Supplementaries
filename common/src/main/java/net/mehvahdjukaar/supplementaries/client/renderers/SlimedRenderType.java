@@ -23,7 +23,7 @@ public class SlimedRenderType extends RenderType {
     }, RenderSystem::resetTextureMatrix);
 
     protected static final TextureStateShard TEXTURE_SHARD = new TextureStateShard(Textures.SLIME_ENTITY_OVERLAY, true, false);
-
+/*
     public static final RenderType SLIMED_RENDER_TYPE =
             create("slimed", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
                     true, true, CompositeState.builder()
@@ -36,7 +36,7 @@ public class SlimedRenderType extends RenderType {
                             .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                             .setTexturingState(TEXTURING_STATE_SHARD)
                             .createCompositeState(true));
-
+*/
 
     private static void animateTexture(float in, long time) {
         long i = Util.getMillis() * time;

@@ -15,7 +15,7 @@ public interface IScreenProvider {
     void openScreen(Level level, BlockPos pos, Player player);
 
     default void sendOpenGuiPacket(Level level, BlockPos pos, Player player) {
-        NetworkHandler.CHANNEL.sendToPlayerClient((ServerPlayer) player,
+        NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
                 new ClientBoundOpenScreenPacket(pos));
     }
 }

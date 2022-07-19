@@ -17,7 +17,7 @@ import java.util.*;
 
 public class GlobeTextureManager {
 
-    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().textureManager;
+    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
     private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
 
     public static void refreshTextures() {
