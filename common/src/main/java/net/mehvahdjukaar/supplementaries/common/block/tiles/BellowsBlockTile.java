@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -356,7 +357,7 @@ public class BellowsBlockTile extends BlockEntity {
     public void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
         if (airType == AirType.SOAP) {
             for (int m = 0; m < (1 + world.random.nextInt(3)); m++) {
-                ParticleUtils.spawnParticleOnFace(world, pos, dir, ModParticles.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);
+                ParticleUtil.spawnParticleOnFace(world, pos, dir, ModParticles.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);
             }
 
         } else {

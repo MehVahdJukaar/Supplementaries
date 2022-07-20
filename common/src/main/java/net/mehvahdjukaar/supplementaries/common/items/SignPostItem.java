@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -71,7 +72,7 @@ public class SignPostItem extends WoodBasedItem {
         if (attachType != AttachType.NONE) {
 
             if (CompatHandler.framedblocks) {
-                Block f = CompatHandler.tryGettingFramedBlock(targetBlock, world, blockpos);
+                Block f = FramedBlocksCompat.tryGettingFramedBlock(targetBlock, world, blockpos);
                 if (f != null) {
                     framed = true;
                     if (f != Blocks.AIR) targetBlock = f;

@@ -20,6 +20,9 @@ public class SupplementariesClient {
 
     }
 
+    public static float getPartialTicks(){
+        return 0;
+    }
     //TODO: move client setup here
 
 }

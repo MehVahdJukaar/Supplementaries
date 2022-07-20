@@ -1,22 +1,24 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
@@ -25,6 +27,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ForgeHelperImpl {
@@ -74,11 +77,11 @@ public class ForgeHelperImpl {
     }
 
     public static boolean canDropFromExplosion(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
-    return blockstate.canDropFromExplosion(level, blockpos, explosion);
+        return blockstate.canDropFromExplosion(level, blockpos, explosion);
     }
 
     public static boolean isDye(ItemStack itemstack) {
-       return  itemstack.is(Tags.Items.DYES);
+        return itemstack.is(Tags.Items.DYES);
     }
 
     public static DyeColor getColor(ItemStack stack) {
@@ -99,5 +102,17 @@ public class ForgeHelperImpl {
 
     public static void setPoolName(LootPool.Builder pool, String name) {
         pool.name(name);
+    }
+
+    public static RailShape getRailDirection(BaseRailBlock railBlock, BlockState blockstate, Level level, BlockPos blockpos, AbstractMinecart o) {
+        return railBlock.getRailDirection(blockstate, level, blockpos, o);
+    }
+
+    public static Optional<ItemStack> getCraftingRemainingItem(ItemStack itemstack) {
+        return itemstack.hasCraftingRemainingItem() ? Optional.of(itemstack.getCraftingRemainingItem()) : Optional.empty();
+    }
+
+    public static void reviveEntity(Entity entity) {
+        entity.revive();
     }
 }

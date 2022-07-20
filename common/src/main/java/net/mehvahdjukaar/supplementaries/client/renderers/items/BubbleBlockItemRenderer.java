@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
+import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -29,7 +30,7 @@ public class BubbleBlockItemRenderer extends ItemStackRenderer {
         TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
         poseStack.translate(0.5, 0.5, 0.5);
         RendererUtil.renderBubble(buffer.getBuffer(RenderType.translucent()), poseStack, 1, sprite, light,
-                false, BlockPos.ZERO, null, ClientEvents.getPartialTicks());
+                false, BlockPos.ZERO, null, SupplementariesClient.getPartialTicks());
 
         poseStack.popPose();
 

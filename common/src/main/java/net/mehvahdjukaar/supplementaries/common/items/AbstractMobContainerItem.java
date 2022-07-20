@@ -315,7 +315,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             }
 
             if (!bucket.isEmpty() || canCatch) {
-                entity.revive();
+                ForgeHelper.reviveEntity(entity);
                 //return for client
                 if (player.level.isClientSide) return InteractionResult.SUCCESS;
 

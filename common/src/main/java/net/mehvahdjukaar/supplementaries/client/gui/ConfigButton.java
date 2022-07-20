@@ -5,6 +5,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -31,13 +32,12 @@ public class ConfigButton extends Button {
 
     public static void click(Button button) {
         ConfigUtils.openModConfigs();
-        //ConfiguredCustomScreen.openScreen();
     }
 
-    //TODO: this doesnt get ticked on fabric
+    @SuppressWarnings("ConstantConditions")
     public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
         if (screen instanceof TitleScreen || screen instanceof PauseScreen) {
-            boolean isOnRight = CompatHandler.shouldHaveButtonOnRight();
+            boolean isOnRight = CompatHandler.quark && QuarkCompat.shouldHaveButtonOnRight();
             List<String> targets = isOnRight ?
                     Arrays.asList(Component.translatable("menu.online").getString(), Component.translatable("fml.menu.modoptions").getString(), Component.translatable("menu.shareToLan").getString())
                     : Arrays.asList(Component.translatable("menu.options").getString(), Component.translatable("fml.menu.mods").getString());

@@ -138,6 +138,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         worldIn.setBlock(pos.above(), this.defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER), flags);
     }
 
+    /*
     // Tick function
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
@@ -159,11 +160,22 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         }
     }
 
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+        InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
+        if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
+            if (event.isCanceled()) return event.getCancellationResult();
+        }
+        return old;
+    }*/
+    //TODO: add back
+
     public boolean canGrowUp(BlockGetter worldIn, BlockPos downPos) {
         BlockState state = worldIn.getBlockState(downPos.above());
         return state.getBlock() instanceof FlaxBlock || state.getMaterial().isReplaceable();
     }
-
 
     //for bonemeal
     @Override
@@ -190,7 +202,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
         }
         level.setBlock(pos, getStateForAge(newAge), 2);
-
     }
 
     @Override
@@ -214,13 +225,4 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         return super.isMaxAge(pState);
     }
 
-    @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
-        InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
-        if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
-            if (event.isCanceled()) return event.getCancellationResult();
-        }
-        return old;
-    }
 }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
+
+import java.util.Optional;
 
 public class FlagFromBannerRecipe extends CustomRecipe {
     public FlagFromBannerRecipe(ResourceLocation idIn) {
@@ -125,12 +128,13 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
-                if (itemstack.hasContainerItem()) {
-                    stacks.set(i, itemstack.getContainerItem());
+                Optional<ItemStack> container = ForgeHelper.getCraftingRemainingItem(itemstack);
+                if (container.isPresent()) {
+                    stacks.set(i, container.get());
                 } else if (itemstack.hasTag() && BannerBlockEntity.getPatternCount(itemstack) > 0) {
-                    ItemStack itemstack1 = itemstack.copy();
-                    itemstack1.setCount(1);
-                    stacks.set(i, itemstack1);
+                    ItemStack copy = itemstack.copy();
+                    copy.setCount(1);
+                    stacks.set(i, copy);
                 }
             }
         }

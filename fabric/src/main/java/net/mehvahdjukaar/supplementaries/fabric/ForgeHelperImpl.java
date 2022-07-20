@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import net.fabricmc.fabric.api.loot.v2.FabricLootPoolBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,16 +11,21 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ForgeHelperImpl {
@@ -101,5 +105,16 @@ public class ForgeHelperImpl {
     }
 
     public static void setPoolName(LootPool.Builder pool, String name) {
+    }
+
+    public static RailShape getRailDirection(BaseRailBlock railBlock, BlockState blockstate, Level level, BlockPos blockpos, AbstractMinecart o) {
+        return blockstate.getValue(railBlock.getShapeProperty());
+    }
+
+    public static Optional<ItemStack> getCraftingRemainingItem(ItemStack itemstack) {
+        return Optional.ofNullable(itemstack.getItem().getCraftingRemainingItem()).map(Item::getDefaultInstance);
+    }
+
+    public static void reviveEntity(Entity entity) {
     }
 }

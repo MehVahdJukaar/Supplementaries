@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -11,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -36,7 +38,7 @@ public class DispenserMinecartItem extends Item {
             double d2 = pSource.z() + (double) direction.getStepZ() * 1.125D;
             BlockPos blockpos = pSource.getPos().relative(direction);
             BlockState blockstate = level.getBlockState(blockpos);
-            RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
+            RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock ? ForgeHelper.getRailDirection(railBlock, blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
             double d3;
             if (blockstate.is(BlockTags.RAILS)) {
                 if (railshape.isAscending()) {
@@ -93,7 +95,7 @@ public class DispenserMinecartItem extends Item {
         } else {
             ItemStack itemstack = pContext.getItemInHand();
             if (!level.isClientSide) {
-                RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
+                RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock? ForgeHelper.getRailDirection(railBlock,blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
                 double d0 = 0.0D;
                 if (railshape.isAscending()) {
                     d0 = 0.5D;

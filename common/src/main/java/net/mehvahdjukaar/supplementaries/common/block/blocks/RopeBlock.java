@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -203,7 +205,7 @@ public class RopeBlock extends WaterBlock {
 
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
-            CompatHandler.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
+            DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -230,7 +232,7 @@ public class RopeBlock extends WaterBlock {
             worldIn.scheduleTick(pos, this, 1);
             if (CompatHandler.deco_blocks) {
                 BlockPos down = pos.below();
-                CompatHandler.tryConvertingRopeChandelier(worldIn.getBlockState(down), worldIn, down);
+                DecoBlocksCompat.tryConvertingRopeChandelier(worldIn.getBlockState(down), worldIn, down);
             }
         }
     }
@@ -488,6 +490,7 @@ public class RopeBlock extends WaterBlock {
     }
 
     //TODO: fix order of operations to allow pulling down lanterns
+    @SuppressWarnings("ConstantConditions")
     private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
         if (toPos.getY() < world.getMinBuildHeight() || toPos.getY() > world.getMaxBuildHeight()) return false;
         BlockState state = world.getBlockState(fromPos);
@@ -504,7 +507,7 @@ public class RopeBlock extends WaterBlock {
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
                 //moves everything if quark is not enabled. bad :/ install quark guys
-                if (CompatHandler.canMoveTile(state)) {
+                if (CompatHandler.quark && !QuarkCompat.canMoveBlockEntity(state)) {
                     return false;
                 } else {
                     tile.setRemoved();

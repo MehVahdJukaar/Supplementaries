@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
@@ -16,46 +18,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TippedSpikesColor implements BlockColor, ItemColor {
-    public static Map<Integer, Integer> cachedColors0 = new HashMap<>();
-    public static Map<Integer, Integer> cachedColors1 = new HashMap<>();
 
-    public static int getCachedColor(int base, int tint) {
+    private static final Map<Integer, Integer> CACHED_COLORS_0 = new HashMap<>();
+    private static final Map<Integer, Integer> CACHED_COLORS_1 = new HashMap<>();
+
+    private static int getCachedColor(int base, int tint) {
         return switch (tint) {
             default -> -1;
-            case 1 -> {
-                if (!cachedColors0.containsKey(base)) {
-                    //cachedColors0.put(base, c);
-                    yield getProcessedColor(base, 0);
-                } else {
-                    yield cachedColors0.get(base);
-                }
-            }
-            case 2 -> {
-                if (!cachedColors1.containsKey(base)) {
-                    // cachedColors1.put(base, c);
-                    yield getProcessedColor(base, 1);
-                } else {
-                    yield cachedColors1.get(base);
-                }
-            }
+            case 1 -> CACHED_COLORS_0.computeIfAbsent(base, b -> getProcessedColor(base, 0));
+            case 2 -> CACHED_COLORS_1.computeIfAbsent(base, b -> getProcessedColor(base, 1));
         };
     }
-
 
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
         if (world != null && pos != null) {
             if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile tile) {
                 int color = tile.getColor();
-                //return getProcessedColor(color, tint);
                 return getCachedColor(color, tint);
             }
             //not actually sure why I need this since quark seems to handle moving tiles pretty well
             else if (CompatHandler.quark) {
                 if (world instanceof Level level) {
-                    if (CompatHandler.getQuarkMovingTile(pos, level) instanceof BambooSpikesBlockTile tile) {
+                    if (QuarkCompat.getMovingBlockEntity(pos, level) instanceof BambooSpikesBlockTile tile) {
                         int color = tile.getColor();
-                        //return getProcessedColor(color, tint);
                         return getCachedColor(color, tint);
                     }
                 }
@@ -68,26 +54,21 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     public int getColor(ItemStack stack, int tint) {
         if (tint == 0) return 0xffffff;
         return getCachedColor(PotionUtils.getColor(stack), tint);
-        //return getProcessedColor(PotionUtils.getColor(stack), tint-1);
     }
 
-    public static int getProcessedColor(int rgb, int tint) {
-        //float[] hsb = Color.RGBtoHSB(r,g,b,null);
-        //int rgb2 = Color.HSBtoRGB(hsb[0],0.75f,0.85f);
-        float[] hsl = ColorHelper.rgbToHsl(rgb);
+    private static int getProcessedColor(int rgb, int tint) {
+        var hsl = new RGBColor(rgb).asHSL();
+        float h = hsl.hue();
         if (tint == 1) {
-            float h = hsl[0];
             boolean b = h > 0.16667f && h < 0.6667f;
             float i = b ? -0.04f : +0.04f;
-            hsl[0] = (h + i) % 1f;
+            h = (h + i) % 1f;
         }
 
-        hsl = ColorHelper.prettyfyColor(hsl);
-        float h = hsl[0];
-        float s = hsl[1];
-        float l = hsl[2];
+        hsl = ColorHelper.prettyfyColor(hsl.withHue(h));
+        float s = hsl.saturation();
         //0.7,0.6
         s = tint == 0 ? ((s * 0.81f)) : s * 0.74f;
-        return ColorHelper.hslToRgb(h, s, l);
+        return hsl.withSaturation(s).asRGB().toInt();
     }
 }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
@@ -11,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+
+import java.util.Optional;
 
 public class BlackboardDuplicateRecipe extends CustomRecipe {
     public BlackboardDuplicateRecipe(ResourceLocation idIn) {
@@ -67,21 +70,22 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
-        for (int i = 0; i < nonnulllist.size(); ++i) {
+        for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
             if (!itemstack.isEmpty()) {
-                if (itemstack.hasContainerItem()) {
-                    nonnulllist.set(i, itemstack.getContainerItem());
+                Optional<ItemStack> container = ForgeHelper.getCraftingRemainingItem(itemstack);
+                if (container.isPresent()) {
+                    stacks.set(i, container.get());
                 } else if (itemstack.hasTag() && isDrawnBlackboard(itemstack)) {
-                    ItemStack itemstack1 = itemstack.copy();
-                    itemstack1.setCount(1);
-                    nonnulllist.set(i, itemstack1);
+                    ItemStack copy = itemstack.copy();
+                    copy.setCount(1);
+                    stacks.set(i, copy);
                 }
             }
         }
-        return nonnulllist;
+        return stacks;
     }
 
     @Override

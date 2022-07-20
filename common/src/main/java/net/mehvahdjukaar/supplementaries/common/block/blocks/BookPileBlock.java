@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -71,7 +72,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isQuarkTome(Item i) {
-        return CompatHandler.quark && CompatHandler.isQuarkTome(i);
+        return CompatHandler.quark && CompatObjects.TOME.get() == i;
     }
 
     @Override

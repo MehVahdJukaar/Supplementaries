@@ -210,7 +210,9 @@ public class CommonUtil {
         Level level = copyPosFrom.getLevel();
         Player p;
         if (level instanceof ServerLevel serverLevel) {
-            p = MovableFakePlayer.get(serverLevel, DUMMY_PROFILE);
+            return null;
+            //TODO: fix
+            //p = MovableFakePlayer.get(serverLevel, DUMMY_PROFILE);
         } else {
             p = ClientAccess.getFakeClientPlayer(level, DUMMY_PROFILE);
         }

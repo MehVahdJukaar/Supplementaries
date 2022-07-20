@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
@@ -37,6 +38,7 @@ public class CompatObjects {
 
     public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", Registry.MOB_EFFECT);
 
+    public static final Supplier<Item> TOME = makeCompatObject("quark:tome", Registry.ITEM);
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 

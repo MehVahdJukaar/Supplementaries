@@ -29,7 +29,6 @@ public class SupplementariesForge {
     public SupplementariesForge() {
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        FlowerPotBlock
 
         Supplementaries.commonInit();
 

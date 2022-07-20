@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -118,7 +119,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                         }
                         return InteractionResult.FAIL;
                     } else if (CompatHandler.framedblocks && tile.framed) {
-                        boolean success = CompatHandler.interactWithFramedSignPost(tile, player, handIn, itemstack, level, pos);
+                        boolean success = FramedBlocksCompat.interactWithFramedSignPost(tile, player, handIn, itemstack, level, pos);
                         if (success) return InteractionResult.CONSUME;
                     } else if (item instanceof SignPostItem) {
                         //let sign item handle this one

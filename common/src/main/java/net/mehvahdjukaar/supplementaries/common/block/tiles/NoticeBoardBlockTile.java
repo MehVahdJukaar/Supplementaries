@@ -119,15 +119,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             }
 
         } else if (CompatHandler.computercraft) {
-            if (CompatHandler.isCCprintedBook(item)) {
+            if (CCCompat.isPrintedBook(item)) {
 
                 if (com != null) {
-                    int pages = CompatHandler.CCgetPages(itemstack);
+                    int pages = CCCompat.getPages(itemstack);
 
                     if (this.pageNumber >= pages) {
                         this.pageNumber = this.pageNumber % pages;
                     }
-                    String[] text = CompatHandler.CCgetText(itemstack);
+                    String[] text = CCCompat.getText(itemstack);
                     StringBuilder combined = new StringBuilder();
                     for (int i = 0; i < 21; i++) {
                         int ind = this.pageNumber * 21 + i;
@@ -170,7 +170,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @SuppressWarnings("ConstantConditions")
     public static boolean isPageItem(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCCompat.checkForPrintedBook(item));
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCCompat.isPrintedBook(item));
     }
 
     @Override

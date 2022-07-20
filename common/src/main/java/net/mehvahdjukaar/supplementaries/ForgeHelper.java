@@ -14,17 +14,21 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ForgeHelper {
@@ -118,6 +122,20 @@ public class ForgeHelper {
 
     @ExpectPlatform
     public static void setPoolName(LootPool.Builder pool, String name) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static RailShape getRailDirection(BaseRailBlock railBlock, BlockState blockstate, Level level, BlockPos blockpos,@Nullable AbstractMinecart o) {
+        throw new AssertionError();
+    }
+    @ExpectPlatform
+    public static Optional<ItemStack> getCraftingRemainingItem(ItemStack itemstack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void reviveEntity(Entity entity) {
         throw new AssertionError();
     }
 }

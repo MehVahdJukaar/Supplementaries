@@ -4,12 +4,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -144,11 +147,12 @@ public class BookPileBlockTile extends ItemDisplayTile {
             }
         }
 
+        @SuppressWarnings("ConstantConditions")
         public VertexConsumer getBuilder(MultiBufferSource buffer) {
             if (this.isEnchanted && ClientConfigs.Tweaks.BOOK_GLINT.get()) {
                 VertexConsumer foilBuilder = null;
                 if (CompatHandler.enchantedbookredesign) {
-                    foilBuilder = CompatHandler.getBookColoredFoil(this.stack, buffer);
+                    foilBuilder = EnchantRedesignCompat.getBookColoredFoil(this.stack, buffer);
                 }
                 if (foilBuilder == null) {
                     foilBuilder = buffer.getBuffer(RenderType.entityGlint());
@@ -194,8 +198,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
         BookColor(String s, int rgb, int angle) {
             this.name = s;
-            float[] col = ColorHelper.rgbToHsl(rgb);
-            this.hue = col[0];
+            var col = new RGBColor(rgb).asHSL();
+            this.hue = col.hue();
             if (angle < 0) this.angle = getAllowedHueShift(col);
             else this.angle = Math.max(1, angle);
         }
@@ -226,9 +230,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
             return diff < (other.angle + this.angle) / 2f;
         }
 
-        private float getAllowedHueShift(float[] col) {
-            float l = col[2];
-            float s = ColorHelper.oneToOneSaturation(col[1], l);
+        //could even just use distance
+        private float getAllowedHueShift(HSLColor color) {
+            float l = color.lightness();
+            float s = ColorHelper.oneToOneSaturation(color.saturation(), l);
             float minAngle = 90 / 360f;
             float addAngle = 65 / 360f;
             float distLightSq = 2;//(s * s) + (1 - l) * (1 - l);
