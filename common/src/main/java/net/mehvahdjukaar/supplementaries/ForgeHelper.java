@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootPool;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -103,6 +105,19 @@ public class ForgeHelper {
 
     @ExpectPlatform
     public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
+        throw new AssertionError();
+    }
+    @ExpectPlatform
+    public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
+        throw new AssertionError();
+    }
+    @ExpectPlatform
+    public static boolean isMultipartEntity(Entity e) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void setPoolName(LootPool.Builder pool, String name) {
         throw new AssertionError();
     }
 }

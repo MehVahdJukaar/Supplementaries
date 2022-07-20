@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
@@ -77,9 +78,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public void playReleaseSound(Level world, Vec3 v) {
     }
 
-    @Override
-    public int getItemStackLimit(ItemStack stack) {
-        return this.isFull(stack) ? 1 : super.getItemStackLimit(stack);
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public int getMaxStackSize(ItemStack stack) {
+        return this.isFull(stack) ? 1 : 64;
     }
 
     public boolean isFull(ItemStack stack) {
@@ -108,8 +110,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
     //TODO: merge
     //immediately discards pets and not alive entities as well as players
+    @SuppressWarnings("ConstantConditions")
     protected final boolean isEntityValid(Entity e, Player player) {
-        if (!e.isAlive() || e.isMultipartEntity() || e instanceof Player) return false;
+        if (!e.isAlive() || ForgeHelper.isMultipartEntity(e) || e instanceof Player) return false;
         if (e instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 

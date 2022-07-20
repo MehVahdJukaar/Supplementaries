@@ -112,12 +112,6 @@ public class BlockPlacerItem extends BlockItem {
     }
 
     @Override
-    protected SoundEvent getPlaceSound(BlockState state, Level world, BlockPos pos, Player entity) {
-        if (this.overrideSound != null) return this.overrideSound.getPlaceSound();
-        return super.getPlaceSound(state, world, pos, entity);
-    }
-
-    @Override
     public boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
         this.mimicBlock = pState.getBlock();
         boolean r = super.canPlace(pContext, pState);

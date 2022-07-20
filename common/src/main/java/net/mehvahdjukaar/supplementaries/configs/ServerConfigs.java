@@ -42,11 +42,11 @@ public class ServerConfigs {
     private static void onRefresh(){
         ResourceLocation res = new ResourceLocation(Items.ROPE_ARROW_ROPE.get());
         var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
-        Items.ROPE_ARROW_OVERRIDE = opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
+        Items.ROPE_ARROW_OVERRIDE = (Holder.Reference<Block>)opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
     }
 
     public static class Items {
-        public static Holder<Block> ROPE_ARROW_OVERRIDE = null;
+        public static Holder.Reference<Block> ROPE_ARROW_OVERRIDE = null;
 
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;

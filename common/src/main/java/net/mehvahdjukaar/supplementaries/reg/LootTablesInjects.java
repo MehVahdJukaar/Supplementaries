@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -132,10 +133,8 @@ public class LootTablesInjects {
 
     private static void injectLootPool(Consumer<LootPool.Builder> consumer, TableType type, String name) {
         String id = type.toString().toLowerCase(Locale.ROOT) + "_" + name;
-        LootPool.Builder pool = LootPool.lootPool().add(
-                        LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)))
-                .name("supp_" + name);
-        //fabric uses a different loot builder and forge has extra params.. todo:split
+        LootPool.Builder pool = LootPool.lootPool().add(LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)));
+        ForgeHelper.setPoolName(pool, "supp_" + name);
         consumer.accept(pool);
     }
 

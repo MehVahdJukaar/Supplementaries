@@ -1,5 +1,6 @@
-package net.mehvahdjukaar.supplementaries.common.items;
+package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -7,15 +8,21 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.extensions.IForgeItem;
+import net.minecraftforge.event.ForgeEventFactory;
 
-//forge only. dont bother for fabric
+//forge only. don't bother for fabric
 public class ShulkerShellItem extends ArmorItem {
+   //TODO: add
     public ShulkerShellItem(Properties properties) {
-        super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
+       super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
     }
 
     @Override
-    public int getItemStackLimit(ItemStack stack) {
+    public int getMaxStackSize(ItemStack stack) {
         return 64;
     }
 

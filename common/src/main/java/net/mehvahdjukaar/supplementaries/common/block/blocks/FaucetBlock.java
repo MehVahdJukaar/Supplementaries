@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -140,11 +141,12 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     }
 
     //TODO: redo
+    @SuppressWarnings("ConstantConditions")
     private boolean canConnect(BlockState downState, LevelAccessor world, BlockPos pos, Direction dir) {
         if (downState.getBlock() instanceof JarBlock) return true;
         else if (downState.is(ModTags.POURING_TANK)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
-        return world instanceof Level && FluidUtil.getFluidHandler((Level) world, pos, dir).isPresent();
+        return world instanceof Level  level && FluidsUtil.hasFluidHandler(level, pos, dir);
     }
 
     @Override
@@ -175,7 +177,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
             world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
         }
     }
-
 
     public boolean isOpen(BlockState state) {
         return (state.getValue(BlockStateProperties.POWERED) ^ state.getValue(BlockStateProperties.ENABLED));

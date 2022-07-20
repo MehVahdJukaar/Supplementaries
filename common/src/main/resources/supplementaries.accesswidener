@@ -22,7 +22,7 @@ mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS L
 accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 
 #explosions
-accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity
+accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
 
 #shadow radius
 accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadius F
@@ -31,7 +31,7 @@ accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadiu
 accessible field net/minecraft/world/entity/Entity wasTouchingWater Z
 
 #concrete
-accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/state/BlockState
+accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/state/BlockState;
 
 #font stuff
 accessible class net/minecraft/client/gui/Font$StringRenderOutput
@@ -44,3 +44,6 @@ accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity name L
 
 #place context
 accessible method net/minecraft/world/item/context/BlockPlaceContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
+
+#luck for urns
+accessible field net/minecraft/world/level/storage/loot/LootContext$Builder luck F

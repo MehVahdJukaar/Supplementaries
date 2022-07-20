@@ -55,6 +55,12 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public int getBarWidth(ItemStack stack) {
+        return Math.round(13.0F - (float)stack.getDamageValue() * 13.0F / (float)this.getMaxDamage(stack));
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
@@ -70,11 +76,6 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public int getBarWidth(ItemStack stack) {
-        return Math.round(13.0F - (float)stack.getDamageValue() * 13.0F / (float)this.getMaxDamage(stack));
-    }
-
-    @Override
     public int getEnchantmentValue() {
         return 0;
     }
@@ -84,17 +85,15 @@ public class RopeArrowItem extends ArrowItem {
         return false;
     }
 
-
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
-        var override = ServerConfigs.Items.ROPE_ARROW_ROPE.key().location();
-        if (!override.equals(ModRegistry.ROPE.getId())) {
-            tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        var override = ServerConfigs.Items.ROPE_ARROW_OVERRIDE;
+        if (override.value() != ModRegistry.ROPE) {
+            tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location()).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }
 

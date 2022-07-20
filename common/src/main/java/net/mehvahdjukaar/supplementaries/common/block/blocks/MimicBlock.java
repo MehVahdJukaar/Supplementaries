@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +56,7 @@ public abstract class MimicBlock extends Block  {
             //checks again if the content itself can be mined
             BlockState heldState = tile.getHeldBlock();
             if(builder.getParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
-                if (!heldState.canHarvestBlock(builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
+                if (!ForgeHelper.canHarvestBlock(state,builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
                     return drops;
                 }
             }

@@ -1,14 +1,17 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import net.fabricmc.fabric.api.loot.v2.FabricLootPoolBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +19,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootPool;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -86,5 +90,16 @@ public class ForgeHelperImpl {
 
     public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
         return state.rotate(rot);
+    }
+
+    public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
+        return !state.requiresCorrectToolForDrops() || player.hasCorrectToolForDrops(state);
+    }
+
+    public static boolean isMultipartEntity(Entity e) {
+        return e instanceof EnderDragon;
+    }
+
+    public static void setPoolName(LootPool.Builder pool, String name) {
     }
 }

@@ -329,17 +329,12 @@ public class GlobeDataGenerator {
             switch (this.terrain) {
                 case LAND:
                     if (this.isLand()) {
-                        switch (this.biome) {
-                            case HOT:
-                                return s ? Col.HOT_S : Col.HOT;
-                            case COLD:
-                                return s ? Col.COLD_S : Col.COLD;
-                            case MUSHROOM:
-                                return s ? Col.MUSHROOM_S : Col.MUSHROOM;
-                            default:
-                            case TEMPERATE:
-                                return s ? Col.GREEN_S : Col.GREEN;
-                        }
+                        return switch (this.biome) {
+                            case HOT -> s ? Col.HOT_S : Col.HOT;
+                            case COLD -> s ? Col.COLD_S : Col.COLD;
+                            case MUSHROOM -> s ? Col.MUSHROOM_S : Col.MUSHROOM;
+                            default -> s ? Col.GREEN_S : Col.GREEN;
+                        };
                     }
                 case WATER:
                     return s ? Col.WATER_S : Col.WATER;

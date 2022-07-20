@@ -46,10 +46,27 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         super(properties);
     }
 
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+
+        int charges = this.getCharges(itemstack);
+
+        if (charges > 0) {
+
+            int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
+            if (ench > 0) return this.deployBubbleBlock(itemstack, level, player, hand);
+
+            player.startUsingItem(hand);
+
+            return InteractionResultHolder.consume(itemstack);
+        }
+        return InteractionResultHolder.fail(itemstack);
+    }
+
     //bubble block
-
-
-    public InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
+    @SuppressWarnings("UnsafePlatformOnlyCall")
+    private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
         HitResult result = player.getAbilities().instabuild ? CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
                 CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
 
@@ -71,7 +88,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
                 }
                 if (!(player.getAbilities().instabuild)) {
                     int max = this.getMaxDamage(stack);
-                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + ServerConfigs.cached.BUBBLE_BLOWER_COST));
+                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + ServerConfigs.Items.BUBBLE_BLOWER_COST.get()));
                 }
 
                 //player.getCooldowns().addCooldown(this, 10);
@@ -79,52 +96,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             }
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return true;
-    }
-
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
-    public boolean isRepairable(ItemStack stack) {
-        return false;
-    }
-
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
-
-    @Override
-    public int getBarColor(ItemStack stack) {
-        return 0xe8a4e4;
-    }
-
-    @Override
-    public int getMaxDamage(ItemStack stack) {
-        return 250;
-    }
-
-    @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return false;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 0;
-    }
-
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        ListTag enchantments = EnchantedBookItem.getEnchantments(book);
-        return enchantments.size() == 1 &&
-                EnchantmentHelper.getEnchantmentId(enchantments.getCompound(0)).equals(
-                        EnchantmentHelper.getEnchantmentId(ModRegistry.STASIS_ENCHANTMENT.get()));
     }
 
     @Override
@@ -150,24 +121,70 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-
-        int charges = this.getCharges(itemstack);
-
-        if (charges > 0) {
-
-            int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
-            if (ench > 0) return this.deployBubbleBlock(itemstack, level, player, hand);
-
-            player.startUsingItem(hand);
-
-            return InteractionResultHolder.consume(itemstack);
-        }
-        return InteractionResultHolder.fail(itemstack);
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+        return false;
     }
 
     @Override
+    public int getEnchantmentValue() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return 0xe8a4e4;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public int getMaxDamage(ItemStack stack) {
+        return 250;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        ListTag enchantments = EnchantedBookItem.getEnchantments(book);
+        return enchantments.size() == 1 &&
+                EnchantmentHelper.getEnchantmentId(enchantments.getCompound(0)).equals(
+                        EnchantmentHelper.getEnchantmentId(ModRegistry.STASIS_ENCHANTMENT.get()));
+    }
+
+    //forge already has these
+    @PlatformOnly(PlatformOnly.FABRIC)
+    private void setDamage(ItemStack stack, int damage) {
+        stack.getOrCreateTag().putInt("Damage", Math.max(0, damage));
+    }
+    @PlatformOnly(PlatformOnly.FABRIC)
+    private int getDamage(ItemStack stack) {
+        return !stack.hasTag() ? 0 : stack.getTag().getInt("Damage");
+    }
+
+    @Override
+    @PlatformOnly(PlatformOnly.FABRIC)
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        this.onUsingTick(stack, livingEntity, remainingUseDuration);
+    }
+
+    //@Override
+    @SuppressWarnings("UnsafePlatformOnlyCall")
     public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {
         Level level = entity.level;
         int damage = this.getDamage(stack) + 1;
@@ -175,7 +192,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             entity.stopUsingItem();
             return;
         }
-        if (!(entity instanceof Player player) || !(player.isCreative())) {
+        if (!(entity instanceof Player player) || !(player.getAbilities().instabuild)) {
             this.setDamage(stack, damage);
         }
 
@@ -185,8 +202,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             entity.level.playSound(p, entity, ModSounds.BUBBLE_BLOW.get(), entity.getSoundSource(),
                     1.0F, MthUtils.nextWeighted(level.random, 0.20f) + 0.95f);
         }
-
-        //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
         if (level.isClientSide) {
             Vec3 v = entity.getViewVector(0).normalize();
             double x = entity.getX() + v.x;

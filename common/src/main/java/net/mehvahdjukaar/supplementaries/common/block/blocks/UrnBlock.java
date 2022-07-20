@@ -41,6 +41,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -210,16 +211,14 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         if (resourcelocation == BuiltInLootTables.EMPTY) {
             return super.getDrops(state, builder);
         } else {
-            LootContext lootcontext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
-            float oldLuck = lootcontext.getLuck();
-            LootContext.Builder newBuilder = new LootContext.Builder(lootcontext);
+            float oldLuck = builder.luck;
             ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
             int f = stack == null ? 0 : EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
-            newBuilder.withLuck(oldLuck + 0.25f * f);
-            lootcontext = newBuilder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
-            ServerLevel serverlevel = lootcontext.getLevel();
+            builder.withLuck(oldLuck + 0.25f * f);
+            var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
+            ServerLevel serverlevel = lootContext.getLevel();
             LootTable loottable = serverlevel.getServer().getLootTables().get(resourcelocation);
-            return loottable.getRandomItems(lootcontext);
+            return loottable.getRandomItems(lootContext);
         }
     }
 

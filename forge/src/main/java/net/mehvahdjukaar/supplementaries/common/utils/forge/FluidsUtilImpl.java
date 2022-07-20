@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.utils.forge;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -44,5 +47,9 @@ public class FluidsUtilImpl {
             return true;
         }
         return false;
+    }
+
+    public static boolean hasFluidHandler(Level level, BlockPos pos, Direction dir) {
+       return FluidUtil.getFluidHandler(level, pos, dir).isPresent();
     }
 }
