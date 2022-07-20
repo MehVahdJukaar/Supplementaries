@@ -109,7 +109,8 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
         return stateIn;
     }
 
-    @Override
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (target.getLocation().y() > pos.getY() + 1 - 0.1875) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
@@ -117,7 +118,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
                 if (!i.isEmpty()) return i;
             }
         }
-        return super.getCloneItemStack(state, target, world, pos, player);
+        return super.getCloneItemStack(world, pos, state);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class RopeItem extends BlockItem {
                     CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
                 }
 
-                SoundType soundtype = ModRegistry.ROPE.get().defaultBlockState().getSoundType(world, pos, player);
+                SoundType soundtype = ModRegistry.ROPE.get().defaultBlockState().getSoundType();
                 world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 if (player == null || !player.getAbilities().instabuild) {
                     stack.shrink(1);

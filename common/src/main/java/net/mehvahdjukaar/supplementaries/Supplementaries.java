@@ -71,6 +71,8 @@ public class Supplementaries {
     //punching swings lanterns
     //ehcnahted books placed vertically. fix placement based off player look dir
 
+
+    //ash makes mobs jump
     //TODO: readd nethers delight stuff & maybe IW planter
     //camera mod with screenshots
 

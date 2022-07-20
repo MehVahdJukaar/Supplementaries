@@ -55,8 +55,6 @@ public class PresentRegistry {
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), BOMB_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), BOMB_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), BOMB_BEHAVIOR);
-
-        //trident?
     }
 
     //projectiles, fireworks, tnt, spawn eggs

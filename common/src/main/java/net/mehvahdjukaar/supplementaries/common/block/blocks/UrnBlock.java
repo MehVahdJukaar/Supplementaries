@@ -231,12 +231,6 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         }
     }
 
-    @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
-        super.onBlockExploded(state, world, pos, explosion);
-        //just add a packet already
-    }
-
     public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {
         if (level.isClientSide && state.getValue(TREASURE)) {
             level.addDestroyBlockEffect(pos, state);

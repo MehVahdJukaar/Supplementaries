@@ -21,7 +21,6 @@ mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS L
 #item properties
 accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 
-
 #explosions
 accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity
 
@@ -42,3 +41,6 @@ accessible method net/minecraft/client/gui/Font getFontSet (Lnet/minecraft/resou
 
 #beacon name
 accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity name Lnet/minecraft/network/chat/Component;
+
+#place context
+accessible method net/minecraft/world/item/context/BlockPlaceContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V

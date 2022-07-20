@@ -18,8 +18,6 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHa
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
-import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
-import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
@@ -28,7 +26,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -62,9 +59,8 @@ public class ModRegistry {
     public static CreativeModeTab JAR_TAB = null;
 
     public static void init() {
-        MOD_TAB = !RegistryConfigs.CREATIVE_TAB.get() ? null : new SupplementariesTab("supplementaries");
-        JAR_TAB = !RegistryConfigs.JAR_TAB.get() ? null : new JarTab("jars");
-
+        MOD_TAB = ModCreativeTabs.MOD_TAB;
+        JAR_TAB = ModCreativeTabs.JAR_TAB;
 
         CompatHandler.registerOptionalStuff();
         RegUtils.initDynamicRegistry();
@@ -120,7 +116,7 @@ public class ModRegistry {
 
 
     public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
-        PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
+            PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
 
     //dispenser minecart
     public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
@@ -618,6 +614,9 @@ public class ModRegistry {
 
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
+
+    public static final Supplier<Item> ROPE_ITEM = regItem(ROPE_NAME, () -> new RopeItem(ROPE.get(),
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, ROPE_NAME))));
 
     public static final Supplier<BlockEntityType<RopeKnotBlockTile>> ROPE_KNOT_TILE = regTile(
             ROPE_KNOT_NAME, () -> PlatformHelper.newBlockEntityType(

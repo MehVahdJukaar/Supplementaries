@@ -96,7 +96,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
             BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
                 quads.addAll(BlackboardTextureManager.getBlackboardInstance(key)
-                        .getModel(dir, b -> generateQuads(b, this.modelTransform)));
+                        .getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform)));
             }
         }
 

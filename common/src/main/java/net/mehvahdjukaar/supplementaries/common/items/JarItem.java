@@ -10,7 +10,6 @@ import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -177,10 +176,8 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (RegistryConfigs.JAR_TAB.get()) {
-            if (group == ModRegistry.JAR_TAB) {
-                JarTab.populateTab(items);
-            }
+        if (RegistryConfigs.JAR_TAB.get() && group == ModRegistry.JAR_TAB) {
+            //lets jar tab populate itself
         } else super.fillItemCategory(group, items);
     }
 

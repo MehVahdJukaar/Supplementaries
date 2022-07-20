@@ -174,8 +174,8 @@ public class GunpowderExplosion extends Explosion {
             Pair<ItemStack, BlockPos> pair = drops.get(j);
             ItemStack itemstack = pair.getFirst();
             if (ItemEntity.areMergable(itemstack, stack)) {
-                ItemStack itemstack1 = ItemEntity.merge(itemstack, stack, 16);
-                drops.set(j, Pair.of(itemstack1, pair.getSecond()));
+                ItemStack merge = ItemEntity.merge(itemstack, stack, 16);
+                drops.set(j, Pair.of(merge, pair.getSecond()));
                 if (stack.isEmpty()) {
                     return;
                 }

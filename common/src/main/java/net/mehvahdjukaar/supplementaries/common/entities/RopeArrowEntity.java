@@ -91,17 +91,17 @@ public class RopeArrowEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
 
-        Block ropeBlock = ServerConfigs.Blocks.ROPE_ARROW_BLOCK.get();
+        Block ropeBlock = ServerConfigs.Items.ROPE_ARROW_OVERRIDE.value();
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {
             this.prevPlacedPos = null;
             Entity entity = this.getOwner();
             Player player = null;
-            if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
-                if (entity instanceof Player && ((Player) entity).mayBuild()) {
+            if (!(entity instanceof Mob) || PlatformHelper.isMobGriefingOn(this.level, this)) {
+                if (entity instanceof Player pl && pl.mayBuild()) {
                     //TODO: i might just give null here since player isn't actually placing these blocks
-                    player = (Player) entity;
+                    player = pl;
                 }
                 //Ugly but works
                 //try finding existing ropes
@@ -110,7 +110,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 Block hitBlock = hitState.getBlock();
 
                 //knot blocks
-                if (ServerConfigs.cached.ROPE_ARROW_BLOCK.get() == ModRegistry.ROPE.get()) {
+                if (ropeBlock == ModRegistry.ROPE.get()) {
                     BlockProperties.PostType knotType = BlockProperties.PostType.get(hitState);
                     if (knotType != null) {
                         BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
@@ -163,7 +163,7 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     private void continueUnwindingRope() {
-        Block ropeBlock = ServerConfigs.cached.ROPE_ARROW_BLOCK.get();
+        Block ropeBlock = ServerConfigs.Items.ROPE_ARROW_OVERRIDE.value();
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();
@@ -190,7 +190,6 @@ public class RopeArrowEntity extends AbstractArrow {
                 this.continueUnwindingRope();
             }
         }
-
     }
 
     @Override

@@ -1,16 +1,17 @@
-package net.mehvahdjukaar.supplementaries.common.items.tabs;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -21,14 +22,20 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class JarTab extends CreativeModeTab {
+import java.util.List;
 
-    public JarTab(String label) {
-        super(label); //forge does not want a second parameter as id are handled intenrally
-    }
+public class ModCreativeTabs {
 
-    @Override
-    public ItemStack makeIcon() {
+    public static final CreativeModeTab MOD_TAB =  !RegistryConfigs.CREATIVE_TAB.get() ? null :
+            PlatformHelper.createModTab(Supplementaries.res("supplementaries"),
+                    ()-> ModRegistry.GLOBE_ITEM.get().getDefaultInstance(), false);
+
+    public static final CreativeModeTab JAR_TAB = !RegistryConfigs.JAR_TAB.get() ? null :
+            PlatformHelper.createModTab(Supplementaries.res("jars"),
+                    ModCreativeTabs::makeIcon, true, ModCreativeTabs::populateTab);
+
+
+    private static ItemStack makeIcon() {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
         ISoftFluidTank fluidHolder = ISoftFluidTank.create(12);
         fluidHolder.fill(VanillaSoftFluids.HONEY.get());
@@ -38,13 +45,7 @@ public class JarTab extends CreativeModeTab {
         return icon;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
-    public boolean hasSearchBar() {
-        return true;
-    }
-
-    public static void tryAdd(NonNullList<ItemStack> items, CompoundTag com) {
+    private static void tryAdd(List<ItemStack> items, CompoundTag com) {
         if (!com.isEmpty()) {
             ItemStack returnStack = new ItemStack(ModRegistry.JAR_ITEM.get());
             returnStack.addTagElement("BlockEntityTag", com);
@@ -55,7 +56,7 @@ public class JarTab extends CreativeModeTab {
         }
     }
 
-    public static void populateTab(NonNullList<ItemStack> items) {
+    private static void populateTab(List<ItemStack> items, CreativeModeTab tab) {
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         ISoftFluidTank fluidHolder = ISoftFluidTank.create(tempTile.getMaxStackSize());
@@ -101,6 +102,5 @@ public class JarTab extends CreativeModeTab {
             }
         }
     }
-
 
 }

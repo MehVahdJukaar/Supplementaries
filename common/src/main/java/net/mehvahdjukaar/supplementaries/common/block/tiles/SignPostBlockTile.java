@@ -68,12 +68,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        this.isSlim = this.mimic.getBlock() instanceof StickBlock;
-    }
-
-    @Override
     public TextHolder getTextHolder() {
         return this.textHolder;
     }

@@ -62,6 +62,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_3 = regSound("item.slingshot.charge_3");
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
+
+    //TODO: this wont work...
     public static final SoundType JAR = new SoundType(1.0F, 1.0F,
             JAR_BREAK.get(),
             SoundEvents.GLASS_STEP,
@@ -99,7 +101,7 @@ public class ModSounds {
 
 
     public static Supplier<SoundEvent> regSound(String name) {
-        return RegHelper.register(Supplementaries.res(name), () -> new SoundEvent(Supplementaries.res(name)), Registry.SOUND_EVENT);
+        return RegHelper.registerAsync(Supplementaries.res(name), () -> new SoundEvent(Supplementaries.res(name)), Registry.SOUND_EVENT);
     }
 
 }

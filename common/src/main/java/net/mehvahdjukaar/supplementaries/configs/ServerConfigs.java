@@ -6,6 +6,12 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,11 +34,20 @@ public class ServerConfigs {
         General.init(builder);
 
         builder.setSynced();
+        builder.onChange(ServerConfigs::onRefresh);
 
-        SERVER_SPEC = builder.buildAndRegister(); //add on change callback
+        SERVER_SPEC = builder.buildAndRegister();
+    }
+
+    private static void onRefresh(){
+        ResourceLocation res = new ResourceLocation(Items.ROPE_ARROW_ROPE.get());
+        var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
+        Items.ROPE_ARROW_OVERRIDE = opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
     }
 
     public static class Items {
+        public static Holder<Block> ROPE_ARROW_OVERRIDE = null;
+
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;
         public static Supplier<String> ROPE_ARROW_ROPE;

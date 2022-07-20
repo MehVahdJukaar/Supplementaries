@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -133,7 +134,7 @@ public class BlackboardTextureManager {
         }
 
         @Nonnull
-        public List<BakedQuad> getModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
+        public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
             if (!models.containsKey(dir)) {
                 this.models.put(dir, modelFactory.apply(pixels));
             }
@@ -182,7 +183,7 @@ public class BlackboardTextureManager {
         int tintG = tint >> 8 & 255;
         int tintB = tint & 255;
 
-        int pixel = sprite.getPixelRGBA(0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
+        int pixel = ClientPlatformHelper.getPixelRGBA(sprite, 0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
 
         // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
         int totalB = pixel >> 16 & 255;
