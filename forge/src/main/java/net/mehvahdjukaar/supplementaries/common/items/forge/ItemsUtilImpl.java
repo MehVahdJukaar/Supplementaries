@@ -6,6 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.forge.CuriosCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -134,7 +137,7 @@ public class ItemsUtilImpl {
 
             if (CompatHandler.quark) {
                 ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
-                amount += CompatHandler.getSacksInBackpack(backpack);
+                amount += QuarkCompat.getSacksInBackpack(backpack);
             }
         }
         return amount;
@@ -144,7 +147,7 @@ public class ItemsUtilImpl {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
         KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.INCORRECT_KEY;
         if (CompatHandler.curios) {
-            found = CompatHandler.isKeyInCurio(player, key);
+            found = CuriosCompatImpl.isKeyInCurio(player, key);
             if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
         }
 

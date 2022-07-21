@@ -35,14 +35,13 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.NoteBlockEvent;
-import net.minecraftforge.event.world.SaplingGrowTreeEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.NoteBlockEvent;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -59,7 +58,7 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onUseBlock(PlayerInteractEvent.RightClickBlock event) {
         if (!event.isCanceled()) {
-            var ret = ServerEvents.onRightClickBlock(event.getPlayer(), event.getWorld(), event.getHand(), event.getHitVec());
+            var ret = ServerEvents.onRightClickBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
             if (ret != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(ret);
@@ -70,7 +69,7 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onUseBlockHP(PlayerInteractEvent.RightClickBlock event) {
         if (!event.isCanceled()) {
-            var ret = ServerEvents.onRightClickBlockHP(event.getPlayer(), event.getWorld(), event.getHand(), event.getHitVec());
+            var ret = ServerEvents.onRightClickBlockHP(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
             if (ret != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(ret);
@@ -81,7 +80,7 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
         if (!event.isCanceled()) {
-            ServerEvents.onUseItem(event.getPlayer(), event.getWorld(), event.getHand());
+            ServerEvents.onUseItem(event.getEntity(), event.getLevel(), event.getHand());
         }
     }
 
@@ -94,7 +93,7 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
         if (event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.Tweaks.RAKED_GRAVEL.get()) {
-            LevelAccessor world = event.getWorld();
+            LevelAccessor world = event.getLevel();
             BlockPos pos = event.getPos();
             if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
                 BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
@@ -107,7 +106,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer player) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             try {
                 NetworkHandler.CHANNEL.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
@@ -125,8 +124,8 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onDimensionUnload(WorldEvent.Unload event) {
-        if (event.getWorld() instanceof ServerLevel serverLevel) {
+    public static void onDimensionUnload(net.minecraftforge.event.level.LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
             ServerEvents.onWorldUnload(ServerLifecycleHooks.getCurrentServer(), serverLevel);
             MovableFakePlayer.unloadLevel(serverLevel);
         }
@@ -135,7 +134,7 @@ public class ServerEventsForge {
     //for flute and cage. fabric calls directly
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        var res = ServerEvents.onRightClickEntity(event.getPlayer(), event.getWorld(), event.getHand(), event.getEntity(), null);
+        var res = ServerEvents.onRightClickEntity(event.getEntity(), event.getLevel(), event.getHand(), event.getEntity(), null);
         if (res != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(res);
@@ -143,8 +142,8 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onEntityJoin(EntityJoinWorldEvent event) {
-        var level = event.getWorld();
+    public static void onEntityJoin(EntityJoinLevelEvent event) {
+        var level = event.getLevel();
         if (level instanceof ServerLevel serverLevel) {
             ServerEvents.onEntityLoad(event.getEntity(), serverLevel);
         }
@@ -166,7 +165,7 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onSaplingGrow(SaplingGrowTreeEvent event) {
         if (ServerConfigs.Blocks.PLANTER_BREAKS.get()) {
-            LevelAccessor level = event.getWorld();
+            LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();
             BlockState state = level.getBlockState(pos.below());
             if (state.getBlock() instanceof PlanterBlock) {
@@ -194,7 +193,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
-        SongsManager.recordNote(event.getWorld(), event.getPos());
+        SongsManager.recordNote(event.getLevel(), event.getPos());
     }
 
 

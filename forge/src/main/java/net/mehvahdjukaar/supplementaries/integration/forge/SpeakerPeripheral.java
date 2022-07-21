@@ -1,10 +1,11 @@
-package net.mehvahdjukaar.supplementaries.integration.cctweaked;
+package net.mehvahdjukaar.supplementaries.integration.forge;
 
 
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

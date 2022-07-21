@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.jei;
+package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JeiPlugin
-public class SupplementariesJEIPlugin implements IModPlugin {
+public class JEICompat implements IModPlugin {
 
     private static final ResourceLocation ID = Supplementaries.res("jei_plugin");
 
@@ -46,7 +46,6 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     public ResourceLocation getPluginUid() {
         return ID;
     }
-
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
@@ -178,16 +177,16 @@ public class SupplementariesJEIPlugin implements IModPlugin {
         String group = "supplementaries.jei.presents";
 
         for (DyeColor color : DyeColor.values()) {
-            Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(color).get());
-            ItemStack output = ModRegistry.TRAPPED_PRESENTS_ITEMS.get(color).get().getDefaultInstance();
+            Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS.get(color).get());
+            ItemStack output = ModRegistry.TRAPPED_PRESENTS.get(color).get().asItem().getDefaultInstance();
 
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
 
             ResourceLocation id = Supplementaries.res("jei_trapped_present_" + color.getName());
             recipes.add(new ShapelessRecipe(id, group, output, inputs));
         }
-        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
-        ItemStack output = ModRegistry.TRAPPED_PRESENTS_ITEMS.get(null).get().getDefaultInstance();
+        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
+        ItemStack output = ModRegistry.TRAPPED_PRESENTS.get(null).get().asItem().getDefaultInstance();
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
 
@@ -199,10 +198,10 @@ public class SupplementariesJEIPlugin implements IModPlugin {
     public static List<CraftingRecipe> makePresentCloringRecipes() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.presents";
-        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS_ITEMS.get(null).get());
+        Ingredient baseShulkerIngredient = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
         for (DyeColor color : DyeColor.values()) {
             DyeItem dye = DyeItem.byColor(color);
-            ItemStack output = ModRegistry.PRESENTS_ITEMS.get(color).get().getDefaultInstance();
+            ItemStack output = ModRegistry.PRESENTS.get(color).get().asItem().getDefaultInstance();
 
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(dye));
 

@@ -161,4 +161,8 @@ dependencies {
     implementation ("curse.maven:curios-309927:3841962")
     implementation ("curse.maven:autoreglib-250363:3857246")
     implementation ("curse.maven:curios-309927:3841962")
+    implementation ("curse.maven:quark-243121:3873471")
+    implementation ("curse.maven:framedblocks-441647:3881493")
+    implementation ("curse.maven:waystones-245755:3835119")
+    implementation ("curse.maven:balm-531761:3881348")
 }

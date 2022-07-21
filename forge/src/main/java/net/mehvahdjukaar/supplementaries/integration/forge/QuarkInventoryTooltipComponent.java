@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.quark;
+package net.mehvahdjukaar.supplementaries.integration.forge;
 
 
 import com.mojang.blaze3d.platform.Window;
@@ -22,7 +22,7 @@ import net.minecraftforge.items.IItemHandler;
 import vazkii.quark.content.client.module.ChestSearchingModule;
 import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
 
-public class InventoryTooltipComponent implements ClientTooltipComponent {
+public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
 
     private static final int CORNER = 5;
     private static final int BUFFER = 1;
@@ -34,7 +34,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private final int size;
     private final boolean locked;
 
-    public InventoryTooltipComponent(ItemsUtil.InventoryTooltip tooltip) {
+    public QuarkInventoryTooltipComponent(ItemsUtil.InventoryTooltip tooltip) {
         this.tag = tooltip.tag();
         this.item = tooltip.item();
         this.dimensions = SackContainerMenu.getRatio(tooltip.size());
