@@ -15,6 +15,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -108,12 +110,15 @@ public class BubbleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity p_152429_, float v) {
-        super.fallOn(level, state, pos, p_152429_, v);
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float v) {
+        super.fallOn(level, state, pos, entity, v);
         if (!level.isClientSide && ServerConfigs.Blocks.BUBBLE_BREAK.get()) {
+            if(entity instanceof LivingEntity le && ServerConfigs.Blocks.BUBBLE_FEATHER_FALLING.get() &&
+                    EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION,le)!=0){
+                return;
+            }
             if (v > 3) breakBubble((ServerLevel) level, pos, state);
             else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
-
         }
     }
 

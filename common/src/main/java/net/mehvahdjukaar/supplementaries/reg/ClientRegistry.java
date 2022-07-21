@@ -10,6 +10,8 @@ import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
@@ -333,7 +335,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
-        if(CompatHandler.quark) QuarkCompat.registerTooltipComponent(event);
+        if (CompatHandler.quark) QuarkCompat.registerTooltipComponent(event);
     }
 
     @EventCalled
@@ -366,8 +368,8 @@ public class ClientRegistry {
         event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
-        //event.register(JARVIS_MODEL, JarredModel::createMesh);
-        // event.register(PICKLE_MODEL, PickleModel::createMesh);
+        event.register(JARVIS_MODEL, JarredModel::createMesh);
+        event.register(PICKLE_MODEL, PickleModel::createMesh);
         //event.register(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
     }
 

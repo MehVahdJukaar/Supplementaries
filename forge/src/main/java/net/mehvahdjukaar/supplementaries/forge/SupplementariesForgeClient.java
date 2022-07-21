@@ -26,7 +26,7 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ClientRegistry.init();
+            ClientRegistry.setup();
         });
     }
 
@@ -41,20 +41,5 @@ public class SupplementariesForgeClient {
         event.register("blackboard_loader", new BlackboardBlockLoader());
         event.register("hanging_pot_loader", new HangingPotLoader());
     }
-
-
-    public static void registerISTER(Consumer<IClientItemExtensions> consumer, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> factory) {
-        consumer.accept(new IClientItemExtensions() {
-            final NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(
-                    () -> factory.apply(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-                            Minecraft.getInstance().getEntityModels()));
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        });
-    }
-
 
 }

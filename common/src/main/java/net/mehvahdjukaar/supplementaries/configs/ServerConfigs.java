@@ -22,6 +22,8 @@ import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.LIS
 
 public class ServerConfigs {
 
+    public static void init(){};
+
     public static ConfigSpec SERVER_SPEC;
 
     static {
@@ -349,6 +351,7 @@ public class ServerConfigs {
 
         public static Supplier<Integer> BUBBLE_LIFETIME;
         public static Supplier<Boolean> BUBBLE_BREAK;
+        public static Supplier<Boolean> BUBBLE_FEATHER_FALLING;
 
         public static Supplier<Boolean> ROPE_UNRESTRICTED;
         public static Supplier<Boolean> ROPE_SLIDE;
@@ -441,8 +444,10 @@ public class ServerConfigs {
             builder.push("bubble_block");
             BUBBLE_LIFETIME = builder.comment("Max lifetime of bubble blocks. Set to 10000 to have it infinite")
                     .define("lifetime", 20 * 60, 1, 10000);
-            BUBBLE_BREAK = builder.comment("Can bubble break when stepped on?")
+            BUBBLE_BREAK = builder.comment("Can bubble break when touched on?")
                     .define("break_when_touched", true);
+            BUBBLE_FEATHER_FALLING = builder.comment("If true feather falling prevents breaking bubbles when stepping on them")
+                    .define("feather_falling_prevents_breaking",true);
             builder.pop();
 
             builder.push("ash");

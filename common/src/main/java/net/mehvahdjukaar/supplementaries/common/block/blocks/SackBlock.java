@@ -158,8 +158,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
             if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                tile.saveAdditional(compoundTag);
+                CompoundTag compoundTag = tile.saveWithoutMetadata();
                 ItemStack itemstack = new ItemStack(this);
                 if (!compoundTag.isEmpty()) {
                     itemstack.addTagElement("BlockEntityTag", compoundTag);
@@ -195,8 +194,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            CompoundTag compoundTag = new CompoundTag();
-            tile.saveAdditional(compoundTag);
+            CompoundTag compoundTag = tile.saveWithoutMetadata();
             if (!compoundTag.isEmpty()) {
                 itemstack.addTagElement("BlockEntityTag", compoundTag);
             }

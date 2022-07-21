@@ -169,7 +169,7 @@ public class RegistryConfigs {
         builder.pop();
 
 
-        builder.push("blocks_and_items");
+        builder.push("blocks");
         PLANTER_ENABLED = regConfig(builder, RegistryConstants.PLANTER_NAME, true);
         CLOCK_ENABLED = regConfig(builder, RegistryConstants.CLOCK_BLOCK_NAME, true);
         PEDESTAL_ENABLED = regConfig(builder, RegistryConstants.PEDESTAL_NAME, true);

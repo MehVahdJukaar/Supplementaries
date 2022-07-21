@@ -9,19 +9,19 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+//TODO: add back
 @Mixin(SpeakerBlockTile.class)
-public abstract class SelfSpeakerMixin extends BlockEntity {
+public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
 
-    public SelfSpeakerMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
+    public SelfSpeakerBlockTileMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
         super(arg, arg2, arg3);
     }
 
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap) {
         if (CompatHandler.computercraft && CCCompatImpl.isPeripheralCap(cap)) {
             return peripheral.cast();
         }
@@ -35,7 +35,6 @@ public abstract class SelfSpeakerMixin extends BlockEntity {
     }
 
     @Unique
-    private final LazyOptional<Object> peripheral = CompatHandler.computercraft ?
+    private LazyOptional<Object> peripheral = CompatHandler.computercraft ?
             CCCompatImpl.getPeripheralSupplier((SpeakerBlockTile) (Object) this) : LazyOptional.empty();
-
 }

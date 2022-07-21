@@ -14,13 +14,16 @@ import java.util.function.Supplier;
 
 
 public class ClientConfigs {
+
+    public static void init(){};
+
     public static ConfigSpec CLIENT_SPEC;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
 
         Blocks.init(builder);
-        particle.init(builder);
+        Particles.init(builder);
         Entity.init(builder);
         General.init(builder);
         Tweaks.init(builder);
@@ -322,7 +325,7 @@ public class ClientConfigs {
     }
 
 
-    public static class particle {
+    public static class Particles {
         public static Supplier<Integer> TURN_INITIAL_COLOR;
         public static Supplier<Integer> TURN_FADE_COLOR;
 

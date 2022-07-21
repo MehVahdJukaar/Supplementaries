@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.forge.OptionalRecipeCondition;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,9 +55,11 @@ public class SupplementariesForge {
         MinecraftForge.EVENT_BUS.register(this);
 
         //wall lantern and jar jsons
-        if (!FMLLoader.getLaunchHandler().isData()) {
+        if (PlatformHelper.getEnv().isClient()) {
             ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager())
                     .registerReloadListener(new WallLanternTexturesRegistry());
+
+            ClientRegistry.init();
         }
     }
 

@@ -5,7 +5,9 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.event.EventHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
@@ -34,6 +36,8 @@ public class Supplementaries {
     public static void commonInit() {
 
         RegistryConfigs.superEarlyLoad();
+        ServerConfigs.init();
+        ClientConfigs.init();
 
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
@@ -65,7 +69,7 @@ public class Supplementaries {
 
     //mod setup
     public static void commonSetup() {
-        ModSetup.init();
+        ModSetup.setup();
     }
 
 

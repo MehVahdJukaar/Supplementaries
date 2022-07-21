@@ -108,8 +108,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         ItemStack returnStack = new ItemStack(this);
 
         if (te.hasContent()) {
-            CompoundTag compoundTag = new CompoundTag();
-            te.saveAdditional(compoundTag);
+            CompoundTag compoundTag = te.saveWithoutMetadata();
             //hax
             if (compoundTag.contains("Owner")) compoundTag.remove("Owner");
             if (!compoundTag.isEmpty()) {

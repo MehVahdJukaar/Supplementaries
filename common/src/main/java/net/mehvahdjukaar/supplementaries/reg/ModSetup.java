@@ -44,7 +44,7 @@ public class ModSetup {
             PresentRegistry::registerBehaviors
     );
 
-    public static void init() {
+    public static void setup() {
         try {
             Stopwatch watch = Stopwatch.createStarted();
 

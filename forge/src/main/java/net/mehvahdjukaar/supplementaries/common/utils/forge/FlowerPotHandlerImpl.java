@@ -32,7 +32,7 @@ public class FlowerPotHandlerImpl {
     //move to forge
     public static void setup() {
         //registers pots
-        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM), ModRegistry.FLAX_POT);
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM.get()), ModRegistry.FLAX_POT);
 
         //maybe not needed since there's only 1 flower pot in vanilla and there are no mods that add more
         Set<FlowerPotBlock> emptyPots = new HashSet<>();

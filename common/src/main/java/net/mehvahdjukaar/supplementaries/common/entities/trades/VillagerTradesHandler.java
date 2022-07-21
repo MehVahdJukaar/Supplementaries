@@ -187,7 +187,9 @@ public class VillagerTradesHandler {
         return tag;
     }
 
-    private static void registerWanderingTraderTrades() {
+
+    //runs on init since we need to be early enough to register stuff to forge busses
+    public static void addTradesRegistration() {
         RegHelper.registerWanderingTraderTrades(2, listings -> {
             if (RegistryConfigs.GLOBE_ENABLED.get()) {
                 //adding twice because it's showing up too rarely
@@ -203,21 +205,12 @@ public class VillagerTradesHandler {
                 }
             }
         });
-    }
-
-    private static void registerVillagerTrades() {
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
             if (RegistryConfigs.FLAX_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
-    }
-
-    //runs on init since we need to be early enough to register stuff to forge busses
-    public static void addTradesRegistration() {
-        registerVillagerTrades();
-        registerWanderingTraderTrades();
 
         AdventurerMapsHandler.loadCustomTrades();
-        AdventurerMapsHandler.addTrades();
+        AdventurerMapsHandler.addTradesCallback();
     }
 }

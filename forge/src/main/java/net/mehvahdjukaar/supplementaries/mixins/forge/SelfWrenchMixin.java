@@ -15,7 +15,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(WrenchItem.class)
-public class SelfWrenchMixin extends Item {
+public abstract class SelfWrenchMixin extends Item {
 
     public SelfWrenchMixin(Properties properties) {
         super(properties);

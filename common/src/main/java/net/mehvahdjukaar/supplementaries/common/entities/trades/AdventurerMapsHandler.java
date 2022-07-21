@@ -157,7 +157,7 @@ public class AdventurerMapsHandler {
                              @Nullable String mapName, int mapColor, @Nullable ResourceLocation marker) {
     }
 
-    public static void addTrades() {
+    public static void addTradesCallback() {
         for (TradeData data : CUSTOM_MAPS_TRADES) {
             if (data != null)
                 try {
@@ -166,9 +166,12 @@ public class AdventurerMapsHandler {
                     Supplementaries.LOGGER.warn("Failed to load custom adventurer map for structure " + data.structure.toString());
                 }
         }
-        if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
-            RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> itemListings.add(new RandomAdventureMapTrade()));
-        }
+
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> {
+            if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
+                itemListings.add(new RandomAdventureMapTrade());
+            }
+        });
     }
 
 

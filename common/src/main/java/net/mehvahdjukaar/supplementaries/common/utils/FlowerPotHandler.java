@@ -71,7 +71,7 @@ public class FlowerPotHandler {
         toAdd.add(Utils.getID(Items.CACTUS).toString());
         toAdd.add(Utils.getID(Items.FLOWERING_AZALEA).toString());
         toAdd.add(Utils.getID(Items.AZALEA).toString());
-        toAdd.add(Utils.getID(ModRegistry.FLAX_SEEDS_ITEM).toString());
+        toAdd.add(Utils.getID(ModRegistry.FLAX_SEEDS_ITEM.get()).toString());
         if (CompatHandler.snowyspirit) {
             toAdd.add("snowyspirit:ginger_flower");
         }

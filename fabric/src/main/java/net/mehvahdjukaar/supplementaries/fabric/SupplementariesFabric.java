@@ -1,44 +1,11 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.DoublePlantBlock;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class SupplementariesFabric implements ModInitializer {
 
@@ -55,14 +22,15 @@ public class SupplementariesFabric implements ModInitializer {
 
     //test stuff
 
-    public static class aaa extends BlockEntity implements RenderAttachmentBlockEntity{
+/*
+
+    public static class aaa extends BlockEntity implements RenderAttachmentBlockEntity {
 
         @Override
         public @Nullable Object getRenderAttachmentData() {
             return null;
         }
     }
-
     public static class aa extends ForwardingBakedModel{
 
         public BakedBlackboardModel(BakedModel baseModel) {
@@ -204,5 +172,5 @@ public class SupplementariesFabric implements ModInitializer {
                 quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
             }
         }
-
+*/
 }

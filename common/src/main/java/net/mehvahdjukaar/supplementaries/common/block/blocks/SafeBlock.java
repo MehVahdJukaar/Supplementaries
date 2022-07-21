@@ -252,17 +252,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
             }
         }
         tooltip.add((Component.translatable("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
-
     }
 
     public ItemStack getSafeItem(SafeBlockTile te) {
-        CompoundTag compoundTag = new CompoundTag();
-        te.saveAdditional(compoundTag);
+        CompoundTag compoundTag = te.saveWithoutMetadata();
         ItemStack itemstack = new ItemStack(this);
         if (!compoundTag.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundTag);
         }
-
         if (te.hasCustomName()) {
             itemstack.setHoverName(te.getCustomName());
         }

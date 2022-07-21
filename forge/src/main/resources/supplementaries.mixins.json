@@ -8,7 +8,6 @@
   "mixins": [
     "SelfSlingshotMixin",
     "SelfWrenchMixin",
-    "SelfSpeakerMixin",
     "SerfOpeneableContainerMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
