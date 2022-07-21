@@ -1,7 +1,11 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.event.EventHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
+import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
@@ -29,6 +33,7 @@ public class Supplementaries {
     //called either on mod creation
     public static void commonInit() {
 
+        RegistryConfigs.superEarlyLoad();
 
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
@@ -36,7 +41,7 @@ public class Supplementaries {
         //banner patterns not working
         //potions in jars are bugged ;_;
 
-
+        EventHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
         ModRegistry.init();
         ModRecipes.init();

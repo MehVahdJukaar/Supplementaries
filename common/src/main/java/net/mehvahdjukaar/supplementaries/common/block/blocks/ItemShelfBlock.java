@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -172,6 +172,6 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        BlockUtils.addOptionalOwnership(entity, world, pos);
+        BlockUtil.addOptionalOwnership(entity, world, pos);
     }
 }

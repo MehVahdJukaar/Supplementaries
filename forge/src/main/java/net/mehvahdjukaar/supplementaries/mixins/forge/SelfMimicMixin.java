@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;

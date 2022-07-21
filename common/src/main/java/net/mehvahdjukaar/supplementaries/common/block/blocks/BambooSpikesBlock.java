@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
@@ -46,7 +46,6 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -67,7 +66,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 1.0D, 16.0D, 16.0D);
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final BooleanProperty TIPPED = BlockProperties.TIPPED;
+    public static final BooleanProperty TIPPED = ModBlockProperties.TIPPED;
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);

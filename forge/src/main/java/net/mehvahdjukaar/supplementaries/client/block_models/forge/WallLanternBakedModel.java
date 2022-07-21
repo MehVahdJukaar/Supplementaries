@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.Minecraft;
@@ -17,19 +19,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WallLanternBakedModel implements IDynamicBakedModel {
+public class WallLanternBakedModel implements CustomBakedModel {
     private final BakedModel support;
     private final BlockModelShaper blockModelShaper;
 
@@ -40,23 +35,22 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
 
         List<BakedQuad> quads = new ArrayList<>();
 
         BlockState mimic = null;
         try {
-            mimic = extraData.get(BlockProperties.MIMIC);
+            mimic = data.get(ModBlockProperties.MIMIC);
         } catch (Exception ignored) {
         }
 
         //support
         try {
 
-            var supportQuads = support.getQuads(state, side, rand, ModelData.EMPTY);
-            if(!supportQuads.isEmpty()){
+            var supportQuads = support.getQuads(state, side, rand);
+            if (!supportQuads.isEmpty()) {
                 if (mimic != null) {
                     var sprite = WallLanternTexturesRegistry.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
@@ -71,7 +65,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
 
         //mimic
         try {
-            boolean fancy = Boolean.TRUE.equals(extraData.getData(BlockProperties.FANCY));
+            boolean fancy = Boolean.TRUE.equals(data.get(ModBlockProperties.FANCY));
 
             if (!fancy) {
                 if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir() && state != null) {
@@ -83,7 +77,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
                     }
                     BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                    List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand, ModelData.EMPTY);
+                    List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand);
 
                     TextureAtlasSprite texture = this.getParticleIcon();
                     for (BakedQuad q : mimicQuads) {
@@ -97,8 +91,6 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
             }
         } catch (Exception ignored) {
         }
-
-
         return quads;
     }
 
@@ -123,14 +115,8 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return support.getParticleIcon();
-        //return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
-        BlockState mimic = data.getData(BlockProperties.MIMIC);
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
+        BlockState mimic = data.get(ModBlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);
@@ -140,7 +126,7 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
             }
 
         }
-        return getParticleIcon();
+        return support.getParticleIcon();
     }
 
     @Override
@@ -152,7 +138,6 @@ public class WallLanternBakedModel implements IDynamicBakedModel {
     public ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
-
 
 
 }

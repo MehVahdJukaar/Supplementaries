@@ -47,3 +47,6 @@ accessible method net/minecraft/world/item/context/BlockPlaceContext <init> (Lne
 
 #luck for urns
 accessible field net/minecraft/world/level/storage/loot/LootContext$Builder luck F
+
+#abstract selection list cf screen
+accessible method net/minecraft/client/gui/components/AbstractSelectionList replaceEntries (Ljava/util/Collection;)V

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import javax.annotation.Nullable;
 
 public class FlippedBlock extends Block {
-    public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
+    public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
     public FlippedBlock(Properties properties) {
         super(properties);

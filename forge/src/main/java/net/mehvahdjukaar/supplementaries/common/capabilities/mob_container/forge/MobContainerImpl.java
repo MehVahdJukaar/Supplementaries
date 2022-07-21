@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.forge;
 
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.DefaultCatchableMobCap;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.LazyOptional;

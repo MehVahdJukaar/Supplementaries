@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -50,7 +49,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
             Block.box(5, 14, 5, 11, 16, 11));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
 
     public JarBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(JarBlock.LIGHT_LEVEL)));
@@ -100,7 +99,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
             if (stack.hasCustomHoverName()) {
                 tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tile);
+            BlockUtil.addOptionalOwnership(placer, tile);
         }
     }
 
@@ -209,7 +208,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.JAR_TILE.get(), JarBlockTile::tick);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.JAR_TILE.get(), JarBlockTile::tick);
     }
 
 }

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Rune;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Rune;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EndLampBlock extends Block {
 
-    public static final EnumProperty<Rune> RUNE = BlockProperties.RUNE;
+    public static final EnumProperty<Rune> RUNE = ModBlockProperties.RUNE;
 
     public EndLampBlock(Properties properties) {
         super(properties);

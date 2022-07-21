@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -30,7 +30,7 @@ public class RopeItem extends BlockItem {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);
-            BlockProperties.PostType type = BlockProperties.PostType.get(state);
+            ModBlockProperties.PostType type = ModBlockProperties.PostType.get(state);
 
             if (type != null) {
 

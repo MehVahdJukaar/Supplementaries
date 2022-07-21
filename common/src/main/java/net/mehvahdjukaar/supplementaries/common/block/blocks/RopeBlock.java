@@ -4,9 +4,9 @@ import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
@@ -76,7 +76,7 @@ public class RopeBlock extends WaterBlock {
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final IntegerProperty DISTANCE = BlockStateProperties.STABILITY_DISTANCE;
-    public static final BooleanProperty KNOT = BlockProperties.KNOT;
+    public static final BooleanProperty KNOT = ModBlockProperties.KNOT;
 
     public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (directions) -> {
         directions.put(Direction.NORTH, NORTH);

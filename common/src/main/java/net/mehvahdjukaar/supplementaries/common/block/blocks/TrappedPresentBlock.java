@@ -5,10 +5,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
-import net.mehvahdjukaar.supplementaries.common.block.util.IPresentItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -65,7 +65,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
             (map) -> map.defaultReturnValue(((source, stack) -> Optional.empty())));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty PRIMED = BlockProperties.PACKED;
+    public static final BooleanProperty PRIMED = ModBlockProperties.PACKED;
 
     private final DyeColor color;
 

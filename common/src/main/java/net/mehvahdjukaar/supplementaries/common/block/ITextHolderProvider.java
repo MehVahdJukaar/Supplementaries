@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.block.util;
+package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;

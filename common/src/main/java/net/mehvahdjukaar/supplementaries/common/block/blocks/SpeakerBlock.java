@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.client.gui.SpeakerBlockGui;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 public class SpeakerBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty ANTIQUE = BlockProperties.ANTIQUE;
+    public static final BooleanProperty ANTIQUE = ModBlockProperties.ANTIQUE;
 
     public SpeakerBlock(Properties properties) {
         super(properties);
@@ -71,7 +71,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
             if (stack.hasCustomHoverName()) {
                 tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tile);
+            BlockUtil.addOptionalOwnership(placer, tile);
         }
     }
 

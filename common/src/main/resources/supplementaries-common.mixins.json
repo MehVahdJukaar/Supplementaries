@@ -22,7 +22,6 @@
     "BrewingStandMixin",
     "CampfireBlockMixin",
     "CatSitOnBlockGoalMixin",
-    "forge.ChunkHolderMixin",
     "CrossbowItemRopeMixin",
     "EntityMixin",
     "GrindstoneInputSlotMixin",
@@ -46,7 +45,6 @@
     "ZombieHorseMixin",
     "accessors.MineshaftAccessor",
     "accessors.MobAccessor",
-    "net.mehvahdjukaar.moonlight.mixins.LevelChunkMixin"
   ],
   "injectors": {
     "defaultRequire": 1

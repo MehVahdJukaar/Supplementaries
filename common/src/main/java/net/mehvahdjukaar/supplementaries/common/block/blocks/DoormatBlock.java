@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -157,7 +157,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, world, pos);
+        BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 
 }

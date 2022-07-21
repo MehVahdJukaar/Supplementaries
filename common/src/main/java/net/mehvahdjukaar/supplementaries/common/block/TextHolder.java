@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.block.util;
+package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;

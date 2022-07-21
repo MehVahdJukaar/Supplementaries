@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
@@ -50,8 +50,8 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
         int light = this.fluidTank.getFluid().getLuminosity();
-        if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
-            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
+        if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         super.setChanged();

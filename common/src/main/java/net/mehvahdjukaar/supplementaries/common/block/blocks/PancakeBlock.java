@@ -4,8 +4,8 @@ import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Topping;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Topping;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -47,8 +47,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(2, 0.0D, 2, 14.0D, 2 + l * 2, 14.0D));
     }
 
-    public static final IntegerProperty PANCAKES = BlockProperties.PANCAKES_1_8;
-    public static final EnumProperty<Topping> TOPPING = BlockProperties.TOPPING;
+    public static final IntegerProperty PANCAKES = ModBlockProperties.PANCAKES_1_8;
+    public static final EnumProperty<Topping> TOPPING = ModBlockProperties.TOPPING;
 
     public PancakeBlock(Properties properties) {
         super(properties);

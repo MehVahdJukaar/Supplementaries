@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import java.util.Random;
 
 public abstract class SwayingBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
-    public static final ModelDataKey<Boolean> FANCY = BlockProperties.FANCY;
+    public static final ModelDataKey<Boolean> FANCY = ModBlockProperties.FANCY;
 
     //maximum allowed swing
     protected static float maxSwingAngle = 45f;

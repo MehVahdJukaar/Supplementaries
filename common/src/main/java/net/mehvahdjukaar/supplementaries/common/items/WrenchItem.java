@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -95,7 +95,7 @@ public class WrenchItem extends Item {
 
             boolean shiftDown = player.isShiftKeyDown(); //^ (dir == Direction.DOWN)
 
-            Optional<Direction> success = BlockUtils.tryRotatingBlockAndConnected(dir, shiftDown, pos, level, context.getClickLocation());
+            Optional<Direction> success = BlockUtil.tryRotatingBlockAndConnected(dir, shiftDown, pos, level, context.getClickLocation());
             if (success.isPresent()) {
                 dir = success.get();
 

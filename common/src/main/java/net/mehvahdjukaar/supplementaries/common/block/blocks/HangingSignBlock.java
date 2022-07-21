@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.BlockAttachment;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.SignAttachment;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.SignAttachment;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +44,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_Z = Block.box(7, 0, 0, 9, 16, 16);
     protected static final VoxelShape SHAPE_X = Block.box(0, 0, 7, 16, 16, 9);
 
-    public static final EnumProperty<SignAttachment> ATTACHMENT = BlockProperties.SIGN_ATTACHMENT;
+    public static final EnumProperty<SignAttachment> ATTACHMENT = ModBlockProperties.SIGN_ATTACHMENT;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public final WoodType woodType;
@@ -234,12 +234,12 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ?HangingSignBlockTile::clientTick : null);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ?HangingSignBlockTile::clientTick : null);
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
     }
 
     @Override

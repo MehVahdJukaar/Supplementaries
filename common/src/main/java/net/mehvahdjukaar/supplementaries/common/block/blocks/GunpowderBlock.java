@@ -6,7 +6,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -60,7 +60,7 @@ public class GunpowderBlock extends LightUpBlock {
     public static final EnumProperty<RedstoneSide> EAST = BlockStateProperties.EAST_REDSTONE;
     public static final EnumProperty<RedstoneSide> SOUTH = BlockStateProperties.SOUTH_REDSTONE;
     public static final EnumProperty<RedstoneSide> WEST = BlockStateProperties.WEST_REDSTONE;
-    public static final IntegerProperty BURNING = BlockProperties.BURNING;
+    public static final IntegerProperty BURNING = ModBlockProperties.BURNING;
 
 
     public static final Map<Direction, EnumProperty<RedstoneSide>> PROPERTY_BY_DIRECTION = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, NORTH, Direction.EAST, EAST, Direction.SOUTH, SOUTH, Direction.WEST, WEST));

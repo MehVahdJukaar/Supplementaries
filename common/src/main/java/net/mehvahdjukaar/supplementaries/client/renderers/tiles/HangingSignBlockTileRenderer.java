@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -58,9 +58,9 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
         poseStack.pushPose();
         BlockState state = tile.getBlockState();
-        BlockProperties.SignAttachment attachment = state.getValue(BlockProperties.SIGN_ATTACHMENT);
+        ModBlockProperties.SignAttachment attachment = state.getValue(ModBlockProperties.SIGN_ATTACHMENT);
         //rotate towards direction
-        double dy = attachment == BlockProperties.SignAttachment.CEILING ? 1 : 0.875;
+        double dy = attachment == ModBlockProperties.SignAttachment.CEILING ? 1 : 0.875;
 
         poseStack.translate(0.5, dy, 0.5);
         if(state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X) poseStack.mulPose(RotHlpr.Y90);

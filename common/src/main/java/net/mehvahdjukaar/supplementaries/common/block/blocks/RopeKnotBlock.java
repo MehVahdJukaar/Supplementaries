@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.PostType;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -49,7 +49,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
-    public static final EnumProperty<PostType> POST_TYPE = BlockProperties.POST_TYPE;
+    public static final EnumProperty<PostType> POST_TYPE = ModBlockProperties.POST_TYPE;
 
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty UP = BlockStateProperties.UP;

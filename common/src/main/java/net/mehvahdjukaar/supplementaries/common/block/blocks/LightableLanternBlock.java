@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingLanternEntity;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
@@ -113,7 +113,7 @@ public class LightableLanternBlock extends LanternBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, world, pos);
+        BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 
     // @Nullable

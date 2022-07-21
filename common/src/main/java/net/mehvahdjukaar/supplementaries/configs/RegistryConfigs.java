@@ -16,16 +16,16 @@ import java.util.function.Supplier;
 //loaded before registry
 public class RegistryConfigs {
 
-    public static ConfigSpec REGISTRY_CONFIG;
+    public static ConfigSpec REGISTRY_SPEC;
 
     public static void superEarlyLoad() {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
         init(builder);
 
-        REGISTRY_CONFIG = builder.build();
+        REGISTRY_SPEC = builder.build();
 
         //load early
-        REGISTRY_CONFIG.loadFromFile();
+        REGISTRY_SPEC.loadFromFile();
 
         HAS_MINESHAFT_LANTERN = COPPER_LANTERN_ENABLED.get();
         HAS_STRONGHOLD_SCONCE = SCONCE_ENABLED.get();
@@ -266,6 +266,7 @@ public class RegistryConfigs {
         //FIREFLY_ENABLED =  regConfig(builder,RegistryConstants.FIREFLY_NAME, true);
         builder.pop();
 
+        /*
         builder.comment("Here you can disable mixins if they clash with other mods ones")
                 .push("mixins");
         List<String> mixins = MixinConfigs.getMixinClassesNames();
@@ -273,7 +274,7 @@ public class RegistryConfigs {
             MIXIN_VALUES.put(c, regConfig(builder, c.replace("Mixin", ""), true));
         }
         builder.pop();
-
+        */
     }
 
 

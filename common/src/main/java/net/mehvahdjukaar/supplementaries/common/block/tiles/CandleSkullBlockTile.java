@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -70,7 +70,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
             if (!this.level.isClientSide) {
                 BlockState state = this.getBlockState();
-                BlockState newState = BlockUtils.replaceProperty(this.candle, state, CandleBlock.CANDLES);
+                BlockState newState = BlockUtil.replaceProperty(this.candle, state, CandleBlock.CANDLES);
                 this.level.setBlockAndUpdate(this.worldPosition, newState);
                 //this.level.sendBlockUpdated(this.worldPosition, state,newState,2);
                 this.setChanged();

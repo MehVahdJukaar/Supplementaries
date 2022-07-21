@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.ILavaAndWaterLoggable;
+import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWaterLoggable, EntityBlock {
-    public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
+    public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
 
     public NetheriteTrapdoorBlock(Properties properties) {
         super(properties.lightLevel(state->state.getValue(LAVALOGGED) ? 15 : 0));

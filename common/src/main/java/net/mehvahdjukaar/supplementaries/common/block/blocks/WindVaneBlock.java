@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
@@ -33,7 +33,7 @@ import java.util.List;
 public class WindVaneBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 16, 14);
 
-    public static final IntegerProperty WIND_STRENGTH = BlockProperties.WIND_STRENGTH;
+    public static final IntegerProperty WIND_STRENGTH = ModBlockProperties.WIND_STRENGTH;
 
     public WindVaneBlock(Properties properties) {
         super(properties);
@@ -111,6 +111,6 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTile::tick);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTile::tick);
     }
 }

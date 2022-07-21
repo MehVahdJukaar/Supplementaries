@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
@@ -53,7 +53,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final BooleanProperty HAS_ITEM = BlockProperties.HAS_ITEM;
+    public static final BooleanProperty HAS_ITEM = ModBlockProperties.HAS_ITEM;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public PedestalBlock(Properties properties) {
@@ -242,6 +242,6 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, world, pos);
+        BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 }

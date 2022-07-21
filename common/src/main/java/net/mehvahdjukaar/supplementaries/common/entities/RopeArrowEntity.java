@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
-import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -111,7 +110,7 @@ public class RopeArrowEntity extends AbstractArrow {
 
                 //knot blocks
                 if (ropeBlock == ModRegistry.ROPE.get()) {
-                    BlockProperties.PostType knotType = BlockProperties.PostType.get(hitState);
+                    ModBlockProperties.PostType knotType = ModBlockProperties.PostType.get(hitState);
                     if (knotType != null) {
                         BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
                         if (knotState != null) {

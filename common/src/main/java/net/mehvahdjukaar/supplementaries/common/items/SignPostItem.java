@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -88,7 +88,7 @@ public class SignPostItem extends WoodBasedItem {
 
             if (world.getBlockEntity(blockpos) instanceof SignPostBlockTile tile) {
 
-                BlockUtils.addOptionalOwnership(player, tile);
+                BlockUtil.addOptionalOwnership(player, tile);
 
                 int r = Mth.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 

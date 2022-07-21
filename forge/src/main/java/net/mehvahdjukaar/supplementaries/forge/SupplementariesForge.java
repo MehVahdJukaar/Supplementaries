@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.forge.OptionalRecipeCondition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;

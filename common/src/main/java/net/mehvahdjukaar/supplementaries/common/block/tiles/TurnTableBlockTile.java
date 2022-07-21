@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,7 +41,7 @@ public class TurnTableBlockTile extends BlockEntity {
             Direction dir = state.getValue(TurnTableBlock.FACING);
             boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
             BlockPos targetPos = pos.relative(dir);
-            boolean success = BlockUtils.tryRotatingBlock(dir, ccw, targetPos, level, null).isPresent();
+            boolean success = BlockUtil.tryRotatingBlock(dir, ccw, targetPos, level, null).isPresent();
             if (success) {
                 //play particle with block event
                 level.blockEvent(pos, state.getBlock(), 0, 0);

@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -15,20 +17,14 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
 
-public class RopeKnotBlockBakedModel implements IDynamicBakedModel {
+public class RopeKnotBlockBakedModel implements CustomBakedModel {
     private final BakedModel knot;
     private final BlockModelShaper blockModelShaper;
 
@@ -37,20 +33,18 @@ public class RopeKnotBlockBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
-
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
 
         //mimic
         try {
 
-            BlockState mimic = extraData.get(BlockProperties.MIMIC);
+            BlockState mimic = data.get(ModBlockProperties.MIMIC);
             if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir()) {
                 BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                quads.addAll(model.getQuads(mimic, side, rand, ModelData.EMPTY));
+                quads.addAll(model.getQuads(mimic, side, rand));
             }
 
 
@@ -103,13 +97,8 @@ public class RopeKnotBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return knot.getParticleIcon();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
-        BlockState mimic = data.get(BlockProperties.MIMIC);
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
+        BlockState mimic = data.get(ModBlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);
@@ -117,7 +106,6 @@ public class RopeKnotBlockBakedModel implements IDynamicBakedModel {
                 return model.getParticleIcon();
             } catch (Exception ignored) {
             }
-
         }
         return getParticleIcon();
     }

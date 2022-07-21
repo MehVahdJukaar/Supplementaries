@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.*;
@@ -82,7 +82,7 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
             if (stack.hasCustomHoverName()) {
                 tile.setCustomName(stack.getHoverName());
             }
-            BlockUtils.addOptionalOwnership(placer, tile);
+            BlockUtil.addOptionalOwnership(placer, tile);
         }
     }
 

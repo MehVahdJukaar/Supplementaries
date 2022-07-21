@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 
+import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
@@ -38,6 +41,11 @@ import java.util.function.Consumer;
 
 
 public class ServerEvents {
+
+    @EventCalled
+    public static void onFireConsume(IFireConsumeBlockEvent event){
+        AshLayerBlock.tryConvertToAsh(event);
+    }
 
     //block placement should stay low in priority to allow other more important mod interaction that use the event
     @EventCalled

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
@@ -62,46 +63,44 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_3 = regSound("item.slingshot.charge_3");
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
+    public static final ModSoundType JAR = new ModSoundType(1.0F, 1.0F,
+            JAR_BREAK,
+            ()->  SoundEvents.GLASS_STEP,
+            JAR_PLACE,
+            ()->  SoundEvents.GLASS_HIT,
+            ()->   SoundEvents.GLASS_FALL);
 
-    //TODO: this wont work...
-    public static final SoundType JAR = new SoundType(1.0F, 1.0F,
-            JAR_BREAK.get(),
-            SoundEvents.GLASS_STEP,
-            JAR_PLACE.get(),
-            SoundEvents.GLASS_HIT,
-            SoundEvents.GLASS_FALL);
+    public static final ModSoundType BUBBLE_BLOCK = new ModSoundType(1.0F, 1.0F,
+            BUBBLE_POP,
+            ()-> SoundEvents.HONEY_BLOCK_STEP,
+            BUBBLE_PLACE,
+            ()->  SoundEvents.HONEY_BLOCK_HIT,
+            ()->  SoundEvents.HONEY_BLOCK_FALL);
 
-    public static final SoundType BUBBLE_BLOCK = new SoundType(1.0F, 1.0F,
-            BUBBLE_POP.get(),
-            SoundEvents.HONEY_BLOCK_STEP,
-            BUBBLE_PLACE.get(),
-            SoundEvents.HONEY_BLOCK_HIT,
-            SoundEvents.HONEY_BLOCK_FALL);
+    public static final ModSoundType PRESENT = new ModSoundType(1.0F, 1.0F,
+            PRESENT_BREAK,
+            ()-> SoundEvents.WOOL_STEP,
+            PRESENT_PLACE,
+            ()->SoundEvents.WOOL_HIT,
+            ()-> SoundEvents.WOOL_FALL);
 
-    public static final SoundType PRESENT = new SoundType(1.0F, 1.0F,
-            PRESENT_BREAK.get(),
-            SoundEvents.WOOL_STEP,
-            PRESENT_PLACE.get(),
-            SoundEvents.WOOL_HIT,
-            SoundEvents.WOOL_FALL);
+    public static final ModSoundType SACK = new ModSoundType(1.0F, 1.0F,
+            SACK_BREAK,
+            ()->SoundEvents.WOOL_STEP,
+            SACK_PLACE,
+            ()->SoundEvents.WOOL_HIT,
+            ()->SoundEvents.WOOL_FALL);
 
-    public static final SoundType SACK = new SoundType(1.0F, 1.0F,
-            SACK_BREAK.get(),
-            SoundEvents.WOOL_STEP,
-            SACK_PLACE.get(),
-            SoundEvents.WOOL_HIT,
-            SoundEvents.WOOL_FALL);
-
-    public static final SoundType ROPE = new SoundType(1.0F, 1.0F,
-            ROPE_BREAK.get(),
-            ROPE_STEP.get(),
-            ROPE_PLACE.get(),
-            ROPE_STEP.get(),
-            SoundEvents.WOOL_FALL);
+    public static final ModSoundType ROPE = new ModSoundType(1.0F, 1.0F,
+            ROPE_BREAK,
+            ROPE_STEP,
+            ROPE_PLACE,
+            ROPE_STEP,
+            ()->SoundEvents.WOOL_FALL);
 
 
     public static Supplier<SoundEvent> regSound(String name) {
-        return RegHelper.registerAsync(Supplementaries.res(name), () -> new SoundEvent(Supplementaries.res(name)), Registry.SOUND_EVENT);
+        return RegHelper.register(Supplementaries.res(name), () -> new SoundEvent(Supplementaries.res(name)), Registry.SOUND_EVENT);
     }
 
 }

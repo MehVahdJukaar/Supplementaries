@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -19,17 +21,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
-public class HangingSignBakedModel implements IDynamicBakedModel {
-    private final EnumMap<BlockProperties.SignAttachment, ImmutableList<BakedModel>> attachmentMap;
+public class HangingSignBakedModel implements CustomBakedModel {
+    private final EnumMap<ModBlockProperties.SignAttachment, ImmutableList<BakedModel>> attachmentMap;
     private final BakedModel particle;
 
     private final BlockModelShaper blockModelShaper;
@@ -37,10 +34,10 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
     public HangingSignBakedModel(BakedModel stick,
                                  BakedModel leftPost, BakedModel leftPalisade, BakedModel leftWall, BakedModel leftBeam, BakedModel leftStick,
                                  BakedModel rightPost, BakedModel rightPalisade, BakedModel rightWall, BakedModel rightBeam, BakedModel rightStick) {
-        Map<BlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new HashMap<>();
-        for (BlockProperties.SignAttachment a : BlockProperties.SignAttachment.values()) {
+        Map<ModBlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new HashMap<>();
+        for (ModBlockProperties.SignAttachment a : ModBlockProperties.SignAttachment.values()) {
             ImmutableList.Builder<BakedModel> b = ImmutableList.builder();
-            if (a != BlockProperties.SignAttachment.CEILING) {
+            if (a != ModBlockProperties.SignAttachment.CEILING) {
                 b.add(stick);
                 switch (a.left) {
                     case POST -> b.add(leftPost);
@@ -65,10 +62,8 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
-
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
 
         if (state != null && state.getBlock() instanceof HangingSignBlock hs) {
@@ -83,14 +78,14 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
 
             //static sign
             try {
-                boolean fancy = Boolean.TRUE.equals(extraData.get(BlockProperties.FANCY));
+                boolean fancy = Boolean.TRUE.equals(data.get(ModBlockProperties.FANCY));
                 if (!fancy) {
 
                     BakedModel model = blockModelShaper.getModelManager().getModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
                     if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
                     var signQuads = model.getQuads(state, side, rand, ModelData.EMPTY, renderType);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;
-                    boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == BlockProperties.SignAttachment.CEILING;
+                    boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == ModBlockProperties.SignAttachment.CEILING;
                     if (flipped || ceiling) {
                         //TODO: move to renderUtils
                         for (BakedQuad q : signQuads) {
@@ -134,10 +129,10 @@ public class HangingSignBakedModel implements IDynamicBakedModel {
         return false;
     }
 
+
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
         return particle.getParticleIcon();
-        //return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
     }
 
     @Override

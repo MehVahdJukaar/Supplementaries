@@ -10,15 +10,13 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.SignPostGui;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.ITextHolderProvider;
-import net.mehvahdjukaar.supplementaries.common.block.util.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -36,7 +34,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     //is holding a framed fence (for framed blocks mod compat)
     public boolean framed = false;
-    public static final ModelDataKey<Boolean> FRAMED = BlockProperties.FRAMED;
+    public static final ModelDataKey<Boolean> FRAMED = ModBlockProperties.FRAMED;
 
     public TextHolder textHolder;
 

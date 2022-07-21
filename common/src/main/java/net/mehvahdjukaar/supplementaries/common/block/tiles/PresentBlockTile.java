@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;

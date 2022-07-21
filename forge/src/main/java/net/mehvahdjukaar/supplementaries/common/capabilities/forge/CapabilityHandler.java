@@ -1,9 +1,10 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities;
+package net.mehvahdjukaar.supplementaries.common.capabilities.forge;
 
+import net.mehvahdjukaar.moonlight.core.mixins.ThirdPersonRendererMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.forge.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -12,6 +13,8 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import vazkii.quark.mixin.WeatheringCopperMixin;
+import vazkii.quark.mixin.client.ItemRendererMixin;
 
 public class CapabilityHandler {
 
@@ -24,6 +27,7 @@ public class CapabilityHandler {
         event.register(ICatchableMob.class);
         event.register(IAntiqueTextProvider.class);
     }
+
 
     public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.ANTIQUE_INK_ENABLED.get();
 

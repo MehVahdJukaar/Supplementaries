@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.minecraft.client.Minecraft;
@@ -24,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrameBlockBakedModel implements IDynamicBakedModel {
+public class FrameBlockBakedModel implements CustomBakedModel {
     private final BakedModel overlay;
     private final BlockModelShaper blockModelShaper;
 
@@ -33,17 +35,15 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData, RenderType renderType) {
-
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         //always on cutout layer
 
         List<BakedQuad> quads = new ArrayList<>();
 
         if (state != null) {
             try {
-                BlockState mimic = extraData.get(BlockProperties.MIMIC);
+                BlockState mimic = data.get(ModBlockProperties.MIMIC);
                 if (mimic == null || (mimic.isAir())) {
                     BakedModel model = blockModelShaper.getBlockModel(state.setValue(FrameBlock.HAS_BLOCK, false));
                     quads.addAll(model.getQuads(mimic, side, rand, ModelData.EMPTY, renderType));
@@ -64,7 +64,6 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
             } catch (Exception ignored) {
             }
         }
-
         return quads;
     }
 
@@ -89,7 +88,7 @@ public class FrameBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public TextureAtlasSprite getBlockParticle(ExtraModelData extraModelData) {
         return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
     }
 

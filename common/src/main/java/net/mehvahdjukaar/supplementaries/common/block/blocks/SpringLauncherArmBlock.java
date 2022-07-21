@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -31,7 +29,7 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
     protected static final VoxelShape SHAPE = Shapes.empty();
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final BooleanProperty EXTENDING = BlockProperties.EXTENDING;// is it extending?
+    public static final BooleanProperty EXTENDING = ModBlockProperties.EXTENDING;// is it extending?
 
     public SpringLauncherArmBlock(Properties properties) {
         super(properties);
@@ -85,6 +83,6 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTile::tick);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTile::tick);
     }
 }

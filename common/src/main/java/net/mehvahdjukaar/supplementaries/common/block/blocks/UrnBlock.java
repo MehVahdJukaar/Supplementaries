@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,7 +41,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -56,7 +55,7 @@ import java.util.List;
 public class UrnBlock extends FallingBlock implements EntityBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty TREASURE = BlockProperties.TREASURE;
+    public static final BooleanProperty TREASURE = ModBlockProperties.TREASURE;
 
     private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 10, 12),
             box(5, 10, 5, 11, 12, 11),
@@ -194,7 +193,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        BlockUtils.addOptionalOwnership(entity, world, pos);
+        BlockUtil.addOptionalOwnership(entity, world, pos);
     }
 
     @Override

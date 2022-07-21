@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -45,7 +45,7 @@ public class PulleyBlockContainerMenu extends AbstractContainerMenu implements I
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PulleyBlockTile.getContentType(stack.getItem())!=BlockProperties.Winding.NONE;
+                return PulleyBlockTile.getContentType(stack.getItem())!= ModBlockProperties.Winding.NONE;
             }
         });
 

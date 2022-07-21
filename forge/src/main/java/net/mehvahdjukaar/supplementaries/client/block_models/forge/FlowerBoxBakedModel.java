@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
@@ -20,9 +22,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FlowerBoxBakedModel implements IDynamicBakedModel {
+public class FlowerBoxBakedModel implements CustomBakedModel {
     private final BakedModel box;
     private final BlockModelShaper blockModelShaper;
 
@@ -40,10 +39,8 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
-
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
 
         //box
@@ -55,11 +52,11 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
         //mimic
         try {
 
-            if(state != null) {
+            if (state != null) {
                 BlockState[] flowers = new BlockState[]{
-                        extraData.get(FlowerBoxBlockTile.FLOWER_0),
-                        extraData.get(FlowerBoxBlockTile.FLOWER_1),
-                        extraData.get(FlowerBoxBlockTile.FLOWER_2)
+                        data.get(FlowerBoxBlockTile.FLOWER_0),
+                        data.get(FlowerBoxBlockTile.FLOWER_1),
+                        data.get(FlowerBoxBlockTile.FLOWER_2)
                 };
 
                 PoseStack matrixStack = new PoseStack();
@@ -117,7 +114,7 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
             model = blockModelShaper.getBlockModel(state);
         }
 
-        List<BakedQuad> mimicQuads = model.getQuads(state, side, rand, ModelData.EMPTY);
+        List<BakedQuad> mimicQuads = model.getQuads(state, side, rand);
         for (BakedQuad q : mimicQuads) {
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
@@ -133,6 +130,11 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
 
             quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }
+    }
+
+    @Override
+    public TextureAtlasSprite getBlockParticle(ExtraModelData extraModelData) {
+        return box.getParticleIcon();
     }
 
     @Override
@@ -156,11 +158,6 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return box.getParticleIcon();
-    }
-
-    @Override
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
@@ -169,6 +166,5 @@ public class FlowerBoxBakedModel implements IDynamicBakedModel {
     public ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
-
 
 }

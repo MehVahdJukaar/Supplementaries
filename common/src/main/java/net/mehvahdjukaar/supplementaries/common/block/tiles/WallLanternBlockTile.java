@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

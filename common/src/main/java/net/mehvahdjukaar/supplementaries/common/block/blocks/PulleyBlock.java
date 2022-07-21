@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.Winding;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable {
-    public static final EnumProperty<Winding> TYPE = BlockProperties.WINDING;
-    public static final BooleanProperty FLIPPED = BlockProperties.FLIPPED;
+    public static final EnumProperty<Winding> TYPE = ModBlockProperties.WINDING;
+    public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
     public PulleyBlock(Properties properties) {
         super(properties);
@@ -139,6 +139,6 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
     }
 }

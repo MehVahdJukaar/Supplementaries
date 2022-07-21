@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
@@ -750,7 +750,7 @@ public class ItemsOverrideHandler {
 
         BlockState newState = blockOverride.defaultBlockState();
         for (Property<?> p : properties) {
-            newState = BlockUtils.replaceProperty(replaced, newState, p);
+            newState = BlockUtil.replaceProperty(replaced, newState, p);
         }
         if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
             FluidState fluidstate = world.getFluidState(pos);

@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.ILavaAndWaterLoggable;
+import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
@@ -53,7 +53,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -67,7 +66,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty LAVALOGGED = BlockProperties.LAVALOGGED;
+    public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     public SafeBlock(Properties properties) {

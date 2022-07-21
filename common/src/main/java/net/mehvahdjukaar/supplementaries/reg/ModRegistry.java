@@ -67,7 +67,7 @@ public class ModRegistry {
         RegHelper.addMiscRegistration(ModRegistry::registerAdditionalStuff);
         RegHelper.addAttributeRegistration(ModRegistry::registerEntityAttributes);
         RegHelper.addCommandRegistration(ModCommands::register);
-        VillagerTradesHandler.registerTrades();
+        VillagerTradesHandler.addTradesRegistration();
     }
 
     public static boolean isDisabled(String name) {
@@ -604,13 +604,12 @@ public class ModRegistry {
 
 
     //rope
-    public static final Supplier<Block> ROPE = regWithItem(ROPE_NAME, () -> new RopeBlock(
+    public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
                     BlockBehaviour.Properties.of(Material.WOOL)
                             .sound(ModSounds.ROPE)
                             .strength(0.25f)
                             .speedFactor(0.7f)
-                            .noOcclusion()),
-            CreativeModeTab.TAB_DECORATIONS);
+                            .noOcclusion()));
 
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));

@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -48,7 +48,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
-    public static final BooleanProperty ROTATING = BlockProperties.ROTATING;
+    public static final BooleanProperty ROTATING = ModBlockProperties.ROTATING;
 
     public TurnTableBlock(Properties properties) {
         super(properties);
@@ -215,7 +215,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.TURN_TABLE_TILE.get(), !pLevel.isClientSide ? TurnTableBlockTile::tick : null);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.TURN_TABLE_TILE.get(), !pLevel.isClientSide ? TurnTableBlockTile::tick : null);
     }
 
     @Override

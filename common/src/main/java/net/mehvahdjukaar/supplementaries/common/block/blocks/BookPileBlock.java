@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -38,7 +38,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     private static final VoxelShape SHAPE_3 = Block.box(3D, 0D, 3D, 13D, 12D, 13D);
     private static final VoxelShape SHAPE_4 = Block.box(3D, 0D, 3D, 13D, 16D, 13D);
 
-    public static final IntegerProperty BOOKS = BlockProperties.BOOKS;
+    public static final IntegerProperty BOOKS = ModBlockProperties.BOOKS;
 
     public BookPileBlock(Properties properties) {
         super(properties);

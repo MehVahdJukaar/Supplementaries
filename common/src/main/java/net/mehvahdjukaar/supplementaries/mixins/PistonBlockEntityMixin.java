@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.common.block.util.IInstanceTick;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IInstanceTick;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

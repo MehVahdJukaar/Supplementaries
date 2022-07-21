@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -11,17 +14,11 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HangingPotBakedModel implements IDynamicBakedModel {
+public class HangingPotBakedModel implements CustomBakedModel {
     private final BakedModel rope;
     private final BlockModelShaper blockModelShaper;
 
@@ -30,26 +27,25 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
 
         //always on cutout layer
         List<BakedQuad> quads = new ArrayList<>();
 
         if (state != null) {
             try {
-                BlockState mimic = extraData.getData(BlockProperties.MIMIC);
+                BlockState mimic = data.get(ModBlockProperties.MIMIC);
 
                 if (mimic != null) {
                     BakedModel model = blockModelShaper.getBlockModel(mimic);
-                    quads.addAll(model.getQuads(mimic, side, rand, ModelData.EMPTY));
+                    quads.addAll(model.getQuads(mimic, side, rand));
                 }
             } catch (Exception ignored) {
             }
 
             try {
-                quads.addAll(rope.getQuads(state, side, rand, ModelData.EMPTY));
+                quads.addAll(rope.getQuads(state, side, rand));
             } catch (Exception ignored) {
             }
         }
@@ -77,13 +73,8 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return rope.getParticleIcon();
-   }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
-        BlockState mimic = data.getData(BlockProperties.MIMIC);
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
+        BlockState mimic = data.get(ModBlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
             BakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
@@ -91,7 +82,7 @@ public class HangingPotBakedModel implements IDynamicBakedModel {
             } catch (Exception ignored) {
             }
         }
-        return getParticleIcon();
+        return rope.getParticleIcon();
     }
 
     @Override

@@ -1,10 +1,10 @@
-package net.mehvahdjukaar.supplementaries.common.block.util;
+package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class BlockUtils {
+public class BlockUtil {
 
     public static <T extends Comparable<T>, A extends Property<T>> BlockState replaceProperty(BlockState from, BlockState to, A property) {
         if (from.hasProperty(property)) {
@@ -115,8 +115,8 @@ public class BlockUtils {
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
         Block block = state.getBlock();
 
-        if (state.hasProperty(BlockProperties.FLIPPED)) {
-            return Optional.of(state.cycle(BlockProperties.FLIPPED));
+        if (state.hasProperty(ModBlockProperties.FLIPPED)) {
+            return Optional.of(state.cycle(ModBlockProperties.FLIPPED));
         }
         //horizontal facing blocks -easy
         if (dir.getAxis() == Direction.Axis.Y) {

@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 

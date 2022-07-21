@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

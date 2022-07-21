@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.RakeDirection;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.RakeDirection;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ public class RakedGravelBlock extends GravelBlock {
 
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = BlockProperties.RAKE_DIRECTION;
+    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = ModBlockProperties.RAKE_DIRECTION;
 
     public RakedGravelBlock(Properties properties) {
         super(properties);

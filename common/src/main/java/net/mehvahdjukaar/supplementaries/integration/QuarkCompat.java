@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,7 +76,12 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static Object getMovingBlockEntity(BlockPos pos, Level level) {
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         throw new AssertionError();
     }
 }

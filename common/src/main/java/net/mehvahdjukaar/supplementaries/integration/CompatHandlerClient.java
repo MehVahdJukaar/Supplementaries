@@ -16,9 +16,6 @@ public class CompatHandlerClient {
             }
         }
         /*
-        if (CompatHandler.quark) {
-            QuarkPlugin.registerTooltipComponent();
-        }
         if (CompatHandler.botania) BotaniaCompatClient.registerRenderLayers();
 
         if (CompatHandler.deco_blocks) DecoBlocksCompatClient.registerRenderLayers();

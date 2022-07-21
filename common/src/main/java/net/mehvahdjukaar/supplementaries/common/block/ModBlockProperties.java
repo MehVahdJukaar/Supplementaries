@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class BlockProperties {
+public class ModBlockProperties {
 
     //BlockState properties
     public static final BooleanProperty EXTENDING = BooleanProperty.create("extending");

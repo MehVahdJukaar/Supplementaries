@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -65,7 +65,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
         if (world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
-            BlockUtils.addOptionalOwnership(placer, tile);
+            BlockUtil.addOptionalOwnership(placer, tile);
         }
     }
 

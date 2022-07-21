@@ -10,17 +10,12 @@
     "SelfWrenchMixin",
     "SelfSpeakerMixin",
     "SerfOpeneableContainerMixin",
-    "SelfFluteItemMixin",
-    "SelfCageItemMixin",
-    "SelfJarItemMixin",
-    "SelfFlagItemMixin",
-    "SelfBlackboardItemMixin",
-    "SelfBubbleBlockItemMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
     "SelfMimicMixin",
     "SelfSafeMixin",
-    "SelfWrenchItemMixin"
+    "SelfPlanterMixin",
+    "ChunkHolderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

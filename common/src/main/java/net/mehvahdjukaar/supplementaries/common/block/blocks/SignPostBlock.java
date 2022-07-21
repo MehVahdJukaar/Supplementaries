@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
@@ -246,6 +246,6 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtils.addOptionalOwnership(placer, worldIn, pos);
+        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
     }
 }

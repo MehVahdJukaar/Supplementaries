@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,7 +31,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -42,7 +41,7 @@ import java.util.List;
 
 public class PresentBlock extends WaterBlock implements EntityBlock, IColored {
 
-    public static final BooleanProperty PACKED = BlockProperties.PACKED;
+    public static final BooleanProperty PACKED = ModBlockProperties.PACKED;
 
     private final DyeColor color;
 

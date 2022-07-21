@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.block.util;
+package net.mehvahdjukaar.supplementaries.common.block;
 
 public interface ICustomDataHolder {
     boolean getVariable();

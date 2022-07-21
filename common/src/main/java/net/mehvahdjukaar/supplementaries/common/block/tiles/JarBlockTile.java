@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
@@ -51,8 +51,8 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public void updateTileOnInventoryChanged() {
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
         int light = this.fluidHolder.getFluid().getLuminosity();
-        if (light != this.getBlockState().getValue(BlockProperties.LIGHT_LEVEL_0_15)) {
-            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2);
+        if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
     }
 

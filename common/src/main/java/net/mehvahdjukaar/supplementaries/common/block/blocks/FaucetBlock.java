@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -56,9 +56,9 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty HAS_WATER = BlockProperties.HAS_WATER;
-    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_7;
-    public static final BooleanProperty HAS_JAR = BlockProperties.HAS_JAR;
+    public static final BooleanProperty HAS_WATER = ModBlockProperties.HAS_WATER;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_7;
+    public static final BooleanProperty HAS_JAR = ModBlockProperties.HAS_JAR;
 
     public FaucetBlock(Properties properties) {
         super(properties.lightLevel(s->s.getValue(LIGHT_LEVEL)));
@@ -249,7 +249,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::tick);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::tick);
     }
 }
 

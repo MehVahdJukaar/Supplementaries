@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -72,8 +72,8 @@ public class FrameBlockTile extends MimicBlockTile {
         if (b == ModRegistry.DAUB.get() && ServerConfigs.Blocks.REPLACE_DAUB.get()) {
             if (level != null && !this.level.isClientSide) {
                 state = WATTLE_AND_DAUB.get();
-                if (this.getBlockState().hasProperty(BlockProperties.FLIPPED)) {
-                    state = state.setValue(BlockProperties.FLIPPED, this.getBlockState().getValue(BlockProperties.FLIPPED));
+                if (this.getBlockState().hasProperty(ModBlockProperties.FLIPPED)) {
+                    state = state.setValue(ModBlockProperties.FLIPPED, this.getBlockState().getValue(ModBlockProperties.FLIPPED));
                 }
                 this.level.setBlock(this.worldPosition, state, 3);
             }

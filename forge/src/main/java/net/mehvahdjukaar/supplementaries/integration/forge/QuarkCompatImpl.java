@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -68,7 +69,7 @@ public class QuarkCompatImpl {
     }
 
     public static InteractionResult tryCaptureTater(JarItem jarItem, UseOnContext context) {
-
+        return InteractionResult.PASS;
     }
 
     public static boolean isDoubleDoorEnabled() {
@@ -119,8 +120,8 @@ public class QuarkCompatImpl {
 
     //--------tooltips-------
 
-    public static void registerTooltipComponent() {
-        MinecraftForgeClient.registerTooltipComponentFactory(ItemsUtil.InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
+    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
+        event.register(ItemsUtil.InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
     }
 
 
@@ -223,8 +224,9 @@ public class QuarkCompatImpl {
         }
     }
 
-    public static Object getMovingBlockEntity(BlockPos pos, Level level) {
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
         return PistonsMoveTileEntitiesModule.getMovement(level, pos);
     }
+
 
 }

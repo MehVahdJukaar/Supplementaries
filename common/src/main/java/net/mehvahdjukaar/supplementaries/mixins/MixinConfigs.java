@@ -144,7 +144,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         try {
-            RegistryConfigs.superEarlyLoad();
+           // RegistryConfigs.superEarlyLoad();
         } catch (Exception exception) {
             throw new RuntimeException("Failed to create registry configs: " + exception);
         }

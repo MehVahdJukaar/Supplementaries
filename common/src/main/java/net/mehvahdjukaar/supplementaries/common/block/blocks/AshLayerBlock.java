@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
+import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -205,26 +207,27 @@ public class AshLayerBlock extends FallingBlock {
             return i == 1;
         }
     }
-
-    public static boolean tryConvertToAsh(Level level, BlockPos pPos, BlockState state) {
+    public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
         if (ServerConfigs.Blocks.ASH_BURN.get()) {
+            BlockState state = event.getState();
+            LevelAccessor level = event.getLevel();
+            BlockPos pos = event.getPos();
 
             Item i = state.getBlock().asItem();
             int count = PlatformHelper.getBurnTime(i.getDefaultInstance()) / 100;
             if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
 
             if (count > 0) {
-                int layers = Mth.clamp(level.random.nextInt(count), 1, 8);
+                int layers = Mth.clamp(level.getRandom().nextInt(count), 1, 8);
                 if (layers != 0) {
-                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), (double) pPos.getX() + 0.5D,
-                            (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.5D, 10 + layers,
+                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), (double) pos.getX() + 0.5D,
+                            (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 10 + layers,
                             0.5D, 0.5D, 0.5D, 0.0D);
-                    return level.setBlock(pPos, ModRegistry.ASH_BLOCK.get()
-                            .defaultBlockState().setValue(AshLayerBlock.LAYERS, layers), 3);
+                    event.setFinalState(ModRegistry.ASH_BLOCK.get().defaultBlockState()
+                            .setValue(AshLayerBlock.LAYERS, layers));
                 }
             }
         }
-        return false;
     }
 
     private void addParticle(Entity entity, BlockPos pos, Level level, int layers, float upSpeed) {

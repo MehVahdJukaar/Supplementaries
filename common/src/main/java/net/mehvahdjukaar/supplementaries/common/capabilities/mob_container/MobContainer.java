@@ -4,7 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -105,8 +105,8 @@ public class MobContainer {
                 light = CapturedMobsHelper.getTypeFromBucket(this.data.filledBucket.getItem()).getLightLevel();
             }
             BlockState state = level.getBlockState(pos);
-            if (state.getValue(BlockProperties.LIGHT_LEVEL_0_15) != light) {
-                level.setBlock(pos, state.setValue(BlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
+            if (state.getValue(ModBlockProperties.LIGHT_LEVEL_0_15) != light) {
+                level.setBlock(pos, state.setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
             }
         }
     }

@@ -1,6 +1,5 @@
-package net.mehvahdjukaar.supplementaries.common.block.util;
+package net.mehvahdjukaar.supplementaries.common.block;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +19,14 @@ import java.util.Optional;
 public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContainer {
 
     default boolean canPlaceLiquid(BlockGetter reader, BlockPos pos, BlockState state, Fluid fluid) {
-        return (!state.getValue(BlockProperties.LAVALOGGED) && fluid == Fluids.LAVA)
+        return (!state.getValue(ModBlockProperties.LAVALOGGED) && fluid == Fluids.LAVA)
                 || (!state.getValue(BlockStateProperties.WATERLOGGED) && fluid == Fluids.WATER);
     }
 
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!state.getValue(BlockProperties.LAVALOGGED) && fluidState.getType() == Fluids.LAVA) {
+        if (!state.getValue(ModBlockProperties.LAVALOGGED) && fluidState.getType() == Fluids.LAVA) {
             if (!world.isClientSide()) {
-                world.setBlock(pos, state.setValue(BlockProperties.LAVALOGGED, Boolean.TRUE), 3);
+                world.setBlock(pos, state.setValue(ModBlockProperties.LAVALOGGED, Boolean.TRUE), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
 
@@ -44,8 +43,8 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
     }
 
     default Fluid takeLiquid(LevelAccessor world, BlockPos pos, BlockState state) {
-        if (state.getValue(BlockProperties.LAVALOGGED)) {
-            world.setBlock(pos, state.setValue(BlockProperties.LAVALOGGED, Boolean.FALSE), 3);
+        if (state.getValue(ModBlockProperties.LAVALOGGED)) {
+            world.setBlock(pos, state.setValue(ModBlockProperties.LAVALOGGED, Boolean.FALSE), 3);
             return Fluids.LAVA;
         } else if (state.getValue(BlockStateProperties.WATERLOGGED)) {
             world.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
@@ -65,8 +64,8 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
             }
 
             return new ItemStack(Items.WATER_BUCKET);
-        } else if (pState.getValue(BlockProperties.LAVALOGGED)) {
-            pLevel.setBlock(pPos, pState.setValue(BlockProperties.LAVALOGGED, Boolean.FALSE), 3);
+        } else if (pState.getValue(ModBlockProperties.LAVALOGGED)) {
+            pLevel.setBlock(pPos, pState.setValue(ModBlockProperties.LAVALOGGED, Boolean.FALSE), 3);
             if (!pState.canSurvive(pLevel, pPos)) {
                 pLevel.destroyBlock(pPos, true);
             }

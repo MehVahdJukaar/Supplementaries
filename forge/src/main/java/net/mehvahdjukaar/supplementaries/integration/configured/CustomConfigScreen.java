@@ -171,7 +171,7 @@ public class CustomConfigScreen extends ConfigScreen {
         super.init();
 
         //replace list with new custom entries
-        boolean reg = this.config == ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_CONFIG).getModConfig() && !this.folderEntry.isRoot();
+        boolean reg = this.config == ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig() && !this.folderEntry.isRoot();
 
         this.list.replaceEntries(replaceItems(this.list.children(), reg));
         Collection<Item> temp = replaceItems(this.entries, reg);
@@ -432,7 +432,7 @@ public class CustomConfigScreen extends ConfigScreen {
         @Override
         public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
             this.button.setMessage(Component.literal(""));
-            super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+           // super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CustomConfigSelectScreen.ICONS_TEXTURES);

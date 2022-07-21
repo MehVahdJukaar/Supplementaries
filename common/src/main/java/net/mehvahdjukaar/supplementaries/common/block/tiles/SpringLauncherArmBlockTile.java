@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherArmBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
@@ -39,7 +39,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
 
     public SpringLauncherArmBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), pos, state);
-        boolean extending = state.getValue(BlockProperties.EXTENDING);
+        boolean extending = state.getValue(ModBlockProperties.EXTENDING);
         Direction dir = state.getValue(BlockStateProperties.FACING);
 
         this.age = 0;

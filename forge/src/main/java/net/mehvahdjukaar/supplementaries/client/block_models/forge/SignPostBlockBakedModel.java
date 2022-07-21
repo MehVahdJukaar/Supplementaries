@@ -1,73 +1,63 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
-import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class SignPostBlockBakedModel implements IDynamicBakedModel {
+public class SignPostBlockBakedModel implements CustomBakedModel {
     private final BlockModelShaper blockModelShaper;
 
     public SignPostBlockBakedModel() {
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull ModelData extraData) {
-
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         try {
-            BlockState mimic = extraData.getData(BlockProperties.MIMIC);
-            Boolean isFramed = extraData.getData(BlockProperties.FRAMED);
+            BlockState mimic = data.get(ModBlockProperties.MIMIC);
+            Boolean isFramed = data.get(ModBlockProperties.FRAMED);
 
-            boolean framed = CompatHandler.framedblocks && (isFramed!=null && isFramed);
+            boolean framed = CompatHandler.framedblocks && (isFramed != null && isFramed);
 
             //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
             //always solid.
 
             if (mimic != null && !mimic.isAir()) {
 
-                ModelData data;
+                ModelData data2;
                 if (framed) {
-                    data = FramedSignPost.getModelData(mimic);
+                    data2 = FramedSignPost.getModelData(mimic);
                     mimic = FramedSignPost.framedFence;
                 } else {
-                    data = ModelData.EMPTY;
+                    data2 = ModelData.EMPTY;
                 }
                 BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                return model.getQuads(mimic, side, rand, data);
-
-
+                return model.getQuads(mimic, side, rand, data2, renderType);
             }
-        }
-        catch (Exception ignored){
+        } catch (Exception ignored) {
             int a = 1;
         }
         return Collections.emptyList();
     }
-
 
     @Override
     public boolean useAmbientOcclusion() {
@@ -90,19 +80,15 @@ public class SignPostBlockBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.TIMBER_CROSS_BRACE_TEXTURE);
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
-        BlockState mimic = data.getData(SignPostBlockTile.MIMIC);
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
+        BlockState mimic = data.get(SignPostBlockTile.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 return model.getParticleIcon();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
 
         }
         return getParticleIcon();

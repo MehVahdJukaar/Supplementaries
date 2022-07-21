@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -142,7 +142,7 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.BELLOWS_TILE.get(), BellowsBlockTile::tick);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.BELLOWS_TILE.get(), BellowsBlockTile::tick);
     }
 
     @Override

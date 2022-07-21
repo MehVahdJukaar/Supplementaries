@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;

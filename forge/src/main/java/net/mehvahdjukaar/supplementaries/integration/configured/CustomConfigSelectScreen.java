@@ -9,10 +9,13 @@ import com.mrcrayfish.configured.client.screen.ModConfigSelectionScreen;
 import com.mrcrayfish.configured.client.screen.widget.IconButton;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
 import com.mrcrayfish.configured.util.ConfigHelper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,7 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -57,8 +60,8 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         ModContainer container = ModList.get().getModContainerById(Supplementaries.MOD_ID).get();
         Map<ModConfig.Type, Set<ModConfig>> modConfigMap = createConfigMap();
 
-        container.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () ->
-                new ConfigGuiHandler.ConfigGuiFactory((mc, screen) ->
+        container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
+                new ConfigScreenHandler.ConfigScreenFactory((mc, screen) ->
                         new CustomConfigSelectScreen(screen, "\u00A76Supplementaries Configured",
                                 Textures.CONFIG_BACKGROUND, modConfigMap)));
     }
@@ -66,11 +69,11 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     private static Map<ModConfig.Type, Set<ModConfig>> createConfigMap() {
         Map<ModConfig.Type, Set<ModConfig>> modConfigMap = new HashMap<>();
         Set<ModConfig> s = new HashSet<>();
-        s.add(ConfigUtils.CLIENT_CONFIGS);
+        s.add(((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig());
         modConfigMap.put(ModConfig.Type.CLIENT, s);
         Set<ModConfig> s1 = new HashSet<>();
-        s1.add(ConfigUtils.REGISTRY_CONFIGS);
-        s1.add(ConfigUtils.SERVER_CONFIGS);
+        s1.add(((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig());
+        s1.add(((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig());
         modConfigMap.put(ModConfig.Type.COMMON, s1);
         return modConfigMap;
     }
@@ -91,9 +94,9 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     }
 
     private ModConfig getConfigFromLabel(String label) {
-        if (label.contains("Common")) return ConfigUtils.SERVER_CONFIGS;
-        if (label.contains("Client")) return ConfigUtils.CLIENT_CONFIGS;
-        return ConfigUtils.REGISTRY_CONFIGS;
+        if (label.contains("Common")) return ((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig();
+        if (label.contains("Client")) return ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig();
+        return ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig();
     }
 
     private Button createModifyButton(ModConfig config) {

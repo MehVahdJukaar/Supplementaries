@@ -1,10 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
-import dan200.computercraft.api.ComputerCraftAPI;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import dan200.computercraft.shared.Capabilities;
-import dan200.computercraft.shared.media.items.ItemPrintout;
+
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -18,7 +14,24 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
+
 public class CCCompatImpl {
+    public static <T> boolean isPeripheralCap(Capability<T> cap) {
+        return false;
+    }
+
+    public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile speakerBlockTile) {
+
+        return null;
+
+    }
+/*
+
+import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.shared.Capabilities;
+import dan200.computercraft.shared.media.items.ItemPrintout;
 
     public static void initialize() {
         ComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
@@ -65,5 +78,5 @@ public class CCCompatImpl {
     public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile tile) {
         return LazyOptional.of(() -> new SpeakerPeripheral(tile));
     }
-
+*/
 }

@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +50,9 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final EnumProperty<BlockProperties.BlockAttachment> ATTACHMENT = BlockProperties.BLOCK_ATTACHMENT;
+    public static final EnumProperty<ModBlockProperties.BlockAttachment> ATTACHMENT = ModBlockProperties.BLOCK_ATTACHMENT;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final IntegerProperty LIGHT_LEVEL = BlockProperties.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
 
     public WallLanternBlock(Properties properties) {
         super(properties.lightLevel(s -> s.getValue(LIT) ? s.getValue(LIGHT_LEVEL) : 0));
@@ -101,7 +100,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
         if (te instanceof IBlockHolder blockHolder && i instanceof BlockItem blockItem) {
             blockHolder.setHeldBlock(blockItem.getBlock().defaultBlockState());
         }
-        BlockUtils.addOptionalOwnership(entity, world, pos);
+        BlockUtil.addOptionalOwnership(entity, world, pos);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
         Direction direction = state.getValue(FACING);
         BlockPos blockpos = pos.relative(direction.getOpposite());
         BlockState blockstate = level.getBlockState(blockpos);
-        return BlockProperties.BlockAttachment.get(blockstate, blockpos, level, direction) != null;
+        return ModBlockProperties.BlockAttachment.get(blockstate, blockpos, level, direction) != null;
     }
 
     @Override
@@ -139,7 +138,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
 
 
     public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction dir) {
-        BlockProperties.BlockAttachment attachment = BlockProperties.BlockAttachment.get(facingState, pos, world, dir);
+        ModBlockProperties.BlockAttachment attachment = ModBlockProperties.BlockAttachment.get(facingState, pos, world, dir);
         if (attachment == null) {
             return state;
         }
@@ -240,7 +239,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtils.getTicker(pBlockEntityType, ModRegistry.WALL_LANTERN_TILE.get(), pLevel.isClientSide ? SwayingBlockTile::clientTick : null);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.WALL_LANTERN_TILE.get(), pLevel.isClientSide ? SwayingBlockTile::clientTick : null);
     }
 
    /* @Override

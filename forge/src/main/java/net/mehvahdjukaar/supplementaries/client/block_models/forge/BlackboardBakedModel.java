@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.block_models.forge;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -22,17 +22,16 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
-import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class BlackboardBakedModel implements IDynamicBakedModel {
+public class BlackboardBakedModel implements CustomBakedModel {
     //model cache used when switching frequently between models
     // data needed to rebake
 
@@ -73,7 +72,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
         return spriteGetter.apply(owner.getMaterial("particle"));
     }
 
@@ -87,11 +86,10 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         return ItemTransforms.NO_TRANSFORMS;
     }
 
-
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random, ModelData data, RenderType renderType) {
-        List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, direction, random, data, renderType));
-        if (data != ModelData.EMPTY && state != null && direction == null) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+        List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
+        if (data != ExtraModelData.EMPTY && state != null && side == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
             BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
@@ -106,7 +104,7 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform) {
         List<BakedQuad> quads;
         try (TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
-            TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {
+             TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {
             quads = new ArrayList<>();
             var rotation = modelTransform.getRotation();
 
@@ -128,7 +126,8 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
                     //draws prev quad
                     int tint = BlackboardBlock.colorFromByte(prevColor);
                     TextureAtlasSprite sprite = prevColor == 0 ? black : white;
-                    quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f, 1 / 16f, length / 16f, sprite, tint, rotation));
+                    quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f,
+                            1 / 16f, length / 16f, sprite, tint, rotation));
                     startY = y;
                     if (current != null) {
                         prevColor = current;
@@ -139,8 +138,6 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         }
         return quads;
     }
-
-    //TODO: forge has builtin code for all this
 
     //MCjty code
 
@@ -153,8 +150,10 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
         float u0 = x * 16;
         float v0 = y * 16;
 
-        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        builder.setQuadOrientation(Direction.getNearest(normal.x(), normal.y(), normal.z()));
+        AtomicReference<BakedQuad> output = new AtomicReference<>();
+        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(output::set);
+        builder.setDirection(Direction.getNearest(normal.x(), normal.y(), normal.z()));
+        builder.setSprite(sprite);
 
         putVertex(builder, normal, x + width, y + height, z,
                 u0 + tu, v0 + tv, sprite, color, transform);
@@ -164,47 +163,23 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
                 u0, v0, sprite, color, transform);
         putVertex(builder, normal, x, y + height, z,
                 u0, v0 + tv, sprite, color, transform);
-        return builder.build();
+
+        return output.get();
     }
 
-    private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
+    private static void putVertex(QuadBakingVertexConsumer builder, Vector3f normal,
                                   float x, float y, float z, float u, float v,
                                   TextureAtlasSprite sprite, int color, Transformation transformation) {
 
-        float r = (color >> 16 & 255) / 255f;
-        float g = (color >> 8 & 255) / 255f;
-        float b = (color & 255) / 255f;
-        ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements().asList();
-        for (int j = 0; j < elements.size(); j++) {
-            VertexFormatElement e = elements.get(j);
-            switch (e.getUsage()) {
-                case POSITION:
-                    Vector3f posV = new Vector3f(x, y, z);
-                    applyModelRotation(posV, transformation);
-                    builder.put(j, posV.x(), posV.y(), posV.z(), 1.0f);
-                    break;
-                case COLOR:
-                    builder.put(j, r, g, b, 1.0f);
-                    break;
-                case UV:
-                    switch (e.getIndex()) {
-                        case 0 -> {
-                            float iu = sprite.getU(u);
-                            float iv = sprite.getV(v);
-                            builder.put(j, iu, iv);
-                        }
-                        case 2 -> builder.put(j, (short) 0, (short) 0);
-                        default -> builder.put(j);
-                    }
-                    break;
-                case NORMAL:
-                    builder.put(j, normal.x(), normal.y(), normal.z());
-                    break;
-                default:
-                    builder.put(j);
-                    break;
-            }
-        }
+        Vector3f posV = new Vector3f(x, y, z);
+        applyModelRotation(posV, transformation);
+        builder.vertex(posV.x(), posV.y(), posV.z());
+
+        builder.color(color);
+
+        builder.uv(sprite.getU(u), sprite.getV(v));
+
+        builder.normal(normal.x(), normal.y(), normal.z());
     }
 
 
@@ -217,7 +192,6 @@ public class BlackboardBakedModel implements IDynamicBakedModel {
     private static void rotateVertexBy(Vector3f pPos, Vector3f pOrigin, Matrix4f pTransform) {
         Vector4f vector4f = new Vector4f(pPos.x() - pOrigin.x(), pPos.y() - pOrigin.y(), pPos.z() - pOrigin.z(), 1.0F);
         vector4f.transform(pTransform);
-        //vector4f.mul(pScale);
         pPos.set(vector4f.x() + pOrigin.x(), vector4f.y() + pOrigin.y(), vector4f.z() + pOrigin.z());
     }
 

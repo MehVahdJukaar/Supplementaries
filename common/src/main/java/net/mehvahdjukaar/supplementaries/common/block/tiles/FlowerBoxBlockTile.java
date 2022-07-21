@@ -5,9 +5,9 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -25,9 +25,9 @@ import net.minecraft.world.phys.AABB;
 
 public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder, IExtraModelDataProvider {
 
-    public static final ModelDataKey<BlockState> FLOWER_0 = BlockProperties.FLOWER_0;
-    public static final ModelDataKey<BlockState> FLOWER_1 = BlockProperties.FLOWER_1;
-    public static final ModelDataKey<BlockState> FLOWER_2 = BlockProperties.FLOWER_2;
+    public static final ModelDataKey<BlockState> FLOWER_0 = ModBlockProperties.FLOWER_0;
+    public static final ModelDataKey<BlockState> FLOWER_1 = ModBlockProperties.FLOWER_1;
+    public static final ModelDataKey<BlockState> FLOWER_2 = ModBlockProperties.FLOWER_2;
 
     private final BlockState[] flowerStates = new BlockState[]{Blocks.AIR.defaultBlockState(),
             Blocks.AIR.defaultBlockState(), Blocks.AIR.defaultBlockState()};

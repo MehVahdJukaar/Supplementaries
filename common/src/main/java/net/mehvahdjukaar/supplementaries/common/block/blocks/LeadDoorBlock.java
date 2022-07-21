@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class LeadDoorBlock extends DoorBlock {
-    public static IntegerProperty OPENING_PROGRESS = BlockProperties.OPENING_PROGRESS;
+    public static IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
 
     public LeadDoorBlock(Properties builder) {
         super(builder);

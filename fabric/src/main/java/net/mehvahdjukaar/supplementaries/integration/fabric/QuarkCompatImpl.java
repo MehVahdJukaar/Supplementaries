@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
-import net.mehvahdjukaar.supplementaries.common.block.util.IBlockHolder;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,6 +59,10 @@ public class QuarkCompatImpl {
         throw new UnsupportedOperationException();
     }
 
-    public static Object getMovingBlockEntity(BlockPos pos, Level level) {
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
     }
 }

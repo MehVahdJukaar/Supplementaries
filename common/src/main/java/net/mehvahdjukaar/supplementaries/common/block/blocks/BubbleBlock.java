@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -131,6 +131,6 @@ public class BubbleBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState state, BlockEntityType<T> tBlockEntityType) {
-        return BlockUtils.getTicker(tBlockEntityType, ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTile::tick);
+        return BlockUtil.getTicker(tBlockEntityType, ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTile::tick);
     }
 }

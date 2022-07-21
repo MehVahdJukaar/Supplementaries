@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -56,9 +56,9 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
             Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D),
             Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D));
 
-    public static final BooleanProperty AXIS_X = BlockProperties.AXIS_X;
-    public static final BooleanProperty AXIS_Y = BlockProperties.AXIS_Y;
-    public static final BooleanProperty AXIS_Z = BlockProperties.AXIS_Z;
+    public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
+    public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
+    public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
 
     protected final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY = ImmutableMap.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
 

@@ -9,9 +9,9 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -127,12 +127,12 @@ public class FaucetBlockTile extends BlockEntity {
         }
         //TODO: move in compat class
         //honey pot
-        else if (CompatHandler.buzzier_bees && backState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
-            if (backState.getValue(BlockProperties.HONEY_LEVEL_POT) > 0) {
+        else if (CompatHandler.buzzier_bees && backState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
+            if (backState.getValue(ModBlockProperties.HONEY_LEVEL_POT) > 0) {
                 this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    level.setBlock(behind, backState.setValue(BlockProperties.HONEY_LEVEL_POT,
-                            backState.getValue(BlockProperties.HONEY_LEVEL_POT) - 1), 3);
+                    level.setBlock(behind, backState.setValue(ModBlockProperties.HONEY_LEVEL_POT,
+                            backState.getValue(ModBlockProperties.HONEY_LEVEL_POT) - 1), 3);
                     return true;
                 }
             }
@@ -273,10 +273,10 @@ public class FaucetBlockTile extends BlockEntity {
                 return false;
             }
             //honey pot
-            else if (CompatHandler.buzzier_bees && belowState.hasProperty(BlockProperties.HONEY_LEVEL_POT)) {
-                int h = belowState.getValue(BlockProperties.HONEY_LEVEL_POT);
+            else if (CompatHandler.buzzier_bees && belowState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
+                int h = belowState.getValue(ModBlockProperties.HONEY_LEVEL_POT);
                 if (h < 4) {
-                    level.setBlock(below, belowState.setValue(BlockProperties.HONEY_LEVEL_POT, h + 1), 3);
+                    level.setBlock(below, belowState.setValue(ModBlockProperties.HONEY_LEVEL_POT, h + 1), 3);
                     return true;
                 }
                 return false;

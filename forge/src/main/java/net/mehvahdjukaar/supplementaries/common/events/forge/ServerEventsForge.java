@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;

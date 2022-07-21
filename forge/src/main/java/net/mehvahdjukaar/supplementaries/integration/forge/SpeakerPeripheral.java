@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
-
+/*
 
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -80,3 +80,4 @@ public class SpeakerPeripheral implements IPeripheral {
         return Objects.equals(this, other);
     }
 }
+*/
