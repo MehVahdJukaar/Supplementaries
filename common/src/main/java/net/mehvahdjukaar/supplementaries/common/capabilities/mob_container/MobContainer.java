@@ -53,6 +53,7 @@ public class MobContainer {
     }
 
     @ExpectPlatform
+    @Nonnull
     public static <E extends Entity> ICatchableMob getCap(E entity) {
         throw new AssertionError();
     }

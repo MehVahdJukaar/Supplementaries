@@ -3,12 +3,15 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -42,10 +45,16 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FluteItem extends InstrumentItem implements IThirdPersonAnimationProvider,
-        IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider {
+        IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider , ICustomItemRendererProvider {
 
     public FluteItem(Properties properties) {
         super(properties);
+    }
+
+
+    @Override
+    public ItemStackRenderer createRenderer() {
+        return new FluteItemRenderer();
     }
 
     @Override

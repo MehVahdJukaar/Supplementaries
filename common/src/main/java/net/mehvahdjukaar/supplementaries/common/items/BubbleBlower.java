@@ -152,11 +152,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         return false;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
-    public int getMaxDamage(ItemStack stack) {
-        return 250;
-    }
+
 
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
@@ -172,6 +168,11 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     private void setDamage(ItemStack stack, int damage) {
         stack.getOrCreateTag().putInt("Damage", Math.max(0, damage));
     }
+    @PlatformOnly(PlatformOnly.FABRIC)
+    public int getMaxDamage(ItemStack stack) {
+        return 250;
+    }
+
     @PlatformOnly(PlatformOnly.FABRIC)
     private int getDamage(ItemStack stack) {
         return !stack.hasTag() ? 0 : stack.getTag().getInt("Damage");

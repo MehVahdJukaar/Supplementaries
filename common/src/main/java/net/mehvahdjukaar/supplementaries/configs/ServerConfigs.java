@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
@@ -42,13 +43,17 @@ public class ServerConfigs {
     }
 
     private static void onRefresh(){
+        //this isnt safe. refresh could happen sooner than item registration for fabric
         ResourceLocation res = new ResourceLocation(Items.ROPE_ARROW_ROPE.get());
-        var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
-        Items.ROPE_ARROW_OVERRIDE = (Holder.Reference<Block>)opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
+
+        Items.ROPE_ARROW_OVERRIDE = Suppliers.memoize(()->{
+            var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
+            return (Holder.Reference<Block>) opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
+        });
     }
 
     public static class Items {
-        public static Holder.Reference<Block> ROPE_ARROW_OVERRIDE = null;
+        public static Supplier<Holder.Reference<Block>> ROPE_ARROW_OVERRIDE = null;
 
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;

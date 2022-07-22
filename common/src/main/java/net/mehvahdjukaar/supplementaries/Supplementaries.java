@@ -39,6 +39,7 @@ public class Supplementaries {
         ServerConfigs.init();
         ClientConfigs.init();
 
+
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
@@ -51,6 +52,8 @@ public class Supplementaries {
         ModRecipes.init();
         ModParticles.init();
 
+
+
         WorldGenHandler.registerBus();
 
         var serverRes = new ServerDynamicResourcesHandler();
@@ -60,11 +63,6 @@ public class Supplementaries {
             var clientRes = new ClientDynamicResourcesHandler();
             clientRes.register();
         }
-    }
-
-    //mod registration. register additional stuff
-    public static void commonRegistration() {
-        ModRegistry.registerAdditionalStuff();
     }
 
     //mod setup

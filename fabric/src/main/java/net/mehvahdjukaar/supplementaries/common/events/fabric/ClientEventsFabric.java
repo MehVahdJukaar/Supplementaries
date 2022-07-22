@@ -12,9 +12,12 @@ public class ClientEventsFabric {
 
     public static void init() {
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
-        ScreenEvents.AFTER_INIT.register((m, s, x, y) ->{
+        ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
             List<? extends GuiEventListener> listeners = s.children();
-            ClientEvents.onScreenInit(s, listeners,e-> listeners.add(e));
+            ClientEvents.onScreenInit(s, listeners, e -> {
+                List<GuiEventListener> c = (List<GuiEventListener>) s.children();
+                c.add(e);
+            });
         });
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
 

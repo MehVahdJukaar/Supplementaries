@@ -50,7 +50,6 @@ public class SupplementariesForge {
 
 
         bus.addListener(SupplementariesForge::init);
-        bus.addListener(SupplementariesForge::registerAdditional);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -69,12 +68,6 @@ public class SupplementariesForge {
             Supplementaries.commonSetup();
         });
 
-    }
-
-
-    public static void registerAdditional(RegisterEvent event) {
-        if (!event.getRegistryKey().equals(ForgeRegistries.ITEMS.getRegistryKey())) return;
-        Supplementaries.commonRegistration();
     }
 
     @SubscribeEvent

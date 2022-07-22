@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "moonlight",
+  "id": "supplementaries",
   "version": "${version}",
-  "name": "Moonlight Library",
+  "name": "Supplementaries",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -16,12 +16,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.mehvahdjukaar.moonlight.fabric.MoonlightFabric"
+      "net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabric"
     ],
     "client": [
-      "net.mehvahdjukaar.moonlight.fabric.MoonlightFabricClient"
+      "net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabricClient"
     ],
     "modmenu": [
+      "net.mehvahdjukaar.supplementaries.integration.fabric.ModMenuCompat"
     ]
   },
   "mixins": [

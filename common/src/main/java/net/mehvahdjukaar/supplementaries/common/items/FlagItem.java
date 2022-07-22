@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -17,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class FlagItem extends WoodBasedBlockItem implements IColored<Block> {
+public class FlagItem extends WoodBasedBlockItem implements IColored<Block>, ICustomItemRendererProvider {
 
     public FlagItem(Block block, Properties properties) {
         super(block, properties, 300);
@@ -70,5 +74,10 @@ public class FlagItem extends WoodBasedBlockItem implements IColored<Block> {
     @Override
     public @Nullable Map<DyeColor, Supplier<Block>> getItemColorMap() {
         return ModRegistry.FLAGS;
+    }
+
+    @Override
+    public ItemStackRenderer createRenderer() {
+        return new FlagItemRenderer();
     }
 }
