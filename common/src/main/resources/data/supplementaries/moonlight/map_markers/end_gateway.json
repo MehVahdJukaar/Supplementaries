@@ -1,5 +1,4 @@
 {
-  "id": "supplementaries:end_gateway",
   "target_block": {
     "block": "minecraft:end_gateway",
     "predicate_type": "minecraft:block_match"

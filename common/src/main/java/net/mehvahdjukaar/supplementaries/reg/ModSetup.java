@@ -6,9 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
@@ -34,7 +32,6 @@ public class ModSetup {
             WorldGenHandler::onInit,
             CompatHandler::setup,
             FlowerPotHandler::setup,
-            CMDreg::setup,
             WeatheredMap::setup,
             NetworkHandler::registerMessages,
             LootTablesInjects::init,
@@ -89,7 +86,7 @@ public class ModSetup {
 
     //events on setup. fire on world load
     //TODO: add
-    public static void onWorldLoad() {
+    public static void tagDependantSetup() {
         if (!firstTagLoad) {
             firstTagLoad = true;
             if (!hasFinishedSetup) {

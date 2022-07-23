@@ -3,10 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
@@ -14,7 +12,9 @@ import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
+import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,8 +25,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -36,7 +34,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -98,10 +95,14 @@ public class ServerEvents {
         return InteractionResult.PASS;
     }
 
-    //on data load?
     @EventCalled
-    public static void onWorldUnload(MinecraftServer minecraftServer, ServerLevel serverLevel) {
+    public static void onDataSync(ServerPlayer player, boolean joined) {
         SongsManager.sendSongsToClient();
+    }
+
+    @EventCalled
+    public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
+        ModSetup.tagDependantSetup();
     }
 
     private static final boolean FODDER_ENABLED = RegistryConfigs.FODDER_ENABLED.get();
@@ -123,8 +124,6 @@ public class ServerEvents {
     public static void injectLootTables(LootTables lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
         LootTablesInjects.injectLootTables(name, builder);
     }
-
-
 
 
 }

@@ -56,21 +56,20 @@ public class CMDreg {
     public static final ResourceLocation SWAMP_HUT_TYPE = Supplementaries.res("swamp_hut");
     public static final ResourceLocation OCEAN_RUIN_TYPE = Supplementaries.res("ocean_ruin");
 
-    public static void setup() {
-        MapDecorationRegistry.register(SIGN_POST_DECORATION_TYPE);
-        MapDecorationRegistry.register(BED_DECORATION_TYPE);
-        MapDecorationRegistry.register(FLAG_DECORATION_TYPE);
-        MapDecorationRegistry.register(NETHER_PORTAL_DECORATION_TYPE);
-        MapDecorationRegistry.register(BEACON_DECORATION_TYPE);
-        MapDecorationRegistry.register(BANNER_DECORATION_TYPE);
-        MapDecorationRegistry.register(CHEST_DECORATION_TYPE);
-        MapDecorationRegistry.register(WAYSTONE_DECORATION_TYPE);
-        MapDecorationRegistry.register(END_PORTAL_DECORATION_TYPE);
-        //done with data
-        //MapDecorationRegistry.register(END_GATEWAY_DECORATION_TYPE);
-        //MapDecorationRegistry.register(CONDUIT_DECORATION_TYPE);
-        //MapDecorationRegistry.register(RESPAWN_ANCHOR_DECORATION_TYPE);
-        //MapDecorationRegistry.register(LODESTONE_DECORATION_TYPE);
+    public static void init() {
+        reg(SIGN_POST_DECORATION_TYPE);
+        reg(BED_DECORATION_TYPE);
+        reg(FLAG_DECORATION_TYPE);
+        reg(NETHER_PORTAL_DECORATION_TYPE);
+        reg(BEACON_DECORATION_TYPE);
+        reg(BANNER_DECORATION_TYPE);
+        reg(CHEST_DECORATION_TYPE);
+        reg(WAYSTONE_DECORATION_TYPE);
+        reg(END_PORTAL_DECORATION_TYPE);
+    }
+
+    private static void reg(CustomDecorationType<?, ?> type) {
+        MapDecorationRegistry.register(type.getCustomFactoryID(), () -> type);
     }
 
 }

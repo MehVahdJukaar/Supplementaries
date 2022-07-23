@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.world.data.map;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
-import net.mehvahdjukaar.moonlight.api.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -14,13 +14,13 @@ public class ColoredDecoration extends CustomMapDecoration {
     private final DyeColor color;
     private final int value;
 
-    public ColoredDecoration(IMapDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @Nonnull DyeColor color) {
+    public ColoredDecoration(MapDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @Nonnull DyeColor color) {
         super(type, x, y, rot, displayName);
         this.color = color;
         this.value = ColorHelper.pack(color.getTextureDiffuseColors());
     }
 
-    public ColoredDecoration(IMapDecorationType<?, ?> type, FriendlyByteBuf buffer) {
+    public ColoredDecoration(MapDecorationType<?, ?> type, FriendlyByteBuf buffer) {
         this(type, buffer.readByte(), buffer.readByte(), (byte) (buffer.readByte() & 15), buffer.readBoolean() ? buffer.readComponent() : null,
                 DyeColor.byId(buffer.readByte()));
     }

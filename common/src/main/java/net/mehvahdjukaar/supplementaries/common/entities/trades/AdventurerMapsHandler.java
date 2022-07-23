@@ -3,8 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
-import net.mehvahdjukaar.moonlight.api.map.type.IMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -48,8 +49,8 @@ public class AdventurerMapsHandler {
         DEFAULT_STRUCTURE_MARKERS.put(tag, Pair.of(res, color));
     }
 
-    private static void addStructureDecoration(TagKey<Structure> tag, IMapDecorationType<?, ?> type, int color) {
-        addStructureDecoration(tag, type.getId(), color);
+    private static void addStructureDecoration(TagKey<Structure> tag, MapDecorationType<?, ?> type, int color) {
+        addStructureDecoration(tag, Utils.getID(type), color);
     }
 
     static {
@@ -86,7 +87,7 @@ public class AdventurerMapsHandler {
 
     }
 
-    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {
+    private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {
         ResourceLocation res = new ResourceLocation("selene:generic_structure");
         int color = -1;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
@@ -98,7 +99,7 @@ public class AdventurerMapsHandler {
         return Pair.of(MapDecorationRegistry.get(res), color);
     }
 
-    private static Pair<IMapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
+    private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
         var g = DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(new ResourceLocation("selene:generic_structure"), -1));
         return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
     }

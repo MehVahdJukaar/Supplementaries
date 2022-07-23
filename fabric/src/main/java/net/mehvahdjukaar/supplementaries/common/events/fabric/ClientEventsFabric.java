@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
@@ -21,8 +23,6 @@ public class ClientEventsFabric {
         });
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
 
-    }
-
-    public static void aa() {
+        WorldRenderEvents.START.register((c)-> SupplementariesClient.onRenderTick(c.tickDelta()));
     }
 }

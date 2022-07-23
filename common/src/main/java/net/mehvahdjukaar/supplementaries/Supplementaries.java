@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.event.EventHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
@@ -51,6 +52,7 @@ public class Supplementaries {
         ModRegistry.init();
         ModRecipes.init();
         ModParticles.init();
+        CMDreg.init();
 
 
 

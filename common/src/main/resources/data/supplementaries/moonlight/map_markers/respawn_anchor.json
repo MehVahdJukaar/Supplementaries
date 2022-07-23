@@ -1,7 +1,6 @@
 {
-  "id": "supplementaries:conduit",
   "target_block": {
-    "block": "minecraft:conduit",
+    "block": "minecraft:respawn_anchor",
     "predicate_type": "minecraft:block_match"
   }
 }

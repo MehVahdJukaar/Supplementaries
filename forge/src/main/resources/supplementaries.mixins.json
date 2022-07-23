@@ -14,7 +14,8 @@
     "SelfMimicMixin",
     "SelfSafeMixin",
     "SelfPlanterMixin",
-    "ChunkHolderMixin"
+    "ChunkHolderMixin",
+    "MobBucketItemAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

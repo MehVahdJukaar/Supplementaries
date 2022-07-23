@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
@@ -31,10 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -46,7 +44,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 public class ServerEventsForge {
 
@@ -123,10 +120,19 @@ public class ServerEventsForge {
         event.addListener(new FluteSongsReloadListener());
     }
 
+    @SubscribeEvent
+    public static void onTagUpdate(OnDatapackSyncEvent event) {
+        ServerEvents.onDataSync(event.getPlayer(),true);
+    }
+
+    @SubscribeEvent
+    public static void onTagUpdate(TagsUpdatedEvent event) {
+        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatformHelper.getEnv().isClient());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onDimensionUnload(net.minecraftforge.event.level.LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
-            ServerEvents.onWorldUnload(ServerLifecycleHooks.getCurrentServer(), serverLevel);
             MovableFakePlayer.unloadLevel(serverLevel);
         }
     }

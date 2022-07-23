@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -12,10 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -116,5 +114,9 @@ public class ForgeHelperImpl {
     }
 
     public static void reviveEntity(Entity entity) {
+    }
+
+    public static EntityType<?> getFishType(MobBucketItem bucketItem) {
+        return ((MobBucketItemAccessor)bucketItem).getType();
     }
 }
