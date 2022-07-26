@@ -6,6 +6,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -45,8 +46,8 @@ public class RendererUtil {
 
         blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
                 buffer.getBuffer(cutout ? Sheets.cutoutBlockSheet() : Sheets.solidBlockSheet()),
-                null, //TODO: fix
-                blockRenderer.getBlockModelShaper().getModelManager().getModel(new ModelResourceLocation(modelLocation,"")),
+                null,
+                ClientPlatformHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), modelLocation),
                 1.0F, 1.0F, 1.0F,
                 light, overlay);
     }
@@ -450,7 +451,7 @@ public class RendererUtil {
 
     public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
                                              BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay) {
-
+//TODO: re add
 //        BakedModel model = renderer.getModel(stack, null, null, 0);
 //
 //        renderer.blitOffset = renderer.blitOffset + 50.0F;

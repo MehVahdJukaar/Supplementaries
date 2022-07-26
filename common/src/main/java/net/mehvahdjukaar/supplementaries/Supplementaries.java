@@ -41,6 +41,7 @@ public class Supplementaries {
         ClientConfigs.init();
 
 
+        //yeet java models in favor or json ones
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
@@ -82,6 +83,7 @@ public class Supplementaries {
 
 
     //ash makes mobs jump
+    //squishy piston launcher. also rework them and fix on servers
     //TODO: readd nethers delight stuff & maybe IW planter
     //camera mod with screenshots
 

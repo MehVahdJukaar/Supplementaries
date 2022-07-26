@@ -1,5 +1,5 @@
 {
-	"loader": "supplementaries:frame_block_loader",
+	"loader": "supplementaries:frame_block",
 	"overlay": {
 		"parent": "supplementaries:block/timber_brace_f_overlay",
 		"textures": {

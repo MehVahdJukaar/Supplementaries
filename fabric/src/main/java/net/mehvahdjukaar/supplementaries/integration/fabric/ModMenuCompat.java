@@ -5,6 +5,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.mehvahdjukaar.moonlight.api.integration.ClothConfigCompat;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
+import net.mehvahdjukaar.moonlight.core.mixins.fabric.SelfIExtraModelDataProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 
@@ -17,6 +18,7 @@ public class ModMenuCompat implements ModMenuApi {
                     "textures/blocks/blackstone_tiles.png"
             ));
         }
+
         return parent -> null;
     }
 }

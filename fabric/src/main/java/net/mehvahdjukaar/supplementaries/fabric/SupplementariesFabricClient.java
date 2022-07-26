@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
+import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.QuadViewImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.platform.fabric.RegHelperImpl;

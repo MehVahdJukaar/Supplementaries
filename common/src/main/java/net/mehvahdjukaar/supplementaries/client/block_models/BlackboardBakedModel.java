@@ -1,30 +1,31 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
-import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,24 +33,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class BlackboardBakedModel implements CustomBakedModel {
-    //model cache used when switching frequently between models
-    // data needed to rebake
 
-    private final IGeometryBakingContext owner;
     private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
-    private final ItemOverrides overrides;
 
     private final BakedModel back;
+    private final BlockModel owner;
 
-    public BlackboardBakedModel(BakedModel unbaked, IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides) {
-        this.back = unbaked;
-        this.owner = owner;
+    public BlackboardBakedModel(BlockModel owner, BakedModel baked, Function<Material, TextureAtlasSprite> spriteGetter,
+                                ModelState modelTransform) {
+        this.back = baked;
         this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
-        this.overrides = overrides;
+        this.owner = owner;
     }
-
 
     @Override
     public boolean useAmbientOcclusion() {
@@ -73,12 +70,12 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
-        return spriteGetter.apply(owner.getMaterial("particle"));
+        return back.getParticleIcon();
     }
 
     @Override
     public ItemOverrides getOverrides() {
-        return overrides;
+        return ItemOverrides.EMPTY;
     }
 
     @Override
@@ -93,8 +90,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
             Direction dir = state.getValue(BlackboardBlock.FACING);
             BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
-                quads.addAll(BlackboardTextureManager.getBlackboardInstance(key)
-                        .getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform)));
+                var blackboard = BlackboardTextureManager.getBlackboardInstance(key);
+                quads.addAll(blackboard.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform)));
             }
         }
 
@@ -122,9 +119,9 @@ public class BlackboardBakedModel implements CustomBakedModel {
                         }
                         current = b;
                     }
-                    //block uv is oncorrectly flipped on both axis... too bai
+                    //block uv is incorrectly flipped on both axis... too bad
                     //draws prev quad
-                    int tint = BlackboardBlock.colorFromByte(prevColor);
+                    int tint =  255 << 24 | BlackboardBlock.colorFromByte(prevColor);
                     TextureAtlasSprite sprite = prevColor == 0 ? black : white;
                     quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f,
                             1 / 16f, length / 16f, sprite, tint, rotation));
@@ -139,19 +136,17 @@ public class BlackboardBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    //MCjty code
-
-    private static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
-                                             TextureAtlasSprite sprite, int color, Transformation transform) {
+    public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height, TextureAtlasSprite sprite, int color, Transformation transform) {
         Vector3f normal = new Vector3f(0, 0, -1);
-        applyModelRotation(normal, transform);
+
+        BakedQuadBuilder builder = BakedQuadBuilder.create();
+
+        BakedQuadBuilder.applyModelRotation(0,0,-1, transform.getMatrix());
         float tu = sprite.getWidth() * width;
         float tv = sprite.getHeight() * height;
         float u0 = x * 16;
         float v0 = y * 16;
-
-        AtomicReference<BakedQuad> output = new AtomicReference<>();
-        QuadBakingVertexConsumer builder = new QuadBakingVertexConsumer(output::set);
+        color = -1;
         builder.setDirection(Direction.getNearest(normal.x(), normal.y(), normal.z()));
         builder.setSprite(sprite);
 
@@ -164,35 +159,24 @@ public class BlackboardBakedModel implements CustomBakedModel {
         putVertex(builder, normal, x, y + height, z,
                 u0, v0 + tv, sprite, color, transform);
 
-        return output.get();
+        return builder.build();
     }
 
-    private static void putVertex(QuadBakingVertexConsumer builder, Vector3f normal,
+    private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
                                   float x, float y, float z, float u, float v,
                                   TextureAtlasSprite sprite, int color, Transformation transformation) {
 
-        Vector3f posV = new Vector3f(x, y, z);
-        applyModelRotation(posV, transformation);
-        builder.vertex(posV.x(), posV.y(), posV.z());
+        Vector3f posV = BakedQuadBuilder.applyModelRotation(x, y, z, transformation.getMatrix());
+
+        builder.pos(posV);
 
         builder.color(color);
 
         builder.uv(sprite.getU(u), sprite.getV(v));
 
         builder.normal(normal.x(), normal.y(), normal.z());
-    }
 
-
-    public static void applyModelRotation(Vector3f pPos, Transformation pTransform) {
-        if (pTransform != Transformation.identity()) {
-            rotateVertexBy(pPos, new Vector3f(0.5F, 0.5F, 0.5F), pTransform.getMatrix());
-        }
-    }
-
-    private static void rotateVertexBy(Vector3f pPos, Vector3f pOrigin, Matrix4f pTransform) {
-        Vector4f vector4f = new Vector4f(pPos.x() - pOrigin.x(), pPos.y() - pOrigin.y(), pPos.z() - pOrigin.z(), 1.0F);
-        vector4f.transform(pTransform);
-        pPos.set(vector4f.x() + pOrigin.x(), vector4f.y() + pOrigin.y(), vector4f.z() + pOrigin.z());
+        builder.endVertex();
     }
 
 

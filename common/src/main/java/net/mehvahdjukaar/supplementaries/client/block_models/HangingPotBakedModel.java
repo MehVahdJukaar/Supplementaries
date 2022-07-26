@@ -1,11 +1,8 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -17,62 +14,41 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
-
-public class RopeKnotBlockBakedModel implements CustomBakedModel {
-    private final BakedModel knot;
+public class HangingPotBakedModel implements CustomBakedModel {
+    private final BakedModel rope;
     private final BlockModelShaper blockModelShaper;
 
-    public RopeKnotBlockBakedModel(BakedModel knot) {
-        this.knot = knot;
+    public HangingPotBakedModel(BakedModel rope) {
+        this.rope = rope;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+
+        //always on cutout layer
         List<BakedQuad> quads = new ArrayList<>();
 
-        //mimic
-        try {
+        if (state != null) {
+            try {
+                BlockState mimic = data.get(ModBlockProperties.MIMIC);
 
-            BlockState mimic = data.get(ModBlockProperties.MIMIC);
-            if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir()) {
-                BakedModel model = blockModelShaper.getBlockModel(mimic);
-
-                quads.addAll(model.getQuads(mimic, side, rand));
+                if (mimic != null) {
+                    BakedModel model = blockModelShaper.getBlockModel(mimic);
+                    quads.addAll(model.getQuads(mimic, side, rand));
+                }
+            } catch (Exception ignored) {
             }
 
-
-        } catch (Exception ignored) {
-        }
-
-        //knot & rope
-        try {
-            if (state != null && state.getBlock() instanceof RopeKnotBlock) {
-                BlockState rope = ModRegistry.ROPE.get().defaultBlockState()
-                        .setValue(UP, state.getValue(UP))
-                        .setValue(DOWN, state.getValue(DOWN))
-                        .setValue(NORTH, state.getValue(NORTH))
-                        .setValue(SOUTH, state.getValue(SOUTH))
-                        .setValue(EAST, state.getValue(EAST))
-                        .setValue(WEST, state.getValue(WEST));
-
-                BakedModel model = blockModelShaper.getBlockModel(rope);
-                //rope
-                quads.addAll(model.getQuads(rope, side, rand, ModelData.EMPTY, renderType));
-
-                //knot
-                quads.addAll(knot.getQuads(state, side, rand, ModelData.EMPTY, renderType));
+            try {
+                quads.addAll(rope.getQuads(state, side, rand));
+            } catch (Exception ignored) {
             }
-        } catch (Exception ignored) {
         }
-
-
         return quads;
     }
 
@@ -100,14 +76,13 @@ public class RopeKnotBlockBakedModel implements CustomBakedModel {
     public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
         BlockState mimic = data.get(ModBlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
-
             BakedModel model = blockModelShaper.getBlockModel(mimic);
             try {
                 return model.getParticleIcon();
             } catch (Exception ignored) {
             }
         }
-        return getParticleIcon();
+        return rope.getParticleIcon();
     }
 
     @Override

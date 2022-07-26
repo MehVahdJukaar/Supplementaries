@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

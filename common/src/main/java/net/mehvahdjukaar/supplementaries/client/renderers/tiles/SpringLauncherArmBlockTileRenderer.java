@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpringLauncherHeadBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -38,6 +39,7 @@ public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<S
         matrixStackIn.translate(-0.5, -0.5, -0.5);
         matrixStackIn.translate(0, Mth.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
         boolean flag1 = tile.getExtending() == tile.age < 2;
+
         BlockState state = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState().setValue(SpringLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
         blockRenderer.renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);

@@ -1,5 +1,5 @@
 {
-	"loader": "supplementaries:wall_lantern_loader",
+	"loader": "supplementaries:wall_lantern",
 	"support": {
 		"parent": "supplementaries:block/wall_lantern_long_template",
 		"textures": {

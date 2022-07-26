@@ -67,8 +67,10 @@ public class TextUtil {
                         SylveticHearts
                         E_Y_E_
                         Wais
+                        ThatPurpleFFox
                         Mattew M
                         LambdaComplex
+                        byunie
                         Lyon M
                         Spencer G
                         Elijah

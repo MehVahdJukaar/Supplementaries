@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
@@ -100,6 +102,7 @@ public class ClientRegistry {
         ClientPlatformHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
         ClientPlatformHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
+        ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
 
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             Textures.getTexturesForBlockAtlas().forEach(e::addSprite);
@@ -331,6 +334,19 @@ public class ClientRegistry {
         event.register(FLUTE_2D_MODEL);
         event.register(BOAT_MODEL);
     }
+
+    private static void registerModelLoaders(ClientPlatformHelper.ModelLoaderEvent event) {
+        event.register(Supplementaries.res("frame_block"), new NestedModelLoader("overlay", FrameBlockBakedModel::new));
+        event.register(Supplementaries.res("wall_lantern"), new NestedModelLoader("support", WallLanternBakedModel::new));
+        event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
+        event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
+        event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
+         event.register(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
+         event.register(Supplementaries.res("blackboard_loader"), new BlackboardBlockLoader());
+        event.register(Supplementaries.res("mimic_block"), new SignPostBlockLoader());
+
+    }
+
 
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {

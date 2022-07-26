@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;

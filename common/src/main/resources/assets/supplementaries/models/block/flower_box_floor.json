@@ -1,5 +1,5 @@
 {
-	"loader": "supplementaries:flower_box_loader",
+	"loader": "supplementaries:flower_box",
 	"box": {
 		"parent": "supplementaries:block/flower_box_floor_model",
 		"textures": {

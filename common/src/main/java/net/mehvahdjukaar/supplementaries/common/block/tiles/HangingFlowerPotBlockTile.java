@@ -17,6 +17,7 @@ public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerP
     private UUID owner = null;
 
     public HangingFlowerPotBlockTile(BlockPos pos, BlockState state) {
+
         super(ModRegistry.HANGING_FLOWER_POT_TILE.get(), pos, state);
     }
 
@@ -39,9 +40,9 @@ public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerP
 
     @Override
     public void load(CompoundTag compound) {
-        if(compound.contains("Pot")) compound.put("Mimic",compound.get("Pot"));
         super.load(compound);
         this.loadOwner(compound);
+        this.requestModelReload();
     }
 
     //@Override

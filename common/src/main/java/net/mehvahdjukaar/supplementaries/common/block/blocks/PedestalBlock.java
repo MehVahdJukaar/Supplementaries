@@ -187,12 +187,6 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    @Override
-    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

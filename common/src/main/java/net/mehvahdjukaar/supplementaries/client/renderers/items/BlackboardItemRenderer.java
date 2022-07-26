@@ -34,8 +34,8 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         if(com != null && com.contains("Pixels")) {
             packed = com.getLongArray("Pixels");
         }
-        VertexConsumer builder = bufferIn.getBuffer(
-                BlackboardTextureManager.getBlackboardInstance(packed).getRenderType());
+        var blackboard = BlackboardTextureManager.getBlackboardInstance(packed);
+        VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());
 
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff'; // ok

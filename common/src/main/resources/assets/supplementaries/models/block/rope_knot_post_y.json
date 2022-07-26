@@ -1,5 +1,5 @@
 {
-	"loader": "supplementaries:rope_knot_loader",
+	"loader": "supplementaries:rope_knot",
 	"knot": {
 		"textures": {
 			"2": "supplementaries:blocks/rope",

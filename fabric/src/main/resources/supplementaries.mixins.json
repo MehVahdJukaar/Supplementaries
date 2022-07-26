@@ -7,6 +7,7 @@
   ],
   "mixins": [
     "MobBucketItemAccessor"
+
   ],
   "injectors": {
     "defaultRequire": 1

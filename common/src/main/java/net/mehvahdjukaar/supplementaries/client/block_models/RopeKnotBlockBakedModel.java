@@ -1,62 +1,80 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.framedblocks.FramedSignPost;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SignPostBlockBakedModel implements CustomBakedModel {
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
+
+public class RopeKnotBlockBakedModel implements CustomBakedModel {
+    private final BakedModel knot;
     private final BlockModelShaper blockModelShaper;
 
-    public SignPostBlockBakedModel() {
+    public RopeKnotBlockBakedModel(BakedModel knot) {
+        this.knot = knot;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }
 
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+        List<BakedQuad> quads = new ArrayList<>();
+
+        //mimic
         try {
+
             BlockState mimic = data.get(ModBlockProperties.MIMIC);
-            Boolean isFramed = data.get(ModBlockProperties.FRAMED);
-
-            boolean framed = CompatHandler.framedblocks && (isFramed != null && isFramed);
-
-            //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
-            //always solid.
-
-            if (mimic != null && !mimic.isAir()) {
-
-                ModelData data2;
-                if (framed) {
-                    data2 = FramedSignPost.getModelData(mimic);
-                    mimic = FramedSignPost.framedFence;
-                } else {
-                    data2 = ModelData.EMPTY;
-                }
+            if (mimic != null && !(mimic.getBlock() instanceof MimicBlock) && !mimic.isAir()) {
                 BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-                return model.getQuads(mimic, side, rand, data2, renderType);
+                quads.addAll(model.getQuads(mimic, side, rand));
+            }
+
+
+        } catch (Exception ignored) {
+        }
+
+        //knot & rope
+        try {
+            //TODO: add framed block stuff
+            if (state != null && state.getBlock() instanceof RopeKnotBlock) {
+                BlockState rope = ModRegistry.ROPE.get().defaultBlockState()
+                        .setValue(UP, state.getValue(UP))
+                        .setValue(DOWN, state.getValue(DOWN))
+                        .setValue(NORTH, state.getValue(NORTH))
+                        .setValue(SOUTH, state.getValue(SOUTH))
+                        .setValue(EAST, state.getValue(EAST))
+                        .setValue(WEST, state.getValue(WEST));
+
+                BakedModel model = blockModelShaper.getBlockModel(rope);
+                //rope
+                quads.addAll(model.getQuads(rope, side, rand));
+
+                //knot
+                quads.addAll(knot.getQuads(state, side, rand));
             }
         } catch (Exception ignored) {
-            int a = 1;
         }
-        return Collections.emptyList();
+
+        return quads;
     }
 
     @Override
@@ -81,7 +99,7 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
 
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
-        BlockState mimic = data.get(SignPostBlockTile.MIMIC);
+        BlockState mimic = data.get(ModBlockProperties.MIMIC);
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);
@@ -89,9 +107,8 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
                 return model.getParticleIcon();
             } catch (Exception ignored) {
             }
-
         }
-        return getParticleIcon();
+        return knot.getParticleIcon();
     }
 
     @Override
@@ -103,4 +120,6 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
     public ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
+
+
 }

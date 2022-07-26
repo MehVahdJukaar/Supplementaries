@@ -1,9 +1,10 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
@@ -22,7 +23,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.client.model.data.ModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
         //box
         try {
-            quads.addAll(box.getQuads(state, side, rand, ModelData.EMPTY, renderType));
+            quads.addAll(box.getQuads(state, side, rand));
         } catch (Exception ignored) {
         }
 
@@ -109,7 +109,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 //dont render double plants
                 return;
             }
-            model = blockModelShaper.getModelManager().getModel(res);
+            model = ClientPlatformHelper.getModel(blockModelShaper.getModelManager(), res);
         } else {
             model = blockModelShaper.getBlockModel(state);
         }

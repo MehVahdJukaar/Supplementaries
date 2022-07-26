@@ -1,5 +1,5 @@
 {
-  "loader": "supplementaries:hanging_pot_loader",
+  "loader": "supplementaries:hanging_pot",
   "rope": {
     "parent": "supplementaries:block/hanging_flower_pot_rope",
     "textures": {

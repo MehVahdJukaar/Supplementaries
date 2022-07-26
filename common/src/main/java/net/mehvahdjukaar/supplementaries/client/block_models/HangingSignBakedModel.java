@@ -1,9 +1,10 @@
-package net.mehvahdjukaar.supplementaries.client.block_models.forge;
+package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
@@ -21,7 +22,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class HangingSignBakedModel implements CustomBakedModel {
             //support & connections
             try {
                 var a = state.getValue(HangingSignBlock.ATTACHMENT);
-                attachmentMap.get(a).forEach(b -> quads.addAll(b.getQuads(state, side, rand, ModelData.EMPTY, renderType)));
+                attachmentMap.get(a).forEach(b -> quads.addAll(b.getQuads(state, side, rand)));
 
             } catch (Exception ignored) {
             }
@@ -81,9 +81,9 @@ public class HangingSignBakedModel implements CustomBakedModel {
                 boolean fancy = Boolean.TRUE.equals(data.get(ModBlockProperties.FANCY));
                 if (!fancy) {
 
-                    BakedModel model = blockModelShaper.getModelManager().getModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
+                    BakedModel model = ClientPlatformHelper.getModel(blockModelShaper.getModelManager(), ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
                     if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
-                    var signQuads = model.getQuads(state, side, rand, ModelData.EMPTY, renderType);
+                    var signQuads = model.getQuads(state, side, rand);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;
                     boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == ModBlockProperties.SignAttachment.CEILING;
                     if (flipped || ceiling) {
