@@ -47,25 +47,19 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
 
     public BlackboardKey getTextureKey() {
-        if (textureKey == null) refreshTexture();
+        if (textureKey == null) refreshTextureKey();
         return textureKey;
     }
 
-    public void refreshTexture() {
+    public void refreshTextureKey() {
         this.textureKey = new BlackboardKey(this.pixels);
     }
 
-    //TODO: add back
-    /*
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        refreshTexture();
-        ModelDataManager.requestModelDataRefresh(this);
-        //update other clients (we are already on the client here)
-        this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-    }//if(this.level != null && this.level.isClientSide) refreshTexture();
-*/
+    public void afterDataPacket(ExtraModelData oldData) {
+        refreshTextureKey();
+        IExtraModelDataProvider.super.afterDataPacket(oldData);
+    }
 
     //I need this for when it's changed manually
     @Override

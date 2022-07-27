@@ -57,12 +57,18 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.textHolder = new TextHolder(2);
     }
 
+    //TODO: add fence mimic block
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
                 .with(FRAMED, this.framed)
                 .with(MIMIC, this.getHeldBlock())
                 .build();
+    }
+
+    @Override
+    public void afterDataPacket(ExtraModelData oldData) {
+        super.afterDataPacket(oldData);
     }
 
     @Override

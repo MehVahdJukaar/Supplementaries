@@ -28,8 +28,6 @@ public class WallLanternBakedModel implements CustomBakedModel {
     private final BakedModel support;
     private final BlockModelShaper blockModelShaper;
 
-    //private static final Map<Block,List<BakedQuad>> MODEL_CACHE = new HashMap<>();
-
     public WallLanternBakedModel(BakedModel support) {
         this.support = support;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();

@@ -29,8 +29,6 @@ public class HangingPotBakedModel implements CustomBakedModel {
 
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
-
-        //always on cutout layer
         List<BakedQuad> quads = new ArrayList<>();
 
         if (state != null) {

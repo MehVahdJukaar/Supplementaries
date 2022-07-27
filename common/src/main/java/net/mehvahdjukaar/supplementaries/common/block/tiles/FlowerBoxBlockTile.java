@@ -107,4 +107,14 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         }
         return false;
     }
+
+    @Override
+    public void afterDataPacket(ExtraModelData oldData) {
+        IExtraModelDataProvider.super.afterDataPacket(oldData);
+    }
+
+    @Override
+    public void requestModelReload() {
+        IExtraModelDataProvider.super.requestModelReload();
+    }
 }

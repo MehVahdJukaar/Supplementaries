@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.forge;
 
-import net.mehvahdjukaar.moonlight.core.mixins.ThirdPersonRendererMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
@@ -13,8 +12,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import vazkii.quark.mixin.WeatheringCopperMixin;
-import vazkii.quark.mixin.client.ItemRendererMixin;
 
 public class CapabilityHandler {
 
@@ -33,7 +30,7 @@ public class CapabilityHandler {
 
     public static void attachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
         if (ANTIQUE_CAP_ENABLED && event.getObject() instanceof SignBlockEntity) {
-            event.addCapability(Supplementaries.res( "antique_ink"), new AntiqueInkProvider());
+            event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProvider());
         }
     }
 

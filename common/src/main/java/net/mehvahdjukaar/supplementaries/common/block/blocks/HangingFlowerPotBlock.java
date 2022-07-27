@@ -70,7 +70,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return context.getClickedFace() == Direction.DOWN ? super.getStateForPlacement(context) : null;
     }
-    //TODO: use dynamic block model
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof HangingFlowerPotBlockTile tile && tile.isAccessibleBy(player)) {
@@ -107,7 +107,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
                             }
                         }
                         if(!level.isClientSide) {
-                            tile.setHeldBlock(((FlowerPotBlock) pot).defaultBlockState());
+                            tile.setHeldBlock(pot.defaultBlockState());
                             level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
                             tile.setChanged();
                         }

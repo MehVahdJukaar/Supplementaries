@@ -79,7 +79,8 @@ public class FrameBlockTile extends MimicBlockTile {
             }
         } else {
             this.setHeldBlock(state);
-            if (level != null && level.isClientSide()) {
+            //called here to update immediately to prevent glitching with different model shaped
+            if (level != null && this.level.isClientSide) {
                 this.requestModelReload();
             }
         }
@@ -124,6 +125,5 @@ public class FrameBlockTile extends MimicBlockTile {
         if (b instanceof FeatherBlock) return true;
         return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world, pos));
     }
-
 }
 

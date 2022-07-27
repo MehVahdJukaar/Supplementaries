@@ -4,6 +4,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
+import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.forge.OptionalRecipeCondition;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -32,6 +34,9 @@ public class SupplementariesForge {
     public static final String MOD_ID = Supplementaries.MOD_ID;
 
     public SupplementariesForge() {
+
+        ClientEventsForge.init();
+        ServerEventsForge.init();
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

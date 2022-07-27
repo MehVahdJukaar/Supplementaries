@@ -47,6 +47,7 @@ public class Supplementaries {
         //fix snowy spirit chest not sincing after reload
         //banner patterns not working
         //potions in jars are bugged ;_;
+        //feather block
 
         EventHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
