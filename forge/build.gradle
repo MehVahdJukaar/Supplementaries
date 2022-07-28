@@ -165,4 +165,5 @@ dependencies {
     modImplementation ("curse.maven:framedblocks-441647:3881493")
     modImplementation ("curse.maven:waystones-245755:3835119")
     modImplementation ("curse.maven:balm-531761:3881348")
+   // modImplementation ("curse.maven:texture-dump-319039:3573998")
 }

@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -86,7 +86,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
                 }
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-            if(ServerConfigs.Blocks.JAR_CAPTURE.get()) {
+            if(CommonConfigs.Blocks.JAR_CAPTURE.get()) {
                 return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
             }
         }

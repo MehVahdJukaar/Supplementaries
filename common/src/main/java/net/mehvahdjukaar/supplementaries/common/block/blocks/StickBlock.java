@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -139,7 +139,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
-            if (ServerConfigs.Blocks.STICK_POLE.get()) {
+            if (CommonConfigs.Blocks.STICK_POLE.get()) {
                 if (this.material != Material.WOOD) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
@@ -158,7 +158,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     public static boolean findConnectedFlag(Level world, BlockPos pos, Direction searchDir, Direction moveDir, int it) {
-        if (it > ServerConfigs.Blocks.STICK_POLE_LENGTH.get()) return false;
+        if (it > CommonConfigs.Blocks.STICK_POLE_LENGTH.get()) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (b == ModRegistry.STICK_BLOCK.get() && isVertical(state)) {

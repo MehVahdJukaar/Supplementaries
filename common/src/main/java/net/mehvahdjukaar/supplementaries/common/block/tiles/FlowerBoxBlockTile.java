@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
-import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +52,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
 
     @Override
     public ExtraModelData getExtraModelData() {
-        //return data;
         return ExtraModelData.builder()
                 .with(FLOWER_0, flowerStates[0])
                 .with(FLOWER_1, flowerStates[1])
@@ -59,7 +59,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
                 .build();
     }
 
-    //TODO: check
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
@@ -72,8 +71,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
             Block b = null;
-            if (item instanceof BlockItem) {
-                b = ((BlockItem) item).getBlock();
+            if (item instanceof BlockItem bi) {
+                b = bi.getBlock();
             } else if (CompatHandler.dynamictrees) {
                 b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
             }
@@ -82,9 +81,9 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         }
         //TODO: check this
         this.requestModelReload();
-        if (level != null) {
-            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-        }
+       // if (level != null) {
+       //     this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+       // }
     }
 
     @Override

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
-import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.common.block.IInstanceTick;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,10 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//TODO: re add
-@Mixin({PistonMovingBlockEntity.class})
+@Mixin(PistonMovingBlockEntity.class)
 public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlockHolder, IInstanceTick {
-
 
     @Shadow
     private Direction direction;
@@ -41,10 +39,12 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
         super(pType, pWorldPosition, pBlockState);
     }
 
+    @Override
     public BlockState getHeldBlock() {
         return this.movedState;
     }
 
+    @Override
     public boolean setHeldBlock(BlockState state) {
         this.movedState = state;
         return true;

@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -88,7 +88,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
                 }
                 if (!(player.getAbilities().instabuild)) {
                     int max = this.getMaxDamage(stack);
-                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + ServerConfigs.Items.BUBBLE_BLOWER_COST.get()));
+                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Items.BUBBLE_BLOWER_COST.get()));
                 }
 
                 //player.getCooldowns().addCooldown(this, 10);

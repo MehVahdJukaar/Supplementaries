@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "daub"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "21 ",
+    "12 ",
+    "   "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:wheat"
+    },
+    "2": {
+      "item": "minecraft:clay_ball"
+    }
+  },
+  "result": {
+    "item": "supplementaries:daub",
+    "count": 2
+  }
+}

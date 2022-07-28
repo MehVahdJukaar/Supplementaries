@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -193,7 +193,7 @@ public class VillagerTradesHandler {
         RegHelper.registerWanderingTraderTrades(2, listings -> {
             if (RegistryConfigs.GLOBE_ENABLED.get()) {
                 //adding twice because it's showing up too rarely
-                for (int i = 0; i < ServerConfigs.Blocks.GLOBE_TRADES.get(); i++) {
+                for (int i = 0; i < CommonConfigs.Blocks.GLOBE_TRADES.get(); i++) {
                     listings.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
                 }
             }

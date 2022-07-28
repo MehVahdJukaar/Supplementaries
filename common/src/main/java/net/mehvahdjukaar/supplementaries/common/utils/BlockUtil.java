@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -39,13 +39,13 @@ public class BlockUtil {
     }
 
     public static <T extends BlockEntity & IOwnerProtected> void addOptionalOwnership(LivingEntity placer, T tileEntity) {
-        if (ServerConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
+        if (CommonConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
             tileEntity.setOwner(placer.getUUID());
         }
     }
 
     public static void addOptionalOwnership(LivingEntity placer, Level world, BlockPos pos) {
-        if (ServerConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
+        if (CommonConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
             if (world.getBlockEntity(pos) instanceof IOwnerProtected tile) {
                 tile.setOwner(placer.getUUID());
             }

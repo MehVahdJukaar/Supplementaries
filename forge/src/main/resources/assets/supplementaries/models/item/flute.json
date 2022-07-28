@@ -1,0 +1,101 @@
+{
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "supplementaries:item/flute_in_hand"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "supplementaries:item/flute_gui"
+    },
+    "ground": {
+      "parent": "supplementaries:item/flute_gui"
+    },
+    "fixed": {
+      "parent": "supplementaries:item/flute_gui"
+    }
+  },
+  "textures": {
+    "layer0": "supplementaries:items/flute",
+    "particles": "supplementaries:items/flute",
+    "particle": "supplementaries:items/flute"
+  },
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "head": {
+      "rotation": [
+        90,
+        0,
+        90
+      ],
+      "translation": [
+        5.5,
+        0,
+        0
+      ],
+      "scale": [
+        1.6,
+        1.6,
+        1.6
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ]
+    }
+  }
+}
+

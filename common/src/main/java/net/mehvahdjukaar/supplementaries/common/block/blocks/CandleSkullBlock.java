@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -157,7 +157,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
             ItemStack stack = player.getItemInHand(hand);
             if (stack.is(ItemTags.CANDLES) && stack.getItem() instanceof BlockItem blockItem) {
                 int count = state.getValue(CANDLES);
-                if (count < 4 && ServerConfigs.Tweaks.SKULL_CANDLES_MULTIPLE.get() &&
+                if (count < 4 && CommonConfigs.Tweaks.SKULL_CANDLES_MULTIPLE.get() &&
                         level.getBlockEntity(pos) instanceof CandleSkullBlockTile tile
                         && tile.getCandle().getBlock().asItem() == stack.getItem()) {
 

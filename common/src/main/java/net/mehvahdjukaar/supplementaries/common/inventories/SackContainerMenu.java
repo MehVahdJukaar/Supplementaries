@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -36,7 +36,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         checkContainerSize(inventory, 27);
         inventory.startOpen(playerInventory.player);
 
-        int size = ServerConfigs.Blocks.SACK_SLOTS.get();
+        int size = CommonConfigs.Blocks.SACK_SLOTS.get();
 
         int[] dims = SackContainerMenu.getRatio(size);
         if (dims[0] > 9) {
@@ -83,7 +83,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
             itemstack = item.copy();
-            int activeSlots = ServerConfigs.Blocks.SACK_SLOTS.get();
+            int activeSlots = CommonConfigs.Blocks.SACK_SLOTS.get();
             if (index < activeSlots) {
                 if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

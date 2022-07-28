@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.*;
@@ -53,7 +53,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
 
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
-        return ServerConfigs.Blocks.ITEM_SHELF_LADDER.get();
+        return CommonConfigs.Blocks.ITEM_SHELF_LADDER.get();
     }
 
     @Override

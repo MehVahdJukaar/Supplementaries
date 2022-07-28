@@ -13,9 +13,9 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -217,7 +217,7 @@ public class CustomConfigScreen extends ConfigScreen {
             }
 
             if (this.isChanged(this.folderEntry)) {
-                if (this.config == ((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig()) {
+                if (this.config == ((ConfigSpecWrapper) CommonConfigs.SERVER_SPEC).getModConfig()) {
                     //TODO: fix. this work but shouldnt be needed and might break servers
                     ConfigUtils.clientRequestServerConfigReload();
                 } else if (this.config == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig()) {

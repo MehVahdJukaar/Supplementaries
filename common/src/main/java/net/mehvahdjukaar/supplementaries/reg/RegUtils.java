@@ -13,8 +13,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -116,7 +115,7 @@ public class RegUtils {
 
     //TODO: these wont work on fabric
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
-        return RegHelper.registerItem(Supplementaries.res(name), ()-> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
+        return RegHelper.registerItem(Supplementaries.res(name), () -> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
     }
 
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
@@ -174,7 +173,7 @@ public class RegUtils {
                                     .strength(1.0F)
                                     .noCollission()
                                     .sound(SoundType.WOOD)
-                    ), color.getName() + "_banner", ServerConfigs.Tweaks.CEILING_BANNERS
+                    ), color.getName() + "_banner", CommonConfigs.Tweaks.CEILING_BANNERS
             ));
         }
         return map;
@@ -221,6 +220,7 @@ public class RegUtils {
                             .noCollission(),
                     wood
             );
+            wood.addChild("hanging_sign", block);
             event.register(Supplementaries.res(name), block);
             ModRegistry.HANGING_SIGNS.put(wood, block);
         }
@@ -249,6 +249,7 @@ public class RegUtils {
                             getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.SIGN_POST_NAME)),
                     wood
             );
+            wood.addChild("sign_post", item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }

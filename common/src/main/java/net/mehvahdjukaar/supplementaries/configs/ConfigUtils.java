@@ -11,7 +11,7 @@ public class ConfigUtils {
     public static void openModConfigs() {
         Minecraft mc = Minecraft.getInstance();
 
-        mc.setScreen(ServerConfigs.SERVER_SPEC.makeScreen(mc.screen));
+        mc.setScreen(CommonConfigs.SERVER_SPEC.makeScreen(mc.screen));
     }
 
 
@@ -27,8 +27,8 @@ public class ConfigUtils {
     //called from config screen
     public static void configScreenReload(ServerPlayer player) {
         //TODO: fix configs sinking and remove this. idk why its needed
-        ServerConfigs.SERVER_SPEC.loadFromFile();
-        ServerConfigs.SERVER_SPEC.syncConfigsToPlayer(player);
+        CommonConfigs.SERVER_SPEC.loadFromFile();
+        CommonConfigs.SERVER_SPEC.syncConfigsToPlayer(player);
     }
 
 }

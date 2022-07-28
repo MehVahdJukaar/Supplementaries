@@ -14,10 +14,9 @@ import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
-import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -89,7 +88,7 @@ public class ServerEventsForge {
     //TODO: soap tool event
     @SubscribeEvent
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (event.getToolAction() == ToolActions.HOE_TILL && ServerConfigs.Tweaks.RAKED_GRAVEL.get()) {
+        if (event.getToolAction() == ToolActions.HOE_TILL && CommonConfigs.Tweaks.RAKED_GRAVEL.get()) {
             LevelAccessor world = event.getLevel();
             BlockPos pos = event.getPos();
             if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
@@ -114,15 +113,9 @@ public class ServerEventsForge {
         }
     }
 
-    //server reload listeners
-    @SubscribeEvent
-    public static void onAddReloadListeners(final AddReloadListenerEvent event) {
-        event.addListener(new FluteSongsReloadListener());
-    }
-
     @SubscribeEvent
     public static void onTagUpdate(OnDatapackSyncEvent event) {
-        ServerEvents.onDataSync(event.getPlayer(),true);
+        ServerEvents.onDataSync(event.getPlayer(), true);
     }
 
     @SubscribeEvent
@@ -170,7 +163,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onSaplingGrow(SaplingGrowTreeEvent event) {
-        if (ServerConfigs.Blocks.PLANTER_BREAKS.get()) {
+        if (CommonConfigs.Blocks.PLANTER_BREAKS.get()) {
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();
             BlockState state = level.getBlockState(pos.below());

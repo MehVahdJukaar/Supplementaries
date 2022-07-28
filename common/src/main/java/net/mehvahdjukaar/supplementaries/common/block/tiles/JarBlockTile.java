@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.IMobC
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -35,7 +35,7 @@ import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
 
-    private final int CAPACITY = ServerConfigs.Blocks.JAR_CAPACITY.get();
+    private final int CAPACITY = CommonConfigs.Blocks.JAR_CAPACITY.get();
 
     public final MobContainer mobContainer;
     public final ISoftFluidTank fluidHolder;
@@ -80,7 +80,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (ServerConfigs.Blocks.JAR_EAT.get()) {
+            if (CommonConfigs.Blocks.JAR_EAT.get()) {
                 if (this.fluidHolder.tryDrinkUpFluid(player, level)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
@@ -164,7 +164,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     //can this item be added?
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if (ServerConfigs.Blocks.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
+        if (CommonConfigs.Blocks.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
@@ -211,7 +211,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        if (!ServerConfigs.Blocks.JAR_COOKIES.get()) return false;
+        if (!CommonConfigs.Blocks.JAR_COOKIES.get()) return false;
         return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
@@ -240,6 +240,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public boolean canInteractWithSoftFluidTank() {
-        return ServerConfigs.Blocks.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
+        return CommonConfigs.Blocks.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 }

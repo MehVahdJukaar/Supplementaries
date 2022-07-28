@@ -12,7 +12,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,9 +20,12 @@ import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
 
-public class ServerConfigs {
+public class CommonConfigs {
 
-    public static void init(){};
+    public static void init() {
+    }
+
+    ;
 
     public static ConfigSpec SERVER_SPEC;
 
@@ -37,16 +39,16 @@ public class ServerConfigs {
         General.init(builder);
 
         builder.setSynced();
-        builder.onChange(ServerConfigs::onRefresh);
+        builder.onChange(CommonConfigs::onRefresh);
 
         SERVER_SPEC = builder.buildAndRegister();
     }
 
-    private static void onRefresh(){
+    private static void onRefresh() {
         //this isnt safe. refresh could happen sooner than item registration for fabric
         ResourceLocation res = new ResourceLocation(Items.ROPE_ARROW_ROPE.get());
 
-        Items.ROPE_ARROW_OVERRIDE = Suppliers.memoize(()->{
+        Items.ROPE_ARROW_OVERRIDE = Suppliers.memoize(() -> {
             var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
             return (Holder.Reference<Block>) opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
         });
@@ -406,6 +408,7 @@ public class ServerConfigs {
 
         public static Supplier<Boolean> REPLACE_DAUB;
         public static Supplier<Boolean> SWAP_TIMBER_FRAME;
+        public static Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
 
         public static Supplier<Integer> HOURGLASS_DUST;
         public static Supplier<Integer> HOURGLASS_SAND;
@@ -452,7 +455,7 @@ public class ServerConfigs {
             BUBBLE_BREAK = builder.comment("Can bubble break when touched on?")
                     .define("break_when_touched", true);
             BUBBLE_FEATHER_FALLING = builder.comment("If true feather falling prevents breaking bubbles when stepping on them")
-                    .define("feather_falling_prevents_breaking",true);
+                    .define("feather_falling_prevents_breaking", true);
             builder.pop();
 
             builder.push("ash");
@@ -593,6 +596,8 @@ public class ServerConfigs {
                     .define("replace_daub", true);
             SWAP_TIMBER_FRAME = builder.comment("Allow placing a timber frame directly on a block by holding shift")
                     .define("swap_on_shift", false);
+            AXE_TIMBER_FRAME_STRIP = builder.comment("Allows axes to remove a framed block leaving the contained block intact")
+                    .define("axes_strip", true);
 
             builder.pop();
 

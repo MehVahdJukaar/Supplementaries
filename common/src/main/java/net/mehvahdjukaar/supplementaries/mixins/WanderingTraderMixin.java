@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -24,7 +24,7 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
             at = {@At("RETURN")}
     )
     public void registerGoals(CallbackInfo ci) {
-        if(ServerConfigs.Tweaks.WANDERING_TRADER_DOORS.get()) {
+        if(CommonConfigs.Tweaks.WANDERING_TRADER_DOORS.get()) {
             this.goalSelector.addGoal(3, new OpenDoorGoal(this, true));
         }
     }

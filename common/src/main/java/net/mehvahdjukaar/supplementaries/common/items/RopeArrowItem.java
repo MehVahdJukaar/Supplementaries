@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,7 +32,7 @@ public class RopeArrowItem extends ArrowItem {
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public int getMaxDamage(ItemStack stack) {
-        return ServerConfigs.Items.ROPE_ARROW_CAPACITY.get();
+        return CommonConfigs.Items.ROPE_ARROW_CAPACITY.get();
     }
 
     //@Override
@@ -91,7 +90,7 @@ public class RopeArrowItem extends ArrowItem {
         tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
-        var override = ServerConfigs.Items.ROPE_ARROW_OVERRIDE.get();
+        var override = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get();
         if (override.value() != ModRegistry.ROPE) {
             tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location()).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }

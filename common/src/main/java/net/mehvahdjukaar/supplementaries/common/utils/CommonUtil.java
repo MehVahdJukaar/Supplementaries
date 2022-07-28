@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -118,7 +118,7 @@ public class CommonUtil {
             Block b = blockItem.getBlock();
             String namespace = Utils.getID(b).getNamespace();
             if (namespace.equals("skinnedlanterns")) return true;
-            if (b instanceof LanternBlock && !ServerConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)) {
+            if (b instanceof LanternBlock && !CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)) {
                 return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
             }
         }

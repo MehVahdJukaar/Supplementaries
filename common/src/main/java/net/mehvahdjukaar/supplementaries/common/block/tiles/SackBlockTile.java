@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -79,7 +79,7 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public int getUnlockedSlots() {
-        return ServerConfigs.Blocks.SACK_SLOTS.get();
+        return CommonConfigs.Blocks.SACK_SLOTS.get();
     }
 
     public boolean isSlotUnlocked(int ind) {

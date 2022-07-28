@@ -3,9 +3,10 @@
   "values": [
     {"id":"minecraft:slime","required":false},
     {"id":"minecraft:bee","required":false},
+    {"id":"minecraft:frog","required":false},
+    {"id":"minecraft:allay","required":false},
     {"id":"minecraft:magma_cube","required":false},
     {"id":"minecraft:endermite","required":false},
-    {"id":"minecraft:vex","required":false},
     {"id":"minecraft:parrot","required":false},
     {"id":"minecraft:rabbit","required":false},
     {"id":"minecraft:cat","required":false},
@@ -156,7 +157,15 @@
     {"id":"fins:white_bull_crab","required":false},
     {"id":"habitat:pooka","required":false},
     {"id":"habitat:passerine","required":false},
-    {"id":"biomemakeover:dragonfly","required":false}
+    {"id":"biomemakeover:dragonfly","required":false},
+    {"id":"alexsmobs:seagull","required":false},
+    {"id":"alexsmobs:toucan","required":false},
+    {"id":"alexsmobs:jerboa","required":false},
+    {"id":"alexsmobs:jerboa","required":false},
+    {"id":"alexsmobs:potoo","required":false},
+    {"id":"alexsmobs:flutter","required":false},
+    {"id":"alexsmobs:rain_frog","required":false},
+    {"id":"alexsmobs:sugar_glider","required":false}
   ]
 }
 

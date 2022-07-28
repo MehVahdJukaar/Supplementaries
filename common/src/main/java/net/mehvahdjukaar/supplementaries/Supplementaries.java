@@ -1,14 +1,16 @@
 package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
+import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.event.EventHelper;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
@@ -37,7 +39,7 @@ public class Supplementaries {
     public static void commonInit() {
 
         RegistryConfigs.superEarlyLoad();
-        ServerConfigs.init();
+        CommonConfigs.init();
         ClientConfigs.init();
 
 
@@ -49,7 +51,7 @@ public class Supplementaries {
         //potions in jars are bugged ;_;
         //feather block
 
-        EventHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
+        MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
         ModRegistry.init();
         ModRecipes.init();
@@ -57,15 +59,19 @@ public class Supplementaries {
         CMDreg.init();
 
 
-
         WorldGenHandler.registerBus();
+
 
         var serverRes = new ServerDynamicResourcesHandler();
         serverRes.register();
 
+        PlatformHelper.addServerReloadListener(new FluteSongsReloadListener(), res("flute_songs"));
+
         if (PlatformHelper.getEnv().isClient()) {
             var clientRes = new ClientDynamicResourcesHandler();
             clientRes.register();
+
+            ClientPlatformHelper.addClientReloadListener(WallLanternTexturesRegistry.RELOAD_INSTANCE, res("wall_lanterns"));
         }
     }
 
@@ -81,7 +87,7 @@ public class Supplementaries {
     //  RegistryConfigs.load();
     //punching swings lanterns
     //ehcnahted books placed vertically. fix placement based off player look dir
-
+    //wind physics for wind vane
 
     //ash makes mobs jump
     //squishy piston launcher. also rework them and fix on servers

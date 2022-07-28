@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +26,7 @@ public class BubbleBlockTile extends BlockEntity {
             tile.prevScale = tile.scale;
             tile.scale = (float) Math.min(1, tile.scale + 0.001f + (1 - tile.scale) * ClientConfigs.Blocks.BUBBLE_BLOCK_GROW_SPEED.get());
         } else {
-            int lifetime = ServerConfigs.Blocks.BUBBLE_LIFETIME.get();
+            int lifetime = CommonConfigs.Blocks.BUBBLE_LIFETIME.get();
             if (lifetime == 10000) return;
             tile.age++;
             if ((tile.age + 5) % 20 == 0) {

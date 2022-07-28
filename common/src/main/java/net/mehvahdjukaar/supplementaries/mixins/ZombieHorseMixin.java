@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.ZombieHorse;
@@ -16,6 +16,6 @@ public abstract class ZombieHorseMixin extends AbstractHorse {
 
     @Override
     public boolean rideableUnderWater() {
-        return ServerConfigs.Tweaks.ZOMBIE_HORSE_UNDERWATER.get();
+        return CommonConfigs.Tweaks.ZOMBIE_HORSE_UNDERWATER.get();
     }
 }

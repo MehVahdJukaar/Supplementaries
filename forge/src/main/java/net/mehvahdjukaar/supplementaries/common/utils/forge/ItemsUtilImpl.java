@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.forge;
+package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.integration.forge.CuriosCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -145,7 +146,7 @@ public class ItemsUtilImpl {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
         KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.INCORRECT_KEY;
         if (CompatHandler.curios) {
-            found = CuriosCompatImpl.isKeyInCurio(player, key);
+            found = CuriosCompat.isKeyInCurio(player, key);
             if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
         }
 

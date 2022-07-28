@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -72,11 +72,11 @@ public class GunpowderBlock extends LightUpBlock {
     private final BlockState crossState;
 
     private static int getDelay() {
-        return ServerConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
+        return CommonConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
     }
 
     private static int getSpreadAge() {
-        return ServerConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
+        return CommonConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
     }
 
     public GunpowderBlock(Properties properties) {

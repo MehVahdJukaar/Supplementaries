@@ -63,9 +63,6 @@ public class SupplementariesForge {
 
         //wall lantern and jar jsons
         if (PlatformHelper.getEnv().isClient()) {
-            ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager())
-                    .registerReloadListener(new WallLanternTexturesRegistry());
-
             ClientRegistry.init();
         }
     }

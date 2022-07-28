@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
@@ -10,8 +9,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -62,7 +61,7 @@ public class ModCreativeTabs {
         ISoftFluidTank fluidHolder = ISoftFluidTank.create(tempTile.getMaxStackSize());
 
 
-        if (ServerConfigs.Blocks.JAR_CAPTURE.get()) {
+        if (CommonConfigs.Blocks.JAR_CAPTURE.get()) {
             for (Item i : BucketHelper.getValidBuckets()) {
                 CompoundTag com = new CompoundTag();
                 MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
@@ -70,7 +69,7 @@ public class ModCreativeTabs {
                 tryAdd(items, com);
             }
         }
-        if (ServerConfigs.Blocks.JAR_COOKIES.get()) {
+        if (CommonConfigs.Blocks.JAR_COOKIES.get()) {
             //TODO: use this elsewhere
             for (var i : Registry.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
                 ItemStack regItem = new ItemStack(i);
@@ -82,7 +81,7 @@ public class ModCreativeTabs {
                 }
             }
         }
-        if (ServerConfigs.Blocks.JAR_LIQUIDS.get()) {
+        if (CommonConfigs.Blocks.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
                 if (s == VanillaSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();

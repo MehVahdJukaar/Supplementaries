@@ -1,16 +1,10 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.SupplementariesClient;
-import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ClientEventsFabric;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ServerEventsFabric;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class SupplementariesFabric implements ModInitializer {
 
@@ -27,7 +21,6 @@ public class SupplementariesFabric implements ModInitializer {
         FabricSetupCallbacks.CLIENT_SETUP.add(SupplementariesFabricClient::initClient);
         FabricSetupCallbacks.COMMON_SETUP.add(Supplementaries::commonSetup);
     }
-
 
 
     //test stuff

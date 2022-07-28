@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FramedBlocksCompat {
+
     @ExpectPlatform
     public static BlockState getFramedFence() {
         throw new AssertionError();
@@ -29,6 +30,7 @@ public class FramedBlocksCompat {
     }
 
     @Environment(EnvType.CLIENT)
+    @ExpectPlatform
     public static ExtraModelData getModelData(BlockState mimic) {
         throw new AssertionError();
     }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
@@ -79,7 +79,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     }
 
     public boolean isAcceptedItem(Item i) {
-        return isNormalBook(i) || (ServerConfigs.Tweaks.MIXED_BOOKS.get() && isEnchantedBook(i));
+        return isNormalBook(i) || (CommonConfigs.Tweaks.MIXED_BOOKS.get() && isEnchantedBook(i));
     }
 
     @Override

@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
-import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -175,7 +174,7 @@ public class AshLayerBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, RandomSource pRandom) {
-        if (ServerConfigs.Blocks.ASH_RAIN.get()) {
+        if (CommonConfigs.Blocks.ASH_RAIN.get()) {
             if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -185,7 +184,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if (ServerConfigs.Blocks.ASH_RAIN.get()) {
+        if (CommonConfigs.Blocks.ASH_RAIN.get()) {
             if (level.random.nextInt(2) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -208,7 +207,7 @@ public class AshLayerBlock extends FallingBlock {
         }
     }
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
-        if (ServerConfigs.Blocks.ASH_BURN.get()) {
+        if (CommonConfigs.Blocks.ASH_BURN.get()) {
             BlockState state = event.getState();
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();

@@ -1,22 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -34,7 +31,7 @@ public class TimberFrameItem extends WoodBasedBlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (ServerConfigs.Blocks.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
+        if (CommonConfigs.Blocks.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);

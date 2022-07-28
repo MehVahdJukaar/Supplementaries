@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -44,7 +44,7 @@ public class SackGui extends AbstractContainerScreen<SackContainerMenu> {
         int k = -1 + (this.width - this.imageWidth) / 2;
         int l = -1 + (this.height - this.imageHeight) / 2;
 
-        int size = ServerConfigs.Blocks.SACK_SLOTS.get();
+        int size = CommonConfigs.Blocks.SACK_SLOTS.get();
 
 
         int[] dims = SackContainerMenu.getRatio(size);

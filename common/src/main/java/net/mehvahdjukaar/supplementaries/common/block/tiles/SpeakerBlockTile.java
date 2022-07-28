@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -56,7 +56,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
 
         this.message = compound.getString("Message");
-        if (!ServerConfigs.Blocks.SPEAKER_NARRATOR.get()) this.narrator = false;
+        if (!CommonConfigs.Blocks.SPEAKER_NARRATOR.get()) this.narrator = false;
         else this.narrator = compound.getBoolean("Narrator");
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);
@@ -89,7 +89,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
                     .withStyle(style);
 
             NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
-                    ServerConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
+                    CommonConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
                     new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
         }

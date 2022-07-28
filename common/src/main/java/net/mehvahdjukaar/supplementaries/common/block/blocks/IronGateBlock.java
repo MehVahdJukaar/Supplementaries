@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
@@ -80,7 +80,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             boolean flag = world.hasNeighborSignal(pos);
             if (state.getValue(POWERED) != flag) {
                 state = state.setValue(POWERED, flag);
-                if (!gold || !ServerConfigs.Blocks.CONSISTENT_GATE.get()) {
+                if (!gold || !CommonConfigs.Blocks.CONSISTENT_GATE.get()) {
                     if (state.getValue(OPEN) != flag) {
                         world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
                         world.gameEvent(null, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
@@ -111,11 +111,11 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
 
-        if (!state.getValue(POWERED) && gold || !ServerConfigs.Blocks.CONSISTENT_GATE.get()) {
+        if (!state.getValue(POWERED) && gold || !CommonConfigs.Blocks.CONSISTENT_GATE.get()) {
             Direction dir = player.getDirection();
 
 
-            if (ServerConfigs.Blocks.DOUBLE_IRON_GATE.get()) {
+            if (CommonConfigs.Blocks.DOUBLE_IRON_GATE.get()) {
                 BlockPos up = pos.above();
                 BlockState stateUp = world.getBlockState(up);
                 if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))

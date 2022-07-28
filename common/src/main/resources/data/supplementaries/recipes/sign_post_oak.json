@@ -1,0 +1,18 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sign_post"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:oak_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_oak",
+    "count": 2
+  }
+}

@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -39,12 +39,12 @@ public class CageItem extends AbstractMobContainerItem implements ICustomItemRen
 
     @Override
     public boolean canItemCatch(Entity e) {
-        if (ServerConfigs.Blocks.CAGE_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
+        if (CommonConfigs.Blocks.CAGE_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
 
         EntityType<?> type = e.getType();
 
         boolean isBaby = e instanceof LivingEntity le && le.isBaby();
-        return ((ServerConfigs.Blocks.CAGE_ALL_BABIES.get() && isBaby) ||
+        return ((CommonConfigs.Blocks.CAGE_ALL_BABIES.get() && isBaby) ||
                 type.is(ModTags.CAGE_CATCHABLE) ||
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
     }

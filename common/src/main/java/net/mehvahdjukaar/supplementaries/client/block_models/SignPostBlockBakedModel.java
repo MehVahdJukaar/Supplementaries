@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collections;
@@ -89,9 +90,8 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
                 return model.getParticleIcon();
             } catch (Exception ignored) {
             }
-
         }
-        return getParticleIcon();
+        return blockModelShaper.getBlockModel(Blocks.OAK_PLANKS.defaultBlockState()).getParticleIcon();
     }
 
     @Override

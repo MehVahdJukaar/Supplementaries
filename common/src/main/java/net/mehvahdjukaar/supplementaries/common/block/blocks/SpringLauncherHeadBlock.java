@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -88,7 +87,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         } else {
             entityIn.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
             //TODO: add falling block entity support
-            if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float)ServerConfigs.Blocks.LAUNCHER_HEIGHT.get()){
+            if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float) CommonConfigs.Blocks.LAUNCHER_HEIGHT.get()){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 if(worldIn.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile launcherArmBlockTile){

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
@@ -81,7 +82,6 @@ public class ClientRegistry {
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
-    public static final ResourceLocation HANGING_POT_BLOCK_MODEL = Supplementaries.res("block/hanging_flower_pot");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
     public static final Map<LabelEntity.AttachType, ResourceLocation> LABEL_MODELS = new HashMap<>() {{
@@ -325,11 +325,15 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerSpecialModels(ClientPlatformHelper.SpecialModelEvent event) {
+        if (HANGING_SIGNS_BLOCK_MODELS.isEmpty()) {
+            ModRegistry.HANGING_SIGNS.forEach((wood, block) -> HANGING_SIGNS_BLOCK_MODELS
+                    .put(wood, Supplementaries.res("block/hanging_signs/" + Utils.getID(block).getPath())));
+        }
+
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WallLanternTexturesRegistry.SPECIAL_TEXTURES.values().forEach(event::register);
         HANGING_SIGNS_BLOCK_MODELS.values().forEach(event::register);
         LABEL_MODELS.values().forEach(event::register);
-        event.register(HANGING_POT_BLOCK_MODEL);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(FLUTE_3D_MODEL);
@@ -343,8 +347,8 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
-        event.register(Supplementaries.res("hanging_sign_loader"), new HangingSignLoader());
-        event.register(Supplementaries.res("blackboard_loader"), new BlackboardBlockLoader());
+        event.register(Supplementaries.res("hanging_sign"), new HangingSignLoader());
+        event.register(Supplementaries.res("blackboard"), new BlackboardBlockLoader());
         event.register(Supplementaries.res("mimic_block"), new SignPostBlockLoader());
 
     }

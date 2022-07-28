@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg.generation;
 
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -17,7 +17,7 @@ public class ModPlacedFeatures {
     public static final Holder<PlacedFeature> PLACED_WILD_FLAX_PATCH = PlacementUtils.register(
             "supplementaries:wild_flax", ModConfiguredFeatures.WILD_FLAX_PATCH, List.of(
                     PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                    RarityFilter.onAverageOnceEvery(ServerConfigs.Spawns.FLAX_AVERAGE_EVERY.get()),
+                    RarityFilter.onAverageOnceEvery(CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()),
                     InSquarePlacement.spread(),
                     BiomeFilter.biome()));
 
@@ -25,7 +25,7 @@ public class ModPlacedFeatures {
     public static final Holder<PlacedFeature> PLACED_CAVE_URNS = PlacementUtils.register(
             "supplementaries:cave_urns", ModConfiguredFeatures.CAVE_URNS_PATCH, List.of(
                     HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
-                    CountPlacement.of(ServerConfigs.Spawns.URN_PER_CHUNK.get()),
+                    CountPlacement.of(CommonConfigs.Spawns.URN_PER_CHUNK.get()),
                     InSquarePlacement.spread(),
                     CaveFilter.BELOW_SURFACE,
                     BiomeFilter.biome()));

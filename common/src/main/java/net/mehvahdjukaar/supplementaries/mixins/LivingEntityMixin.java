@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
@@ -48,7 +48,7 @@ public abstract class LivingEntityMixin extends Entity {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "handleOnClimbable", at = @At("HEAD"), cancellable = true)
     private void handleOnClimbable(Vec3 motion, CallbackInfoReturnable<Vec3> info) {
-        if (this.onClimbable() && ServerConfigs.Blocks.ROPE_SLIDE.get()) {
+        if (this.onClimbable() && CommonConfigs.Blocks.ROPE_SLIDE.get()) {
             BlockState b = this.getFeetBlockState();
             if (b.is(ModRegistry.ROPE.get())) {
                 this.fallDistance = 0;

@@ -19,8 +19,8 @@ import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +47,7 @@ public class DispenserRegistry {
 
         if (!RegistryConfigs.DISPENSERS.get()) return;
 
-        if (ServerConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
+        if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
             DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
         }
         DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
@@ -63,7 +63,7 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
         DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
 
-        if (ServerConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
+        if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
             Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
                     DispenserHelper.registerCustomBehavior(new ThrowableBricksDispenserBehavior(h.value()))
             );
@@ -80,7 +80,7 @@ public class DispenserRegistry {
             DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
         }
         //gunpowder
-        if (ServerConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
+        if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
             DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
         if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
@@ -101,7 +101,7 @@ public class DispenserRegistry {
             });
         }
 
-        boolean axe = ServerConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
+        boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         boolean jar = RegistryConfigs.JAR_ENABLED.get();
         if (axe || jar) {
             for (Item i : Registry.ITEM) {

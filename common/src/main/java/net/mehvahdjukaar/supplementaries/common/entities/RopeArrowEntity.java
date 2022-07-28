@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -90,7 +90,7 @@ public class RopeArrowEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
 
-        Block ropeBlock = ServerConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
+        Block ropeBlock = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {
@@ -162,7 +162,7 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     private void continueUnwindingRope() {
-        Block ropeBlock = ServerConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
+        Block ropeBlock = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();

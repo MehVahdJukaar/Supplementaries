@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -122,7 +122,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Nullable
     public static DyeColor getStackChalkColor(ItemStack stack) {
         DyeColor color = null;
-        if (ServerConfigs.Blocks.BLACKBOARD_COLOR.get()) {
+        if (CommonConfigs.Blocks.BLACKBOARD_COLOR.get()) {
             color = ForgeHelper.getColor(stack);
         }
         if (color == null) {

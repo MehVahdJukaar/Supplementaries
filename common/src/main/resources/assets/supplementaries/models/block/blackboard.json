@@ -1,5 +1,5 @@
 {
-  "loader": "supplementaries:blackboard_loader",
+  "loader": "supplementaries:blackboard",
   "model": {
     "parent": "supplementaries:block/blackboard_frame",
     "textures": {

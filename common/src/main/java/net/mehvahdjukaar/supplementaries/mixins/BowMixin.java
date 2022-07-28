@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public abstract class BowMixin {
             value = "RETURN"),
             cancellable = true)
     public void getAllSupportedProjectiles(CallbackInfoReturnable<Predicate<ItemStack>> cir) {
-        if(ServerConfigs.Items.ROPE_ARROW_CROSSBOW.get()){
+        if(CommonConfigs.Items.ROPE_ARROW_CROSSBOW.get()){
             var v = cir.getReturnValue();
             cir.setReturnValue((s)->{
                 if(s.getItem() instanceof RopeArrowItem) return false;

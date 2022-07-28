@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -165,7 +165,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && (ServerConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
+        return this.isEmpty() && (CommonConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
     }
 
     @SuppressWarnings("ConstantConditions")

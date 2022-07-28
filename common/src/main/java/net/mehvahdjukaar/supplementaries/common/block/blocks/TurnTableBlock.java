@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -152,7 +152,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity e) {
         super.stepOn(world, pos, state, e);
-        if (!ServerConfigs.Blocks.TURN_TABLE_ROTATE_ENTITIES.get()) return;
+        if (!CommonConfigs.Blocks.TURN_TABLE_ROTATE_ENTITIES.get()) return;
         if (!e.isOnGround()) return;
         if (state.getValue(POWER) != 0 && state.getValue(FACING) == Direction.UP) {
             float period = getPeriod(state) + 1;

@@ -3,22 +3,22 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.builtincompat.MapAtlasPlugin;
+import net.mehvahdjukaar.moonlight.core.builtincompat.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -107,20 +107,20 @@ public class ItemsOverrideHandler {
         itemActionOnBlock.add(new MapMarkerBehavior());
         itemActionOnBlock.add(new XpBottlingBehavior());
 
-        if (ServerConfigs.Tweaks.WRITTEN_BOOKS.get()) {
+        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
             ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
             ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
         }
         outer:
         for (Item i : Registry.ITEM) {
 
-            if (ServerConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
+            if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
                 if (i instanceof BlockItem bi && CommonUtil.isLanternBlock(bi.getBlock())) {
                     ((IExtendedItem) i).addAdditionalBehavior(new WallLanternPlacement());
                     continue;
                 }
             }
-            if (ServerConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
+            if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
                 if (BookPileBlock.isQuarkTome(i)) {
                     ((IExtendedItem) i).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
                     continue;
@@ -309,7 +309,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get();
+            return CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get();
         }
 
         @Nullable
@@ -345,7 +345,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.DIRECTIONAL_CAKE.get();
+            return CommonConfigs.Tweaks.DIRECTIONAL_CAKE.get();
         }
 
         @Override
@@ -362,7 +362,7 @@ public class ItemsOverrideHandler {
             if (state.is(net.minecraft.world.level.block.Blocks.CAKE) && (stack.is(ItemTags.CANDLES) || player.getDirection() == Direction.EAST || state.getValue(CakeBlock.BITES) != 0)) {
                 return InteractionResult.PASS;
             }
-            if (!(ServerConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get() && stack.is(Items.CAKE))) {
+            if (!(CommonConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get() && stack.is(Items.CAKE))) {
                 //for candles. normal cakes have no drops
                 BlockState newState = ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState();
                 if (world.isClientSide) world.setBlock(pos, newState, 3);
@@ -392,7 +392,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.BELL_CHAIN.get();
+            return CommonConfigs.Tweaks.BELL_CHAIN.get();
         }
 
         @Override
@@ -417,12 +417,12 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.MAP_MARKERS.get();
+            return CommonConfigs.Tweaks.MAP_MARKERS.get();
         }
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasPlugin.isAtlas(item));
+            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasCompat.isAtlas(item));
         }
 
         @Override
@@ -439,7 +439,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.BOTTLE_XP.get();
+            return CommonConfigs.Tweaks.BOTTLE_XP.get();
         }
 
         @Override
@@ -482,7 +482,7 @@ public class ItemsOverrideHandler {
                     }
 
                     if (returnStack != null) {
-                        player.hurt(ModDamageSources.BOTTLING_DAMAGE, ServerConfigs.Tweaks.BOTTLING_COST.get());
+                        player.hurt(ModDamageSources.BOTTLING_DAMAGE, CommonConfigs.Tweaks.BOTTLING_COST.get());
                         Utils.swapItem(player, hand, returnStack);
 
                         if (!player.isCreative())
@@ -539,7 +539,7 @@ public class ItemsOverrideHandler {
                 if (b == net.minecraft.world.level.block.Blocks.CAKE || b == ModRegistry.DIRECTIONAL_CAKE.get()) {
                     InteractionResult result = InteractionResult.FAIL;
 
-                    if (ServerConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get()) {
+                    if (CommonConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get()) {
                         result = placeDoubleCake(player, stack, pos, world, state, isRanged);
                     }
                     return result;
@@ -646,9 +646,9 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
-                var h = ServerConfigs.Items.WRENCH_BYPASS.get();
-                if ((h == ServerConfigs.Hands.MAIN_HAND && hand == InteractionHand.MAIN_HAND) ||
-                        (h == ServerConfigs.Hands.OFF_HAND && hand == InteractionHand.OFF_HAND) || h == ServerConfigs.Hands.BOTH) {
+                var h = CommonConfigs.Items.WRENCH_BYPASS.get();
+                if ((h == CommonConfigs.Hands.MAIN_HAND && hand == InteractionHand.MAIN_HAND) ||
+                        (h == CommonConfigs.Hands.OFF_HAND && hand == InteractionHand.OFF_HAND) || h == CommonConfigs.Hands.BOTH) {
 
                     return stack.useOn(new UseOnContext(player, hand, hit));
                 }
@@ -667,7 +667,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.SKULL_PILES.get();
+            return CommonConfigs.Tweaks.SKULL_PILES.get();
         }
 
         @Override
@@ -707,7 +707,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return ServerConfigs.Tweaks.SKULL_CANDLES.get();
+            return CommonConfigs.Tweaks.SKULL_CANDLES.get();
         }
 
         @Override

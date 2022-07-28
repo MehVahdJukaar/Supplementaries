@@ -17,7 +17,9 @@
     {"id":"eanimod:enhanced_cow","required":false},
     {"id":"eanimod:enhanced_llama","required":false},
     {"id":"eanimod:enhanced_pig","required":false},
-    {"id":"eanimod:enhanced_mooshroom","required":false}
+    {"id":"eanimod:enhanced_mooshroom","required":false},
+    {"id":"alexsmobs:bald_eagle","required":false},
+    {"id":"alexsmobs:gelada_monkey","required":false}
   ]
 }
 

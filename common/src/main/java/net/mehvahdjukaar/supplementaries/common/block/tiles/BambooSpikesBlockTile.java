@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -54,7 +54,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //true if has run out of charges
     public boolean consumeCharge(Level world) {
-        if (ServerConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
+        if (CommonConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
         this.lastTicked = world.getGameTime();
         this.charges -= 1;
         this.setChanged();

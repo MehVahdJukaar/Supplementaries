@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.generation.structure.StructureLocator;
 import net.minecraft.core.BlockPos;
@@ -109,7 +109,7 @@ public class AdventurerMapsHandler {
         //only called once when server starts
         if (!CUSTOM_MAPS_TRADES.isEmpty()) return;
         try {
-            List<? extends List<String>> tradeData = ServerConfigs.Tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
+            List<? extends List<String>> tradeData = CommonConfigs.Tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
 
             for (List<String> l : tradeData) {
                 int s = l.size();
@@ -169,7 +169,7 @@ public class AdventurerMapsHandler {
         }
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> {
-            if (ServerConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
+            if (CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
                 itemListings.add(new RandomAdventureMapTrade());
             }
         });

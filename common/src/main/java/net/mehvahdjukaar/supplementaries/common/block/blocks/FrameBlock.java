@@ -31,12 +31,11 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     public static final BooleanProperty HAS_BLOCK = ModBlockProperties.HAS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
     public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01, 0.01, 0.01, 15.99, 15.99, 15.99);
-    public static final VoxelShape OCCLUSION_SHAPE_2 = Block.box(-0.01, -0.01, -0.01, 16.01, 16.01, 16.01);
 
     public final Supplier<Block> daub;
 
     public FrameBlock(Properties properties, Supplier<Block> daub) {
-        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
+        super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.daub = daub;
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
@@ -70,7 +69,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
         if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-            return tile.handleInteraction(player, hand, trace);
+            return tile.handleInteraction(world, pos, player, hand, trace);
         }
         return InteractionResult.PASS;
     }
@@ -87,9 +86,6 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         }
         return OCCLUSION_SHAPE;
     }
-
-    public static final VoxelShape OCCLUSION_SHAPE_3 = Block.box(1, 1, 1, 15, 15, 15);
-
 
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
@@ -118,11 +114,11 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     //needed for isnide black edges
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext p_220071_4_) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         if (state.getValue(HAS_BLOCK)) {
             return Shapes.block();
         }
-        return OCCLUSION_SHAPE_2;
+        return super.getCollisionShape(state, reader, pos, context); //return OCCLUSION_SHAPE
     }
     /*
     @Override
@@ -131,6 +127,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     }*/
 
     //occlusion shading
+    @Override
     public float getShadeBrightness(BlockState state, BlockGetter reader, BlockPos pos) {
         return state.getValue(HAS_BLOCK) ? 0.2f : 1;
     }

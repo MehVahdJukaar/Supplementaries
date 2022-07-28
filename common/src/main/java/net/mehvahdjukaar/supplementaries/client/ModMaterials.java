@@ -33,9 +33,6 @@ public class ModMaterials {
 
 
     static {
-        ModRegistry.HANGING_SIGNS.forEach((wood, block) -> ClientRegistry.HANGING_SIGNS_BLOCK_MODELS
-                .put(wood, Supplementaries.res("block/hanging_signs/" + Utils.getID(block).getPath())));
-
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
                 .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));
 

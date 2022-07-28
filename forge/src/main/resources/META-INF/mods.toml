@@ -1,25 +1,33 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/MehVahdJukaar/Supplementaries/issues" #optional
+license = "ARR"
 
 
 [[mods]]
 modId = "supplementaries"
 version = "${version}"
 displayName = "Supplementaries"
-authors = "Me!"
 
-logoFile="icon.png" #optional
-description = '''
-This is an example description! Tell everyone what your mod is about!
-'''
-#logoFile = ""
+
+credits = "Put a book named 'credits' inside a notice board" #optional
+
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
+
+authors = "MehVahdJukaar, Plantkillable" #optional
+
+description = '''Many functional and useful Vanilla+ blocks'''
+
+itemIcon = "supplementaries:globe" #catalogue icon
+
+configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
+
+logoFile = "icon.png" #optional
 
 [[dependencies.supplementaries]]
 modId = "forge"
 mandatory = true
-versionRange = "[40,)"
+versionRange = "[41.1.0,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -27,5 +35,12 @@ side = "BOTH"
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.supplementaries]]
+modId = "moonlight"
+mandatory = true
+versionRange = "[1.19-2.0.5,]"
 ordering = "NONE"
 side = "BOTH"

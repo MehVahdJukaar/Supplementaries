@@ -14,8 +14,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -72,7 +72,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         s.add(((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig());
         modConfigMap.put(ModConfig.Type.CLIENT, s);
         Set<ModConfig> s1 = new HashSet<>();
-        s1.add(((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig());
+        s1.add(((ConfigSpecWrapper) CommonConfigs.SERVER_SPEC).getModConfig());
         s1.add(((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig());
         modConfigMap.put(ModConfig.Type.COMMON, s1);
         return modConfigMap;
@@ -94,7 +94,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
     }
 
     private ModConfig getConfigFromLabel(String label) {
-        if (label.contains("Common")) return ((ConfigSpecWrapper) ServerConfigs.SERVER_SPEC).getModConfig();
+        if (label.contains("Common")) return ((ConfigSpecWrapper) CommonConfigs.SERVER_SPEC).getModConfig();
         if (label.contains("Client")) return ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig();
         return ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig();
     }

@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
-        if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+        if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
             if (this.isNotOwnedBy(player)) {
                 if (feedbackMessage)
                     player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", this.ownerName), true);
@@ -81,7 +81,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public Component getDisplayName() {
-        if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+        if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
             if (this.ownerName != null) {
                 return (Component.translatable("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
             }

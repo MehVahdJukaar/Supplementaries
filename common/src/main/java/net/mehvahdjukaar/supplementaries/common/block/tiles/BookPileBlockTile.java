@@ -10,10 +10,9 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -70,11 +69,11 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
             Item item = this.getItem(i).getItem();
-            if (BookPileBlock.isNormalBook(item)) this.enchantPower += ServerConfigs.Tweaks.BOOK_POWER.get() / 4f;
+            if (BookPileBlock.isNormalBook(item)) this.enchantPower += CommonConfigs.Tweaks.BOOK_POWER.get() / 4f;
             else if (BookPileBlock.isQuarkTome(item))
-                this.enchantPower += (ServerConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2;
+                this.enchantPower += (CommonConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2;
             else if (BookPileBlock.isEnchantedBook(item))
-                this.enchantPower += ServerConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
+                this.enchantPower += CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
         }
     }
 

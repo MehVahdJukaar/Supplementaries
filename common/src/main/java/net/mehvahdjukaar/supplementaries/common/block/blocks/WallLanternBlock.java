@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -97,7 +97,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         BlockEntity te = world.getBlockEntity(pos);
         Item i = stack.getItem();
-        if (te instanceof IBlockHolder blockHolder && i instanceof BlockItem blockItem) {
+        if (te instanceof WallLanternBlockTile blockHolder && i instanceof BlockItem blockItem) {
             blockHolder.setHeldBlock(blockItem.getBlock().defaultBlockState());
         }
         BlockUtil.addOptionalOwnership(entity, world, pos);

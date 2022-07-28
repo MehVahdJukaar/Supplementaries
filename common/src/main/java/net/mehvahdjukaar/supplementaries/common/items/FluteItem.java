@@ -2,18 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.FluteItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -28,9 +23,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,19 +37,12 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class FluteItem extends InstrumentItem implements IThirdPersonAnimationProvider,
-        IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider , ICustomItemRendererProvider {
+        IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider {
 
     public FluteItem(Properties properties) {
         super(properties);
-    }
-
-
-    @Override
-    public ItemStackRenderer createRenderer() {
-        return new FluteItemRenderer();
     }
 
     @Override
@@ -92,12 +80,13 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         if (!(target instanceof LivingEntity)) return false;
         CompoundTag c = stack.getTagElement("Pet");
-        if (c == null && (
-                target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(player.getUUID()))
+        if (c != null) return false;
+        if (target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(player.getUUID())
                 || target.getType().is(ModTags.FLUTE_PET)) {
-            if (target instanceof AbstractHorse horse && !horse.isTamed()) return false;
 
-            //if(target instanceof FoxEntity && ! ((FoxEntity)target).isTrustedUUID(p_213497_1_.getUniqueID())return ActionResultType.PASS;
+            if (target instanceof AbstractHorse horse && !horse.isTamed()) return false;
+            else if (target instanceof Fox fox && !fox.trusts(player.getUUID())) return false;
+
             CompoundTag com = new CompoundTag();
             com.putString("Name", target.getName().getString());
             com.putUUID("UUID", target.getUUID());
@@ -122,11 +111,11 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             double x = playerIn.getX();
             double y = playerIn.getY();
             double z = playerIn.getZ();
-            int r = ServerConfigs.Items.FLUTE_RADIUS.get();
+            int r = CommonConfigs.Items.FLUTE_RADIUS.get();
             CompoundTag com = stack.getTagElement("Pet");
             if (com != null) {
                 Entity entity = worldIn.getEntity(com.getInt("ID"));
-                int maxDist = ServerConfigs.Items.FLUTE_DISTANCE.get() * ServerConfigs.Items.FLUTE_DISTANCE.get();
+                int maxDist = CommonConfigs.Items.FLUTE_DISTANCE.get() * CommonConfigs.Items.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
                     if (pet.level == playerIn.level && pet.distanceToSqr(playerIn) < maxDist) {
                         if (pet.randomTeleport(x, y, z, false)) {

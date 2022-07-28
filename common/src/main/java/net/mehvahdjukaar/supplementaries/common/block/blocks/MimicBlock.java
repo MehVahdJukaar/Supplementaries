@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.block.IBlockHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
 
-public abstract class MimicBlock extends Block  {
+public abstract class MimicBlock extends Block {
     public MimicBlock(Properties properties) {
         super(properties);
     }
@@ -54,15 +54,14 @@ public abstract class MimicBlock extends Block  {
         if (builder.getParameter(LootContextParams.BLOCK_ENTITY) instanceof IBlockHolder tile) {
             //checks again if the content itself can be mined
             BlockState heldState = tile.getHeldBlock();
-            if(builder.getParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
-                if (!ForgeHelper.canHarvestBlock(state,builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
+            if (builder.getParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
+                if (!ForgeHelper.canHarvestBlock(state, builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
                     return drops;
                 }
             }
             List<ItemStack> newDrops = heldState.getDrops(builder);
             //ItemStack camo = new ItemStack(tile.getHeldBlock().getBlock());
             drops.addAll(newDrops);
-
         }
         return drops;
     }

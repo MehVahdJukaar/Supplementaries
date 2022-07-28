@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -42,13 +42,13 @@ public class SackItem extends BlockItem {
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!ServerConfigs.Blocks.SACK_PENALTY.get()) return;
+        if (!CommonConfigs.Blocks.SACK_PENALTY.get()) return;
         if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator()) {
             //if (player.hasEffect(ModRegistry.OVERENCUMBERED.get())) return;
 
             int amount = 0;
             amount = ItemsUtil.getAllSacksInInventory(stack, entityIn, player, amount);
-            int inc = ServerConfigs.Blocks.SACK_INCREMENT.get();
+            int inc = CommonConfigs.Blocks.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
                         20 * 10, ((amount - 1) / inc) - 1, false, false, true));
@@ -125,7 +125,7 @@ public class SackItem extends BlockItem {
         if (CompatHandler.quark && QuarkCompat.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, ServerConfigs.Blocks.SACK_SLOTS.get()));
+                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();

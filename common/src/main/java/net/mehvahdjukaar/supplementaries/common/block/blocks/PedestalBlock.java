@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +63,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     @PlatformOnly(PlatformOnly.FORGE)
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        if (ServerConfigs.Blocks.CRYSTAL_ENCHANTING.get() && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
+        if (CommonConfigs.Blocks.CRYSTAL_ENCHANTING.get() && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
             if (te.type == PedestalBlockTile.DisplayType.CRYSTAL) return 3;
         }
         return 0;

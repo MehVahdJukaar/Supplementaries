@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg.generation;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -50,7 +50,7 @@ public class ModConfiguredFeatures {
 
     public static final Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> WILD_FLAX_PATCH =
             FeatureUtils.register("supplementaries:wild_flax", Feature.RANDOM_PATCH,
-                    getPatchConfiguration(ServerConfigs.Spawns.FLAX_PATCH_TRIES.get(), 4, 0,
+                    getPatchConfiguration(CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(), 4, 0,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
                             FLAX_PLACEMENT));
@@ -58,7 +58,7 @@ public class ModConfiguredFeatures {
 
     public static final Holder<ConfiguredFeature<RandomPatchConfiguration, ?>> CAVE_URNS_PATCH =
             FeatureUtils.register("supplementaries:cave_urns", Feature.RANDOM_PATCH,
-                    getPatchConfiguration(ServerConfigs.Spawns.URN_PATCH_TRIES.get(), 4, 1,
+                    getPatchConfiguration(CommonConfigs.Spawns.URN_PATCH_TRIES.get(), 4, 1,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
                             URN_PLACEMENT));

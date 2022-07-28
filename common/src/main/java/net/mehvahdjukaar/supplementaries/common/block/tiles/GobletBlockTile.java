@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
@@ -77,7 +77,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         //empty hand: eat food
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (ServerConfigs.Blocks.GOBLET_DRINK.get()) {
+            if (CommonConfigs.Blocks.GOBLET_DRINK.get()) {
                 boolean b = this.fluidTank.tryDrinkUpFluid(player, this.level);
                 if (b && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));

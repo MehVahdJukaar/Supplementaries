@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -178,7 +178,7 @@ public class RopeBlock extends WaterBlock {
                 return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
             }
             default -> {
-                if (ServerConfigs.Blocks.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
+                if (CommonConfigs.Blocks.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
                     return true;
                 }
                 if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
@@ -331,7 +331,7 @@ public class RopeBlock extends WaterBlock {
 
     public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
 
-        if (it > ServerConfigs.Tweaks.BELL_CHAIN_LENGTH.get()) return false;
+        if (it > CommonConfigs.Tweaks.BELL_CHAIN_LENGTH.get()) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (predicate.test(state)) {
@@ -391,7 +391,7 @@ public class RopeBlock extends WaterBlock {
             return InteractionResult.PASS;
         } else if (stack.isEmpty()) {
             if (state.getValue(UP)) {
-                if (ServerConfigs.Tweaks.BELL_CHAIN.get() && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
+                if (CommonConfigs.Tweaks.BELL_CHAIN.get() && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 else if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
                     return InteractionResult.sidedSuccess(world.isClientSide);

@@ -29,12 +29,12 @@ import java.util.Set;
 public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-
     public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new HashMap<>();
-
     private static Set<Block> POSSIBLE_LANTERNS = null;
 
-    public WallLanternTexturesRegistry() {
+    public static final WallLanternTexturesRegistry RELOAD_INSTANCE = new WallLanternTexturesRegistry();
+
+    private WallLanternTexturesRegistry() {
         super(GSON, "textures/blocks/wall_lanterns");
     }
 
@@ -44,7 +44,7 @@ public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListene
     }
 
     public static void reloadTextures(ResourceManager manager) {
-        if (POSSIBLE_LANTERNS == null) init();
+        if (POSSIBLE_LANTERNS == null) initialize();
         SPECIAL_TEXTURES.clear();
         for (Block i : POSSIBLE_LANTERNS) {
 
@@ -81,7 +81,7 @@ public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListene
         }
     }
 
-    private static void init() {
+    private static void initialize() {
         ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
         for (Block i : Registry.BLOCK) {
             if (CommonUtil.isLanternBlock(i)) builder.add(i);

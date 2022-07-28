@@ -1,30 +1,23 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "timber_frame"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "1 1",
-          "   ",
-          "1 1"
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:rods/wooden"
-          }
-        },
-        "result": {
-          "item": "supplementaries:timber_cross_brace",
-          "count": 1
-        }
-      }
+      "type": "supplementaries:flag",
+      "flag": "timber_frame"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "1 1",
+    "   ",
+    "1 1"
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "result": {
+    "item": "supplementaries:timber_cross_brace",
+    "count": 1
+  }
 }

@@ -1,33 +1,26 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "flag": "faucet",
-          "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          "222",
-          "  2"
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:rods/wooden"
-          },
-          "2": {
-            "tag": "forge:ingots/iron"
-          }
-        },
-        "result": {
-          "item": "supplementaries:faucet",
-          "count": 1
-        }
-      }
+      "flag": "faucet",
+      "type": "supplementaries:flag"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "222",
+    "  2"
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:rods/wooden"
+    },
+    "2": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "supplementaries:faucet",
+    "count": 1
+  }
 }

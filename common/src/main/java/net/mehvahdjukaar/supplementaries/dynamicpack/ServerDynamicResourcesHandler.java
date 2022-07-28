@@ -1,14 +1,27 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
+import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
+import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
+import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Registry;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.Logger;
 
 public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
@@ -30,34 +43,10 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     @Override
     public void regenerateDynamicAssets(ResourceManager resourceManager) {
-    }
+        addHangingSignRecipes(resourceManager);
 
-    @Override
-    public void generateStaticAssetsOnStartup(ResourceManager manager) {
-
-        //hanging signs
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
-            //loot table
-            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
-                dynamicPack.addSimpleBlockLootTable(sign);
-                builder.addEntry(sign);
-                // makeHangingSignRecipe(wood, dynamicPack::addRecipe);
-            });
-            //tag
-            dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
-            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
-        }
-        //sing posts
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
-            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
-            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
-            //recipes
-            //  ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> makeSignPostRecipe(wood, dynamicPack::addRecipe));
-        }
-        //TODO: add recipes
-
+        //recipes
+        addSignPostRecipes(resourceManager);
 
         //way signs tag
         {
@@ -86,6 +75,79 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
         }
     }
+
+    @Override
+    public void generateStaticAssetsOnStartup(ResourceManager manager) {
+
+        //hanging signs
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
+            //loot table
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
+                dynamicPack.addSimpleBlockLootTable(sign);
+                builder.addEntry(sign);
+            });
+            //tag
+            dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
+            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
+        }
+        //sing posts
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
+            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
+            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
+        }
+    }
+
+
+    private void addHangingSignRecipes(ResourceManager manager) {
+        IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
+                ResType.RECIPES.getPath(Supplementaries.res("hanging_sign_oak")));
+
+        ModRegistry.HANGING_SIGNS.forEach((w, b) -> {
+            Item i = b.asItem();
+            //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+            if (i.getItemCategory() != null) {
+                FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                if (newR == null) return;
+                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                this.dynamicPack.addRecipe(newR);
+            }
+        });
+    }
+
+    private void addSignPostRecipes(ResourceManager manager) {
+        IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
+                ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
+
+        WoodType wood = WoodTypeRegistry.OAK_TYPE;
+
+        if (signPostTemplate2 == null) {
+            ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(wood), 3)
+                    .pattern("   ")
+                    .pattern("222")
+                    .pattern(" 1 ")
+                    .define('1', Items.STICK)
+                    .define('2', wood.planks)
+                    .group(RegistryConstants.SIGN_POST_NAME)
+                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(wood.planks))
+                    .save((s) -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
+        }
+
+        ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
+            //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+            if (i.getItemCategory() != null) {
+                IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
+
+                FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                if (newR == null) return;
+                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                this.dynamicPack.addRecipe(newR);
+            }
+        });
+    }
+
+    private IRecipeTemplate<?> signPostTemplate2;
 
 
 }

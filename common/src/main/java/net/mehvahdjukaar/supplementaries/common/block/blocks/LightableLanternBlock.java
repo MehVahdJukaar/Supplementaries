@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingLanternEntity;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -126,7 +126,7 @@ public class LightableLanternBlock extends LanternBlock {
     //called by mixin
     public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader worldIn) {
         if (!RopeBlock.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
-            if (ServerConfigs.Tweaks.FALLING_LANTERNS.get().isOn() && l.getBlockState(pos).is(state.getBlock())) {
+            if (CommonConfigs.Tweaks.FALLING_LANTERNS.get().isOn() && l.getBlockState(pos).is(state.getBlock())) {
                 return createFallingLantern(state, pos, l);
             }
             return false;

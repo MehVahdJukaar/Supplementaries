@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,15 +31,15 @@ import java.util.function.Supplier;
 
 public class FrameBlockTile extends MimicBlockTile {
 
-    public final Supplier<BlockState> WATTLE_AND_DAUB = Suppliers.memoize(() -> ((FrameBlock) this.getBlockState().getBlock()).daub.get().defaultBlockState());
+    private final Supplier<Block> daub;
 
     public FrameBlockTile(BlockPos pos, BlockState state) {
         this(pos, state, () -> null);
     }
 
-    public FrameBlockTile(BlockPos pos, BlockState state, Supplier<Block> wattle_and_daub) {
+    public FrameBlockTile(BlockPos pos, BlockState state, Supplier<Block> daub) {
         super(ModRegistry.TIMBER_FRAME_TILE.get(), pos, state);
-        //data = new ModelDataMap.Builder().withInitial(MIMIC, held).build();
+        this.daub = daub;
     }
 
     @Override
@@ -69,9 +69,9 @@ public class FrameBlockTile extends MimicBlockTile {
     public BlockState acceptBlock(BlockState state) {
         Block b = state.getBlock();
 
-        if (b == ModRegistry.DAUB.get() && ServerConfigs.Blocks.REPLACE_DAUB.get()) {
+        if (b == ModRegistry.DAUB.get() && CommonConfigs.Blocks.REPLACE_DAUB.get()) {
             if (level != null && !this.level.isClientSide) {
-                state = WATTLE_AND_DAUB.get();
+                state = daub.get().defaultBlockState();
                 if (this.getBlockState().hasProperty(ModBlockProperties.FLIPPED)) {
                     state = state.setValue(ModBlockProperties.FLIPPED, this.getBlockState().getValue(ModBlockProperties.FLIPPED));
                 }
@@ -87,25 +87,35 @@ public class FrameBlockTile extends MimicBlockTile {
         return state;
     }
 
-    public InteractionResult handleInteraction(Player player, InteractionHand hand, BlockHitResult trace) {
+    public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        if (player.getAbilities().mayBuild && item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
+        if (player.getAbilities().mayBuild) {
+            if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
+                BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
 
-            BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
+                if (isValidBlock(toPlace, pos, level)) {
 
-            if (isValidBlock(toPlace, this.worldPosition, this.level)) {
+                    BlockState newState = this.acceptBlock(toPlace);
 
-                BlockState newState = this.acceptBlock(toPlace);
-
-                SoundType s = newState.getSoundType();
-                this.level.gameEvent(player, GameEvent.BLOCK_CHANGE, this.worldPosition);
-                this.level.playSound(player, this.worldPosition, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
-                if (!player.isCreative() && !level.isClientSide()) {
-                    stack.shrink(1);
+                    SoundType s = newState.getSoundType();
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    level.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
+                    if (!player.getAbilities().instabuild && !level.isClientSide()) {
+                        stack.shrink(1);
+                    }
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
-
+            } else if (item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Blocks.AXE_TIMBER_FRAME_STRIP.get()) {
+                BlockState held = this.getHeldBlock();
+                if (!level.isClientSide) {
+                    Block.popResourceFromFace(level, pos, trace.getDirection(), new ItemStack(this.getBlockState().getBlock()));
+                }
+                level.playSound(player, pos, this.getBlockState().getSoundType().getBreakSound(),
+                        SoundSource.BLOCKS, 1, 1);
+                stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
+                level.setBlockAndUpdate(pos, held);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
         //don't try filling with other hand

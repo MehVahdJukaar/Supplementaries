@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.core.network.ClientBoundSyncConfigsPacket;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -19,8 +18,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHa
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -945,7 +944,7 @@ public class ModRegistry {
     //hanging flower pot
     public static final Supplier<Block> HANGING_FLOWER_POT = regPlaceableItem(HANGING_FLOWER_POT_NAME,
             () -> new HangingFlowerPotBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)),
-            () -> Items.FLOWER_POT, ServerConfigs.Tweaks.HANGING_POT_PLACEMENT);
+            () -> Items.FLOWER_POT, CommonConfigs.Tweaks.HANGING_POT_PLACEMENT);
 
     public static final Supplier<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = regTile(
             HANGING_FLOWER_POT_NAME, () -> PlatformHelper.newBlockEntityType(
@@ -1056,19 +1055,19 @@ public class ModRegistry {
     public static final Supplier<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD), 60), () -> Items.STICK, ServerConfigs.Tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD), 60), () -> Items.STICK, CommonConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", ServerConfigs.Tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", CommonConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> PRISMARINE_ROD_BLOCK = regPlaceableItem("prismarine_rod", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", ServerConfigs.Tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", CommonConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> PROPELPLANT_ROD_BLOCK = regPlaceableItem("propelplant_cane", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", ServerConfigs.Tweaks.PLACEABLE_STICKS);
+                    .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", CommonConfigs.Tweaks.PLACEABLE_STICKS);
 
     //blaze rod
     //TODO: blaze sound
@@ -1078,7 +1077,7 @@ public class ModRegistry {
                             .lightLevel(state -> 12)
                             .emissiveRendering((p, w, s) -> true)
                             .sound(SoundType.GILDED_BLACKSTONE)),
-            () -> Items.BLAZE_ROD, ServerConfigs.Tweaks.PLACEABLE_RODS
+            () -> Items.BLAZE_ROD, CommonConfigs.Tweaks.PLACEABLE_RODS
     );
 
     //daub
@@ -1104,7 +1103,10 @@ public class ModRegistry {
 
     //timber frame
     public static final Supplier<Block> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
-        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(0.1f, 0f).dynamicShape().sound(SoundType.SCAFFOLDING);
+        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
+                .strength(0.1f, 0f)
+                .noCollission().instabreak()
+                .dynamicShape().sound(SoundType.SCAFFOLDING);
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p, DAUB_FRAME);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
@@ -1201,17 +1203,17 @@ public class ModRegistry {
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
                     BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)),
-            () -> Items.GUNPOWDER, ServerConfigs.Tweaks.PLACEABLE_GUNPOWDER);
+            () -> Items.GUNPOWDER, CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER);
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regPlaceableItem(BOOK_PILE_NAME, () -> new BookPileBlock(
                     BlockBehaviour.Properties.of(Material.DECORATION).strength(0.5F).sound(SoundType.WOOD)),
-            () -> Items.ENCHANTED_BOOK, ServerConfigs.Tweaks.PLACEABLE_BOOKS);
+            () -> Items.ENCHANTED_BOOK, CommonConfigs.Tweaks.PLACEABLE_BOOKS);
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE_H = regPlaceableItem(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
                     BlockBehaviour.Properties.copy(BOOK_PILE.get())),
-            () -> Items.BOOK, ServerConfigs.Tweaks.PLACEABLE_BOOKS);
+            () -> Items.BOOK, CommonConfigs.Tweaks.PLACEABLE_BOOKS);
 
     public static final Supplier<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = regTile(
             BOOK_PILE_NAME, () -> PlatformHelper.newBlockEntityType(

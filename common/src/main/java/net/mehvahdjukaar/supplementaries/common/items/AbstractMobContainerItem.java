@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -120,7 +120,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 return !pet.isTame() || pet.isOwnedBy(player);
             }
 
-            int p = ServerConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
+            int p = CommonConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
             if (p != 100) {
                 return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
             }
@@ -132,7 +132,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     private <T extends Entity> boolean canCatch(T e) {
         String name = Utils.getID(e.getType()).toString();
         if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (ServerConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
+        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
             return true;
         }
         ICatchableMob cap = MobContainer.getCap(e);
@@ -196,7 +196,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
                         entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
-                        if (ServerConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+                        if (CommonConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                             mob.setPersistenceRequired();
                         }
 
@@ -322,7 +322,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 this.playCatchSound(player);
                 this.angerNearbyEntities(entity, player);
 
-                if (ServerConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+                if (CommonConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                     mob.setPersistenceRequired();
                 }
 

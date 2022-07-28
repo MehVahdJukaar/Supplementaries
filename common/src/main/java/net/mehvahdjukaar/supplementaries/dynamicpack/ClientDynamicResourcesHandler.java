@@ -48,7 +48,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
 
-        //hack. I need this for texture stitch
+        //need this here for reasons I forgot
         WallLanternTexturesRegistry.reloadTextures(manager);
 
         //generate static resources
@@ -68,7 +68,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
                 //if(wood.isVanilla())return;
 
                 String id = Utils.getID(sign).getPath();
-                //langBuilder.addEntry(sign, wood.getVariantReadableName("block_type.supplementaries.hanging_sign"));
+
 
                 try {
                     dynamicPack.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);

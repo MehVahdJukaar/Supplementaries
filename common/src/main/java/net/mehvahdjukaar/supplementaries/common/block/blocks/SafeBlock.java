@@ -4,7 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -147,7 +147,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 //clear ownership with tripwire
                 boolean cleared = false;
-                if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+                if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
                     if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
                             (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
@@ -169,7 +169,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 BlockPos p = pos.relative(state.getValue(FACING));
                 if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
-                    if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+                    if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
                         UUID owner = tile.owner;
                         if (owner == null) {
                             owner = player.getUUID();
@@ -209,7 +209,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag != null) {
-            if (ServerConfigs.Blocks.SAFE_SIMPLE.get()) {
+            if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
                 if (compoundTag.contains("Owner")) {
                     UUID id = compoundTag.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {

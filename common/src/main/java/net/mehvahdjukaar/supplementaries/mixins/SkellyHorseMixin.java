@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -61,9 +61,9 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (ServerConfigs.Tweaks.ZOMBIE_HORSE.get() && this.isTamed() && !this.isBaby()) {
+        if (CommonConfigs.Tweaks.ZOMBIE_HORSE.get() && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
-            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < ServerConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
+            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
                 this.feedRottenFlesh(player, hand, stack);
                 cir.cancel();
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level.isClientSide));
@@ -88,7 +88,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         this.setEating(true);
         this.fleshCount++;
 
-        if (this.fleshCount >= ServerConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
+        if (this.fleshCount >= CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
             this.conversionTime = 200;
             this.level.broadcastEntityEvent(this, (byte) 16);
         }

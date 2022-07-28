@@ -11,6 +11,6 @@ public class FarmersDelightCompat {
 
     @ExpectPlatform
     public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
-        return InteractionResult.PASS;
+        throw new AssertionError();
     }
 }

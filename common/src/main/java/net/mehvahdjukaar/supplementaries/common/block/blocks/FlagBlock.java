@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -133,7 +133,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             } else if (itemstack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
-                if (ServerConfigs.Blocks.STICK_POLE.get()) {
+                if (CommonConfigs.Blocks.STICK_POLE.get()) {
                     if (world.isClientSide) return InteractionResult.SUCCESS;
                     else {
                         Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;

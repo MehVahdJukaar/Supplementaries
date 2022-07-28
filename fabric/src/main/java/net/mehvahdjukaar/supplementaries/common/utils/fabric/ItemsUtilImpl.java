@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.fabric;
+package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.core.BlockPos;

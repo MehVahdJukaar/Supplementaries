@@ -8,7 +8,8 @@
     {"id":"minecraft:goat","required":false},
     {"id":"minecraft:mooshroom","required":false},
     {"id":"autumnity:snail","required":false},
-    {"id":"alexsmobs:raccoon","required":false}
+    {"id":"alexsmobs:raccoon","required":false},
+    {"id":"alexsmobs:elephant","required":false}
   ]
 }
 

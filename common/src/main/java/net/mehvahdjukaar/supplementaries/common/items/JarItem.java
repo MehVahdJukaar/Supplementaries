@@ -11,8 +11,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -56,7 +56,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
         if (e instanceof Monster) return false;
-        if (ServerConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
+        if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
         return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
     }
 
@@ -91,7 +91,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     private Boolean captureEnabled() {
-        return ServerConfigs.Blocks.JAR_CAPTURE.get();
+        return CommonConfigs.Blocks.JAR_CAPTURE.get();
     }
 
     @Override
@@ -227,7 +227,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (ServerConfigs.Blocks.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Blocks.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (DUMMY_TILE == null)
@@ -244,7 +244,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        if (ServerConfigs.Blocks.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Blocks.JAR_ITEM_DRINK.get()) {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;

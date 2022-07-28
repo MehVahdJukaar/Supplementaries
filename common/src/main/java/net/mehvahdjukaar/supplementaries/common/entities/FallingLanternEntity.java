@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,7 +37,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
     @Override
     public boolean causeFallDamage(float height, float amount, DamageSource source) {
         boolean r = super.causeFallDamage(height, amount, source);
-        if (ServerConfigs.Tweaks.FALLING_LANTERNS.get().hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
+        if (CommonConfigs.Tweaks.FALLING_LANTERNS.get().hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
             BlockState state = this.getBlockState();
 
             BlockPos pos = new BlockPos(this.getX(), this.getY() + 0.25, this.getZ());

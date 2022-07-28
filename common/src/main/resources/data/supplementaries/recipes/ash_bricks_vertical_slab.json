@@ -1,66 +1,31 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "flag": "ash_bricks",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "quark",
-          "type": "forge:mod_loaded"
-        },
-        {
-          "flag": "vertical_slabs",
-          "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          " 1 ",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "item": "supplementaries:ash_bricks_slab"
-          }
-        },
-        "result": {
-          "item": "supplementaries:ash_bricks_vertical_slab",
-          "count": 3
-        }
-      }
+      "flag": "ash_bricks",
+      "type": "supplementaries:flag"
     },
     {
-      "conditions": [
-        {
-          "flag": "ash_bricks",
-          "type": "supplementaries:flag"
-        },
-        {
-          "flag": "vertical_slabs",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "quark",
-          "type": "forge:mod_loaded"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "supplementaries:ash_bricks_vertical_slab"
-          }
-        ],
-        "result": {
-          "item": "supplementaries:ash_bricks_slab",
-          "count": 1
-        }
-      }
+      "modid": "quark",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 1 ",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:ash_bricks_slab"
+    }
+  },
+  "result": {
+    "item": "supplementaries:ash_bricks_vertical_slab",
+    "count": 3
+  }
 }

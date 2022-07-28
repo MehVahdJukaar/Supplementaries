@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
 
-    private final boolean hasFuse = ServerConfigs.Items.BOMB_FUSE.get() != 0;
+    private final boolean hasFuse = CommonConfigs.Items.BOMB_FUSE.get() != 0;
     private BombType type;
     private boolean active = true;
     private int changeTimer = -1;
@@ -51,19 +51,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
-        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
         super(ModRegistry.BOMB.get(), throwerIn, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModRegistry.BOMB.get(), x, y, z, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? ServerConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     //data to be saved when the entity gets unloaded
@@ -343,11 +343,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         public double getRadius() {
-            return this == BLUE ? ServerConfigs.Items.BOMB_BLUE_RADIUS.get() : ServerConfigs.Items.BOMB_RADIUS.get();
+            return this == BLUE ? CommonConfigs.Items.BOMB_BLUE_RADIUS.get() : CommonConfigs.Items.BOMB_RADIUS.get();
         }
 
         public BreakingMode breakMode() {
-            return this == BLUE ? ServerConfigs.Items.BOMB_BLUE_BREAKS.get() : ServerConfigs.Items.BOMB_BREAKS.get();
+            return this == BLUE ? CommonConfigs.Items.BOMB_BLUE_BREAKS.get() : CommonConfigs.Items.BOMB_BREAKS.get();
         }
 
         public float volume() {

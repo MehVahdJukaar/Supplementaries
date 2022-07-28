@@ -1,9 +1,21 @@
 {
   "replace": false,
   "values": [
-  {"id":"minecraft:charcoal","required":false},
-  {"id":"minecraft:coal","required":false},
-    {"id":"forge:dyes/black","required":false},
-    {"id":"chalk:black_chalk","required":false}
+    {
+      "id": "minecraft:charcoal",
+      "required": false
+    },
+    {
+      "id": "minecraft:coal",
+      "required": false
+    },
+    {
+      "id": "#forge:dyes/black",
+      "required": false
+    },
+    {
+      "id": "chalk:black_chalk",
+      "required": false
+    }
   ]
 }

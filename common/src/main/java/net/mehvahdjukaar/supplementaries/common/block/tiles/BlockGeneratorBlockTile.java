@@ -5,9 +5,9 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.generation.structure.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.reg.generation.structure.StructureLocator;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -178,7 +178,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                         }
 
 
-                        if (ServerConfigs.Spawns.DISTANCE_TEXT.get()) {
+                        if (CommonConfigs.Spawns.DISTANCE_TEXT.get()) {
                             sign.textHolder.setLine(0, getSignText(dist1));
                             if (twoSigns)
                                 sign.textHolder.setLine(1, getSignText(dist2));

@@ -3,16 +3,11 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 
 
 public class CCCompatImpl {
@@ -21,9 +16,27 @@ public class CCCompatImpl {
     }
 
     public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile speakerBlockTile) {
-
         return null;
 
+    }
+
+    public static void initialize() {
+    }
+
+    public static boolean isPrintedBook(Item item) {
+        return false;
+    }
+
+    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties p) {
+        return null;
+    }
+
+    public static int getPages(ItemStack itemstack) {
+        return 0;
+    }
+
+    public static String[] getText(ItemStack itemstack) {
+        return null;
     }
 /*
 

@@ -4,7 +4,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -56,7 +56,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public boolean isAcceptedItem(Item i) {
-        return isEnchantedBook(i) || (ServerConfigs.Tweaks.MIXED_BOOKS.get() && isNormalBook(i));
+        return isEnchantedBook(i) || (CommonConfigs.Tweaks.MIXED_BOOKS.get() && isNormalBook(i));
     }
 
     public static boolean isEnchantedBook(Item i) {
@@ -64,7 +64,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isNormalBook(Item i) {
-        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (ServerConfigs.Tweaks.WRITTEN_BOOKS.get() && isWrittenBook(i));
+        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (CommonConfigs.Tweaks.WRITTEN_BOOKS.get() && isWrittenBook(i));
     }
 
     public static boolean isWrittenBook(Item i) {
