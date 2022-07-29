@@ -37,7 +37,6 @@ public class EatFodderGoal extends MoveToBlockGoal {
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean canUse() {
         if (!this.animal.canFallInLove() || this.animal.getAge() > 0) return false;

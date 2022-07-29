@@ -33,7 +33,6 @@
     "LivingEntityMixin",
     "LoomInputSlotMixin",
     "LoomMenuMixin",
-    "MineshaftLanternMixin",
     "PistonBlockEntityMixin",
     "RedMerchantSpawnerMixin",
     "ShulkerBoxBlockEntityMixin",
@@ -44,7 +43,7 @@
     "WanderingTraderMixin",
     "ZombieHorseMixin",
     "accessors.MineshaftAccessor",
-    "accessors.MobAccessor",
+    "accessors.MobAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

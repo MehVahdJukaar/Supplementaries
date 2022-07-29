@@ -75,6 +75,16 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float f) {
+        super.fallOn(level, state, pos, entity, f);
+    }
+
+    @Override
+    public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
+        super.updateEntityAfterFallOn(level, entity);
+    }
+
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
@@ -111,8 +121,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     public ItemStack getSpikeItem(BlockEntity te) {
-        if (te instanceof BambooSpikesBlockTile) {
-            return ((BambooSpikesBlockTile) te).getSpikeItem();
+        if (te instanceof BambooSpikesBlockTile tile) {
+            return tile.getSpikeItem();
         }
         return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
     }
@@ -149,7 +159,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         if (entityIn instanceof LivingEntity le && entityIn.isAlive()) {
             boolean up = state.getValue(FACING) == Direction.UP;
             double vy = up ? 0.45 : 0.95;
+            //does not reset fall distance
+            float fall = entityIn.fallDistance;
             entityIn.makeStuckInBlock(state, new Vec3(0.95D, vy, 0.95D));
+            entityIn.fallDistance = fall;
+
             if (!worldIn.isClientSide) {
                 if (up && entityIn instanceof Player && entityIn.isShiftKeyDown()) return;
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 3 : 1.5f;

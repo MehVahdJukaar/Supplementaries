@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -17,9 +21,13 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -36,59 +44,66 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class AdventurerMapsHandler {
+public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
+
+    //cursed
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
+            .registerTypeAdapter(AdventurerMapTrade.class, (JsonDeserializer<AdventurerMapTrade>)
+                    (json, typeOfT, context) -> AdventurerMapTrade.CODEC.parse(JsonOps.INSTANCE, json)
+                            .getOrThrow(false, e ->
+                                    Supplementaries.LOGGER.error("failed to parse structure map trade: {}", e))
+            ).create();
+
+    public static final PreparableReloadListener RELOAD_INSTANCE = new AdventurerMapsHandler();
+
+    public AdventurerMapsHandler() {
+        super(GSON, "structure_maps");
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+        CUSTOM_MAPS_TRADES.clear();
+
+        jsons.forEach((key, json) -> {
+            //CUSTOM_MAPS_TRADES.add(GSON.fromJson(json, AdventurerMapTrade.class));
+            var v = AdventurerMapTrade.CODEC.parse(JsonOps.INSTANCE, json);
+             var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse structure map trade: {}", e));
+            CUSTOM_MAPS_TRADES.add(data);
+        });
+        if (CUSTOM_MAPS_TRADES.size() != 0)
+            Supplementaries.LOGGER.info("Loaded  " + CUSTOM_MAPS_TRADES.size() + " structure maps trades");
+    }
+
 
     private static final int SEARCH_RADIUS = 100;
-    private static final List<TradeData> CUSTOM_MAPS_TRADES = new ArrayList<>();
+    private static final List<AdventurerMapTrade> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
     private static final Map<TagKey<Structure>,
             Pair<ResourceLocation, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
 
 
-    private static void addStructureDecoration(TagKey<Structure> tag, ResourceLocation res, int color) {
+    private static void associateStructureMarker(TagKey<Structure> tag, ResourceLocation res, int color) {
         DEFAULT_STRUCTURE_MARKERS.put(tag, Pair.of(res, color));
     }
 
-    private static void addStructureDecoration(TagKey<Structure> tag, MapDecorationType<?, ?> type, int color) {
-        addStructureDecoration(tag, Utils.getID(type), color);
-    }
-
     static {
-        //tags here
-        addStructureDecoration(StructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
-        addStructureDecoration(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
-        addStructureDecoration(StructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
-        addStructureDecoration(StructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
-        addStructureDecoration(StructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
-        addStructureDecoration(ModTags.PILLAGER_OUTPOST, CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100);
-        addStructureDecoration(ModTags.DESERT_PYRAMID, CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f);
-        addStructureDecoration(ModTags.JUNGLE_TEMPLE, CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638);
-        addStructureDecoration(ModTags.BASTION_REMNANT, CMDreg.BASTION_TYPE, 0x2c292f);
-        addStructureDecoration(ModTags.END_CITY, CMDreg.END_CITY_TYPE, 0x9c73ab);
-        addStructureDecoration(ModTags.SWAMP_HUT, CMDreg.SWAMP_HUT_TYPE, 0x1b411f);
-        addStructureDecoration(ModTags.NETHER_FORTRESS, CMDreg.NETHER_FORTRESS, 0x3c080b);
-        addStructureDecoration(StructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
-
-        /*
-        simpleMapTrade(Structure.SHIPWRECK);
-        simpleMapTrade(Structure.IGLOO);
-        simpleMapTrade(Structure.RUINED_PORTAL);
-        simpleMapTrade(Structure.VILLAGE);
-        simpleMapTrade(Structure.OCEAN_RUIN);
-        simpleMapTrade(Structure.PILLAGER_OUTPOST);
-        simpleMapTrade(Structure.DESERT_PYRAMID);
-        simpleMapTrade(Structure.JUNGLE_TEMPLE);
-        simpleMapTrade(Structure.BASTION_REMNANT);
-        simpleMapTrade(Structure.END_CITY);
-        simpleMapTrade(Structure.SWAMP_HUT);
-        simpleMapTrade(Structure.NETHER_BRIDGE);
-        simpleMapTrade(Structure.MINESHAFT);
-        */
-
+        associateStructureMarker(StructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
+        associateStructureMarker(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
+        associateStructureMarker(StructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
+        associateStructureMarker(StructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
+        associateStructureMarker(StructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
+        associateStructureMarker(ModTags.PILLAGER_OUTPOST, CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100);
+        associateStructureMarker(ModTags.DESERT_PYRAMID, CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f);
+        associateStructureMarker(ModTags.JUNGLE_TEMPLE, CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638);
+        associateStructureMarker(ModTags.BASTION_REMNANT, CMDreg.BASTION_TYPE, 0x2c292f);
+        associateStructureMarker(ModTags.END_CITY, CMDreg.END_CITY_TYPE, 0x9c73ab);
+        associateStructureMarker(ModTags.SWAMP_HUT, CMDreg.SWAMP_HUT_TYPE, 0x1b411f);
+        associateStructureMarker(ModTags.NETHER_FORTRESS, CMDreg.NETHER_FORTRESS, 0x3c080b);
+        associateStructureMarker(StructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
     }
 
     private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {
-        ResourceLocation res = new ResourceLocation("selene:generic_structure");
+        ResourceLocation res = new ResourceLocation("");
         int color = -1;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
             if (structure.is(v.getKey())) {
@@ -104,82 +119,41 @@ public class AdventurerMapsHandler {
         return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
     }
 
-
-    public static void loadCustomTrades() {
-        //only called once when server starts
-        if (!CUSTOM_MAPS_TRADES.isEmpty()) return;
-        try {
-            List<? extends List<String>> tradeData = CommonConfigs.Tweaks.CUSTOM_ADVENTURER_MAPS_TRADES.get();
-
-            for (List<String> l : tradeData) {
-                int s = l.size();
-                if (s > 0) {
-                    try {
-
-                        String res = l.get(0);
-                        if (res.isEmpty()) continue;
-                        ResourceLocation structure = new ResourceLocation(res);
-
-                        //default values
-                        int level = 2;
-                        int minPrice = 7;
-                        int maxPrice = 13;
-
-                        String mapName = null;
-                        int mapColor = 0xffffff;
-                        ResourceLocation marker = null;
-
-
-                        if (s > 1) level = Integer.parseInt(l.get(1));
-                        if (level < 1 || level > 5) {
-                            Supplementaries.LOGGER.warn("skipping configs 'custom_adventurer_maps' (" + l + "): invalid level, must be between 1 and 5");
-                            continue;
-                        }
-                        if (s > 2) minPrice = Integer.parseInt(l.get(2));
-                        if (s > 3) maxPrice = Integer.parseInt(l.get(3));
-                        if (s > 4) mapName = l.get(4);
-                        if (s > 5) mapColor = Integer.parseInt(l.get(5).replace("0x", ""), 16);
-                        if (s > 6) marker = new ResourceLocation(l.get(6));
-
-
-                        CUSTOM_MAPS_TRADES.add(new TradeData(structure, level, minPrice, maxPrice, mapName, mapColor, marker));
-                    } catch (Exception e) {
-                        Supplementaries.LOGGER.warn("wrong formatting for configs 'custom_adventurer_maps'(" + l + "), skipping it :" + e);
-                    }
-                }
-
-            }
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn("failed to parse config 'custom_adventurer_maps', skipping them.");
-        }
-    }
-
-    private record TradeData(ResourceLocation structure, int level, int minPrice, int maxPrice,
-                             @Nullable String mapName, int mapColor, @Nullable ResourceLocation marker) {
-    }
-
     public static void addTradesCallback() {
-        for (TradeData data : CUSTOM_MAPS_TRADES) {
-            if (data != null)
-                try {
-                    RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, data.level, itemListings -> itemListings.add(new AdventureMapTrade(data)));
-                } catch (Exception e) {
-                    Supplementaries.LOGGER.warn("Failed to load custom adventurer map for structure " + data.structure.toString());
-                }
-        }
+
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 1, itemListings -> {
+            maybeAddCustomMap(itemListings, 1);
+        });
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> {
             if (CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
                 itemListings.add(new RandomAdventureMapTrade());
             }
+            maybeAddCustomMap(itemListings, 2);
+        });
+
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 3, itemListings -> {
+            maybeAddCustomMap(itemListings, 3);
+        });
+
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 4, itemListings -> {
+            maybeAddCustomMap(itemListings, 4);
+        });
+
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 5, itemListings -> {
+            maybeAddCustomMap(itemListings, 5);
         });
     }
 
+    private static void maybeAddCustomMap(List<VillagerTrades.ItemListing> listings, int level){
+        for (var data : CUSTOM_MAPS_TRADES) {
+            if(level == data.villagerLevel()){
+                listings.add(data);
+            }
+        }
+    }
 
     private static class RandomAdventureMapTrade implements VillagerTrades.ItemListing {
-
-        private RandomAdventureMapTrade() {
-        }
 
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
@@ -218,29 +192,6 @@ public class AdventurerMapsHandler {
             }
             return ItemStack.EMPTY;
         }
-    }
-
-
-    private static class AdventureMapTrade implements VillagerTrades.ItemListing {
-        public final TradeData tradeData;
-
-        private AdventureMapTrade(TradeData data) {
-            this.tradeData = data;
-        }
-
-        @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
-
-            int i = Math.max(1, random.nextInt(Math.max(1, tradeData.maxPrice - tradeData.minPrice)) + tradeData.minPrice);
-
-            ItemStack itemstack = createStructureMap(entity.level, entity.blockPosition(),
-                    tradeData.structure, tradeData.mapName, tradeData.mapColor, tradeData.marker);
-            if (itemstack.isEmpty()) return null;
-
-            return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, Math.max(1, 5 * (tradeData.level - 1)), 0.2F);
-        }
-
-
     }
 
 

@@ -105,13 +105,15 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
                 ResType.RECIPES.getPath(Supplementaries.res("hanging_sign_oak")));
 
         ModRegistry.HANGING_SIGNS.forEach((w, b) -> {
-            Item i = b.asItem();
-            //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-            if (i.getItemCategory() != null) {
-                FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                if (newR == null) return;
-                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                this.dynamicPack.addRecipe(newR);
+            if (w != WoodTypeRegistry.OAK_TYPE) {
+                Item i = b.asItem();
+                //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+                if (i.getItemCategory() != null) {
+                    FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                    if (newR == null) return;
+                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                    this.dynamicPack.addRecipe(newR);
+                }
             }
         });
     }
@@ -120,29 +122,31 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
         IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
                 ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
 
-        WoodType wood = WoodTypeRegistry.OAK_TYPE;
+        WoodType oak = WoodTypeRegistry.OAK_TYPE;
 
         if (signPostTemplate2 == null) {
-            ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(wood), 3)
+            ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(oak), 3)
                     .pattern("   ")
                     .pattern("222")
                     .pattern(" 1 ")
                     .define('1', Items.STICK)
-                    .define('2', wood.planks)
+                    .define('2', oak.planks)
                     .group(RegistryConstants.SIGN_POST_NAME)
-                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(wood.planks))
+                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(oak.planks))
                     .save((s) -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
         }
 
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
-            //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-            if (i.getItemCategory() != null) {
-                IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
+            if (w != oak) {
+                //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+                if (i.getItemCategory() != null) {
+                    IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 
-                FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                if (newR == null) return;
-                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                this.dynamicPack.addRecipe(newR);
+                    FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                    if (newR == null) return;
+                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                    this.dynamicPack.addRecipe(newR);
+                }
             }
         });
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -14,18 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-
-import static net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder.LIST_STRING_CHECK;
 
 public class CommonConfigs {
 
     public static void init() {
     }
 
-    ;
 
     public static ConfigSpec SERVER_SPEC;
 
@@ -45,11 +42,10 @@ public class CommonConfigs {
     }
 
     private static void onRefresh() {
-        //this isnt safe. refresh could happen sooner than item registration for fabric
-        ResourceLocation res = new ResourceLocation(Items.ROPE_ARROW_ROPE.get());
-
+        //this isn't safe. refresh could happen sooner than item registration for fabric
         Items.ROPE_ARROW_OVERRIDE = Suppliers.memoize(() -> {
-            var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), res));
+            var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(),
+                    new ResourceLocation(Items.ROPE_ARROW_ROPE.get())));
             return (Holder.Reference<Block>) opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
         });
     }
@@ -89,9 +85,8 @@ public class CommonConfigs {
 
             //rope arrow
             builder.push("rope_arrow");
-            ROPE_ARROW_ROPE = builder.comment("If you don't like my ropes you can specify here the block id of" +
-                            "a rope from another mod which will get deployed by rope arrows instead of mine")
-                    .define("rope_arrow_override", "supplementaries:rope");
+            ROPE_ARROW_ROPE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows instead")
+                    .define("rope_override", "supplementaries:rope");
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
                     .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
@@ -162,7 +157,6 @@ public class CommonConfigs {
         public static Supplier<Boolean> RAKED_GRAVEL;
         public static Supplier<Boolean> BOTTLE_XP;
         public static Supplier<Integer> BOTTLING_COST;
-        public static Supplier<List<? extends List<String>>> CUSTOM_ADVENTURER_MAPS_TRADES;
         public static Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static Supplier<Boolean> MAP_MARKERS;
         public static Supplier<Boolean> CEILING_BANNERS;
@@ -278,28 +272,8 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("map_tweaks");
-            CUSTOM_ADVENTURER_MAPS_TRADES = builder.comment("""
-                            In this section you can add custom structure maps to cartographers
-                            The format required is as follows:
-                            [[<structure>,<level>,<min_price>,<max_price>,<map_name>,<map_color>,<map_marker>],[<structure>,...,<map_marker>],...]
-                            With the following parameters:
-                             - <structure> structure id to be located (ie: minecraft:igloo)
-                             - <level> villager trading level at which the map will be sold. Must be between 1 and 5
-                             - <min_price> minimum emerald price
-                             - <max_price> maximum emerald price
-                             - <map_name> map item name
-                             - <map_color> hex color of the map item overlay texture
-                             - <map_marker> id of the map marker to be used (ie: supplementaries:igloo).\s
-                            See texture folder for all the names. Leave empty for default ones.
-                            You can also use vanilla map markers by referring to them with their enum name (i.e: minecraft:target_x)
-                            Other vanilla valid ones are: player, target, red_marker, target_point, player_off_map, player_off_limits, mansion, monument, red_x, banner_white
-                            Note that ony the first parameter is required, each of the others others can me removed and will be defaulted to reasonable values
-                            example: ['minecraft:swamp_hut','2','5','7','witch hut map','0x00ff33']""")
-
-                    .defineForgeList("custom_adventurer_maps", Collections.singletonList(Collections.singletonList("")), LIST_STRING_CHECK);
-
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                            "Best kept disabled if you are adding custom adventurer maps with its config")
+                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)")
                     .define("random_adventurer_maps", true);
             MAP_MARKERS = builder.comment("enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);

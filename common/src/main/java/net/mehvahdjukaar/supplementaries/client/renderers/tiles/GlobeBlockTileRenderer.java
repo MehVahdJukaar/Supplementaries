@@ -91,6 +91,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         return LayerDefinition.create(mesh, 32, 32);
     }
 
+    public static GlobeBlockTileRenderer INSTANCE = null;
+
     public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart model = context.bakeLayer(ClientRegistry.GLOBE_BASE_MODEL);
         models.put(GlobeBlockTile.GlobeModel.GLOBE, model.getChild("globe"));
@@ -98,7 +100,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         models.put(GlobeBlockTile.GlobeModel.FLAT, special.getChild("flat"));
         models.put(GlobeBlockTile.GlobeModel.SNOW, special.getChild("snow"));
         models.put(GlobeBlockTile.GlobeModel.SHEARED, special.getChild("sheared"));
-        ClientRegistry.GLOBE_RENDERER_INSTANCE = this;
+        INSTANCE = this;
     }
 
     @Override

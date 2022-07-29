@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -47,8 +48,13 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class ServerEventsForge {
 
     public static void init() {
-        var bus = MinecraftForge.EVENT_BUS;
-        bus.register(ServerEventsForge.class);
+
+                MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
+    }
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        CapabilityHandler.register(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

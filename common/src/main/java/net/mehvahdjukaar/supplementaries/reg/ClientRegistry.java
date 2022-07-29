@@ -61,9 +61,6 @@ import java.util.Map;
 
 public class ClientRegistry {
 
-    //move out of here!
-    public static GlobeBlockTileRenderer GLOBE_RENDERER_INSTANCE = null;
-
     //entity models
     public static ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static ModelLayerLocation BOOK_MODEL = loc("book");

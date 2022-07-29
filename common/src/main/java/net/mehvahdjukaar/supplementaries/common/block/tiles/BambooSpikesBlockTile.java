@@ -28,7 +28,6 @@ public class BambooSpikesBlockTile extends BlockEntity {
     public Potion potion = Potions.EMPTY;
     public int charges = 0;
     public long lastTicked = 0;
-    private final Random rand = new Random();
     //put these two in config
     public static final float POTION_MULTIPLIER = 0.1f;
     public static final int MAX_CHARGES = 16;
@@ -52,7 +51,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
         return world.getGameTime() - this.lastTicked < 20;
     }
 
-    //true if has run out of charges
+    //true if it has run out of charges
     public boolean consumeCharge(Level world) {
         if (CommonConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
         this.lastTicked = world.getGameTime();
@@ -119,7 +118,9 @@ public class BambooSpikesBlockTile extends BlockEntity {
         double d2 = (double) (i & 255) / 255.0D;
         BlockPos pos = this.getBlockPos();
         //TODO: fix on server side
-        level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getY() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, pos.getZ() + 0.5 + (this.rand.nextFloat() - 0.5) * 0.75, d0, d1, d2);
+        level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
+                pos.getY() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
+                pos.getZ() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75, d0, d1, d2);
     }
 
     public ItemStack getSpikeItem() {

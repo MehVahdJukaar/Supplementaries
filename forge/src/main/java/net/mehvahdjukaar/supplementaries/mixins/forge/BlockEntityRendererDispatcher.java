@@ -24,6 +24,7 @@ public abstract class BlockEntityRendererDispatcher {
     private static <T extends BlockEntity> void setupAndRenderPre(BlockEntityRenderer<T> renderer, T tile, float partialTicks,
                                                                   PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> {
+
             if (c.hasAntiqueInk()) {
                 IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
                 font.setAntiqueInk(true);

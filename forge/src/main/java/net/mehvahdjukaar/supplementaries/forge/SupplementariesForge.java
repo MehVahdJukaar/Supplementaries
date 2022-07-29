@@ -34,36 +34,20 @@ public class SupplementariesForge {
     public static final String MOD_ID = Supplementaries.MOD_ID;
 
     public SupplementariesForge() {
-
-        ClientEventsForge.init();
-        ServerEventsForge.init();
-
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         Supplementaries.commonInit();
 
         CraftingHelper.register(new OptionalRecipeCondition.Serializer());
 
-        /**
-         * Update stuff:
-         * Configs
-         * sand later
-         * ash layer
-         * leaf layer
-         */
-
-        //TODO: fix layers texture generation
-        //TODO: fix grass growth replacing double plants and add tag
-
-
         bus.addListener(SupplementariesForge::init);
         bus.addListener(SupplementariesForge::registerOverrides);
 
-        MinecraftForge.EVENT_BUS.register(this);
+        ServerEventsForge.init();
 
-        //wall lantern and jar jsons
         if (PlatformHelper.getEnv().isClient()) {
             ClientRegistry.init();
+            ClientEventsForge.init();
         }
     }
 
@@ -85,11 +69,6 @@ public class SupplementariesForge {
             Supplementaries.commonSetup();
         });
 
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        CapabilityHandler.register(event);
     }
 
 

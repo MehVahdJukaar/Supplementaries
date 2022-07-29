@@ -9,8 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,6 +21,8 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
+    public static final FluteSongsReloadListener RELOAD_INSTANCE = new FluteSongsReloadListener();
+
     public FluteSongsReloadListener() {
         super(GSON, "flute_songs");
     }
@@ -34,23 +34,19 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
         List<Song> temp = new ArrayList<>();
 
         jsons.forEach((key, input) -> {
-            if (input != null) {
-                try {
-                    Song song = GSON.fromJson(input, Song.class);
-                    if (song.getNotes().length == 0) {
-                        Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key + ": a song can't have 0 notes!");
-                    } else {
-                        temp.add(song);
-                        SongsManager.addSong(key, song);
-                    }
-                } catch (Exception e) {
-                    Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
+            try {
+                Song song = GSON.fromJson(input, Song.class);
+                if (song.getNotes().length == 0) {
+                    Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key + ": a song can't have 0 notes!");
+                } else {
+                    temp.add(song);
+                    SongsManager.addSong(key, song);
                 }
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
             }
         });
-
-        //Supplementaries.LOGGER.debug("Loaded  " + SongsManager.SONGS.size() + " songs: " + SongsManager.SONGS.keySet());
-
+        if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded  " + temp.size() + " flute songs");
         temp.forEach(Song::processForPlaying);
     }
 

@@ -131,7 +131,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                         }
 
                         if (tile.type.isGlobe()) {
-                            if (ClientRegistry.GLOBE_RENDERER_INSTANCE != null) {
+                            if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                                 boolean sepia = tile.type == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
                                 Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
@@ -139,7 +139,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                                                 GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :
                                                 Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
 
-                                ClientRegistry.GLOBE_RENDERER_INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
+                                GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
                                         combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                             }
                             matrixStackIn.popPose();

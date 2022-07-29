@@ -210,7 +210,6 @@ public class VillagerTradesHandler {
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
 
-        AdventurerMapsHandler.loadCustomTrades();
         AdventurerMapsHandler.addTradesCallback();
     }
 }

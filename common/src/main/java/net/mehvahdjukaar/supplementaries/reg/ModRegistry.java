@@ -461,7 +461,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = regTile(
             GLOBE_NAME, () -> PlatformHelper.newBlockEntityType(
-                    GlobeBlockTile::new, GLOBE.get()));
+                    GlobeBlockTile::new, GLOBE.get(), GLOBE_SEPIA.get()));
 
     /*
     //candle holder
@@ -605,11 +605,11 @@ public class ModRegistry {
 
     //rope
     public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
-                    BlockBehaviour.Properties.of(Material.WOOL)
-                            .sound(ModSounds.ROPE)
-                            .strength(0.25f)
-                            .speedFactor(0.7f)
-                            .noOcclusion()));
+            BlockBehaviour.Properties.of(Material.WOOL)
+                    .sound(ModSounds.ROPE)
+                    .strength(0.25f)
+                    .speedFactor(0.7f)
+                    .noOcclusion()));
 
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
@@ -1199,6 +1199,11 @@ public class ModRegistry {
     public static final Supplier<Block> FLINT_BLOCK = regWithItem(FLINT_BLOCK_NAME, () -> new FlintBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+
+    //sugar block
+   // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+   //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+   // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(

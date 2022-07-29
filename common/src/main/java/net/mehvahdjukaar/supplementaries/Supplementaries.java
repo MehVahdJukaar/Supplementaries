@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
@@ -65,7 +66,8 @@ public class Supplementaries {
         var serverRes = new ServerDynamicResourcesHandler();
         serverRes.register();
 
-        PlatformHelper.addServerReloadListener(new FluteSongsReloadListener(), res("flute_songs"));
+        PlatformHelper.addServerReloadListener(FluteSongsReloadListener.RELOAD_INSTANCE, res("flute_songs"));
+        PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
 
         if (PlatformHelper.getEnv().isClient()) {
             var clientRes = new ClientDynamicResourcesHandler();

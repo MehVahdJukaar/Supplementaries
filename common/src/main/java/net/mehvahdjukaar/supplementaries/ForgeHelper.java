@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.function.Consumer;
 //todo: move to lib
 public class ForgeHelper {
 
+    @Contract
     @ExpectPlatform
     public static boolean canEntityDestroy(Level level, BlockPos blockPos, Animal animal) {
         throw new AssertionError();

@@ -1,8 +1,14 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,11 +21,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
+//seems like this still makes the internal server freeze
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockBehaviourPlanterMixin {
 
     @Shadow
     public abstract Block getBlock();
+
+    @Shadow public abstract boolean is(TagKey<Block> tagKey);
 
     @Inject(method = "getOffset", at = @At(
             value = "RETURN",
@@ -27,7 +36,8 @@ public abstract class BlockBehaviourPlanterMixin {
             cancellable = true)
     public void getOffset(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Vec3> cir) {
         //null check for world since some mods like to throw a null world here...
-        if (world != null && cir.getReturnValue() != Vec3.ZERO) {
+        if (world != null && cir.getReturnValue() != Vec3.ZERO &&
+                !world.isOutsideBuildHeight(pos.getY()-2) && world instanceof RenderChunkRegion) {
             int b = 1;
             if (this.getBlock() instanceof DoublePlantBlock && world.getBlockState(pos).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;

@@ -185,7 +185,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
                 matrixStackIn.translate(0, -0.5, -0.5);
                 if (pose.isGlobe()) {
-                    if (ClientRegistry.GLOBE_RENDERER_INSTANCE != null) {
+                    if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
                         Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
@@ -193,7 +193,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                                         GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :
                                         Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
 
-                        ClientRegistry.GLOBE_RENDERER_INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
+                        GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
                                 combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                     }
                 } else {
