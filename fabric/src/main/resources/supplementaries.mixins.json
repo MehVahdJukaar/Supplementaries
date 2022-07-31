@@ -6,8 +6,9 @@
   "client": [
   ],
   "mixins": [
+    "BushBlockMixin",
+    "CropBlockMixin",
     "MobBucketItemAccessor"
-
   ],
   "injectors": {
     "defaultRequire": 1

@@ -26,13 +26,17 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
+    //so we don't have to save the whole texture location but its index instead
+    private static final List<ResourceLocation> TEXTURE_IND = new ArrayList<>(Textures.SKULL_CANDLES_TEXTURES.values());
+
     @Nullable
     protected SkullBlockEntity innerTileUp = null;
-
-    private int waxColorInd = -1;
+    //client only
     private ResourceLocation waxTexture = null;
 
     public DoubleSkullBlockTile(BlockPos pWorldPosition, BlockState pBlockState) {
@@ -44,8 +48,8 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
         super.saveAdditional(tag);
         this.saveInnerTile("SkullUp", this.innerTileUp, tag);
 
-        if (waxColorInd != -1) {
-            tag.putInt("WaxColor", waxColorInd);
+        if (waxTexture != null) {
+            tag.putByte("WaxColor", (byte) TEXTURE_IND.indexOf(waxTexture));
         }
     }
 
@@ -55,9 +59,7 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
         this.innerTileUp = this.loadInnerTile("SkullUp", this.innerTileUp, tag);
 
         if (tag.contains("WaxColor")) {
-            this.waxColorInd = tag.getInt("WaxColor");
-            DyeColor d = waxColorInd == 17 ? null : DyeColor.byId(waxColorInd);
-            this.waxTexture = Textures.SKULL_CANDLES_TEXTURES.get(d);
+            this.waxTexture = TEXTURE_IND.get(tag.getByte("WaxColor"));
         } else {
             waxTexture = null;
         }
@@ -120,19 +122,14 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     }
 
     public void updateWax(BlockState above) {
-        int index = -1;
-        DyeColor c = null;
+        ResourceLocation newTexture = null;
         if (above.getBlock() instanceof CandleBlock block) {
-            c = CandleSkullBlockTile.colorFromCandle(block);
-            if (c == null) index = 17;
-            else index = c.getId();
+            newTexture = CandleSkullBlockTile.getWaxColor(block);
         }
-        if (this.waxColorInd != index) {
-            this.waxColorInd = index;
+        if (this.waxTexture != newTexture) {
+            this.waxTexture = newTexture;
             if (this.level instanceof ServerLevel) {
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 2);
-            } else {
-                this.waxTexture = waxColorInd == -1 ? null : Textures.SKULL_CANDLES_TEXTURES.get(c);
             }
         }
     }

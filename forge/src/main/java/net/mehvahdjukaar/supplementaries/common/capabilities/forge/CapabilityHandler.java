@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.forge;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.forge.AntiqueInkProvider;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.forge.AntiqueInkProviderImpl;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,12 +25,9 @@ public class CapabilityHandler {
         event.register(IAntiqueTextProvider.class);
     }
 
-
-    public static final boolean ANTIQUE_CAP_ENABLED = RegistryConfigs.ANTIQUE_INK_ENABLED.get();
-
     public static void attachCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (ANTIQUE_CAP_ENABLED && event.getObject() instanceof SignBlockEntity) {
-            event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProvider());
+        if (AntiqueInkProvider.isEnabled() && event.getObject() instanceof SignBlockEntity) {
+            event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProviderImpl());
         }
     }
 

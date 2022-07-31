@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.configured;
+package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 
 
 import com.google.common.collect.ImmutableList;

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -28,7 +27,8 @@ public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer
                     .setValue(CandleBlock.CANDLES, blockstate.getValue(CandleBlock.CANDLES));
 
             float yaw = -22.5F * (float) (blockstate.getValue(SkullBlock.ROTATION));
-            this.renderWax(poseStack, buffer, pCombinedLight, Textures.SKULL_CANDLES_TEXTURES.get(tile.getCandleColor()), yaw);
+
+            this.renderWax(poseStack, buffer, pCombinedLight, tile.getWaxTexture(), yaw);
 
             poseStack.translate(0, 0.5, 0);
             blockRenderer.renderSingleBlock(candle, poseStack, buffer, pCombinedLight, pCombinedOverlay);

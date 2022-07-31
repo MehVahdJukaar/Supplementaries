@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.integration.MapAtlasCompat;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.builtincompat.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -606,7 +607,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return AntiqueInkHandler.isEnabled();
+            return AntiqueInkProvider.isEnabled();
         }
 
         @Override
@@ -621,7 +622,7 @@ public class ItemsOverrideHandler {
                 BlockPos pos = hit.getBlockPos();
                 BlockEntity tile = world.getBlockEntity(pos);
                 if (tile != null && (!(tile instanceof IOwnerProtected op) || op.isAccessibleBy(player))) {
-                    if (AntiqueInkHandler.toggleAntiqueInkOnSigns(world, player, stack, newState, pos, tile)) {
+                    if (AntiqueInkProvider.toggleAntiqueInkOnSigns(world, player, stack, newState, pos, tile)) {
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }
@@ -697,7 +698,6 @@ public class ItemsOverrideHandler {
                         return result;
                     }
                 }
-
             }
             return InteractionResult.PASS;
         }
@@ -712,7 +712,8 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item.builtInRegistryHolder().is(ItemTags.CANDLES) && Utils.getID(item).getNamespace().equals("minecraft");
+            return item.builtInRegistryHolder().is(ItemTags.CANDLES)
+                    && (Utils.getID(item).getNamespace().equals("minecraft") || item == CompatObjects.SOUL_CANDLE_ITEM.get());
         }
 
         @Override
@@ -720,14 +721,18 @@ public class ItemsOverrideHandler {
             if (player.getAbilities().mayBuild) {
                 BlockPos pos = hit.getBlockPos();
 
-                BlockEntity te = world.getBlockEntity(pos);
-                if (te instanceof SkullBlockEntity oldTile) {
+                if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {
                     BlockState state = oldTile.getBlockState();
                     if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
 
                         ItemStack copy = stack.copy();
 
-                        InteractionResult result = replaceSimilarBlock(ModRegistry.SKULL_CANDLE.get(), player, stack, pos, world,
+                        Block b;
+                        if (CompatHandler.buzzier_bees && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
+                            b = ModRegistry.SKULL_CANDLE_SOUL.get();
+                        } else b = ModRegistry.SKULL_CANDLE.get();
+
+                        InteractionResult result = replaceSimilarBlock(b, player, stack, pos, world,
                                 state, SoundType.CANDLE, SkullBlock.ROTATION);
 
                         if (result.consumesAction()) {

@@ -13,4 +13,5 @@ public interface MobBucketItemAccessor {
 
     @Invoker("getFishType")
     EntityType<?> invokeGetFishType();
+
 }

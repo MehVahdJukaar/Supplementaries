@@ -1,8 +1,6 @@
-package net.mehvahdjukaar.supplementaries.integration.configured;
+package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.screen.ModConfigSelectionScreen;
@@ -11,21 +9,19 @@ import com.mrcrayfish.configured.client.util.ScreenUtil;
 import com.mrcrayfish.configured.util.ConfigHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.gui.widgets.LinkButton;
 import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
@@ -154,30 +150,30 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
         this.addRenderableWidget(new Button(centerX - 45, y, 90, 20, CommonComponents.GUI_BACK, (button) -> this.minecraft.setScreen(this.parent)));
 
-        ButtonIcon patreon = ButtonIcon.linkButton(this, centerX - 45 - 22, y, 3, 1,
-                getLink("https://www.patreon.com/user?u=53696377"), "Support me on Patreon :D");
+        LinkButton patreon = LinkButton.create(ICONS_TEXTURES, this, centerX - 45 - 22, y, 3, 1,
+                "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D");
 
-        ButtonIcon kofi = ButtonIcon.linkButton(this, centerX - 45 - 22 * 2, y, 2, 2,
-                getLink("https://ko-fi.com/mehvahdjukaar"), "Donate a Coffe");
+        LinkButton kofi = LinkButton.create(ICONS_TEXTURES, this, centerX - 45 - 22 * 2, y, 2, 2,
+                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
 
-        ButtonIcon curseforge = ButtonIcon.linkButton(this, centerX - 45 - 22 * 3, y, 1, 2,
-                getLink("https://www.curseforge.com/minecraft/mc-mods/supplementaries"), "CurseForge Page");
+        LinkButton curseforge = LinkButton.create(ICONS_TEXTURES, this, centerX - 45 - 22 * 3, y, 1, 2,
+                "https://www.curseforge.com/minecraft/mc-mods/supplementaries", "CurseForge Page");
 
-        ButtonIcon github = ButtonIcon.linkButton(this, centerX - 45 - 22 * 4, y, 0, 2,
-                getLink("https://github.com/MehVahdJukaar/Supplementaries/wiki"), "Mod Wiki");
+        LinkButton github = LinkButton.create(ICONS_TEXTURES, this, centerX - 45 - 22 * 4, y, 0, 2,
+                "https://github.com/MehVahdJukaar/Supplementaries/wiki", "Mod Wiki");
 
 
-        ButtonIcon discord = ButtonIcon.linkButton(this, centerX + 45 + 2, y, 1, 1,
-                getLink("https://discord.com/invite/qdKRTDf8Cv"), "Mod Discord");
+        LinkButton discord = LinkButton.create(ICONS_TEXTURES, this, centerX + 45 + 2, y, 1, 1,
+                "https://discord.com/invite/qdKRTDf8Cv", "Mod Discord");
 
-        ButtonIcon youtube = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22, y, 0, 1,
-                getLink("https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s"), "Youtube Channel");
+        LinkButton youtube = LinkButton.create(ICONS_TEXTURES, this, centerX + 45 + 2 + 22, y, 0, 1,
+                "https://www.youtube.com/watch?v=LSPNAtAEn28&t=1s", "Youtube Channel");
 
-        ButtonIcon twitter = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22 * 2, y, 2, 1,
-                getLink("https://twitter.com/Supplementariez?s=09"), "Twitter Page");
+        LinkButton twitter = LinkButton.create(ICONS_TEXTURES, this, centerX + 45 + 2 + 22 * 2, y, 2, 1,
+                "https://twitter.com/Supplementariez?s=09", "Twitter Page");
 
-        ButtonIcon akliz = ButtonIcon.linkButton(this, centerX + 45 + 2 + 22 * 3, y, 3, 2,
-                getLink("https://www.akliz.net/supplementaries"), "Need a server? Get one with Akliz");
+        LinkButton akliz = LinkButton.create(ICONS_TEXTURES, this, centerX + 45 + 2 + 22 * 3, y, 3, 2,
+                "https://www.akliz.net/supplementaries", "Need a server? Get one with Akliz");
 
 
         this.addRenderableWidget(kofi);
@@ -188,61 +184,6 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         this.addRenderableWidget(youtube);
         this.addRenderableWidget(github);
         this.addRenderableWidget(twitter);
-
     }
 
-    public String getLink(String original) {
-        return CommonUtil.FESTIVITY.isAprilsFool() ? "https://www.youtube.com/watch?v=dQw4w9WgXcQ" : original;
-    }
-
-    public static class ButtonIcon extends Button {
-        private static final int ICON_WIDTH = 14;
-
-        private final Component label;
-        private final int u;
-        private final int v;
-
-        public static ButtonIcon linkButton(Screen parent, int x, int y, int uInd, int vInd, String url, String tooltip) {
-            OnPress onPress = (op) -> {
-                Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-                parent.handleComponentClicked(style);
-            };
-            OnTooltip onTooltip = (button, poseStack, mouseX, mouseY) -> {
-                if (button.isHoveredOrFocused()) {
-                    parent.renderTooltip(poseStack, parent.getMinecraft().font.split(
-                            Component.literal(tooltip), Math.max(parent.width / 2 - 43, 170)), mouseX, mouseY);
-                }
-            };
-            return new ButtonIcon(x, y, uInd * ICON_WIDTH, vInd * ICON_WIDTH, 20, CommonComponents.EMPTY, onPress, onTooltip);
-        }
-
-        public ButtonIcon(int x, int y, int u, int v, int width, Component label, OnPress onPress, OnTooltip onTooltip) {
-            super(x, y, width, 20, CommonComponents.EMPTY, onPress, onTooltip);
-            this.label = label;
-            this.u = u;
-            this.v = v;
-        }
-
-        @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-            super.renderButton(poseStack, mouseX, mouseY, partialTicks);
-            Minecraft mc = Minecraft.getInstance();
-            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-            RenderSystem.setShaderTexture(0, ICONS_TEXTURES);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-            RenderSystem.enableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            int contentWidth = ICON_WIDTH + mc.font.width(this.label);
-            int iconX = (int) (this.x + Math.ceil((this.width - contentWidth) / 2f));
-            int iconY = (int) (this.y + Math.ceil((this.width - ICON_WIDTH) / 2f));
-            float brightness = this.active ? 1.0F : 0.5F;
-            RenderSystem.setShaderColor(brightness, brightness, brightness, this.alpha);
-            blit(poseStack, iconX, iconY, this.getBlitOffset(), (float) this.u, (float) this.v, ICON_WIDTH, ICON_WIDTH, 64, 64);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-            int textColor = this.getFGColor() | Mth.ceil(this.alpha * 255.0F) << 24;
-            drawString(poseStack, mc.font, this.label, iconX + 14, iconY + 1, textColor);
-        }
-    }
 }

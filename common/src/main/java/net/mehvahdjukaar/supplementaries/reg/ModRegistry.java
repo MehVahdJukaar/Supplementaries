@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.EnumMap;
@@ -1005,7 +1007,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, FLAX_NAME))));
 
     public static final Supplier<Block> FLAX_WILD = regWithItem(FLAX_WILD_NAME, () -> new WildFlaxBlock(
-            BlockBehaviour.Properties.copy(Blocks.TALL_GRASS)
+            BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).offsetType(BlockBehaviour.OffsetType.NONE)
     ), CreativeModeTab.TAB_DECORATIONS);
 
     //pot
@@ -1274,9 +1276,14 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new CandleSkullBlock(p);
     });
 
+    public static final Supplier<Block> SKULL_CANDLE_SOUL = regBlock(SKULL_CANDLE_SOUL_NAME, () -> {
+        var p = BlockBehaviour.Properties.copy(SKULL_CANDLE.get());
+        return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new SoulCandleSkullBlock(p);
+    });
+
     public static final Supplier<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = regTile(
             SKULL_CANDLE_NAME, () -> PlatformHelper.newBlockEntityType(
-                    CandleSkullBlockTile::new, SKULL_CANDLE.get()));
+                    CandleSkullBlockTile::new, SKULL_CANDLE.get(), SKULL_CANDLE_SOUL.get()));
 
     //bubble
     public static final Supplier<BubbleBlock> BUBBLE_BLOCK = regBlock(BUBBLE_BLOCK_NAME, () ->

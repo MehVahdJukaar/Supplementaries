@@ -4,17 +4,16 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Textures {
 
@@ -82,7 +81,7 @@ public class Textures {
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("blocks/bubble_block");
 
-    public static final Map<DyeColor, ResourceLocation> SKULL_CANDLES_TEXTURES = new HashMap<>();
+    public static final LinkedHashMap<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = new LinkedHashMap<>();
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
@@ -96,10 +95,13 @@ public class Textures {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
 
-        for (DyeColor color : DyeColor.values()) {
-            SKULL_CANDLES_TEXTURES.put(color, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
-        }
+        //first key and default one too
         SKULL_CANDLES_TEXTURES.put(null, Supplementaries.res("textures/entity/skull_candles/default.png"));
+        for (DyeColor color : DyeColor.values()) {
+            Block candle = Registry.BLOCK.get(new ResourceLocation(color.getName() + "_candle"));
+            SKULL_CANDLES_TEXTURES.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
+        }
+        SKULL_CANDLES_TEXTURES.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
     }
 
     public static List<ResourceLocation> getTexturesForBlockAtlas() {

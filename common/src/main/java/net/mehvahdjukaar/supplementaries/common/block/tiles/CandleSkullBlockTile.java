@@ -1,17 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.SkullBlock;
@@ -24,10 +23,14 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
     private BlockState candle = Blocks.AIR.defaultBlockState();
     //client only
-    private DyeColor color = null;
+    private ResourceLocation waxTexture = null;
 
     public CandleSkullBlockTile(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ModRegistry.SKULL_CANDLE_TILE.get(), pWorldPosition, pBlockState);
+    }
+
+    public ResourceLocation getWaxTexture() {
+        return waxTexture;
     }
 
     @Override
@@ -41,13 +44,10 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
         super.load(tag);
         if (tag.contains("Candle", 10)) {
             this.candle = NbtUtils.readBlockState(tag.getCompound("Candle"));
-            this.color = colorFromCandle(this.candle.getBlock());
+            if (this.candle.getBlock() instanceof CandleBlock candleBlock) {
+                this.waxTexture = getWaxColor(candleBlock);
+            } else this.waxTexture = Textures.SKULL_CANDLES_TEXTURES.get(Blocks.CANDLE);
         }
-    }
-
-    @Nullable
-    public DyeColor getCandleColor() {
-        return this.color;
     }
 
     public BlockState getCandle() {
@@ -58,12 +58,12 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
         this.candle = candle;
     }
 
-    public boolean tryAddingCandle(Block candle) {
+    public boolean tryAddingCandle(CandleBlock candle) {
         if (this.candle.isAir() || (candle == this.candle.getBlock() && this.candle.getValue(CandleBlock.CANDLES) != 4)) {
 
             if (this.candle.isAir()) {
                 this.candle = candle.defaultBlockState();
-                this.color = colorFromCandle(this.candle.getBlock());
+                this.waxTexture = getWaxColor(candle);
             } else {
                 this.candle.cycle(CandleBlock.CANDLES);
             }
@@ -84,18 +84,15 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
     @Override
     public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player, InteractionHand hand) {
         super.initialize(oldTile, skullBlock, stack, player, hand);
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            tryAddingCandle(blockItem.getBlock());
+        if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CandleBlock candleBlock) {
+            tryAddingCandle(candleBlock);
         }
     }
 
     @Nullable
-    public static DyeColor colorFromCandle(Block b) {
-        if (b instanceof CandleBlock) {
-            String n = Utils.getID(b).getPath().replace("_candle", "");
-            return DyeColor.byName(n, null);
-        }
-        return null;
+    public static ResourceLocation getWaxColor(CandleBlock b) {
+        return Textures.SKULL_CANDLES_TEXTURES.get(b);
     }
+
 
 }

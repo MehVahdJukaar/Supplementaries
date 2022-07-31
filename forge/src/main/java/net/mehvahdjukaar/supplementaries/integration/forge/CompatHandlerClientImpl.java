@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.configured.CustomConfigSelectScreen;
+import net.mehvahdjukaar.supplementaries.integration.forge.configured.CustomConfigSelectScreen;
 
 public class CompatHandlerClientImpl {
 

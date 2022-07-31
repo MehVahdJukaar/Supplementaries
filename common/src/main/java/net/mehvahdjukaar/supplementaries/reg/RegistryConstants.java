@@ -132,5 +132,6 @@ public final class RegistryConstants {
     public static final String SOAP_BLOCK_NAME = "soap_block";
     public static final String SKULL_PILE_NAME = "skull_pile";
     public static final String SKULL_CANDLE_NAME = "skull_candle";
+    public static final String SKULL_CANDLE_SOUL_NAME = "skull_candle_soul";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
 }

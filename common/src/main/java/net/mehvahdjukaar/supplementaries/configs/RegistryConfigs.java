@@ -5,11 +5,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.mixins.MixinConfigs;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -39,18 +37,18 @@ public class RegistryConfigs {
             case RegistryConstants.FLAX_WILD_NAME -> FLAX_ENABLED.get();
             case RegistryConstants.KEY_NAME ->
                     NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
-            default -> CONFIGS.getOrDefault(key, () -> true).get();
+            default -> CONFIGS_BY_NAME.getOrDefault(key, () -> true).get();
         };
 
     }
 
     private static Supplier<Boolean> regConfig(ConfigBuilder builder, String name, Boolean value) {
         var config = builder.define(name, value);
-        CONFIGS.put(name, config);
+        CONFIGS_BY_NAME.put(name, config);
         return config;
     }
 
-    private static final Map<String, Supplier<Boolean>> CONFIGS = new HashMap<>();
+    private static final Map<String, Supplier<Boolean>> CONFIGS_BY_NAME = new HashMap<>();
 
     public static Supplier<Boolean> ASH_ENABLED;
     public static Supplier<Boolean> ASH_BRICKS_ENABLED;

@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.ChatFormatting;
@@ -137,7 +137,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
-                AntiqueInkHandler.setAntiqueInk(tile, message.ink);
+                AntiqueInkProvider.setAntiqueInk(tile, message.ink);
             }
         });
     }

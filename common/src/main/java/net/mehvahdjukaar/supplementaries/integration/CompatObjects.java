@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -30,6 +31,14 @@ public class CompatObjects {
 
     public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", Registry.PARTICLE_TYPE);
 
+    public static final Supplier<ParticleType<?>> SMALL_SOUL_FLAME = makeCompatObject("buzzier_bees:small_soul_fire_flame", Registry.PARTICLE_TYPE);
+
+    public static final Supplier<Item> SOUL_CANDLE_ITEM = makeCompatObject("buzzier_bees:soul_candle", Registry.ITEM);
+
+    public static final Supplier<Block> SOUL_CANDLE = makeCompatObject("buzzier_bees:soul_candle", Registry.BLOCK);
+
+    public static final Supplier<Item> TOME = makeCompatObject("quark:tome", Registry.ITEM);
+
     public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", Registry.BLOCK);
 
     public static final Supplier<Block> RICH_SOUL_SOIL = makeCompatObject("nethers_delight:rich_soul_soil", Registry.BLOCK);
@@ -38,11 +47,10 @@ public class CompatObjects {
 
     public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", Registry.MOB_EFFECT);
 
-    public static final Supplier<Item> TOME = makeCompatObject("quark:tome", Registry.ITEM);
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T> Supplier<T> makeCompatObject(String name, Registry<T> registry) {
+    private static <T> Supplier<@Nullable T> makeCompatObject(String name, Registry<T> registry) {
         return Suppliers.memoize(() -> registry.getOptional(new ResourceLocation(name)).orElse(null));
     }
 

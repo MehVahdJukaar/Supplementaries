@@ -35,6 +35,7 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     modImplementation("curse.maven:roughly-enough-items-310111:3900965")
+    modImplementation("curse.maven:flan-404578:3902630")
 
     //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
     //modImplementation("curse.maven:selene-499980:3859239")
