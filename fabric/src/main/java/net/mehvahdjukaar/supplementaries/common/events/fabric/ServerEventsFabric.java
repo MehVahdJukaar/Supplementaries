@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -8,11 +10,16 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class ServerEventsFabric {
@@ -37,7 +45,14 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
-        //  BiomeModificationImpl.INSTANCE.addModifier();
+        if(CommonConfigs.Spawns.URN_PILE_ENABLED.get()){
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
+                    GenerationStep.Decoration.UNDERGROUND_DECORATION, ModWorldgenRegistry.PLACED_CAVE_URNS.getHolder().unwrapKey().get());
+        }
+        if(CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()){
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
+                    GenerationStep.Decoration.VEGETAL_DECORATION, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getHolder().unwrapKey().get());
+        }
     }
 
     private static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
@@ -65,35 +80,7 @@ public class ServerEventsFabric {
         return InteractionResult.PASS;
     }
 
-/*
-    @Deprecated
-    public static void addStuffToBiomes(BiomeLoadingEvent event) {
 
-        Biome.BiomeCategory category = event.getCategory();
-        if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
-
-            if (ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
-                if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
-                    if (!event.getName().getNamespace().equals("twilightforest")) //TODO: find a better way to handle dimensons with weird land height
-                        event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ModPlacedFeatures.PLACED_CAVE_URNS);
-                }
-            }
-
-            if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {
-
-                ResourceLocation res = event.getName();
-                if (res != null && category != Biome.BiomeCategory.UNDERGROUND) {
-
-                    ResourceKey<Biome> key = ResourceKey.create(ForgeRegistries.Keys.BIOMES, res);
-                    Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
-                    if (types.contains(SANDY) && (types.contains(HOT) || types.contains(DRY)) || types.contains(RIVER)) {
-                        event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModPlacedFeatures.PLACED_WILD_FLAX_PATCH);
-                    }
-                }
-            }
-        }
-    }
-*/
 
 
 }

@@ -2,24 +2,20 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -233,7 +229,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
                     pLevel.addParticle(ParticleTypes.CLOUD, cx, py, cz, dx, dy, dz);
                 }
 
-                this.destroyLid(pPos, pState, pLevel);
+                ParticleUtil.spawnBreakParticles(PresentBlock.SHAPE_LID, pPos, pState, pLevel);
 
                 // ((ClientLevel)pLevel).playLocalSound(pPos, SoundEvents.DISPENSER_LAUNCH, SoundSource.BLOCKS, 1.0F, 0.7f,false);
             }
@@ -242,36 +238,6 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
-    @Environment(EnvType.CLIENT)
-    public void destroyLid(BlockPos pPos, BlockState pState, Level level) {
-        var particleEngine = Minecraft.getInstance().particleEngine;
-        VoxelShape voxelshape = PresentBlock.SHAPE_LID;
-
-        voxelshape.forAllBoxes((p_172273_, p_172274_, p_172275_, p_172276_, p_172277_, p_172278_) -> {
-            double d1 = Math.min(1.0D, p_172276_ - p_172273_);
-            double d2 = Math.min(1.0D, p_172277_ - p_172274_);
-            double d3 = Math.min(1.0D, p_172278_ - p_172275_);
-            int i = Math.max(2, Mth.ceil(d1 / 0.25D));
-            int j = Math.max(2, Mth.ceil(d2 / 0.25D));
-            int k = Math.max(2, Mth.ceil(d3 / 0.25D));
-
-            for (int l = 0; l < i; ++l) {
-                for (int i1 = 0; i1 < j; ++i1) {
-                    for (int j1 = 0; j1 < k; ++j1) {
-                        double d4 = ((double) l + 0.5D) / (double) i;
-                        double d5 = ((double) i1 + 0.5D) / (double) j;
-                        double d6 = ((double) j1 + 0.5D) / (double) k;
-                        double d7 = d4 * d1 + p_172273_;
-                        double d8 = d5 * d2 + p_172274_;
-                        double d9 = d6 * d3 + p_172275_;
-                        particleEngine.add(new TerrainParticle((ClientLevel) level, (double) pPos.getX() + d7, (double) pPos.getY() + d8, (double) pPos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, pState, pPos));
-                    }
-                }
-            }
-
-        });
-
-    }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {

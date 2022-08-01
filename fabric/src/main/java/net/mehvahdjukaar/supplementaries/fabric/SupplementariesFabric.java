@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.fabric.FabricRecipeConditionManager;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -19,11 +20,15 @@ public class SupplementariesFabric implements ModInitializer {
 
         Supplementaries.commonInit();
 
-        ClientEventsFabric.init();
-        ServerEventsFabric.init();
 
-        FabricSetupCallbacks.CLIENT_SETUP.add(SupplementariesFabricClient::initClient);
+        ServerEventsFabric.init();
         FabricSetupCallbacks.COMMON_SETUP.add(Supplementaries::commonSetup);
+
+        if(PlatformHelper.getEnv().isClient()){
+            ClientEventsFabric.init();
+            FabricSetupCallbacks.CLIENT_SETUP.add(SupplementariesFabricClient::initClient);
+        }
+
     }
 
 

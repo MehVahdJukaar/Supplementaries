@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.WaystonesCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
@@ -25,11 +26,11 @@ public class WaystoneMarker extends NamedMapBlockMarker<CustomMapDecoration> {
     public static WaystoneMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (CompatHandler.waystones) {
             var te = world.getBlockEntity(pos);
-            //TODO: readd
-            //if (WaystonesPlugin.isWaystone(te)) {
-            //    Component name = WaystonesPlugin.getName(te);
-            //    return new WaystoneMarker(pos, name);
-            // }
+
+            if (WaystonesCompat.isWaystone(te)) {
+                Component name = WaystonesCompat.getName(te);
+                return new WaystoneMarker(pos, name);
+             }
         }
         return null;
     }

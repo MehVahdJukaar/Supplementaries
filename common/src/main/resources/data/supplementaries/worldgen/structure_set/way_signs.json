@@ -2,7 +2,7 @@
 {
   "structures": [
     {
-      "structure": "structure_tutorial:way_sign",
+      "structure": "supplementaries:way_sign",
       "weight": 1
     }
   ],
@@ -18,7 +18,7 @@
 
     "exclusion_zone": {
       "chunk_count": 10,
-      "other_set": "minecraft:villager_outposts"
+      "other_set": "#minecraft:villager_outposts"
     }
   }
 }

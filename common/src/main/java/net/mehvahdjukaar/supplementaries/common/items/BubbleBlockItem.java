@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import org.apache.commons.compress.archivers.sevenz.CLI;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BubbleBlockItem extends BlockItem implements ICustomItemRendererProvider {
 
@@ -19,7 +20,7 @@ public class BubbleBlockItem extends BlockItem implements ICustomItemRendererPro
 
     @Environment(EnvType.CLIENT)
     @Override
-    public ItemStackRenderer createRenderer() {
-        return new BubbleBlockItemRenderer();
+    public Supplier<ItemStackRenderer> getRendererFactory() {
+        return BubbleBlockItemRenderer::new;
     }
 }

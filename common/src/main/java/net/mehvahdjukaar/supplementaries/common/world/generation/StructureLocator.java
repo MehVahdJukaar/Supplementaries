@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.reg.generation.structure;
+package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;

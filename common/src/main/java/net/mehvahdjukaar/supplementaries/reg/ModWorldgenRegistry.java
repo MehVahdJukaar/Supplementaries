@@ -1,14 +1,14 @@
-package net.mehvahdjukaar.supplementaries.reg.generation;
+package net.mehvahdjukaar.supplementaries.reg;
 
 
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.common.world.generation.CaveFilter;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.generation.structure.RoadSignFeature;
-import net.mehvahdjukaar.supplementaries.reg.generation.structure.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.common.world.generation.RoadSignFeature;
+import net.mehvahdjukaar.supplementaries.common.world.generation.WaySignStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -66,7 +66,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> WILD_FLAX_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("wild_flax"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(),
+                            35,//CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(),
                             4, 0,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
@@ -80,7 +80,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> CAVE_URNS_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            CommonConfigs.Spawns.URN_PATCH_TRIES.get(),
+                            4,//CommonConfigs.Spawns.URN_PATCH_TRIES.get(),
                             4, 1,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
@@ -95,26 +95,28 @@ public class ModWorldgenRegistry {
 
     //placed features
 
-    public static final Supplier<PlacedFeature> PLACED_WILD_FLAX_PATCH =
+    public static final RegSupplier<PlacedFeature> PLACED_WILD_FLAX_PATCH =
             RegHelper.registerPlacedFeature(Supplementaries.res("wild_flax"),
                     WILD_FLAX_PATCH,
-                    PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                    RarityFilter.onAverageOnceEvery(CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()),
-                    InSquarePlacement.spread(),
-                    BiomeFilter.biome());
+                    () -> List.of(
+                            PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                            RarityFilter.onAverageOnceEvery(6), //CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()
+                            InSquarePlacement.spread(),
+                            BiomeFilter.biome()));
 
-    public static final Supplier<PlacedFeature> PLACED_CAVE_URNS =
+    public static final RegSupplier<PlacedFeature> PLACED_CAVE_URNS =
             RegHelper.registerPlacedFeature(Supplementaries.res("cave_urns"),
                     CAVE_URNS_PATCH,
-                    HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
-                    CountPlacement.of(CommonConfigs.Spawns.URN_PER_CHUNK.get()),
-                    InSquarePlacement.spread(),
-                    CaveFilter.BELOW_SURFACE,
-                    BiomeFilter.biome());
+                    () -> List.of(
+                            HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
+                            CountPlacement.of(7),//CommonConfigs.Spawns.URN_PER_CHUNK.get()
+                            InSquarePlacement.spread(),
+                            CaveFilter.BELOW_SURFACE,
+                            BiomeFilter.biome()));
 
-    public static final Supplier<PlacedFeature> PLACED_ROAD_SIGN =
+    public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
             RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"),
-                    ROAD_SIGN);
+                    ROAD_SIGN, List::of);
 
 
     //helper

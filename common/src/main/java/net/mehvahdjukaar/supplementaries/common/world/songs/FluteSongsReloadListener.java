@@ -29,8 +29,6 @@ public class FluteSongsReloadListener extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
-
-        SongsManager.clearSongs();
         List<Song> temp = new ArrayList<>();
 
         jsons.forEach((key, input) -> {

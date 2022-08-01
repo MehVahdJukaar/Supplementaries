@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
@@ -77,7 +79,7 @@ public class FlagItem extends WoodBasedBlockItem implements IColored<Block>, ICu
     }
 
     @Override
-    public ItemStackRenderer createRenderer() {
-        return new FlagItemRenderer();
+    public Supplier<ItemStackRenderer> getRendererFactory() {
+        return FlagItemRenderer::new;
     }
 }

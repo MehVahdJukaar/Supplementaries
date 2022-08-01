@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.mehvahdjukaar.supplementaries.reg.generation.ModWorldgenRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,15 +61,13 @@ public class Supplementaries {
         ModWorldgenRegistry.init();
 
 
-        var serverRes = new ServerDynamicResourcesHandler();
-        serverRes.register();
+        ServerDynamicResourcesHandler.INSTANCE.register();
 
         PlatformHelper.addServerReloadListener(FluteSongsReloadListener.RELOAD_INSTANCE, res("flute_songs"));
         PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
 
         if (PlatformHelper.getEnv().isClient()) {
-            var clientRes = new ClientDynamicResourcesHandler();
-            clientRes.register();
+            ClientDynamicResourcesHandler.INSTANCE.register();
 
             ClientPlatformHelper.addClientReloadListener(WallLanternTexturesRegistry.RELOAD_INSTANCE, res("wall_lanterns"));
         }
@@ -80,6 +78,9 @@ public class Supplementaries {
         ModSetup.setup();
     }
 
+    //map markers not wkring
+    //claim mod comat
+    //antique ink fishing
 
     //yes this is where I write crap. deal with it XD
 

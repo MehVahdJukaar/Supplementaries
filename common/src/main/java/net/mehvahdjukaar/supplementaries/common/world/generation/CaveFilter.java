@@ -1,7 +1,8 @@
-package net.mehvahdjukaar.supplementaries.reg.generation;
+package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.util.RandomSource;

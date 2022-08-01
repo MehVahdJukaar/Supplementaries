@@ -1,10 +1,10 @@
-package net.mehvahdjukaar.supplementaries.reg.generation.structure;
+package net.mehvahdjukaar.supplementaries.common.world.generation;
 
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.reg.generation.ModWorldgenRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -21,9 +21,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class WaySignStructure extends Structure {
 
@@ -125,23 +123,24 @@ public class WaySignStructure extends Structure {
         if (y < structure.minY || y > structure.maxY) return Optional.empty();
         if (y > 105 || y < generator.getSeaLevel()) return Optional.empty();
 
-        TreeSet<Integer> set = new TreeSet<>();
+        List<Integer> list = new ArrayList<>();
         //I could remove this but it makes for nicer generation
-        set.add(y);
-        if (isPosNotValid(generator, x + 2, z + 2, set, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x + 2, z - 2, set, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x - 2, z + 2, set, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x - 2, z - 2, set, heightLimitView, randomState)) return Optional.empty();
+        list.add(y);
+        if (isPosNotValid(generator, x + 2, z + 2, list, heightLimitView, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x + 2, z - 2, list, heightLimitView, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x - 2, z + 2, list, heightLimitView, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x - 2, z - 2, list, heightLimitView, randomState)) return Optional.empty();
 
+        TreeSet<Integer> set = new TreeSet<>(list);
         if (set.last() - set.first() > 1) return Optional.empty();
 
         int sum = 0;
-        for (var v : set) sum += v;
+        for (var v : list) sum += v;
 
         return Optional.of(new BlockPos(x, Math.round(sum / 5f) + 1, z));
     }
 
-    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, Set<Integer> heightMap,
+    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, List<Integer> heightMap,
                                          LevelHeightAccessor heightLimitView, RandomState randomState) {
         // Grab height of land. Will stop at first non-air block.
         int y = gen.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);

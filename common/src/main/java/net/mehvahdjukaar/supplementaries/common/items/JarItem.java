@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
@@ -45,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 public class JarItem extends AbstractMobContainerItem implements ICustomItemRendererProvider {
 
@@ -260,7 +263,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     @Override
-    public ItemStackRenderer createRenderer() {
-        return new JarItemRenderer();
+    public Supplier<ItemStackRenderer> getRendererFactory() {
+        return JarItemRenderer::new;
     }
 }

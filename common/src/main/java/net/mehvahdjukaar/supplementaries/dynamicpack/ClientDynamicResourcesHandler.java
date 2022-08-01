@@ -30,6 +30,8 @@ import java.util.Objects;
 
 public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
+    public static final ClientDynamicResourcesHandler INSTANCE = new ClientDynamicResourcesHandler();
+
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
         this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();

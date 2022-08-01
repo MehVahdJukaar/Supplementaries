@@ -12,19 +12,33 @@ import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
+
+    public static final ServerDynamicResourcesHandler INSTANCE = new ServerDynamicResourcesHandler();
 
     public ServerDynamicResourcesHandler() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
@@ -43,36 +57,83 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
     @Override
     public void regenerateDynamicAssets(ResourceManager resourceManager) {
+        /*
+        try {
+           var r = Utils.hackyGetRegistryAccess();
+           // var j = PlacedFeature.DIRECT_CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE,r), ModWorldgenRegistry.PLACED_CAVE_URNS.get());
+          //  ServerDynamicResourcesHandler.INSTANCE.dynamicPack.addJson(Supplementaries.res("placed_urns"), j.get().orThrow(), ResType.GENERIC);
+
+            var jj = ConfiguredFeature.DIRECT_CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE,r),
+                    ModWorldgenRegistry.WILD_FLAX_PATCH.get());
+            ServerDynamicResourcesHandler.INSTANCE.dynamicPack.addJson(Supplementaries.res("flax"), jj.get().orThrow(), ResType.GENERIC);
+            int aa = 1;
+        }catch (Exception e){
+
+        }*/
+
         addHangingSignRecipes(resourceManager);
 
         //recipes
         addSignPostRecipes(resourceManager);
 
         //way signs tag
+
         {
-            //TODO: re add
-            /*
-            List<ResourceLocation> biomes = new ArrayList<>();
-            if(ServerConfigs.spawn.WAY_SIGN_ENABLED.get()) {
-                for (var e : ForgeRegistries.BIOMES.getEntries()) {
-                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(e.getKey());
-                    Biome.BiomeCategory biomeCategory = Biome.getBiomeCategory(holder);
+            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
 
-                    if (biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.THEEND &&
-                            biomeCategory != Biome.BiomeCategory.RIVER &&
-                            biomeCategory != Biome.BiomeCategory.UNDERGROUND &&
-                            biomeCategory != Biome.BiomeCategory.JUNGLE &&
-                            biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.NONE) {
-                        if (!e.getValue().getRegistryName().getPath().equals("minecraft:mushroom_fields")) {
+            if (CommonConfigs.Spawns.WAY_SIGN_ENABLED.get()) {
+                for (var id : BuiltinRegistries.BIOME.keySet()) {
+                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
 
-                            biomes.add(e.getValue().getRegistryName());
-                        }
+                    if (!holder.is(BiomeTags.IS_OCEAN) &&
+                            !holder.is(BiomeTags.IS_NETHER) &&
+                            !holder.is(BiomeTags.IS_END) &&
+                            !holder.is(BiomeTags.IS_RIVER) &&
+                            !holder.is(BiomeTags.IS_JUNGLE) &&
+                            !holder.is(Biomes.MUSHROOM_FIELDS)) {
+                        builder.add(id);
                     }
                 }
             }
-            dynamicPack.addTag(Supplementaries.res("has_way_signs"), biomes, Registry.BIOME_REGISTRY);
-            */
+            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+        }
 
+        //cave urns tag
+
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
+
+            if (CommonConfigs.Spawns.URN_PILE_ENABLED.get()) {
+                for (var id : BuiltinRegistries.BIOME.keySet()) {
+                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
+
+                    if (!holder.is(BiomeTags.IS_END) && !holder.is(BiomeTags.IS_NETHER) &&
+                            !CommonConfigs.Spawns.URN_BIOME_BLACKLIST.get().contains(id.toString())) {
+                        builder.add(id);
+                    }
+                }
+            }
+            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+        }
+
+        //wild flax tag
+
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+
+            if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
+                for (var id : BuiltinRegistries.BIOME.keySet()) {
+                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
+
+                    if (!holder.is(BiomeTags.IS_END) && !holder.is(BiomeTags.IS_NETHER) &&
+                            ( holder.is(BiomeTags.IS_BEACH) || holder.is(BiomeTags.IS_RIVER)
+                                    || holder.is(BiomeTags.IS_BADLANDS) ||
+                                    holder.is(BiomeTags.HAS_VILLAGE_DESERT))){
+                        builder.add(id);
+                    }
+                }
+            }
+            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
     }
 

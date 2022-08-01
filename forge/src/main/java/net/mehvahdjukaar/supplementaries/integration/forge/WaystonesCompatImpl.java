@@ -1,14 +1,12 @@
-package net.mehvahdjukaar.supplementaries.integration.waystones;
+package net.mehvahdjukaar.supplementaries.integration.forge;
 
-/*
 import net.blay09.mods.waystones.block.entity.WaystoneBlockEntityBase;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-public class WaystonesPlugin {
-
+public class WaystonesCompatImpl {
     public static boolean isWaystone(BlockEntity blockEntity) {
         return blockEntity instanceof WaystoneBlockEntityBase;
     }
@@ -20,4 +18,3 @@ public class WaystonesPlugin {
         return Component.literal(s);
     }
 }
-*/

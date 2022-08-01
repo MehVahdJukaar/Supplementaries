@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ParticleUtils;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.DeferredRegister;
@@ -47,7 +47,7 @@ public class ForgeHelperImpl {
     }
 
     public static boolean onExplosionStart(Level level, Explosion explosion) {
-        DeferredRegister r = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY,"a");
+        DeferredRegister r = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, "a");
         return ForgeEventFactory.onExplosionStart(level, explosion);
     }
 
@@ -124,6 +124,11 @@ public class ForgeHelperImpl {
     }
 
     public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        return ((MobBucketItemAccessor)bucketItem).invokeGetFishType();
+        return ((MobBucketItemAccessor) bucketItem).invokeGetFishType();
+    }
+
+    public static boolean isWildFlaxBiome(Holder<Biome> biome) {
+        //these are empty now....
+        return (biome.is(Tags.Biomes.IS_SANDY) && (biome.is(Tags.Biomes.IS_HOT) || biome.is(Tags.Biomes.IS_DRY)) || biome.is(BiomeTags.IS_RIVER));
     }
 }

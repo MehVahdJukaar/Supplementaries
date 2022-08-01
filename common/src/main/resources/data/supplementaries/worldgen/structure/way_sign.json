@@ -5,5 +5,6 @@
   "terrain_adaptation": "beard_thin",
   "step": "strongholds",
   "min_y": 40,
-  "max_y": 105
+  "max_y": 105,
+  "spawn_overrides": {}
 }

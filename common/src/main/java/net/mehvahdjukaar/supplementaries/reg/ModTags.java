@@ -74,6 +74,8 @@ public class ModTags {
 
     //biomes
     public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
+    public static final TagKey<Biome> HAS_CAVE_URNS = biomeTag("has_cave_urns");
+    public static final TagKey<Biome> HAS_WILD_FLAX = biomeTag("has_wild_flax");
 
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));

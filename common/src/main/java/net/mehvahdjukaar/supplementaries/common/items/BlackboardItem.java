@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class BlackboardItem extends BlockItem implements ICustomItemRendererProvider {
     public BlackboardItem(Block blockIn, Properties builder) {
@@ -42,8 +43,8 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
     }
 
     @Override
-    public ItemStackRenderer createRenderer() {
-        return new BlackboardItemRenderer();
+    public Supplier<ItemStackRenderer> getRendererFactory() {
+        return BlackboardItemRenderer::new;
     }
 
     public record BlackboardTooltip(long[] packed) implements TooltipComponent {

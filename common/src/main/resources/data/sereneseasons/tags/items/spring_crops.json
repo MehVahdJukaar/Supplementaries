@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flax"
+    "supplementaries:flax",
+    "supplementaries:flax_seeds"
   ]
 }

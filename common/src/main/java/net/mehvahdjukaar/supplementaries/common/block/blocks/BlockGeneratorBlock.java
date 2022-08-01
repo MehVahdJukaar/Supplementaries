@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlockGeneratorBlockT
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -33,7 +34,7 @@ public class BlockGeneratorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(),!pLevel.isClientSide ?
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(),(pLevel instanceof ServerLevel serverLevel) ?
                 BlockGeneratorBlockTile::tick : null);
     }
 }
