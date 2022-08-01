@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ParticleUtils;
@@ -29,6 +30,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +47,7 @@ public class ForgeHelperImpl {
     }
 
     public static boolean onExplosionStart(Level level, Explosion explosion) {
+        DeferredRegister r = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY,"a");
         return ForgeEventFactory.onExplosionStart(level, explosion);
     }
 

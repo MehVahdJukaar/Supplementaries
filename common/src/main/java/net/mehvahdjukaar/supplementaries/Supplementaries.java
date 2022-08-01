@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
+import net.mehvahdjukaar.supplementaries.reg.generation.ModWorldgenRegistry;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,9 +58,7 @@ public class Supplementaries {
         ModRecipes.init();
         ModParticles.init();
         CMDreg.init();
-
-
-        WorldGenHandler.registerBus();
+        ModWorldgenRegistry.init();
 
 
         var serverRes = new ServerDynamicResourcesHandler();

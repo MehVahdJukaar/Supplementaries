@@ -36,6 +36,8 @@ public class ServerEventsFabric {
         CommonLifecycleEvents.TAGS_LOADED.register(ServerEvents::onCommonTagUpdate);
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
+
+        //  BiomeModificationImpl.INSTANCE.addModifier();
     }
 
     private static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
@@ -62,6 +64,36 @@ public class ServerEventsFabric {
         }
         return InteractionResult.PASS;
     }
+
+/*
+    @Deprecated
+    public static void addStuffToBiomes(BiomeLoadingEvent event) {
+
+        Biome.BiomeCategory category = event.getCategory();
+        if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
+
+            if (ServerConfigs.spawn.URN_PILE_ENABLED.get()) {
+                if (!ServerConfigs.spawn.URN_BIOME_BLACKLIST.get().contains(event.getName().toString())) {
+                    if (!event.getName().getNamespace().equals("twilightforest")) //TODO: find a better way to handle dimensons with weird land height
+                        event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, ModPlacedFeatures.PLACED_CAVE_URNS);
+                }
+            }
+
+            if (ServerConfigs.spawn.WILD_FLAX_ENABLED.get()) {
+
+                ResourceLocation res = event.getName();
+                if (res != null && category != Biome.BiomeCategory.UNDERGROUND) {
+
+                    ResourceKey<Biome> key = ResourceKey.create(ForgeRegistries.Keys.BIOMES, res);
+                    Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
+                    if (types.contains(SANDY) && (types.contains(HOT) || types.contains(DRY)) || types.contains(RIVER)) {
+                        event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModPlacedFeatures.PLACED_WILD_FLAX_PATCH);
+                    }
+                }
+            }
+        }
+    }
+*/
 
 
 }

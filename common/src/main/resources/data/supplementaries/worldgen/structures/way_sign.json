@@ -1,0 +1,9 @@
+{
+  "type": "supplementaries:way_sign",
+  "start_pool": "supplementaries:way_sign/start_pool",
+  "biomes": "#supplementaries:has_way_signs",
+  "terrain_adaptation": "beard_thin",
+  "step": "strongholds",
+  "min_y": 40,
+  "max_y": 105
+}

@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
@@ -24,7 +23,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.reg.generation.WorldGenHandler;
+import net.mehvahdjukaar.supplementaries.reg.generation.ModWorldgenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -41,7 +40,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.EnumMap;
@@ -66,7 +64,6 @@ public class ModRegistry {
 
         CompatHandler.registerOptionalStuff();
         RegUtils.initDynamicRegistry();
-        RegHelper.addMiscRegistration(ModRegistry::registerAdditionalStuff);
         RegHelper.addAttributeRegistration(ModRegistry::registerEntityAttributes);
         RegHelper.addCommandRegistration(ModCommands::register);
         VillagerTradesHandler.addTradesRegistration();
@@ -76,14 +73,13 @@ public class ModRegistry {
         return !RegistryConfigs.isEnabled(name);
     }
 
-    public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
+    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
+            () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
 
     //using this to register overwrites and conditional block items
-    @EventCalled
+
     public static void registerAdditionalStuff() {
 
-        WorldGenHandler.onRegisterAdditional();
-        Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
 
         //CompatHandler.registerOptionalItems(event);
         //shulker shell
@@ -1203,9 +1199,9 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-   // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
-   //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
-   // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+    //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+    // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(

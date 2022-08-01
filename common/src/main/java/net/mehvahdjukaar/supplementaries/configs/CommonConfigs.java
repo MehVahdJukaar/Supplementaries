@@ -623,8 +623,6 @@ public class CommonConfigs {
     public static class Spawns {
         public static Supplier<Boolean> DISTANCE_TEXT;
         public static Supplier<Boolean> WAY_SIGN_ENABLED;
-        public static Supplier<Integer> ROAD_SIGN_DISTANCE_MIN;
-        public static Supplier<Integer> ROAD_SIGN_DISTANCE_AVR;
 
         public static Supplier<Boolean> WILD_FLAX_ENABLED;
         public static Supplier<Integer> FLAX_PATCH_TRIES;
@@ -642,10 +640,6 @@ public class CommonConfigs {
 
 
             builder.push("way_sign");
-            ROAD_SIGN_DISTANCE_AVR = builder.comment("Average distance apart in chunks between spawn attempts. Has to be larger than minimum_distance of course")
-                    .define("average_distance", 19, 0, 1000);
-            ROAD_SIGN_DISTANCE_MIN = builder.comment("Minimum distance apart in chunks between spawn attempts")
-                    .define("minimum_distance", 10, 0, 1000);
             WAY_SIGN_ENABLED = builder.comment("Entirely disables them from spawning")
                     .define("enabled", true);
             DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")

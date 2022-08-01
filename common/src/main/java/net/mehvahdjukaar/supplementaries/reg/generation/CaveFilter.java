@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg.generation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -19,9 +17,15 @@ public class CaveFilter extends PlacementFilter {
                             Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((p) -> p.belowHeightMap))
                     .apply(instance, CaveFilter::new));
 
-    public static PlacementModifierType<CaveFilter> TYPE;
+    public static class Type implements PlacementModifierType<CaveFilter>{
+        @Override
+        public Codec<CaveFilter> codec() {
+            return CODEC;
+        }
+    }
 
     public static final CaveFilter BELOW_SURFACE = new CaveFilter(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
+
 
     private final Heightmap.Types belowHeightMap;
 
@@ -45,12 +49,7 @@ public class CaveFilter extends PlacementFilter {
 
     @Override
     public PlacementModifierType<?> type() {
-        return TYPE;
-    }
-
-    //loads so it registers
-    public static void init() {
-        TYPE = Registry.register(Registry.PLACEMENT_MODIFIERS, Supplementaries.res("cave"), () -> CODEC);
+        return ModWorldgenRegistry.CAVE_MODIFIER.get();
     }
 
 

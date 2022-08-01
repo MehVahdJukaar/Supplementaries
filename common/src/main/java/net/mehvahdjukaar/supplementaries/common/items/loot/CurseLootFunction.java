@@ -40,7 +40,7 @@ public class CurseLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return ModRegistry.CURSE_LOOT_FUNCTION;
+        return ModRegistry.CURSE_LOOT_FUNCTION.get();
     }
 
     /**
