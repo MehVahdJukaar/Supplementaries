@@ -23,9 +23,10 @@ import java.util.UUID;
 public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected {
     private UUID owner = null;
 
-    public String message = "";
-    public boolean narrator = false;
-    public double volume = 1;
+    private String message = "";
+    private boolean narrator = false;
+    //distance in blocks
+    private double volume = CommonConfigs.Blocks.SPEAKER_RANGE.get();
     private Component customName;
 
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
@@ -46,6 +47,24 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
     public Component getDefaultName() {
         return Component.translatable("block.supplementaries.speaker_block");
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public boolean isNarrator() {
+        return narrator;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setSettings(double volume, boolean narrator, String message){
+        this.volume = volume;
+        this.narrator = narrator;
+        this.message = message;
     }
 
     @Override
@@ -89,8 +108,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
                     .withStyle(style);
 
             NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
-                    CommonConfigs.Blocks.SPEAKER_RANGE.get() * this.volume,
-                    new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
+                    this.volume, new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
         }
     }

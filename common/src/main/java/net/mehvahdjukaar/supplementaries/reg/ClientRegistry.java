@@ -29,6 +29,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
+import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -354,7 +355,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
-        if (CompatHandler.quark) QuarkCompat.registerTooltipComponent(event);
+        if (CompatHandler.quark) QuarkClientCompat.registerTooltipComponent(event);
     }
 
     @EventCalled

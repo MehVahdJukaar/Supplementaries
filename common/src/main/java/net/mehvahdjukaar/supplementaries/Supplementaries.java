@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.StructureTags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +45,7 @@ public class Supplementaries {
         ClientConfigs.init();
 
 
+        //TODO: banner bug
         //yeet java models in favor or json ones
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
@@ -78,8 +80,7 @@ public class Supplementaries {
         ModSetup.setup();
     }
 
-    //map markers not wkring
-    //claim mod comat
+    //claim mod compat
     //antique ink fishing
 
     //yes this is where I write crap. deal with it XD

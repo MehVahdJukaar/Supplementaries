@@ -18,7 +18,7 @@
 
     "exclusion_zone": {
       "chunk_count": 10,
-      "other_set": "#minecraft:villager_outposts"
+      "other_set": "minecraft:pillager_outposts"
     }
   }
 }

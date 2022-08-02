@@ -40,6 +40,7 @@ public class SpecialPlayers {
         addSpecialPlayer("DrPineapple", false, false, true, "935b65e9-6451-4c2b-92da-287846a94b07");
         addSpecialPlayer("byunie", false, false, true, "9605accb-f9fa-4ea3-b985-bf32a840dae9");
         addSpecialPlayer("ThatPurpleFFox", false, false, true, "eb8f500f-ae4f-4ebb-855b-0714f1e1a0a2");
+        addSpecialPlayer("PwnimuS", false, false, true, "eb21318d-471a-4f08-b061-85bb55917e45");
 
 
     }

@@ -269,14 +269,18 @@ public class CustomConfigScreen extends ConfigScreen {
             FolderEntry found = null;
             for (IEntry e : folderEntry.getEntries()) {
                 if (e instanceof FolderEntry f) {
-                    String n = Component.literal(ConfigScreen.createLabel((String) FOLDER_LABEL.get(e))).getString();
-                    if (n.equals(oldName)) found = f;
+                    String n = Component.literal(ConfigScreen.createLabel(f.getLabel())).getString();
+                    if (n.equals(oldName)){
+                        found = f;
+                        break;
+                    }
                 }
             }
             if (found != null) {
                 return new FolderWrapper(found, oldName);
             }
         } catch (Exception ignored) {
+            int aa = 1;
         }
         return null;
     }
@@ -432,7 +436,9 @@ public class CustomConfigScreen extends ConfigScreen {
         @Override
         public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
             this.button.setMessage(Component.literal(""));
-           // super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+
+            super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
+
 
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CustomConfigSelectScreen.ICONS_TEXTURES);

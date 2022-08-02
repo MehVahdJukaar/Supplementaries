@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
+import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

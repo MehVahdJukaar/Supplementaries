@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.impl.biome.modification.BiomeModificationImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -45,13 +44,15 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
-        if(CommonConfigs.Spawns.URN_PILE_ENABLED.get()){
+        if (CommonConfigs.Spawns.URN_PILE_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
-                    GenerationStep.Decoration.UNDERGROUND_DECORATION, ModWorldgenRegistry.PLACED_CAVE_URNS.getHolder().unwrapKey().get());
+                    GenerationStep.Decoration.UNDERGROUND_DECORATION,
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_CAVE_URNS.getId()));
         }
-        if(CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()){
+        if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
-                    GenerationStep.Decoration.VEGETAL_DECORATION, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getHolder().unwrapKey().get());
+                    GenerationStep.Decoration.VEGETAL_DECORATION,
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getId()));
         }
     }
 
@@ -79,8 +80,6 @@ public class ServerEventsFabric {
         }
         return InteractionResult.PASS;
     }
-
-
 
 
 }

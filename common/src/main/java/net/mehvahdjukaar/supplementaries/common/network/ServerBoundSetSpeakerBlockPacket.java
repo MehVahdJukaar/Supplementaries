@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -46,9 +47,8 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
 
         BlockPos pos = this.pos;
         if (world.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
-            speaker.message = this.str.getString();
-            speaker.narrator = this.narrator;
-            speaker.volume = this.volume;
+            speaker.setSettings(this.volume, this.narrator, this.str.getString());
+
             //updates client
             BlockState state = world.getBlockState(pos);
             world.sendBlockUpdated(pos, state, state, 3);

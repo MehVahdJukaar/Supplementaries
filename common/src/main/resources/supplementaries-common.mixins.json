@@ -12,11 +12,12 @@
     "LoomScreenFlagMixin",
     "ParrotMixin",
     "PlayerSocialManagerMixin",
+    "BlockBehaviourPlanterMixin",
     "UndeadHorseRenderMixin"
   ],
   "mixins": [
     "AbstractSkullBlockMixin",
-    "BlockBehaviourPlanterMixin",
+
     "BlockItemMixin",
     "BowMixin",
     "BrewingStandMixin",

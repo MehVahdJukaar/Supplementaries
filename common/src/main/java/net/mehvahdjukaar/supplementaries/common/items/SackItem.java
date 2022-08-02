@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
@@ -58,11 +59,10 @@ public class SackItem extends BlockItem {
 
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if (!CompatHandler.quark || !QuarkCompat.canRenderQuarkTooltip()) {
+        if (!CompatHandler.quark || !QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (tag.contains("LootTable", 8)) {
@@ -120,9 +120,8 @@ public class SackItem extends BlockItem {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.quark && QuarkCompat.canRenderQuarkTooltip()) {
+        if (CompatHandler.quark && QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
                 return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));
