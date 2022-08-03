@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "supplementaries:ash"
+    },
+    {
+      "item": "supplementaries:ash"
+    },
+    {
+      "item": "supplementaries:ash"
+    },
+    {
+      "item": "supplementaries:ash"
+    },
+    {
+      "item": "minecraft:porkchop"
+    }
+
+  ],
+  "result": {
+    "item": "supplementaries:soap",
+    "count": 6
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ]
+}

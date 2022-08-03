@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -44,11 +43,13 @@ public class SackItem extends BlockItem {
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if (!CommonConfigs.Blocks.SACK_PENALTY.get()) return;
-        if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player && !player.isCreative() && !entityIn.isSpectator()) {
-            //if (player.hasEffect(ModRegistry.OVERENCUMBERED.get())) return;
+        if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player &&
+                !player.isCreative() && !entityIn.isSpectator() && stack.getTagElement("BlockEntityTag") != null) {
+            //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
 
+            //keep refreshing for better accuracy
             int amount = 0;
-            amount = ItemsUtil.getAllSacksInInventory(stack, entityIn, player, amount);
+            amount = ItemsUtil.getAllSacksInInventory(stack, player, amount);
             int inc = CommonConfigs.Blocks.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),

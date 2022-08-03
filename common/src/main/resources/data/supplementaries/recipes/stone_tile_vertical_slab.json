@@ -1,62 +1,27 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "stone_tile"
-        },
-        {
-          "flag": "vertical_slabs",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "quark",
-          "type": "forge:mod_loaded"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          " 1 ",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "item": "supplementaries:stone_tile_slab"
-          }
-        },
-        "result": {
-          "item": "supplementaries:stone_tile_vertical_slab",
-          "count": 3
-        }
-      }
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
     },
     {
-      "conditions": [
-        {
-          "flag": "stone_tile",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "quark",
-          "type": "forge:mod_loaded"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "supplementaries:stone_tile_vertical_slab"
-          }
-        ],
-        "result": {
-          "item": "supplementaries:stone_tile_slab",
-          "count": 1
-        }
-      }
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 1 ",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "supplementaries:stone_tile_slab"
+    }
+  },
+  "result": {
+    "item": "supplementaries:stone_tile_vertical_slab",
+    "count": 3
+  }
 }

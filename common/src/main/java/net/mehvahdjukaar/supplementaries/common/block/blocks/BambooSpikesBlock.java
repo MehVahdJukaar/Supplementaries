@@ -205,7 +205,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!tippedEnabled.get()) return InteractionResult.PASS;
+        if (!TIPPED_ENABLED.get()) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(handIn);
 
         if (stack.getItem() instanceof LingeringPotionItem) {
@@ -243,11 +243,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    public Supplier<Boolean> tippedEnabled = Suppliers.memoize(() -> RegistryConfigs.TIPPED_SPIKES_ENABLED.get());
+    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(() -> RegistryConfigs.TIPPED_SPIKES_ENABLED.get());
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
-        if (!tippedEnabled.get()) return false;
+        if (!TIPPED_ENABLED.get()) return false;
         if (f == VanillaSoftFluids.POTION.get() && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
             if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
                 if (te.tryApplyPotion(PotionUtils.getPotion(nbt))) {

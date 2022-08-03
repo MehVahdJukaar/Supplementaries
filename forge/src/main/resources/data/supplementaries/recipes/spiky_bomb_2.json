@@ -1,0 +1,44 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/lead"
+      }
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "modid": "oreganized",
+        "type": "forge:mod_loaded"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "bomb",
+  "pattern": [
+    " 12",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:tnt"
+    },
+    "1": {
+      "tag": "forge:ingots/lead"
+    },
+    "2": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "supplementaries:bomb_spiky",
+    "count": 4
+  }
+}

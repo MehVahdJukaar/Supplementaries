@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/silver"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "silver_door"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "iron_door",
+  "pattern": [
+    "11 ",
+    "11 ",
+    "11 "
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:ingots/silver"
+    }
+  },
+  "result": {
+    "item": "supplementaries:silver_door",
+    "count": 3
+  }
+}

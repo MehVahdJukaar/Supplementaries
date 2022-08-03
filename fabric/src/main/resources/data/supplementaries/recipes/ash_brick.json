@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "supplementaries:ash"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "result": "supplementaries:ash_brick",
+  "experience": 0.3,
+  "cookingtime": 200
+}

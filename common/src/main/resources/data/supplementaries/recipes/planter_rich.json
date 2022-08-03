@@ -1,40 +1,33 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "modid": "farmersdelight",
-          "type": "forge:mod_loaded"
-        },
-        {
-          "type": "supplementaries:flag",
-          "flag": "planter"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "101",
-          "121",
-          "111"
-        ],
-        "key": {
-          "1": {
-            "item": "minecraft:brick"
-          },
-          "0": {
-            "item": "minecraft:bone_meal"
-          },
-          "2": {
-            "item": "farmersdelight:rich_soil"
-          }
-        },
-        "result": {
-          "item": "supplementaries:planter_rich",
-          "count": 1
-        }
-      }
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "101",
+    "121",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:brick"
+    },
+    "0": {
+      "item": "minecraft:bone_meal"
+    },
+    "2": {
+      "item": "farmersdelight:rich_soil"
+    }
+  },
+  "result": {
+    "item": "supplementaries:planter_rich",
+    "count": 1
+  }
 }

@@ -1,0 +1,33 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/brass"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "copper_lantern"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 2 ",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:ingots/brass"
+    },
+    "2": {
+      "item": "minecraft:blaze_powder"
+    }
+  },
+  "result": {
+    "item": "supplementaries:brass_lantern",
+    "count": 2
+  }
+}

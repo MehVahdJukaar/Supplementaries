@@ -2,25 +2,25 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "daub"
+      "flag": "wattle_and_daub"
     }
   ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "21 ",
-    "12 ",
-    "   "
+    "1 1",
+    " 2 ",
+    "1 1"
   ],
   "key": {
     "1": {
-      "item": "minecraft:wheat"
+      "item": "minecraft:stick"
     },
     "2": {
-      "item": "minecraft:clay_ball"
+      "item": "supplementaries:daub"
     }
   },
   "result": {
-    "item": "supplementaries:daub",
-    "count": 2
+    "item": "supplementaries:daub_cross_brace",
+    "count": 1
   }
 }

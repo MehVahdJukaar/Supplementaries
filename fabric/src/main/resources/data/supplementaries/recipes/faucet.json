@@ -13,10 +13,10 @@
   ],
   "key": {
     "1": {
-      "tag": "forge:rods/wooden"
+      "item": "minecraft:stick"
     },
     "2": {
-      "tag": "forge:ingots/iron"
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {

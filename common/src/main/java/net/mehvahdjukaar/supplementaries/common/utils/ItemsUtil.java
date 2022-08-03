@@ -99,7 +99,7 @@ public class ItemsUtil {
     }
 
     @ExpectPlatform
-    public static int getAllSacksInInventory(ItemStack stack, Entity entityIn, ServerPlayer player, int amount) {
+    public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
         throw new AssertionError();
     }
 

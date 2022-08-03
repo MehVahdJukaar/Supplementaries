@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:bamboo_spikes_tipped"
+  "type": "supplementaries:bamboo_spikes_tipped",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bamboo_spikes_tipped"
+    }
+  ]
 }

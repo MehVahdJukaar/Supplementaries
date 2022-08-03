@@ -1,16 +1,11 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +16,6 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -123,7 +117,7 @@ public class ForgeHelperImpl {
     }
 
     public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        return ((MobBucketItemAccessor)bucketItem).getType();
+        return ((MobBucketItemAccessor) bucketItem).getType();
     }
 
 

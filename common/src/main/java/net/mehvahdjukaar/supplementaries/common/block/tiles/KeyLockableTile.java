@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,18 +67,12 @@ public class KeyLockableTile extends BlockEntity {
     //returns true if door has to open
     public boolean handleAction(Player player, InteractionHand handIn, String translName) {
         if (player.isSpectator()) return false;
-
         ItemStack stack = player.getItemInHand(handIn);
-        Item item = stack.getItem();
 
         boolean isKey = stack.is(ModTags.KEY);
         //clear ownership
-        if (player.isShiftKeyDown() && isKey && (player.isCreative() || this.isCorrectKey(stack))) {
-            this.clearOwner();
-            player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
-            this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
-                    SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
-            return false;
+        if (player.isSecondaryUseActive() && isKey) {
+            if(tryClearingKey(player, stack))return false;
         }
         //set key
         else if (this.password == null) {
@@ -93,7 +86,18 @@ public class KeyLockableTile extends BlockEntity {
             return true;
         }
         //open
-        else return player.isCreative() || doesPlayerHaveKeyToOpen(player, this.password, true, translName);
+        return player.isCreative() || doesPlayerHaveKeyToOpen(player, this.password, true, translName);
+    }
+
+    public boolean tryClearingKey(Player player, ItemStack stack) {
+        if((player.isCreative() || this.isCorrectKey(stack))) {
+            this.clearOwner();
+            player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
+            this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
+                    SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
+            return true;
+        }
+        return false;
     }
 
     @Override

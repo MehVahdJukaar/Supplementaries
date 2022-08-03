@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/lead"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "lead_door"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "iron_trapdoor",
+  "pattern": [
+    "   ",
+    "11 ",
+    "11 "
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:ingots/lead"
+    }
+  },
+  "result": {
+    "item": "supplementaries:lead_trapdoor",
+    "count": 1
+  }
+}

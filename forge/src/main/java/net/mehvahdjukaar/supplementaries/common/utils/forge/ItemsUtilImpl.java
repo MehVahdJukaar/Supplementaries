@@ -120,12 +120,12 @@ public class ItemsUtilImpl {
         return null;
     }
 
-    public static int getAllSacksInInventory(ItemStack stack, Entity entityIn, ServerPlayer player, int amount) {
+    public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
         AtomicReference<IItemHandler> reference = new AtomicReference<>();
-        entityIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
+        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
         if (reference.get() != null) {
-            for (int _idx = 0; _idx < reference.get().getSlots(); _idx++) {
-                ItemStack slotItem = reference.get().getStackInSlot(_idx);
+            for (int idx = 0; idx < reference.get().getSlots(); idx++) {
+                ItemStack slotItem = reference.get().getStackInSlot(idx);
                 if (slotItem.getItem() instanceof SackItem) {
                     CompoundTag tag = stack.getTag();
                     if (tag != null && tag.contains("BlockEntityTag")) {
@@ -144,7 +144,7 @@ public class ItemsUtilImpl {
 
     public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
-        KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.INCORRECT_KEY;
+        KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.NO_KEY;
         if (CompatHandler.curios) {
             found = CuriosCompat.isKeyInCurio(player, key);
             if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
@@ -153,8 +153,8 @@ public class ItemsUtilImpl {
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
         player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);
         if (itemHandler.get() != null) {
-            for (int _idx = 0; _idx < itemHandler.get().getSlots(); _idx++) {
-                ItemStack stack = itemHandler.get().getStackInSlot(_idx);
+            for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
+                ItemStack stack = itemHandler.get().getStackInSlot(idx);
                 if (stack.is(ModTags.KEY)) {
                     found = KeyLockableTile.KeyStatus.INCORRECT_KEY;
                     if (KeyLockableTile.isCorrectKey(stack, key)) return KeyLockableTile.KeyStatus.CORRECT_KEY;

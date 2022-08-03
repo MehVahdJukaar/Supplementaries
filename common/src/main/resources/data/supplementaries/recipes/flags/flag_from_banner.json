@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:flag_from_banner"
+  "type": "supplementaries:flag_from_banner",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flag"
+    }
+  ]
 }

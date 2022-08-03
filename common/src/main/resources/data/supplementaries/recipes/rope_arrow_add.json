@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:rope_arrow_add"
+  "type": "supplementaries:rope_arrow_add",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "rope_arrow"
+    }
+  ]
 }

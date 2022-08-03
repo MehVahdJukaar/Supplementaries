@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "323",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:stick"
+    },
+    "2": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "3": {
+      "item": "minecraft:string"
+    },
+    "0": {
+      "item": "minecraft:slime_ball"
+    }
+  },
+  "result": {
+    "item": "supplementaries:slingshot",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "slingshot"
+    }
+  ]
+}

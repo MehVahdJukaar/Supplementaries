@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:bubble_blower_charge"
+  "type": "supplementaries:bubble_blower_charge",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bubble_blower"
+    }
+  ]
 }
