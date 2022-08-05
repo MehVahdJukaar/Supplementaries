@@ -1,0 +1,9 @@
+
+{
+  "parent": "minecraft:block/template_piston",
+  "textures": {
+    "platform": "supplementaries:blocks/diode_block_front_on",
+    "bottom": "supplementaries:blocks/diode_block_back",
+    "side": "supplementaries:blocks/diode_block_side"
+  }
+}
