@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.common.Credits;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
@@ -16,9 +16,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.StructureTags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +39,7 @@ public class Supplementaries {
     //called on mod creation
     public static void commonInit() {
 
-         Credits.fetchFromServer();
+        Credits.fetchFromServer();
         RegistryConfigs.superEarlyLoad();
         CommonConfigs.init();
         ClientConfigs.init();

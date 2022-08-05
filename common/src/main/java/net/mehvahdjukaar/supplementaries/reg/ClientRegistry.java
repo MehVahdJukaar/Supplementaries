@@ -117,8 +117,6 @@ public class ClientRegistry {
     @SuppressWarnings("ConstantConditions")
     public static void setup() {
 
-        ModMaterials.setup();
-
         //compat
         CompatHandlerClient.init();
 

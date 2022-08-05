@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.minecraft.client.Minecraft;
@@ -36,136 +37,9 @@ public class TextUtil {
 
 
     static {
-        String c =
-                """
-                        \u00A76
-                        \u00A7lSupplementaries
-
-
-
-                        \u00A74Author:\u00A7r
-
-                        \u00A70MehVahdJukaar
-
-                        \u00A74Artist:\u00A7r
-
-                        \u00A70Plantkillable
-
-
-                        \u00A74Donators:\u00A7r
-
-                        \u00A70NotHypherionSA
-                        anon
-                        FishSuckerSupreme
-                        Azrod_dovahkiin
-                        AdaraChristine
-                        Plummet_studios
-                        ThugPug43
-                        MetalBox47
-                        Hellfire
-                        LaughHappy
-                        StonkManHanz
-                        SylveticHearts
-                        E_Y_E_
-                        Wais
-                        ThatPurpleFFox
-                        Mattew M
-                        LambdaComplex
-                        byunie
-                        Lyon M
-                        Spencer G
-                        Elijah
-                        DrPineapple
-                        Colleen Cleland
-                        Astralis
-                        Mars The Gamer        
-                        Eudes Gerodez
-                        Little Pianist
-
-
-                        \u00A74Credits:
-
-                        \u00A75Other Textures:\u00A7r
-
-                        \u00A70
-                        YaBoiCinn
-                        Nary
-                        Evo
-                        VladimirLemon
-
-                        \u00A75Mod Compat.:\u00A7r
-
-                        \u00A70Agrona
-                        WenXin2
-                        AlleCraft
-                        Frogbirdd
-                        MightyGoat
-                        Fr_z_n
-                        ebo.
-                        Brun333rp
-                        Binome
-
-                        \u00A75Music and Sound:\u00A7r
-
-                        \u00A70Partyp
-                        Cydian
-                        DemiMark
-                        Piero
-                        zapsplat.com
-
-                        \u00A75Translations:\u00A7r
-
-                        \u00A70Bart_Riot23
-                        Mikeliro
-                        mayonaka8478
-                        eZio
-                        Othuntgithub
-                        Ye Weiguo
-                        baooduy
-                        Tenebris_AK
-                        Baliocraft
-                        Anton Bidenko
-                        sarlix
-                        Nick Defrunct
-                        Kevinl2000
-                        fixmes
-                        Zano1999
-                        Doiqotaq
-                        stupid
-                        HatchbackGuy'doscht
-                        VerdaPegasus
-                        ppblitto
-                        Saiki
-                        DrHesperus
-                        feliixpe
-                        zeedif
-                        ChuijkYahus
-
-                        \u00A75Others:\u00A7r
-
-                        \u00A70Guys on Discord
-                        TmTravlr
-                        CandyCraft
-                        Umaroth
-                        Howester84
-                        spiritwolf_twitch
-                        ax3el
-                        GermanCheeseMan
-                        Mcreator
-                        Youtube tutorials
-                        my grades. rip
-                        Joe Mama
-                        and You <3
-
-
-
-
-
-
-                        """;
-
+        String text = Credits.INSTANCE.createCreditsText();
         float lx = 1 - (2 * 0.125f);
-        CREDITS.addAll(Minecraft.getInstance().font.split(parseText(c), Mth.floor(lx * SCALINGFACTOR)));
+        CREDITS.addAll(Minecraft.getInstance().font.split(parseText(text), Mth.floor(lx * SCALINGFACTOR)));
         String b = """
                 THE BEE MOVIE\u00A7r
 
@@ -247,13 +121,15 @@ public class TextUtil {
                                            RenderTextProperties properties) {
 
         switch (properties.mode) {
-            case GLOWING -> font.drawInBatch8xOutline(formattedCharSequences, xOffset, yOffset, properties.textColor, properties.darkenedColor,
-                    matrix4f, buffer, properties.light);
+            case GLOWING ->
+                    font.drawInBatch8xOutline(formattedCharSequences, xOffset, yOffset, properties.textColor, properties.darkenedColor,
+                            matrix4f, buffer, properties.light);
             case NORMAL -> font.drawInBatch(formattedCharSequences, xOffset, yOffset, properties.darkenedColor, false,
                     matrix4f, buffer, false, 0, properties.light);
-            case ENGRAVED -> {drawInBatch8xOutline(font,formattedCharSequences, xOffset, yOffset, properties.darkenedColor, properties.textColor,
-                    matrix4f, buffer, properties.light);
-                }
+            case ENGRAVED -> {
+                drawInBatch8xOutline(font, formattedCharSequences, xOffset, yOffset, properties.darkenedColor, properties.textColor,
+                        matrix4f, buffer, properties.light);
+            }
         }
 
 
@@ -290,7 +166,7 @@ public class TextUtil {
 
 
     private static int getDarkenedColor(int color, boolean glowing) {
-        if(color == DyeColor.BLACK.getTextColor() && glowing) return 0xFFF0EBCC;
+        if (color == DyeColor.BLACK.getTextColor() && glowing) return 0xFFF0EBCC;
         return getDarkenedColor(color, 0.4f);
     }
 
@@ -331,11 +207,10 @@ public class TextUtil {
                 this.textColor = originalColor;
             } else {
                 //this.textColor = darkenedColor;
-                if(textHolder.isEngraved()){
+                if (textHolder.isEngraved()) {
                     this.mode = Mode.ENGRAVED;
                     this.textColor = getDarkenedColor(originalColor, 0.8f);
-                }
-                else{
+                } else {
                     this.mode = Mode.NORMAL;
                     this.textColor = originalColor;
                 }
@@ -424,7 +299,7 @@ public class TextUtil {
     }
 
     public static void drawInBatch8xOutline(Font font, FormattedCharSequence charSequence, float xOffset, float yOffset, int color, int color2,
-                                     Matrix4f matrix4f, MultiBufferSource bufferSource, int light) {
+                                            Matrix4f matrix4f, MultiBufferSource bufferSource, int light) {
         int c = adjustColor(color2);
 
         Font.StringRenderOutput stringRenderOutput = font.new StringRenderOutput(bufferSource, 0.0F, 0.0F, c,
@@ -433,8 +308,8 @@ public class TextUtil {
         int mx = 1;
         int my = 1;
 
-        for(int j = -mx; j <= mx; ++j) {
-            for(int k = -my; k <= my; ++k) {
+        for (int j = -mx; j <= mx; ++j) {
+            for (int k = -my; k <= my; ++k) {
                 if (j != 0 || k != 0) {
                     float[] afloat = new float[]{xOffset};
                     int pX = j;
@@ -443,8 +318,8 @@ public class TextUtil {
                         boolean bold = style.isBold();
                         FontSet fontset = font.getFontSet(style.getFont());
                         GlyphInfo glyphinfo = fontset.getGlyphInfo(b);
-                        stringRenderOutput.x = afloat[0] + (float)pX * glyphinfo.getShadowOffset();
-                        stringRenderOutput.y = yOffset + (float)pY * glyphinfo.getShadowOffset();
+                        stringRenderOutput.x = afloat[0] + (float) pX * glyphinfo.getShadowOffset();
+                        stringRenderOutput.y = yOffset + (float) pY * glyphinfo.getShadowOffset();
                         afloat[0] += glyphinfo.getAdvance(bold);
                         return stringRenderOutput.accept(a, style.withColor(c), b);
                     });

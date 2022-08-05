@@ -30,8 +30,8 @@ public class ModMaterials {
     public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
     public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
 
-
-    public static void setup() {
+    //needs static initializer as models are loaded before client setup
+    static{
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
                 .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));
 

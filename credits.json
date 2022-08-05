@@ -1,22 +1,159 @@
 {
-  "textures": [
-    "aa",
-    "bb"
-  ],
-  "translations": [
-    "cc"
-  ],
+  "note": "If your name is missing here please contact me",
+  "author": "MehVahdJukaar",
+  "artist": "Plantkillable",
   "supporters": {
     "toffanelly": {
-      "uuid": "bd337926-7396-4d3e-bfb9-7e562b077219",
-      "has_statue": "false",
       "has_globe": "true"
     },
-    "mehvahdjukaar": {
-      "has_statue": "true"
-    }
-
-  }
-
-
+    "NotHypherionSA": {},
+    "anon": {},
+    "FishSupreme": {
+      "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
+      "has_statue": true
+    },
+    "Azrod_dovahkiin": {
+      "uuid": "171ccd8a-3afe-4788-806d-ee643fe33a9c",
+      "has_statue": true
+    },
+    "AdaraChristine": {},
+    "Houston Millsap": {},
+    "MinecraftDadHappyVibes": {},
+    "Plummet_studios": {
+      "uuid": "8c1af44c-d02a-42e8-8ae6-e3f2132acbbf",
+      "has_statue": true
+    },
+    "ThugPug43": {
+      "uuid": "98105ad8-080a-4d70-a5da-0cc27a833309",
+      "has_statue": true,
+      "has_globe": true
+    },
+    "MetalBox47": {},
+    "PwnimuS": {
+      "uuid": "eb21318d-471a-4f08-b061-85bb55917e45",
+      "has_statue": true
+    },
+    "Mia Lemon": {},
+    "LaughHappy": {},
+    "YouMayCallMeVe": {},
+    "StonkManHanz": {
+      "uuid": "8b69ac73-b7d8-439f-972d-1ed43e583b47",
+      "has_statue": true
+    },
+    "Jacster1000": {
+      "uuid": "d4c6b27a-68ec-4625-a324-3efbe7fdf155",
+      "has_statue": true
+    },
+    "Little_pianist": {
+      "uuid": "86045b27-09fd-478d-87d7-77fb9312dd91",
+      "has_statue": true
+    },
+    "SylveticHearts": {
+      "uuid": "bd337926-7396-4d3e-bfb9-7e562b077219",
+      "has_statue": true,
+      "has_globe": true
+    },
+    "E_Y_E_": {
+      "has_globe": true
+    },
+    "Wais": {
+      "has_globe": true
+    },
+    "MylesTheChild": {
+      "uuid": "ea92f2be-4bd1-4082-a9b3-e6a8fbd43063",
+      "has_statue": true
+    },
+    "Kevin2000": {
+      "uuid": "36c058a7-c9db-4526-b787-ded8f4be48f0",
+      "has_statue": true
+    },
+    "ThatPurpleFFox": {
+      "uuid": "eb8f500f-ae4f-4ebb-855b-0714f1e1a0a2",
+      "has_statue": true
+    },
+    "Mattew M": {},
+    "jk1499": {},
+    "LambdaComplex": {},
+    "byunie": {
+      "uuid": "9605accb-f9fa-4ea3-b985-bf32a840dae9",
+      "has_statue": true
+    },
+    "Lyon M": {},
+    "Spencer G": {},
+    "Elijah": {},
+    "DrPineapple": {
+      "uuid": "935b65e9-6451-4c2b-92da-287846a94b07",
+      "has_statue": true
+    },
+    "Colleen Cleland": {},
+    "Astralis": {},
+    "Mars The Gamer": {},
+    "Eudes Gerodez": {}
+  },
+  "music_and_sounds": [
+    "Partyp",
+    "Cydian",
+    "DemiMark",
+    "Piero",
+    "zapsplat.com"
+  ],
+  "mod_compatibility": [
+    "Agrona",
+    "WenXin2",
+    "AlleCraft",
+    "Frogbirdd",
+    "MightyGoat",
+    "Fr_z_n",
+    "Brun333rp",
+    "Binome"
+  ],
+  "additional_artists": [
+    "YaBoiCinn",
+    "Nary",
+    "VladimirLemon",
+    "Evo"
+  ],
+  "translators": [
+    "Bart_Riot23",
+    "Mikeliro",
+    "mayonaka8478",
+    "eZio",
+    "Othuntgithub",
+    "Ye Weiguo",
+    "baooduy",
+    "Tenebris_AK",
+    "Baliocraft",
+    "Anton Bidenko",
+    "sarlix",
+    "Nick Defrunct",
+    "Kevinl2000",
+    "fixmes",
+    "Zano1999",
+    "Doiqotaq",
+    "stupid",
+    "HatchbackGuy'doscht",
+    "VerdaPegasus",
+    "ppblitto",
+    "Saiki",
+    "DrHesperus",
+    "feliixpe",
+    "zeedif",
+    "ChuijkYahus"
+  ],
+  "others": [
+    "Supplementaries on Discord",
+    "TmTravlr",
+    "ebo.",
+    "CandyCraft",
+    "Umaroth",
+    "Howester84",
+    "spiritwolf_twitch",
+    "ax3el",
+    "GermanCheeseMan",
+    "Mcreator",
+    "Youtube tutorials",
+    "my grades. rip",
+    "Joe Mama",
+    "and You <3"
+  ]
 }
