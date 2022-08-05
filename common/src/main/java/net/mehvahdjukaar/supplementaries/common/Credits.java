@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.core.Moonlight;
+import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.minecraft.core.UUIDUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,8 +18,10 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 public class Credits {
@@ -38,47 +41,48 @@ public class Credits {
     }
 
     public static void fetchFromServer() {
-        String link = "https://raw.githubusercontent.com/MehVahdJukaar/supplementaries/main/credits.json";;
-        try {
-            INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
-        } catch (Exception e) {
-            Moonlight.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
-        }
+        Executors.newSingleThreadExecutor().submit(()-> {
+            String link = "https://raw.githubusercontent.com/MehVahdJukaar/WIPsuppMULTI/master/credits.json";
+            try {
+                INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
+            } catch (Exception e) {
+                Moonlight.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
+            }
+            SpecialPlayers
+            int a = 1;
+        });
     }
 
     public static Credits INSTANCE = null;
 
-    private final List<Supporter> supporters;
-    private final List<String> artists;
-    private final List<String> translations;
+    private Map<String, Supporter> supporters = Map.of();
+    private List<String> artists = List.of();
+    private List<String> translations = List.of();
 
 
-    public Credits(List<Supporter> supporters, List<String> artists, List<String> translations) {
+    public Credits(Map<String, Supporter> supporters, List<String> artists, List<String> translations) {
         this.supporters = supporters;
         this.artists = artists;
         this.translations = translations;
     }
 
-
     private static class Supporter {
 
-        public Codec<Supporter> CODEC2 = Codec.STRING.listOf().fieldOf("aa").forGetter(s -> s.aa);
-
         private static Codec<Supporter> CODEC = RecordCodecBuilder.<Supporter>create((i) -> i.group(
-                        UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.of(p.id)),
-                        Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.hasStatue),
-                        Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.hasGlobe))
+                        UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.of(p.uuid)),
+                        Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
+                        Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe))
                 .apply(i, Supporter::new));
 
         @Nullable
-        private final UUID id;
-        private final boolean hasStatue;
-        private final boolean hasGlobe;
+        private final UUID uuid;
+        private final boolean has_statue;
+        private final boolean has_globe;
 
-        private Supporter(Optional<UUID> id, boolean hasStatue, boolean hasGlobe) {
-            this.id = id.orElse(null);
-            this.hasStatue = hasStatue;
-            this.hasGlobe = hasGlobe;
+        private Supporter(Optional<UUID> uuid, boolean hasStatue, boolean hasGlobe) {
+            this.uuid = uuid.orElse(null);
+            this.has_statue = hasStatue;
+            this.has_globe = hasGlobe;
         }
     }
 }

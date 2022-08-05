@@ -89,7 +89,7 @@ public class ModTextures {
     public static void setup() {
         //can't access these right away and only on setup
         for (BannerPattern pattern : Registry.BANNER_PATTERN) {
-            JarBlockTile
+
             FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
                     Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey()));
         }

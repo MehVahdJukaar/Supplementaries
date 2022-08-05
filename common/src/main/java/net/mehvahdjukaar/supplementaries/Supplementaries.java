@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
@@ -37,14 +38,15 @@ public class Supplementaries {
     }
 
 
-    //called either on mod creation
+    //called on mod creation
     public static void commonInit() {
 
+         Credits.fetchFromServer();
         RegistryConfigs.superEarlyLoad();
         CommonConfigs.init();
         ClientConfigs.init();
 
-    //fabric server books
+
         //TODO: banner bug
         //yeet java models in favor or json ones
         // TODO: re add soap stuff

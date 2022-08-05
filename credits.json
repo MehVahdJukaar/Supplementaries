@@ -1,17 +1,19 @@
 {
-  "credits": {
-    "textures": [
-      "aa",
-      "bb"
-    ],
-    "translations": [
-
-    ]
-  },
+  "textures": [
+    "aa",
+    "bb"
+  ],
+  "translations": [
+    "cc"
+  ],
   "supporters": {
     "toffanelly": {
-      "uuid": "aaaaaa",
-      "has_statue": "false"
+      "uuid": "bd337926-7396-4d3e-bfb9-7e562b077219",
+      "has_statue": "false",
+      "has_globe": "true"
+    },
+    "mehvahdjukaar": {
+      "has_statue": "true"
     }
 
   }
