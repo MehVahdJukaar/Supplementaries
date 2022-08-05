@@ -1,12 +1,12 @@
 {
   "conditions": [
     {
-      "modid": "farmersdelight",
-      "type": "forge:mod_loaded"
-    },
-    {
       "type": "supplementaries:flag",
       "flag": "planter"
+    },
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
     }
   ],
   "type": "minecraft:crafting_shaped",

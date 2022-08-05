@@ -101,9 +101,10 @@ public class CompatHandler {
         // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
     }
 
-    public static void registerOptionalStuff() {
+    public static void initOptionalRegistries() {
+        if (farmers_delight) FarmersDelightCompat.init();
         //   if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
-        //   if (farmers_delight) FDCompatRegistry.registerStuff();
+
         //    if (botania) BotaniaCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
     }

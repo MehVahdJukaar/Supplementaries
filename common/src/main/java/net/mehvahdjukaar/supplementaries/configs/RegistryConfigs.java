@@ -32,6 +32,7 @@ public class RegistryConfigs {
 
     public static boolean isEnabled(String key) {
         return switch (key) {
+            case "planter_rich", "planter_rich_soul" -> PLANTER_ENABLED.get();
             case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
             case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
             case RegistryConstants.FLAX_WILD_NAME -> FLAX_ENABLED.get();

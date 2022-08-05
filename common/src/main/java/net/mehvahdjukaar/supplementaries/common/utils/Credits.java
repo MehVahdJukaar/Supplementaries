@@ -45,6 +45,7 @@ public class Credits {
             try {
                 INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
             } catch (Exception e) {
+                INSTANCE = new Credits(Map.of(),List.of(),List.of(),List.of(),List.of(),List.of());
                 Moonlight.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
             }
             int a = 1;
@@ -91,6 +92,8 @@ public class Credits {
                 \u00A74Artist:\u00A7r
 
                 \u00A70Plantkillable
+                
+                
                 """);
 
         builder.append("""
@@ -101,17 +104,17 @@ public class Credits {
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Music and Sounds:\u00A7r
-                \u00A70
-                """);
-        music_and_sounds.forEach(s-> builder.append(s).append("\n"));
-        builder.append("\n\n");
-
-        builder.append("""
                 \u00A75Mod Compatibility:\u00A7r
                 \u00A70
                 """);
         mod_compatibility.forEach(s-> builder.append(s).append("\n"));
+        builder.append("\n\n");
+
+        builder.append("""
+                \u00A75Music and Sounds:\u00A7r
+                \u00A70
+                """);
+        music_and_sounds.forEach(s-> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""

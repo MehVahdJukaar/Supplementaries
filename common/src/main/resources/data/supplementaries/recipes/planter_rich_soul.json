@@ -1,12 +1,12 @@
 {
   "conditions": [
     {
-      "modid": "nethers_delight",
-      "type": "forge:mod_loaded"
-    },
-    {
       "type": "supplementaries:flag",
       "flag": "planter"
+    },
+    {
+      "modid": "nethers_delight",
+      "type": "forge:mod_loaded"
     }
   ],
   "type": "minecraft:crafting_shaped",
