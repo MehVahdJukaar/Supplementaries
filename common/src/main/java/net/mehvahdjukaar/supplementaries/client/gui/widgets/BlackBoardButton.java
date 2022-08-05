@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.gui.widgets;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -55,7 +55,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     public void renderButton(PoseStack matrixStack) {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, Textures.BLACKBOARD_GUI_TEXTURE);
+        RenderSystem.setShaderTexture(0, ModTextures.BLACKBOARD_GUI_TEXTURE);
 
         int offset = this.color > 0 ? 16 : 0;
 

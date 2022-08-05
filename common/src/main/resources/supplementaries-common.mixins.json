@@ -17,7 +17,6 @@
   ],
   "mixins": [
     "AbstractSkullBlockMixin",
-
     "BlockItemMixin",
     "BowMixin",
     "BrewingStandMixin",
@@ -43,7 +42,6 @@
     "VineMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin",
-    "accessors.MineshaftAccessor",
     "accessors.MobAccessor"
   ],
   "injectors": {

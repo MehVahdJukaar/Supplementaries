@@ -1,0 +1,20 @@
+{
+  "credits": {
+    "textures": [
+      "aa",
+      "bb"
+    ],
+    "translations": [
+
+    ]
+  },
+  "supporters": {
+    "toffanelly": {
+      "uuid": "aaaaaa",
+      "has_statue": "false"
+    }
+
+  }
+
+
+}

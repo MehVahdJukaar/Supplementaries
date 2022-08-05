@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
@@ -18,8 +19,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.Textures;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
@@ -30,7 +30,6 @@ import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -45,7 +44,6 @@ import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -104,13 +102,13 @@ public class ClientRegistry {
         ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
 
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
-            Textures.getTexturesForBlockAtlas().forEach(e::addSprite);
+            ModTextures.getTexturesForBlockAtlas().forEach(e::addSprite);
         });
         ClientPlatformHelper.addAtlasTextureCallback(Sheets.SHULKER_SHEET, e -> {
-            Textures.getTexturesForShulkerAtlas().forEach(e::addSprite);
+            ModTextures.getTexturesForShulkerAtlas().forEach(e::addSprite);
         });
         ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e -> {
-            Textures.getTexturesForBannerAtlas().forEach(e::addSprite);
+            ModTextures.getTexturesForBannerAtlas().forEach(e::addSprite);
         });
 
     }
@@ -118,6 +116,9 @@ public class ClientRegistry {
 
     @SuppressWarnings("ConstantConditions")
     public static void setup() {
+
+        ModMaterials.setup();
+
         //compat
         CompatHandlerClient.init();
 
@@ -189,10 +190,10 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
 
 
-        ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+        ClientPlatformHelper.registerItemProperty(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
                 (stack, world, entity, s) -> {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
@@ -201,21 +202,22 @@ public class ClientRegistry {
                     }
                 });
 
-        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+
+        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
-        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ForgeHelper.areStacksEqual(stack, entity.getUseItem(), true) ? 1.0F : 0.0F);
 
 
-        ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), new ResourceLocation("packed"),
-                (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
+        ModRegistry.PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), new ResourceLocation("packed"),
+                (stack, world, entity, s) -> 1));
 
-        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), new ResourceLocation("primed"),
+        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), new ResourceLocation("primed"),
                 (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
-        ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
                 (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
 

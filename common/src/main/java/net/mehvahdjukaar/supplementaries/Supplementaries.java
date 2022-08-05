@@ -44,7 +44,7 @@ public class Supplementaries {
         CommonConfigs.init();
         ClientConfigs.init();
 
-
+    //fabric server books
         //TODO: banner bug
         //yeet java models in favor or json ones
         // TODO: re add soap stuff

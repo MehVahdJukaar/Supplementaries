@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -89,7 +89,7 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public void setLine(int line, Component text) {
-        Style style = this.hasAntiqueInk ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
+        Style style = this.hasAntiqueInk ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY;
         text = text.copy().setStyle(style);
         this.signText[line] = text;
         this.renderText[line] = null;

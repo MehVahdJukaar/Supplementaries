@@ -6,7 +6,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.client.Minecraft;
@@ -172,7 +172,7 @@ public class BlackboardTextureManager {
         int offset = i > 0 ? 16 : 0;
         int tint = BlackboardBlock.colorFromByte(i);
         TextureAtlas textureMap = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
-        TextureAtlasSprite sprite = textureMap.getSprite(Textures.BLACKBOARD_TEXTURE);
+        TextureAtlasSprite sprite = textureMap.getSprite(ModTextures.BLACKBOARD_TEXTURE);
         return getTintedColor(sprite, x, y, offset, tint);
     }
 

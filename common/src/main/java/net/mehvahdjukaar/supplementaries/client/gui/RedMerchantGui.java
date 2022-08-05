@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSelectMerchantTradePacket;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainerMenu> {
-    private static final ResourceLocation TEXTURE = Textures.RED_MERCHANT_GUI_TEXTURE;
+    private static final ResourceLocation TEXTURE = ModTextures.RED_MERCHANT_GUI_TEXTURE;
     private static final MutableComponent TRADES_LABEL = Component.translatable("merchant.trades");
     private static final MutableComponent DEPRECATED_TOOLTIP = Component.translatable("merchant.deprecated");
     private static final MutableComponent TRADE_OFFER = Component.translatable("gui.supplementaries.orange_trader.trade");

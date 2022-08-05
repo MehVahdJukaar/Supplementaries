@@ -8,11 +8,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.block_models.StatueEntityModel;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -118,7 +117,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             }
         }
 
-        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
+        ResourceLocation resourceLocation = tile.owner == null ? ModTextures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
 
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(RotHlpr.rot(dir));

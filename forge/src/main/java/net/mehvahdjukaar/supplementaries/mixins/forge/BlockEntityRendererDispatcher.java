@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
+import com.electronwill.nightconfig.toml.TomlParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
             this.candle = NbtUtils.readBlockState(tag.getCompound("Candle"));
             if (this.candle.getBlock() instanceof CandleBlock candleBlock) {
                 this.waxTexture = getWaxColor(candleBlock);
-            } else this.waxTexture = Textures.SKULL_CANDLES_TEXTURES.get(Blocks.CANDLE);
+            } else this.waxTexture = ModTextures.SKULL_CANDLES_TEXTURES.get(Blocks.CANDLE);
         }
     }
 
@@ -91,7 +91,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
     @Nullable
     public static ResourceLocation getWaxColor(CandleBlock b) {
-        return Textures.SKULL_CANDLES_TEXTURES.get(b);
+        return ModTextures.SKULL_CANDLES_TEXTURES.get(b);
     }
 
 

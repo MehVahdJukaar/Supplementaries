@@ -6,8 +6,10 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.BaseColor;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DiodeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.effects.OverencumberedEffect;
@@ -701,9 +703,16 @@ public class ModRegistry {
 
     //cog block
     public static final Supplier<Block> COG_BLOCK = regWithItem(COG_BLOCK_NAME, () -> new CogBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)
                     .strength(3f, 6f)
                     .sound(SoundType.COPPER)
+                    .requiresCorrectToolForDrops()
+    ), CreativeModeTab.TAB_REDSTONE);
+
+    //diode block
+    public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                    .strength(3f, 6f)
                     .requiresCorrectToolForDrops()
     ), CreativeModeTab.TAB_REDSTONE);
 
@@ -762,9 +771,14 @@ public class ModRegistry {
 
     //illuminator
     public static final Supplier<Block> REDSTONE_ILLUMINATOR = regWithItem(REDSTONE_ILLUMINATOR_NAME, () -> new RedstoneIlluminatorBlock(
-            BlockBehaviour.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.QUARTZ)
+            BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.QUARTZ)
                     .strength(0.3f, 0.3f)
-                    .sound(SoundType.GLASS)
+    ), CreativeModeTab.TAB_REDSTONE);
+
+    //crystal display
+    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+                    .strength(0.2f, 0.2f)
     ), CreativeModeTab.TAB_REDSTONE);
 
     //pulley

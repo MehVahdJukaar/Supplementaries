@@ -4,18 +4,19 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.*;
 
-public class Textures {
+public class ModTextures {
 
     //minecraft
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
@@ -85,8 +86,10 @@ public class Textures {
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
-    static {
+    public static void setup() {
+        //can't access these right away and only on setup
         for (BannerPattern pattern : Registry.BANNER_PATTERN) {
+            JarBlockTile
             FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
                     Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey()));
         }
@@ -120,7 +123,7 @@ public class Textures {
     public static List<ResourceLocation> getTexturesForBannerAtlas() {
         List<ResourceLocation> list = new ArrayList<>();
         try {
-            Textures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
+            ModTextures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
                     .forEach(list::add);
         } catch (Exception ignored) {
         }
@@ -130,12 +133,12 @@ public class Textures {
     public static List<ResourceLocation> getTexturesForShulkerAtlas() {
         List<ResourceLocation> list = new ArrayList<>();
 
-        list.add(Textures.BOOK_ENCHANTED_TEXTURES);
-        list.add(Textures.BOOK_TOME_TEXTURES);
-        list.add(Textures.BOOK_WRITTEN_TEXTURES);
-        list.add(Textures.BOOK_AND_QUILL_TEXTURES);
-        list.add(Textures.BOOK_ANTIQUE_TEXTURES);
-        list.addAll(Textures.BOOK_TEXTURES.values());
+        list.add(ModTextures.BOOK_ENCHANTED_TEXTURES);
+        list.add(ModTextures.BOOK_TOME_TEXTURES);
+        list.add(ModTextures.BOOK_WRITTEN_TEXTURES);
+        list.add(ModTextures.BOOK_AND_QUILL_TEXTURES);
+        list.add(ModTextures.BOOK_ANTIQUE_TEXTURES);
+        list.addAll(ModTextures.BOOK_TEXTURES.values());
 
         return list;
     }

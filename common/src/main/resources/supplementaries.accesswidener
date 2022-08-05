@@ -19,9 +19,6 @@ accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minec
 accessible field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
 
-#items
-accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
-
 #explosions
 accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
 

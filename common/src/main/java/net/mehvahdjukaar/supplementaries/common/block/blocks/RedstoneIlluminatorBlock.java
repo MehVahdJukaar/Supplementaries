@@ -36,7 +36,7 @@ public class RedstoneIlluminatorBlock extends Block {
         this.updatePower(state, world, pos);
     }
 
-    public void updatePower(BlockState state, Level world, BlockPos pos) {
+    private void updatePower(BlockState state, Level world, BlockPos pos) {
         if (!world.isClientSide) {
             int pow = world.getBestNeighborSignal(pos);
             world.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 2);

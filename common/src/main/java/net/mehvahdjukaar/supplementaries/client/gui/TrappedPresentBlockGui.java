@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -117,7 +117,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Textures.TRAPPED_PRESENT_GUI_TEXTURE);
+        RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
@@ -130,7 +130,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, Textures.TRAPPED_PRESENT_GUI_TEXTURE);
+            RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
             blit(poseStack, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
@@ -174,7 +174,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
 
         @Override
         public void renderButton(PoseStack poseStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
-            RenderSystem.setShaderTexture(0, Textures.TRAPPED_PRESENT_GUI_TEXTURE);
+            RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
             int j = 0;

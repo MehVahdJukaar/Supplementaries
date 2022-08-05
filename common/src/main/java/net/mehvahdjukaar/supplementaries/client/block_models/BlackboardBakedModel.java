@@ -2,18 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -29,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class BlackboardBakedModel implements CustomBakedModel {
@@ -121,7 +115,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
                     }
                     //block uv is incorrectly flipped on both axis... too bad
                     //draws prev quad
-                    int tint =  255 << 24 | BlackboardBlock.colorFromByte(prevColor);
+                    int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
                     TextureAtlasSprite sprite = prevColor == 0 ? black : white;
                     quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f,
                             1 / 16f, length / 16f, sprite, tint, rotation));
@@ -141,7 +135,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
         BakedQuadBuilder builder = BakedQuadBuilder.create();
 
-        BakedQuadBuilder.applyModelRotation(0,0,-1, transform.getMatrix());
+        BakedQuadBuilder.applyModelRotation(0, 0, -1, transform.getMatrix());
         float tu = sprite.getWidth() * width;
         float tv = sprite.getHeight() * height;
         float u0 = x * 16;

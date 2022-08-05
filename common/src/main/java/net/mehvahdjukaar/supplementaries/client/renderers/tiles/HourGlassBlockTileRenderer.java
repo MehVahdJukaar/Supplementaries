@@ -6,7 +6,7 @@ import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -39,7 +39,7 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
         int color = 0xffffff;
         if (CommonUtil.FESTIVITY.isAprilsFool()) {
             color = ColorHelper.getRainbowColor(1);
-            sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.WHITE_CONCRETE_TEXTURE);
+            sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.WHITE_CONCRETE_TEXTURE);
         }
 
 

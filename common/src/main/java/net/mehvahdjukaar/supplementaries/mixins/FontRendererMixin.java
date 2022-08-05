@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +39,7 @@ public abstract class FontRendererMixin implements IAntiqueTextProvider {
     @Inject(method = "getFontSet", at = @At("HEAD"), cancellable = true)
     private void getFontSet(ResourceLocation resourceLocation, CallbackInfoReturnable<FontSet> cir) {
         if (antique) {
-            cir.setReturnValue(this.fonts.apply(Textures.ANTIQUABLE_FONT));
+            cir.setReturnValue(this.fonts.apply(ModTextures.ANTIQUABLE_FONT));
         }
     }
 

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.integration.fabric.ClothConfigListScreen;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.LinkButton;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -22,14 +22,14 @@ public class CustomConfigScreen extends ClothConfigListScreen {
     public static final ItemStack MAIN_ICON = new ItemStack(ModRegistry.GLOBE_ITEM.get());
 
     public CustomConfigScreen(Screen parent) {
-        super(parent, Component.literal("\u00A76Supplementaries Configs"), Textures.CONFIG_BACKGROUND,
+        super(parent, Component.literal("\u00A76Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
                 ClientConfigs.CLIENT_SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
     }
 
     @Override
     protected void addExtraButtons() {
 
-        ResourceLocation icons = Textures.MISC_ICONS_TEXTURE;
+        ResourceLocation icons = ModTextures.MISC_ICONS_TEXTURE;
 
         int y = this.height - 27;
         int centerX = this.width / 2;

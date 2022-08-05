@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -51,7 +51,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
 
     @Override
     public ResourceLocation getTextureLocation(AbstractClientPlayer player) {
-        return Textures.JAR_MAN;
+        return ModTextures.JAR_MAN;
     }
 
     @Override

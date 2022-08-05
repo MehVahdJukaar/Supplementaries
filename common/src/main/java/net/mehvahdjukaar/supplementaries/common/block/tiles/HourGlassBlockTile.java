@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-import static net.mehvahdjukaar.supplementaries.common.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.ModTextures.*;
 
 public class HourGlassBlockTile extends ItemDisplayTile {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;

@@ -17,8 +17,10 @@ public class StasisEnchantment extends Enchantment {
             (RegistryConfigs.SLINGSHOT_ENABLED.get() || RegistryConfigs.BUBBLE_BLOWER_ENABLED.get());
 
     public StasisEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
+        super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW,
+                new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }
+
 
     @Override
     public int getMinCost(int level) {
@@ -59,6 +61,12 @@ public class StasisEnchantment extends Enchantment {
     @Override
     public boolean checkCompatibility(Enchantment enchantment) {
         return super.checkCompatibility(enchantment) && enchantment != Enchantments.MULTISHOT;
+    }
+
+    @Override
+    public boolean canEnchant(ItemStack stack) {
+        Item i = stack.getItem();
+        return i instanceof SlingshotItem || i instanceof BubbleBlower || super.canEnchant(stack);
     }
 
     //@Override

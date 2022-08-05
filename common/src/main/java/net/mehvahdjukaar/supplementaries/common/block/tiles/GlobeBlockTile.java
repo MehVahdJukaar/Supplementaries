@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-import static net.mehvahdjukaar.supplementaries.common.Textures.*;
+import static net.mehvahdjukaar.supplementaries.common.ModTextures.*;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 

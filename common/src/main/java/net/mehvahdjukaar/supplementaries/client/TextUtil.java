@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -101,6 +101,7 @@ public class TextUtil {
                         Frogbirdd
                         MightyGoat
                         Fr_z_n
+                        ebo.
                         Brun333rp
                         Binome
 
@@ -340,7 +341,7 @@ public class TextUtil {
                 }
                 this.light = combinedLight;
             }
-            this.style = textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(Textures.ANTIQUABLE_FONT) : Style.EMPTY;
+            this.style = textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY;
         }
     }
 

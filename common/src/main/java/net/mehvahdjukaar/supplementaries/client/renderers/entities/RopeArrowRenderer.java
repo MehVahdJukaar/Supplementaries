@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleRenderer;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -19,7 +19,7 @@ public class RopeArrowRenderer extends ArrowRenderer<RopeArrowEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(RopeArrowEntity entity) {
-        return Textures.ROPE_ARROW;
+        return ModTextures.ROPE_ARROW;
     }
 
 }

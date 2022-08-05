@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 
@@ -22,7 +20,7 @@ public class SlimedRenderType extends RenderType {
 
     }, RenderSystem::resetTextureMatrix);
 
-    protected static final TextureStateShard TEXTURE_SHARD = new TextureStateShard(Textures.SLIME_ENTITY_OVERLAY, true, false);
+    protected static final TextureStateShard TEXTURE_SHARD = new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, true, false);
 /*
     public static final RenderType SLIMED_RENDER_TYPE =
             create("slimed", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,

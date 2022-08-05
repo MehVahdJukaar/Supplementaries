@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.CandleBlock;
@@ -32,7 +31,7 @@ import java.util.List;
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
     //so we don't have to save the whole texture location but its index instead
-    private static final List<ResourceLocation> TEXTURE_IND = new ArrayList<>(Textures.SKULL_CANDLES_TEXTURES.values());
+    private static final List<ResourceLocation> TEXTURE_IND = new ArrayList<>(ModTextures.SKULL_CANDLES_TEXTURES.values());
 
     @Nullable
     protected SkullBlockEntity innerTileUp = null;

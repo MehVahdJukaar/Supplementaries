@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.IBellConnections;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -50,7 +50,7 @@ public class BellTileMixinRenderer {
 
             if(connection.isRope()) {
                 //TODO: fix lighting since none of these methods are shaded properly
-                VertexConsumer builder2 = bufferIn.getBuffer(RenderType.entityCutout(Textures.BELL_ROPE_TEXTURE));
+                VertexConsumer builder2 = bufferIn.getBuffer(RenderType.entityCutout(ModTextures.BELL_ROPE_TEXTURE));
 
                 //rope.render(matrixStackIn, builder2, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
             }
@@ -60,7 +60,7 @@ public class BellTileMixinRenderer {
                 int lu = combinedLightIn & '\uffff';
                 int lv = combinedLightIn >> 16 & '\uffff'; // ok
 
-                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Textures.CHAIN_TEXTURE);
+                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.CHAIN_TEXTURE);
                 VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
 
                 float sMinU = sprite.getU0();

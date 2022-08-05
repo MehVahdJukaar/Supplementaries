@@ -10,23 +10,19 @@ import com.mrcrayfish.configured.util.ConfigHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.LinkButton;
-import net.mehvahdjukaar.supplementaries.common.Textures;
+import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.data.worldgen.StructureSets;
-import net.minecraft.data.worldgen.Structures;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.StructureTags;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.ModConfig;
@@ -37,7 +33,7 @@ import java.util.*;
 
 public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
-    public static final ResourceLocation ICONS_TEXTURES = Textures.MISC_ICONS_TEXTURE;
+    public static final ResourceLocation ICONS_TEXTURES = ModTextures.MISC_ICONS_TEXTURE;
 
     static {
         Field temp = null;
@@ -63,7 +59,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
                 new ConfigScreenHandler.ConfigScreenFactory((mc, screen) ->
                         new CustomConfigSelectScreen(screen, "\u00A76Supplementaries Configured",
-                                Textures.CONFIG_BACKGROUND, modConfigMap)));
+                                ModTextures.CONFIG_BACKGROUND, modConfigMap)));
     }
 
     private static Map<ModConfig.Type, Set<ModConfig>> createConfigMap() {
