@@ -43,12 +43,6 @@ public class ForgeHelper {
         throw new AssertionError();
     }
 
-    //TODO: fabric
-    @ExpectPlatform
-    public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        throw new AssertionError();
-    }
-
     // TODO: fabric
     @ExpectPlatform
     public static boolean onExplosionStart(Level level, Explosion explosion) {

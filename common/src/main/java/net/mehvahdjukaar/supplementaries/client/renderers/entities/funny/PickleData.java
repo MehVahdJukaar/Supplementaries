@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
-import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ public class PickleData {
     public static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
 
     static {
-        for (UUID id : SpecialPlayers.DEVS) PICKLE_PLAYERS.put(id, new PickleValues());
+        for (UUID id : Credits.INSTANCE.getDevs()) PICKLE_PLAYERS.put(id, new PickleValues());
     }
 
     //reset
@@ -39,7 +39,7 @@ public class PickleData {
     }
 
     public static boolean isDev(UUID id) {
-        return SpecialPlayers.DEVS.contains(id);
+        return PICKLE_PLAYERS.containsKey(id);
     }
 
     public static void set(UUID id, boolean on) {

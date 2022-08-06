@@ -42,12 +42,7 @@ public class ForgeHelperImpl {
         return ForgeHooks.canEntityDestroy(level, blockPos, animal);
     }
 
-    public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        NetworkHooks.openScreen(player, menuProvider, pos);
-    }
-
     public static boolean onExplosionStart(Level level, Explosion explosion) {
-        DeferredRegister r = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, "a");
         return ForgeEventFactory.onExplosionStart(level, explosion);
     }
 

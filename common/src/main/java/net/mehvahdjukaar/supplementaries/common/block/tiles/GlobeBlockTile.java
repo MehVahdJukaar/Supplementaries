@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -167,7 +167,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         public static Pair<GlobeModel, ResourceLocation> getGlobeTexture(String text) {
             GlobeModel model = GlobeModel.GLOBE;
             String name = text.toLowerCase(Locale.ROOT);
-            ResourceLocation r = SpecialPlayers.GLOBES.get(name);
+            ResourceLocation r = Credits.INSTANCE.globes().get(name);
 
             if (r != null) {
                 if (r.getPath().contains("globe_wais")) {

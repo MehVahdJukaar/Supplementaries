@@ -709,11 +709,11 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //diode block
-    //public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
-   //         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-   //                 .strength(3f, 6f)
-   //                 .requiresCorrectToolForDrops()
-   // ), CreativeModeTab.TAB_REDSTONE);
+    public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                    .strength(3f, 6f)
+                    .requiresCorrectToolForDrops()
+    ), CreativeModeTab.TAB_REDSTONE);
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
@@ -775,10 +775,10 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //crystal display
-   // public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-  //          BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
-  //                  .strength(0.2f, 0.2f)
-  //  ), CreativeModeTab.TAB_REDSTONE);
+    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+                    .strength(0.2f, 0.2f)
+    ), CreativeModeTab.TAB_REDSTONE);
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
@@ -1211,9 +1211,9 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-    // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
-    //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
-    // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+     public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(

@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StatueBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,7 +66,7 @@ public class StatueBlockTile extends ItemDisplayTile {
         if (this.hasCustomName()) {
 
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
-            Pair<UUID, String> profile = SpecialPlayers.STATUES.get(name);
+            Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
                 this.setOwner(new GameProfile(profile.getFirst(), profile.getSecond()));
             }
@@ -128,7 +128,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             return (stack.is(ItemTags.CANDLES)) ? StatuePose.CANDLE : StatuePose.HOLDING;
         }
 
-        public boolean isGlobe(){
+        public boolean isGlobe() {
             return this == GLOBE || this == SEPIA_GLOBE;
         }
     }

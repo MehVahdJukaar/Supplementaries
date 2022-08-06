@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
@@ -129,7 +131,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         if (this.isUnused()) {
             if (this.canOpen(player)) {
-                ForgeHelper.openContainerScreen(player, this, pos);
+                PlatformHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);

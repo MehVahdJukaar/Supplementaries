@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
@@ -97,7 +98,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         if (this.isUnused() &&
                 Mth.abs(time - lastActivated) > 10) {
             if (this.canOpen(player)) {
-                ForgeHelper.openContainerScreen(player, this, pos);
+                PlatformHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 detonate(player.getLevel(), pos);

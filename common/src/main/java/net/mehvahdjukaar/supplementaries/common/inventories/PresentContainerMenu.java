@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;

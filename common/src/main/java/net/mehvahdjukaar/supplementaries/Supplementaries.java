@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.client.gui.PresentBlockGui;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -44,7 +45,7 @@ public class Supplementaries {
         CommonConfigs.init();
         ClientConfigs.init();
 
-
+        //soap in water makes soap particles
         //TODO: banner bug
         //yeet java models in favor or json ones
         // TODO: re add soap stuff
@@ -54,6 +55,7 @@ public class Supplementaries {
         //potions in jars are bugged ;_;
         //feather block
 
+        PresentBlockGui
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
         ModRegistry.init();

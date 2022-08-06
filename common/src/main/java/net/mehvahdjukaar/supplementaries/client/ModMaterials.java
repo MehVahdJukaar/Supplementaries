@@ -34,7 +34,10 @@ public class ModMaterials {
     static{
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
                 .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));
+    }
 
+    //needs to run after textures but can't run too early because of banners
+    public static void setup(){
         for (var e : ModTextures.FLAG_TEXTURES.entrySet()) {
             FLAG_MATERIALS.put(e.getKey(), new Material(Sheets.BANNER_SHEET, e.getValue()));
         }

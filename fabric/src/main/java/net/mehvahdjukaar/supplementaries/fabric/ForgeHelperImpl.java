@@ -36,11 +36,6 @@ public class ForgeHelperImpl {
         }
     }
 
-    public static void openContainerScreen(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        //TODO: check this
-        player.openMenu(menuProvider);
-    }
-
     public static boolean onExplosionStart(Level level, Explosion explosion) {
         return true;
     }
