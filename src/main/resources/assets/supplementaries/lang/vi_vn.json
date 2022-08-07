@@ -83,7 +83,7 @@
   "message.supplementaries.safe.locked": "Két sắt này đã bị khóa",
   "gui.supplementaries.safe.password": "Mã khóa %2$s: %1$s",
   "message.supplementaries.safe.bound": "Đã khóa",
-  "message.supplementaries.safe.assigned_key": "Được gán cho chìa khóa '%s',"
+  "message.supplementaries.safe.assigned_key": "Được gán cho chìa khóa '%s'",
   "item.supplementaries.key": "Chìa khóa",
   "supplementaries.comment8": "Để dịch, hãy xóa %s và dịch như thể nó là 'gai tre nghiêng'",
   "supplementaries.comment9": "Bạn cũng có thể để lại %s sẽ được lấp đầy bởi tên thuốc đã dịch từ các mũi tên nghiêng",
