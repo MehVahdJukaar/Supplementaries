@@ -34,7 +34,7 @@ dependencies {
     }
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation("curse.maven:roughly-enough-items-310111:3900965")
+   // modImplementation("curse.maven:roughly-enough-items-310111:3900965")
     modImplementation("curse.maven:flan-404578:3902630")
     modImplementation("curse.maven:farmers-delight-fabric-482834:3833241")
 

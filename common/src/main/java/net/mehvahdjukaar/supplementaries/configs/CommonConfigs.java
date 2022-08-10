@@ -633,6 +633,7 @@ public class CommonConfigs {
         public static Supplier<Integer> URN_PER_CHUNK;
         public static Supplier<List<String>> URN_BIOME_BLACKLIST;
 
+        public static Supplier<Double> RED_MERCHANT_SPAWN_CHANCE;
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Configure spawning conditions")
@@ -665,6 +666,10 @@ public class CommonConfigs {
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
                     .define("biome_blacklist", urnBlacklist);
             builder.pop();
+
+            //TODO: add
+            RED_MERCHANT_SPAWN_CHANCE = builder.comment("Set to 1 for default spawn chance (around 1 every 7 trader at maxed out local difficulty). Decrease to lower the spawn rate. Set to 0 to disable entirely")
+                    .define("red_merchant_spawn_chance",1d,0d,1d);
 
             builder.pop();
         }

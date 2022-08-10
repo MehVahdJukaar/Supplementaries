@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -142,6 +143,12 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
+
+        RPUtils.addCrossbowModel(manager, this.dynamicPack, e->{
+            e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
+                             List.of(new ItemOverride.Predicate(new ResourceLocation("charged"),1f),
+                                     new ItemOverride.Predicate(Supplementaries.res("rope_arrow"),1f))));
+        });
 
         //hanging signs block textures
         try (TextureImage template = TextureImage.open(manager,

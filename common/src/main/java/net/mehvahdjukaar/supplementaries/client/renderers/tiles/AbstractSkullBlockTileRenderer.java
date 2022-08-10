@@ -19,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import javax.annotation.Nullable;
+
 public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBlockTile> implements BlockEntityRenderer<T> {
 
 
@@ -38,11 +40,11 @@ public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBloc
         BlockEntity inner = tile.getSkullTile();
         if (inner != null) {
             float yaw = -22.5F * (float) (tile.getBlockState().getValue(SkullBlock.ROTATION)
-            -inner.getBlockState().getValue(SkullBlock.ROTATION));
+                    - inner.getBlockState().getValue(SkullBlock.ROTATION));
             //let's base block master the rotation
 
 
-           poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.translate(0.5, 0.5, 0.5);
             poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
             poseStack.translate(-0.5, -0.5, -0.5);
 
@@ -55,14 +57,15 @@ public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBloc
         //leaves the matrix rotated for wax
     }
 
-    public <B extends BlockEntity> void  renderInner(B tile,float pPartialTicks, PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, int pCombinedOverlay){
+    public <B extends BlockEntity> void renderInner(B tile, float pPartialTicks, PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, int pCombinedOverlay) {
         BlockEntityRenderer<B> renderer = dispatcher.getRenderer(tile);
-        if(renderer != null) {
+        if (renderer != null) {
             renderer.render(tile, pPartialTicks, poseStack, buffer, pCombinedLight, pCombinedOverlay);
         }
     }
 
-    public void renderWax(PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, ResourceLocation texture, float yaw) {
+    public void renderWax(PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, @Nullable ResourceLocation texture, float yaw) {
+        if (texture == null) return;
         poseStack.pushPose();
         poseStack.translate(0.5, 0.25, 0.5);
 
