@@ -190,7 +190,7 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
 
 
-        ClientPlatformHelper.registerItemProperty(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+        ClientPlatformHelper.registerItemProperty(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
