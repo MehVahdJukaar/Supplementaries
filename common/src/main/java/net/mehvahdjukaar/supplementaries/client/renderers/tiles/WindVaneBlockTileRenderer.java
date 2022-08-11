@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,7 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90 + Mth.lerp(partialTicks, tile.prevYaw, tile.yaw)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
-        RendererUtil.renderBlockModel(ClientRegistry.WIND_VANE_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,
+        RenderUtil.renderBlockModel(ClientRegistry.WIND_VANE_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,
                 combinedLightIn, combinedOverlayIn, true);
 
         matrixStackIn.popPose();

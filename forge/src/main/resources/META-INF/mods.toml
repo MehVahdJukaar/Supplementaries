@@ -12,7 +12,7 @@ displayName = "Supplementaries"
 
 credits = "Put a book named 'credits' inside a notice board" #optional
 
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
+modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
 
 authors = "MehVahdJukaar, Plantkillable" #optional
 

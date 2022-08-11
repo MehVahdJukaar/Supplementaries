@@ -4,10 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
@@ -72,7 +73,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
             poseStack.translate(-0.5, -0.875, -0.5);
             //render block
-            RendererUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
+            RenderUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
         }else{
             poseStack.translate(-0.5, -0.875, -0.5);
         }
@@ -122,7 +123,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     int lu = combinedLightIn & '\uffff';
                     int lv = combinedLightIn >> 16 & '\uffff';
                     for (int v = 0; v < 2; v++) {
-                        RendererUtil.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
+                        VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
                                 0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
                         poseStack.mulPose(RotHlpr.Y180);

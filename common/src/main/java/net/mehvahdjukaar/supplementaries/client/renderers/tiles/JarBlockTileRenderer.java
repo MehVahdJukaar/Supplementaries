@@ -7,7 +7,7 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
@@ -46,7 +46,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         // TODO:remove breaking animation
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, liquidParams.z(), 0.5);
-        RendererUtil.addCube(builder, matrixStackIn,
+        VertexUtils.addCube(builder, matrixStackIn,
                 liquidParams.x(),
                 percentageFill * liquidParams.y(),
                 sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
@@ -100,7 +100,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 int fishType = data.getFishIndex();
 
                 //overlay
-                RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
+                VertexUtils.renderFish(builder, matrixStackIn, wo, ho, fishType, combinedLightIn);
                 matrixStackIn.popPose();
 
             } else {
@@ -111,7 +111,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 matrixStackIn.translate(0.5, 0.0015 + liquidParams.z(), 0.5);
                 VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                 TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.SAND_TEXTURE);
-                RendererUtil.addCube(builder, matrixStackIn, 0.99f * liquidParams.x(), liquidParams.y() / 12, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
+                VertexUtils.addCube(builder, matrixStackIn, 0.99f * liquidParams.x(), liquidParams.y() / 12, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
                 SoftFluid s = VanillaSoftFluids.WATER.get();

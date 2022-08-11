@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -633,6 +632,8 @@ public class CommonConfigs {
         public static Supplier<Integer> URN_PER_CHUNK;
         public static Supplier<List<String>> URN_BIOME_BLACKLIST;
 
+        public static Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
+
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Configure spawning conditions")
@@ -664,6 +665,11 @@ public class CommonConfigs {
             List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
             URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
                     .define("biome_blacklist", urnBlacklist);
+            builder.pop();
+
+            builder.push("misc");
+            RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red marchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
+                    .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
 
             builder.pop();

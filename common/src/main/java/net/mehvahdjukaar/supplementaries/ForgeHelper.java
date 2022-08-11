@@ -1,26 +1,20 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +26,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 //todo: move to lib
 public class ForgeHelper {
@@ -43,15 +36,16 @@ public class ForgeHelper {
         throw new AssertionError();
     }
 
-    // TODO: fabric
     @ExpectPlatform
     public static boolean onExplosionStart(Level level, Explosion explosion) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static void onLivingConvert(LivingEntity from, LivingEntity to) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static boolean canLivingConvert(LivingEntity entity, EntityType<? extends LivingEntity> outcome, Consumer<Integer> timer) {
         throw new AssertionError();
@@ -96,6 +90,7 @@ public class ForgeHelper {
     public static boolean isDye(ItemStack itemstack) {
         throw new AssertionError();
     }
+
     @Nullable
     @ExpectPlatform
     public static DyeColor getColor(ItemStack stack) {
@@ -111,10 +106,12 @@ public class ForgeHelper {
     public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static boolean isMultipartEntity(Entity e) {
         throw new AssertionError();
@@ -126,9 +123,10 @@ public class ForgeHelper {
     }
 
     @ExpectPlatform
-    public static RailShape getRailDirection(BaseRailBlock railBlock, BlockState blockstate, Level level, BlockPos blockpos,@Nullable AbstractMinecart o) {
+    public static RailShape getRailDirection(BaseRailBlock railBlock, BlockState blockstate, Level level, BlockPos blockpos, @Nullable AbstractMinecart o) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static Optional<ItemStack> getCraftingRemainingItem(ItemStack itemstack) {
         throw new AssertionError();

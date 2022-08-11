@@ -3,8 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBoatTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -41,7 +42,7 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
 
 
 
-        RendererUtil.renderBlockModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
+        RenderUtil.renderBlockModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
         matrixStackIn.popPose();
 
     }

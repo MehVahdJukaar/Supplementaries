@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.integration.fabric.ClothConfigListScreen;
-import net.mehvahdjukaar.supplementaries.client.gui.widgets.LinkButton;
+import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
+import net.mehvahdjukaar.moonlight.api.integration.cloth_config.ClothConfigListScreen;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -10,26 +10,23 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class CustomConfigScreen extends ClothConfigListScreen {
+public class ModConfigScreen extends ClothConfigListScreen {
 
-    public static final ItemStack MAIN_ICON = new ItemStack(ModRegistry.GLOBE_ITEM.get());
-
-    public CustomConfigScreen(Screen parent) {
-        super(parent, Component.literal("\u00A76Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
-                ClientConfigs.CLIENT_SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
+    public ModConfigScreen(Screen parent) {
+        super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
+                Component.literal("\u00A76Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
+                parent, ClientConfigs.CLIENT_SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
     }
 
     @Override
     protected void addExtraButtons() {
 
-        ResourceLocation icons = ModTextures.MISC_ICONS_TEXTURE;
+        ResourceLocation icons = LinkButton.MISC_ICONS;
 
         int y = this.height - 27;
         int centerX = this.width / 2;
@@ -72,30 +69,4 @@ public class CustomConfigScreen extends ClothConfigListScreen {
         this.addRenderableWidget(twitter);
     }
 
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-
-        if (isMouseWithin((this.width / 2) - 90, 2 + 6, 180, 16 + 2, mouseX, mouseY)) {
-            this.renderTooltip(poseStack, this.font.split(Component.translatable("supplementaries.gui.info"), 200), mouseX, mouseY);
-        }
-        int titleWidth = this.font.width(this.title) + 35;
-        this.itemRenderer.renderAndDecorateFakeItem(MAIN_ICON, (this.width / 2) + titleWidth / 2 - 17, 2 + 8);
-        this.itemRenderer.renderAndDecorateFakeItem(MAIN_ICON, (this.width / 2) - titleWidth / 2, 2 + 8);
-    }
-
-    private boolean isMouseWithin(int x, int y, int width, int height, int mouseX, int mouseY) {
-        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(true)        return super.mouseClicked(mouseX, mouseY, button);
-        if (isMouseWithin((this.width / 2) - 90, 2 + 6, 180, 16 + 2, (int) mouseX, (int) mouseY)) {
-            Style style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/supplementaries"));
-            this.handleComponentClicked(style);
-            return true;
-        }
-return false;
-    }
 }

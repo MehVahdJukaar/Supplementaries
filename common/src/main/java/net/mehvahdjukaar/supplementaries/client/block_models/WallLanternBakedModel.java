@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -52,7 +52,7 @@ public class WallLanternBakedModel implements CustomBakedModel {
                 if (mimic != null) {
                     var sprite = WallLanternTexturesRegistry.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
-                        supportQuads = RendererUtil.swapSprite(supportQuads, sprite);
+                        supportQuads = VertexUtils.swapSprite(supportQuads, sprite);
                     }
                 }
                 quads.addAll(supportQuads);
@@ -77,11 +77,10 @@ public class WallLanternBakedModel implements CustomBakedModel {
 
                     List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand);
 
-                    TextureAtlasSprite texture = this.getParticleIcon();
                     for (BakedQuad q : mimicQuads) {
                         int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                        RendererUtil.moveVertices(v, Direction.UP, 2 / 16f, texture);
-                        RendererUtil.moveVertices(v, dir, -2 / 16f, texture);
+                        VertexUtils.moveVertices(v, Direction.UP, 2 / 16f);
+                        VertexUtils.moveVertices(v, dir, -2 / 16f);
 
                         quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
                     }

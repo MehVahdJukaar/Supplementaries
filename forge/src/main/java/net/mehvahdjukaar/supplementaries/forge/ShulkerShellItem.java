@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -12,53 +10,50 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeItem;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 //forge only. don't bother for fabric
 public class ShulkerShellItem extends ArmorItem {
 
     public ShulkerShellItem(Properties properties) {
-       super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
+        super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
     }
 
-public static class b extends Block{
+    public static class b extends Block {
 
-    public b(Properties arg) {
-        super(arg);
-    }
+        public b(Properties arg) {
+            super(arg);
+        }
 
-    @Override
-    public boolean shouldCheckWeakPower(BlockState state, LevelReader level, BlockPos pos, Direction side) {
-        return super.shouldCheckWeakPower(state, level, pos, side);
-    }
+        @Override
+        public boolean shouldCheckWeakPower(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+            return super.shouldCheckWeakPower(state, level, pos, side);
+        }
 
-    @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        return super.getAnalogOutputSignal(state, level, pos);
-    }
+        @Override
+        public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+            return super.getAnalogOutputSignal(state, level, pos);
+        }
 
-    @Override
-    public boolean isSignalSource(BlockState state) {
-        return super.isSignalSource(state);
-    }
+        @Override
+        public boolean isSignalSource(BlockState state) {
+            return super.isSignalSource(state);
+        }
 
-    @Override
-    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return super.getSignal(state, level, pos, direction);
-    }
+        @Override
+        public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+            return super.getSignal(state, level, pos, direction);
+        }
 
-    @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        return super.canConnectRedstone(state, level, pos, direction);
+        @Override
+        public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+            return super.canConnectRedstone(state, level, pos, direction);
+        }
     }
-}
 
     @Override
     public int getMaxStackSize(ItemStack stack) {

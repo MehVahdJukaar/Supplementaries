@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
@@ -57,11 +57,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             matrixStackIn.mulPose(q);
             matrixStackIn.translate(0, -0.125, 0);
             float h1 = height * 0.25f;
-            RendererUtil.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.25f, h1, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
+            VertexUtils.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.25f, h1, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     true, true, true);
             if (dir == Direction.DOWN) {
                 matrixStackIn.translate(0, -h1 - 0.25f, 0);
-                RendererUtil.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
+                VertexUtils.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                         true, true, false);
             }
             matrixStackIn.popPose();
@@ -72,11 +72,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             matrixStackIn.mulPose(q);
             matrixStackIn.translate(0, -0.125, 0);
             float h2 = (1 - height) * 0.25f;
-            RendererUtil.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.25f, h2, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
+            VertexUtils.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.25f, h2, sprite, combinedLightIn, color, 1, combinedOverlayIn, true,
                     true, true, true);
             if (dir == Direction.UP) {
                 matrixStackIn.translate(0, -h2 - 0.25, 0);
-                RendererUtil.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f, sprite, combinedLightIn, color, 1f, combinedOverlayIn, true,
+                VertexUtils.addCube(builder, matrixStackIn, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f, sprite, combinedLightIn, color, 1f, combinedOverlayIn, true,
                         true, true, false);
             }
             matrixStackIn.popPose();

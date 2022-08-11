@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
             float h = 0.5f / 16f;
             for (int i = 0; i < 16; i++) {
                 opacity = Math.min(1, opacity - 0.0082f * i);
-                RendererUtil.addCube(builder, matrixStackIn, 0, i * h, 0.125f, h, sprite, light, color, opacity, false, false, true, false, true);
+                VertexUtils.addCube(builder, matrixStackIn, 0, i * h, 0.125f, h, sprite, light, color, opacity, false, false, true, false, true);
                 matrixStackIn.translate(0, -h, 0);
             }
             matrixStackIn.popPose();

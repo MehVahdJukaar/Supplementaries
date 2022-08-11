@@ -7,6 +7,6 @@ public class ModMenuCompat implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return CustomConfigScreen::new;
+        return ModConfigScreen::new;
     }
 }

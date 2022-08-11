@@ -55,7 +55,6 @@ public class Supplementaries {
         //potions in jars are bugged ;_;
         //feather block
 
-        PresentBlockGui
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
         ModRegistry.init();

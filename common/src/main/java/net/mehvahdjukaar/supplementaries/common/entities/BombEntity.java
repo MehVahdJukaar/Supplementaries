@@ -119,7 +119,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     public void handleEntityEvent(byte id) {
         switch (id) {
             default -> super.handleEntityEvent(id);
-            case 3 -> spawnBreakParticles();
+            case 3 -> {
+                spawnBreakParticles();
+                this.discard();
+            }
             case 10 -> {
                 spawnBreakParticles();
                 if (CommonUtil.FESTIVITY.isBirthday()) {
@@ -129,6 +132,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                             this.type.getRadius(), 0, 0);
                 }
                 type.spawnExtraParticles(this);
+
+                this.discard();
             }
             case 68 -> level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
             case 67 -> {
@@ -284,15 +289,20 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     //createMiniExplosion
     @Override
     public void reachedEndOfLife() {
-        if (this.active) {
-            this.createExplosion();
-            //spawn particles
-            this.level.broadcastEntityEvent(this, (byte) 10);
-        } else {
-            this.level.broadcastEntityEvent(this, (byte) 3);
-        }
         this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundSource.NEUTRAL, 1.5F, 1.5f);
-        this.remove(RemovalReason.DISCARDED);
+
+        if (!this.level.isClientSide) {
+            if (this.active) {
+                this.createExplosion();
+                //spawn particles
+                this.level.broadcastEntityEvent(this, (byte) 10);
+            } else {
+                this.level.broadcastEntityEvent(this, (byte) 3);
+            }
+            this.discard();
+        }
+
+        //client one is discarded when the event is recieved otherwise sometimes particles dont spawn
     }
 
     private void createExplosion() {
@@ -310,7 +320,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 return canBreakBlock(state, type);
             }
         },
-                this.getX(), this.getY() + 0.25, this.getZ(), (float)type.getRadius(),
+                this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
                 this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
 
         explosion.explode();

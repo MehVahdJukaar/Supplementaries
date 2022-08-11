@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -40,7 +41,7 @@ public class FallingBlockRendererGeneric<T extends FallingBlockEntity> extends E
                 poseStack.translate(-0.5D, 0.0D, -0.5D);
                 BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 
-                ClientPlatformHelper.renderBlock(state.getSeed(entity.getStartPos()),
+                RenderUtil.renderBlock(state.getSeed(entity.getStartPos()),
                         poseStack, buffer, state, level, blockpos, dispatcher);
                 poseStack.popPose();
                 super.render(entity, pEntityYaw, pPartialTicks, poseStack, buffer, pPackedLight);

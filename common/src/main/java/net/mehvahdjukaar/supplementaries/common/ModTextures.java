@@ -71,7 +71,6 @@ public class ModTextures {
     public static final ResourceLocation PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/present_gui.png");
     public static final ResourceLocation TRAPPED_PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/trapped_present_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
-    public static final ResourceLocation MISC_ICONS_TEXTURE = Supplementaries.res("textures/gui/misc.png");
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new HashMap<>();
     public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = new HashMap<>();

@@ -1,64 +1,34 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 //TODO: move to lib
-public class RendererUtil {
+public class VertexUtils {
     //centered on x,z. aligned on y=0
-
-
-    //from resource location
-    public static void renderBlockModel(ResourceLocation modelLocation, PoseStack matrixStack, MultiBufferSource buffer,
-                                        BlockRenderDispatcher blockRenderer, int light, int overlay, boolean cutout) {
-
-        blockRenderer.getModelRenderer().renderModel(matrixStack.last(),
-                buffer.getBuffer(cutout ? Sheets.cutoutBlockSheet() : Sheets.solidBlockSheet()),
-                null,
-                ClientPlatformHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(), modelLocation),
-                1.0F, 1.0F, 1.0F,
-                light, overlay);
-    }
 
 
     public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
@@ -351,10 +321,8 @@ public class RendererUtil {
         }
     }
 
-    private static int getFormatLength(TextureAtlasSprite sprite) {
-        return 8; //TODO: re add
-        // BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        // return builder.getVertexFormat().getIntegerSize();
+    private static int getFormatLength() {
+        return DefaultVertexFormat.BLOCK.getIntegerSize();
     }
 
 
@@ -362,7 +330,7 @@ public class RendererUtil {
         List<BakedQuad> newList = new ArrayList<>();
         for (BakedQuad q : quads) {
             TextureAtlasSprite oldSprite = q.getSprite();
-            int formatLength = getFormatLength(oldSprite);
+            int formatLength = getFormatLength();
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
             for (int i = 0; i < v.length / formatLength; i++) {
                 float originalU = Float.intBitsToFloat(v[i * formatLength + 4]);
@@ -375,8 +343,8 @@ public class RendererUtil {
         return newList;
     }
 
-    public static void transformVertices(int[] v, TextureAtlasSprite sprite, Matrix3f transform) {
-        int formatLength = getFormatLength(sprite);
+    public static void transformVertices(int[] v, Matrix3f transform) {
+        int formatLength = getFormatLength();
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]) - 0.5f;
             float originalY = Float.intBitsToFloat(v[i * formatLength + 1]) - 0.5f;
@@ -389,17 +357,24 @@ public class RendererUtil {
         }
     }
 
+    public static void transformVertices(int[] v, PoseStack stack, TextureAtlasSprite sprite) {
+        Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
+        vector4f.transform(stack.last().pose());
+        moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z());
+    }
+
+
     public static void rotateVerticesY(int[] v, TextureAtlasSprite sprite, Rotation rot) {
         var matrix = rot.rotation().transformation();
-        transformVertices(v, sprite, matrix);
+        transformVertices(v, matrix);
     }
 
     /**
      * moves baked vertices in a direction by amount
      */
-    public static void moveVertices(int[] v, Direction dir, float amount, TextureAtlasSprite sprite) {
+    public static void moveVertices(int[] v, Direction dir, float amount) {
 
-        int formatLength = getFormatLength(sprite);
+        int formatLength = getFormatLength();
 
         //checkShaders();
         int axis = dir.getAxis().ordinal();
@@ -413,8 +388,8 @@ public class RendererUtil {
     /**
      * moves baked vertices by amount
      */
-    public static void moveVertices(int[] v, float x, float y, float z, TextureAtlasSprite sprite) {
-        int formatLength = getFormatLength(sprite);
+    public static void moveVertices(int[] v, float x, float y, float z) {
+        int formatLength = getFormatLength();
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX + x);
@@ -431,8 +406,8 @@ public class RendererUtil {
     /**
      * scale baked vertices by amount
      */
-    public static void scaleVertices(int[] v, float scale, TextureAtlasSprite sprite) {
-        int formatLength = getFormatLength(sprite);
+    public static void scaleVertices(int[] v, float scale) {
+        int formatLength = getFormatLength();
         for (int i = 0; i < v.length / formatLength; i++) {
             float originalX = Float.intBitsToFloat(v[i * formatLength]);
             v[i * formatLength] = Float.floatToIntBits(originalX * scale);
@@ -443,95 +418,6 @@ public class RendererUtil {
             float originalZ = Float.intBitsToFloat(v[i * formatLength + 2]);
             v[i * formatLength + 2] = Float.floatToIntBits(originalZ * scale);
         }
-    }
-
-    public static void transformVertices(int[] v, PoseStack stack, TextureAtlasSprite sprite) {
-        Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
-        vector4f.transform(stack.last().pose());
-        moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z(), sprite);
-    }
-
-    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
-                                             BiConsumer<PoseStack, Boolean> movement) {
-        renderGuiItemRelative(stack, x, y, renderer, movement, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-    }
-
-
-    //im not even using this on fabric...
-    public static void renderGuiItemRelative(ItemStack stack, int x, int y, ItemRenderer renderer,
-                                             BiConsumer<PoseStack, Boolean> movement, int combinedLight, int pCombinedOverlay) {
-
-        BakedModel model = renderer.getModel(stack, null, null, 0);
-
-        renderer.blitOffset = renderer.blitOffset + 50.0F;
-
-        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        PoseStack posestack = RenderSystem.getModelViewStack();
-        posestack.pushPose();
-        posestack.translate(x, y, 100.0F + renderer.blitOffset);
-        posestack.translate(8.0D, 8.0D, 0.0D);
-        posestack.scale(1.0F, -1.0F, 1.0F);
-        posestack.scale(16.0F, 16.0F, 16.0F);
-        RenderSystem.applyModelViewMatrix();
-
-        PoseStack matrixStack = new PoseStack();
-
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean flag = !model.usesBlockLight();
-        if (flag) {
-            Lighting.setupForFlatItems();
-        }
-
-        //-----render---
-
-        ItemTransforms.TransformType pTransformType = ItemTransforms.TransformType.GUI;
-
-        matrixStack.pushPose();
-
-        if (stack.is(Items.TRIDENT)) {
-            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
-        } else if (stack.is(Items.SPYGLASS)) {
-            model = renderer.getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:spyglass#inventory"));
-        }
-
-
-        model = handleCameraTransforms(model, matrixStack, pTransformType);
-
-        //custom rotation
-
-        movement.accept(matrixStack, model.isGui3d() && stack.getItem() != ModRegistry.FLUTE_ITEM.get());
-
-        renderGuiItem(model, stack, renderer, combinedLight, pCombinedOverlay, matrixStack, bufferSource, flag);
-
-
-        //----end-render---
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-        if (flag) {
-            Lighting.setupFor3DItems();
-        }
-
-        posestack.popPose();
-        RenderSystem.applyModelViewMatrix();
-
-        renderer.blitOffset = renderer.blitOffset - 50.0F;
-
-    }
-
-    @ExpectPlatform
-    private static BakedModel handleCameraTransforms(BakedModel model, PoseStack matrixStack, ItemTransforms.TransformType pTransformType) {
-        throw new ArrayStoreException();
-    }
-
-    @ExpectPlatform
-    public static void renderGuiItem(BakedModel model, ItemStack stack, ItemRenderer renderer, int combinedLight, int pCombinedOverlay,
-                                     PoseStack poseStack, MultiBufferSource.BufferSource buffer, boolean flatItem) {
-        throw new ArrayStoreException();
     }
 
 

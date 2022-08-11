@@ -5,7 +5,7 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -120,13 +120,13 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
             TextureAtlasSprite texture = this.getParticleIcon();
             if (res == null) {
-                RendererUtil.moveVertices(v, -0.5f, -0.5f, -0.5f, texture);
-                RendererUtil.scaleVertices(v, 0.6249f, texture);
+                VertexUtils.moveVertices(v, -0.5f, -0.5f, -0.5f);
+                VertexUtils.scaleVertices(v, 0.6249f);
             } else {
-                RendererUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f, texture);
+                VertexUtils.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
             }
 
-            RendererUtil.transformVertices(v, matrixStack, texture);
+            VertexUtils.transformVertices(v, matrixStack, texture);
 
             quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -59,7 +60,8 @@ public abstract class RedMerchantSpawnerMixin {
                 BlockPos blockpos = player.blockPosition();
 
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
-                if (this.calculateNormalizeDifficulty(world, blockpos) > random.nextFloat() * 90) {
+                if (this.calculateNormalizeDifficulty(world, blockpos) * CommonConfigs.Spawns.RED_MERCHANT_SPAWN_MULTIPLIER.get()
+                        > random.nextFloat() * 90) {
 
                     PoiManager poiManager = world.getPoiManager();
                     Optional<BlockPos> optional = poiManager.find((h) -> h.is(PoiTypes.MEETING),

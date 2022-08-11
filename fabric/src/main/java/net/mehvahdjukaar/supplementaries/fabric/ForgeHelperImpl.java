@@ -17,6 +17,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
@@ -37,7 +38,7 @@ public class ForgeHelperImpl {
     }
 
     public static boolean onExplosionStart(Level level, Explosion explosion) {
-        return true;
+        return false; //true if event cancelled
     }
 
     // TODO: fabric
@@ -60,6 +61,8 @@ public class ForgeHelperImpl {
     }
 
     public static void onBlockExploded(BlockState blockstate, Level level, BlockPos blockpos, Explosion explosion) {
+        level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 3);
+        blockstate.getBlock().wasExploded(level, blockpos, explosion);
     }
 
     public static boolean areStacksEqual(ItemStack stack, ItemStack other, boolean sameNbt) {

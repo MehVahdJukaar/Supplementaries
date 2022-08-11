@@ -2,9 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -34,11 +33,11 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
 
         // animation
         matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(angle));
-        matrixStackIn.translate(-0.5, -0.75-tile.attachmentOffset, -0.375);
+        matrixStackIn.translate(-0.5, -0.75 - tile.attachmentOffset, -0.375);
 
         // render block
 
-        ClientPlatformHelper.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
+        RenderUtil.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
 
         //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ModelData.EMPTY);
         matrixStackIn.popPose();

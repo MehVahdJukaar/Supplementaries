@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.IBellConnections;
 import net.minecraft.client.Minecraft;
@@ -84,11 +84,11 @@ public class BellTileMixinRenderer {
 
                 matrixStackIn.mulPose(RotHlpr.Y45);
 
-                RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
-                RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                VertexUtils.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                VertexUtils.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu1, minv, maxu1, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
                 matrixStackIn.mulPose(RotHlpr.YN90);
-                RendererUtil.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
-                RendererUtil.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                VertexUtils.addQuadSide(builder, matrixStackIn, -w, -0, 0, w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
+                VertexUtils.addQuadSide(builder, matrixStackIn, w, -0, 0, -w, h, 0, minu2, minv, maxu2, maxv, col, col, col, 1, lu, lv, 0, 0, 1);
             }
             matrixStackIn.popPose();
         }

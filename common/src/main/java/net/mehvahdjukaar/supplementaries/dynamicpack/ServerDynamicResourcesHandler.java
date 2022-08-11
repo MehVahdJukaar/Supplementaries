@@ -71,10 +71,14 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
         }*/
 
-        addHangingSignRecipes(resourceManager);
 
         //recipes
-        addSignPostRecipes(resourceManager);
+        if(RegistryConfigs.SIGN_POST_ENABLED.get()) {
+            addSignPostRecipes(resourceManager);
+        }
+        if(RegistryConfigs.HANGING_SIGN_ENABLED.get()){
+            addHangingSignRecipes(resourceManager);
+        }
 
         //way signs tag
 
