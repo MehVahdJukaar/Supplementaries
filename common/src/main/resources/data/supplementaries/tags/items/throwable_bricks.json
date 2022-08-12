@@ -6,6 +6,8 @@
     {"id":"minecraft:brick","required":false},
     {"id":"minecraft:nether_brick","required":false},
     {"id":"immersive_weathering:stone_brick","required":false},
+    {"id":"immersive_weathering:prismarine_brick","required":false},
+    {"id":"immersive_weathering:deepslate_brick","required":false},
     {"id":"immersive_weathering:blackstone_brick","required":false},
     {"id":"immersive_weathering:end_stone_brick","required":false},
     {"id":"unnamedanimalmod:dried_mud_brick","required":false},
