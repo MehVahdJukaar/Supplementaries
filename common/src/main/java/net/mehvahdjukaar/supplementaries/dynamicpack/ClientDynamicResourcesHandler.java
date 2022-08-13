@@ -16,6 +16,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
@@ -36,6 +37,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
         this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
+        this.dynamicPack.addNamespaces("minecraft");
     }
 
     @Override
@@ -144,6 +146,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
+//TODO: fix
         RPUtils.addCrossbowModel(manager, this.dynamicPack, e->{
             e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
                              List.of(new ItemOverride.Predicate(new ResourceLocation("charged"),1f),

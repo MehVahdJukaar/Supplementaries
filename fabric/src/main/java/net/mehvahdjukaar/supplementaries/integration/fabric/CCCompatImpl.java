@@ -7,22 +7,21 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class CCCompatImpl {
     public static boolean isPrintedBook(Item item) {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
     public static void initialize() {
-        throw new UnsupportedOperationException();
     }
 
     public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties p) {
-        throw new UnsupportedOperationException();
+        return new SpeakerBlock(p);
     }
 
     public static int getPages(ItemStack itemstack) {
-        throw new UnsupportedOperationException();
+        return 0;
     }
 
     public static String[] getText(ItemStack itemstack) {
-        throw new UnsupportedOperationException();
+        return new String[]{};
     }
 }

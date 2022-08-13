@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.authlib.GameProfile;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
@@ -199,29 +200,14 @@ public class CommonUtil {
         return world.clip(context);
     }
 
-    public static final GameProfile DUMMY_PROFILE = new GameProfile(
-            UUID.fromString("9bf808b4-d64a-47f0-9220-e3849f80f35b"), "[player_stando]");
 
     public static Player getEntityStand(Entity copyFrom) {
         return getEntityStand(copyFrom, copyFrom);
     }
 
+    @ExpectPlatform
     public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
-        Level level = copyPosFrom.getLevel();
-        Player p;
-        if (level instanceof ServerLevel serverLevel) {
-            return null;
-            //TODO: fix
-            //p = MovableFakePlayer.get(serverLevel, DUMMY_PROFILE);
-        } else {
-            p = ClientAccess.getFakeClientPlayer(level, DUMMY_PROFILE);
-        }
-        p.setPos(copyPosFrom.getX(), copyPosFrom.getY(), copyPosFrom.getZ());
-        p.setYHeadRot(copyRotFrom.getYHeadRot());
-        p.setXRot(copyRotFrom.getXRot());
-        p.setYRot(copyRotFrom.getYRot());
-        p.setOldPosAndRot();
-        return p;
+        throw new AssertionError();
     }
 
 }

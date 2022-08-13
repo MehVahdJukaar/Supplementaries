@@ -39,7 +39,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -59,6 +58,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientRegistry {
+
+    //we cant load sheets class thanks to new banners shit
+    private static final ResourceLocation SHULKER_SHEET = new ResourceLocation("textures/atlas/shulker_boxes.png");
+    public static final ResourceLocation BANNER_SHEET = new ResourceLocation("textures/atlas/banner_patterns.png");
+
 
     //entity models
     public static ModelLayerLocation BELLOWS_MODEL = loc("bellows");
@@ -104,10 +108,10 @@ public class ClientRegistry {
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             ModTextures.getTexturesForBlockAtlas().forEach(e::addSprite);
         });
-        ClientPlatformHelper.addAtlasTextureCallback(Sheets.SHULKER_SHEET, e -> {
+        ClientPlatformHelper.addAtlasTextureCallback(SHULKER_SHEET, e -> {
             ModTextures.getTexturesForShulkerAtlas().forEach(e::addSprite);
         });
-        ClientPlatformHelper.addAtlasTextureCallback(Sheets.BANNER_SHEET, e -> {
+        ClientPlatformHelper.addAtlasTextureCallback(BANNER_SHEET, e -> {
             ModTextures.getTexturesForBannerAtlas().forEach(e::addSprite);
         });
 
@@ -434,4 +438,6 @@ public class ClientRegistry {
                         DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), s -> instance = s);
     }
  */
+
+
 }

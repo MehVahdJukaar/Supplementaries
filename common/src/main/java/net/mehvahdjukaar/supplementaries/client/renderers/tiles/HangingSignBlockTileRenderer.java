@@ -31,8 +31,12 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
     public static final int LINE_MAX_WIDTH = 75;
@@ -64,17 +68,17 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         double dy = attachment == ModBlockProperties.SignAttachment.CEILING ? 1 : 0.875;
 
         poseStack.translate(0.5, dy, 0.5);
-        if(state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X) poseStack.mulPose(RotHlpr.Y90);
+        if (state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X) poseStack.mulPose(RotHlpr.Y90);
 
         //animation
 
-        if(tile.shouldRenderFancy()) {
+        if (tile.shouldRenderFancy()) {
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(tile.getSwingAngle(partialTicks)));
 
             poseStack.translate(-0.5, -0.875, -0.5);
             //render block
             RenderUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(tile.woodType), poseStack, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, true);
-        }else{
+        } else {
             poseStack.translate(-0.5, -0.875, -0.5);
         }
         LOD lod = new LOD(camera, tile.getBlockPos());
@@ -109,24 +113,25 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                         Player player = Minecraft.getInstance().player;
                         NetworkHandler.CHANNEL.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
                     }
-                } else if (item instanceof BannerPatternItem) {
+                } else if (item instanceof BannerPatternItem bannerPatternItem) {
 
-                    //TODO: cache or not like notice board
-                    Material renderMaterial = ModMaterials.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
+                    if (renderMaterial != null) {
 
-                    VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                        VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
-                    float[] color = tile.textHolder.getColor().getTextureDiffuseColors();
-                    float b = color[2];
-                    float g = color[1];
-                    float r = color[0];
-                    int lu = combinedLightIn & '\uffff';
-                    int lv = combinedLightIn >> 16 & '\uffff';
-                    for (int v = 0; v < 2; v++) {
-                        VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
-                                0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
+                        float[] color = tile.textHolder.getColor().getTextureDiffuseColors();
+                        float b = color[2];
+                        float g = color[1];
+                        float r = color[0];
+                        int lu = combinedLightIn & '\uffff';
+                        int lv = combinedLightIn >> 16 & '\uffff';
+                        for (int v = 0; v < 2; v++) {
+                            VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
+                                    0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
-                        poseStack.mulPose(RotHlpr.Y180);
+                            poseStack.mulPose(RotHlpr.Y180);
+                        }
                     }
                 }
                 //render item
@@ -167,4 +172,6 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         }
         poseStack.popPose();
     }
+
+    private static final Map<BannerPatternItem, BannerPattern> ITEMS_TO_PATTERNS = new HashMap<>();
 }

@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -49,8 +48,8 @@ public class ClientEvents {
     }
 
     @EventCalled
-    public static void onScreenInit(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
-        if (ClientConfigs.General.CONFIG_BUTTON.get() && CompatHandler.configured) {
+    public static void addConfigButton(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
+        if (ClientConfigs.General.CONFIG_BUTTON.get()) {
             ConfigButton.setupConfigButton(screen, listeners, adder);
         }
     }

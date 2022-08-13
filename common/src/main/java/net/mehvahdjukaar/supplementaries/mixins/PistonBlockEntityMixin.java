@@ -50,6 +50,11 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
         return true;
     }
 
+    @Shadow
+    protected abstract float getExtendedProgress(float pProgress);
+
+    @Shadow
+    public abstract Direction getMovementDirection();
 
     @Inject(method = "tick", at = @At("TAIL"))
     private static void tick(Level pLevel, BlockPos pPos, BlockState pState, PistonMovingBlockEntity tile, CallbackInfo info) {
@@ -71,9 +76,5 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
         return aabb.move((double) pos.getX() + d0 * (double) this.direction.getStepX(), (double) pos.getY() + d0 * (double) this.direction.getStepY(), (double) pos.getZ() + d0 * (double) this.direction.getStepZ());
     }
 
-    @Shadow
-    protected abstract float getExtendedProgress(float pProgress);
 
-    @Shadow
-    public abstract Direction getMovementDirection();
 }

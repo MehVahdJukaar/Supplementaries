@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
 import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
-import com.nhoryzon.mc.farmersdelight.tag.Tags;
+import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FarmersDelightCompatImpl {
     public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack stack) {
-        if (stack.is(Tags.KNIVES)) {
+        if (stack.is(TagsRegistry.KNIVES)) {
             int bites = state.getValue(CakeBlock.BITES);
             if (bites < 6) {
                 level.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);

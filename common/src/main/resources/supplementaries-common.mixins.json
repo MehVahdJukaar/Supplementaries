@@ -4,6 +4,7 @@
   "package": "net.mehvahdjukaar.supplementaries.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "BlockBehaviourPlanterMixin",
     "FontRendererMixin",
     "IronGolemRendererMixin",
     "ItemRendererMixin",
@@ -12,11 +13,12 @@
     "LoomScreenFlagMixin",
     "ParrotMixin",
     "PlayerSocialManagerMixin",
-    "BlockBehaviourPlanterMixin",
+    "SheetsClassloadingFixHackMixin",
     "UndeadHorseRenderMixin"
   ],
   "mixins": [
     "AbstractSkullBlockMixin",
+    "BeeGoalMixin",
     "BlockItemMixin",
     "BowMixin",
     "BrewingStandMixin",
@@ -35,6 +37,7 @@
     "LoomMenuMixin",
     "PistonBlockEntityMixin",
     "RedMerchantSpawnerMixin",
+    "ServerLevelMixin",
     "ShulkerBoxBlockEntityMixin",
     "SkellyHorseMixin",
     "StrongholdCrossingSconceMixin",
@@ -42,6 +45,7 @@
     "VineMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin",
+    "accessors.DispenserAccessor",
     "accessors.MobAccessor"
   ],
   "injectors": {

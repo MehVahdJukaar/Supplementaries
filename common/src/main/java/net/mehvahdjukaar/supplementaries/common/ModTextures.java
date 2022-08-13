@@ -4,8 +4,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
@@ -121,6 +119,9 @@ public class ModTextures {
 
     public static List<ResourceLocation> getTexturesForBannerAtlas() {
         List<ResourceLocation> list = new ArrayList<>();
+        if (ModTextures.FLAG_TEXTURES.isEmpty()) {
+            Supplementaries.LOGGER.error("Failed to add flag textures. texture map was empty?");
+        }
         try {
             ModTextures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
                     .forEach(list::add);

@@ -29,6 +29,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
@@ -154,6 +155,10 @@ public class QuarkCompatImpl {
 
     public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
         return PistonsMoveTileEntitiesModule.getMovement(level, pos);
+    }
+
+    public static boolean isJukeboxModuleOn() {
+      return  ModuleLoader.INSTANCE.isModuleEnabled(JukeboxAutomationModule.class);
     }
 
 

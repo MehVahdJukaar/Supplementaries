@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -14,9 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -33,10 +32,13 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.DeferredRegister;
+import vazkii.quark.content.automation.module.JukeboxAutomationModule;
+import vazkii.quark.content.tools.module.EndermoshMusicDiscModule;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ForgeHelperImpl {
 
@@ -128,4 +130,5 @@ public class ForgeHelperImpl {
         //these are empty now....
         return (biome.is(Tags.Biomes.IS_SANDY) && (biome.is(Tags.Biomes.IS_HOT) || biome.is(Tags.Biomes.IS_DRY)) || biome.is(BiomeTags.IS_RIVER));
     }
+
 }

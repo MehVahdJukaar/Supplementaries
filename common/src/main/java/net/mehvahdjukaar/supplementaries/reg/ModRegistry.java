@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DiodeBlock;
@@ -709,11 +710,11 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //diode block
-    public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-                    .strength(3f, 6f)
-                    .requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_REDSTONE);
+    //public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
+   //         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+    //                .strength(3f, 6f)
+   //                 .requiresCorrectToolForDrops()
+   // ), CreativeModeTab.TAB_REDSTONE);
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
@@ -775,10 +776,10 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //crystal display
-    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
-                    .strength(0.2f, 0.2f)
-    ), CreativeModeTab.TAB_REDSTONE);
+    //public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+   //         BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+    //                .strength(0.2f, 0.2f)
+   // ), CreativeModeTab.TAB_REDSTONE);
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
@@ -822,7 +823,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = regTile(
             CLOCK_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
-                    ClockBlockTile::new, BELLOWS.get()));
+                    ClockBlockTile::new, CLOCK_BLOCK.get()));
 
     //sconce lever
     public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
@@ -998,7 +999,7 @@ public class ModRegistry {
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_FOOD, PANCAKE_NAME))
     ));
     public static final Supplier<Item> PANCAKE_DISC = regItem("pancake_disc",
-            () -> PlatformHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null)));
+            () -> PlatformHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null), 345));
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
@@ -1211,9 +1212,9 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-     public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
-             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
-     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+    //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+    // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
@@ -1314,7 +1315,7 @@ public class ModRegistry {
     // ATIVE_WAND = "creative_wand";
     //public static final Supplier<Item> TELEPORT_WAND = regItem(CREATIVE_WAND, () ->
     //        new TeleportWand((new Item.Properties()).tab(null)));
-    /*
+    /* //magnetic driver?
     public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
     public static final Supplier<Block> REDSTONE_DRIVER = regBlock(REDSTONE_DRIVER_NAME,()-> new RedstoneDriverBlock(
             AbstractBlock.Properties.copy(Blocks.REPEATER)));

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.gui.PresentBlockGui;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
@@ -44,6 +45,8 @@ public class Supplementaries {
         RegistryConfigs.superEarlyLoad();
         CommonConfigs.init();
         ClientConfigs.init();
+
+        RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"),RegistryConfigs::isEnabled);
 
         //soap in water makes soap particles
         //TODO: banner bug

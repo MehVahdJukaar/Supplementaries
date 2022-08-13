@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,10 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Pre event) {
-        ClientEvents.onScreenInit(event.getScreen(), event.getListenersList(), event::addListener);
+        if(CompatHandler.configured) {
+            //TODO: this doesnt work
+            ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
+        }
     }
 
     @SubscribeEvent

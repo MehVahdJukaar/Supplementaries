@@ -17,12 +17,15 @@ import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.*;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -38,14 +41,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nonnull;
 
 public class DispenserRegistry {
 
+
     public static void registerBehaviors() {
 
+
         if (!RegistryConfigs.DISPENSERS.get()) return;
+
+        if (RegistryConfigs.PANCAKES_ENABLED.get() && CompatHandler.quark && QuarkCompat.isJukeboxModuleOn()) {
+            DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
+        }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
             DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
@@ -259,10 +273,27 @@ public class DispenserRegistry {
 
     }
 
-    private static class BombsDispenserBehavior extends AbstractProjectileDispenseBehavior {
+    public static class PancakeDiscBehavior extends OptionalDispenseItemBehavior {
 
-        public BombsDispenserBehavior() {
+        @Nonnull
+        protected ItemStack execute(BlockSource source, @Nonnull ItemStack stack) {
+            Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos pos = source.getPos().relative(dir);
+            Level world = source.getLevel();
+            BlockState state = world.getBlockState(pos);
+            if (state.getBlock() == Blocks.JUKEBOX) {
+                if (world.getBlockEntity(pos) instanceof JukeboxBlockEntity jukebox) {
+                    ItemStack currentRecord = jukebox.getRecord();
+                    ((JukeboxBlock) state.getBlock()).setRecord(null, world, pos, state, stack);
+                    world.levelEvent(null, 1010, pos, Item.getId(ModRegistry.PANCAKE_DISC.get()));
+                    return currentRecord;
+                }
+            }
+            return super.execute(source, stack);
         }
+    }
+
+    private static class BombsDispenserBehavior extends AbstractProjectileDispenseBehavior {
 
         @Override
         protected Projectile getProjectile(Level worldIn, Position position, ItemStack stackIn) {

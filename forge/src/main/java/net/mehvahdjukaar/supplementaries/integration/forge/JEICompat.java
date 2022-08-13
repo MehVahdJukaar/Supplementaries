@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.BannerBlock;
-import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -258,9 +256,6 @@ public class JEICompat implements IModPlugin {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.flag_from_banner";
 
-        //List<BannerPatternItem> patterns = ForgeRegistries.ITEMS.getValues().stream().filter(i -> i instanceof BannerPatternItem)
-        //        .map(i -> (BannerPatternItem)i).collect(Collectors.toList());
-
         for (DyeColor color : DyeColor.values()) {
 
 
@@ -270,7 +265,7 @@ public class JEICompat implements IModPlugin {
             ListTag list = new ListTag();
             CompoundTag compoundTag = new CompoundTag();
 
-            compoundTag.putString("Pattern", Registry.BANNER_PATTERN.get(BannerPatterns.MOJANG).getHashname());
+            compoundTag.putString("Pattern", "mojang");
             compoundTag.putInt("Color", color == DyeColor.WHITE ? DyeColor.BLACK.getId() : DyeColor.WHITE.getId());
             list.add(compoundTag);
 

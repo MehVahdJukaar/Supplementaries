@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -97,10 +96,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if (item instanceof BannerPatternItem bannerPatternItem) {
-            for (var e : Registry.BANNER_PATTERN.getTag(bannerPatternItem.getBannerPattern()).get()) {
-                this.cachedPattern = ModMaterials.FLAG_MATERIALS.get(e.value());
-                break;
-            }
+            this.cachedPattern = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
         }
 
         this.needsVisualRefresh = true;

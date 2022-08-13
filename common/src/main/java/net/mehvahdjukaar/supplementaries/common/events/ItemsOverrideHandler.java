@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
@@ -57,6 +58,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -185,6 +187,7 @@ public class ItemsOverrideHandler {
         return tryPerformClickedBlockOverride(player, level, player.getItemInHand(hand), hand, hit, isRanged);
     }
 
+
     public static InteractionResult tryPerformClickedBlockOverride(Player player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hit, boolean isRanged) {
 
         Item item = stack.getItem();
@@ -223,6 +226,7 @@ public class ItemsOverrideHandler {
             var ret = override.tryPerformingAction(level, player, hand, stack, null, false);
             return switch (ret) {
                 case CONSUME -> InteractionResultHolder.consume(stack);
+                case SUCCESS -> InteractionResultHolder.success(stack);
                 default -> InteractionResultHolder.pass(stack);
                 case FAIL -> InteractionResultHolder.fail(stack);
             };

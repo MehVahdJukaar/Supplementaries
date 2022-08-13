@@ -48,11 +48,6 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return super.getRenderShape(state);
-    }
-
     public static void displayCurrentHour(Level world, Player player) {
         int time = ((int) (world.getDayTime() + 6000) % 24000);
         int m = (int) (((time % 1000f) / 1000f) * 60);

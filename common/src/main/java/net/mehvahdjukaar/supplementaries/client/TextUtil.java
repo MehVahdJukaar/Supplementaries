@@ -317,7 +317,7 @@ public class TextUtil {
                     charSequence.accept((a, style, b) -> {
                         boolean bold = style.isBold();
                         FontSet fontset = font.getFontSet(style.getFont());
-                        GlyphInfo glyphinfo = fontset.getGlyphInfo(b);
+                        GlyphInfo glyphinfo = fontset.getGlyphInfo(b, false);
                         stringRenderOutput.x = afloat[0] + (float) pX * glyphinfo.getShadowOffset();
                         stringRenderOutput.y = yOffset + (float) pY * glyphinfo.getShadowOffset();
                         afloat[0] += glyphinfo.getAdvance(bold);

@@ -13,12 +13,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 
 public class SupplementariesFabric implements ModInitializer {
 
-    public static final String MOD_ID = Supplementaries.MOD_ID;
-
     @Override
     public void onInitialize() {
-
-        FabricRecipeConditionManager.registerSimple(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
         Supplementaries.commonInit();
 

@@ -31,7 +31,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19",
-    "moonlight": ">1.19-2.0.10"
+    "minecraft": ">=1.19.1",
+    "moonlight": ">1.19-2.0.13"
   }
 }

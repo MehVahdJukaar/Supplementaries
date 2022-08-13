@@ -226,7 +226,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
         ((ILevelEventRedirect) pLevel).setRedirected(true, this.position());
 
-        int i = this.dispenser.getRandomSlot(level.getRandom());
+        int i = this.dispenser.getRandomSlot(pLevel.getRandom());
 
         if (i < 0) {
             //replace with client side animation

@@ -13,13 +13,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Supplier;
+
 public class SoulCandleSkullBlock extends CandleSkullBlock{
 
-    private final ParticleType<? extends ParticleOptions> particle;
+    private final Supplier<ParticleType<? extends ParticleOptions>> particle;
 
     public SoulCandleSkullBlock(Properties properties) {
         super(properties);
-        this.particle = CompatHandler.buzzier_bees ? CompatObjects.SMALL_SOUL_FLAME.get() : ParticleTypes.SOUL_FIRE_FLAME;
+        this.particle = CompatHandler.buzzier_bees ? CompatObjects.SMALL_SOUL_FLAME : ()->ParticleTypes.SOUL_FIRE_FLAME;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class SoulCandleSkullBlock extends CandleSkullBlock{
         if (!state.getValue(LIT)) {
             return;
         }
-        this.getParticleOffsets(state).forEach(vec3 -> addParticlesAndSound(particle, level, vec3.add(blockPos.getX(), blockPos.getY(), blockPos.getZ()), randomSource));
+        this.getParticleOffsets(state).forEach(vec3 -> addParticlesAndSound(particle.get(), level, vec3.add(blockPos.getX(), blockPos.getY(), blockPos.getZ()), randomSource));
     }
 
     protected void addParticlesAndSound(ParticleType<?> particle, Level level, Vec3 vec3, RandomSource randomSource) {
