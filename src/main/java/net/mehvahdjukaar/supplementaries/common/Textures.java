@@ -87,9 +87,6 @@ public class Textures {
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     static {
-        for (BannerPattern pattern : BannerPattern.values()) {
-            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename()));
-        }
 
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
@@ -102,6 +99,7 @@ public class Textures {
     }
 
     public static void stitchTextures(TextureStitchEvent.Pre event) {
+
         List<ResourceLocation> blocks = List.of(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE,
                 HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
@@ -110,6 +108,14 @@ public class Textures {
         ResourceLocation loc = event.getAtlas().location();
 
         if (loc.equals(TextureAtlas.LOCATION_BLOCKS)) {
+
+            if(FLAG_TEXTURES.isEmpty()){
+                for (BannerPattern pattern : BannerPattern.values()) {
+                    FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" + pattern.getFilename().replace(":","/")));
+                }
+            }
+
+
             for (ResourceLocation r : blocks) {
                 event.addSprite(r);
             }

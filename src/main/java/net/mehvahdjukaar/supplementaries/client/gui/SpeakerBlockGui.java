@@ -27,12 +27,14 @@ public class SpeakerBlockGui extends Screen {
     private final String message;
     private Button modeBtn;
     private ForgeSlider volumeSlider;
+    private final double initialVolume;
 
     public SpeakerBlockGui(SpeakerBlockTile te) {
         super(new TranslatableComponent("gui.supplementaries.speaker_block.edit"));
         this.tileSpeaker = te;
-        this.narrator = tileSpeaker.narrator;
-        this.message = tileSpeaker.message;
+        this.narrator = tileSpeaker.isNarrator();
+        this.message = tileSpeaker.getMessage();
+        this.initialVolume = tileSpeaker.getVolume();
     }
 
     public static void open(SpeakerBlockTile te) {
@@ -61,20 +63,22 @@ public class SpeakerBlockGui extends Screen {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
-        int range = ServerConfigs.cached.SPEAKER_RANGE;
+        int range = ServerConfigs.block.SPEAKER_RANGE.get();
 
-        double currentValue = this.tileSpeaker.volume * range;
-        this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20, VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
-                currentValue, 1, 1, true);
+        double a = this.tileSpeaker.getVolume(); //keep
+        a++;
+        this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
+                VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
+                initialVolume, 1, 1, true);
 
-        this.addWidget(this.volumeSlider);
+        this.addRenderableWidget(this.volumeSlider);
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.onDone()));
         this.modeBtn = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
             this.toggleMode();
             this.updateMode();
         }));
-        if (!ServerConfigs.cached.SPEAKER_NARRATOR) {
+        if (!ServerConfigs.block.SPEAKER_NARRATOR.get()) {
             this.modeBtn.active = false;
         }
 
@@ -86,7 +90,7 @@ public class SpeakerBlockGui extends Screen {
         };
         this.commandTextField.setValue(message);
         this.commandTextField.setMaxLength(32);
-        this.addWidget(this.commandTextField);
+        this.addRenderableWidget(this.commandTextField);
         this.setInitialFocus(this.commandTextField);
         this.commandTextField.setFocus(true);
     }
@@ -94,12 +98,10 @@ public class SpeakerBlockGui extends Screen {
     @Override
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-        this.tileSpeaker.message = this.commandTextField.getValue();
-        this.tileSpeaker.narrator = this.narrator;
-        this.tileSpeaker.volume = this.volumeSlider.getValue();
+        this.tileSpeaker.setSettings(this.volumeSlider.getValue(), this.narrator, this.commandTextField.getValue());
         //refreshTextures server tile
-        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(), this.tileSpeaker.message, this.tileSpeaker.narrator, this.tileSpeaker.volume));
-
+        NetworkHandler.INSTANCE.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
+                this.tileSpeaker.getMessage(), this.tileSpeaker.isNarrator(), this.tileSpeaker.getVolume()));
     }
 
     private void onDone() {
@@ -126,16 +128,19 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) this.volumeSlider.onRelease(mouseX, mouseY);
-        return false;
+        if (this.volumeSlider == this.getFocused()) {
+            if (button == 0) {
+                this.volumeSlider.onRelease(mouseX, mouseY);
+                this.setFocused(null);
+            }
+        }
+        return true;
     }
 
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 40, 16777215);
-        this.volumeSlider.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.commandTextField.render(matrixStack, mouseX, mouseY, partialTicks);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 }

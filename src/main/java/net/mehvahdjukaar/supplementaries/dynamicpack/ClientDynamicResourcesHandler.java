@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonObject;
 import net.mehvahdjukaar.selene.client.asset_generators.LangBuilder;
 import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
 import net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter;
@@ -11,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
+import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -21,12 +23,14 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 
 public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider {
 
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
+        this.dynamicPack.addNamespaces("minecraft");
         this.dynamicPack.generateDebugResources = !FMLLoader.isProduction() || RegistryConfigs.Reg.DEBUG_RESOURCES.get();
     }
 
@@ -141,6 +145,12 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
+
+        addCrossbowModel(manager, this.dynamicPack, e -> {
+            e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
+                    List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
+                            new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
+        });
 
         //hanging signs block textures
         try (TextureImage template = TextureImage.open(manager,
@@ -339,6 +349,38 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
                 LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block));
         ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
+    }
+
+    public static void addCrossbowModel(ResourceManager manager, DynamicTexturePack pack, Consumer<CrossbowModelAdder> modelConsumer) {
+        var res = new ResourceLocation("crossbow");
+
+        try (var model = manager.getResource(ResType.ITEM_MODELS.getPath(res));) {
+            var json = RPUtils.deserializeJson(model.getInputStream());
+            var overrides = json.getAsJsonArray("overrides");
+
+            modelConsumer.accept(ov -> overrides.add(serializeOverride(ov)));
+
+            json.add("overrides", overrides);
+            pack.addItemModel(res, json);
+        } catch (Exception ignored) {
+        }
+
+    }
+
+    private static JsonObject serializeOverride(ItemOverride override) {
+        JsonObject json = new JsonObject();
+        json.addProperty("model", override.getModel().toString());
+        JsonObject predicates = new JsonObject();
+        override.getPredicates().forEach(p -> {
+            predicates.addProperty(p.getProperty().toString(), p.getValue());
+        });
+        json.add("predicate", predicates);
+        return json;
+    }
+
+    @FunctionalInterface
+    public interface CrossbowModelAdder {
+        void add(ItemOverride override);
     }
 
 }

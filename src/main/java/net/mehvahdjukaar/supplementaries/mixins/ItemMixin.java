@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +28,7 @@ public abstract class ItemMixin implements IExtendedItem {
 
     @Unique
     @Nullable
-    private AdditionalPlacement additionalBehavior;
+    private IAdditionalPlacement additionalBehavior;
 
     @Shadow
     @Final
@@ -38,7 +38,7 @@ public abstract class ItemMixin implements IExtendedItem {
     //delegates stuff to internal blockItem
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void onUseOnBlock(UseOnContext pContext, CallbackInfoReturnable<InteractionResult> cir) {
-        AdditionalPlacement behavior = this.getAdditionalBehavior();
+        IAdditionalPlacement behavior = this.getAdditionalBehavior();
         if (behavior != null) {
             var result = behavior.overrideUseOn(pContext, foodProperties);
             if (result.consumesAction()) cir.setReturnValue(result);
@@ -48,19 +48,19 @@ public abstract class ItemMixin implements IExtendedItem {
     //delegates stuff to internal blockItem
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     private void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced, CallbackInfo ci) {
-        AdditionalPlacement behavior = this.getAdditionalBehavior();
+        IAdditionalPlacement behavior = this.getAdditionalBehavior();
         if (behavior != null) {
             behavior.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         }
     }
 
     @Nullable
-    public AdditionalPlacement getAdditionalBehavior() {
+    public IAdditionalPlacement getAdditionalBehavior() {
         return this.additionalBehavior;
     }
 
     @Override
-    public void addAdditionalBehavior(AdditionalPlacement placementOverride) {
+    public void addAdditionalBehavior(IAdditionalPlacement placementOverride) {
         this.additionalBehavior = placementOverride;
     }
 }
