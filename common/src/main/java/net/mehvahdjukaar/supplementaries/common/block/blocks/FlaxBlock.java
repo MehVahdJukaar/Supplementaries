@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IBeeGrowable;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -138,39 +140,37 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         worldIn.setBlock(pos.above(), this.defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER), flags);
     }
 
-    /*
+
     // Tick function
     @Override
-    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
-        if (!worldIn.isAreaLoaded(pos, 1))
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!PlatformHelper.isAreaLoaded(level, pos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) return; //only bottom one handles ticking
-        if (worldIn.getRawBrightness(pos, 0) >= 9) {
+        if (level.getRawBrightness(pos, 0) >= 9) {
             int age = this.getAge(state);
-            if (this.isValidBonemealTarget(worldIn, pos, state, worldIn.isClientSide)) {
-                float f = getGrowthSpeed(this, worldIn, pos);
-                if (ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+            if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
+                float f = getGrowthSpeed(this, level, pos);
+                if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                     if (age + 1 >= DOUBLE_AGE) {
-                        worldIn.setBlock(pos.above(), this.getStateForAge(age + 1).setValue(HALF, DoubleBlockHalf.UPPER), 3);
+                        level.setBlock(pos.above(), this.getStateForAge(age + 1).setValue(HALF, DoubleBlockHalf.UPPER), 3);
                     }
-                    worldIn.setBlock(pos, this.getStateForAge(age + 1), 2);
-                    ForgeHooks.onCropsGrowPost(worldIn, pos, state);
+                    level.setBlock(pos, this.getStateForAge(age + 1), 2);
+                    ForgeHelper.onCropsGrowPost(level, pos, state);
                 }
             }
         }
     }
 
-
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
-            if (event.isCanceled()) return event.getCancellationResult();
+            var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
+            if (ev != null) return ev;
         }
         return old;
-    }*/
-    //TODO: add back
+    }
 
     public boolean canGrowUp(BlockGetter worldIn, BlockPos downPos) {
         BlockState state = worldIn.getBlockState(downPos.above());
@@ -189,12 +189,12 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         growCropBy(level, pos, state, this.getBonemealAgeIncrease(level));
     }
 
-    public void growCropBy(Level level, BlockPos pos, BlockState state, int increment){
-        if(state.getValue(HALF) == DoubleBlockHalf.UPPER){
+    public void growCropBy(Level level, BlockPos pos, BlockState state, int increment) {
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             //as if it was called on lower
             pos = pos.below();
         }
-        int newAge = this.getAge(state) +increment;
+        int newAge = this.getAge(state) + increment;
         newAge = Math.min(newAge, this.getMaxAge());
 
         if (newAge >= DOUBLE_AGE) {

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

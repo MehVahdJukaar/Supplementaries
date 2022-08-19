@@ -82,7 +82,11 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
         if (!event.isCanceled()) {
-            ServerEvents.onUseItem(event.getEntity(), event.getLevel(), event.getHand());
+           var ret = ServerEvents.onUseItem(event.getEntity(), event.getLevel(), event.getHand());
+           if(ret.getResult() != InteractionResult.PASS){
+               event.setCanceled(true);
+               event.setCancellationResult(ret.getResult());
+           }
         }
     }
 

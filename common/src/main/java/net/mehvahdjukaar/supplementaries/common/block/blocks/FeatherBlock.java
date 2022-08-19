@@ -50,7 +50,6 @@ public class FeatherBlock extends Block {
     public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
         if (!world.isClientSide) {
             if (height > 2) {
-                //TODO: sound here
                 world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
             }
         } else {

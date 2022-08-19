@@ -93,8 +93,6 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
         } catch (Exception ignored) {
         }
-
-        //TODO: do this for hanging flower pot
         return quads;
     }
 

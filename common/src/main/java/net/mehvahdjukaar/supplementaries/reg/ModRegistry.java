@@ -25,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -77,25 +78,6 @@ public class ModRegistry {
     public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
             () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
 
-    //using this to register overwrites and conditional block items
-
-    public static void registerAdditionalStuff() {
-
-
-        //CompatHandler.registerOptionalItems(event);
-        //shulker shell
-        //addOptionalPlaceableItem("quark:ancient_tome", BOOK_PILE.get());
-
-        if (RegistryConfigs.SHULKER_HELMET_ENABLED.get()) {
-            //TODO: re add
-            /*
-            event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
-                    new ShulkerShellItem(new Item.Properties()
-                            .stacksTo(64)
-                            .tab(CreativeModeTab.TAB_MATERIALS)));*/
-        }
-    }
-
     @EventCalled
     public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
         event.register(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes());
@@ -106,8 +88,8 @@ public class ModRegistry {
             Supplementaries.res("bombs"), () -> new PaintingVariant(32, 32));
 
     //enchantment
-    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerEnchantment(
-            Supplementaries.res(STASIS_NAME), StasisEnchantment::new);
+    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerAsync(
+            Supplementaries.res(STASIS_NAME), StasisEnchantment::new, Registry.ENCHANTMENT);
 
     //effects
     public static final Supplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(

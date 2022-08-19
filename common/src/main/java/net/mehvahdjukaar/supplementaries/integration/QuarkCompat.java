@@ -16,6 +16,11 @@ import org.jetbrains.annotations.Contract;
 public class QuarkCompat {
 
     @ExpectPlatform
+    public static void setup(){
+
+    }
+
+    @ExpectPlatform
     public static void tickPiston(Level level, BlockPos pos, AABB aabb, boolean sameDir, BlockEntity pistonBlockEntityMixin) {
         throw new AssertionError();
     }

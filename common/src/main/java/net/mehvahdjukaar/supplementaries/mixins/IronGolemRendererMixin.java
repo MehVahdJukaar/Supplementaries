@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.IronGolem;

@@ -3,7 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.item.WoodBasedItem;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -44,9 +47,11 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
         this.color = color;
         BY_COLOR.put(color, this);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+
+        if(PlatformHelper.getPlatform().isFabric())
+            RegHelper.registerBlockFlammability(this,60,60);
     }
 
-    // TODO fabric
     @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;

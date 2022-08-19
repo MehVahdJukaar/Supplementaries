@@ -8,7 +8,7 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;

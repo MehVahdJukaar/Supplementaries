@@ -105,7 +105,9 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                 if (tile.yaw > 1500 && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
                     if (advancement != null) {
-                        serverPlayer.getAdvancements().award(advancement, "unlock");
+                        if(!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                            serverPlayer.getAdvancements().award(advancement, "unlock");
+                        }
                     }
                 }
 

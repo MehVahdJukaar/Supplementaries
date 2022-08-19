@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

@@ -117,7 +117,6 @@ public class BambooSpikesBlockTile extends BlockEntity {
         double d1 = (double) (i >> 8 & 255) / 255.0D;
         double d2 = (double) (i & 255) / 255.0D;
         BlockPos pos = this.getBlockPos();
-        //TODO: fix on server side
         level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
                 pos.getY() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
                 pos.getZ() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75, d0, d1, d2);

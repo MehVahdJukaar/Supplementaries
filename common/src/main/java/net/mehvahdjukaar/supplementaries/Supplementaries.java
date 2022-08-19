@@ -49,12 +49,10 @@ public class Supplementaries {
         RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"),RegistryConfigs::isEnabled);
 
         //soap in water makes soap particles
-        //TODO: banner bug
         //yeet java models in favor or json ones
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
-        //banner patterns not working
         //potions in jars are bugged ;_;
         //feather block
 

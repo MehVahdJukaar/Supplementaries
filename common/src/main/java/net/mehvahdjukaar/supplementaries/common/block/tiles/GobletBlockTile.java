@@ -82,7 +82,9 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
                 if (b && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));
                     if (advancement != null) {
-                        serverPlayer.getAdvancements().award(advancement, "unlock");
+                        if(!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                            serverPlayer.getAdvancements().award(advancement, "unlock");
+                        }
                     }
                 }
                 return b;

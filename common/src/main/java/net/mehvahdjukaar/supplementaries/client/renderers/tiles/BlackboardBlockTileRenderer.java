@@ -56,14 +56,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         BlockPos pos = tile.getBlockPos();
         if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;
 
-        //TODO: add glow ink support
-
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.mulPose(RotHlpr.rot(dir));
         matrixStackIn.mulPose(RotHlpr.XN90);
         matrixStackIn.translate(-0.5, -0.5, -0.1875);
-
 
 
         int lu = combinedLightIn & '\uffff';
@@ -90,7 +87,6 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                 }
             }
         }
-
 
        // VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getBlackboardInstance(tile).getRenderType());
        // RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);

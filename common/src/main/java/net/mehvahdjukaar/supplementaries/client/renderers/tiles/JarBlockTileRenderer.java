@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-        // TODO:remove breaking animation
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, liquidParams.z(), 0.5);
         VertexUtils.addCube(builder, matrixStackIn,

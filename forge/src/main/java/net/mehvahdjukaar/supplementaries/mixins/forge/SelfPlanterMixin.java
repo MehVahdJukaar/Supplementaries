@@ -16,7 +16,6 @@ public abstract class SelfPlanterMixin extends Block {
         super(arg);
     }
 
-    //TODO: add to fabric? how
     @Override
     public boolean isFertile(BlockState state, BlockGetter world, BlockPos pos) {
         return true;

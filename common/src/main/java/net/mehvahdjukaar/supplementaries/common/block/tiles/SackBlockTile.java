@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;

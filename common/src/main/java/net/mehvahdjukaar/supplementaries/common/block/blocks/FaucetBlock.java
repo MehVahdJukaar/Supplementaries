@@ -140,8 +140,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    //TODO: redo
-    @SuppressWarnings("ConstantConditions")
     private boolean canConnect(BlockState downState, LevelAccessor world, BlockPos pos, Direction dir) {
         if (downState.getBlock() instanceof JarBlock) return true;
         else if (downState.is(ModTags.POURING_TANK)) return false;
@@ -214,7 +212,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
                 .setValue(HAS_JAR, hasJar).setValue(WATERLOGGED, water).setValue(POWERED, powered);
     }
 
-    //TODO: maybe remove haswater state
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         boolean flag = this.isOpen(state);

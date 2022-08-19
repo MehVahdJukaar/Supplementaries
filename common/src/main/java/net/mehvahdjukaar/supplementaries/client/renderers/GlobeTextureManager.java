@@ -105,7 +105,6 @@ public class GlobeTextureManager {
             DEFAULT_COLORS.add(GlobeDataGenerator.Col.MUSHROOM, 0x826e71);
             DEFAULT_COLORS.add(GlobeDataGenerator.Col.MUSHROOM_S, 0x8e8675);
 
-            //TODO: finish this
             DEFAULT_COLORS.add(GlobeDataGenerator.Col.TAIGA, 0x2d8a5c);
             DEFAULT_COLORS.add(GlobeDataGenerator.Col.MESA, 0xc28947);
             DEFAULT_COLORS.add(GlobeDataGenerator.Col.MESA_S, 0xba9f65);

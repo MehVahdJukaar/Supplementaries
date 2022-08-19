@@ -9,11 +9,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
@@ -26,6 +29,7 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
@@ -129,6 +133,21 @@ public class ForgeHelperImpl {
     public static boolean isWildFlaxBiome(Holder<Biome> biome) {
         //these are empty now....
         return (biome.is(Tags.Biomes.IS_SANDY) && (biome.is(Tags.Biomes.IS_HOT) || biome.is(Tags.Biomes.IS_DRY)) || biome.is(BiomeTags.IS_RIVER));
+    }
+
+    public static boolean onCropsGrowPre(ServerLevel level, BlockPos pos, BlockState state, boolean b) {
+        return ForgeHooks.onCropsGrowPre(level , pos, state,b);
+    }
+
+    public static void onCropsGrowPost(ServerLevel level, BlockPos pos, BlockState state) {
+        ForgeHooks.onCropsGrowPost(level, pos, state);
+    }
+
+    @javax.annotation.Nullable
+    public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
+      var ev =  ForgeHooks.onRightClickBlock(player, hand, below, rayTraceResult);
+        if(ev.isCanceled())return ev.getCancellationResult();
+        return null;
     }
 
 }

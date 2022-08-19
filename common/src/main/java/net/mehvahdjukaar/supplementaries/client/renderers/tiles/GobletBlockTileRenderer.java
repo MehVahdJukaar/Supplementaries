@@ -29,7 +29,6 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-        // TODO:remove breaking animation
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, 0.0625, 0.5);
 

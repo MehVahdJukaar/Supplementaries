@@ -86,7 +86,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             super.fallOn(worldIn, state, pos, entityIn, fallDistance);
         } else {
             entityIn.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
-            //TODO: add falling block entity support
+            //TODO: add falling block entity support. also fix not working on servers
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float) CommonConfigs.Blocks.LAUNCHER_HEIGHT.get()){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);

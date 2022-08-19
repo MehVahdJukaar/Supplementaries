@@ -283,6 +283,8 @@ public class AshLayerBlock extends FallingBlock {
         return false;
     }
 
+    //TODO: ash pahtfinding
+
     //TODO: add this
     public static final int GRASS_SPREAD_WIDTH = 3;
     /*

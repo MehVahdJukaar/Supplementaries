@@ -7,12 +7,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
@@ -23,6 +26,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +47,6 @@ public class ForgeHelperImpl {
         return false; //true if event cancelled
     }
 
-    // TODO: fabric
     public static void onExplosionDetonate(Level level, Explosion explosion, List<Entity> entities, double diameter) {
     }
 
@@ -94,9 +97,6 @@ public class ForgeHelperImpl {
         return state.rotate(rot);
     }
 
-    public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
-        return !state.requiresCorrectToolForDrops() || player.hasCorrectToolForDrops(state);
-    }
 
     public static boolean isMultipartEntity(Entity e) {
         return e instanceof EnderDragon;
@@ -118,6 +118,18 @@ public class ForgeHelperImpl {
 
     public static EntityType<?> getFishType(MobBucketItem bucketItem) {
         return ((MobBucketItemAccessor) bucketItem).getType();
+    }
+
+    public static boolean onCropsGrowPre(ServerLevel level, BlockPos pos, BlockState state, boolean b) {
+        return b;
+    }
+
+    public static void onCropsGrowPost(ServerLevel level, BlockPos pos, BlockState state) {
+    }
+
+    @javax.annotation.Nullable
+    public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
+        return null;
     }
 
 

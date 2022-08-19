@@ -7,7 +7,6 @@
     "BlockBehaviourPlanterMixin",
     "FontRendererMixin",
     "IronGolemRendererMixin",
-    "ItemRendererMixin",
     "LevelRendererMixin",
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",

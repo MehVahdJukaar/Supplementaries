@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.SlingshotItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
@@ -19,7 +20,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
@@ -104,6 +104,7 @@ public class ClientRegistry {
         ClientPlatformHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
+        ClientPlatformHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
 
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             ModTextures.getTexturesForBlockAtlas().forEach(e::addSprite);
@@ -357,6 +358,10 @@ public class ClientRegistry {
 
     }
 
+    @EventCalled
+    private static void registerItemDecorators(ClientPlatformHelper.ItemDecoratorEvent event) {
+        event.register(ModRegistry.SLINGSHOT_ITEM.get(), new SlingshotItemOverlayRenderer());
+    }
 
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {

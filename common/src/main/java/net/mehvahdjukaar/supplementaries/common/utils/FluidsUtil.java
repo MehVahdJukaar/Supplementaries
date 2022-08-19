@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Contract;
 
 import java.util.function.Supplier;
 
@@ -23,6 +24,7 @@ public class FluidsUtil {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean hasFluidHandler(Level level, BlockPos pos, Direction dir) {
         throw new AssertionError();

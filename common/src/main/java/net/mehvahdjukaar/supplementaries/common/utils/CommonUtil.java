@@ -6,10 +6,12 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientAccess;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -93,9 +95,10 @@ public class CommonUtil {
     public static Festivity FESTIVITY = Festivity.get();
 
     public static boolean isLanternBlock(Block b) {
-        String namespace = Utils.getID(b).getNamespace();
-        if (namespace.equals("skinnedlanterns")) return true;
-        if (b instanceof LanternBlock) {
+        ResourceLocation id = Utils.getID(b);
+        String namespace = id.getNamespace();
+        if (namespace.equals("skinnedlanterns") || (namespace.equals("twigs") && id.getPath().contains("paper_lantern") )) return true;
+        if (b instanceof LanternBlock) { //!CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)
             return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
         }
         return false;
@@ -113,19 +116,6 @@ public class CommonUtil {
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
 
-    //TODO: move to tag
-    public static boolean isLantern(Item i) {
-        if (i instanceof BlockItem blockItem) {
-            Block b = blockItem.getBlock();
-            String namespace = Utils.getID(b).getNamespace();
-            if (namespace.equals("skinnedlanterns")) return true;
-            if (b instanceof LanternBlock && !CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)) {
-                return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
-            }
-        }
-        return false;
-    }
-
     public static boolean isCookie(Item i) {
         return (i.builtInRegistryHolder().is(ModTags.COOKIES));
     }
@@ -139,9 +129,8 @@ public class CommonUtil {
     }
 
     public static boolean isPot(Item i) {
-        if (i instanceof BlockItem) {
-            Block b = ((BlockItem) i).getBlock();
-            return ((b instanceof FlowerPotBlock));
+        if (i instanceof BlockItem bi) {
+            return (bi.getBlock() instanceof FlowerPotBlock);
         }
         return false;
     }

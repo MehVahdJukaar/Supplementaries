@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common;
+package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
@@ -83,13 +83,7 @@ public class ModTextures {
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
-    public static void setup() {
-        //can't access these right away and only on setup
-        for (BannerPattern pattern : Registry.BANNER_PATTERN) {
-
-            FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
-                    Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey()));
-        }
+    static{
 
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
@@ -120,7 +114,11 @@ public class ModTextures {
     public static List<ResourceLocation> getTexturesForBannerAtlas() {
         List<ResourceLocation> list = new ArrayList<>();
         if (ModTextures.FLAG_TEXTURES.isEmpty()) {
-            Supplementaries.LOGGER.error("Failed to add flag textures. texture map was empty?");
+            for (BannerPattern pattern : Registry.BANNER_PATTERN) {
+
+                FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
+                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":","/")));
+            }
         }
         try {
             ModTextures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))

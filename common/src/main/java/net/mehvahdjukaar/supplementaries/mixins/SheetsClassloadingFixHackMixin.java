@@ -40,7 +40,7 @@ public abstract class SheetsClassloadingFixHackMixin {
             applied = true;
         }
         if (applied) {
-            Supplementaries.LOGGER.error("Some mod loaded thr Sheets class to early! This causes the banner texture maps to not contain modded patterns. Supplementaries will not attempt to fix...");
+            Supplementaries.LOGGER.error("Some mod loaded the Sheets class to early! This causes the banner texture maps to not contain modded patterns. Supplementaries will not attempt to fix...");
         }
 
     }

@@ -2,7 +2,13 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -99,8 +105,9 @@ public class CompatHandler {
         // if (create) CreatePlugin.initialize();
         if (computercraft) CCCompat.initialize();
 
-        //var i = ForgeRegistries.ITEMS.getValue(new ResourceLocation("quark:ancient_tome"));
-        // if (i != Items.AIR) ((IPlaceableItem) i).addPlaceable(ModRegistry.BOOK_PILE.get());
+        var i = Registry.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
+
+        i.ifPresent(b->BlockPlacerItem.registerPlaceableItem(ModRegistry.BOOK_PILE.get(), ()->b, CommonConfigs.Tweaks.PLACEABLE_BOOKS));
     }
 
     public static void initOptionalRegistries() {

@@ -6,7 +6,7 @@ import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;

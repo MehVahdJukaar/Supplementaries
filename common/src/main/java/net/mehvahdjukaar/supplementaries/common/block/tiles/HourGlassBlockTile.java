@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-import static net.mehvahdjukaar.supplementaries.common.ModTextures.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
 
 public class HourGlassBlockTile extends ItemDisplayTile {
     public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
@@ -115,7 +115,6 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         return this.isEmpty() && !HourGlassSandType.getHourGlassSandType(stack.getItem()).isEmpty();
     }
 
-    //TODO: FIX this so it can only put from top
     @Override
     public int[] getSlotsForFace(Direction side) {
         return IntStream.range(0, this.getContainerSize()).toArray();

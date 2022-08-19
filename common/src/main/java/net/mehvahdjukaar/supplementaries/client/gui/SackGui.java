@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;

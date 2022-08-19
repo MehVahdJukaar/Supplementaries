@@ -2,17 +2,22 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotRendererHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-public class SlingshotItemOverlayRenderer {
+import java.awt.*;
 
-    public static void render(ItemStack stack, int x, int y, float blitOffset) {
+public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
+
+    public boolean render(Font font, ItemStack stack, int x, int y, float blitOffset) {
         boolean overlay = ClientConfigs.Items.SLINGSHOT_OVERLAY.get();
         boolean outline = ClientConfigs.Items.SLINGSHOT_OUTLINE.get();
         if (overlay || outline) {
@@ -49,6 +54,8 @@ public class SlingshotItemOverlayRenderer {
                     }
                 }
             }
+            return true;
         }
+        return false;
     }
 }

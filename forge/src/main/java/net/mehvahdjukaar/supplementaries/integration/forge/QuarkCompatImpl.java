@@ -161,5 +161,10 @@ public class QuarkCompatImpl {
       return  ModuleLoader.INSTANCE.isModuleEnabled(JukeboxAutomationModule.class);
     }
 
+    public static void setup() {
+
+
+    }
+
 
 }

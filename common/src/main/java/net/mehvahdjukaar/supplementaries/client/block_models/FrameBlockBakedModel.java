@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;

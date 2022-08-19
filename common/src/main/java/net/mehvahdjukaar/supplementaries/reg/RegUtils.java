@@ -113,7 +113,6 @@ public class RegUtils {
         return regWithItem(name, block, t);
     }
 
-    //TODO: these wont work on fabric
     public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
         return RegHelper.registerItem(Supplementaries.res(name), () -> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
     }
@@ -165,7 +164,6 @@ public class RegUtils {
     //ceiling banners
     public static Map<DyeColor, Supplier<Block>> registerCeilingBanners(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
-        //TODO: fix this not working
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
             map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,

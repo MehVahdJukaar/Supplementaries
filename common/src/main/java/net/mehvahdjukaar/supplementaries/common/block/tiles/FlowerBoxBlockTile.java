@@ -79,11 +79,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
             if (b == null) b = Blocks.AIR;
             this.flowerStates[n] = b.defaultBlockState();
         }
-        //TODO: check this
         this.requestModelReload();
-       // if (level != null) {
-       //     this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-       // }
     }
 
     @Override

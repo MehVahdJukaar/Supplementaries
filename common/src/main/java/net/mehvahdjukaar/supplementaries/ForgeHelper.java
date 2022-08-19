@@ -6,10 +6,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
@@ -45,7 +49,7 @@ public class ForgeHelper {
     }
 
     @ExpectPlatform
-    public static void onLivingConvert(LivingEntity from, LivingEntity to) {
+    public static void onLivingConvert(LivingEntity frFom, LivingEntity to) {
         throw new AssertionError();
     }
 
@@ -110,10 +114,6 @@ public class ForgeHelper {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
-        throw new AssertionError();
-    }
 
     @ExpectPlatform
     public static boolean isMultipartEntity(Entity e) {
@@ -140,4 +140,19 @@ public class ForgeHelper {
         throw new AssertionError();
     }
 
+    @ExpectPlatform
+    public static boolean onCropsGrowPre(ServerLevel level, BlockPos pos, BlockState state, boolean b) {
+        throw new AssertionError();
+
+    }
+
+    @ExpectPlatform
+    public static void onCropsGrowPost(ServerLevel level, BlockPos pos, BlockState state) {
+    }
+
+    @ExpectPlatform
+    @Nullable
+    public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
+        throw new AssertionError();
+    }
 }

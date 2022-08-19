@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
@@ -60,7 +58,9 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         EntityType<?> type = e.getType();
         if (e instanceof Monster) return false;
         if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
-        return type.is(ModTags.JAR_CATCHABLE) || this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
+        return type.is(ModTags.JAR_CATCHABLE) ||
+                (type.is(ModTags.JAR_BABY_CATCHABLE) && e instanceof LivingEntity le && le.isBaby()) ||
+                this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
     }
 
     @Override

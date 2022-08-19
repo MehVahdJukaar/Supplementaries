@@ -46,4 +46,7 @@ public class QuarkCompatImpl {
     public static boolean isJukeboxModuleOn() {
         return false;
     }
+
+    public static void setup() {
+    }
 }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

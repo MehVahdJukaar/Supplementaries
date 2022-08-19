@@ -17,6 +17,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -103,7 +104,6 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    //TODO: improve
     public ItemStack getJarItem(JarBlockTile te) {
         ItemStack returnStack = new ItemStack(this);
 

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -28,7 +27,6 @@ public class ModSetup {
     public static boolean firstTagLoad = false;
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
-            ModTextures::setup,
             CurseLootFunction::setup,
             CompatHandler::setup,
             FlowerPotHandler::setup,
@@ -85,7 +83,6 @@ public class ModSetup {
     }
 
     //events on setup. fire on world load
-    //TODO: add
     public static void tagDependantSetup() {
         if (!firstTagLoad) {
             firstTagLoad = true;

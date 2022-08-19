@@ -15,7 +15,6 @@ public abstract class SelfFrameMixin extends Block {
         super(arg);
     }
 
-    // TODO fabric
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
