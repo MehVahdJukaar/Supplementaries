@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.mehvahdjukaar.selene.client.asset_generators.LangBuilder;
 import net.mehvahdjukaar.selene.client.asset_generators.textures.Palette;
 import net.mehvahdjukaar.selene.client.asset_generators.textures.Respriter;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.selene.client.asset_generators.textures.TextureImage;
 import net.mehvahdjukaar.selene.resourcepack.*;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -47,6 +49,18 @@ public class ClientDynamicResourcesHandler extends RPAwareDynamicTextureProvider
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
 
+        if (ClientConfigs.tweaks.COLORED_ARROWS.get()) {
+            this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
+                    """ 
+                            {
+                                "parent": "item/crossbow",
+                                "textures": {
+                                    "layer0": "item/crossbow_arrow_base",
+                                    "layer1": "item/crossbow_arrow_tip"
+                                }
+                            }
+                            """));
+        }
 
         //hack. I need this for texture stitch
         WallLanternTexturesRegistry.reloadTextures(manager);

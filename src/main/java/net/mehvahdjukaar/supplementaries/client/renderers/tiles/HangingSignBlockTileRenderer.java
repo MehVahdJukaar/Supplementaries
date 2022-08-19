@@ -110,7 +110,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                 } else if (item instanceof BannerPatternItem) {
 
                     //TODO: cache or not like notice board
-                    Material renderMaterial = ClientRegistry.FLAG_MATERIALS.get(((BannerPatternItem) item).getBannerPattern());
+                    Material renderMaterial = ClientRegistry.FLAG_MATERIALS.get().get(((BannerPatternItem) item).getBannerPattern());
 
                     VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 

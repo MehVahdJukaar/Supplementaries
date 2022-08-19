@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
 
@@ -60,7 +62,13 @@ public class ClientRegistry {
 
     public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
     public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
-    public static final Map<BannerPattern, Material> FLAG_MATERIALS = new HashMap<>();
+    public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
+        var map = new HashMap<BannerPattern, Material>();
+        for (BannerPattern pattern : BannerPattern.values()) {
+            map.put(pattern, new Material(Sheets.BANNER_SHEET, Textures.FLAG_TEXTURES.get(pattern)));
+        }
+        return map;
+    });
 
 
     //special models locations
@@ -87,9 +95,6 @@ public class ClientRegistry {
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
                 .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + item.getRegistryName().getPath()))));
 
-        for (BannerPattern pattern : BannerPattern.values()) {
-            FLAG_MATERIALS.put(pattern, new Material(Sheets.BANNER_SHEET, Textures.FLAG_TEXTURES.get(pattern)));
-        }
 
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             BOOK_MATERIALS.put(color, new Material(Sheets.SHULKER_SHEET, Textures.BOOK_TEXTURES.get(color)));
@@ -177,6 +182,6 @@ public class ClientRegistry {
                 createGenericRenderType("test_texture", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
                         VertexFormat.Mode.QUADS, RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER,
                         RenderStateShard.TRANSLUCENT_TRANSPARENCY,
-                        new RenderStateShard.TextureStateShard(texture,false, false)));
+                        new RenderStateShard.TextureStateShard(texture, false, false)));
     }
 }

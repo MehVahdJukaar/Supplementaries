@@ -97,7 +97,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if (item instanceof BannerPatternItem bannerPatternItem) {
-            this.cachedPattern = ClientRegistry.FLAG_MATERIALS.get(bannerPatternItem.getBannerPattern());
+            this.cachedPattern = ClientRegistry.FLAG_MATERIALS.get().get(bannerPatternItem.getBannerPattern());
         }
 
         this.needsVisualRefresh = true;

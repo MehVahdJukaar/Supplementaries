@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import vectorwing.farmersdelight.common.registry.ModMaterials;
 
 import java.util.HashMap;
 import java.util.List;
