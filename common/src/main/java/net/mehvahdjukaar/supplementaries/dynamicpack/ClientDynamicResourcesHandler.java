@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
@@ -15,8 +16,8 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +38,6 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
     public ClientDynamicResourcesHandler() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
         this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
-        this.dynamicPack.addNamespaces("minecraft");
     }
 
     @Override
@@ -52,6 +52,23 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
+        if (RegistryConfigs.ROPE_ARROW_ENABLED.get() || ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
+            this.dynamicPack.addNamespaces("minecraft");
+        }
+
+        if (ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
+            this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
+                    """ 
+                            {
+                                "parent": "item/crossbow",
+                                "textures": {
+                                    "layer0": "item/crossbow_arrow_base",
+                                    "layer1": "item/crossbow_arrow_tip"
+                                }
+                            }
+                            """));
+        }
+
 
         //need this here for reasons I forgot
         WallLanternTexturesRegistry.reloadTextures(manager);
@@ -147,10 +164,10 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
     public void regenerateDynamicAssets(ResourceManager manager) {
 
 //TODO: fix
-        RPUtils.addCrossbowModel(manager, this.dynamicPack, e->{
+        RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
             e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
-                             List.of(new ItemOverride.Predicate(new ResourceLocation("charged"),1f),
-                                     new ItemOverride.Predicate(Supplementaries.res("rope_arrow"),1f))));
+                    List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
+                            new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
         });
 
         //hanging signs block textures

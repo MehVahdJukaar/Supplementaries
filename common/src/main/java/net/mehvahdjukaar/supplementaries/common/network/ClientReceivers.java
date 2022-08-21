@@ -52,7 +52,6 @@ public class ClientReceivers {
     }
 
     public static void handlePlaySpeakerMessagePacket(ClientBoundPlaySpeakerMessagePacket message) {
-        //TODO: add @p command support
         boolean narrator = message.narrator;
         Component str = message.str;
         if (narrator && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
