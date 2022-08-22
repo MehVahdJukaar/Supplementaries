@@ -7,8 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class WaystonesCompatImpl {
     public static boolean isWaystone(BlockEntity te) {
-        return Utils.getID(te.getBlockState().getBlock()).getPath().contains("waystone");
+        return te != null && Utils.getID(te.getBlockState().getBlock()).getPath().contains("waystone");
     }
+
     @Nullable
     public static Component getName(BlockEntity te) {
         return null;

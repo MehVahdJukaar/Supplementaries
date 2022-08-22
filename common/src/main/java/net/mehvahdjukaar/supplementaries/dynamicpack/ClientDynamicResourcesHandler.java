@@ -56,7 +56,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
             this.dynamicPack.addNamespaces("minecraft");
         }
 
-        if (ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
+        //if (ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
             this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
                     """ 
                             {
@@ -67,7 +67,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
                                 }
                             }
                             """));
-        }
+       // }
 
 
         //need this here for reasons I forgot

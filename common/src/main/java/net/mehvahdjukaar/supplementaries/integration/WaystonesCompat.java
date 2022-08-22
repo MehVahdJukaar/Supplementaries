@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WaystonesCompat {
     @ExpectPlatform
-    public static boolean isWaystone(BlockEntity te) {
+    public static boolean isWaystone(@Nullable BlockEntity te) {
         throw new ArrayStoreException();
     }
     @Nullable

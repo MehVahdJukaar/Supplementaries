@@ -61,8 +61,11 @@ public class Supplementaries {
         ModRegistry.init();
         ModRecipes.init();
         ModParticles.init();
-        CMDreg.init();
+
         ModWorldgenRegistry.init();
+
+        //TODO: remove as moonlight itself now disables fabric code markers
+        if(PlatformHelper.getPlatform().isForge()) CMDreg.init(); // fabric has issues with either codec...
 
 
         ServerDynamicResourcesHandler.INSTANCE.register();
