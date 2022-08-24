@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
@@ -14,11 +14,11 @@ public class SignPostMarker extends NamedMapBlockMarker<CustomMapDecoration> {
 
 
     public SignPostMarker() {
-        super(CMDreg.SIGN_POST_DECORATION_TYPE);
+        super(ModMapMarkers.SIGN_POST_DECORATION_TYPE);
     }
 
     public SignPostMarker(BlockPos pos, Component name) {
-        super(CMDreg.SIGN_POST_DECORATION_TYPE, pos);
+        super(ModMapMarkers.SIGN_POST_DECORATION_TYPE, pos);
         this.name = name;
     }
 

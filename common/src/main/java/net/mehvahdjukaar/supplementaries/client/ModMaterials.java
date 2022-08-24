@@ -41,7 +41,7 @@ public class ModMaterials {
         return map;
     });
 
-    //needs static initializer as models are loaded before client setup
+    //needs static initializer as models are loaded before client init
     static {
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
                 .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.ChestBlock;
@@ -12,11 +12,11 @@ import javax.annotation.Nullable;
 public class ChestMarker extends MapBlockMarker<CustomMapDecoration> {
 
     public ChestMarker() {
-        super(CMDreg.CHEST_DECORATION_TYPE);
+        super(ModMapMarkers.CHEST_DECORATION_TYPE);
     }
 
     public ChestMarker(BlockPos pos) {
-        super(CMDreg.CHEST_DECORATION_TYPE, pos);
+        super(ModMapMarkers.CHEST_DECORATION_TYPE, pos);
         this.setPos(pos);
     }
 

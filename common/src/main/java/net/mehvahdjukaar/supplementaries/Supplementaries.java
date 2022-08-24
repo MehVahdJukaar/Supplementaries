@@ -6,11 +6,10 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.client.gui.PresentBlockGui;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -61,11 +60,8 @@ public class Supplementaries {
         ModRegistry.init();
         ModRecipes.init();
         ModParticles.init();
-
         ModWorldgenRegistry.init();
-
-        //TODO: remove as moonlight itself now disables fabric code markers
-        if(PlatformHelper.getPlatform().isForge()) CMDreg.init(); // fabric has issues with either codec...
+        ModMapMarkers.init();
 
 
         ServerDynamicResourcesHandler.INSTANCE.register();
@@ -80,7 +76,7 @@ public class Supplementaries {
         }
     }
 
-    //mod setup
+    //mod init
     public static void commonSetup() {
         ModSetup.setup();
     }

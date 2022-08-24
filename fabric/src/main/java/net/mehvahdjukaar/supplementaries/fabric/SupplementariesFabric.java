@@ -15,9 +15,7 @@ public class SupplementariesFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
         Supplementaries.commonInit();
-
 
         ServerEventsFabric.init();
         FabricSetupCallbacks.COMMON_SETUP.add(Supplementaries::commonSetup);

@@ -47,6 +47,6 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static void setup() {
+    public static void init() {
     }
 }

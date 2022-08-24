@@ -11,12 +11,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import vectorwing.farmersdelight.common.block.RichSoilBlock;
 import vectorwing.farmersdelight.common.registry.ModItems;
 import vectorwing.farmersdelight.common.tag.ModTags;
 
 public class FarmersDelightCompatImpl {
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack stack) {
+
+    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, @NotNull ItemStack stack) {
         if (stack.is(ModTags.KNIVES)) {
             int bites = state.getValue(CakeBlock.BITES);
             if (bites < 6) {

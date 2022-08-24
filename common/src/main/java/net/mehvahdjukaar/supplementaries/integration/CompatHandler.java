@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -107,14 +106,14 @@ public class CompatHandler {
 
         var i = Registry.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
 
-        i.ifPresent(b->BlockPlacerItem.registerPlaceableItem(ModRegistry.BOOK_PILE.get(), ()->b, CommonConfigs.Tweaks.PLACEABLE_BOOKS));
+        i.ifPresent(b -> BlockPlacerItem.registerPlaceableItem(ModRegistry.BOOK_PILE.get(), () -> b, CommonConfigs.Tweaks.PLACEABLE_BOOKS));
     }
 
     public static void initOptionalRegistries() {
         if (farmers_delight) FarmersDelightCompat.init();
-        //   if (deco_blocks) DecoBlocksCompatRegistry.registerStuff();
+        if (deco_blocks) DecoBlocksCompat.init();
+        if (quark) QuarkCompat.init();
 
-        //    if (botania) BotaniaCompatRegistry.registerStuff();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

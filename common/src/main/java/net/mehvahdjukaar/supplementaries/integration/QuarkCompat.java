@@ -16,8 +16,7 @@ import org.jetbrains.annotations.Contract;
 public class QuarkCompat {
 
     @ExpectPlatform
-    public static void setup(){
-
+    public static void init(){
     }
 
     @ExpectPlatform

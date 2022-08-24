@@ -41,6 +41,8 @@ dependencies {
    // modImplementation("curse.maven:roughly-enough-items-310111:3900965")
     modImplementation("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:3929455")
+    modImplementation("curse.maven:decorative-blocks-362528:3941637")
+    modImplementation("curse.maven:snowy-spirit-566142:3936202")
 
     //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
 

@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
+import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,14 +17,23 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -39,6 +51,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
 
@@ -55,9 +68,6 @@ public class QuarkCompatImpl {
         return null;
     }
 
-    public static InteractionResult tryCaptureTater(JarItem jarItem, UseOnContext context) {
-        return InteractionResult.PASS;
-    }
 
     public static boolean isDoubleDoorEnabled() {
         return ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class);
@@ -70,7 +80,7 @@ public class QuarkCompatImpl {
     public static int getSacksInBackpack(ItemStack stack) {
         int j = 0;
         if (stack.getItem() instanceof BackpackItem) {
-            LazyOptional<IItemHandler> handlerOpt = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
             if (handlerOpt.isPresent()) {
                 IItemHandler handler = handlerOpt.orElse(null);
                 for (int i = 0; i < handler.getSlots(); ++i) {
@@ -158,12 +168,47 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isJukeboxModuleOn() {
-      return  ModuleLoader.INSTANCE.isModuleEnabled(JukeboxAutomationModule.class);
+        return ModuleLoader.INSTANCE.isModuleEnabled(JukeboxAutomationModule.class);
     }
 
-    public static void setup() {
+    public static InteractionResult tryCaptureTater(JarItem item, UseOnContext context) {
+        BlockPos pos = context.getClickedPos();
+        Level world = context.getLevel();
+        if (world.getBlockEntity(pos) instanceof TaterInAJarBlock.Tile te && te.getType() != TATER_IN_A_JAR_TILE.get()) {
+            ItemStack stack = context.getItemInHand();
+            CompoundTag com = stack.getTagElement("BlockEntityTag");
+            if (com == null || com.isEmpty()) {
+                if (!world.isClientSide) {
+                    Player player = context.getPlayer();
+                    item.playCatchSound(player);
 
+                    ItemStack returnItem = new ItemStack(TATER_IN_A_JAR.get());
+                    if (te.hasCustomName()) returnItem.setHoverName(te.getCustomName());
+                    Utils.swapItemNBT(player, context.getHand(), stack, returnItem);
 
+                    world.removeBlock(pos, false);
+                }
+                return InteractionResult.sidedSuccess(world.isClientSide);
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    public static void init() {
+
+    }
+
+    public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
+
+    public static final Supplier<Block> TATER_IN_A_JAR;
+    public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
+
+    static {
+        TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
+                new Item.Properties().tab(null).rarity(Rarity.UNCOMMON), 0);
+
+        TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
+                TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
     }
 
 

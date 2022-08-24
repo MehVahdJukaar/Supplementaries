@@ -26,4 +26,8 @@ public class DecoBlocksCompat {
     @ExpectPlatform
     public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos) {
     }
+
+    @ExpectPlatform
+    public static void init() {
+    }
 }

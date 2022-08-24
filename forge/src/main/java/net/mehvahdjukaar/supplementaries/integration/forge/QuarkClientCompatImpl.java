@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -15,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
+import vazkii.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
@@ -24,6 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuarkClientCompatImpl {
+
+    public static void init() {
+        ClientPlatformHelper.addBlockEntityRenderersRegistration(e -> e.register(
+                QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new));
+    }
+
+    public static void registerRenderLayers() {
+        ClientPlatformHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
+    }
 
     public static boolean shouldHaveButtonOnRight() {
         return !(GeneralConfig.qButtonOnRight && GeneralConfig.enableQButton);
@@ -79,4 +94,20 @@ public class QuarkClientCompatImpl {
             tooltip.add(1, Component.translatable("quark.misc.shulker_box_shift"));
         }
     }
+
+
+    public static class TaterInAJarTileRenderer extends TinyPotatoRenderer {
+        public TaterInAJarTileRenderer(BlockEntityRendererProvider.Context ctx) {
+            super(ctx);
+        }
+
+        @Override
+        public void render(TinyPotatoBlockEntity potato, float partialTicks, PoseStack ms, MultiBufferSource buffers, int light, int overlay) {
+            ms.pushPose();
+            ms.translate(0, 1 / 16f, 0);
+            super.render(potato, partialTicks, ms, buffers, light, overlay);
+            ms.popPose();
+        }
+    }
+
 }

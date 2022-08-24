@@ -3,12 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.utils.forge;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.integration.forge.CuriosCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -25,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
@@ -89,7 +87,7 @@ public class ItemsUtilImpl {
                             }
                         } else {
                             int i = stack.getCount() - result.getCount();
-                            slot.safeTake( i, i, player);
+                            slot.safeTake(i, i, player);
                             containerStack.setTag(newTag);
                             return true;
                         }
@@ -103,14 +101,14 @@ public class ItemsUtilImpl {
     @Nullable
     public static Pair<IItemHandler, BlockEntity> getItemHandler(ItemStack containerStack, Player player) {
         CompoundTag tag = containerStack.getTag();
-        if(tag != null) {
+        if (tag != null) {
             CompoundTag cmp = tag.getCompound("BlockEntityTag");
             if (!cmp.contains("LootTable")) {
                 BlockEntity te = ItemsUtil.loadBlockEntityFromItem(cmp.copy(), containerStack.getItem());
 
                 if (te != null) {
                     if (te instanceof SafeBlockTile safe && !safe.canPlayerOpen(player, false)) return null;
-                    LazyOptional<IItemHandler> handlerHolder = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+                    LazyOptional<IItemHandler> handlerHolder = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
                     if (handlerHolder.isPresent()) {
                         return Pair.of(handlerHolder.orElseGet(EmptyHandler::new), te);
                     }
@@ -122,7 +120,7 @@ public class ItemsUtilImpl {
 
     public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
         AtomicReference<IItemHandler> reference = new AtomicReference<>();
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(reference::set);
+        player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(reference::set);
         if (reference.get() != null) {
             for (int idx = 0; idx < reference.get().getSlots(); idx++) {
                 ItemStack slotItem = reference.get().getStackInSlot(idx);
@@ -151,7 +149,7 @@ public class ItemsUtilImpl {
         }
 
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
-        player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler::set);
+        player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(itemHandler::set);
         if (itemHandler.get() != null) {
             for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(idx);
@@ -165,7 +163,7 @@ public class ItemsUtilImpl {
     }
 
     public static boolean faucetSpillItems(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
-        IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir).orElse(null);
+        IItemHandler itemHandler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir).orElse(null);
         if (itemHandler != null) {
             for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
                 ItemStack itemstack = itemHandler.getStackInSlot(slot);

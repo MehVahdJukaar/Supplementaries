@@ -95,6 +95,8 @@ public class ClientRegistry {
     }
 
     public static void init() {
+        CompatHandlerClient.init();
+
         ClientPlatformHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
         ClientPlatformHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
         ClientPlatformHelper.addBlockColorsRegistration(ClientRegistry::registerBlockColors);
@@ -125,7 +127,7 @@ public class ClientRegistry {
         ModMaterials.setup();
 
         //compat
-        CompatHandlerClient.init();
+        CompatHandlerClient.setup();
 
         //map markers
         CMDclient.init();
@@ -282,7 +284,6 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
-        CompatHandlerClient.registerEntityRenderers(event);
         //entities
         event.register(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));

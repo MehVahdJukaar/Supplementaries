@@ -11,7 +11,7 @@ import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.common.world.generation.StructureLocator;
@@ -87,19 +87,19 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
     static {
-        associateStructureMarker(StructureTags.SHIPWRECK, CMDreg.SHIPWRECK_TYPE, 0x34200f);
-        associateStructureMarker(ModTags.IGLOO, CMDreg.IGLOO_TYPE, 0x99bdc2);
-        associateStructureMarker(StructureTags.RUINED_PORTAL, CMDreg.RUINED_PORTAL_TYPE, 0x5f30b5);
-        associateStructureMarker(StructureTags.VILLAGE, CMDreg.VILLAGE_TYPE, 0xba8755);
-        associateStructureMarker(StructureTags.OCEAN_RUIN, CMDreg.OCEAN_RUIN_TYPE, 0x3a694d);
-        associateStructureMarker(ModTags.PILLAGER_OUTPOST, CMDreg.PILLAGER_OUTPOST_TYPE, 0x1f1100);
-        associateStructureMarker(ModTags.DESERT_PYRAMID, CMDreg.DESERT_PYRAMID_TYPE, 0x806d3f);
-        associateStructureMarker(ModTags.JUNGLE_TEMPLE, CMDreg.JUNGLE_TEMPLE_TYPE, 0x526638);
-        associateStructureMarker(ModTags.BASTION_REMNANT, CMDreg.BASTION_TYPE, 0x2c292f);
-        associateStructureMarker(ModTags.END_CITY, CMDreg.END_CITY_TYPE, 0x9c73ab);
-        associateStructureMarker(ModTags.SWAMP_HUT, CMDreg.SWAMP_HUT_TYPE, 0x1b411f);
-        associateStructureMarker(ModTags.NETHER_FORTRESS, CMDreg.NETHER_FORTRESS, 0x3c080b);
-        associateStructureMarker(StructureTags.MINESHAFT, CMDreg.MINESHAFT_TYPE, 0x808080);
+        associateStructureMarker(StructureTags.SHIPWRECK, ModMapMarkers.SHIPWRECK_TYPE, 0x34200f);
+        associateStructureMarker(ModTags.IGLOO, ModMapMarkers.IGLOO_TYPE, 0x99bdc2);
+        associateStructureMarker(StructureTags.RUINED_PORTAL, ModMapMarkers.RUINED_PORTAL_TYPE, 0x5f30b5);
+        associateStructureMarker(StructureTags.VILLAGE, ModMapMarkers.VILLAGE_TYPE, 0xba8755);
+        associateStructureMarker(StructureTags.OCEAN_RUIN, ModMapMarkers.OCEAN_RUIN_TYPE, 0x3a694d);
+        associateStructureMarker(ModTags.PILLAGER_OUTPOST, ModMapMarkers.PILLAGER_OUTPOST_TYPE, 0x1f1100);
+        associateStructureMarker(ModTags.DESERT_PYRAMID, ModMapMarkers.DESERT_PYRAMID_TYPE, 0x806d3f);
+        associateStructureMarker(ModTags.JUNGLE_TEMPLE, ModMapMarkers.JUNGLE_TEMPLE_TYPE, 0x526638);
+        associateStructureMarker(ModTags.BASTION_REMNANT, ModMapMarkers.BASTION_TYPE, 0x2c292f);
+        associateStructureMarker(ModTags.END_CITY, ModMapMarkers.END_CITY_TYPE, 0x9c73ab);
+        associateStructureMarker(ModTags.SWAMP_HUT, ModMapMarkers.SWAMP_HUT_TYPE, 0x1b411f);
+        associateStructureMarker(ModTags.NETHER_FORTRESS, ModMapMarkers.NETHER_FORTRESS, 0x3c080b);
+        associateStructureMarker(StructureTags.MINESHAFT, ModMapMarkers.MINESHAFT_TYPE, 0x808080);
     }
 
     private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {

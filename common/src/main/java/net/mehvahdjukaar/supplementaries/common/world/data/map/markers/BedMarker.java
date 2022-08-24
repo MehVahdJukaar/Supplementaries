@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
@@ -17,11 +17,11 @@ public class BedMarker extends MapBlockMarker<CustomMapDecoration> {
     private DyeColor color;
 
     public BedMarker() {
-        super(CMDreg.BED_DECORATION_TYPE);
+        super(ModMapMarkers.BED_DECORATION_TYPE);
     }
 
     public BedMarker(BlockPos pos, DyeColor color) {
-        super(CMDreg.BED_DECORATION_TYPE, pos);
+        super(ModMapMarkers.BED_DECORATION_TYPE, pos);
         this.color = color;
     }
 

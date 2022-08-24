@@ -11,8 +11,8 @@ import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.InspirationCompat;
@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -85,10 +86,15 @@ public class FaucetBlockTile extends BlockEntity {
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
         //fluid stuff
         FluidState fluidState = level.getFluidState(pos.relative(state.getValue(FaucetBlock.FACING).getOpposite()));
-        if (!fluidState.isEmpty()) {
-            this.tempFluidHolder.fill(SoftFluidRegistry.fromForgeFluid(fluidState.getType()));
-            this.updateLight();
-            return true;
+        if (!fluidState.isEmpty() && fluidState.isSource()) {
+            var f = SoftFluidRegistry.fromForgeFluid(fluidState.getType());
+            if (f != null) { //just to be sure
+                this.tempFluidHolder.fill(f);
+                this.updateLight();
+                return true;
+            } else {
+                int aa = 1;//error
+            }
         }
         boolean r = this.tryExtract(level, pos, state, false);
         this.updateLight();

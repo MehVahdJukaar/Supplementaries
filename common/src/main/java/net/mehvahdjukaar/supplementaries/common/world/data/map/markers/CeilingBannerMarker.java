@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ColoredDecoration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,11 +18,11 @@ public class CeilingBannerMarker extends NamedMapBlockMarker<ColoredDecoration> 
     private DyeColor color;
 
     public CeilingBannerMarker() {
-        super(CMDreg.BANNER_DECORATION_TYPE);
+        super(ModMapMarkers.BANNER_DECORATION_TYPE);
     }
 
     public CeilingBannerMarker(BlockPos pos, DyeColor color, @Nullable Component name) {
-        super(CMDreg.BANNER_DECORATION_TYPE, pos);
+        super(ModMapMarkers.BANNER_DECORATION_TYPE, pos);
         this.color = color;
         this.name = name;
     }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
@@ -12,11 +12,11 @@ import javax.annotation.Nullable;
 public class RespawnAnchorMarker extends MapBlockMarker<CustomMapDecoration> {
 
     public RespawnAnchorMarker() {
-        super(CMDreg.NETHER_PORTAL_DECORATION_TYPE);
+        super(ModMapMarkers.NETHER_PORTAL_DECORATION_TYPE);
     }
 
     public RespawnAnchorMarker(BlockPos pos) {
-        super(CMDreg.NETHER_PORTAL_DECORATION_TYPE, pos);
+        super(ModMapMarkers.NETHER_PORTAL_DECORATION_TYPE, pos);
     }
 
     @Nullable

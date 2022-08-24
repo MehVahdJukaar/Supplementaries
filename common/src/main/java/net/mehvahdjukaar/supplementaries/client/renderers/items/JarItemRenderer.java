@@ -58,9 +58,12 @@ public class JarItemRenderer extends CageItemRenderer {
             if (count != 0) {
                 int color = com.getInt("CachedColor");
                 SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
-                if (!fluid.isEmpty() && count > 0)
-                    renderFluid(getHeight(count, 0.75f) , color, 0, fluid.getStillTexture(),
+                if (fluid != null && !fluid.isEmpty() && count > 0) {
+                    renderFluid(getHeight(count, 0.75f), color, 0, fluid.getStillTexture(),
                             matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+                }if(fluid == null){
+                    int aaa = 1;//this should not happen
+                }
             }
         }
         if (tag.contains("Items")) {

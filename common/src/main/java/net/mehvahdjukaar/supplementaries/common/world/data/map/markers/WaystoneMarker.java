@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.data.map.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.CMDreg;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.WaystonesCompat;
 import net.minecraft.core.BlockPos;
@@ -14,11 +14,11 @@ import javax.annotation.Nullable;
 public class WaystoneMarker extends NamedMapBlockMarker<CustomMapDecoration> {
 
     public WaystoneMarker() {
-        super(CMDreg.WAYSTONE_DECORATION_TYPE);
+        super(ModMapMarkers.WAYSTONE_DECORATION_TYPE);
     }
 
     public WaystoneMarker(BlockPos pos, @Nullable Component name) {
-        super(CMDreg.WAYSTONE_DECORATION_TYPE, pos);
+        super(ModMapMarkers.WAYSTONE_DECORATION_TYPE, pos);
         this.name = name;
     }
 

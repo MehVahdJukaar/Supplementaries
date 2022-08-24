@@ -6,13 +6,14 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.world.generation.CaveFilter;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.common.world.generation.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WaySignStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -36,8 +37,8 @@ public class ModWorldgenRegistry {
 
     //structure types
 
-    public static final Supplier<StructureType<WaySignStructure>> WAY_SIGN = RegHelper.registerStructure(
-            Supplementaries.res("way_sign"), WaySignStructure.Type::new);
+    public static final Supplier<StructureType<WaySignStructure>> WAY_SIGN = RegHelper.registerAsync(
+            Supplementaries.res("way_sign"), WaySignStructure.Type::new, Registry.STRUCTURE_TYPES);
 
 
     //feature types
@@ -75,7 +76,6 @@ public class ModWorldgenRegistry {
                                     BlockPredicate.ONLY_IN_AIR_PREDICATE,
                                     BlockPredicate.wouldSurvive(ModRegistry.FLAX_WILD.get().defaultBlockState(), BlockPos.ZERO),
                                     HAS_WATER_PREDICATE))));
-
 
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> CAVE_URNS_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns"), () -> Feature.RANDOM_PATCH,
@@ -115,9 +115,17 @@ public class ModWorldgenRegistry {
                             BiomeFilter.biome()));
 
     public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
-            RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"),
-                    ROAD_SIGN, List::of);
+            registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
 
+    //TODO: is this needed?
+    public static <FC extends FeatureConfiguration, F extends Feature<FC>> RegSupplier<PlacedFeature> registerPlacedFeature(
+            ResourceLocation name, RegSupplier<ConfiguredFeature<FC, F>> feature, Supplier<List<PlacementModifier>> modifiers) {
+        return registerPlacedFeature(name, () -> new PlacedFeature(Holder.hackyErase(feature.getHolder()), modifiers.get()));
+    }
+
+    public static RegSupplier<PlacedFeature> registerPlacedFeature(ResourceLocation name, Supplier<PlacedFeature> featureSupplier) {
+        return RegHelper.registerAsync(name, featureSupplier, BuiltinRegistries.PLACED_FEATURE);
+    }
 
     //helper
     private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier placementRule) {

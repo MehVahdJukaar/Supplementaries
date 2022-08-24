@@ -253,7 +253,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     /*
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
+        if (capability == ForgeCapabilities.ITEM_HANDLER) return LazyOptional.empty();
         return super.getCapability(capability, facing);
     }*/
 }

@@ -15,6 +15,7 @@
     "SelfMimicMixin",
     "SelfSafeMixin",
     "SelfPlanterMixin",
+    "SelfQuiverItem",
     "ChunkHolderMixin",
     "MobBucketItemAccessor"
   ],

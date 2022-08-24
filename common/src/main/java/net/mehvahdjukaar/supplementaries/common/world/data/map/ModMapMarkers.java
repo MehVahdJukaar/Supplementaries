@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.markers.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class CMDreg {
+public class ModMapMarkers {
 
 
     //with markers

@@ -27,6 +27,9 @@ public class CompatObjects {
 
     public static final Supplier<Block> SAPPY_MAPLE_WOOD = makeCompatObject("autumnity:sappy_maple_wood", Registry.BLOCK);
 
+    public static final Supplier<Block> TATER = makeCompatObject("quark:tiny_potato", Registry.BLOCK);
+
+
     public static final Supplier<ParticleType<?>> ENDER_FLAME = makeCompatObject("endergetic:ender_flame", Registry.PARTICLE_TYPE);
 
     public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", Registry.PARTICLE_TYPE);

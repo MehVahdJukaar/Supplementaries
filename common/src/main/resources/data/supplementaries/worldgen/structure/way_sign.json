@@ -1,10 +1,12 @@
 {
   "type": "supplementaries:way_sign",
-  "start_pool": "supplementaries:way_sign/start_pool",
   "biomes": "#supplementaries:has_way_signs",
   "terrain_adaptation": "beard_thin",
   "step": "strongholds",
+  "spawn_overrides": {},
+
+  "start_pool": "supplementaries:way_sign/start_pool",
   "min_y": 40,
-  "max_y": 105,
-  "spawn_overrides": {}
+  "max_y": 105
+
 }
