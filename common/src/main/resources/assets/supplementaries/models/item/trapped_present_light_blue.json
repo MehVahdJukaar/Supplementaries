@@ -4,7 +4,7 @@
   "overrides": [
     {
       "predicate": {
-        "primed": 1
+        "supplementaries:primed": 1
       },
       "model":  "supplementaries:block/presents/trapped_present_closed_light_blue"
     }

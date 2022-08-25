@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui.widgets;
+package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 /*
  * Copyright (c) Forge Development LLC and contributors

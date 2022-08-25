@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui.widgets;
+package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;

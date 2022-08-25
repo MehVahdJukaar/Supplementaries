@@ -24,6 +24,7 @@ public final class RegistryConstants {
     public static final String CANDY_NAME = "candy";
     public static final String ANTIQUE_INK_NAME = "antique_ink";
     public static final String WRENCH_NAME = "wrench";
+    public static final String QUIVER_NAME = "quiver";
 
     public static final String HANGING_SIGN_NAME = "hanging_sign";
     public static final String SIGN_POST_NAME = "sign_post";

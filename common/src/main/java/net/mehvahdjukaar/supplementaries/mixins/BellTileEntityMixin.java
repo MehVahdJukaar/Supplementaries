@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BellBlockEntity.class)
-public abstract class BellTileEntityMixin extends BlockEntity  implements IBellConnections {
+public abstract class BellTileEntityMixin extends BlockEntity implements IBellConnections {
 
     @Unique
     public BellConnection connection = BellConnection.NONE;
@@ -29,28 +29,23 @@ public abstract class BellTileEntityMixin extends BlockEntity  implements IBellC
 
     @Override
     public void setConnected(BellConnection con) {
-        this.connection=con;
+        this.connection = con;
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
-        //not needed but since I keep getting reports lets do this
-        try {
-            if (this.connection != null)
-                compound.putInt("Connection", this.connection.ordinal());
-        }catch (Exception ignored){}
+        if (this.connection != null) {
+            compound.putInt("Connection", this.connection.ordinal());
+        }
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        try {
-            if(compound.contains("Connection"))
-                this.connection = BellConnection.values()[compound.getInt("Connection")];
-        }catch (Exception ignored){
-            this.connection = BellConnection.NONE;
-        }
+        if (compound.contains("Connection")) {
+            this.connection = BellConnection.values()[compound.getInt("Connection")];
+        }else this.connection = BellConnection.NONE;
     }
 
     @Override

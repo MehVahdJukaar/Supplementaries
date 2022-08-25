@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
-import net.mehvahdjukaar.supplementaries.client.gui.PresentBlockGui;
+import net.mehvahdjukaar.supplementaries.client.screens.PresentBlockGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.social.PlayerSocialManager;

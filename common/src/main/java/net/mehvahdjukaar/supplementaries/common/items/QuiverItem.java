@@ -1,43 +1,41 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class QuiverItem extends Item {
+public class QuiverItem extends Item implements DyeableLeatherItem {
 
     public static final int SLOTS = 7;
-    public static final String TAG_ITEMS = "Items";
 
     private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
     public QuiverItem(Properties properties) {
         super(properties);
     }
+    //TODO: quark arrow preview
 
     @Override
     public boolean canFitInsideContainerItems() {
@@ -45,7 +43,7 @@ public class QuiverItem extends Item {
     }
 
     @Override
-    public boolean overrideStackedOnOther(ItemStack pStack, Slot pSlot, ClickAction pAction, Player pPlayer) {
+    public boolean overrideStackedOnOther(ItemStack quiver, Slot pSlot, ClickAction pAction, Player pPlayer) {
         if (pAction != ClickAction.SECONDARY) {
             return false;
         } else {
@@ -53,17 +51,18 @@ public class QuiverItem extends Item {
             //place into slot
             if (itemstack.isEmpty()) {
                 this.playRemoveOneSound(pPlayer);
-                removeOne(pStack).ifPresent((p_150740_) -> {
-                    add(pStack, pSlot.safeInsert(p_150740_));
+                removeOne(quiver).ifPresent((p_150740_) -> {
+                    add(quiver, pSlot.safeInsert(p_150740_));
                 });
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-               // int i = (64 - getArrowFullness(pStack)) / getWeight(itemstack);
-              //  int j = add(pStack, pSlot.safeTake(itemstack.getCount(), i, pPlayer));
-               // if (j > 0) {
-               //     this.playInsertSound(pPlayer);
-              //  }
+                ItemStack i = add(quiver, pSlot.safeTake(itemstack.getCount(), 64, pPlayer));
+                if (!i.equals(itemstack)) {
+                    this.playInsertSound(pPlayer);
+                    pSlot.set(i);
+                    return true;
+                }
             }
             return true;
         }
@@ -77,24 +76,34 @@ public class QuiverItem extends Item {
                     this.playRemoveOneSound(pPlayer);
                     pAccess.set(p_186347_);
                 });
+                return true;
             } else {
                 ItemStack i = add(quiver, pOther);
-                if (i.equals(pOther)) {
-                    //ifk if this will work
+                if (!i.equals(pOther)) {
                     this.playInsertSound(pPlayer);
-                    pOther.setCount(i.getCount());
+                    pAccess.set(i);
+                    return true;
                 }
             }
-            return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+        if(pPlayer.isSecondaryUseActive()){
+            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+            QuiverItem.cycleArrow(stack);
+            return InteractionResultHolder.sidedSuccess(stack,pLevel.isClientSide);
+        }
+        return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
     }
+
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
@@ -111,41 +120,20 @@ return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         return BAR_COLOR;
     }
 
-    /**
-     * Adds one item. returns the item that is remaining and has not been added
-     */
-    @ExpectPlatform
-    private static ItemStack add(ItemStack pBundleStack, ItemStack pInsertedStack) {
-        throw new UnsupportedOperationException();
-    }
-
-    //expect platform
-    @ExpectPlatform
-    private static Optional<ItemStack> removeOne(ItemStack pStack) {
-        throw new UnsupportedOperationException();
-    }
-
-    @ExpectPlatform
-    public static Stream<ItemStack> getContents(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null) {
-            return Stream.empty();
-        } else {
-            ListTag listtag = compoundtag.getList("Items", 10);
-            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
-        }
-    }
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        NonNullList<ItemStack> stacks = NonNullList.create();
-        getContents(pStack).forEach(stacks::add);
-        return Optional.of(new QuiverTooltip(stacks,1));
+        return Optional.ofNullable(QuiverItem.getQuiverTooltip(pStack));
     }
+
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("item.supplementaries.quiver.tooltip", getSelectedArrow(pStack), getSelectedArrowCount(pStack)));
+        var c = getSelectedArrowCount(pStack);
+        if(c != 0) {
+            pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
+                    getSelectedArrow(pStack, null).getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
+        }
     }
 
 
@@ -166,19 +154,51 @@ return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
         pEntity.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + pEntity.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
-    public static ItemStack getSelectedArrow(ItemStack stack) {
-return stack;
+    @Nullable
+    @ExpectPlatform
+    private static QuiverTooltip getQuiverTooltip(ItemStack pStack) {
+        throw  new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static int getSelectedArrowCount(ItemStack pStack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack getSelectedArrow(ItemStack itemStack, @Nullable Predicate<ItemStack> supporterArrows) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack getQuiver(LivingEntity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Stream<ItemStack> getContents(ItemStack pStack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    private static void cycleArrow(ItemStack stack) {
+        throw new AssertionError();
+    }
+
+    /**
+     * Adds one item. returns the item that is remaining and has not been added
+     */
+    @ExpectPlatform
+    private static ItemStack add(ItemStack pBundleStack, ItemStack pInsertedStack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    private static Optional<ItemStack> removeOne(ItemStack pStack) {
+        throw new AssertionError();
     }
 
 
-    private int getSelectedArrowCount(ItemStack pStack) {
-        return 0;
-    }
-
-
-
-
-    //capability and provider in one
 
     public static class QuiverTooltip implements TooltipComponent {
         private final NonNullList<ItemStack> items;

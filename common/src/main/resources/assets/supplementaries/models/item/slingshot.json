@@ -20,21 +20,21 @@
 	"overrides": [
         {
             "predicate": {
-                "pulling": 1
+                "supplementaries:pulling": 1
             },
             "model": "supplementaries:item/slingshot_pulling_0"
         },
         {
             "predicate": {
-                "pulling": 1,
-                "pull": 0.55
+                "supplementaries:pulling": 1,
+                "supplementaries:pull": 0.55
             },
             "model": "supplementaries:item/slingshot_pulling_1"
         },
         {
             "predicate": {
-                "pulling": 1,
-                "pull": 0.9
+                "supplementaries:pulling": 1,
+                "supplementaries:pull": 0.9
             },
             "model": "supplementaries:item/slingshot_pulling_2"
         }

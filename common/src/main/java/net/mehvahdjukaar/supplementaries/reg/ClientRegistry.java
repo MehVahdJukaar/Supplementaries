@@ -10,23 +10,26 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
-import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.SlingshotItemOverlayRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverlayRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
+import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
+import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
+import net.mehvahdjukaar.supplementaries.common.world.data.map.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
@@ -47,10 +50,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,6 +80,8 @@ public class ClientRegistry {
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
+    public static final ResourceLocation BELL_ROPE = Supplementaries.res("block/bell_rope");
+    public static final ResourceLocation BELL_CHAIN = Supplementaries.res("block/bell_chain");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
@@ -130,7 +132,7 @@ public class ClientRegistry {
         CompatHandlerClient.setup();
 
         //map markers
-        CMDclient.init();
+        ModMapMarkersClient.init();
 
         //overlay
         //SlimedGuiOverlay.register();
@@ -200,7 +202,7 @@ public class ClientRegistry {
         ClientPlatformHelper.registerItemProperty(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pull"),
                 (stack, world, entity, s) -> {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
@@ -210,23 +212,25 @@ public class ClientRegistry {
                 });
 
 
-        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
-        ClientPlatformHelper.registerItemProperty(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.BUBBLE_BLOWER.get(), Supplementaries.res("using"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ForgeHelper.areStacksEqual(stack, entity.getUseItem(), true) ? 1.0F : 0.0F);
 
 
-        ModRegistry.PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), new ResourceLocation("packed"),
+        ModRegistry.PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), Supplementaries.res("packed"),
                 (stack, world, entity, s) -> 1));
 
-        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), new ResourceLocation("primed"),
+        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ClientPlatformHelper.registerItemProperty(i.get().asItem(), Supplementaries.res("primed"),
                 (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
-        ClientPlatformHelper.registerItemProperty(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+        ClientPlatformHelper.registerItemProperty(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
                 (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
+        ClientPlatformHelper.registerItemProperty(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
+                (stack, world, entity, s) -> ((DyeableLeatherItem)stack.getItem()).hasCustomColor(stack) ? 1 : 0);
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
@@ -345,6 +349,8 @@ public class ClientRegistry {
         event.register(FLUTE_3D_MODEL);
         event.register(FLUTE_2D_MODEL);
         event.register(BOAT_MODEL);
+        event.register(BELL_ROPE);
+        event.register(BELL_CHAIN);
     }
 
     private static void registerModelLoaders(ClientPlatformHelper.ModelLoaderEvent event) {
@@ -362,11 +368,13 @@ public class ClientRegistry {
     @EventCalled
     private static void registerItemDecorators(ClientPlatformHelper.ItemDecoratorEvent event) {
         event.register(ModRegistry.SLINGSHOT_ITEM.get(), new SlingshotItemOverlayRenderer());
+        event.register(ModRegistry.QUIVER_ITEM.get(), new QuiverItemOverlayRenderer());
     }
 
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
+        event.register(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
         if (CompatHandler.quark) QuarkClientCompat.registerTooltipComponent(event);
     }
 
@@ -388,6 +396,7 @@ public class ClientRegistry {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
+        event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack), ModRegistry.QUIVER_ITEM.get());
     }
 
     @EventCalled

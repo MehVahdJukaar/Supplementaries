@@ -68,11 +68,11 @@ public class CommonUtil {
             return this == MOD_BIRTHDAY || this == MY_BIRTHDAY;
         }
 
-        public int getCandyWrappingIndex() {
+        public float getCandyWrappingIndex() {
             return switch (this) {
                 default -> 0;
-                case HALLOWEEN -> 1;
-                case CHRISTMAS -> 2;
+                case HALLOWEEN -> 0.5f;
+                case CHRISTMAS -> 1;
             };
         }
 

@@ -66,7 +66,8 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     public void setOwner(UUID owner) {
         if (this.level != null) {
             if (owner != null) {
-                this.ownerName = level.getPlayerByUUID(owner).getName().getString();
+                var p = level.getPlayerByUUID(owner);
+                if (p != null) this.ownerName = p.getName().getString();
             }
             this.setChanged();
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);

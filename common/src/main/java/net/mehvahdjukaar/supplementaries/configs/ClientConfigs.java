@@ -5,7 +5,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
@@ -33,6 +35,9 @@ public class ClientConfigs {
     }
 
     public static class Items {
+        public static Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
+        public static Supplier<Double> QUIVER_ARMOR_OFFSET;
+        public static Supplier<Boolean> QUIVER_OVERLAY;
         public static Supplier<Boolean> SLINGSHOT_OVERLAY;
         public static Supplier<Boolean> SLINGSHOT_OUTLINE;
         public static Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
@@ -44,8 +49,6 @@ public class ClientConfigs {
             builder.push("items");
 
             builder.push("slingshot");
-            //actually no they are added automatically lol
-            //TODO: these lines now need to be included in the translation file (config.category.name.description)
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
                     .define("overlay", true);
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
@@ -54,6 +57,15 @@ public class ClientConfigs {
                     .defineColor("block_outline_color", 0xffffff66);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .define("projectile_scale", 0.5, 0, 1);
+            builder.pop();
+
+            builder.push("quiver");
+            QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
+                    .define("armor_render_offset", -1d, -1d, 1);
+            QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
+                    .define("render_mode", QuiverLayer.QuiverMode.HIP);
+            QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
+                    .define("overlay", true);
             builder.pop();
 
             builder.push("wrench");

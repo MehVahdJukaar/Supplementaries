@@ -1,9 +1,9 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.gui.widgets.BlackBoardButton;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;

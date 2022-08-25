@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;

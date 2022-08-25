@@ -1,10 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class QuiverItemImpl {
@@ -35,6 +39,30 @@ public class QuiverItemImpl {
     }
 
     public static Stream<ItemStack> getContents(ItemStack pStack) {
+        CompoundTag compoundtag = pStack.getTag();
+        if (compoundtag == null) {
+            return Stream.empty();
+        } else {
+            ListTag listtag = compoundtag.getList("Items", 10);
+            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
+        }
+    }
+
+    public static ItemStack getSelectedArrow(ItemStack itemStack, @Nullable Predicate<ItemStack> supporterArrows) {
+        return ItemStack.EMPTY;
+    }
+
+    public static int getSelectedArrowCount(ItemStack pStack) {
+        return 0;
+    }
+
+    public static QuiverItem.QuiverTooltip getQuiverTooltip(ItemStack pStack) {
         return null;
+    }
+
+    public static void cycleArrow(ItemStack stack) {
+    }
+
+    public static ItemStack getQuiver(LivingEntity entity) {
     }
 }

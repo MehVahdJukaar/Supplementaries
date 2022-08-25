@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

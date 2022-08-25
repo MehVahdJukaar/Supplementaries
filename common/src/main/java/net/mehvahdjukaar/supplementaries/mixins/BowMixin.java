@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 @Mixin(BowItem.class)
 public abstract class BowMixin {
 
+    //TODO: use forge event
     @Inject(method = "getAllSupportedProjectiles", at = @At(
             value = "RETURN"),
             cancellable = true)

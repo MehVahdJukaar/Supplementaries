@@ -333,6 +333,11 @@
   "message.supplementaries.cage.fail": "You can only capture small animals",
   "item.supplementaries.sign_post": "%s Sign Post",
   "block.supplementaries.hanging_sign": "%s Hanging Sign",
+  "block.supplementaries.sugar_cube": "Sugar Cube",
+  "item.supplementaries.quiver": "Quiver",
+  "message.supplementaries.quiver.tooltip": "%s [%s]",
+  "block.supplementaries.crystal_display": "Crystal Display",
+  "block.supplementaries.diode": "Diode",
 
 
   "subtitle.supplementaries.clock_tick": "Clock ticking",

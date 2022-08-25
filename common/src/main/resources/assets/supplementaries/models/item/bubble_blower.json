@@ -29,7 +29,7 @@
 	  "overrides": [
     {
       "predicate": {
-        "using": 1
+        "supplementaries:using": 1
       },
       "model": "supplementaries:item/bubble_blower_using"
     }

@@ -1,10 +1,6 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotRendererHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
@@ -12,8 +8,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-
-import java.awt.*;
 
 public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
 
@@ -28,25 +22,7 @@ public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
                 if (overlay) {
                     ItemStack ammo = SlingshotRendererHelper.getAmmoForPreview(stack, Minecraft.getInstance().level, player);
 
-                    if (!ammo.isEmpty()) {
-
-                        PoseStack posestack = RenderSystem.getModelViewStack();
-                        posestack.pushPose();
-
-
-                        posestack.translate(16.0F * (-0.25D) + (8.0F + x) * (1 - 0.4f),
-                                16.0F * (0.25D + 0.025) + (8.0F + y) * (1 - 0.4f),
-                                16.0F + (100.0F + blitOffset) * (1 - 0.4f));
-                        posestack.scale(0.4f, 0.4f, 0.4f);
-
-                        //0.4 scale
-                        RenderSystem.applyModelViewMatrix();
-
-                        Minecraft.getInstance().getItemRenderer().renderGuiItem(ammo, x, y);
-
-                        posestack.popPose();
-                        RenderSystem.applyModelViewMatrix();
-                    }
+                    QuiverItemOverlayRenderer.renderAmmo(x, y, blitOffset, ammo);
                 }
                 if (outline) {
                     if (EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0) {

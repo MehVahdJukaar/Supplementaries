@@ -117,6 +117,7 @@ public class RegistryConfigs {
     public static Supplier<Boolean> SHULKER_HELMET_ENABLED;
     public static Supplier<Boolean> CANDY_ENABLED;
     public static Supplier<Boolean> WRENCH_ENABLED;
+    public static Supplier<Boolean> QUIVER_ENABLED;
     public static Supplier<Boolean> URN_ENABLED;
     public static Supplier<Boolean> ANTIQUE_INK_ENABLED;
     public static Supplier<Boolean> DOORMAT_ENABLED;
@@ -255,6 +256,7 @@ public class RegistryConfigs {
         SHULKER_HELMET_ENABLED = regConfig(builder, "shulker_shell", true);
         CANDY_ENABLED = regConfig(builder, RegistryConstants.CANDY_NAME, true);
         WRENCH_ENABLED = regConfig(builder, RegistryConstants.WRENCH_NAME, true);
+        QUIVER_ENABLED = regConfig(builder, RegistryConstants.QUIVER_NAME, true);
         SLINGSHOT_ENABLED = regConfig(builder, RegistryConstants.SLINGSHOT_NAME, true);
         ROPE_ARROW_ENABLED = regConfig(builder, RegistryConstants.ROPE_ARROW_NAME, true);
         BOMB_ENABLED = regConfig(builder, RegistryConstants.BOMB_NAME, true);

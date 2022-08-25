@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui;
+package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import dev.architectury.injectables.annotations.PlatformOnly;
@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -41,7 +40,6 @@ public class ConfigButton extends Button {
             List<String> targets = isOnRight ?
                     Arrays.asList(Component.translatable("menu.online").getString(), Component.translatable("fml.menu.modoptions").getString(), Component.translatable("menu.shareToLan").getString())
                     : Arrays.asList(Component.translatable("menu.options").getString(), Component.translatable("fml.menu.mods").getString());
-
 
             for (GuiEventListener w : listeners) {
                 if (w instanceof AbstractWidget b) {

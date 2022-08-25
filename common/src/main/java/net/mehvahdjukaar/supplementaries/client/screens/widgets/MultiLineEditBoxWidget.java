@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.gui.widgets;
+package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;

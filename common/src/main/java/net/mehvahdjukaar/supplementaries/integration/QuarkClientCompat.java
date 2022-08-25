@@ -34,8 +34,4 @@ public class QuarkClientCompat {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    public static void onItemTooltipEvent(ItemStack stack, TooltipFlag tooltipFlag, List<Component> components) {
-        throw new AssertionError();
-    }
 }

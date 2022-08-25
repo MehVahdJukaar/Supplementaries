@@ -1,0 +1,27 @@
+{
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "supplementaries:item/quiver_in_hand"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "supplementaries:item/quiver_gui"
+    },
+    "ground": {
+      "parent": "supplementaries:item/quiver_gui"
+    },
+    "fixed": {
+      "parent": "supplementaries:item/quiver_gui"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "supplementaries:dyed": 1
+      },
+      "model": "supplementaries:item/quiver_dyed"
+    }
+  ],
+  "gui_light": "front"
+}
+

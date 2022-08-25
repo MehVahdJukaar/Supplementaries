@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DiodeBlock;
@@ -25,7 +24,6 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -71,17 +69,21 @@ public class ModRegistry {
         VillagerTradesHandler.addTradesRegistration();
     }
 
-    public static boolean isDisabled(String name) {
+    private static boolean isDisabled(String name) {
         return !RegistryConfigs.isEnabled(name);
     }
-
-    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
-            () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
 
     @EventCalled
     public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
         event.register(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes());
     }
+
+    //misc entries
+
+    //loot
+    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
+            () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
+
 
     //paintings
     public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
@@ -96,6 +98,7 @@ public class ModRegistry {
             Supplementaries.res("overencumbered"), OverencumberedEffect::new);
 
 
+    //entities
     public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
             PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
 
@@ -247,6 +250,11 @@ public class ModRegistry {
     //wrench
     public static final Supplier<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
+
+    //quiver
+    public static final Supplier<QuiverItem> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1)));
+
 
     //speedometer
     /*
@@ -692,11 +700,11 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //diode block
-    //public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
-   //         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-    //                .strength(3f, 6f)
-   //                 .requiresCorrectToolForDrops()
-   // ), CreativeModeTab.TAB_REDSTONE);
+    public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
+             BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                    .strength(3f, 6f)
+                     .requiresCorrectToolForDrops()
+     ), CreativeModeTab.TAB_REDSTONE);
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
@@ -758,10 +766,10 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //crystal display
-    //public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-   //         BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
-    //                .strength(0.2f, 0.2f)
-   // ), CreativeModeTab.TAB_REDSTONE);
+    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+                    .strength(0.2f, 0.2f)
+     ), CreativeModeTab.TAB_REDSTONE);
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
@@ -1194,9 +1202,9 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-    // public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
-    //         BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
-    // ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+            BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
