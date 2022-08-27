@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -20,6 +21,7 @@ public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
         super(creature, speedIn, length);
     }
 
+    @Unique
     private boolean doormat = false;
 
     @Inject(method = "isValidTarget", at = @At("HEAD"), cancellable = true)

@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+
 public class QuiverTooltipComponent implements ClientTooltipComponent {
     public static final ResourceLocation TEXTURE_LOCATION = ClientBundleTooltip.TEXTURE_LOCATION;
     private static final int MARGIN_Y = 4;
@@ -27,12 +29,12 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
     private static final int TEX_SIZE = 128;
     private static final int SLOT_SIZE_X = 18;
     private static final int SLOT_SIZE_Y = 20;
-    private final NonNullList<ItemStack> items;
+    private final List<ItemStack> items;
     private final int selectedSlot;
 
     public QuiverTooltipComponent(QuiverItem.QuiverTooltip tooltip) {
-        this.items = tooltip.getItems();
-        this.selectedSlot = tooltip.getSelectedIndex();
+        this.items = tooltip.stacks();
+        this.selectedSlot = tooltip.selected();
     }
 
     @Override

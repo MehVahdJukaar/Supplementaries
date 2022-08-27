@@ -68,7 +68,7 @@ public class GunpowderBlock extends LightUpBlock {
     private static final Map<Direction, VoxelShape> SHAPES_FLOOR = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(3.0D, 0.0D, 0.0D, 13.0D, 1.0D, 13.0D), Direction.SOUTH, Block.box(3.0D, 0.0D, 3.0D, 13.0D, 1.0D, 16.0D), Direction.EAST, Block.box(3.0D, 0.0D, 3.0D, 16.0D, 1.0D, 13.0D), Direction.WEST, Block.box(0.0D, 0.0D, 3.0D, 13.0D, 1.0D, 13.0D)));
     private static final Map<Direction, VoxelShape> SHAPES_UP = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Shapes.or(SHAPES_FLOOR.get(Direction.NORTH), Block.box(3.0D, 0.0D, 0.0D, 13.0D, 16.0D, 1.0D)), Direction.SOUTH, Shapes.or(SHAPES_FLOOR.get(Direction.SOUTH), Block.box(3.0D, 0.0D, 15.0D, 13.0D, 16.0D, 16.0D)), Direction.EAST, Shapes.or(SHAPES_FLOOR.get(Direction.EAST), Block.box(15.0D, 0.0D, 3.0D, 16.0D, 16.0D, 13.0D)), Direction.WEST, Shapes.or(SHAPES_FLOOR.get(Direction.WEST), Block.box(0.0D, 0.0D, 3.0D, 1.0D, 16.0D, 13.0D))));
 
-    private final Map<BlockState, VoxelShape> SHAPES_CACHE = Maps.newHashMap();
+    private final Map<BlockState, VoxelShape> SHAPES_CACHE;
     private final BlockState crossState;
 
     private static int getDelay() {
@@ -88,11 +88,13 @@ public class GunpowderBlock extends LightUpBlock {
                 .setValue(EAST, RedstoneSide.SIDE).setValue(SOUTH, RedstoneSide.SIDE)
                 .setValue(WEST, RedstoneSide.SIDE).setValue(BURNING, 0);
 
+        ImmutableMap.Builder<BlockState, VoxelShape> builder = ImmutableMap.builder();
         for (BlockState blockstate : this.getStateDefinition().getPossibleStates()) {
             if (blockstate.getValue(BURNING) == 0) {
-                this.SHAPES_CACHE.put(blockstate, this.calculateVoxelShape(blockstate));
+                builder.put(blockstate, this.calculateVoxelShape(blockstate));
             }
         }
+        this.SHAPES_CACHE = builder.build();
         RegHelper.registerBlockFlammability(this, 60, 300);
     }
 

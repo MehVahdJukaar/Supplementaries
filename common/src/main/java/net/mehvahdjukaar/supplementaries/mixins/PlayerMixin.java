@@ -29,7 +29,7 @@ public abstract class PlayerMixin extends LivingEntity {
     private void getProjectile(ItemStack weaponStack, CallbackInfoReturnable<ItemStack> cir,
                                Predicate<ItemStack> supporterArrows, ItemStack heldArrow, int slotIndex, ItemStack itemStack) {
         if (itemStack.getItem() instanceof QuiverItem) {
-            ItemStack arrow = QuiverItem.getSelectedArrow(itemStack, supporterArrows);
+            ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(supporterArrows);
             if (arrow != ItemStack.EMPTY) cir.setReturnValue(arrow);
         }
     }

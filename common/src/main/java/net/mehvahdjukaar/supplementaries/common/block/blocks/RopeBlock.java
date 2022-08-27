@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
@@ -67,7 +68,7 @@ public class RopeBlock extends WaterBlock {
     //TODO: make solid when player is not colliding
     public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
-    private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
+    private final Map<BlockState, VoxelShape> SHAPES_MAP;
 
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
@@ -89,7 +90,7 @@ public class RopeBlock extends WaterBlock {
 
     public RopeBlock(Properties properties) {
         super(properties);
-        this.makeShapes();
+        SHAPES_MAP = this.makeShapes();
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(UP, true).setValue(DOWN, true).setValue(KNOT, false).setValue(DISTANCE, 7).setValue(WATERLOGGED, false)
                 .setValue(NORTH, false).setValue(SOUTH, false).setValue(EAST, false).setValue(WEST, false));
@@ -106,7 +107,9 @@ public class RopeBlock extends WaterBlock {
     }
 
     //oh boy 32k shapes. 2k by removing water and distance lol
-    protected void makeShapes() {
+    protected Map<BlockState, VoxelShape> makeShapes() {
+        Map<BlockState, VoxelShape> shapes = new HashMap<>();
+
         VoxelShape down = Block.box(6, 0, 6, 10, 13, 10);
         VoxelShape up = Block.box(6, 9, 6, 10, 16, 10);
         VoxelShape north = Block.box(6, 9, 0, 10, 13, 10);
@@ -127,15 +130,16 @@ public class RopeBlock extends WaterBlock {
             if (state.getValue(EAST)) v = Shapes.or(v, east);
             v = v.optimize();
             boolean flag = true;
-            for (VoxelShape existing : this.SHAPES_MAP.values()) {
+            for (VoxelShape existing : shapes.values()) {
                 if (existing.equals(v)) {
-                    this.SHAPES_MAP.put(state, existing);
+                    shapes.put(state, existing);
                     flag = false;
                     break;
                 }
             }
-            if (flag) this.SHAPES_MAP.put(state, v);
+            if (flag) shapes.put(state, v);
         }
+        return ImmutableMap.copyOf(shapes);
     }
 
     @Override

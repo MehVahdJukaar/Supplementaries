@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,16 +20,15 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class QuiverItem extends Item implements DyeableLeatherItem {
-
-    public static final int SLOTS = 7;
 
     private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
@@ -50,18 +50,24 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             ItemStack itemstack = pSlot.getItem();
             //place into slot
             if (itemstack.isEmpty()) {
-                this.playRemoveOneSound(pPlayer);
-                removeOne(quiver).ifPresent((p_150740_) -> {
-                    add(quiver, pSlot.safeInsert(p_150740_));
-                });
+                IQuiverData data = getQuiverData(quiver);
+                if (data != null) {
+                    this.playRemoveOneSound(pPlayer);
+                    data.removeOne().ifPresent((p_150740_) -> {
+                        data.add(pSlot.safeInsert(p_150740_));
+                    });
+                }
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                ItemStack i = add(quiver, pSlot.safeTake(itemstack.getCount(), 64, pPlayer));
-                if (!i.equals(itemstack)) {
-                    this.playInsertSound(pPlayer);
-                    pSlot.set(i);
-                    return true;
+                IQuiverData data = getQuiverData(quiver);
+                if (data != null) {
+                    ItemStack i = data.add(pSlot.safeTake(itemstack.getCount(), 64, pPlayer));
+                    if (!i.equals(itemstack)) {
+                        this.playInsertSound(pPlayer);
+                        pSlot.set(i);
+                        return true;
+                    }
                 }
             }
             return true;
@@ -71,18 +77,21 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
-            if (pOther.isEmpty()) {
-                removeOne(quiver).ifPresent((p_186347_) -> {
-                    this.playRemoveOneSound(pPlayer);
-                    pAccess.set(p_186347_);
-                });
-                return true;
-            } else {
-                ItemStack i = add(quiver, pOther);
-                if (!i.equals(pOther)) {
-                    this.playInsertSound(pPlayer);
-                    pAccess.set(i);
+            IQuiverData data = getQuiverData(quiver);
+            if (data != null) {
+                if (pOther.isEmpty()) {
+                    data.removeOne().ifPresent((removed) -> {
+                        this.playRemoveOneSound(pPlayer);
+                        pAccess.set(removed);
+                    });
                     return true;
+                } else {
+                    ItemStack i = data.add(pOther);
+                    if (!i.equals(pOther)) {
+                        this.playInsertSound(pPlayer);
+                        pAccess.set(i);
+                        return true;
+                    }
                 }
             }
         }
@@ -95,24 +104,62 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if(pPlayer.isSecondaryUseActive()){
-            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-            QuiverItem.cycleArrow(stack);
-            return InteractionResultHolder.sidedSuccess(stack,pLevel.isClientSide);
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+        ItemStack stack = player.getItemInHand(pUsedHand);
+        if (player.isSecondaryUseActive()) {
+
+            IQuiverData data = getQuiverData(stack);
+            if (data != null) {
+                data.cycle();
+            }
+        } else {
+            //same as startUsingItem but client only so it does not slow
+            if (pLevel.isClientSide) {
+                toggleQuiverGUI(true);
+            }
+            this.playRemoveOneSound(player);
+            player.startUsingItem(pUsedHand);
+            return InteractionResultHolder.consume(stack);
         }
-        return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+        return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
     }
 
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return 72000;
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+        return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
+        if (level.isClientSide) {
+            toggleQuiverGUI(false);
+        }
+        this.playInsertSound(livingEntity);
+        livingEntity.swing(livingEntity.getUsedItemHand());
+        super.releaseUsing(stack, level, livingEntity, timeCharged);
+    }
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        return getSelectedArrowCount(pStack) > 0;
+        IQuiverData data = getQuiverData(pStack);
+        if (data != null) {
+            return data.getSelected().getCount() > 0;
+        }
+        return false;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        return Math.min(1 + 12 * getSelectedArrowCount(pStack) / (64 * SLOTS), 13);
+        IQuiverData data = getQuiverData(pStack);
+        if (data != null) {
+            return Math.min(1 + 12 * data.getSelectedArrowCount() / (64 * CommonConfigs.Items.QUIVER_SLOTS.get()), 13);
+        }
+        return 0;
     }
 
     @Override
@@ -123,23 +170,41 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        return Optional.ofNullable(QuiverItem.getQuiverTooltip(pStack));
+        IQuiverData data = getQuiverData(pStack);
+        if (data != null) {
+            NonNullList<ItemStack> list = NonNullList.create();
+            boolean isEmpty = true;
+            for (var v : data.getContent()) {
+                if (!v.isEmpty()) isEmpty = false;
+                list.add(v);
+            }
+            if (!isEmpty) {
+                return Optional.of(new QuiverTooltip(new ArrayList<>(data.getContent()), data.getSelectedSlot()));
+            }
+        }
+        return Optional.empty();
     }
 
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        var c = getSelectedArrowCount(pStack);
-        if(c != 0) {
-            pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
-                    getSelectedArrow(pStack, null).getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
+        IQuiverData data = getQuiverData(pStack);
+        if (data != null) {
+            int c = data.getSelectedArrowCount();
+            if (c != 0) {
+                pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
+                        data.getSelected(null).getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
+            }
         }
     }
 
 
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
-        ItemUtils.onContainerDestroyed(pItemEntity, getContents(pItemEntity.getItem()));
+        IQuiverData data = getQuiverData(pItemEntity.getItem());
+        if (data != null) {
+            ItemUtils.onContainerDestroyed(pItemEntity, data.getContent().stream());
+        }
     }
 
     private void playRemoveOneSound(Entity pEntity) {
@@ -156,17 +221,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Nullable
     @ExpectPlatform
-    private static QuiverTooltip getQuiverTooltip(ItemStack pStack) {
-        throw  new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static int getSelectedArrowCount(ItemStack pStack) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static ItemStack getSelectedArrow(ItemStack itemStack, @Nullable Predicate<ItemStack> supporterArrows) {
+    public static IQuiverData getQuiverData(ItemStack stack) {
         throw new AssertionError();
     }
 
@@ -175,47 +230,62 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
-    public static Stream<ItemStack> getContents(ItemStack pStack) {
+    protected static void toggleQuiverGUI(boolean on) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    private static void cycleArrow(ItemStack stack) {
-        throw new AssertionError();
+    public record QuiverTooltip(List<ItemStack> stacks, int selected) implements TooltipComponent {
     }
 
-    /**
-     * Adds one item. returns the item that is remaining and has not been added
-     */
-    @ExpectPlatform
-    private static ItemStack add(ItemStack pBundleStack, ItemStack pInsertedStack) {
-        throw new AssertionError();
-    }
+    //this is cap, cap provider
+    public interface IQuiverData {
 
-    @ExpectPlatform
-    private static Optional<ItemStack> removeOne(ItemStack pStack) {
-        throw new AssertionError();
-    }
+        int getSelectedSlot();
 
+        void setSelectedSlot(int selectedSlot);
 
+        List<ItemStack> getContent();
 
-    public static class QuiverTooltip implements TooltipComponent {
-        private final NonNullList<ItemStack> items;
-        private final int selectedIndex;
-
-        public QuiverTooltip(NonNullList<ItemStack> itemStacks, int selectedIndex) {
-            this.items = itemStacks;
-            this.selectedIndex = selectedIndex;
+        default ItemStack getSelected() {
+            return getSelected(null);
         }
 
-        public NonNullList<ItemStack> getItems() {
-            return this.items;
+        ItemStack getSelected(@Nullable Predicate<ItemStack> supporterArrows);
+
+        default void cycle() {
+            cycle(1);
         }
 
-        public int getSelectedIndex() {
-            return this.selectedIndex;
+        default void cycle(boolean clockWise){
+            cycle(clockWise ? 1 : -1);
+        }
+
+        void cycle(int slotsMoved);
+
+        /**
+         * Adds one item. returns the item that is remaining and has not been added
+         */
+        ItemStack add(ItemStack pInsertedStack);
+
+        Optional<ItemStack> removeOne();
+
+        default int getSelectedArrowCount() {
+            ItemStack selected = this.getSelected(null);
+            int amount = 0;
+            for (var item : this.getContent()) {
+                if (ForgeHelper.canItemStack(selected, item)) {
+                    amount += item.getCount();
+                }
+            }
+            return amount;
         }
     }
+
+    //if local player is using gui
+    public static boolean isUsingGUI = false;
+    public static Integer slot  = null;
+
 }
 

@@ -17,7 +17,7 @@ public abstract class GrindstoneTestSlotMixin {
     private void getExperienceFromItem(ItemStack stack, CallbackInfoReturnable<Integer> cir){
         Item i = stack.getItem();
         if(i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()){
-            cir.setReturnValue(50);
+            cir.setReturnValue(500);
         }
     }
 }

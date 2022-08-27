@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
@@ -130,6 +131,10 @@ public class ForgeHelperImpl {
     @javax.annotation.Nullable
     public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
         return null;
+    }
+
+    public static boolean canItemStack(ItemStack selected, ItemStack item) {
+        return ItemStack.isSameIgnoreDurability(selected, item);
     }
 
 

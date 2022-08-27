@@ -24,13 +24,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
-    private final Map<GlobeBlockTile.GlobeModel, ModelPart> models = new HashMap<>();
+    private final Map<GlobeBlockTile.GlobeModel, ModelPart> models = new EnumMap<>(GlobeBlockTile.GlobeModel.class);
 
     public static LayerDefinition createBaseMesh() {
         MeshDefinition mesh = new MeshDefinition();

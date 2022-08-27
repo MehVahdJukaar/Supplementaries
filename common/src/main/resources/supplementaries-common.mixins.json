@@ -8,9 +8,11 @@
     "BlockBehaviourPlanterMixin",
     "FontRendererMixin",
     "IronGolemRendererMixin",
+    "KeyboardHandlerMixin",
     "LevelRendererMixin",
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",
+    "MouseHandlerMixin",
     "ParrotMixin",
     "PlayerSocialManagerMixin",
     "SheetsClassloadingFixHackMixin",
@@ -49,7 +51,7 @@
     "WanderingTraderMixin",
     "ZombieHorseMixin",
     "accessors.DispenserAccessor",
-    "accessors.MobAccessor",
+    "accessors.MobAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

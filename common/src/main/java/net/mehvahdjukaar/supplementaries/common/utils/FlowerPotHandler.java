@@ -42,7 +42,7 @@ public class FlowerPotHandler {
 
     //flower box stuff
 
-    private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new HashMap<>();
+    private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
 
     /**
      * for mods: use this or #Link(IFlowerModelProvider) to register plants that go into a flower box and have a custom model

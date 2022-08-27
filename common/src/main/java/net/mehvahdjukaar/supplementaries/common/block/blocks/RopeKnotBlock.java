@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
@@ -44,8 +45,8 @@ import java.util.Map;
 
 public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
 
-    private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
-    private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP = new HashMap<>();
+    private final Map<BlockState, VoxelShape> SHAPES_MAP;
+    private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP;
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -64,7 +65,9 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
     public RopeKnotBlock(Properties properties) {
         super(properties);
-        this.makeShapes();
+        var s = this.makeShapes();
+        SHAPES_MAP = s.getFirst();
+        COLLISION_SHAPES_MAP = s.getSecond();
 
         this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.Y)
                 .setValue(WATERLOGGED, false).setValue(POST_TYPE, PostType.POST)
@@ -136,7 +139,10 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return super.getCollisionShape(state, world, pos, context);
     }
 
-    protected void makeShapes() {
+    protected Pair<Map<BlockState ,VoxelShape>, Map<BlockState, VoxelShape>> makeShapes() {
+        Map<BlockState, VoxelShape> shapesBuilder = new HashMap<>();
+        Map<BlockState, VoxelShape> collisionBuilder = new HashMap<>();
+
         VoxelShape down = Block.box(6, 0, 6, 10, 13, 10);
         VoxelShape up = Block.box(6, 9, 6, 10, 16, 10);
         VoxelShape north = Block.box(6, 9, 0, 10, 13, 10);
@@ -176,25 +182,26 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             c = c.optimize();
             v = v.optimize();
             boolean flag = true;
-            for (VoxelShape existing : this.SHAPES_MAP.values()) {
+            for (VoxelShape existing : shapesBuilder.values()) {
                 if (existing.equals(v)) {
-                    this.SHAPES_MAP.put(state, existing);
+                    shapesBuilder.put(state, existing);
                     flag = false;
                     break;
                 }
             }
-            if (flag) this.SHAPES_MAP.put(state, v);
+            if (flag)shapesBuilder.put(state, v);
 
             boolean flag2 = true;
-            for (VoxelShape existing : this.COLLISION_SHAPES_MAP.values()) {
+            for (VoxelShape existing : collisionBuilder.values()) {
                 if (existing.equals(c)) {
-                    this.COLLISION_SHAPES_MAP.put(state, existing);
+                    collisionBuilder.put(state, existing);
                     flag2 = false;
                     break;
                 }
             }
-            if (flag2) this.COLLISION_SHAPES_MAP.put(state, c);
+            if (flag2) collisionBuilder.put(state, c);
         }
+        return Pair.of(ImmutableMap.copyOf(shapesBuilder),ImmutableMap.copyOf(collisionBuilder));
     }
 
     @SuppressWarnings("ConstantConditions")

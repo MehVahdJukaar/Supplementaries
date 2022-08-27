@@ -24,13 +24,14 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new HashMap<>();
+    public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
     private static Set<Block> POSSIBLE_LANTERNS = null;
 
     public static final WallLanternTexturesRegistry RELOAD_INSTANCE = new WallLanternTexturesRegistry();

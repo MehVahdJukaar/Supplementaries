@@ -21,7 +21,7 @@ public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
             LocalPlayer player = Minecraft.getInstance().player;
 
             if (player != null) {
-                ItemStack ammo = QuiverItem.getSelectedArrow(stack, null);
+                ItemStack ammo = QuiverItem.getQuiverData(stack).getSelected();
                 renderAmmo(x, y, blitOffset, ammo);
             }
             return true;

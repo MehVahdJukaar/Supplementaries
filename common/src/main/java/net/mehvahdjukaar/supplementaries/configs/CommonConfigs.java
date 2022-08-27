@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.minecraft.core.Holder;
@@ -50,6 +51,7 @@ public class CommonConfigs {
     }
 
     public static class Items {
+
         public static Supplier<Holder.Reference<Block>> ROPE_ARROW_OVERRIDE = null;
 
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
@@ -67,10 +69,19 @@ public class CommonConfigs {
         public static Supplier<Double> SLINGSHOT_DECELERATION;
         public static Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
         public static Supplier<Hands> WRENCH_BYPASS;
+        public static Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
+        public static Supplier<Integer> QUIVER_SLOTS;
         public static Supplier<Integer> BUBBLE_BLOWER_COST;
 
         private static void init(ConfigBuilder builder) {
             builder.push("items");
+
+            builder.push("quiver");
+            QUIVER_PREVENTS_SLOWS = builder.comment("Allows using a quiver without being slowed down")
+                            .define("use_without_slow", true);
+            QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
+                            .define("slots", 6, 1, 9);
+            builder.pop();
 
             builder.push("bubble_blower");
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")

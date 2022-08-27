@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -41,7 +42,7 @@ public class FlowerPotHandlerImpl {
                 emptyPots.add(flowerPotBlock.getEmptyPot());
             }
         }
-        FULL_POTS = Maps.newHashMap();
+        FULL_POTS = new IdentityHashMap<>();
         for (FlowerPotBlock pot : emptyPots) {
             FULL_POTS.put(pot, pot.getFullPotsView());
         }

@@ -54,7 +54,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class ClientRegistry {
@@ -85,8 +87,8 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
-    public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new HashMap<>();
-    public static final Map<LabelEntity.AttachType, ResourceLocation> LABEL_MODELS = new HashMap<>() {{
+    public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
+    public static final Map<LabelEntity.AttachType, ResourceLocation> LABEL_MODELS = new EnumMap<>(LabelEntity.AttachType.class) {{
         put(LabelEntity.AttachType.BLOCK, Supplementaries.res("block/label"));
         put(LabelEntity.AttachType.CHEST, Supplementaries.res("block/label_chest"));
         put(LabelEntity.AttachType.JAR, Supplementaries.res("block/label_jar"));
@@ -140,7 +142,7 @@ public class ClientRegistry {
         MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
         MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
         MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
-        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockGui.GUI_FACTORY);
+        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockScreen.GUI_FACTORY);
         MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
         MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
 

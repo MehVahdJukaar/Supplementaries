@@ -156,4 +156,8 @@ public class ForgeHelper {
     public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
         throw new AssertionError();
     }
+    @ExpectPlatform
+    public static boolean canItemStack(ItemStack selected, ItemStack item) {
+        throw new AssertionError();
+    }
 }

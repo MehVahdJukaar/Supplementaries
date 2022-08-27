@@ -42,10 +42,7 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
@@ -290,7 +287,7 @@ public class ModRegistry {
             SIGN_POST_NAME, () -> PlatformHelper.newBlockEntityType(
                     SignPostBlockTile::new, SIGN_POST.get()));
 
-    public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new HashMap<>();
+    public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new IdentityHashMap<>();
 
     //flags
     public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);
@@ -1084,6 +1081,7 @@ public class ModRegistry {
     //daub
     public static final Supplier<Block> DAUB = regWithItem(DAUB_NAME, () -> new Block(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SNOW)
+                    .sound(SoundType.PACKED_MUD)
                     .strength(1.5f, 3f)
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 

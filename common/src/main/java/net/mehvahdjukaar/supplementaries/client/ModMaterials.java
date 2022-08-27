@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -31,10 +32,10 @@ public class ModMaterials {
     public static final Material BOOK_TOME_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_AND_QUILL_TEXTURES);
-    public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new HashMap<>();
-    public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new HashMap<>();
+    public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new IdentityHashMap<>();
+    public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new IdentityHashMap<>();
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
-        var map = new HashMap<BannerPattern, Material>();
+        var map = new IdentityHashMap<BannerPattern, Material>();
         for (var v : ModTextures.FLAG_TEXTURES.entrySet()) {
             map.put(v.getKey(), new Material(BANNER_SHEET, v.getValue()));
         }
@@ -67,7 +68,7 @@ public class ModMaterials {
         } else return FLAG_MATERIALS.get().get(p);
     }
 
-    private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new HashMap<>();
+    private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();
 
 
 }

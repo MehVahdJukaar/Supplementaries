@@ -61,24 +61,21 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemsOverrideHandler {
 
     //TODO: clean this up
 
     //equivalent to Item.useOnBlock to the item itself (called before that though)
-    private static final Map<Item, ItemUseOnBlockOverride> HP_ON_BLOCK_OVERRIDES = new HashMap<>();
-    private static final Map<Item, ItemUseOnBlockOverride> ON_BLOCK_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> HP_ON_BLOCK_OVERRIDES = new IdentityHashMap<>();
+    private static final Map<Item, ItemUseOnBlockOverride> ON_BLOCK_OVERRIDES = new IdentityHashMap<>();
 
     //equivalent to Item.use
-    private static final Map<Item, ItemUseOverride> ITEM_USE_OVERRIDES = new HashMap<>();
+    private static final Map<Item, ItemUseOverride> ITEM_USE_OVERRIDES = new IdentityHashMap<>();
 
     //equivalent to Block.use
-    private static final Map<Block, BlockInteractedWithOverride> BLOCK_USE_OVERRIDES = new HashMap<>();
+    private static final Map<Block, BlockInteractedWithOverride> BLOCK_USE_OVERRIDES = new IdentityHashMap<>();
 
     public static boolean hasBlockPlacementAssociated(Item item) {
         ItemUseOnBlockOverride override = ON_BLOCK_OVERRIDES.get(item);

@@ -172,6 +172,4 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         }
         poseStack.popPose();
     }
-
-    private static final Map<BannerPatternItem, BannerPattern> ITEMS_TO_PATTERNS = new HashMap<>();
 }

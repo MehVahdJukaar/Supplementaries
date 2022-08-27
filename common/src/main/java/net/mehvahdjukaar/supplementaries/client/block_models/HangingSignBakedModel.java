@@ -34,7 +34,7 @@ public class HangingSignBakedModel implements CustomBakedModel {
     public HangingSignBakedModel(BakedModel stick,
                                  BakedModel leftPost, BakedModel leftPalisade, BakedModel leftWall, BakedModel leftBeam, BakedModel leftStick,
                                  BakedModel rightPost, BakedModel rightPalisade, BakedModel rightWall, BakedModel rightBeam, BakedModel rightStick) {
-        Map<ModBlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new HashMap<>();
+        Map<ModBlockProperties.SignAttachment, ImmutableList<BakedModel>> temp = new EnumMap<>(ModBlockProperties.SignAttachment.class);
         for (ModBlockProperties.SignAttachment a : ModBlockProperties.SignAttachment.values()) {
             ImmutableList.Builder<BakedModel> b = ImmutableList.builder();
             if (a != ModBlockProperties.SignAttachment.CEILING) {

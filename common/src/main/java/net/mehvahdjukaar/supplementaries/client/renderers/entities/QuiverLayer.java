@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,7 +32,12 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
         QuiverMode mode = ClientConfigs.Items.QUIVER_RENDER_MODE.get();
         if (mode == QuiverMode.HIDDEN) return;
+
         ItemStack quiver = QuiverItem.getQuiver(livingEntity);
+        if(livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver){
+            return;
+        }
+
         if (!quiver.isEmpty()) {
             this.getParentModel().body.translateAndRotate(poseStack);
 

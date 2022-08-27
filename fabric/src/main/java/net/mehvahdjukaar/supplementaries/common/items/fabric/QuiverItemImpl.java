@@ -64,5 +64,13 @@ public class QuiverItemImpl {
     }
 
     public static ItemStack getQuiver(LivingEntity entity) {
+        return ItemStack.EMPTY;
+    }
+
+    public static QuiverItem.@Nullable IQuiverData getQuiverData(ItemStack stack) {
+        return null;
+    }
+
+    public static void toggleQuiverGUI(boolean on) {
     }
 }

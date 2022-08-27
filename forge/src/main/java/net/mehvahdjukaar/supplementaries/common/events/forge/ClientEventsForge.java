@@ -1,35 +1,37 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
-import vazkii.quark.api.IQuarkButtonAllowed;
-import vazkii.quark.base.client.config.screen.QuarkConfigHomeScreen;
 
 public class ClientEventsForge {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(ClientEventsForge.class);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddLayers);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddGuiLayers);
     }
 
     @SubscribeEvent
@@ -41,7 +43,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Post event) {
-        if(CompatHandler.configured) {
+        if (CompatHandler.configured) {
             ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
         }
     }
@@ -85,8 +87,8 @@ public class ClientEventsForge {
     }
 
 
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event){
-        for (String skinType : event.getSkins()){
+    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
             addPlayerLayer(renderer);
         }
@@ -98,9 +100,27 @@ public class ClientEventsForge {
             renderer.addLayer(new QuiverLayer(renderer));
         }
     }
-    private static <M extends EntityModel<? extends Player>, R extends LivingEntityRenderer<? extends Player, M>> void addPlayerLayer(@Nullable R renderer){
-        if(renderer != null) {
+
+    private static <M extends EntityModel<? extends Player>, R extends LivingEntityRenderer<? extends Player, M>> void addPlayerLayer(@Nullable R renderer) {
+        if (renderer != null) {
             renderer.addLayer(new QuiverLayer(renderer));
         }
     }
+
+    public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
+                new QuiverArrowSelectGuiImpl());
+    }
+
+    @SubscribeEvent
+    public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
+        if (QuiverArrowSelectGui.isActive()) {
+            Player player = Minecraft.getInstance().player;
+            ItemStack quiver = player.getUseItem();
+            QuiverItem.getQuiverData(quiver).cycle(event.getScrollDelta() > 0);
+            event.setCanceled(true);
+        }
+    }
+
+
 }

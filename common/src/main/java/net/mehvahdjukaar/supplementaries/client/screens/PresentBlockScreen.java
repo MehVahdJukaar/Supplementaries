@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.UUID;
 
-public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
+public class PresentBlockScreen extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
 
     private static final Component PACK_BUTTON = Component.translatable("gui.supplementaries.present.pack");
 
@@ -49,16 +49,16 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
     //hasn't received items yet
     private boolean needsInitialization = true;
 
-    public static MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockGui> GUI_FACTORY =
+    public static MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockScreen> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof PresentBlockTile presentBlockTile) {
-                    return new PresentBlockGui(container, inventory, title, presentBlockTile);
+                    return new PresentBlockScreen(container, inventory, title, presentBlockTile);
                 }
                 return null;
             };
 
-    public PresentBlockGui(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
+    public PresentBlockScreen(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -276,13 +276,13 @@ public class PresentBlockGui extends AbstractContainerScreen<PresentContainerMen
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
             if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                PresentBlockGui.this.renderTooltip(matrixStack, PACK_BUTTON, x, y);
+                PresentBlockScreen.this.renderTooltip(matrixStack, PACK_BUTTON, x, y);
             }
         }
 
         @Override
         public void onPress() {
-            PresentBlockGui.this.pack();
+            PresentBlockScreen.this.pack();
         }
 
         @Override

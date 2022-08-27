@@ -34,8 +34,10 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.DeferredRegister;
+import org.jetbrains.annotations.Nullable;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.tools.module.EndermoshMusicDiscModule;
 
@@ -143,11 +145,15 @@ public class ForgeHelperImpl {
         ForgeHooks.onCropsGrowPost(level, pos, state);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public static InteractionResult onRightClickBlock(Player player, InteractionHand hand, BlockPos below, BlockHitResult rayTraceResult) {
       var ev =  ForgeHooks.onRightClickBlock(player, hand, below, rayTraceResult);
         if(ev.isCanceled())return ev.getCancellationResult();
         return null;
+    }
+
+    public static boolean canItemStack(ItemStack selected, ItemStack item) {
+        return ItemHandlerHelper.canItemStacksStack(selected,item);
     }
 
 }
