@@ -37,6 +37,10 @@ processResources {
         expand "version": project.version
         expand "mod_name": project.getArchivesBaseName()
     }
+
+    filesMatching('update.toml') {
+        expand 'version': project.version
+    }
 }
 
 shadowJar {
