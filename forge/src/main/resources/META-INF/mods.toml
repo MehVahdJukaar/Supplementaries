@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 issueTrackerURL = "https://github.com/MehVahdJukaar/Supplementaries/issues" #optional
+updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/update.json"
 license = "ARR"
 
 
