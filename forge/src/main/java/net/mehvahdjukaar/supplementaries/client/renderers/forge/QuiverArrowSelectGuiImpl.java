@@ -39,11 +39,11 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IG
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             Gui.fill(poseStack, nx - 2, ny - 2, nx + fontWidth + 2, ny + 9 + 2, this.minecraft.options.getBackgroundColor(0));
-            Font font = IClientItemExtensions.of(this.lastToolHighlight).getFont(this.lastToolHighlight, IClientItemExtensions.FontContext.SELECTED_ITEM_NAME);
+            Font font = IClientItemExtensions.of(selectedArrow).getFont(selectedArrow, IClientItemExtensions.FontContext.SELECTED_ITEM_NAME);
             if (font == null) {
                 this.getFont().drawShadow(poseStack, highlightTip, (float) nx, ny, 0xFFFFFF + (l << 24));
             } else {
-                nx = (this.screenWidth - font.width(highlightTip)) / 2;
+                nx = (screenWidth - font.width(highlightTip)) / 2;
                 font.drawShadow(poseStack, highlightTip, (float) nx, ny, 0xFFFFFF + (l << 24));
             }
             RenderSystem.disableBlend();
@@ -51,7 +51,9 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IG
 
     @Override
     public void render(ForgeGui forgeGui, PoseStack poseStack, float partialTicks, int width, int height) {
-        renderQuiverContent(poseStack, partialTicks, width, height);
+        if(isActive()) {
+            renderQuiverContent(poseStack, partialTicks, width, height);
+        }
     }
 
 }

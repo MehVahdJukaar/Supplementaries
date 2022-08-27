@@ -29,6 +29,7 @@ configurations {
 }
 
 
+
 processResources {
     inputs.property "version", project.version
     //inputs.property "mod_name": project.getArchivesBaseName()
@@ -38,8 +39,8 @@ processResources {
         expand "mod_name": project.getArchivesBaseName()
     }
 
-    filesMatching('update.toml') {
-        expand 'version': project.version
+    filesMatching('update.json') {
+        expand "version" : project.version
     }
 }
 
@@ -55,6 +56,15 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
+}
+
+task updateJson {
+    file('update.json').withWriter { w ->
+        file('update_template.json').eachLine { line ->
+            w << line.replaceAll("version", project.version) + System.getProperty("line.separator")
+        }
+        w.close()
+    }
 }
 
 jar {

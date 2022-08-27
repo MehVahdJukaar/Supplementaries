@@ -4,17 +4,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -25,6 +29,8 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
     }
 
+
+    @SuppressWarnings("unchecked")
     public static void initClient() {
 
         ClientRegistry.init();
@@ -37,7 +43,16 @@ public class SupplementariesFabricClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.FLUTE_ITEM.get(), new FluteItemRenderer());
 
         ModRegistry.FLAGS.values().forEach(f -> registerISTER(f.get()));
+
+        HudRenderCallback.EVENT.register(QuiverArrowSelectGuiImpl.INSTANCE::render);
+
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
+            if (r instanceof PlayerRenderer) {
+                e.register(new QuiverLayer(r));
+            }
+        });
     }
+
 
     private static void registerISTER(ItemLike itemLike) {
         ((ICustomItemRendererProvider) itemLike.asItem()).registerFabricRenderer();

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.CommandBlock;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
@@ -87,25 +89,16 @@ public class ClientEventsForge {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
         for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
-            addPlayerLayer(renderer);
+            if(renderer != null) {
+                renderer.addLayer(new QuiverLayer(renderer));
+            }
         }
     }
 
-    private static <T extends LivingEntity, M extends HierarchicalModel<T>, R extends LivingEntityRenderer<T, M>> void addLayer(
-            @Nullable R renderer) {
-        if (renderer != null) {
-            renderer.addLayer(new QuiverLayer(renderer));
-        }
-    }
-
-    private static <M extends EntityModel<? extends Player>, R extends LivingEntityRenderer<? extends Player, M>> void addPlayerLayer(@Nullable R renderer) {
-        if (renderer != null) {
-            renderer.addLayer(new QuiverLayer(renderer));
-        }
-    }
 
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",

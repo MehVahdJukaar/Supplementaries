@@ -13,7 +13,7 @@ displayName = "Supplementaries"
 
 credits = "Put a book named 'credits' inside a notice board" #optional
 
-updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/forge/src/main/resources/update.json"
+updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/forge/update.json"
 modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
 
 authors = "MehVahdJukaar, Plantkillable" #optional

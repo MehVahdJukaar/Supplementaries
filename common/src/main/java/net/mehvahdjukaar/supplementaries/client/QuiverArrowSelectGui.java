@@ -101,7 +101,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     public void renderQuiverContent(PoseStack poseStack, float partialTicks, int screenWidth, int screenHeight) {
 
-        if (active && minecraft.getCameraEntity() instanceof Player player) {
+        if (minecraft.getCameraEntity() instanceof Player player) {
             ItemStack quiver = player.getUseItem();
             if (quiver.getItem() == ModRegistry.QUIVER_ITEM.get()) {
                 ///gui.setupOverlayRenderState(true, false);
