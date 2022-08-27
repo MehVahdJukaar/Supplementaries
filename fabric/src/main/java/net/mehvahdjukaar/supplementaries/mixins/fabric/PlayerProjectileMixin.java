@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.world.entity.EntityType;
@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity {
+public abstract class PlayerProjectileMixin extends LivingEntity {
 
-    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+    protected PlayerProjectileMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -27,7 +27,7 @@ public abstract class PlayerMixin extends LivingEntity {
             cancellable = true
     )
     private void getProjectile(ItemStack weaponStack, CallbackInfoReturnable<ItemStack> cir,
-                               Predicate<ItemStack> supporterArrows, ItemStack heldArrow, int slotIndex, ItemStack itemStack) {
+                               Predicate<ItemStack> supporterArrows, int slotIndex, ItemStack itemStack) {
         if (itemStack.getItem() instanceof QuiverItem) {
             ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(supporterArrows);
             if (arrow != ItemStack.EMPTY) cir.setReturnValue(arrow);

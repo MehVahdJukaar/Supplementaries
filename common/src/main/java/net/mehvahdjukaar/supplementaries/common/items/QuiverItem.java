@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -115,7 +116,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                toggleQuiverGUI(true);
+                QuiverArrowSelectGui.setActive(true);
             }
             this.playRemoveOneSound(player);
             player.startUsingItem(pUsedHand);
@@ -137,7 +138,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            toggleQuiverGUI(false);
+            QuiverArrowSelectGui.setActive(false);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());
@@ -230,12 +231,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         throw new AssertionError();
     }
 
-    @Contract
-    @ExpectPlatform
-    protected static void toggleQuiverGUI(boolean on) {
-        throw new AssertionError();
-    }
-
     public record QuiverTooltip(List<ItemStack> stacks, int selected) implements TooltipComponent {
     }
 
@@ -281,11 +276,12 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             }
             return amount;
         }
+
+       default void updateIfNeededSelected(){
+           this.cycle(0); //this works
+       }
     }
 
-    //if local player is using gui
-    public static boolean isUsingGUI = false;
-    public static Integer slot  = null;
 
 }
 

@@ -4,8 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,11 +28,12 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
+
         QuiverMode mode = ClientConfigs.Items.QUIVER_RENDER_MODE.get();
         if (mode == QuiverMode.HIDDEN) return;
 
         ItemStack quiver = QuiverItem.getQuiver(livingEntity);
-        if(livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver){
+        if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
             return;
         }
 
@@ -49,12 +48,18 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
                 double offset = hasArmor ? ClientConfigs.Items.QUIVER_ARMOR_OFFSET.get() : 0;
 
                 if (flipped) {
+                    var old = this.getParentModel().leftLeg.xRot;
+                    this.getParentModel().leftLeg.xRot = old * 0.3f;
                     this.getParentModel().leftLeg.translateAndRotate(poseStack);
+                    this.getParentModel().leftLeg.xRot = old;
                     poseStack.translate(0, -1 / 16f, -2.5 / 16f);
                     poseStack.translate(offset == -1 ? 3.5 / 16f : 3 / 16f + offset, 0, 0);
 
-                }else{
+                } else {
+                    var old = this.getParentModel().rightLeg.xRot;
+                    this.getParentModel().rightLeg.xRot = old * 0.3f;
                     this.getParentModel().rightLeg.translateAndRotate(poseStack);
+                    this.getParentModel().rightLeg.xRot = old;
                     poseStack.translate(0, -1 / 16f, -2.5 / 16f);
                     poseStack.translate(offset == -1 ? -3.5 / 16f : -3 / 16f + offset, 0, 0);
                 }

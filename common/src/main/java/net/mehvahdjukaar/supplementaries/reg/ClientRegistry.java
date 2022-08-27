@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
@@ -82,6 +83,9 @@ public class ClientRegistry {
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
+    public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
+    public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
+
     public static final ResourceLocation BELL_ROPE = Supplementaries.res("block/bell_rope");
     public static final ResourceLocation BELL_CHAIN = Supplementaries.res("block/bell_chain");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
@@ -348,11 +352,16 @@ public class ClientRegistry {
         LABEL_MODELS.values().forEach(event::register);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
-        event.register(FLUTE_3D_MODEL);
-        event.register(FLUTE_2D_MODEL);
         event.register(BOAT_MODEL);
         event.register(BELL_ROPE);
         event.register(BELL_CHAIN);
+        //not needed on forge
+        if(PlatformHelper.getPlatform().isFabric()){
+            event.register(FLUTE_3D_MODEL);
+            event.register(FLUTE_2D_MODEL);
+            event.register(QUIVER_2D_MODEL);
+            event.register(QUIVER_3D_MODEL);
+        }
     }
 
     private static void registerModelLoaders(ClientPlatformHelper.ModelLoaderEvent event) {

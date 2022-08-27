@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

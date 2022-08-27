@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRe
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.fabric.DifferentProspectiveItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -40,17 +41,12 @@ public class SupplementariesFabricClient implements ClientModInitializer {
         registerISTER(ModRegistry.JAR_ITEM.get());
         registerISTER(ModRegistry.BLACKBOARD_ITEM.get());
         registerISTER(ModRegistry.BUBBLE_BLOCK_ITEM.get());
-        BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.FLUTE_ITEM.get(), new FluteItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.FLUTE_ITEM.get(),
+                new DifferentProspectiveItemRenderer(ClientRegistry.FLUTE_2D_MODEL, ClientRegistry.FLUTE_3D_MODEL));
+        BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.QUIVER_ITEM.get(),
+                new DifferentProspectiveItemRenderer(ClientRegistry.QUIVER_2D_MODEL, ClientRegistry.QUIVER_3D_MODEL));
 
         ModRegistry.FLAGS.values().forEach(f -> registerISTER(f.get()));
-
-        HudRenderCallback.EVENT.register(QuiverArrowSelectGuiImpl.INSTANCE::render);
-
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
-            if (r instanceof PlayerRenderer) {
-                e.register(new QuiverLayer(r));
-            }
-        });
     }
 
 
@@ -59,27 +55,5 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
 
-    private static class FluteItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
-        @Override
-        public void render(ItemStack stack, ItemTransforms.TransformType transform, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
-            if (!stack.isEmpty()) {
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-
-                matrixStack.pushPose();
-                boolean gui = transform == ItemTransforms.TransformType.GUI || transform == ItemTransforms.TransformType.GROUND || transform == ItemTransforms.TransformType.FIXED;
-
-                BakedModel model;
-                if (gui) {
-                    model = ClientPlatformHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), ClientRegistry.FLUTE_2D_MODEL);
-                } else {
-                    model = ClientPlatformHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), ClientRegistry.FLUTE_3D_MODEL);
-                }
-                RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
-                VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(buffer, rendertype, true, stack.hasFoil());
-                itemRenderer.renderModelLists(model, stack, light, overlay, matrixStack, vertexconsumer);
-                matrixStack.popPose();
-            }
-        }
-    }
 }

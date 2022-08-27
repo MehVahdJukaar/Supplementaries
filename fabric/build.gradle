@@ -34,8 +34,10 @@ dependencies {
     }
    // modCompileOnly("curse.maven:modmenu-308702:3920481")
 
-    modImplementation(include("curse.maven:modmenu-308702:3850113"))
-    modImplementation "com.terraformersmc:modmenu:4.0.6", {
+    modCompileOnly(include("curse.maven:modmenu-308702:3850113")){
+            exclude module: "fabric-api"
+        }
+    modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
         exclude module: "fabric-api"
     }
 

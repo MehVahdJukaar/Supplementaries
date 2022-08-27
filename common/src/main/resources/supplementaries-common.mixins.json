@@ -40,7 +40,6 @@
     "LoomInputSlotMixin",
     "LoomMenuMixin",
     "PistonBlockEntityMixin",
-    "PlayerMixin",
     "RedMerchantSpawnerMixin",
     "ServerLevelMixin",
     "ShulkerBoxBlockEntityMixin",

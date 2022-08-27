@@ -17,6 +17,7 @@
     "SelfPlanterMixin",
     "SelfQuiverItem",
     "ChunkHolderMixin",
+    "PlayerProjectileMixin",
     "MobBucketItemAccessor"
   ],
   "injectors": {

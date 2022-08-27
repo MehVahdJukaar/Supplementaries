@@ -8,7 +8,8 @@
   "mixins": [
     "BushBlockMixin",
     "CropBlockMixin",
-    "MobBucketItemAccessor"
+    "MobBucketItemAccessor",
+    "PlayerProjectileMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -41,15 +41,22 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
     public static void ohMouseMoved(double deltaX) {
-        double scale =  Minecraft.getInstance().options.sensitivity().get() * 0.02;
+        double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
         int oldI = (int) (lastCumulativeMouseDx * scale);
         lastCumulativeMouseDx += deltaX;
-        int slotsMoved =  (int)(lastCumulativeMouseDx * scale) - oldI;
+        int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
         if (slotsMoved != 0) {
             Player player = Minecraft.getInstance().player;
             ItemStack quiver = player.getUseItem();
             QuiverItem.getQuiverData(quiver).cycle(slotsMoved);
         }
+    }
+
+    public static boolean onMouseScrolled(double scrollDelta) {
+        Player player = Minecraft.getInstance().player;
+        ItemStack quiver = player.getUseItem();
+        QuiverItem.getQuiverData(quiver).cycle(scrollDelta > 0);
+        return true;
     }
 
     public static boolean onKeyPressed(int key, int action, int modifiers) {
@@ -69,8 +76,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
             }
             int number = key - 48;
             if (number >= 1 && number <= 9) {
-                if(number <= CommonConfigs.Items.QUIVER_SLOTS.get()) {
-                    data.setSelectedSlot(number);
+                if (number <= CommonConfigs.Items.QUIVER_SLOTS.get()) {
+                    data.setSelectedSlot(number-1);
                 }
                 //cancels all number keys to prevent switching items
                 return true;
@@ -78,18 +85,6 @@ public abstract class QuiverArrowSelectGui extends Gui {
         }
         return false;
     }
-
-/*
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        !InputConstants.isKeyDown(this.minecraft.getWindow().getWindow(), 292)
-        if (pKeyCode == 293 && this.currentlyHovered.isPresent()) {
-            this.setFirstMousePos = false;
-            this.currentlyHovered = this.currentlyHovered.get().getNext();
-            return true;
-        } else {
-            return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-        }
-    }*/
 
     private void renderSlot(int pX, int pY, Player pPlayer, ItemStack pStack, int seed) {
         if (!pStack.isEmpty()) {
@@ -109,8 +104,6 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 poseStack.pushPose();
 
                 var data = QuiverItem.getQuiverData(quiver);
-                //renderQuiverItems(poseStack, data.getContent(), data.getSelectedSlot());
-
 
                 int selected = data.getSelectedSlot();
                 List<ItemStack> items = data.getContent();

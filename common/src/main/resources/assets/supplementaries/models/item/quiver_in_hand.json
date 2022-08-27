@@ -34,20 +34,20 @@
 		},
 		{
 			"from": [4.35, 9, 9],
-			"to": [4.35, 10, 12],
+			"to": [4.35, 11, 12],
 			"rotation": {"angle": 22.5, "axis": "y", "origin": [0, 0, 0]},
 			"faces": {
-				"east": {"uv": [11, 1, 14, 2], "texture": "#spyglass"},
-				"west": {"uv": [11, 1, 14, 2], "texture": "#spyglass"}
+				"east": {"uv": [11, 0, 14, 2], "texture": "#spyglass"},
+				"west": {"uv": [11, 0, 14, 2], "texture": "#spyglass"}
 			}
 		},
 		{
 			"from": [10.5, 9, 2.85],
-			"to": [10.5, 10, 5.85],
+			"to": [10.5, 11, 5.85],
 			"rotation": {"angle": -22.5, "axis": "y", "origin": [0, 0, 0]},
 			"faces": {
-				"east": {"uv": [11, 1, 14, 2], "texture": "#spyglass"},
-				"west": {"uv": [11, 1, 14, 2], "texture": "#spyglass"}
+				"east": {"uv": [11, 0, 14, 2], "texture": "#spyglass"},
+				"west": {"uv": [11, 0, 14, 2], "texture": "#spyglass"}
 			}
 		}
 	],

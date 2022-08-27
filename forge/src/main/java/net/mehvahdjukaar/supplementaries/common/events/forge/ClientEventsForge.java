@@ -64,6 +64,29 @@ public class ClientEventsForge {
         }
     }
 
+
+    @SuppressWarnings("unchecked")
+    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skinType : event.getSkins()) {
+            var renderer = event.getSkin(skinType);
+            if(renderer != null) {
+                renderer.addLayer(new QuiverLayer(renderer));
+            }
+        }
+    }
+
+    public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
+                new QuiverArrowSelectGuiImpl());
+    }
+
+    @SubscribeEvent
+    public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
+       if(QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())){
+           event.setCanceled(true);
+       }
+    }
+
     //forge only below
 
     //TODO: add to fabric
@@ -89,31 +112,6 @@ public class ClientEventsForge {
     }
 
 
-    @SuppressWarnings("unchecked")
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skinType : event.getSkins()) {
-            var renderer = event.getSkin(skinType);
-            if(renderer != null) {
-                renderer.addLayer(new QuiverLayer(renderer));
-            }
-        }
-    }
-
-
-    public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
-                new QuiverArrowSelectGuiImpl());
-    }
-
-    @SubscribeEvent
-    public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (QuiverArrowSelectGui.isActive()) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack quiver = player.getUseItem();
-            QuiverItem.getQuiverData(quiver).cycle(event.getScrollDelta() > 0);
-            event.setCanceled(true);
-        }
-    }
 
 
 }

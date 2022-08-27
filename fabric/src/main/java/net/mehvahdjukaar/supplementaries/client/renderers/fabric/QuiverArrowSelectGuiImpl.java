@@ -51,8 +51,8 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui {
     public void render(PoseStack poseStack, float partialTicks) {
         if(isActive()) {
             renderQuiverContent(poseStack, partialTicks,
-                    Minecraft.getInstance().getMainRenderTarget().width,
-                    Minecraft.getInstance().getMainRenderTarget().height);
+                    Minecraft.getInstance().getWindow().getGuiScaledWidth(),
+                    Minecraft.getInstance().getWindow().getGuiScaledHeight());
         }
     }
 

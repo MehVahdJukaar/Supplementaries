@@ -115,7 +115,7 @@ public class ModWorldgenRegistry {
                             BiomeFilter.biome()));
 
     public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
-            registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
+            RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
 
     //TODO: is this needed?
     public static <FC extends FeatureConfiguration, F extends Feature<FC>> RegSupplier<PlacedFeature> registerPlacedFeature(

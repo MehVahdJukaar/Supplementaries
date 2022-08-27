@@ -1,6 +1,45 @@
 {
-  "parent": "item/generated",
+  "parent": "builtin/entity",
   "textures": {
-    "layer0": "supplementaries:items/quiver"
+    "layer0": "supplementaries:items/quiver_full",
+    "particles": "supplementaries:items/quiver_full",
+    "particle": "supplementaries:items/quiver_full"
+  },
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [0, 1.5, -0.5]
+    },
+    "thirdperson_lefthand": {
+      "translation": [0, 1.5, -0.5]
+    },
+    "firstperson_righthand": {
+      "translation": [0, 3.25, 0]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 3.25, 0]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "head": {
+      "rotation": [-145.5, 0, 0]
+    }
   }
 }
+

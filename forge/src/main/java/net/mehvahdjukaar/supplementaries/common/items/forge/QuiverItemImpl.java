@@ -41,10 +41,6 @@ public class QuiverItemImpl {
         return (QuiverCapability) stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
     }
 
-    public static void toggleQuiverGUI(boolean on) {
-        QuiverArrowSelectGui.setActive(on);
-    }
-
 
     public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.IQuiverData {
 
@@ -95,13 +91,13 @@ public class QuiverItemImpl {
         }
 
         public void cycle(int slotsMoved) {
-            int maxSlots = CommonConfigs.Items.QUIVER_SLOTS.get();
+            int maxSlots = this.stacks.size();
             slotsMoved = slotsMoved % maxSlots;
             this.selectedSlot = (maxSlots + (this.selectedSlot + slotsMoved)) % maxSlots;
             for (int i = 0; i < maxSlots; i++) {
                 var stack = this.getStackInSlot(selectedSlot);
                 if (!stack.isEmpty()) return;
-                this.selectedSlot = (maxSlots + (this.selectedSlot + (slotsMoved > 0 ? 1 : -1))) % maxSlots;
+                this.selectedSlot = (maxSlots + (this.selectedSlot + (slotsMoved >= 0 ? 1 : -1))) % maxSlots;
             }
         }
 
@@ -116,7 +112,9 @@ public class QuiverItemImpl {
             int i = 0;
             for (var s : this.getContent()) {
                 if (!s.isEmpty()) {
-                    return Optional.of(this.extractItem(i, s.getCount(), false));
+                    var extracted = this.extractItem(i, s.getCount(), false);
+                    this.updateIfNeededSelected();
+                    return Optional.of(extracted);
                 }
                 i++;
             }
