@@ -33,7 +33,9 @@ public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        peripheral.invalidate();
+        if(peripheral != null) {
+            peripheral.invalidate();
+        }
     }
 
     @SuppressWarnings("FieldMayBeFinal")

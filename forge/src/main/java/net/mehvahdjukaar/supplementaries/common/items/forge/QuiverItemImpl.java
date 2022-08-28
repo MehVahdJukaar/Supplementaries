@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
-import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -21,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class QuiverItemImpl {
 
@@ -52,6 +49,19 @@ public class QuiverItemImpl {
             return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, lazyOptional);
         }
 
+        @Override
+        public CompoundTag serializeNBT() {
+            var c = super.serializeNBT();
+            c.putInt("SelectedSlot", this.selectedSlot);
+            return c;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundTag nbt) {
+            super.deserializeNBT(nbt);
+            this.selectedSlot = nbt.getByte("SelectedSlot");
+        }
+
         //actual cap
 
         private int selectedSlot = 0;
@@ -62,10 +72,10 @@ public class QuiverItemImpl {
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return stack.getItem() instanceof ArrowItem;
+            return this.canAcceptItem(stack);
         }
 
-        public List<ItemStack> getContent() {
+        public List<ItemStack> getContentView() {
             return this.stacks;
         }
 
@@ -75,50 +85,51 @@ public class QuiverItemImpl {
         }
 
         public void setSelectedSlot(int selectedSlot) {
-            if(!stacks.get(selectedSlot).isEmpty()) {
+            if (!stacks.get(selectedSlot).isEmpty()) {
                 this.selectedSlot = selectedSlot;
             }
         }
 
-        public ItemStack getSelected(@Nullable Predicate<ItemStack> supporterArrows) {
-            if (supporterArrows == null) return this.getStackInSlot(this.selectedSlot);
-            int size = this.getSlots();
-            for (int i = 0; i < size; i++) {
-                ItemStack s = this.getStackInSlot((i + this.selectedSlot) % size);
-                if (supporterArrows.test(s)) return s;
-            }
-            return ItemStack.EMPTY;
-        }
-
-        public void cycle(int slotsMoved) {
+        public boolean cycle(int slotsMoved) {
+            int originalSlot = this.selectedSlot;
             int maxSlots = this.stacks.size();
             slotsMoved = slotsMoved % maxSlots;
             this.selectedSlot = (maxSlots + (this.selectedSlot + slotsMoved)) % maxSlots;
             for (int i = 0; i < maxSlots; i++) {
                 var stack = this.getStackInSlot(selectedSlot);
-                if (!stack.isEmpty()) return;
+                if (!stack.isEmpty()) break;
                 this.selectedSlot = (maxSlots + (this.selectedSlot + (slotsMoved >= 0 ? 1 : -1))) % maxSlots;
             }
+            return originalSlot != selectedSlot;
         }
 
-        public ItemStack add(ItemStack toInsert) {
+        public ItemStack tryAdding(ItemStack toInsert) {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
                 return ItemHandlerHelper.insertItem(this, toInsert, false);
             }
             return ItemStack.EMPTY;
         }
 
-        public Optional<ItemStack> removeOne() {
+        public Optional<ItemStack> removeOneStack() {
             int i = 0;
-            for (var s : this.getContent()) {
+            for (var s : this.getContentView()) {
                 if (!s.isEmpty()) {
                     var extracted = this.extractItem(i, s.getCount(), false);
-                    this.updateIfNeededSelected();
+                    this.updateSelectedIfNeeded();
                     return Optional.of(extracted);
                 }
                 i++;
             }
             return Optional.empty();
+        }
+
+        @Override
+        public void consumeArrow() {
+            var s = this.getSelected();
+            s.shrink(1);
+            if (s.isEmpty()) this.stacks.set(this.selectedSlot, ItemStack.EMPTY);
+            this.updateSelectedIfNeeded();
+            //not implemented because it isn't needed
         }
     }
 }

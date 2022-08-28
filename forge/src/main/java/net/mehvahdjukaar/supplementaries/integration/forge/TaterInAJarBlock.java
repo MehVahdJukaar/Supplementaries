@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
+import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -36,25 +39,40 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.TinyPotatoBlock;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.module.TinyPotatoModule;
 import vazkii.quark.base.module.ModuleLoader;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class TaterInAJarBlock extends TinyPotatoBlock {
     private static final VoxelShape SHAPE = JarBlock.SHAPE;
 
     public TaterInAJarBlock() {
         super(ModuleLoader.INSTANCE.getModuleInstance(TinyPotatoModule.class));
+
+        Field f2;
+        try {
+            f2 = ObfuscationReflectionHelper.findField(RegistryHelper.class, "modData");
+            f2.setAccessible(true);
+
+            var data = (Map<String, ?>) f2.get(null);
+            data.remove(Supplementaries.MOD_ID);
+        } catch (Exception ignored) {
+
+        }
     }
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
-        return SoundType.GLASS;
+        return ModSounds.JAR;
     }
 
 
@@ -133,6 +151,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
         public Tile(BlockPos pos, BlockState state) {
             super(pos, state);
+            this.angry = true;
         }
 
         public BlockEntityType<Tile> getType() {

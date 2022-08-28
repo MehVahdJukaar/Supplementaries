@@ -212,4 +212,5 @@ public class ServerEventsForge {
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
         SongsManager.recordNote(event.getLevel(), event.getPos());
     }
+
 }

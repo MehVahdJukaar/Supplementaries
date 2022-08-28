@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.blay09.mods.balm.forge.DeferredRegisters;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.Tags;
@@ -103,10 +105,6 @@ public class ForgeHelperImpl {
 
     public static BlockState rotateBlock(BlockState state, Level world, BlockPos targetPos, Rotation rot) {
         return state.rotate(world, targetPos, rot);
-    }
-
-    public static boolean canHarvestBlock(BlockState state, ServerLevel level, BlockPos pos, ServerPlayer player) {
-        return state.canHarvestBlock(level, pos, player);
     }
 
     public static boolean isMultipartEntity(Entity e) {

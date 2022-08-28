@@ -33,6 +33,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
@@ -168,7 +169,7 @@ public class QuarkCompatImpl {
     public static InteractionResult tryCaptureTater(JarItem item, UseOnContext context) {
         BlockPos pos = context.getClickedPos();
         Level world = context.getLevel();
-        if (world.getBlockEntity(pos) instanceof TaterInAJarBlock.Tile te && te.getType() != TATER_IN_A_JAR_TILE.get()) {
+        if (world.getBlockEntity(pos) instanceof TinyPotatoBlockEntity te && te.getType() != TATER_IN_A_JAR_TILE.get()) {
             ItemStack stack = context.getItemInHand();
             CompoundTag com = stack.getTagElement("BlockEntityTag");
             if (com == null || com.isEmpty()) {

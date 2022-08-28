@@ -78,6 +78,8 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 PicklePacket.ClientBound.class, PicklePacket.ClientBound::new);
 
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::new);
 
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,

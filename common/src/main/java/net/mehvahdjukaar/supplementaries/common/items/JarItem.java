@@ -255,7 +255,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (CompatHandler.botania && this == ModRegistry.JAR_ITEM.get()) {
+        if (CompatHandler.quark && this == ModRegistry.JAR_ITEM.get()) {
             InteractionResult r = QuarkCompat.tryCaptureTater(this, context);
             if (r.consumesAction()) return r;
         }

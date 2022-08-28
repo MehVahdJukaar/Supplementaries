@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.CropBlock;
