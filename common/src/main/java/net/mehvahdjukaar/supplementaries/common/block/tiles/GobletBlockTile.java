@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -25,12 +25,12 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
 
     private UUID owner = null;
 
-    public ISoftFluidTank fluidTank;
+    public SoftFluidTank fluidTank;
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
         int CAPACITY = 1;
-        this.fluidTank = ISoftFluidTank.create(CAPACITY);
+        this.fluidTank = SoftFluidTank.create(CAPACITY);
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
                 if (b && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));
                     if (advancement != null) {
-                        if(!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
                             serverPlayer.getAdvancements().award(advancement, "unlock");
                         }
                     }
@@ -108,7 +108,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     }
 
     @Override
-    public ISoftFluidTank getSoftFluidTank() {
+    public SoftFluidTank getSoftFluidTank() {
         return this.fluidTank;
     }
 }

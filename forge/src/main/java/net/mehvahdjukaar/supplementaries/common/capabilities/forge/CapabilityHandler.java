@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.forge.AntiqueInkProviderImpl;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraftforge.common.capabilities.Capability;

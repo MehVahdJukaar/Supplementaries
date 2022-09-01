@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
@@ -36,7 +36,7 @@ public class ModCreativeTabs {
 
     private static ItemStack makeIcon() {
         ItemStack icon = new ItemStack(ModRegistry.JAR_ITEM.get());
-        ISoftFluidTank fluidHolder = ISoftFluidTank.create(12);
+        SoftFluidTank fluidHolder = SoftFluidTank.create(12);
         fluidHolder.fill(VanillaSoftFluids.HONEY.get());
         CompoundTag com = new CompoundTag();
         fluidHolder.save(com);
@@ -58,13 +58,14 @@ public class ModCreativeTabs {
     private static void populateTab(List<ItemStack> items, CreativeModeTab tab) {
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-        ISoftFluidTank fluidHolder = ISoftFluidTank.create(tempTile.getMaxStackSize());
+        SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
 
 
         if (CommonConfigs.Blocks.JAR_CAPTURE.get()) {
             for (Item i : BucketHelper.getValidBuckets()) {
                 CompoundTag com = new CompoundTag();
-                MobContainer.MobData data = new MobContainer.MobData(new ItemStack(i));
+                //TODO: fix
+                MobContainer.MobData data = new MobContainer.MobData(null, 0, new ItemStack(i));
                 data.saveToTag(com);
                 tryAdd(items, com);
             }

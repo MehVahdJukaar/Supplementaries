@@ -14,6 +14,7 @@
     {"id":"minecraft:bat","required":false},
     {"id":"minecraft:fox","required":false},
     {"id":"minecraft:ocelot","required":false},
+    {"id":"ecologics:lizard","required":false},
     {"id":"feywild:spring_pixie","required":false},
     {"id":"feywild:autumn_pixie","required":false},
     {"id":"feywild:summer_pixie","required":false},

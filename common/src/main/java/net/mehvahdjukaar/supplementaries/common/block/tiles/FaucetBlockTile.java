@@ -4,9 +4,9 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -21,7 +21,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +45,7 @@ public class FaucetBlockTile extends BlockEntity {
     private static final int COOLDOWN = 20;
 
     private int transferCooldown = 0;
-    public final ISoftFluidTank tempFluidHolder = ISoftFluidTank.create(5);
+    public final SoftFluidTank tempFluidHolder = SoftFluidTank.create(5);
 
     public FaucetBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
@@ -200,7 +199,7 @@ public class FaucetBlockTile extends BlockEntity {
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
             if (tileBack instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
-                ISoftFluidTank fluidHolder = holder.getSoftFluidTank();
+                SoftFluidTank fluidHolder = holder.getSoftFluidTank();
                 this.tempFluidHolder.copy(fluidHolder);
                 this.tempFluidHolder.setCount(2);
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
@@ -328,7 +327,7 @@ public class FaucetBlockTile extends BlockEntity {
         //soft fluid holders
         BlockEntity tileBelow = level.getBlockEntity(below);
         if (tileBelow instanceof ISoftFluidTankProvider holder) {
-            ISoftFluidTank fluidHolder = holder.getSoftFluidTank();
+            SoftFluidTank fluidHolder = holder.getSoftFluidTank();
             result = this.tempFluidHolder.tryTransferFluid(fluidHolder, this.tempFluidHolder.getCount() - 1);
             if (result) {
                 tileBelow.setChanged();

@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.world.songs;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
@@ -8,7 +12,10 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPack
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,9 +27,40 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
-public class SongsManager {
+public class SongsManager extends SimpleJsonResourceReloadListener {
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
+    public static final SongsManager RELOAD_INSTANCE = new SongsManager();
+
+    public SongsManager() {
+        super(GSON, "flute_songs");
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
+        List<Song> temp = new ArrayList<>();
+        jsons.forEach((key, input) -> {
+            try {
+                Song song = GSON.fromJson(input, Song.class);
+                if (song.getNotes().length == 0) {
+                    Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key + ": a song can't have 0 notes!");
+                } else {
+                    temp.add(song);
+                    SongsManager.addSong(key, song);
+                }
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
+            }
+        });
+        if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded  " + temp.size() + " flute songs");
+        temp.forEach(Song::processForPlaying);
+    }
 
     private static final Map<ResourceLocation, Song> SONGS = new LinkedHashMap<>();
     private static final List<WeightedEntry.Wrapper<ResourceLocation>> SONG_WEIGHTED_LIST = new ArrayList<>();
@@ -189,7 +227,7 @@ public class SongsManager {
 
         Song song = new Song(name, GCD, finalNotes.toArray(new Integer[0]), "recorded in-game");
 
-        FluteSongsReloadListener.saveRecordedSong(song);
+        saveRecordedSong(song);
 
         //temporairly adds the song
         //TODO: remove
@@ -216,6 +254,24 @@ public class SongsManager {
         if (WHITELIST.size() == 0 || WHITELIST.contains(instrument)) {
             List<Integer> notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new ArrayList<>());
             notes.add(note);
+        }
+    }
+
+    private static void saveRecordedSong(Song song) {
+        File folder = PlatformHelper.getGamePath().resolve("recorded_songs").toFile();
+
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        File exportPath = new File(folder, song.getTranslationKey() + ".json");
+
+        try {
+            try (FileWriter writer = new FileWriter(exportPath)) {
+                GSON.toJson(song, writer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
@@ -38,11 +38,11 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     private final int CAPACITY = CommonConfigs.Blocks.JAR_CAPACITY.get();
 
     public final MobContainer mobContainer;
-    public final ISoftFluidTank fluidHolder;
+    public final SoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state);
-        this.fluidHolder = ISoftFluidTank.create(CAPACITY);
+        this.fluidHolder = SoftFluidTank.create(CAPACITY);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight());
     }
@@ -234,7 +234,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public ISoftFluidTank getSoftFluidTank() {
+    public SoftFluidTank getSoftFluidTank() {
         return this.fluidHolder;
     }
 

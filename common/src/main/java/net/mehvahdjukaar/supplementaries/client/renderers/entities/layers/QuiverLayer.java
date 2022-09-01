@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers.entities;
+package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,9 +47,14 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
             if (mode == QuiverMode.THIGH) {
                 boolean hasArmor = livingEntity.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem;
                 double offset = hasArmor ? ClientConfigs.Items.QUIVER_ARMOR_OFFSET.get() : 0;
+                boolean sneaking = livingEntity.isCrouching();
 
+                if(sneaking){
+                    poseStack.translate(0,-0.125, -0.275);
+                }
+                float old;
                 if (flipped) {
-                    var old = this.getParentModel().leftLeg.xRot;
+                    old = this.getParentModel().leftLeg.xRot;
                     this.getParentModel().leftLeg.xRot = old * 0.3f;
                     this.getParentModel().leftLeg.translateAndRotate(poseStack);
                     this.getParentModel().leftLeg.xRot = old;
@@ -56,7 +62,7 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
                     poseStack.translate(offset == -1 ? 3.5 / 16f : 3 / 16f + offset, 0, 0);
 
                 } else {
-                    var old = this.getParentModel().rightLeg.xRot;
+                    old = this.getParentModel().rightLeg.xRot;
                     this.getParentModel().rightLeg.xRot = old * 0.3f;
                     this.getParentModel().rightLeg.translateAndRotate(poseStack);
                     this.getParentModel().rightLeg.xRot = old;

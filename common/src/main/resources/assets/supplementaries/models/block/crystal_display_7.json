@@ -1,0 +1,12 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/crystal_display_1",
+	"render_type": "cutout",
+	"textures": {
+		"0": "supplementaries:blocks/display_side",
+		"2": "supplementaries:blocks/display_7",
+		"3": "supplementaries:blocks/display_front",
+		"4": "supplementaries:blocks/display_back",
+		"particle": "supplementaries:blocks/display_side"
+	}
+}

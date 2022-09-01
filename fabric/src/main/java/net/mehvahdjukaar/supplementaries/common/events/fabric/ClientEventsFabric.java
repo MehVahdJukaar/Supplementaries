@@ -1,22 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import me.shedaniel.clothconfig2.ClothConfigDemo;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
-import net.mehvahdjukaar.moonlight.api.platform.fabric.RegHelperImpl;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
-import net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabricClient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 

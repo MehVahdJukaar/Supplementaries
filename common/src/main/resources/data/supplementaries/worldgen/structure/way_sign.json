@@ -7,6 +7,14 @@
 
   "start_pool": "supplementaries:way_sign/start_pool",
   "min_y": 40,
-  "max_y": 105
+  "max_y": 105,
 
+  "structure_to_use": {
+    "bop": {
+      "start_pool": "supplementaries:way_sign/start_pool"
+    },
+    "default": {
+      "start_pool": "supplementaries:way_sign/start_pool"
+    }
+  }
 }

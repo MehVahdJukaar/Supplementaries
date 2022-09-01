@@ -6,11 +6,12 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
-import net.mehvahdjukaar.supplementaries.common.world.songs.FluteSongsReloadListener;
+import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -45,7 +46,7 @@ public class Supplementaries {
         CommonConfigs.init();
         ClientConfigs.init();
 
-        RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"),RegistryConfigs::isEnabled);
+        RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
         //soap in water makes soap particles
         //yeet java models in favor or json ones
@@ -66,8 +67,9 @@ public class Supplementaries {
 
         ServerDynamicResourcesHandler.INSTANCE.register();
 
-        PlatformHelper.addServerReloadListener(FluteSongsReloadListener.RELOAD_INSTANCE, res("flute_songs"));
+        PlatformHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
         PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
+        PlatformHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
 
         if (PlatformHelper.getEnv().isClient()) {
             ClientDynamicResourcesHandler.INSTANCE.register();

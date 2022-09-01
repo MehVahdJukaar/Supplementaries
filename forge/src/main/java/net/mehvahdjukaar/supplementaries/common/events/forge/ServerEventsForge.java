@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
@@ -25,9 +25,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,13 +32,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingGetProjectileEvent;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -51,7 +45,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ServerEventsForge {
 
@@ -190,14 +183,6 @@ public class ServerEventsForge {
                 level.setBlock(pos.below(), net.minecraft.world.level.block.Blocks.ROOTED_DIRT.defaultBlockState(), 2);
                 level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void reloadConfigsEvent(ModConfigEvent event) {
-        if (event.getConfig().getSpec() == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getSpec()) {
-            CapturedMobsHelper.refreshVisuals();
-            GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
         }
     }
 

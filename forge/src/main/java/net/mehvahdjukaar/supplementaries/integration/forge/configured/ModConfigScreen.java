@@ -75,6 +75,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("lantern tweaks", Items.LANTERN);
         addIcon("conditional sign registration", Items.BARRIER);
         addIcon("dispenser minecart", ModRegistry.DISPENSER_MINECART_ITEM.get());
+        addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
     }
 
     public ModConfigScreen(CustomConfigSelectScreen parent, ModConfig config) {

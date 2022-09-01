@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +39,6 @@ public class PicklePlayer {
 
     @SubscribeEvent
     public static void chat(ClientChatEvent event) {
-
         String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
         if (m.startsWith("/jarvis")) {

@@ -488,7 +488,7 @@ public class ItemsOverrideHandler {
                         Utils.swapItem(player, hand, returnStack);
 
                         if (!player.isCreative())
-                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random));
+                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random)-3);
 
                         if (world.isClientSide) {
                             Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModParticles.BOTTLING_XP_PARTICLE.get(), 1);

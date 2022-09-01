@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.UUID;
 
@@ -29,5 +30,9 @@ public class CommonUtilImpl {
         p.setYRot(copyRotFrom.getYRot());
         p.setOldPosAndRot();
         return p;
+    }
+
+    public static Player getFakePlayer(ServerLevel serverLevel){
+        return FakePlayerFactory.get(serverLevel, DUMMY_PROFILE);
     }
 }

@@ -198,5 +198,9 @@ public class CommonUtil {
     public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
         throw new AssertionError();
     }
+    @ExpectPlatform
+    public static Player getFakePlayer(ServerLevel serverLevel){
+        throw new AssertionError();
+    }
 
 }

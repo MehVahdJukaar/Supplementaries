@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,6 +56,32 @@ public class ItemsUtil {
         if (((IExtendedItem) item).getAdditionalBehavior() instanceof SimplePlacement si)
             return si.overridePlace(pContext);
         return InteractionResult.PASS;
+    }
+
+    public static void addStackToExisting(Player player, ItemStack stack, boolean avoidHands) {
+        var inv = player.getInventory();
+        boolean added = false;
+        for (int j = 0; j < inv.items.size(); j++) {
+            if (inv.getItem(j).is(stack.getItem()) && inv.add(j, stack)) {
+                added = true;
+                break;
+            }
+        }
+        if(avoidHands && !added){
+            for (int j = 0; j < inv.items.size(); j++) {
+                if (inv.getItem(j).isEmpty() && j != inv.selected && inv.add(j, stack)) {
+                    added = true;
+                    break;
+                }
+            }
+        }
+        if (!added && inv.add(stack)) {
+            player.drop(stack, false);
+        }
+    }
+
+    //TODO: implement
+    public static void addToInventory(Level world, BlockPos below, ObjectArrayList<ItemStack> randomItems) {
     }
 
     public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {

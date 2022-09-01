@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CrossbowItem.class)
-public class CrossbowMixin {
+public abstract class CrossbowMixin {
 
     @Inject(method = "loadProjectile",
             at = @At(value = "INVOKE",

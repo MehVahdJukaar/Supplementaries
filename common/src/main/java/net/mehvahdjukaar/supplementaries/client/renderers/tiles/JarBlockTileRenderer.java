@@ -105,7 +105,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             } else {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
-            if (tile.mobContainer.shouldHaveWater()) {
+            var fluid = tile.mobContainer.shouldRenderWithFluid();
+            if (fluid.isPresent()) {
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0.5, 0.0015 + liquidParams.z(), 0.5);
                 VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
@@ -113,7 +114,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 VertexUtils.addCube(builder, matrixStackIn, 0.99f * liquidParams.x(), liquidParams.y() / 12, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                 matrixStackIn.popPose();
                 matrixStackIn.pushPose();
-                SoftFluid s = VanillaSoftFluids.WATER.get();
+                SoftFluid s = fluid.get().value();
                 renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
                         matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
                 matrixStackIn.popPose();

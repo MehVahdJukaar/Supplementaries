@@ -154,7 +154,7 @@ public class QuiverItemImpl {
 
         @Override
         public void consumeArrow() {
-            if (!tag.contains(TAG_ITEMS)) {
+            if (tag.contains(TAG_ITEMS)) {
                 ListTag listTag = tag.getList(TAG_ITEMS, 10);
                 if (!listTag.isEmpty()) {
                     int selected = this.getSelectedSlot();

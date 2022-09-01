@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     public GobletBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-    public static void renderFluid(float h, BlockEntity tile, ISoftFluidTank fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static void renderFluid(float h, BlockEntity tile, SoftFluidTank fluidHolder, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         matrixStackIn.pushPose();
         int color = fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos());
         int luminosity = fluidHolder.getFluid().getLuminosity();

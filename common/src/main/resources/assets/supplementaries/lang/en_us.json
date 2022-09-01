@@ -337,7 +337,9 @@
   "item.supplementaries.quiver": "Quiver",
   "message.supplementaries.quiver.tooltip": "%s [%s]",
   "block.supplementaries.crystal_display": "Crystal Display",
-  "block.supplementaries.diode": "Diode",
+  "block.supplementaries.diode_block": "Diode",
+  "supplementaries.gui.controls": "Supplementaries",
+  "supplementaries.keybind.quiver": "Quiver",
 
 
   "subtitle.supplementaries.clock_tick": "Clock ticking",

@@ -764,7 +764,7 @@ public class ModRegistry {
 
     //crystal display
     public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+            BlockBehaviour.Properties.copy(Blocks.POLISHED_DEEPSLATE)
                     .strength(0.2f, 0.2f)
      ), CreativeModeTab.TAB_REDSTONE);
 

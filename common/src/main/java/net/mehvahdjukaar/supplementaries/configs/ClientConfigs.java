@@ -5,9 +5,8 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
@@ -31,6 +30,10 @@ public class ClientConfigs {
         Tweaks.init(builder);
         Items.init(builder);
 
+        builder.onChange(()->{
+            GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
+            StuffToRemove.generateStuff();
+        });
         CLIENT_SPEC = builder.buildAndRegister();
     }
 
@@ -167,7 +170,6 @@ public class ClientConfigs {
         public static Supplier<Double> FLAG_WAVELENGTH;
         public static Supplier<Double> FLAG_AMPLITUDE;
         public static Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
-        public static Supplier<List<? extends List<String>>> CAPTURED_MOBS_PROPERTIES;
         public static Supplier<List<String>> TICKABLE_MOBS;
 
         public static Supplier<Boolean> FAST_SIGNS;
@@ -280,25 +282,6 @@ public class ClientConfigs {
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"));
 
-            CAPTURED_MOBS_PROPERTIES = builder.comment("""
-                            Here you can customize how mobs are displayed in jars and cages.
-                            Following will have to be a list with the format below:
-                            [[<id>,<height>,<width>,<light_level>,<animation_type>],[<id>,...],...]
-                            With the following description:
-                             - <id> being the mob id (ie: minecraft:bee)
-                             - <height>,<width>: these are the added height and width that will be added to the actual mob hitbox to determine its scale inside a cage or jar\s
-                               You can increase them so this 'adjusted hitbox' will match the actual mob shape
-                               In other words increase the to make the mob smaller
-                             - <light_level> determines if and how much light should the mob emit (currently broken)
-                             - <animation_type> is used to associate each mob an animation.
-                            It can be set to the following values:
-                             - 'air' to make it stand in mid air like a flying animal (note that such mobs are set to this value by default)
-                             - 'land' to force it to stand on the ground even if it is a flying animal
-                             - 'floating' to to make it stand in mid air and wobble up and down
-                             - any number > 0 to make it render as a 2d fish whose index matches the 'fishies' texture sheet
-                             - 0 or any other values will be ignored and treated as default
-                            Note that only the first 3 parameters are needed, the others are optional""")
-                    .defineForgeList("rendering_parameters", CapturedMobsHelper.DEFAULT_CONFIG, ConfigBuilder.LIST_STRING_CHECK);
             builder.pop();
 
             builder.push("wall_lantern");

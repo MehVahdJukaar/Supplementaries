@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -60,7 +60,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
         return type.is(ModTags.JAR_CATCHABLE) ||
                 (type.is(ModTags.JAR_BABY_CATCHABLE) && e instanceof LivingEntity le && le.isBaby()) ||
-                this.isBoat(e) || CapturedMobsHelper.is2DFish(type);
+                this.isBoat(e) || BucketHelper.isModdedFish(e);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         if (tag != null && entity instanceof Player player) {
             JarBlockTile temp = new JarBlockTile(entity.getOnPos(), ModRegistry.JAR.get().defaultBlockState());
             temp.load(tag);
-            ISoftFluidTank fh = temp.getSoftFluidTank();
+            SoftFluidTank fh = temp.getSoftFluidTank();
             if (fh.containsFood()) {
                 if (fh.tryDrinkUpFluid(player, world)) {
                     CompoundTag newTag = new CompoundTag();
@@ -236,7 +236,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
                 if (DUMMY_TILE == null)
                     DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                 DUMMY_TILE.load(tag);
-                ISoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
+                SoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();

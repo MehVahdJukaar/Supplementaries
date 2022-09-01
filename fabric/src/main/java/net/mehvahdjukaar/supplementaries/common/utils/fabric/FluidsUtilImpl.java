@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -11,11 +11,11 @@ import java.util.function.Supplier;
 
 public class FluidsUtilImpl {
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     ISoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
+                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
         return false;
     }
 
-    public static boolean tryFillFluidTank(BlockEntity tileBelow, ISoftFluidTank tempFluidHolder) {
+    public static boolean tryFillFluidTank(BlockEntity tileBelow, SoftFluidTank tempFluidHolder) {
         return false;
     }
 

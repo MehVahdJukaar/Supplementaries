@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
@@ -34,6 +35,7 @@ import net.mehvahdjukaar.supplementaries.common.world.data.map.client.ModMapMark
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -68,16 +70,16 @@ public class ClientRegistry {
 
 
     //entity models
-    public static ModelLayerLocation BELLOWS_MODEL = loc("bellows");
-    public static ModelLayerLocation BOOK_MODEL = loc("book");
-    public static ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
-    public static ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
-    public static ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
-    public static ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
-    public static ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
-    public static ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
-    public static ModelLayerLocation JARVIS_MODEL = loc("jarvis");
-    public static ModelLayerLocation PICKLE_MODEL = loc("pickle");
+    public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
+    public static final ModelLayerLocation BOOK_MODEL = loc("book");
+    public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
+    public static final ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
+    public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
+    public static final ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
+    public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
+    public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
+    public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
+    public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
 
     //special models locations
@@ -98,6 +100,8 @@ public class ClientRegistry {
         put(LabelEntity.AttachType.JAR, Supplementaries.res("block/label_jar"));
     }};
 
+    public static KeyMapping QUIVER_KEYBIND;
+
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
     }
@@ -115,6 +119,7 @@ public class ClientRegistry {
         ClientPlatformHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
         ClientPlatformHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
+        ClientPlatformHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
 
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             ModTextures.getTexturesForBlockAtlas().forEach(e::addSprite);
@@ -258,6 +263,15 @@ public class ClientRegistry {
     }
 
     @EventCalled
+    private static void registerKeyBinds(ClientPlatformHelper.KeyBindEvent event) {
+        QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
+                InputConstants.Type.KEYSYM,
+                InputConstants.getKey("key.keyboard.v").getValue(),
+                "supplementaries.gui.controls");
+        event.register(QUIVER_KEYBIND);
+    }
+
+    @EventCalled
     private static void registerParticles(ClientPlatformHelper.ParticleEvent event) {
         event.register(ModParticles.SPEAKER_SOUND.get(), SpeakerSoundParticle.Factory::new);
         event.register(ModParticles.GREEN_FLAME.get(), FlameParticle.Provider::new);
@@ -277,6 +291,7 @@ public class ClientRegistry {
         event.register(ModParticles.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
         event.register(ModParticles.ASH_PARTICLE.get(), AshParticleFactory::new);
         event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
+        event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
     }
 
     private static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -422,7 +437,6 @@ public class ClientRegistry {
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
-        //event.register(BELL_EXTENSION, BellTileMixinRenderer::createMesh);
     }
 
 

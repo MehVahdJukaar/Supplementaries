@@ -4,10 +4,11 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -22,8 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
-import net.minecraft.world.entity.animal.Bucketable;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -52,6 +51,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         this.mobContainerWidth = width;
         this.mobContainerHeight = height;
         this.isAquarium = aquarium;
+    }
+
+    //if it can hold and display liquids
+    public boolean isAquarium() {
+        return isAquarium;
     }
 
     public float getMobContainerHeight() {
@@ -108,41 +112,38 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return this.doInteract(stack, player, entity, player.getUsedItemHand()).consumesAction();
     }
 
-    //TODO: merge
-    //immediately discards pets and not alive entities as well as players
-    @SuppressWarnings("ConstantConditions")
-    protected final boolean isEntityValid(Entity e, Player player) {
-        if (!e.isAlive() || ForgeHelper.isMultipartEntity(e) || e instanceof Player) return false;
-        if (e instanceof LivingEntity living) {
+
+    //1
+    private <T extends Entity> boolean canCatch(T entity, Player player) {
+        //immediately discards pets and not alive entities as well as players
+        if (!entity.isAlive() || ForgeHelper.isMultipartEntity(entity) || entity instanceof Player) return false;
+        if (entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 
-            if (e instanceof TamableAnimal pet) {
-                return !pet.isTame() || pet.isOwnedBy(player);
+            if (entity instanceof TamableAnimal pet) {
+                if(pet.isTame() && !pet.isOwnedBy(player))return false;
             }
 
             int p = CommonConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
-            if (p != 100) {
-                return (living.getHealth() <= living.getMaxHealth() * (p / 100f));
+            if (p != 100 && (living.getHealth() > living.getMaxHealth() * (p / 100f))) {
+                return false;
             }
         }
-        return true;
-    }
-
-    //2
-    private <T extends Entity> boolean canCatch(T e) {
-        String name = Utils.getID(e.getType()).toString();
+        String name = Utils.getID(entity.getType()).toString();
         if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobsHelper.COMMAND_MOBS.contains(name)) {
+        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || StuffToRemove.COMMAND_MOBS.contains(name)) {
             return true;
         }
-        ICatchableMob cap = MobContainer.getCap(e);
-        return cap.canBeCaughtWithItem(this);
+        ICatchableMob cap = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
+
+        //this calls can ItemCatch for default or let's full control for custom ones
+        return cap.canBeCaughtWithItem(entity,this, player);
     }
 
     /**
-     * condition specific to the item. called from mob holder cap
+     * condition specific to the item. called from mob catchable mob cap
      */
-    //4
+    //3
     public abstract boolean canItemCatch(Entity e);
 
     /**
@@ -290,22 +291,15 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      * interact with an entity to catch it
      */
     public InteractionResult doInteract(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
-
         if (hand == null) {
             return InteractionResult.PASS;
         }
-        if (this.isEntityValid(entity, player)) {
+        if (this.canCatch(entity, player)) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
-            boolean canCatch = this.canCatch(entity);
-            if (this.isAquarium || canCatch) {
-                if (entity instanceof Bucketable bucketable) {
-                    bucket = bucketable.getBucketItemStack();
-                }
-                //maybe remove. not needed with new bucketable interface. might improve compat
-                else if (entity instanceof WaterAnimal) {
-                    bucket = this.tryGettingFishBucketHackery(player, entity, hand);
-                }
+
+            if (this.isAquarium) {
+                bucket = BucketHelper.getBucketFromEntity(entity);
             }
             //safety check since some mods like to give a null bucket...
             if (bucket == null || bucket.isEmpty()) {
@@ -314,7 +308,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }
 
-            if (!bucket.isEmpty() || canCatch) {
+            //fix here
+            if (!bucket.isEmpty()) {
                 ForgeHelper.reviveEntity(entity);
                 //return for client
                 if (player.level.isClientSide) return InteractionResult.SUCCESS;
@@ -344,34 +339,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return InteractionResult.PASS;
     }
 
-    /**
-     * try catching a mob with a water or empty bucket to then store it in the mob holder
-     *
-     * @return filled bucket stack or empty stack
-     */
-    private ItemStack tryGettingFishBucketHackery(Player player, Entity entity, InteractionHand hand) {
-        ItemStack heldItem = player.getItemInHand(hand).copy();
-
-        ItemStack bucket = ItemStack.EMPTY;
-        //hax incoming
-        player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        InteractionResult result = entity.interact(player, hand);
-        if (!result.consumesAction()) {
-            player.setItemInHand(hand, new ItemStack(Items.BUCKET));
-            result = entity.interact(player, hand);
-        }
-
-        if (result.consumesAction()) {
-            ItemStack filledBucket = player.getItemInHand(hand);
-            if (filledBucket != heldItem && !entity.isAlive()) {
-                bucket = filledBucket;
-            }
-        }
-        //hax
-        player.setItemInHand(hand, heldItem);
-        player.startUsingItem(hand);
-        return bucket;
-    }
 
     //cancel block placement when not shifting
     @Override

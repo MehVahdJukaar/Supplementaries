@@ -116,6 +116,7 @@ public class ForgeHelper {
     }
 
 
+    @Contract
     @ExpectPlatform
     public static boolean isMultipartEntity(Entity e) {
         throw new AssertionError();

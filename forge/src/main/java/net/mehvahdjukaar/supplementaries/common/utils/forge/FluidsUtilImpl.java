@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
-import net.mehvahdjukaar.moonlight.api.fluids.ISoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidTankImpl;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.function.Supplier;
@@ -18,13 +18,13 @@ import java.util.function.Supplier;
 public class FluidsUtilImpl {
 
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     ISoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
-        IFluidHandler handlerBack = tileBack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).orElse(null);
+                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
+        IFluidHandler handlerBack = tileBack.getCapability(ForgeCapabilities.FLUID_HANDLER, dir).orElse(null);
         //TODO: fix create fluid int bug
         if (handlerBack != null && !Utils.getID(backBlock).getPath().equals("fluid_interface")) {
             //only works in 250 increment
             if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
-            ((SoftFluidTank) tempFluidHolder).copy(handlerBack);
+            ((SoftFluidTankImpl) tempFluidHolder).copy(handlerBack);
             tempFluidHolder.setCount(2);
             if (doTransfer && transferFunction.get()) {
                 handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
@@ -35,11 +35,11 @@ public class FluidsUtilImpl {
         return false;
     }
 
-    public static boolean tryFillFluidTank(BlockEntity tileBelow, ISoftFluidTank tempFluidHolder) {
+    public static boolean tryFillFluidTank(BlockEntity tileBelow, SoftFluidTank tempFluidHolder) {
         boolean result;
-        IFluidHandler handlerDown = tileBelow.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+        IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
         if (handlerDown != null) {
-            result = ((SoftFluidTank) tempFluidHolder).tryTransferToFluidTank(handlerDown, tempFluidHolder.getCount() - 1);
+            result = ((SoftFluidTankImpl) tempFluidHolder).tryTransferToFluidTank(handlerDown, tempFluidHolder.getCount() - 1);
             if (result) {
                 tileBelow.setChanged();
                 tempFluidHolder.fillCount();

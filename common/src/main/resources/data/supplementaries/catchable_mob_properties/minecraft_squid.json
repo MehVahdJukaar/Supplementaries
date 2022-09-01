@@ -1,0 +1,8 @@
+{
+  "animation": "floating",
+  "height_increment": 0.25,
+  "owners": [
+    "minecraft:squid"
+  ],
+  "width_increment": 0.25
+}

@@ -1,24 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.CommandBlock;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,7 +21,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.jetbrains.annotations.Nullable;
+import vazkii.quark.base.network.QuarkNetwork;
+import vazkii.quark.base.network.message.ChangeHotbarMessage;
+import vazkii.quark.content.client.module.AutoWalkKeybindModule;
 
 public class ClientEventsForge {
 
@@ -110,6 +107,28 @@ public class ClientEventsForge {
             }
         }
     }
+
+    public static boolean keyDown  =false;
+
+    @SubscribeEvent
+    public static void onKeyPress(ScreenEvent.KeyPressed event) {
+        if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+            boolean down = ClientRegistry.QUIVER_KEYBIND.isDown();
+            boolean wasDown = keyDown;
+            keyDown = down;
+            if (down && !wasDown) {
+
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onKeyPress(ScreenEvent.KeyReleased event) {
+        if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+
+        }
+    }
+
+
 
 
 

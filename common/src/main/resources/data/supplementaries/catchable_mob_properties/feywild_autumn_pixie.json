@@ -1,0 +1,9 @@
+{
+  "animation": "floating",
+  "height_increment": 0.25,
+  "light_level": 8,
+  "owners": [
+    "feywild:autumn_pixie"
+  ],
+  "width_increment": 0.0
+}

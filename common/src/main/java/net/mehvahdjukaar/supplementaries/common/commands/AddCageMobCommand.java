@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntitySummonArgument;
@@ -28,7 +28,7 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
 
         ResourceLocation id = EntitySummonArgument.getSummonableEntity(context, "entity");
 
-        CapturedMobsHelper.COMMAND_MOBS.add(id.toString());
+        StuffToRemove.COMMAND_MOBS.add(id.toString());
         return 0;
     }
 }

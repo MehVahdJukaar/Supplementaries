@@ -189,8 +189,11 @@ public class CommonConfigs {
         private static void init(ConfigBuilder builder) {
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
+            builder.push("traders_open_doors");
             WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldnt aparently)")
-                    .define("traders_open_doors", true);
+                    .define("enabled", true);
+            builder.pop();
+
 
             builder.push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
@@ -451,7 +454,7 @@ public class CommonConfigs {
 
             builder.push("rope");
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
-                    .define("block_side_attachment", false);
+                    .define("block_side_attachment", true);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
             builder.pop();

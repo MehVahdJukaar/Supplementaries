@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BowItem.class)
-public class BowMixin {
+public abstract class BowMixin {
 
     @Inject(method = "releaseUsing",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V"))
-    private static void shrinkQuiverArrow(ItemStack stack, Level level, LivingEntity livingEntity,
+    private void shrinkQuiverArrow(ItemStack stack, Level level, LivingEntity livingEntity,
                                           int timeCharged, CallbackInfo ci) {
         var q = QuiverItem.getQuiver(livingEntity);
         if (q != null) {

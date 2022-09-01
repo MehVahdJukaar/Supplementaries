@@ -1,14 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.DoubleTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -32,6 +32,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class MobContainer {
@@ -42,24 +43,21 @@ public class MobContainer {
     //stuff that actually gets saved
     @Nullable
     private MobData data;
-
-    //static mob instance created from entity data. contained in the capability that handles the animation
+    //static mob instance created from entity data.
+    //handles the animations. Also contains a reference to the entity properties and visual entity itself
     @Nullable
-    private ICatchableMob mobDisplayCapInstance;
+    private CapturedMobInstance mobInstance;
+    //mob settings. In case of bucket holder these wil only consist of default cap or data ones
+    private ICatchableMob mobProperties;
+    private boolean needsInitialization = false;
 
     public MobContainer(float width, float height) {
         this.width = width;
         this.height = height;
     }
 
-    @ExpectPlatform
-    @Nonnull
-    public static <E extends Entity> ICatchableMob getCap(E entity) {
-        throw new AssertionError();
-    }
-
     public CompoundTag save(CompoundTag tag) {
-        if (!this.isEmpty()) {
+        if (this.data != null) {
             this.data.saveToTag(tag);
         }
         return tag;
@@ -72,38 +70,41 @@ public class MobContainer {
 
     private void setData(@Nullable MobData data) {
         this.data = data;
-        this.mobDisplayCapInstance = null;
+        this.mobInstance = null;
         this.needsInitialization = true;
     }
 
     //----init----
 
-    private boolean needsInitialization = false;
-
     private void initializeEntity(Level level, BlockPos pos) {
         this.needsInitialization = false;
-        if (data != null && level != null && pos != null && !data.isAquarium) {
-            Entity entity = createStaticMob(data, level, pos);
+        if (data != null && level != null && pos != null) {
 
-            if (entity != null) {
+            if (this.data.isAquarium) {
+                var type = BucketHelper.getEntityTypeFromBucket(this.data.filledBucket.getItem());
+                this.mobProperties = CapturedMobHandler.getDataCap(type, true);
 
-                //visual entity stored in capability
-                this.mobDisplayCapInstance = getCap(entity);
-                this.mobDisplayCapInstance.setContainerDimensions(this.width, this.height);
-                this.mobDisplayCapInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY);
+            } else {
 
-                this.updateLightLevel(level, pos);
+                Entity entity = createStaticMob(data, level, pos);
+
+                if (entity != null) {
+                    //visual entity stored in this instance
+                    this.mobProperties = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
+                    this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
+                    this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY);
+
+                    this.updateLightLevel(level, pos);
+                }
             }
         }
     }
 
     public void updateLightLevel(Level level, BlockPos pos) {
-        int light;
-        if (level != null && !level.isClientSide) {
-            if (hasDisplayMob()) {
-                light = mobDisplayCapInstance.getLightLevel();
-            } else {
-                light = CapturedMobsHelper.getTypeFromBucket(this.data.filledBucket.getItem()).getLightLevel();
+        int light = 0;
+        if (level != null && !level.isClientSide && data != null) {
+            if (mobProperties != null) {
+                light = mobProperties.getLightLevel(level, pos);
             }
             BlockState state = level.getBlockState(pos);
             if (state.getValue(ModBlockProperties.LIGHT_LEVEL_0_15) != light) {
@@ -166,9 +167,8 @@ public class MobContainer {
     //-----end-init-----
 
 
-    //TODO: dispensers
-    //only called from jar. move to mob container
-    public boolean interactWithBucket(ItemStack stack, Level world, BlockPos pos, @Nullable Player player, InteractionHand hand) {
+    public boolean interactWithBucket(ItemStack stack, Level world, BlockPos pos, @Nullable Player
+            player, InteractionHand hand) {
         Item item = stack.getItem();
 
         ItemStack returnStack = ItemStack.EMPTY;
@@ -178,8 +178,9 @@ public class MobContainer {
 
                 world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
-
-                MobData data = new MobData(stack.copy());
+                var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
+                var cap = CapturedMobHandler.getDataCap(type, true);
+                MobData data = new MobData(null, cap.getFishTextureIndex(), stack.copy());
                 this.setData(data);
             }
         } else {
@@ -209,41 +210,37 @@ public class MobContainer {
         return this.data == null;
     }
 
-    public boolean hasDisplayMob() {
-        return this.mobDisplayCapInstance != null;
-    }
 
     public void tick(Level pLevel, BlockPos pPos) {
         if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
-        if (this.hasDisplayMob() && !this.isEmpty()) {
-            //TODO: maybe put inside cap
-            this.mobDisplayCapInstance.getEntity().tickCount++;
-            this.mobDisplayCapInstance.tickInsideContainer(pLevel, pPos, this.data.scale, this.data.mobTag);
+        if (this.mobInstance != null && this.data != null) {
+            this.mobInstance.containerTick(pLevel, pPos, this.data.scale, this.data.mobTag);
         }
     }
 
     public InteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand) {
-        if (this.hasDisplayMob()) {
-            return mobDisplayCapInstance.onPlayerInteract(world, pos, player, hand, this.data.mobTag);
+        if (this.mobInstance != null && this.data != null) {
+            return mobInstance.onPlayerInteract(world, pos, player, hand, this.data.mobTag);
         }
         return InteractionResult.PASS;
     }
 
-    public @Nullable
-    MobData getData() {
+    @Nullable
+    public MobData getData() {
         return data;
     }
 
     @Nullable
     public Entity getDisplayedMob() {
-        if (this.hasDisplayMob()) {
-            return this.mobDisplayCapInstance.getEntity();
+        if (this.mobInstance != null) {
+            return this.mobInstance.getEntityForRenderer();
         }
         return null;
     }
 
-    public boolean shouldHaveWater() {
-        return this.data != null && this.data.isAquarium || (this.hasDisplayMob() && this.mobDisplayCapInstance.shouldHaveWater());
+    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
+        if (data == null || !this.data.isAquarium || this.mobProperties == null) return Optional.empty();
+        return this.mobProperties.shouldRenderWithFluid();
     }
 
     //item stuff
@@ -258,15 +255,16 @@ public class MobContainer {
      * @param isAquarium  if the container only needs to keep bucket data when bucket is not empty
      * @return item Tag
      */
-    @Nullable
-    public static CompoundTag createMobHolderItemTag(@Nonnull Entity mob, float blockW, float blockH, ItemStack bucketStack, boolean isAquarium) {
+    public static CompoundTag createMobHolderItemTag(Entity mob, float blockW, float blockH, ItemStack bucketStack,
+                                                     boolean isAquarium) {
 
         MobData data;
         String name = mob.getName().getString();
-        if (isAquarium && !bucketStack.isEmpty() && CapturedMobsHelper.getType(mob).canBe2dFish()) {
-            data = new MobData(name, bucketStack);
+        var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
+        if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
+            data = new MobData(name, cap.getFishTextureIndex(), bucketStack);
         } else {
-            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(getCap(mob), blockW, blockH, false);
+            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, blockW, blockH, false);
 
             float scale = dimensions.getLeft();
             float yOffset = dimensions.getRight();
@@ -333,14 +331,14 @@ public class MobContainer {
         entity.clearFire();
         entity.invulnerableTime = 0;
 
-        if (entity instanceof Bat) {
-            ((Bat) entity).setResting(true);
+        if (entity instanceof Bat bat) {
+            bat.setResting(true);
         }
-        if (entity instanceof Fox) {
-            ((Fox) entity).setSleeping(true);
+        if (entity instanceof Fox fox) {
+            fox.setSleeping(true);
         }
-        if (entity instanceof AbstractFish) {
-            ((AbstractFish) entity).setFromBucket(true);
+        if (entity instanceof AbstractFish abstractFish) {
+            abstractFish.setFromBucket(true);
         }
 
         CompoundTag mobTag = new CompoundTag();
@@ -367,15 +365,14 @@ public class MobContainer {
     /**
      * get mob scale and vertical offset for a certain container
      *
-     * @param cap    mob capability    entity
      * @param blockW container width
      * @param blockH container height
      * @return scale and y offset
      */
-    public static Pair<Float, Float> calculateMobDimensionsForContainer(ICatchableMob cap, float blockW, float blockH, boolean waterlogged) {
+    public static Pair<Float, Float> calculateMobDimensionsForContainer(
+            Entity mob, float blockW, float blockH, boolean waterlogged) {
 
-        Entity mob = cap.getEntity();
-
+        var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
         float babyScale = 1;
 
         if (mob instanceof LivingEntity && ((LivingEntity) mob).isBaby()) {
@@ -389,12 +386,10 @@ public class MobContainer {
         float w = mob.getBbWidth() * babyScale;
         float h = mob.getBbHeight() * babyScale;
 
-        cap.getHitBoxHeightIncrement();
+        boolean isAir = cap.shouldHover(mob, waterlogged);
 
-        boolean isAir = cap.isFlyingMob(waterlogged);
-
-        float aW = w + cap.getHitBoxWidthIncrement();
-        float aH = h + cap.getHitBoxHeightIncrement();
+        float aW = w + cap.getHitBoxWidthIncrement(mob);
+        float aH = h + cap.getHitBoxHeightIncrement(mob);
 
         //1 pixel margin
         float margin = 1 / 16f * 2;
@@ -428,6 +423,7 @@ public class MobContainer {
         this.setData(null);
     }
 
+    //what is serialized in an itemStack or container
     public static class MobData {
         public final String name;
         public final boolean isAquarium;
@@ -452,30 +448,13 @@ public class MobContainer {
             this.fishIndex = 0;
         }
 
-        public MobData(ItemStack filledBucket) {
-            this(null, filledBucket);
-        }
-
-        public MobData(String name, ItemStack filledBucket) {
-            this(name, 0, filledBucket);
-        }
-
         public MobData(@Nullable String name, @Nullable int fishIndex, @Nonnull ItemStack filledBucket) {
             //initialize name & texture if absent
-            EntityType<?> type = null;
+            EntityType<?> type;
             if (name == null) {
-                type = BucketHelper.getEntityType(filledBucket.getItem());
+                type = BucketHelper.getEntityTypeFromBucket(filledBucket.getItem());
                 name = type == null ? "Mob" : type.getDescriptionId();
             }
-            if (fishIndex == 0) {
-                if (type == null) type = BucketHelper.getEntityType(filledBucket.getItem());
-                fishIndex = 0;
-                if (type != null) {
-                    var t = CapturedMobsHelper.getType(type);
-                    if (t.is2DFish()) fishIndex = t.getFishTexture();
-                }
-            }
-
 
             this.isAquarium = true;
             this.fishIndex = fishIndex;
@@ -497,18 +476,7 @@ public class MobContainer {
                 UUID uuid = cmp.contains("UUID") ? cmp.getUUID("UUID") : null;
                 ItemStack bucket = cmp.contains("Bucket") ? ItemStack.of(cmp.getCompound("Bucket")) : ItemStack.EMPTY;
                 String name = cmp.getString("Name");
-
-                //backwards compat
-                if (cmp.contains("YOffset")) {
-                    float y = cmp.getFloat("YOffset");
-                    ListTag listnbt = new ListTag();
-                    listnbt.add(DoubleTag.valueOf(0.5));
-                    listnbt.add(DoubleTag.valueOf(y));
-                    listnbt.add(DoubleTag.valueOf(0.5));
-
-                    if (entityData.contains("Pos")) entityData.remove("Pos");
-                    entityData.put("Pos", listnbt);
-                }
+                int fish = cmp.getInt("FishTexture");
 
                 return new MobData(name, entityData, scale, uuid, bucket);
             }

@@ -18,4 +18,8 @@ public class CommonUtilImpl {
         if(copyPosFrom instanceof Player p)return p;
         else return null; //TODO: add
     }
+
+    public static Player getFakePlayer(ServerLevel serverLevel) {
+        throw new UnsupportedOperationException();
+    }
 }

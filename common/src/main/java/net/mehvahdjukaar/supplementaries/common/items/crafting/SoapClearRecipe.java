@@ -5,10 +5,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
@@ -28,7 +25,8 @@ public class SoapClearRecipe extends CustomRecipe {
         for (int k = 0; k < craftingContainer.getContainerSize(); ++k) {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {
-                if (Block.byItem(itemstack.getItem()) instanceof ShulkerBoxBlock || itemstack.getItem() instanceof IColored) {
+                if (Block.byItem(itemstack.getItem()) instanceof ShulkerBoxBlock ||
+                        itemstack.getItem() instanceof IColored || itemstack.getItem() instanceof DyeableLeatherItem) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {
@@ -54,14 +52,19 @@ public class SoapClearRecipe extends CustomRecipe {
             ItemStack stack = craftingContainer.getItem(i);
             if (!stack.isEmpty()) {
                 Item item = stack.getItem();
-                if (item instanceof IColored || Block.byItem(item) instanceof ShulkerBoxBlock) {
+                if (item instanceof IColored || Block.byItem(item) instanceof ShulkerBoxBlock ||
+                        item instanceof DyeableLeatherItem) {
                     itemstack = stack;
                 }
             }
         }
         ItemStack result;
         Item i = itemstack.getItem();
-        if (i instanceof IColored colored) {
+        if (i instanceof DyeableLeatherItem leatherItem) {
+            result = itemstack.copy();
+            leatherItem.clearColor(result);
+            return result;
+        } else if (i instanceof IColored colored) {
             var map = colored.getItemColorMap();
             if (map != null) {
                 result = ((ItemLike) map.get(colored.supportsBlankColor() ? null : DyeColor.WHITE)).asItem().getDefaultInstance();

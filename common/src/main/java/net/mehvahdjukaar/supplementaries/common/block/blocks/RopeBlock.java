@@ -406,7 +406,7 @@ public class RopeBlock extends WaterBlock {
                     if (removeRope(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
-                            Utils.addStackToExisting(player, new ItemStack(this));
+                            ItemsUtil.addStackToExisting(player, new ItemStack(this), true);
                         }
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
