@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ClientEventsFabric {
     public static void init() {
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            if(CompatHandler.cloth_config) {
+            if (CompatHandler.cloth_config) {
                 List<? extends GuiEventListener> listeners = s.children();
                 ClientEvents.addConfigButton(s, listeners, e -> {
                     List<GuiEventListener> c = (List<GuiEventListener>) s.children();
@@ -32,16 +33,17 @@ public class ClientEventsFabric {
         });
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
 
-        WorldRenderEvents.START.register((c)-> SupplementariesClient.onRenderTick(c.tickDelta()));
+        WorldRenderEvents.START.register((c) -> SupplementariesClient.onRenderTick(c.tickDelta()));
 
         HudRenderCallback.EVENT.register(ClientEventsFabric::onRenderHud);
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
             if (r instanceof PlayerRenderer) {
                 e.register(new QuiverLayer(r));
+            } else if (t == EntityType.SKELETON) {
+                e.register(new QuiverLayer(r));
             }
         });
-
 
 
     }

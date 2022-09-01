@@ -4,11 +4,10 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +25,10 @@ import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -121,7 +123,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             if (living.isDeadOrDying()) return false;
 
             if (entity instanceof TamableAnimal pet) {
-                if(pet.isTame() && !pet.isOwnedBy(player))return false;
+                if (pet.isTame() && !pet.isOwnedBy(player)) return false;
             }
 
             int p = CommonConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
@@ -131,13 +133,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
         String name = Utils.getID(entity.getType()).toString();
         if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || StuffToRemove.COMMAND_MOBS.contains(name)) {
+        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobHandler.COMMAND_MOBS.contains(name)) {
             return true;
         }
         ICatchableMob cap = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
 
         //this calls can ItemCatch for default or let's full control for custom ones
-        return cap.canBeCaughtWithItem(entity,this, player);
+        return cap.canBeCaughtWithItem(entity, this, player);
     }
 
     /**
@@ -309,30 +311,27 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             }
 
             //fix here
-            if (!bucket.isEmpty()) {
-                ForgeHelper.reviveEntity(entity);
-                //return for client
-                if (player.level.isClientSide) return InteractionResult.SUCCESS;
 
-                this.playCatchSound(player);
-                this.angerNearbyEntities(entity, player);
+            ForgeHelper.reviveEntity(entity);
+            //return for client
+            if (player.level.isClientSide) return InteractionResult.SUCCESS;
 
-                if (CommonConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
-                    mob.setPersistenceRequired();
-                }
+            this.playCatchSound(player);
+            this.angerNearbyEntities(entity, player);
 
-                if (entity instanceof Mob mob) {
-                    mob.dropLeash(true, !player.getAbilities().instabuild);
-                }
-
-                Utils.swapItemNBT(player, hand, stack, this.saveEntityInItem(entity, stack, bucket));
-
-
-                entity.remove(Entity.RemovalReason.DISCARDED);
-                return InteractionResult.CONSUME;
-            } else if (player.getLevel().isClientSide) {
-                player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
+            if (CommonConfigs.Blocks.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+                mob.setPersistenceRequired();
             }
+
+            if (entity instanceof Mob mob) {
+                mob.dropLeash(true, !player.getAbilities().instabuild);
+            }
+            Utils.swapItemNBT(player, hand, stack, this.saveEntityInItem(entity, stack, bucket));
+
+            entity.remove(Entity.RemovalReason.DISCARDED);
+            return InteractionResult.CONSUME;
+        } else if (player.getLevel().isClientSide) {
+            player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
         }
 
         this.playFailSound(player);

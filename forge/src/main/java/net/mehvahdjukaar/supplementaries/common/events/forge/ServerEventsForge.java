@@ -1,14 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigHelper;
-import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
@@ -16,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPack
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -44,13 +39,12 @@ import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ServerEventsForge {
 
     public static void init() {
 
-                MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
+        MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
     }
 
     @SubscribeEvent
@@ -83,11 +77,11 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onUseItem(PlayerInteractEvent.RightClickItem event) {
         if (!event.isCanceled()) {
-           var ret = ServerEvents.onUseItem(event.getEntity(), event.getLevel(), event.getHand());
-           if(ret.getResult() != InteractionResult.PASS){
-               event.setCanceled(true);
-               event.setCancellationResult(ret.getResult());
-           }
+            var ret = ServerEvents.onUseItem(event.getEntity(), event.getLevel(), event.getHand());
+            if (ret.getResult() != InteractionResult.PASS) {
+                event.setCanceled(true);
+                event.setCancellationResult(ret.getResult());
+            }
         }
     }
 

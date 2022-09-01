@@ -1,0 +1,8 @@
+{
+  "comment": "this applies to all fishes that don't have another data file or interface implemented",
+  "fish_index": 1,
+  "height_increment": 0.0,
+  "owners": [
+  ],
+  "width_increment": 0.125
+}

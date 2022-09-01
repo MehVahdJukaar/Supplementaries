@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -34,6 +35,8 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     public QuiverItem(Properties properties) {
         super(properties);
     }
+
+
     //TODO: quark arrow preview
 
     @Override
@@ -324,6 +327,14 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         void consumeArrow();
     }
 
+
+    //for spawn
+    public static ItemStack createRandomQuiver(float specialMultiplier) {
+        ItemStack quiver = new ItemStack(ModRegistry.QUIVER_ITEM.get());
+    var data =    QuiverItem.getQuiverData(quiver);
+        data.tryAdding(new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get(), 2));
+        return quiver;
+    }
 
 }
 

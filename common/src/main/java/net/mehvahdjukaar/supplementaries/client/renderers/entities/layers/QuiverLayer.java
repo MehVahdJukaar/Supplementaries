@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 
-public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
+public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
     private final ItemRenderer itemRenderer;
 
     public QuiverLayer(RenderLayerParent<T, M> parent) {
@@ -33,7 +34,7 @@ public class QuiverLayer<T extends LivingEntity, M extends HumanoidModel<T>> ext
         QuiverMode mode = ClientConfigs.Items.QUIVER_RENDER_MODE.get();
         if (mode == QuiverMode.HIDDEN) return;
 
-        ItemStack quiver = QuiverItem.getQuiver(livingEntity);
+        ItemStack quiver = livingEntity.getQuiver();
         if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
             return;
         }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -56,6 +57,7 @@ public class QuiverItemImpl {
 
 
     public static ItemStack getQuiver(LivingEntity entity) {
+        if(entity instanceof IQuiverEntity e)return e.getQuiver();
         if (entity instanceof Player p) {
             for (var s : p.getInventory().items) {
                 if (s.getItem() == ModRegistry.QUIVER_ITEM.get()) return s;

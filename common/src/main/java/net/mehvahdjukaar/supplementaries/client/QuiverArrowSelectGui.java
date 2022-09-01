@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
@@ -126,6 +127,9 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 int uWidth = slots * 20 + 2;
                 int px = uWidth / 2;
                 int py = screenHeight / 2 - 40;
+
+                px += ClientConfigs.Items.QUIVER_GUI_X.get();
+                py += ClientConfigs.Items.QUIVER_GUI_Y.get();
 
                 this.blit(poseStack, centerX - px, py, 0, 0, uWidth - 1, 22);
                 this.blit(poseStack, centerX + px - 1, py, 0, 0, 1, 22);

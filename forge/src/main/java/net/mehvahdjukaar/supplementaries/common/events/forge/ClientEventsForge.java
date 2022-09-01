@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
@@ -9,10 +8,9 @@ import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -21,9 +19,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import vazkii.quark.base.network.QuarkNetwork;
-import vazkii.quark.base.network.message.ChangeHotbarMessage;
-import vazkii.quark.content.client.module.AutoWalkKeybindModule;
 
 public class ClientEventsForge {
 
@@ -66,9 +61,13 @@ public class ClientEventsForge {
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
         for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
-            if(renderer != null) {
+            if (renderer != null) {
                 renderer.addLayer(new QuiverLayer(renderer));
             }
+        }
+        var renderer = event.getRenderer(EntityType.SKELETON);
+        if(renderer != null) {
+            renderer.addLayer(new QuiverLayer(renderer));
         }
     }
 
@@ -79,9 +78,9 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-       if(QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())){
-           event.setCanceled(true);
-       }
+        if (QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())) {
+            event.setCanceled(true);
+        }
     }
 
     //forge only below
@@ -108,7 +107,7 @@ public class ClientEventsForge {
         }
     }
 
-    public static boolean keyDown  =false;
+    public static boolean keyDown = false;
 
     @SubscribeEvent
     public static void onKeyPress(ScreenEvent.KeyPressed event) {
@@ -121,16 +120,13 @@ public class ClientEventsForge {
             }
         }
     }
+
     @SubscribeEvent
     public static void onKeyPress(ScreenEvent.KeyReleased event) {
         if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
 
         }
     }
-
-
-
-
 
 
 }

@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.StuffToRemove;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
@@ -16,7 +15,10 @@ import java.util.function.Supplier;
 
 public class ClientConfigs {
 
-    public static void init(){};
+    public static void init() {
+    }
+
+    ;
 
     public static ConfigSpec CLIENT_SPEC;
 
@@ -30,9 +32,8 @@ public class ClientConfigs {
         Tweaks.init(builder);
         Items.init(builder);
 
-        builder.onChange(()->{
+        builder.onChange(() -> {
             GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
-            StuffToRemove.generateStuff();
         });
         CLIENT_SPEC = builder.buildAndRegister();
     }
@@ -42,6 +43,8 @@ public class ClientConfigs {
         public static Supplier<Double> QUIVER_ARMOR_OFFSET;
         public static Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
         public static Supplier<Boolean> QUIVER_OVERLAY;
+        public static Supplier<Integer> QUIVER_GUI_X;
+        public static Supplier<Integer> QUIVER_GUI_Y;
         public static Supplier<Boolean> SLINGSHOT_OVERLAY;
         public static Supplier<Boolean> SLINGSHOT_OUTLINE;
         public static Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
@@ -71,7 +74,11 @@ public class ClientConfigs {
             QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
                     .define("overlay", true);
             QUIVER_MOUSE_MOVEMENT = builder.comment("Allows using your mouse to select an arrow in the quiver GUI")
-                            .define("mouse_movement_in_gui",true);
+                    .define("mouse_movement_in_gui", true);
+            QUIVER_GUI_X = builder.comment("Quiver GUI X offset from default position")
+                    .define("gui_x_offset", 0, -1000, 1000);
+            QUIVER_GUI_Y = builder.comment("Quiver GUI Y offset from default position")
+                    .define("gui_y_offset", 0, -1000, 1000);
             builder.pop();
 
             builder.push("wrench");

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 //seems like this still makes the internal server freeze
- //idk why this is here
+//idk why this is here
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockBehaviourPlanterMixin {
 
@@ -41,7 +40,7 @@ public abstract class BlockBehaviourPlanterMixin {
             if (this.getBlock() instanceof DoublePlantBlock && world.getBlockState(pos).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;
             }
-            if (world.getBlockState(pos.below(b)).is(ModRegistry.PLANTER.get())) {
+            if (world.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
                 cir.setReturnValue(Vec3.ZERO);
             }
         }

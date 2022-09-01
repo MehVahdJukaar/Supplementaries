@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
+        if (entity instanceof IQuiverEntity e) return e.getQuiver();
         var cap = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {
