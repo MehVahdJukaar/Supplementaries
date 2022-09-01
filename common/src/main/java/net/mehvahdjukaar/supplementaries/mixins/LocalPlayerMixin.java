@@ -87,4 +87,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     public ItemStack getQuiver() {
         return quiver;
     }
+
+    @Override
+    public void setQuiver(ItemStack quiver) {
+        this.quiver = quiver;
+    }
 }

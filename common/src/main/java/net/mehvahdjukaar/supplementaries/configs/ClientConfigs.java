@@ -40,6 +40,7 @@ public class ClientConfigs {
 
     public static class Items {
         public static Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
+        public static Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
         public static Supplier<Double> QUIVER_ARMOR_OFFSET;
         public static Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
         public static Supplier<Boolean> QUIVER_OVERLAY;
@@ -71,6 +72,8 @@ public class ClientConfigs {
                     .define("armor_render_offset", -1d, -1d, 1);
             QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
                     .define("render_mode", QuiverLayer.QuiverMode.HIP);
+            QUIVER_SKELETON_RENDER_MODE = builder.comment("How skeleton with quivers should render it")
+                    .define("skeleton_render_mode", QuiverLayer.QuiverMode.BACK);
             QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
                     .define("overlay", true);
             QUIVER_MOUSE_MOVEMENT = builder.comment("Allows using your mouse to select an arrow in the quiver GUI")

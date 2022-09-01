@@ -52,6 +52,7 @@ public class CommonConfigs {
 
     public static class Items {
 
+
         public static Supplier<Holder.Reference<Block>> ROPE_ARROW_OVERRIDE = null;
 
         public static Supplier<Integer> ROPE_ARROW_CAPACITY;
@@ -71,6 +72,7 @@ public class CommonConfigs {
         public static Supplier<Hands> WRENCH_BYPASS;
         public static Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static Supplier<Integer> QUIVER_SLOTS;
+        public static Supplier<Double> QUIVER_SKELETON_SPAWN;
         public static Supplier<Integer> BUBBLE_BLOWER_COST;
 
         private static void init(ConfigBuilder builder) {
@@ -81,6 +83,8 @@ public class CommonConfigs {
                             .define("use_without_slow", true);
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
                             .define("slots", 6, 1, 9);
+            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty")
+                            .define("quiver_skeleton_chance", 0.015d,0,1);
             builder.pop();
 
             builder.push("bubble_blower");

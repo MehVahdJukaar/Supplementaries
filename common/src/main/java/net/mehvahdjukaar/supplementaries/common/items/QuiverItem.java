@@ -324,6 +324,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             this.cycle(0); //this works
         }
 
+        //edit skeleton shoot goal
         void consumeArrow();
     }
 

@@ -6,4 +6,6 @@ public interface IQuiverEntity {
 
     //only used for rendering for player and both for skeletons
     ItemStack getQuiver();
+
+    void setQuiver(ItemStack quiver);
 }

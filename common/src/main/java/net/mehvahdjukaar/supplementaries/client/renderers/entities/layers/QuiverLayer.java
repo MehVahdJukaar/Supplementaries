@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -20,18 +21,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Supplier;
+
 public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
     private final ItemRenderer itemRenderer;
+    private final boolean isSkeleton;
+    private final Supplier<QuiverMode> quiverMode;
 
-    public QuiverLayer(RenderLayerParent<T, M> parent) {
+    public QuiverLayer(RenderLayerParent<T, M> parent, boolean isSkeleton) {
         super(parent);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
+        this.isSkeleton = true;
+        this.quiverMode = isSkeleton ? ClientConfigs.Items.QUIVER_SKELETON_RENDER_MODE : ClientConfigs.Items.QUIVER_RENDER_MODE;
     }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
 
-        QuiverMode mode = ClientConfigs.Items.QUIVER_RENDER_MODE.get();
+        QuiverMode mode = quiverMode.get();
         if (mode == QuiverMode.HIDDEN) return;
 
         ItemStack quiver = livingEntity.getQuiver();
@@ -43,24 +50,26 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
             this.getParentModel().body.translateAndRotate(poseStack);
 
             boolean flipped = livingEntity.getMainArm() == HumanoidArm.RIGHT;
-
+            double o = 0.001; //to avoid z fight
 
             if (mode == QuiverMode.THIGH) {
                 boolean hasArmor = livingEntity.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ArmorItem;
                 double offset = hasArmor ? ClientConfigs.Items.QUIVER_ARMOR_OFFSET.get() : 0;
                 boolean sneaking = livingEntity.isCrouching();
 
+
                 if(sneaking){
                     poseStack.translate(0,-0.125, -0.275);
                 }
                 float old;
+                o += (offset == -1 ? 3.5 / 16f : 3 / 16f + offset);
                 if (flipped) {
                     old = this.getParentModel().leftLeg.xRot;
                     this.getParentModel().leftLeg.xRot = old * 0.3f;
                     this.getParentModel().leftLeg.translateAndRotate(poseStack);
                     this.getParentModel().leftLeg.xRot = old;
                     poseStack.translate(0, -1 / 16f, -2.5 / 16f);
-                    poseStack.translate(offset == -1 ? 3.5 / 16f : 3 / 16f + offset, 0, 0);
+                    poseStack.translate(o, 0, 0);
 
                 } else {
                     old = this.getParentModel().rightLeg.xRot;
@@ -68,7 +77,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
                     this.getParentModel().rightLeg.translateAndRotate(poseStack);
                     this.getParentModel().rightLeg.xRot = old;
                     poseStack.translate(0, -1 / 16f, -2.5 / 16f);
-                    poseStack.translate(offset == -1 ? -3.5 / 16f : -3 / 16f + offset, 0, 0);
+                    poseStack.translate(-o, 0, 0);
                 }
 
             } else {
@@ -76,14 +85,16 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
                 double offset = hasArmor ? ClientConfigs.Items.QUIVER_ARMOR_OFFSET.get() : 0;
 
                 if (mode == QuiverMode.HIP) {
-                    poseStack.translate(0, 0.1, offset == -1 ? 3.5 / 16f : 3 / 16f + offset);
+                    o += (offset == -1 ? 3.5 / 16f : 3 / 16f + offset);
+                    poseStack.translate(0, 0.1, o);
                     poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
                     if (flipped) poseStack.scale(-1, 1, -1);
 
                     poseStack.translate(0, 0.4, -3 / 16f);
                     poseStack.mulPose(Vector3f.XN.rotationDegrees(-22.5f));
                 } else {
-                    poseStack.translate(0, 0.1, offset == -1 ? 4 / 16f : 3 / 16f + offset);
+                    o += (offset == -1 ? 4 / 16f : 3 / 16f + offset);
+                    poseStack.translate(0, 0.1, o);
                     poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
                     if (flipped) poseStack.scale(-1, 1, -1);
 

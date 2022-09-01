@@ -62,12 +62,12 @@ public class ClientEventsForge {
         for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
             if (renderer != null) {
-                renderer.addLayer(new QuiverLayer(renderer));
+                renderer.addLayer(new QuiverLayer(renderer, false));
             }
         }
         var renderer = event.getRenderer(EntityType.SKELETON);
         if(renderer != null) {
-            renderer.addLayer(new QuiverLayer(renderer));
+            renderer.addLayer(new QuiverLayer(renderer, true));
         }
     }
 

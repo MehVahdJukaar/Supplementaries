@@ -39,9 +39,9 @@ public class ClientEventsFabric {
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
             if (r instanceof PlayerRenderer) {
-                e.register(new QuiverLayer(r));
+                e.register(new QuiverLayer(r,false));
             } else if (t == EntityType.SKELETON) {
-                e.register(new QuiverLayer(r));
+                e.register(new QuiverLayer(r, true));
             }
         });
 

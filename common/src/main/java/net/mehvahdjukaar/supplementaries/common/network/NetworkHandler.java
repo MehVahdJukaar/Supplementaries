@@ -38,7 +38,6 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::new);
 
-
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::new);
 

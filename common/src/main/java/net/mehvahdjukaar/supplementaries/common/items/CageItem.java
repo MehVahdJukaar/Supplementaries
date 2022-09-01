@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.sounds.SoundEvents;

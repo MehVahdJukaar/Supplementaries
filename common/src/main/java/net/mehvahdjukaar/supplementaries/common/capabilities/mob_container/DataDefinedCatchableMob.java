@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.mixins.SkeletonMixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -76,7 +77,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
     @Override
     public <T extends Entity> CapturedMobInstance<T> createCapturedMobInstance(T self, float containerWidth, float containerHeight) {
-        return ICatchableMob.super.createCapturedMobInstance(self, containerWidth, containerHeight);
+        return new DataCapturedMobInstance<>(self, containerWidth, containerHeight, this);
     }
 
     @Override
