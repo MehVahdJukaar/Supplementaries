@@ -7,8 +7,8 @@ import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -29,20 +29,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
+//I swear I changed this stuff from the ground up at least 5 times, and it just keeps getting messier somehow. It just needs to do so much...
 public class MobContainer {
 
     private final float width;
     private final float height;
+    private final boolean isAquarium;
 
     //stuff that actually gets saved
     @Nullable
-    private MobData data;
+    private MobNBTData data;
     //static mob instance created from entity data.
     //handles the animations. Also contains a reference to the entity properties and visual entity itself
     @Nullable
@@ -51,24 +54,25 @@ public class MobContainer {
     private ICatchableMob mobProperties;
     private boolean needsInitialization = false;
 
-    public MobContainer(float width, float height) {
+    public MobContainer(float width, float height, boolean isAquarium) {
         this.width = width;
         this.height = height;
+        this.isAquarium = isAquarium;
     }
 
     public CompoundTag save(CompoundTag tag) {
         if (this.data != null) {
-            this.data.saveToTag(tag);
+            this.data.save(tag, this.isAquarium);
         }
         return tag;
     }
 
     public void load(CompoundTag tag) {
-        MobData data = MobData.loadFromTag(tag);
+        MobNBTData data = MobNBTData.load(tag);
         this.setData(data);
     }
 
-    private void setData(@Nullable MobData data) {
+    private void setData(@Nullable MobNBTData data) {
         this.data = data;
         this.mobInstance = null;
         this.needsInitialization = true;
@@ -79,15 +83,11 @@ public class MobContainer {
     private void initializeEntity(Level level, BlockPos pos) {
         this.needsInitialization = false;
         if (data != null && level != null && pos != null) {
-
-            if (this.data.isAquarium) {
-                var type = BucketHelper.getEntityTypeFromBucket(this.data.filledBucket.getItem());
+            if (data instanceof MobNBTData.Bucket bucketData) {
+                var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
                 this.mobProperties = CapturedMobHandler.getDataCap(type, true);
-
-            } else {
-
-                Entity entity = createStaticMob(data, level, pos);
-
+            } else if (data instanceof MobNBTData.Entity entityData) {
+                Entity entity = createStaticMob(entityData, level, pos);
                 if (entity != null) {
                     //visual entity stored in this instance
                     this.mobProperties = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
@@ -119,34 +119,28 @@ public class MobContainer {
      */
     //TODO: make this holder store an actual mob so one can modify it when inside the container. in other words save this entity to this mob data when done
     @Nullable
-    public static Entity createStaticMob(MobData data, @Nonnull Level world, BlockPos pos) {
+    public static Entity createStaticMob(MobNBTData.Entity data, @Nonnull Level world, BlockPos pos) {
         Entity entity = null;
         if (data != null) {
+            entity = createEntityFromNBT(data.mobTag, data.uuid, world);
+            if (entity == null) return null;
 
-            //this has two mode: normal and bucket mode
-            // if fish tank no visual mob is needed. aquarium has null entity
-            if (!data.isAquarium && data.mobTag != null) {
+            //don't even need to sync these since they are only used by the block
 
-                entity = createEntityFromNBT(data.mobTag, data.uuid, world);
-                if (entity == null) return null;
+            //sets the correct mob position to its block pos
+            double px = pos.getX() + entity.getX();
+            double py = pos.getY() + entity.getY();
+            double pz = pos.getZ() + entity.getZ();
 
-                //don't even need to sync these since they are only used by the block
-
-                //sets the correct mob position to its block pos
-                double px = pos.getX() + entity.getX();
-                double py = pos.getY() + entity.getY();
-                double pz = pos.getZ() + entity.getZ();
-
-                entity.setPos(px, py, pz);
-                //entity.setMotion(0,0,0);
-                entity.xOld = px;
-                entity.yOld = py;
-                entity.zOld = pz;
-                entity.xo = px;
-                entity.yo = py;
-                entity.zo = pz;
-                //entity.tickCount += this.rand.nextInt(40);
-            }
+            entity.setPos(px, py, pz);
+            //entity.setMotion(0,0,0);
+            entity.xOld = px;
+            entity.yOld = py;
+            entity.zOld = pz;
+            entity.xo = px;
+            entity.yo = py;
+            entity.zo = pz;
+            //entity.tickCount += this.rand.nextInt(40);
         }
         return entity;
     }
@@ -175,25 +169,31 @@ public class MobContainer {
         //fill
         if (this.isEmpty()) {
             if (BucketHelper.isFishBucket(item)) {
-
                 world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
                 var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
                 var cap = CapturedMobHandler.getDataCap(type, true);
-                MobData data = new MobData(null, cap.getFishTextureIndex(), stack.copy());
+                var f = cap.shouldRenderWithFluid();
+                ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
+                MobNBTData data = new MobNBTData.Bucket(null, stack.copy(), cap.getFishTextureIndex(), fluidId);
                 this.setData(data);
             }
-        } else {
-
+        } else if(item == Items.BUCKET){
             //empty
-            if (!this.data.filledBucket.isEmpty() && item == Items.BUCKET) {
+            if(this.data instanceof MobNBTData.Bucket bucketData){
                 world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                returnStack = this.data.filledBucket.copy();
-
+                returnStack = bucketData.filledBucket.copy();
                 this.setData(null);
+            }else if(this.data instanceof MobNBTData.Entity && mobInstance != null){
+                Entity temp = mobInstance.getEntityForRenderer();
+                if(temp != null){
+                    ItemStack bucket = BucketHelper.getBucketFromEntity(temp);
+                    world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    returnStack = bucket.copy();
+                    this.setData(null);
+                }
             }
         }
-
         if (!returnStack.isEmpty()) {
             if (player != null) {
                 player.awardStat(Stats.ITEM_USED.get(item));
@@ -213,20 +213,20 @@ public class MobContainer {
 
     public void tick(Level pLevel, BlockPos pPos) {
         if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
-        if (this.mobInstance != null && this.data != null) {
-            this.mobInstance.containerTick(pLevel, pPos, this.data.scale, this.data.mobTag);
+        if (this.mobInstance != null && this.data instanceof MobNBTData.Entity entityData) {
+            this.mobInstance.containerTick(pLevel, pPos, entityData.scale, entityData.mobTag);
         }
     }
 
     public InteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand) {
-        if (this.mobInstance != null && this.data != null) {
-            return mobInstance.onPlayerInteract(world, pos, player, hand, this.data.mobTag);
+        if (this.mobInstance != null && this.data instanceof MobNBTData.Entity entityData) {
+            return mobInstance.onPlayerInteract(world, pos, player, hand, entityData.mobTag);
         }
         return InteractionResult.PASS;
     }
 
     @Nullable
-    public MobData getData() {
+    public MobNBTData getData() {
         return data;
     }
 
@@ -238,8 +238,8 @@ public class MobContainer {
         return null;
     }
 
-    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
-        if (data == null || !this.data.isAquarium || this.mobProperties == null) return Optional.empty();
+    public Optional<SoftFluid> shouldRenderWithFluid() {
+        if (data == null || !this.isAquarium || this.mobProperties == null) return Optional.empty();
         return this.mobProperties.shouldRenderWithFluid();
     }
 
@@ -257,40 +257,26 @@ public class MobContainer {
      */
     public static CompoundTag createMobHolderItemTag(Entity mob, float blockW, float blockH, ItemStack bucketStack,
                                                      boolean isAquarium) {
-
-        MobData data;
+        MobNBTData data;
         String name = mob.getName().getString();
         var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
         if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
-            data = new MobData(name, cap.getFishTextureIndex(), bucketStack);
+            var f = cap.shouldRenderWithFluid();
+            ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
+            data = new MobNBTData.Bucket(name,bucketStack, cap.getFishTextureIndex(), fluidId);
         } else {
             Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, blockW, blockH, false);
-
             float scale = dimensions.getLeft();
             float yOffset = dimensions.getRight();
 
-            //set post relative to center block cage
-            double px = 0.5;
-            double py = yOffset + 0.0001;//+ 0.0625;
-            double pz = 0.5;
-            mob.setPos(px, py, pz);
-            //entity.setMotion(0,0,0);
-            mob.xOld = px;
-            mob.yOld = py;
-            mob.zOld = pz;
-
-            CompoundTag mobTag = prepareMobTagForContainer(mob);
+            CompoundTag mobTag = prepareMobTagForContainer(mob, yOffset);
             if (mobTag == null) return null;
-
-
             UUID id = mob.getUUID();
-
-            data = new MobData(name, mobTag, scale, id, bucketStack);
+            data = new MobNBTData.Entity(name, mobTag, scale, id);
         }
 
         CompoundTag cmp = new CompoundTag();
-        data.saveToTag(cmp);
-
+        data.save(cmp, isAquarium);
         return cmp;
     }
 
@@ -301,7 +287,16 @@ public class MobContainer {
      * @return entity tag
      */
     @Nullable
-    private static CompoundTag prepareMobTagForContainer(Entity entity) {
+    private static CompoundTag prepareMobTagForContainer(Entity entity, double yOffset) {
+        //set post relative to center block cage
+        double px = 0.5;
+        double py = yOffset + 0.0001;//+ 0.0625;
+        double pz = 0.5;
+        entity.setPos(px, py, pz);
+        //entity.setMotion(0,0,0);
+        entity.xOld = px;
+        entity.yOld = py;
+        entity.zOld = pz;
 
         if (entity.isPassenger()) {
             entity.getVehicle().ejectPassengers();
@@ -424,101 +419,130 @@ public class MobContainer {
     }
 
     //what is serialized in an itemStack or container
-    public static class MobData {
-        public final String name;
-        public final boolean isAquarium;
-        private final ItemStack filledBucket;
-
-        public final CompoundTag mobTag;
-        private final float scale;
+    //TODO: turn this into a itemStack cap for faster access
+    public abstract static class MobNBTData {
+        protected final String name;
+        protected int fishTexture;
         @Nullable
-        private final UUID uuid;
+        protected ResourceLocation fluidID;
 
-        private final int fishIndex;
-
-
-        public MobData(String name, CompoundTag mobTag, float scale, @Nullable UUID id, ItemStack filledBucket) {
-            this.isAquarium = false;
+        private MobNBTData(String name, int fishTexture, @Nullable ResourceLocation fluidID) {
             this.name = name;
-            this.mobTag = mobTag;
-            this.scale = scale;
-            this.uuid = id;
-            this.filledBucket = filledBucket;
-
-            this.fishIndex = 0;
+            this.fishTexture = fishTexture;
+            this.fluidID = fluidID;
         }
 
-        public MobData(@Nullable String name, @Nullable int fishIndex, @Nonnull ItemStack filledBucket) {
-            //initialize name & texture if absent
-            EntityType<?> type;
-            if (name == null) {
-                type = BucketHelper.getEntityTypeFromBucket(filledBucket.getItem());
-                name = type == null ? "Mob" : type.getDescriptionId();
-            }
-
-            this.isAquarium = true;
-            this.fishIndex = fishIndex;
-            this.filledBucket = filledBucket;
-            this.name = name;
-
-            //unique to non aquarium ones
-            this.uuid = null;
-            this.scale = 1;
-            this.mobTag = null;
-        }
+        protected abstract void save(CompoundTag tag, boolean isAquarius);
 
         @Nullable
-        public static MobData loadFromTag(CompoundTag tag) {
-            if (tag.contains("MobHolder")) {
-                CompoundTag cmp = tag.getCompound("MobHolder");
-                CompoundTag entityData = cmp.getCompound("EntityData");
-                float scale = cmp.getFloat("Scale");
-                UUID uuid = cmp.contains("UUID") ? cmp.getUUID("UUID") : null;
-                ItemStack bucket = cmp.contains("Bucket") ? ItemStack.of(cmp.getCompound("Bucket")) : ItemStack.EMPTY;
-                String name = cmp.getString("Name");
-                int fish = cmp.getInt("FishTexture");
-
-                return new MobData(name, entityData, scale, uuid, bucket);
-            }
+        protected static MobNBTData load(CompoundTag tag) {
             if (tag.contains("BucketHolder")) {
-                CompoundTag cmp = tag.getCompound("BucketHolder");
-                ItemStack bucket = ItemStack.of(cmp.getCompound("Bucket"));
-                int fish = cmp.getInt("FishTexture");
-                String name = cmp.getString("Name");
-                return new MobData(name, fish, bucket);
+               return Bucket.of(tag.getCompound("BucketHolder"));
+            } else if (tag.contains("MobHolder")) {
+               return Entity.of(tag.getCompound("MobHolder"));
             }
-            //Supplementaries.LOGGER.error("Invalid tile entity data for mob holder");
             return null;
         }
 
-        public void saveToTag(CompoundTag tag) {
-            CompoundTag cmp = new CompoundTag();
-            cmp.putString("Name", name);
-            if (!filledBucket.isEmpty() || this.isAquarium) {
-                CompoundTag bucketTag = new CompoundTag();
-                filledBucket.save(bucketTag);
-                cmp.put("Bucket", bucketTag);
+        @Nullable
+        public String getName() {
+            return name;
+        }
+
+        public static class Bucket extends MobNBTData {
+            private final ItemStack filledBucket;
+
+            protected Bucket(@Nullable String name, ItemStack filledBucket, int fishTexture, @Nullable ResourceLocation fluidId) {
+                super(getDefaultName(name, filledBucket), fishTexture, fluidId);
+                this.filledBucket = filledBucket;
             }
-            if (this.isAquarium) {
-                cmp.putInt("FishTexture", this.fishIndex);
+
+            private static String getDefaultName(@Nullable String name, @NotNull ItemStack filledBucket) {
+                EntityType<?> type;
+                if (name == null) {
+                    type = BucketHelper.getEntityTypeFromBucket(filledBucket.getItem());
+                    name = type == null ? "Mob" : type.getDescriptionId();
+                }
+                return name;
+            }
+
+            @Override
+            protected void save(CompoundTag tag, boolean isAquarium) {
+                CompoundTag cmp = new CompoundTag();
+                cmp.putString("Name", name);
+                cmp.put("Bucket", filledBucket.save(new CompoundTag()));
+                if (isAquarium) {
+                    cmp.putInt("FishTexture", this.fishTexture);
+                    if (fluidID != null) {
+                        cmp.putString("Fluid", this.fluidID.toString());
+                    }
+                }
                 tag.put("BucketHolder", cmp);
-            } else {
+            }
+
+            private static Bucket of(CompoundTag cmp) {
+                String name = cmp.getString("Name");
+                int fish = cmp.getInt("FishTexture");
+                ItemStack bucket = ItemStack.of(cmp.getCompound("Bucket"));
+                ResourceLocation fluid = null;
+                if (cmp.contains("Fluid")) {
+                    fluid = new ResourceLocation(cmp.getString("Fluid"));
+                }
+                return new Bucket(name, bucket, fish, fluid);
+            }
+        }
+
+        public static class Entity extends MobNBTData {
+
+            public final CompoundTag mobTag;
+            private final float scale;
+            @Nullable
+            private final UUID uuid;
+
+            protected Entity(String name, CompoundTag tag, float scale, UUID uuid) {
+                this(name, 0, null, tag, scale, uuid);
+            }
+
+            protected Entity(String name, int fishTexture, @Nullable ResourceLocation fishFluid,
+                             CompoundTag tag, float scale, UUID uuid) {
+                super(name, fishTexture, fishFluid);
+                this.mobTag = tag;
+                this.scale = scale;
+                this.uuid = uuid;
+            }
+
+            private static Entity of(CompoundTag cmp) {
+                String name = cmp.getString("Name");
+                int fish = cmp.getInt("FishTexture");
+                ResourceLocation fluid = null;
+                if (cmp.contains("Fluid")) {
+                    fluid = new ResourceLocation(cmp.getString("Fluid"));
+                }
+                CompoundTag entityData = cmp.getCompound("EntityData");
+                float scale = cmp.getFloat("Scale");
+                UUID uuid = cmp.contains("UUID") ? cmp.getUUID("UUID") : null;
+                return new Entity(name, fish, fluid, entityData, scale, uuid);
+            }
+
+            public float getScale() {
+                return scale;
+            }
+
+            @Override
+            protected void save(CompoundTag tag, boolean isAquarium) {
+                CompoundTag cmp = new CompoundTag();
+                cmp.putString("Name", name);
+                if (isAquarium) {
+                    cmp.putInt("FishTexture", this.fishTexture);
+                    if (fluidID != null) {
+                        cmp.putString("Fluid", this.fluidID.toString());
+                    }
+                }
                 cmp.put("EntityData", mobTag);
                 cmp.putFloat("Scale", scale);
                 if (uuid != null) cmp.putUUID("UUID", uuid);
-
                 tag.put("MobHolder", cmp);
-
-
             }
-        }
-
-        public float getScale() {
-            return scale;
-        }
-
-        public int getFishIndex() {
-            return fishIndex;
         }
     }
 }

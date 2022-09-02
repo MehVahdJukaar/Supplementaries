@@ -100,7 +100,7 @@ public class BucketHelper {
     }
 
     /**
-     * try catching a mob with a water or empty bucket to then store it in the mob holder
+     * try catching a mob with a water or empty bucket and then return filled bucket
      *
      * @return filled bucket stack or empty stack
      */

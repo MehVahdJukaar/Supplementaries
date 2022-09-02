@@ -1,5 +1,5 @@
 {
-  "fish_index": 23,
+  "force_fluid": "minecraft:water","fish_index": 23,
   "height_increment": 0.0,
   "owners": [
     "alexsmobs:stradpole"

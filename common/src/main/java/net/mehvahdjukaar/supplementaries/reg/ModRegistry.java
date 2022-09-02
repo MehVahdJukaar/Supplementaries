@@ -765,11 +765,6 @@ public class ModRegistry {
                     .strength(0.3f, 0.3f)
     ), CreativeModeTab.TAB_REDSTONE);
 
-    //crystal display
-    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.copy(Blocks.POLISHED_DEEPSLATE)
-                    .strength(0.2f, 0.2f)
-    ), CreativeModeTab.TAB_REDSTONE);
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
@@ -814,6 +809,12 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = regTile(
             CLOCK_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     ClockBlockTile::new, CLOCK_BLOCK.get()));
+
+    //crystal display
+    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+            BlockBehaviour.Properties.copy(Blocks.POLISHED_DEEPSLATE)
+                    .strength(0.2f, 0.2f)
+    ), CreativeModeTab.TAB_REDSTONE);
 
     //sconce lever
     public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(

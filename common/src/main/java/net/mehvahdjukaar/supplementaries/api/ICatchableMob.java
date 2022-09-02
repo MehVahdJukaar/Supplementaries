@@ -96,7 +96,7 @@ public interface ICatchableMob {
      *
      * @return should always render with water
      */
-    default Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
+    default Optional<SoftFluid> shouldRenderWithFluid() {
         return Optional.empty();
     }
 

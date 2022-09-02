@@ -1,5 +1,5 @@
 {
-  "fish_index": 8,
+  "force_fluid": "minecraft:water","fish_index": 8,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:wee_wee"

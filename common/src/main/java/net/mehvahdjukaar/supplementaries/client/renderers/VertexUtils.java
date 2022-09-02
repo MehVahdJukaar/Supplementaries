@@ -8,8 +8,9 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.DataDefinedCatchableMob;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -284,7 +285,7 @@ public class VertexUtils {
         int textH = 32;
         int fishW = 5;
         int fishH = 4;
-
+        fishType -= 1; //wah
         int fishv = fishType % (textH / fishH);
         int fishu = fishType / (textH / fishH);
 

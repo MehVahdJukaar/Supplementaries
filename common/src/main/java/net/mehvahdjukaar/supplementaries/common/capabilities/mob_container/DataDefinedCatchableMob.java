@@ -3,11 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.mixins.SkeletonMixin;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +41,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
             BuiltinAnimation.Type.CODEC.optionalFieldOf("animation", BuiltinAnimation.Type.NONE)
                     .forGetter(b -> b.builtinAnimation),
             TickMode.CODEC.optionalFieldOf("tick_mode", TickMode.NONE).forGetter(p -> p.tickMode),
-            SoftFluid.HOLDER_CODEC.optionalFieldOf("force_fluid").forGetter(p -> p.forceFluid),
+            ResourceLocation.CODEC.optionalFieldOf("force_fluid").forGetter(p -> p.forceFluidID),
             LootParam.CODEC.optionalFieldOf("loot").forGetter(p -> p.loot)
     ).apply(instance, DataDefinedCatchableMob::new));
 
@@ -52,20 +53,22 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     final int fishIndex;
     final BuiltinAnimation.Type builtinAnimation;
     final TickMode tickMode;
-    final Optional<Holder<SoftFluid>> forceFluid;
+    final Optional<ResourceLocation> forceFluidID;
     final Optional<LootParam> loot;
+
+    private Optional<SoftFluid> forceFluid = null;
 
     public DataDefinedCatchableMob(List<ResourceLocation> owners, float widthIncrement, float heightIncrement, int lightLevel,
                                    Optional<CaptureSettings> captureSettings,
                                    int fishIndex, BuiltinAnimation.Type builtinAnimation, TickMode tickMode,
-                                   Optional<Holder<SoftFluid>> forceFluid, Optional<LootParam> loot) {
+                                   Optional<ResourceLocation> forceFluidID, Optional<LootParam> loot) {
         this.widthIncrement = widthIncrement;
         this.heightIncrement = heightIncrement;
         this.lightLevel = lightLevel;
         this.captureSettings = captureSettings;
         this.fishIndex = fishIndex;
         this.builtinAnimation = builtinAnimation;
-        this.forceFluid = forceFluid;
+        this.forceFluidID = forceFluidID;
         this.loot = loot;
         this.tickMode = tickMode;
         this.owners = owners;
@@ -99,9 +102,14 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     }
 
     @Override
-    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
+    public Optional<SoftFluid> shouldRenderWithFluid() {
+        if(forceFluid==null && forceFluidID.isPresent()){
+            forceFluid = SoftFluidRegistry.getOptional(forceFluidID.get());
+        }
         return this.forceFluid;
     }
+
+    ModRegistry
 
     @Override
     public int getFishTextureIndex() {

@@ -1,5 +1,5 @@
 {
-  "fish_index": 42,
+  "force_fluid": "minecraft:water","fish_index": 42,
   "height_increment": 0.0,
   "owners": [
     "betteranimalsplus:barracuda"
