@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -20,7 +19,7 @@ public class SugarParticle extends TerrainParticle {
     //TODO:this is crap, make it snap to water surface
 
     public SugarParticle(ClientLevel clientLevel, double x, double y, double z, double speedX, double speedY, double speedZ) {
-        super(clientLevel, x, y, z, speedX, speedY, speedZ, ModRegistry.SUGAR_BLOCK.get().defaultBlockState());
+        super(clientLevel, x, y, z, speedX, speedY, speedZ, ModRegistry.SUGAR_CUBE.get().defaultBlockState());
         this.lifetime = (int)(30.0f / (this.random.nextFloat() * 0.7f + 0.3f));
         this.setColor(1,1,1);
         this.xd*=0.6;

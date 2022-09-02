@@ -1,21 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "0"
+    "000",
+    "000",
+    "000"
   ],
   "key": {
     "0": {
-      "item": "supplementaries:flint_block"
+      "item": "minecraft:sugar"
     }
   },
   "result": {
-    "item": "minecraft:flint",
-    "count": 9
+    "item": "supplementaries:sugar_cube",
+    "count": 1
   },
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "flint_block"
+      "flag": "sugar_cube"
     }
   ]
 }

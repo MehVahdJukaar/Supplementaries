@@ -25,13 +25,11 @@ import java.util.function.Supplier;
 
 public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
     private final ItemRenderer itemRenderer;
-    private final boolean isSkeleton;
     private final Supplier<QuiverMode> quiverMode;
 
     public QuiverLayer(RenderLayerParent<T, M> parent, boolean isSkeleton) {
         super(parent);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
-        this.isSkeleton = true;
         this.quiverMode = isSkeleton ? ClientConfigs.Items.QUIVER_SKELETON_RENDER_MODE : ClientConfigs.Items.QUIVER_RENDER_MODE;
     }
 

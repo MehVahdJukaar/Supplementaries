@@ -5,17 +5,17 @@
   ],
   "key": {
     "0": {
-      "item": "supplementaries:flint_block"
+      "item": "supplementaries:sugar_cube"
     }
   },
   "result": {
-    "item": "minecraft:flint",
+    "item": "minecraft:sugar",
     "count": 9
   },
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "flint_block"
+      "flag": "sugar_cube"
     }
   ]
 }

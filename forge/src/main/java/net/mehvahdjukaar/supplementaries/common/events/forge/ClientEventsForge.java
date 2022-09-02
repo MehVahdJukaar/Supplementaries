@@ -69,6 +69,10 @@ public class ClientEventsForge {
         if(renderer != null) {
             renderer.addLayer(new QuiverLayer(renderer, true));
         }
+        var renderer2 = event.getRenderer(EntityType.STRAY);
+        if(renderer2 != null) {
+            renderer2.addLayer(new QuiverLayer(renderer2, true));
+        }
     }
 
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {

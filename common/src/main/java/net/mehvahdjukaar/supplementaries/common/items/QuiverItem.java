@@ -1,14 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +24,8 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class QuiverItem extends Item implements DyeableLeatherItem {
 
@@ -234,7 +241,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         IQuiverData data = getQuiverData(stack);
-        if(data != null)data.updateSelectedIfNeeded();
+        if (data != null) data.updateSelectedIfNeeded();
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
@@ -254,7 +261,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
          */
         List<ItemStack> getContentView();
 
-        default boolean canAcceptItem(ItemStack toInsert){
+        default boolean canAcceptItem(ItemStack toInsert) {
             return toInsert.getItem() instanceof ArrowItem;
         }
 
@@ -286,10 +293,10 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             int originalSlot = this.getSelectedSlot();
             var content = this.getContentView();
             ItemStack selected;
-            if(slotsMoved == 0){
+            if (slotsMoved == 0) {
                 //returns if it doesn't have to move
                 selected = content.get(this.getSelectedSlot());
-                if(!selected.isEmpty())return false;
+                if (!selected.isEmpty()) return false;
             }
             int maxSlots = content.size();
             slotsMoved = slotsMoved % maxSlots;
@@ -324,18 +331,46 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             this.cycle(0); //this works
         }
 
-        //edit skeleton shoot goal
+        //fabric and skeleton shoot goal. forge for player doesn't need this as stack decrement already affects the one in quiver
         void consumeArrow();
     }
 
 
     //for spawn
-    public static ItemStack createRandomQuiver(float specialMultiplier) {
+    public static ItemStack createRandomQuiver(RandomSource random, float specialMultiplier) {
         ItemStack quiver = new ItemStack(ModRegistry.QUIVER_ITEM.get());
-    var data =    QuiverItem.getQuiverData(quiver);
-        data.tryAdding(new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get(), 2));
+        var data = QuiverItem.getQuiverData(quiver);
+        int amount = random.nextInt(3, (int) (8 + (specialMultiplier * 4)));
+        int tries = 0;
+        while (amount > 0 && tries < 10) {
+            int stackAmount = random.nextInt(1, 7);
+            ItemStack arrow = RANDOM_ARROWS.get().get(random.nextInt(RANDOM_ARROWS.get().size())).copy();
+            stackAmount = Math.min(amount, stackAmount);
+            amount -= stackAmount;
+            arrow.setCount(stackAmount);
+            data.tryAdding(arrow);
+            tries++;
+        }
         return quiver;
     }
+
+    private static final Supplier<List<ItemStack>> RANDOM_ARROWS = Suppliers.memoize(() -> {
+        ImmutableList.Builder<ItemStack> builder = new ImmutableList.Builder<>();
+        for (Potion potion : Registry.POTION) {
+            boolean isNegative = false;
+            for (var e : potion.getEffects()) {
+                if (!e.getEffect().isBeneficial()) {
+                    isNegative = true;
+                    break;
+                }
+            }
+            if (isNegative) {
+                builder.add(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), potion));
+            }
+        }
+        builder.add(new ItemStack(Items.SPECTRAL_ARROW));
+        return builder.build();
+    });
 
 }
 

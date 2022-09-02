@@ -16,6 +16,12 @@
     "supplementaries:prismarine_rod",
     "supplementaries:edelwood_stick",
     "supplementaries:propelplant_cane",
-    "#supplementaries:ceiling_banners"
+    "#supplementaries:ceiling_banners",
+    "supplementaries:timber_cross_brace",
+    "supplementaries:timber_brace",
+    "supplementaries:timber_frame",
+    "supplementaries:daub_cross_brace",
+    "supplementaries:daub_brace",
+    "supplementaries:daub_frame"
   ]
 }

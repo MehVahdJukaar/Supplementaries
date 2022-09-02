@@ -70,7 +70,8 @@ public class ModSetup {
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
         Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());
 
-        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()), new ItemStack(ModRegistry.FLAX_BLOCK.get())));
+        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()),
+                new ItemStack(ModRegistry.FLAX_BLOCK.get()), new ItemStack(ModRegistry.SUGAR_CUBE.get())));
         horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
         AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
     }

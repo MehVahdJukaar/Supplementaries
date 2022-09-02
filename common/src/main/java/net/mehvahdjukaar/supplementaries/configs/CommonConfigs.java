@@ -83,8 +83,8 @@ public class CommonConfigs {
                             .define("use_without_slow", true);
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
                             .define("slots", 6, 1, 9);
-            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty")
-                            .define("quiver_skeleton_chance", 0.015d,0,1);
+            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
+                            .define("quiver_skeleton_chance", 0.2d,0,1);
             builder.pop();
 
             builder.push("bubble_blower");
@@ -386,6 +386,8 @@ public class CommonConfigs {
         public static Supplier<Boolean> CAGE_PERSISTENT_MOBS;
         public static Supplier<Integer> CAGE_HEALTH_THRESHOLD;
 
+        public static Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
+
         public static Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
 
         public static Supplier<Boolean> SACK_PENALTY;
@@ -433,6 +435,11 @@ public class CommonConfigs {
             builder.push("bamboo_spikes");
             BAMBOO_SPIKES_ALTERNATIVE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("alternative_mode", true);
+            builder.pop();
+
+            builder.push("sugar_cube");
+            SUGAR_BLOCK_HORSE_SPEED_DURATION = builder.comment("Duration in seconts of speed effect garanted to horses that eat a sugar cube")
+                            .define("horse_speed_duration", 10, 0, 1000);
             builder.pop();
 
             builder.push("planter");

@@ -42,6 +42,8 @@ public class ClientEventsFabric {
                 e.register(new QuiverLayer(r,false));
             } else if (t == EntityType.SKELETON) {
                 e.register(new QuiverLayer(r, true));
+            } else if (t == EntityType.STRAY) {
+                e.register(new QuiverLayer(r, true));
             }
         });
 

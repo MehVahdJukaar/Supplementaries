@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -9,9 +8,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Skeleton.class)
-public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverEntity {
+@Mixin(Stray.class)
+public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEntity {
     //frick it going full mixin here. I could have used caps and spawn events...
 
     //server
@@ -32,19 +31,22 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
 
     //for just used to sync this to client
     private static final EntityDataAccessor<Boolean> HAS_QUIVER =
-            SynchedEntityData.defineId(Skeleton.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(Stray.class, EntityDataSerializers.BOOLEAN);
 
-    protected SkeletonMixin(EntityType<? extends AbstractSkeleton> entityType, Level level) {
+    protected StrayMixin(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
     }
 
-    @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    protected void defineSynchedData(CallbackInfo ci) {
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
         this.getEntityData().define(HAS_QUIVER, false);
     }
 
-    @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
-    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer, CallbackInfo ci) {
+    @Override
+    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
+        super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
         if (this.quiver != null && hitByPlayer) {
             ItemStack itemStack = this.quiver;
             if (Math.max(this.random.nextFloat() - (float) looting * 0.02F, 0.0F) < quiverDropChance) {
@@ -54,16 +56,18 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
         }
     }
 
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         if (!this.quiver.isEmpty()) {
             compound.put("Quiver", quiver.save(new CompoundTag()));
             compound.putFloat("QuiverDropChance",quiverDropChance);
         }
     }
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         if (compound.contains("Quiver")) {
             this.setQuiver(ItemStack.of(compound.getCompound("Quiver")));
             this.quiverDropChance = compound.getFloat("QuiverDropChance");

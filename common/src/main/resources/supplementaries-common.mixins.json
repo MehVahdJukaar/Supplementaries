@@ -19,6 +19,7 @@
     "UndeadHorseRenderMixin"
   ],
   "mixins": [
+    "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "AbstractSkullBlockMixin",
     "BeeGoalMixin",
@@ -47,6 +48,7 @@
     "ShulkerBoxBlockEntityMixin",
     "SkeletonMixin",
     "SkellyHorseMixin",
+    "StrayMixin",
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
     "VineMixin",

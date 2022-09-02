@@ -1200,7 +1200,7 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-    public static final Supplier<Block> SUGAR_BLOCK = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+    public static final Supplier<Block> SUGAR_CUBE = regWithItem(SUGAR_BLOCK_NAME, () -> new SugarBlock(
             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 

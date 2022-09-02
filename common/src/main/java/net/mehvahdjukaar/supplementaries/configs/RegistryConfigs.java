@@ -133,6 +133,8 @@ public class RegistryConfigs {
     public static Supplier<Boolean> LEAD_TRAPDOOR_ENABLED;
     public static Supplier<Boolean> LEAD_DOOR_ENABLED;
     public static Supplier<Boolean> DISPENSER_MINECART_ENABLED;
+    public static Supplier<Boolean> SUGAR_CUBE_ENABLED;
+    public static Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
 
     public static Supplier<Boolean> JAR_TAB;
     public static Supplier<Boolean> CREATIVE_TAB;
@@ -237,7 +239,8 @@ public class RegistryConfigs {
         GLOBE_SEPIA = regConfig(builder, RegistryConstants.GLOBE_SEPIA_NAME, true);
         PRESENT_ENABLED = regConfig(builder, RegistryConstants.PRESENT_NAME, true);
         PRESENT_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
-
+        SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_BLOCK_NAME, true);
+        CRYSTAL_DISPLAY_ENABLED = regConfig(builder, RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
 
         SILVER_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_TRAPDOOR_NAME, true);
         SILVER_DOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_DOOR_NAME, true);
