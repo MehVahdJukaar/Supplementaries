@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.common.items.SugarCubeItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -83,7 +84,7 @@ public abstract class AbstractHorseMixin extends Animal {
                 }
             }
             if (duration != 0) {
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * duration));
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * duration, 1));
                 eat = true;
             }
 
