@@ -18,8 +18,6 @@ public class ClientConfigs {
     public static void init() {
     }
 
-    ;
-
     public static ConfigSpec CLIENT_SPEC;
 
     static {
@@ -73,7 +71,7 @@ public class ClientConfigs {
             QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
                     .define("render_mode", QuiverLayer.QuiverMode.HIP);
             QUIVER_SKELETON_RENDER_MODE = builder.comment("How skeleton with quivers should render it")
-                    .define("skeleton_render_mode", QuiverLayer.QuiverMode.BACK);
+                    .define("skeleton_render_mode", QuiverLayer.QuiverMode.THIGH);
             QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
                     .define("overlay", true);
             QUIVER_MOUSE_MOVEMENT = builder.comment("Allows using your mouse to select an arrow in the quiver GUI")

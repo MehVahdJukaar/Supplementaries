@@ -173,6 +173,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         Block b = world.getBlockState(pos).getBlock();
         if (b instanceof ConcretePowderBlock concretePowderBlock) {
             world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
+        }else if(b instanceof SugarBlock){
+            world.removeBlock(pos, false);
         }
     }
 

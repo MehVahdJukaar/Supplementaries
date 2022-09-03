@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.mixins.FontRendererMixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

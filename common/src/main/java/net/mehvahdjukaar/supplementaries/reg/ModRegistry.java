@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHa
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
@@ -79,11 +80,11 @@ public class ModRegistry {
     }
 
     //misc entries
-
     //loot
     public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
             () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
-
+    public static final Supplier<LootItemFunctionType> RANDOM_ARROW_FUNCTION = RegHelper.register(Supplementaries.res("random_arrows"),
+            () -> new LootItemFunctionType(new RandomArrowFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
 
     //paintings
     public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
@@ -564,15 +565,13 @@ public class ModRegistry {
             getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME), "forge:ingots/brass");
 
     //crimson lantern
-    public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new LightableLanternBlock(
+    public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
                     .strength(1.5f)
                     .sound(SoundType.WOOL)
                     .lightLevel((state) -> 15)
-                    .noOcclusion(),
-            Shapes.or(Block.box(4.0D, 1.0D, 4.0D, 12.0D, 8.0D, 12.0D),
-                    Block.box(6.0D, 0.0D, 6.0D, 10.0D, 9.0D, 10.0D))
-    ), CreativeModeTab.TAB_DECORATIONS);
+                    .noOcclusion()),
+            CreativeModeTab.TAB_DECORATIONS);
 
     //silver lantern
     public static final Supplier<Block> SILVER_LANTERN = regBlock(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
@@ -1136,7 +1135,8 @@ public class ModRegistry {
 
     //lapis bricks
     public static final Supplier<Block> LAPIS_BRICKS = regWithItem(LAPIS_BRICKS_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK).strength(2.0F, 2.0F)
+            BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
+                    .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F)
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //ashen bricks

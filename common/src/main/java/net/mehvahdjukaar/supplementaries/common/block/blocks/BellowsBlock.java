@@ -6,8 +6,11 @@ import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -154,5 +158,14 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Override
     public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn) {
         if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile te) te.onSteppedOn(entityIn);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if(state.getValue(POWER)==0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile){
+            tile.manualPress = 10;
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.use(state, level, pos, player, hand, hit);
     }
 }

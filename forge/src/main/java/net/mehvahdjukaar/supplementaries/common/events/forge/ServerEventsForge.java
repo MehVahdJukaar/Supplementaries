@@ -138,7 +138,8 @@ public class ServerEventsForge {
     //for flute and cage. fabric calls directly
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        var res = ServerEvents.onRightClickEntity(event.getEntity(), event.getLevel(), event.getHand(), event.getEntity(), null);
+        var res = ServerEvents.onRightClickEntity(event.getEntity(), event.getLevel(),
+                event.getHand(), event.getTarget(), null);
         if (res != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(res);

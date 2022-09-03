@@ -3,7 +3,7 @@
   "parent": "minecraft:block/template_piston",
   "textures": {
     "platform": "supplementaries:blocks/relayer_front",
-    "bottom": "supplementaries:blocks/relayer_back",
+    "bottom": "supplementaries:blocks/relayer_back_on",
     "side": "supplementaries:blocks/relayer_side"
   }
 }

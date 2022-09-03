@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +37,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
         if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && RegistryConfigs.QUIVER_ENABLED.get()) {
             if (random.nextFloat() < CommonConfigs.Items.QUIVER_SKELETON_SPAWN.get() * difficulty.getSpecialMultiplier()) {
                 ((IQuiverEntity) this).setQuiver(
-                        QuiverItem.createRandomQuiver(level.getRandom(), difficulty.getSpecialMultiplier()));
+                        RandomArrowFunction.createRandomQuiver(level.getRandom(), difficulty.getSpecialMultiplier()));
             }
         }
     }

@@ -5,6 +5,7 @@ import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
@@ -28,6 +29,7 @@ public class ModSetup {
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CurseLootFunction::setup,
+            RandomArrowFunction::setup,
             CompatHandler::setup,
             FlowerPotHandler::setup,
             WeatheredMap::setup,

@@ -40,8 +40,11 @@ import java.util.List;
 //TODO: this is a mess
 public class BellowsBlockTile extends BlockEntity {
 
+    private static final float MAX_COMPRESSION = 2 / 16f;//0.09375f;
+
     public float height = 0;
     public float prevHeight = 0;
+    public int manualPress = 0;
     private long startTime = 0;
     public boolean isPressed = false;
 
@@ -256,8 +259,9 @@ public class BellowsBlockTile extends BlockEntity {
             float arg = (float) Math.PI * 2 * (((time - tile.startTime) / period) % 1);
             float sin = Mth.sin(arg);
             float cos = Mth.cos(arg);
-            final float dh = 1 / 16f;//0.09375f;
-            tile.height = dh * cos - dh;
+
+            float half = MAX_COMPRESSION / 2f;
+            tile.height = half * cos - half;
 
             tile.pushAir(level, pos, state, power, time, period, sin);
 
@@ -273,15 +277,14 @@ public class BellowsBlockTile extends BlockEntity {
             tile.lastBlowing = blowing;
 
         } else if (tile.isPressed) {
-            float minH = -2 / 16f;
-            tile.height = Math.max(tile.height - 0.01f, minH);
+            float minH = -MAX_COMPRESSION;
+            tile.height = Math.max(tile.height - 0.01f, MAX_COMPRESSION);
 
             if (tile.height > minH) {
                 long time = level.getGameTime();
                 //when operated by a mob it behaves like a constant with 7 power
                 int p = 7;
                 float period = tile.getPeriodForPower(p);
-
 
                 tile.pushAir(level, pos, state, power, time, period, 0.8f);
             }
@@ -296,7 +299,10 @@ public class BellowsBlockTile extends BlockEntity {
         if (tile.prevHeight != 0 && tile.height != 0) {
             tile.moveCollidedEntities(level);
         }
-        tile.isPressed = false;
+        if (tile.manualPress > 0) {
+            tile.manualPress--;
+            tile.isPressed = true;
+        } else tile.isPressed = false;
     }
 
     private void pushAir(Level level, BlockPos pos, BlockState state, int power, long time, float period, float airIntensity) {

@@ -117,6 +117,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 List<ItemStack> items = data.getContentView();
                 int slots = items.size();
 
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, TEXTURE);
@@ -149,8 +151,9 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
 
                 ItemStack selectedArrow = items.get(selected);
-                drawHighlight(poseStack, screenWidth, py, selectedArrow);
-
+                if(!selectedArrow.isEmpty()) {
+                    drawHighlight(poseStack, screenWidth, py, selectedArrow);
+                }
 
                 poseStack.popPose();
 

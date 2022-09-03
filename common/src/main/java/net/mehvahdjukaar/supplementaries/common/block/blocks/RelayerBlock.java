@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.client.particles.SugarParticle;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -48,7 +49,11 @@ public class RelayerBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+        var dir = context.getNearestLookingDirection();
+        var state = this.defaultBlockState().setValue(FACING, dir);
+        int p = getSignalInFront(context.getLevel(), context.getClickedPos(), dir);
+        state = state.setValue(POWER, p).setValue(POWERED, p != 0);
+        return state;
     }
 
     @Override
@@ -76,8 +81,8 @@ public class RelayerBlock extends DirectionalBlock {
         var behind = pos.relative(dir);
         int pow = level.getSignal(behind, dir);
         BlockState b = level.getBlockState(behind);
-        if(b.getBlock() instanceof RedStoneWireBlock){
-          pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
+        if (b.getBlock() instanceof RedStoneWireBlock) {
+            pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
         }
         return pow;
     }

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -117,5 +118,10 @@ public class SugarBlock extends FallingBlock {
     @Override
     public int getDustColor(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getMapColor(level, pos).col;
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+        dissolve(level,pos);
     }
 }

@@ -40,8 +40,8 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
     @Override
     public void onContainerWaterlogged(boolean waterlogged) {
         var f = this.properties.forceFluidID.orElse(null);
-        if (f != null && f.getPath().equals("water")) {
-            onContainerWaterlogged(true);
+        if (!waterlogged && f != null && f.getPath().equals("water")) {
+           super.onContainerWaterlogged(true);
         } else super.onContainerWaterlogged(waterlogged);
     }
 

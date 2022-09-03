@@ -335,42 +335,5 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         void consumeArrow();
     }
 
-
-    //for spawn
-    public static ItemStack createRandomQuiver(RandomSource random, float specialMultiplier) {
-        ItemStack quiver = new ItemStack(ModRegistry.QUIVER_ITEM.get());
-        var data = QuiverItem.getQuiverData(quiver);
-        int amount = random.nextInt(3, (int) (8 + (specialMultiplier * 4)));
-        int tries = 0;
-        while (amount > 0 && tries < 10) {
-            int stackAmount = random.nextInt(1, 7);
-            ItemStack arrow = RANDOM_ARROWS.get().get(random.nextInt(RANDOM_ARROWS.get().size())).copy();
-            stackAmount = Math.min(amount, stackAmount);
-            amount -= stackAmount;
-            arrow.setCount(stackAmount);
-            data.tryAdding(arrow);
-            tries++;
-        }
-        return quiver;
-    }
-
-    private static final Supplier<List<ItemStack>> RANDOM_ARROWS = Suppliers.memoize(() -> {
-        ImmutableList.Builder<ItemStack> builder = new ImmutableList.Builder<>();
-        for (Potion potion : Registry.POTION) {
-            boolean isNegative = false;
-            for (var e : potion.getEffects()) {
-                if (!e.getEffect().isBeneficial()) {
-                    isNegative = true;
-                    break;
-                }
-            }
-            if (isNegative) {
-                builder.add(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), potion));
-            }
-        }
-        builder.add(new ItemStack(Items.SPECTRAL_ARROW));
-        return builder.build();
-    });
-
 }
 

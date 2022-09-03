@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +27,7 @@ public class LootTablesInjects {
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
+        if (RegistryConfigs.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectQuiver);
         if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
         if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
         if (RegistryConfigs.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBlueBomb);
@@ -42,6 +44,7 @@ public class LootTablesInjects {
             if (type != TableType.OTHER) {
                 LOOT_INJECTS.forEach(i -> i.accept(builder, type));
             }
+            //TODO: data stuff isnt synced...
         }
     }
 
@@ -79,7 +82,12 @@ public class LootTablesInjects {
             if (isStronghold(name)) return TableType.STRONGHOLD;
             if (isFortress(name)) return TableType.FORTRESS;
             if (isEndCity(name)) return TableType.END_CITY;
+            if (isMansion(name)) return TableType.MANSION;
             return TableType.OTHER;
+        }
+
+        private static boolean isMansion(String name) {
+            return name.equals(BuiltInLootTables.WOODLAND_MANSION.toString()) || RS && name.contains("repurposed_structures:chests/mansion");
         }
 
         private static final Pattern RS_SHIPWRECK = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/treasure_chest");
@@ -141,6 +149,12 @@ public class LootTablesInjects {
     public static void tryInjectGlobe(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.SHIPWRECK_TREASURE) {
             injectLootPool(e, type, "globe");
+        }
+    }
+
+    private static void tryInjectQuiver(Consumer<LootPool.Builder> e, TableType type) {
+        if(type == TableType.DUNGEON || type == TableType.MANSION){
+            injectLootPool(e, type, "quiver");
         }
     }
 

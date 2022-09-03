@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        if (entity instanceof IQuiverEntity e) return e.getQuiver();
+        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.getQuiver();
         var cap = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {

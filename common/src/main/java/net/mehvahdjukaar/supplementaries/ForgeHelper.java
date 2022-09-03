@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RelayerBlock;
 import net.minecraft.client.gui.screens.debug.GameModeSwitcherScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

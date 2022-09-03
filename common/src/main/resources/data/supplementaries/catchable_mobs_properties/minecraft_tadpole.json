@@ -1,0 +1,9 @@
+{
+  "force_fluid": "minecraft:water",
+  "fish_index": 45,
+  "height_increment": 0.0,
+  "owners": [
+    "minecraft:tadpole"
+  ],
+  "width_increment": 0.125
+}

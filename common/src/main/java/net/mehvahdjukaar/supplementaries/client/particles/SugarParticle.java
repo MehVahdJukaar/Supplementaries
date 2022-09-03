@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -20,36 +21,46 @@ public class SugarParticle extends TerrainParticle {
 
     public SugarParticle(ClientLevel clientLevel, double x, double y, double z, double speedX, double speedY, double speedZ) {
         super(clientLevel, x, y, z, speedX, speedY, speedZ, ModRegistry.SUGAR_CUBE.get().defaultBlockState());
-        this.lifetime = (int)(30.0f / (this.random.nextFloat() * 0.7f + 0.3f));
-        this.setColor(1,1,1);
-        this.xd*=0.6;
-        this.zd*=0.6;
+        this.lifetime = (int) (40.0f / (this.random.nextFloat() * 0.7f + 0.3f));
+        this.setColor(1, 1, 1);
+        this.xd *= 0.6;
+        this.zd *= 0.6;
     }
 
-
-
+    //dont touch it works
     @Override
     public void tick() {
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
         var pos = new BlockPos(this.x, this.y, this.z);
         var fluid = this.level.getFluidState(pos);
-        float h = fluid.getOwnHeight();
-        if (!this.removed && fluid.is(FluidTags.WATER)) {
-            this.gravity = -0.125f;
+        boolean wasTouchingWater = fluid.is(FluidTags.WATER);
+        if (wasTouchingWater && Math.abs((this.y - pos.getY() - fluid.getOwnHeight())) < 0.01 && this.level.getFluidState(pos.above()).isEmpty()) {
+               this.gravity = 0;
+               this.yd = 0;
         }else {
-            if(this.yd>0) {
-                this.yd = 0;
-            }else {
-                this.gravity = 1;
+            this.gravity = wasTouchingWater ? -0.05f : 1;
+        }
+
+        super.tick();
+
+
+        if(gravity != 0) {
+            var pos2 = new BlockPos(this.x, this.y, this.z);
+            var fluid2 = this.level.getFluidState(pos2);
+            boolean isTouchingWater = fluid2.is(FluidTags.WATER);
+
+            if (wasTouchingWater && !isTouchingWater) {
+                this.setPos(this.x, pos.getY() + fluid.getHeight(level, pos) - 0.005, this.z);
+                gravity = 0;
+            }
+            if (!wasTouchingWater && isTouchingWater) {
+                this.setPos(this.x, pos2.getY() + fluid2.getHeight(level, pos2) - 0.005, this.z);
+                gravity = 0;
             }
         }
-        super.tick();
-        if(fluid.is(FluidTags.WATER) &&
-                !this.level.getFluidState(new BlockPos(this.x, this.y, this.z)).is(FluidTags.WATER)){
-           if(Math.abs(pos.getY()+h-this.y)>1){
-               int aaa = 1;
-           }
-            this.y = pos.getY()+h;
-        }
+
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

@@ -13,7 +13,7 @@
   ],
   "key": {
     "1": {
-      "tag": "minecraft:deepslate"
+      "item": "minecraft:deepslate"
     },
     "2": {
       "item": "minecraft:amethyst_shard"
