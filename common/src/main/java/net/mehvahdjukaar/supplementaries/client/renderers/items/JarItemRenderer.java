@@ -7,8 +7,8 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,9 +47,13 @@ public class JarItemRenderer extends CageItemRenderer {
                     VertexUtils.renderFish(builder1, matrixStackIn, 0, 0, fishTexture, combinedLightIn);
                     matrixStackIn.popPose();
                 }
-                SoftFluid s = VanillaSoftFluids.WATER.get();
-                renderFluid(0.5625f, s.getTintColor(), 0, s.getStillTexture(),
-                        matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+                if(com.contains("Fluid")) {
+                    SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
+                    if(s != null) {
+                        renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
+                                matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+                    }
+                }
             }
         }
         if (tag.contains("FluidHolder")) {

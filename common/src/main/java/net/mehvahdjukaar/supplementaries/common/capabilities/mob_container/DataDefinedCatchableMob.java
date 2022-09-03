@@ -109,7 +109,6 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
         return this.forceFluid;
     }
 
-    ModRegistry
 
     @Override
     public int getFishTextureIndex() {

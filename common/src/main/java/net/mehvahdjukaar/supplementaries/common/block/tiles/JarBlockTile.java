@@ -44,7 +44,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         super(ModRegistry.JAR_TILE.get(), pos, state);
         this.fluidHolder = SoftFluidTank.create(CAPACITY);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
-        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight());
+        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
     }
 
     @Override

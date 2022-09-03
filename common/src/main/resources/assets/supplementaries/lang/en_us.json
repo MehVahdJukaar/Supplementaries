@@ -337,7 +337,8 @@
   "item.supplementaries.quiver": "Quiver",
   "message.supplementaries.quiver.tooltip": "%s [%s]",
   "block.supplementaries.crystal_display": "Crystal Display",
-  "block.supplementaries.diode_block": "Diode",
+  "block.supplementaries.relayer": "Relayer",
+  "block.supplementaries.lapis_bricks": "Lapis Bricks",
   "supplementaries.gui.controls": "Supplementaries",
   "supplementaries.keybind.quiver": "Quiver",
 

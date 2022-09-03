@@ -11,9 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -21,15 +19,25 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.Nullable;
 
-public class DiodeBlock extends DirectionalBlock {
+public class RelayerBlock extends DirectionalBlock {
 
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public DiodeBlock(Properties properties) {
+    public RelayerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(POWER, 0).setValue(POWERED, false));
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
@@ -39,7 +47,7 @@ public class DiodeBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
     }
 
     @Override
@@ -50,31 +58,41 @@ public class DiodeBlock extends DirectionalBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        if (pos.relative(state.getValue(FACING).getOpposite()).equals(fromPos)) this.updatePower(state, world, pos);
+        if (pos.relative(state.getValue(FACING)).equals(fromPos)) this.updatePower(state, world, pos);
 
     }
 
     private void updatePower(BlockState state, Level level, BlockPos pos) {
-        var dir = state.getValue(FACING).getOpposite();
-        int pow = level.getSignal(pos.relative(dir), dir);
+        var dir = state.getValue(FACING);
+        int pow = getSignalInFront(level, pos, dir);
 
         if (pow != state.getValue(POWER) && !level.getBlockTicks().hasScheduledTick(pos, this)) {
             level.scheduleTick(pos, this, 1);
         }
     }
 
+    private int getSignalInFront(Level level, BlockPos pos, Direction dir) {
+        var behind = pos.relative(dir);
+        int pow = level.getSignal(behind, dir);
+        BlockState b = level.getBlockState(behind);
+        if(b.getBlock() instanceof RedStoneWireBlock){
+          pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
+        }
+        return pow;
+    }
+
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
-        Direction direction = state.getValue(FACING);
-        Direction back = direction.getOpposite();
+        Direction front = state.getValue(FACING);
+        Direction back = front.getOpposite();
 
-        int pow = level.getSignal(pos.relative(back), back);
+        int pow = getSignalInFront(level, pos, front);
 
         level.setBlock(pos, state.setValue(POWERED, pow != 0).setValue(POWER, Mth.clamp(pow, 0, 15)), 1 | 2 | 4);
 
-        BlockPos blockPos = pos.relative(direction);
+        BlockPos blockPos = pos.relative(back);
         level.neighborChanged(blockPos, this, pos);
-        level.updateNeighborsAtExceptFromFacing(blockPos, this, direction.getOpposite());
+        level.updateNeighborsAtExceptFromFacing(blockPos, this, front);
     }
 
     @Override
@@ -89,7 +107,7 @@ public class DiodeBlock extends DirectionalBlock {
 
     @Override
     public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        if (state.getValue(POWERED) && state.getValue(FACING) == direction.getOpposite()) {
+        if (state.getValue(POWERED) && state.getValue(FACING) == direction) {
             return state.getValue(POWER);
         }
         return 0;
@@ -99,7 +117,7 @@ public class DiodeBlock extends DirectionalBlock {
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         if (direction == null) return false;
-        return direction.getAxis() == state.getValue(ObserverBlock.FACING).getAxis();
+        return direction == state.getValue(ObserverBlock.FACING);
     }
 
 }

@@ -116,7 +116,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return this.doInteract(stack, player, entity, player.getUsedItemHand()).consumesAction();
     }
 
-
     //1
     private <T extends Entity> boolean canCatch(T entity, Player player) {
         //immediately discards pets and not alive entities as well as players
@@ -347,7 +346,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         Player player = context.getPlayer();
         if ((player != null && !player.isShiftKeyDown()) && this.blocksPlacement()) {
             return InteractionResult.PASS;
-
         }
         return super.place(context);
     }

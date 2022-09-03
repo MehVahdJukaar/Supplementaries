@@ -63,7 +63,7 @@ public final class RegistryConstants {
     public static final String MAGMA_CREAM_BLOCK_NAME = "magma_cream_block";
     public static final String RAKED_GRAVEL_NAME = "raked_gravel";
     public static final String COG_BLOCK_NAME = "cog_block";
-    public static final String DIODE_BLOCK_NAME = "diode_block";
+    public static final String RELAYER_NAME = "relayer";
     public static final String SPRING_LAUNCHER_NAME = "spring_launcher";
     public static final String PISTON_LAUNCHER_HEAD_NAME = "spring_launcher_head";
     public static final String PISTON_LAUNCHER_ARM_NAME = "spring_launcher_arm";
@@ -137,4 +137,5 @@ public final class RegistryConstants {
     public static final String SKULL_CANDLE_NAME = "skull_candle";
     public static final String SKULL_CANDLE_SOUL_NAME = "skull_candle_soul";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
+    public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
 }

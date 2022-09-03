@@ -432,6 +432,19 @@ public class MobContainer {
             this.fluidID = fluidID;
         }
 
+        public boolean is2DFish(){
+            return this.fishTexture != 0;
+        }
+
+        public int getFishTexture() {
+            return fishTexture;
+        }
+
+        @Nullable
+        public ResourceLocation getFluidID() {
+            return fluidID;
+        }
+
         protected abstract void save(CompoundTag tag, boolean isAquarius);
 
         @Nullable

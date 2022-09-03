@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DiodeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RelayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
@@ -700,10 +700,8 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_REDSTONE);
 
     //diode block
-    public static final Supplier<Block> DIODE_BLOCK = regWithItem(DIODE_BLOCK_NAME, () -> new DiodeBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-                    .strength(3f, 6f)
-                    .requiresCorrectToolForDrops()
+    public static final Supplier<Block> RELAYER = regWithItem(RELAYER_NAME, () -> new RelayerBlock(
+            BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s,l,p)->false)
     ), CreativeModeTab.TAB_REDSTONE);
 
     //piston launcher base
@@ -812,8 +810,9 @@ public class ModRegistry {
 
     //crystal display
     public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.copy(Blocks.POLISHED_DEEPSLATE)
-                    .strength(0.2f, 0.2f)
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+                    .sound(SoundType.POLISHED_DEEPSLATE)
+                    .strength(0.5f, 0.5f)
     ), CreativeModeTab.TAB_REDSTONE);
 
     //sconce lever
@@ -1134,6 +1133,11 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
             TIMBER_FRAME_NAME, () -> PlatformHelper.newBlockEntityType(
                     FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()));
+
+    //lapis bricks
+    public static final Supplier<Block> LAPIS_BRICKS = regWithItem(LAPIS_BRICKS_NAME, () -> new Block(
+            BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK).strength(2.0F, 2.0F)
+    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //ashen bricks
     public static EnumMap<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =

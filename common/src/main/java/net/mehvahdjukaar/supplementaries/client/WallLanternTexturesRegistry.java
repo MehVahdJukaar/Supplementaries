@@ -75,7 +75,7 @@ public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListene
                 float width = GsonHelper.getAsFloat(bsElement, "width") / 16f;
                 float height = GsonHelper.getAsFloat(bsElement, "height") / 16f;
                 float y0 = GsonHelper.getAsFloat(bsElement, "y") / 16f;
-                JarBlockTileRenderer.liquidParams.set(width, height, y0);
+                JarBlockTileRenderer.LIQUID_DIMENSIONS.set(width, height, y0);
             } catch (Exception ignored) {
             }
         }

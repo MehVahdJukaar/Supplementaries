@@ -60,18 +60,7 @@ public class ModCreativeTabs {
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
 
-
-        if (CommonConfigs.Blocks.JAR_CAPTURE.get()) {
-            for (Item i : BucketHelper.getValidBuckets()) {
-                CompoundTag com = new CompoundTag();
-                //TODO: fix
-                MobContainer.MobData data = new MobContainer.MobData(null, 0, new ItemStack(i));
-                data.saveToTag(com);
-                tryAdd(items, com);
-            }
-        }
         if (CommonConfigs.Blocks.JAR_COOKIES.get()) {
-            //TODO: use this elsewhere
             for (var i : Registry.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
                 ItemStack regItem = new ItemStack(i);
                 CompoundTag com = new CompoundTag();
