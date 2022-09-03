@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.DataDefinedCatchableMob;
@@ -310,7 +311,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             } else {
                 BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }
-
             //fix here
 
             ForgeHelper.reviveEntity(entity);

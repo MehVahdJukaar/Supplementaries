@@ -106,11 +106,11 @@ public interface ICatchableMob {
      * @return -1 for normal mobs
      */
     default int getFishTextureIndex() {
-        return -1;
+        return 0;
     }
 
     default boolean renderAs2DFish() {
-        return getFishTextureIndex() == -1;
+        return getFishTextureIndex() != 0;
     }
 
     /**

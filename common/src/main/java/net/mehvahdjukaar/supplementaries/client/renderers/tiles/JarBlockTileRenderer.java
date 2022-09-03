@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +55,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
 
     @Override
     public void render(JarBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-
         long r = tile.getBlockPos().asLong();
         Random rand = new Random(r);
         //render cookies

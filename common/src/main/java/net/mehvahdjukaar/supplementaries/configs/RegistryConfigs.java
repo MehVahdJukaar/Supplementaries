@@ -101,7 +101,6 @@ public class RegistryConfigs {
     public static Supplier<Boolean> PULLEY_ENABLED;
     public static Supplier<Boolean> FODDER_ENABLED;
     public static Supplier<Boolean> BOMB_ENABLED;
-    public static Supplier<Boolean> MAGMA_CREAM_BLOCK_ENABLED;
     public static Supplier<Boolean> CRIMSON_LANTERN_ENABLED;
     public static Supplier<Boolean> DAUB_ENABLED;
     public static Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
@@ -135,6 +134,7 @@ public class RegistryConfigs {
     public static Supplier<Boolean> DISPENSER_MINECART_ENABLED;
     public static Supplier<Boolean> SUGAR_CUBE_ENABLED;
     public static Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
+    public static Supplier<Boolean> LAPIS_BRICKS_ENABLED;
 
     public static Supplier<Boolean> JAR_TAB;
     public static Supplier<Boolean> CREATIVE_TAB;
@@ -218,7 +218,6 @@ public class RegistryConfigs {
         FODDER_ENABLED = regConfig(builder, RegistryConstants.FODDER_NAME, true);
 
         CRIMSON_LANTERN_ENABLED = regConfig(builder, RegistryConstants.CRIMSON_LANTERN_NAME, true);
-        MAGMA_CREAM_BLOCK_ENABLED = regConfig(builder, RegistryConstants.MAGMA_CREAM_BLOCK_NAME, true);
         DAUB_ENABLED = regConfig(builder, RegistryConstants.DAUB_NAME, true);
         WATTLE_AND_DAUB_ENABLED = regConfig(builder, "wattle_and_daub", true);
         TIMBER_FRAME_ENABLED = regConfig(builder, RegistryConstants.TIMBER_FRAME_NAME, true);
@@ -241,6 +240,7 @@ public class RegistryConfigs {
         PRESENT_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
         SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_BLOCK_NAME, true);
         CRYSTAL_DISPLAY_ENABLED = regConfig(builder, RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
+        LAPIS_BRICKS_ENABLED = regConfig(builder, RegistryConstants.LAPIS_BRICKS_NAME, true);
 
         SILVER_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_TRAPDOOR_NAME, true);
         SILVER_DOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_DOOR_NAME, true);

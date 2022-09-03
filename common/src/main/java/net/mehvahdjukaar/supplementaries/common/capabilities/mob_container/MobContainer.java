@@ -93,7 +93,6 @@ public class MobContainer {
                     this.mobProperties = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
                     this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
                     this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY);
-
                     this.updateLightLevel(level, pos);
                 }
             }

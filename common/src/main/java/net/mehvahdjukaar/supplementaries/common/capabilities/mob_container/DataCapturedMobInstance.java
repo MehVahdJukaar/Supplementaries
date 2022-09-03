@@ -36,5 +36,14 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
         if (builtinAnimationInstance != null) builtinAnimationInstance.tick(entity, world, pos);
     }
 
+    //force water check
+    @Override
+    public void onContainerWaterlogged(boolean waterlogged) {
+        var f = this.properties.forceFluidID.orElse(null);
+        if (f != null && f.getPath().equals("water")) {
+            onContainerWaterlogged(true);
+        } else super.onContainerWaterlogged(waterlogged);
+    }
+
 
 }
