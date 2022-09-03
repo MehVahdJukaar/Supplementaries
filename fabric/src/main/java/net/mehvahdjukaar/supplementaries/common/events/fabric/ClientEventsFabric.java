@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -39,7 +40,7 @@ public class ClientEventsFabric {
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
             if (r instanceof PlayerRenderer) {
-                e.register(new QuiverLayer(r,false));
+                e.register(new QuiverLayer(r, false));
             } else if (t == EntityType.SKELETON) {
                 e.register(new QuiverLayer(r, true));
             } else if (t == EntityType.STRAY) {

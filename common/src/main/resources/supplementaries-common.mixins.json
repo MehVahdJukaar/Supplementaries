@@ -15,6 +15,7 @@
     "MouseHandlerMixin",
     "ParrotMixin",
     "PlayerSocialManagerMixin",
+    "RemotePlayerMixin",
     "SheetsClassloadingFixHackMixin",
     "UndeadHorseRenderMixin"
   ],

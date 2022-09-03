@@ -63,9 +63,8 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     public ItemStack run(ItemStack pStack, LootContext pContext) {
 
         RandomSource random = pContext.getRandom();
-        createRandomQuiver(random, random.nextInt(min, max + 1));
+        createRandomQuiver(random, pStack, random.nextInt(min, max + 1));
         return pStack;
-
     }
 
     public static ItemStack createRandomQuiver(RandomSource random, float specialMultiplier) {

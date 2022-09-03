@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -25,10 +27,7 @@ public class SugarBlock extends FallingBlock {
     @Override
     public void onLand(Level level, BlockPos pos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlock) {
         if (isWater(blockState2)) {
-
-
             //level.addDestroyBlockEffect(blockPos, blockState);
-
             level.destroyBlock(pos, false);
         }
     }
@@ -122,6 +121,10 @@ public class SugarBlock extends FallingBlock {
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
-        dissolve(level,pos);
+        if(level.isClientSide) {
+            dissolve(level, pos);
+        }
+        SoundType soundtype = state.getSoundType();
+        level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 }

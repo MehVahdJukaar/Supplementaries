@@ -105,7 +105,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 super.render(tile, partialTicks, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             }
             var fluid = tile.mobContainer.shouldRenderWithFluid();
-            if (fluid.isPresent()) {
+            if (fluid != null && fluid.isPresent()) {
                 if (fluid.get() == VanillaSoftFluids.WATER.get()) {
                     //sand
                     matrixStackIn.pushPose();

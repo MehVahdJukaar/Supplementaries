@@ -1,22 +1,30 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -30,6 +38,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
 
     public static final BooleanProperty HAS_BLOCK = ModBlockProperties.HAS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01, 0.01, 0.01, 15.99, 15.99, 15.99);
 
     public final Supplier<Block> daub;
@@ -37,7 +46,8 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     public FrameBlock(Properties properties, Supplier<Block> daub) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.daub = daub;
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false)
+                .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
 
 
@@ -63,7 +73,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, HAS_BLOCK);
+        builder.add(LIGHT_LEVEL, HAS_BLOCK, WATERLOGGED);
     }
 
     @Override
@@ -149,5 +159,36 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
             tile.getHeldBlock().getAnalogOutputSignal(world, pos);
         }
         return 0;
+    }
+
+
+    //waterlogged
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+        }
+        return stateIn;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState().setValue(WATERLOGGED, fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8);
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+        if(state.getValue(HAS_BLOCK))return false;
+        return switch (type) {
+            case LAND, AIR -> true;
+            case WATER -> worldIn.getFluidState(pos).is(FluidTags.WATER);
+        };
     }
 }

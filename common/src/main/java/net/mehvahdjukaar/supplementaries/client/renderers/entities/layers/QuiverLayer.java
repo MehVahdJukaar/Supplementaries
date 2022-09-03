@@ -35,7 +35,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-
+        if(!(livingEntity instanceof IQuiverEntity))return; //failsafe for mods that change the renderer for some reason
         QuiverMode mode = quiverMode.get();
         if (mode == QuiverMode.HIDDEN) return;
 

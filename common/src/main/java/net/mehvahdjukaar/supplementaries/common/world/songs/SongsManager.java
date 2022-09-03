@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPack
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
@@ -19,6 +20,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -34,6 +36,13 @@ import java.util.*;
 
 public class SongsManager extends SimpleJsonResourceReloadListener {
 
+    private static final Map<ResourceLocation, Song> SONGS = new LinkedHashMap<>();
+    private static final List<WeightedEntry.Wrapper<ResourceLocation>> SONG_WEIGHTED_LIST = new ArrayList<>();
+
+    //randomly selected currently playing songs
+    private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
+
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public static final SongsManager RELOAD_INSTANCE = new SongsManager();
@@ -44,6 +53,8 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
+        SONGS.clear();
+        SONG_WEIGHTED_LIST.clear();
         List<Song> temp = new ArrayList<>();
         jsons.forEach((key, input) -> {
             try {
@@ -62,24 +73,23 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         temp.forEach(Song::processForPlaying);
     }
 
-    private static final Map<ResourceLocation, Song> SONGS = new LinkedHashMap<>();
-    private static final List<WeightedEntry.Wrapper<ResourceLocation>> SONG_WEIGHTED_LIST = new ArrayList<>();
+    public static void acceptClientSongs(Map<ResourceLocation, Song> songs) {
+        SONGS.clear();
+        SONG_WEIGHTED_LIST.clear();
+        songs.keySet().forEach(k -> {
+            Song s = songs.get(k);
+            s.processForPlaying();
+            SongsManager.addSong(k, s);
+        });
+    }
 
-    //randomly selected currently playing songs
-    private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
-
-    public static void addSong(ResourceLocation res, Song song) {
+    private static void addSong(ResourceLocation res, Song song) {
         SONGS.put(res, song);
         SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(res, song.getWeight()));
     }
 
-    public static void clearSongs() {
-        SONGS.clear();
-        SONG_WEIGHTED_LIST.clear();
-    }
-
-    public static void sendSongsToClient() {
-        NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+    public static void sendSongsToClient(ServerPlayer player) {
+        NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncSongsPacket(SongsManager.SONGS));
     }
 
     public static Song setCurrentlyPlaying(UUID id, ResourceLocation songKey) {
@@ -98,7 +108,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         Optional<WeightedEntry.Wrapper<ResourceLocation>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
         return song.map(WeightedEntry.Wrapper::getData).orElseGet(() -> new ResourceLocation(""));
     }
-
 
     //called on server only
     public static void playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,

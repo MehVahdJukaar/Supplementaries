@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.songs.Song;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.nbt.CompoundTag;
@@ -44,13 +45,9 @@ public class ClientBoundSyncSongsPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         //client world
-        SongsManager.clearSongs();
-        this.songs.keySet().forEach(k -> {
-            Song s = this.songs.get(k);
-            s.processForPlaying();
-            SongsManager.addSong(k, s);
-        });
-
+        SongsManager.acceptClientSongs(this.songs);
+        Supplementaries.LOGGER.info("Synced Flute Songs");
     }
+
 
 }

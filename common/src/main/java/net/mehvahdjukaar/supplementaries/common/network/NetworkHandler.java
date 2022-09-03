@@ -57,6 +57,9 @@ public class NetworkHandler {
                 ClientBoundSyncSongsPacket.class, ClientBoundSyncSongsPacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncCapturedMobsPacket.class, ClientBoundSyncCapturedMobsPacket::new);
+
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,

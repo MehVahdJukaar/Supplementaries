@@ -278,7 +278,7 @@ public class BellowsBlockTile extends BlockEntity {
 
         } else if (tile.isPressed) {
             float minH = -MAX_COMPRESSION;
-            tile.height = Math.max(tile.height - 0.01f, MAX_COMPRESSION);
+            tile.height = Math.max(tile.height - 0.01f, minH);
 
             if (tile.height > minH) {
                 long time = level.getGameTime();

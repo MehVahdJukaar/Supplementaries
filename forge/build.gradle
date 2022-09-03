@@ -172,7 +172,7 @@ dependencies {
     //modImplementation ("curse.maven:cc-tweaked-282001:3845707")
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:3857246")
-    modImplementation("curse.maven:quark-243121:3933816")
+    modCompileOnly("curse.maven:quark-243121:3933816")
     // modImplementation ("curse.maven:buzzier-bees-355458:3912010")
     // modImplementation ("curse.maven:blueprint-382216:3898272")
     modImplementation("curse.maven:framedblocks-441647:3881493")

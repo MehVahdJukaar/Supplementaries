@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
+import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
@@ -16,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -73,7 +73,7 @@ public class ServerEvents {
 
     @EventCalled
     public static void onPlayerLoggedIn(ServerPlayer player) {
-        GlobeData.sendGlobeData(player);
+
     }
 
     @EventCalled
@@ -96,8 +96,10 @@ public class ServerEvents {
     }
 
     @EventCalled
-    public static void onDataSync(ServerPlayer player, boolean joined) {
-        SongsManager.sendSongsToClient();
+    public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
+        SongsManager.sendSongsToClient(player);
+        CapturedMobHandler.sendDataToClient(player);
+        GlobeData.sendDataToClient(player);
     }
 
     @EventCalled

@@ -254,7 +254,7 @@ public class ModRegistry {
 
     //quiver
     public static final Supplier<QuiverItem> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1)));
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1).rarity(Rarity.UNCOMMON)));
 
 
     //speedometer

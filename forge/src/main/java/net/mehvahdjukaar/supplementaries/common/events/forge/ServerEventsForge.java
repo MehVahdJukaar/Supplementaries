@@ -120,8 +120,19 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onTagUpdate(OnDatapackSyncEvent event) {
-        ServerEvents.onDataSync(event.getPlayer(), true);
     }
+
+    @SubscribeEvent
+    public static void onDataSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() != null) {
+            ServerEvents.onDataSyncToPlayer(event.getPlayer(), true);
+        } else {
+            for (var p : event.getPlayerList().getPlayers()) {
+                ServerEvents.onDataSyncToPlayer(p, true);
+            }
+        }
+    }
+
 
     @SubscribeEvent
     public static void onTagUpdate(TagsUpdatedEvent event) {

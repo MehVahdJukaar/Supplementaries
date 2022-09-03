@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -164,6 +167,8 @@ public class BellowsBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(state.getValue(POWER)==0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile){
             tile.manualPress = 10;
+            level.playSound(null, pos,
+                   ModSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 0.1f, 1.5f);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return super.use(state, level, pos, player, hand, hit);

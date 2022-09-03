@@ -103,12 +103,11 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
     @Override
     public Optional<SoftFluid> shouldRenderWithFluid() {
-        if(forceFluid==null && forceFluidID.isPresent()){
-            forceFluid = SoftFluidRegistry.getOptional(forceFluidID.get());
+        if(this.forceFluid==null){
+            this.forceFluid = forceFluidID.flatMap(SoftFluidRegistry::getOptional);
         }
         return this.forceFluid;
     }
-
 
     @Override
     public int getFishTextureIndex() {

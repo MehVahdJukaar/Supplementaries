@@ -74,7 +74,7 @@ public class GlobeData extends SavedData {
         GlobeTextureManager.refreshTextures();
     }
 
-    public static void sendGlobeData(ServerPlayer player) {
+    public static void sendDataToClient(ServerPlayer player) {
         GlobeData data = GlobeData.get(player.level);
         if (data != null) {
             NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));

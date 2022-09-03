@@ -11,15 +11,23 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,6 +61,25 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
                 list.add(data);
             }
         });
+        for (var c : list) {
+            for (var o : c.getOwners()) {
+                Registry.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
+            }
+        }
+    }
+
+
+    public static void sendDataToClient(ServerPlayer player) {
+        Set<DataDefinedCatchableMob> set = new HashSet<>(CUSTOM_MOB_PROPERTIES.values());
+        NetworkHandler.CHANNEL.sendToClientPlayer(player,
+                new ClientBoundSyncCapturedMobsPacket(set,MODDED_FISH_PROPERTIES));
+    }
+
+    public static void acceptClientData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {
+        if(defaultFish != null){
+            MODDED_FISH_PROPERTIES = defaultFish;
+        }
+        CUSTOM_MOB_PROPERTIES.clear();
         for (var c : list) {
             for (var o : c.getOwners()) {
                 Registry.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
