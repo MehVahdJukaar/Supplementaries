@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -41,7 +40,7 @@ public class QuiverItemImpl {
     public static QuiverItem.IQuiverData getQuiverData(ItemStack stack) {
         return (QuiverCapability) stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
     }
-    
+
     public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.IQuiverData {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);

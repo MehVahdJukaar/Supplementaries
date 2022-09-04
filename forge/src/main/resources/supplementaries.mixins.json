@@ -18,6 +18,7 @@
     "SelfPlanterMixin",
     "SelfQuiverItem",
     "ChunkHolderMixin",
+    "FriendlyByteBufMixin",
     "PlayerProjectileMixin",
     "MobBucketItemAccessor"
   ],

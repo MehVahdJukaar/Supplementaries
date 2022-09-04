@@ -51,8 +51,10 @@ public abstract class QuiverArrowSelectGui extends Gui {
         int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
         if (slotsMoved != 0) {
             Player player = Minecraft.getInstance().player;
-            NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                    slotsMoved, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+            if(player != null) {
+                NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
+                        slotsMoved, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+            }
         }
     }
 

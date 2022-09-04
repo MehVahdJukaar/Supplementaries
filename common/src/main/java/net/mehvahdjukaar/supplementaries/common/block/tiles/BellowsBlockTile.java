@@ -286,7 +286,7 @@ public class BellowsBlockTile extends BlockEntity {
                 int p = 7;
                 float period = tile.getPeriodForPower(p);
 
-                tile.pushAir(level, pos, state, power, time, period, 0.8f);
+                tile.pushAir(level, pos, state, p, time, period, 0.8f);
             }
         }
         //resets counter when powered off

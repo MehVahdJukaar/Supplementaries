@@ -1,18 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -24,16 +19,15 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class QuiverItem extends Item implements DyeableLeatherItem {
 
@@ -58,12 +52,14 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         } else {
             ItemStack itemstack = pSlot.getItem();
             //place into slot
+            AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
                 IQuiverData data = getQuiverData(quiver);
                 if (data != null) {
-                    this.playRemoveOneSound(pPlayer);
                     data.removeOneStack().ifPresent((stack) -> {
+                        this.playRemoveOneSound(pPlayer);
                         data.tryAdding(pSlot.safeInsert(stack));
+                        didStuff.set(true);
                     });
                 }
             }
@@ -71,15 +67,16 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             else if (itemstack.getItem().canFitInsideContainerItems()) {
                 IQuiverData data = getQuiverData(quiver);
                 if (data != null) {
-                    ItemStack i = data.tryAdding(pSlot.safeTake(itemstack.getCount(), 64, pPlayer));
-                    if (!i.equals(itemstack)) {
+                    var taken = pSlot.safeTake(itemstack.getCount(), 64, pPlayer);
+                    ItemStack remaining = data.tryAdding(taken);
+                    if (!remaining.equals(taken)) {
                         this.playInsertSound(pPlayer);
-                        pSlot.set(i);
-                        return true;
+                        didStuff.set(true);
                     }
+                    pSlot.set(remaining);
                 }
             }
-            return true;
+            return didStuff.get();
         }
     }
 
@@ -88,20 +85,22 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
             IQuiverData data = getQuiverData(quiver);
             if (data != null) {
+                AtomicBoolean didStuff = new AtomicBoolean(false);
                 if (pOther.isEmpty()) {
                     data.removeOneStack().ifPresent((removed) -> {
                         this.playRemoveOneSound(pPlayer);
                         pAccess.set(removed);
+                        didStuff.set(true);
                     });
-                    return true;
                 } else {
                     ItemStack i = data.tryAdding(pOther);
                     if (!i.equals(pOther)) {
                         this.playInsertSound(pPlayer);
                         pAccess.set(i);
-                        return true;
+                        didStuff.set(true);
                     }
                 }
+                return didStuff.get();
             }
         }
         return false;
@@ -334,6 +333,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         //fabric and skeleton shoot goal. forge for player doesn't need this as stack decrement already affects the one in quiver
         void consumeArrow();
     }
+
 
 }
 

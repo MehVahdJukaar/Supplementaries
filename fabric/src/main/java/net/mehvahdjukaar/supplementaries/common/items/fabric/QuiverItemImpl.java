@@ -19,43 +19,6 @@ import java.util.stream.Stream;
 
 public class QuiverItemImpl {
 
-    public static int add(ItemStack pBundleStack, ItemStack pInsertedStack) {
-        return 0;
-    }
-
-    public static Optional<ItemStack> removeOne(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getOrCreateTag();
-        if (!compoundtag.contains("Items")) {
-            return Optional.empty();
-        } else {
-            ListTag listtag = compoundtag.getList("Items", 10);
-            if (listtag.isEmpty()) {
-                return Optional.empty();
-            } else {
-                int i = 0;
-                CompoundTag compound = listtag.getCompound(0);
-                ItemStack itemstack = ItemStack.of(compound);
-                listtag.remove(0);
-                if (listtag.isEmpty()) {
-                    pStack.removeTagKey("Items");
-                }
-
-                return Optional.of(itemstack);
-            }
-        }
-    }
-
-    public static Stream<ItemStack> getContents(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null) {
-            return Stream.empty();
-        } else {
-            ListTag listtag = compoundtag.getList("Items", 10);
-            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
-        }
-    }
-
-
     public static ItemStack getQuiver(LivingEntity entity) {
         if(!(entity instanceof Player) && entity instanceof IQuiverEntity e)return e.getQuiver();
         if (entity instanceof Player p) {
@@ -68,6 +31,9 @@ public class QuiverItemImpl {
 
     public static QuiverItem.@Nullable IQuiverData getQuiverData(ItemStack stack) {
         return new QuiverNBTData(stack.getOrCreateTag());
+    }
+
+    public static void sendForgeCapToServer(ItemStack quiver) {
     }
 
     public static class QuiverNBTData implements QuiverItem.IQuiverData {
