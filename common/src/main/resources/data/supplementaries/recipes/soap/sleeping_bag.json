@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "modid": "comforts",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "comforts:sleeping_bags"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "item": "comforts:white_sleeping_bag",
+    "count": 1
+  }
+}

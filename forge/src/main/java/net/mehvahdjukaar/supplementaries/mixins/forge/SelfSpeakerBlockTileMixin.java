@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.CCCompatImpl;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,9 +22,9 @@ public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
         if (CompatHandler.computercraft && CCCompatImpl.isPeripheralCap(cap)) {
-            if(peripheral == null){
+            if (peripheral == null) {
                 peripheral = CCCompatImpl.getPeripheralSupplier((SpeakerBlockTile) (Object) this);
             }
             return peripheral.cast();
@@ -33,7 +35,7 @@ public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        if(peripheral != null) {
+        if (peripheral != null) {
             peripheral.invalidate();
         }
     }

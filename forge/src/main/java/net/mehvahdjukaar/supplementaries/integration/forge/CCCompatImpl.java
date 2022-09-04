@@ -1,50 +1,31 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-
-
-public class CCCompatImpl {
-    public static <T> boolean isPeripheralCap(Capability<T> cap) {
-        return false;
-    }
-
-    public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile speakerBlockTile) {
-        return null;
-
-    }
-
-    public static void initialize() {
-    }
-
-    public static boolean isPrintedBook(Item item) {
-        return false;
-    }
-
-    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties p) {
-        return null;
-    }
-
-    public static int getPages(ItemStack itemstack) {
-        return 0;
-    }
-
-    public static String[] getText(ItemStack itemstack) {
-        return null;
-    }
-/*
-
 import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.shared.Capabilities;
 import dan200.computercraft.shared.media.items.ItemPrintout;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class CCCompatImpl {
 
     public static void initialize() {
         ComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
@@ -71,11 +52,10 @@ import dan200.computercraft.shared.media.items.ItemPrintout;
                 super(properties);
             }
 
-            @NotNull
             @Override
-            public LazyOptional<IPeripheral> getPeripheral(@NotNull Level world, @NotNull BlockPos pos, @NotNull Direction side) {
+            public LazyOptional<IPeripheral> getPeripheral(Level world, BlockPos pos, Direction side) {
                 var tile = world.getBlockEntity(pos);
-                if (tile != null) {
+                if (tile instanceof SpeakerBlockTile) {
                     return tile.getCapability(Capabilities.CAPABILITY_PERIPHERAL, side);
                 }
                 return LazyOptional.empty();
@@ -91,5 +71,97 @@ import dan200.computercraft.shared.media.items.ItemPrintout;
     public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile tile) {
         return LazyOptional.of(() -> new SpeakerPeripheral(tile));
     }
-*/
+
+    @SuppressWarnings({"ClassCanBeRecord"})
+    public static final class SpeakerPeripheral implements IPeripheral {
+        private final SpeakerBlockTile tile;
+
+        public SpeakerPeripheral(SpeakerBlockTile tile) {
+            this.tile = tile;
+        }
+
+        @LuaFunction
+        public void setNarrator(boolean narratorOn) {
+            tile.setNarrator(narratorOn);
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public boolean isNarratorEnabled() {
+            return tile.isNarrator();
+        }
+
+        @LuaFunction
+        public void setMessage(String message) {
+            tile.setMessage(message);
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public String getMessage() {
+            return tile.getMessage();
+        }
+
+        @LuaFunction
+        public void setName(String name) {
+            tile.setCustomName(Component.literal(name));
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public String getName() {
+            return tile.getName().getString();
+        }
+
+        @LuaFunction
+        public double getVolume() {
+            return tile.getVolume();
+        }
+
+        @LuaFunction
+        public void setVolume(double volume) {
+            tile.setVolume(volume);
+            tile.setChanged();
+        }
+
+        @LuaFunction
+        public void activate() {
+            tile.sendMessage();
+        }
+
+        @NotNull
+        @Override
+        public String getType() {
+            return "speaker_block";
+        }
+
+        @Override
+        public boolean equals(@Nullable IPeripheral other) {
+            return Objects.equals(this, other);
+        }
+
+        public SpeakerBlockTile tile() {
+            return tile;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (SpeakerPeripheral) obj;
+            return Objects.equals(this.tile, that.tile);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(tile);
+        }
+
+        @Override
+        public String toString() {
+            return "SpeakerPeripheral[" +
+                    "tile=" + tile + ']';
+        }
+
+    }
 }

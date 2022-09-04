@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -223,6 +224,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     float b = (NativeImage.getR(i)) / 255f;
                     float g = (NativeImage.getG(i)) / 255f;
                     float r = (NativeImage.getB(i)) / 255f;
+                    //if(tile.textHolder.hasGlowingText())combinedLightIn= LightTexture.FULL_BRIGHT;
                     int lu = frontLight & '\uffff';
                     int lv = frontLight >> 16 & '\uffff';
                     VertexUtils.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,

@@ -37,6 +37,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         this.customName = name;
     }
 
+    @Override
     public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
@@ -65,6 +66,18 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         this.volume = volume;
         this.narrator = narrator;
         this.message = message;
+    }
+
+    public void setNarrator(boolean narrator) {
+        this.narrator = narrator;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 
     @Override

@@ -169,7 +169,7 @@ dependencies {
 
     modImplementation("curse.maven:jei-238222:3928388")
     modImplementation("curse.maven:configured-457570:3946498")
-    //modImplementation ("curse.maven:cc-tweaked-282001:3845707")
+    modCompileOnly ("curse.maven:cc-tweaked-282001:3904454")
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:3857246")
     modCompileOnly("curse.maven:quark-243121:3933816")

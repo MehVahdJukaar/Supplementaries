@@ -19,6 +19,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -31,12 +32,8 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class HangingSignBlockTileRenderer implements BlockEntityRenderer<HangingSignBlockTile> {
     public static final int LINE_MAX_WIDTH = 75;
@@ -124,6 +121,10 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                         float b = color[2];
                         float g = color[1];
                         float r = color[0];
+                        if (tile.textHolder.hasGlowingText()){
+                            combinedLightIn = LightTexture.FULL_BRIGHT;
+                        }
+
                         int lu = combinedLightIn & '\uffff';
                         int lv = combinedLightIn >> 16 & '\uffff';
                         for (int v = 0; v < 2; v++) {
