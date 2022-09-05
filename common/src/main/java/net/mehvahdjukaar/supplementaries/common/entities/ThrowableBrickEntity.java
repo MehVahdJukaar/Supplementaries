@@ -47,7 +47,6 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         return PlatformHelper.getEntitySpawnPacket(this);
     }
 
-
     @Override
     protected Item getDefaultItem() {
         return Items.BRICK;

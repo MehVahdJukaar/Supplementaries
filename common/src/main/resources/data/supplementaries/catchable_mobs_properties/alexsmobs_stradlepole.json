@@ -1,0 +1,10 @@
+{
+  "force_fluid": "minecraft:lava",
+  "fish_index": 0,
+  "animation": "floating",
+  "height_increment": 0.0,
+  "owners": [
+    "alexsmobs:stradlepole"
+  ],
+  "width_increment": 0.125
+}

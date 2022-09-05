@@ -12,14 +12,14 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "comforts:sleeping_bags"
+      "tag": "comforts:hammocks"
     },
     {
       "item": "supplementaries:soap"
     }
   ],
   "result": {
-    "item": "comforts:sleeping_bag_white",
+    "item": "comforts:hammock_white",
     "count": 1
   }
 }

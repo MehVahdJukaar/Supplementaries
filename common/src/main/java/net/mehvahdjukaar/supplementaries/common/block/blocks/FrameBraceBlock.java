@@ -19,8 +19,7 @@ public class FrameBraceBlock extends FrameBlock { //implements IRotationLockable
 
     public FrameBraceBlock(Properties properties, Supplier<Block> daub) {
         super(properties, daub);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FLIPPED, false)
-                .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(FLIPPED, false));
     }
 
     @Override
@@ -33,7 +32,7 @@ public class FrameBraceBlock extends FrameBlock { //implements IRotationLockable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getClickedPos();
         Direction direction = context.getClickedFace();
-        return this.defaultBlockState().setValue(FLIPPED, direction != Direction.DOWN && (direction == Direction.UP || !(context.getClickLocation().y - (double) blockpos.getY() > 0.5D)));
+        return super.getStateForPlacement(context).setValue(FLIPPED, direction != Direction.DOWN && (direction == Direction.UP || !(context.getClickLocation().y - (double) blockpos.getY() > 0.5D)));
     }
 
     //quark rot lock

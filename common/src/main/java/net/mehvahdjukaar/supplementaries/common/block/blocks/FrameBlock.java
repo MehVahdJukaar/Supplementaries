@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.minecraft.core.BlockPos;
@@ -46,16 +45,13 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     public FrameBlock(Properties properties, Supplier<Block> daub) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.daub = daub;
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED,false)
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                 .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
 
-
     private static final VoxelShape INSIDE_Z = box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 16.0D);
     private static final VoxelShape INSIDE_X = box(0.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D);
-    protected static final VoxelShape SHAPE = Shapes.join(Shapes.block(), Shapes.or(
-                    INSIDE_Z, INSIDE_X),
-            BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SHAPE = Shapes.join(Shapes.block(), Shapes.or(INSIDE_Z, INSIDE_X), BooleanOp.ONLY_FIRST);
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
@@ -185,7 +181,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
 
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-        if(state.getValue(HAS_BLOCK))return false;
+        if (state.getValue(HAS_BLOCK)) return false;
         return switch (type) {
             case LAND, AIR -> true;
             case WATER -> worldIn.getFluidState(pos).is(FluidTags.WATER);

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -162,7 +163,12 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                         .withParameter(LootContextParams.BLOCK_STATE, serverLevel.getBlockState(pos))
                         .withOptionalParameter(LootContextParams.THIS_ENTITY, entity);
-                ItemsUtil.addToInventory(serverLevel, pos.below(), lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT)));
+
+                var l = lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT));
+                for (var o : l){
+                    entity.spawnAtLocation(o);
+                }
+                //ItemsUtil.addToInventory(serverLevel, pos.below(), );
             }
         }
     }

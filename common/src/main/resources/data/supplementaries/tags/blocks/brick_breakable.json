@@ -4,6 +4,8 @@
     {"id":"minecraft:glass","required":false},
     {"id":"minecraft:glass_pane","required":false},
     {"id":"#forge:glass","required":false},
-    {"id":"#forge:glass_panes","required":false}
+    {"id":"#forge:glass_panes","required":false},
+    {"id":"#c:glass_blocks","required":false},
+    {"id":"#c:glass_panes","required":false}
   ]
 }
