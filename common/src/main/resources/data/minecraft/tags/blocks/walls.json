@@ -3,6 +3,7 @@
   "values": [
     "supplementaries:blackstone_tile_wall",
     "supplementaries:ash_bricks_wall",
+    "supplementaries:lapis_bricks_wall",
     "supplementaries:stone_tile_wall"
   ]
 }

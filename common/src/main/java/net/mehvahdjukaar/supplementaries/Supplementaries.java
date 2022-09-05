@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -48,13 +49,13 @@ public class Supplementaries {
 
         RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
+        //sugar block fall in water
         //soap in water makes soap particles
         //yeet java models in favor or json ones
         // TODO: re add soap stuff
         //Fix throwing bricks not working on glass
         //fix snowy spirit chest not sincing after reload
-        //potions in jars are bugged ;_;
-        //feather block
+
 
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
         ModSounds.init();
@@ -100,7 +101,6 @@ public class Supplementaries {
     //camera mod with screenshots
 
     //clicking on cage with lead will put the leashed animal inside
-    //bug: tipped spikes not getting placed. rope not playing up sound
     //TODO: flint block and steel
     //wrench rotation overlay
     //TODO: dynamic soap undye recipe
@@ -115,14 +115,12 @@ public class Supplementaries {
     //bundle sound for sacks
 
     //FIx spikes piston movements
-    //TODO: fish bucket on cages a
     //TODO: shift click to pickup placed book
 
     //todo: fix projectile hitbox being a single point on y = 0
     //divining rod
     //add chain knot
 
-    //elytra acrobatics mod
     //enderman hold block in rain
     //horizontal shearable ropes
 
@@ -202,15 +200,11 @@ public class Supplementaries {
 
     //jeed mod loaded recipe condition
     //blackboard otline gui+
-    //quiver that allows to select arrows
-    //map function & data driven map markers
 
     //soap signs & finish notice board dye (add dye interface)
     //snow real magic compat
     //bugs: spring launcher broken on servers
 
-    //rope sliding sound instance
     //bellows particles
-    //rope walking
 
 }

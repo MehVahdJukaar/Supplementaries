@@ -339,6 +339,11 @@
   "block.supplementaries.crystal_display": "Crystal Display",
   "block.supplementaries.relayer": "Relayer",
   "block.supplementaries.lapis_bricks": "Lapis Bricks",
+  "block.supplementaries.lapis_bricks_wall": "Lapis Brick Wall",
+  "block.supplementaries.lapis_bricks_stairs": "Lapis Brick Stairs",
+  "block.supplementaries.lapis_bricks_slab": "Lapis Brick Slab",
+  "block.supplementaries.lapis_bricks_vertical_slab": "Lapis Brick Vertical Slab",
+
   "supplementaries.gui.controls": "Supplementaries",
   "supplementaries.keybind.quiver": "Quiver",
 

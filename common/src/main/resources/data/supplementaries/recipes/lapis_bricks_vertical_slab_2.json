@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "flag": "lapis_bricks",
+      "type": "supplementaries:flag"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "quark",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:lapis_bricks_vertical_slab"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:lapis_bricks_slab",
+    "count": 1
+  }
+}

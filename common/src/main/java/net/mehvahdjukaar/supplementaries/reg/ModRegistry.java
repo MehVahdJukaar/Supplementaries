@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RelayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
@@ -566,11 +565,11 @@ public class ModRegistry {
 
     //crimson lantern
     public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
-                    .strength(1.5f)
-                    .sound(SoundType.WOOL)
-                    .lightLevel((state) -> 15)
-                    .noOcclusion()),
+                    BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
+                            .strength(1.5f)
+                            .sound(SoundType.WOOL)
+                            .lightLevel((state) -> 15)
+                            .noOcclusion()),
             CreativeModeTab.TAB_DECORATIONS);
 
     //silver lantern
@@ -700,7 +699,7 @@ public class ModRegistry {
 
     //diode block
     public static final Supplier<Block> RELAYER = regWithItem(RELAYER_NAME, () -> new RelayerBlock(
-            BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s,l,p)->false)
+            BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
     ), CreativeModeTab.TAB_REDSTONE);
 
     //piston launcher base
@@ -1134,21 +1133,21 @@ public class ModRegistry {
                     FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()));
 
     //lapis bricks
-    public static final Supplier<Block> LAPIS_BRICKS = regWithItem(LAPIS_BRICKS_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
-                    .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
+            RegHelper.registerFullBlockSet(Supplementaries.res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
+                            .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F),
+                    isDisabled(LAPIS_BRICKS_NAME));
 
     //ashen bricks
-    public static EnumMap<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
+    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
 
     //stone tile
-    public static EnumMap<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
+    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(STONE_TILE_NAME), Blocks.STONE_BRICKS, isDisabled(STONE_TILE_NAME));
 
     //blackstone tile
-    public static EnumMap<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
+    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE, isDisabled(BLACKSTONE_TILE_NAME));
 
     //stone lamp
