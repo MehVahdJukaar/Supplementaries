@@ -118,7 +118,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         for (int p = 0; p < list.size(); p++) {
 
-            Material material = ClientRegistry.FLAG_MATERIALS.get(list.get(p).getFirst());
+            Material material = ClientRegistry.FLAG_MATERIALS.get().get(list.get(p).getFirst());
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();

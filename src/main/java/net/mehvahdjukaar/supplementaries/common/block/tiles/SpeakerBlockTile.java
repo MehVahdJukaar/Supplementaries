@@ -33,7 +33,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
     public String message = "";
     public boolean narrator = false;
-    public double volume = 1;
+    //distance in blocks
+    public double volume = ServerConfigs.block.SPEAKER_RANGE.get();
     private Component customName;
 
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
@@ -61,6 +62,24 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         return new TranslatableComponent("block.supplementaries.speaker_block");
     }
 
+    public double getVolume() {
+        return volume;
+    }
+
+    public boolean isNarrator() {
+        return narrator;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setSettings(double volume, boolean narrator, String message) {
+        this.volume = volume;
+        this.narrator = narrator;
+        this.message = message;
+    }
+
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
@@ -69,7 +88,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
 
         this.message = compound.getString("Message");
-        if (!ServerConfigs.cached.SPEAKER_NARRATOR) this.narrator = false;
+        if (!ServerConfigs.block.SPEAKER_NARRATOR.get()) this.narrator = false;
         else this.narrator = compound.getBoolean("Narrator");
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);
@@ -102,8 +121,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
                     .withStyle(style);
 
             NetworkHandler.sendToAllInRangeClients(pos, server,
-                    ServerConfigs.cached.SPEAKER_RANGE * this.volume,
-                    new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
+                    this.volume, new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
 
         }
     }
@@ -125,5 +143,4 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     private final LazyOptional<Object> peripheral;
-
 }

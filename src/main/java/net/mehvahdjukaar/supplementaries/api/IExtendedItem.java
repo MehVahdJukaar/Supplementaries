@@ -5,9 +5,9 @@ import javax.annotation.Nullable;
 public interface IExtendedItem {
 
     @Nullable
-    AdditionalPlacement getAdditionalBehavior();
+    IAdditionalPlacement getAdditionalBehavior();
 
-    void addAdditionalBehavior(AdditionalPlacement b);
+    void addAdditionalBehavior(IAdditionalPlacement b);
 
     default boolean hasPlacementBehavior(){
         return getAdditionalBehavior() != null;

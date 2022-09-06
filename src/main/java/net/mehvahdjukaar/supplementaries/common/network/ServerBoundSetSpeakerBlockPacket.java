@@ -48,9 +48,7 @@ public class ServerBoundSetSpeakerBlockPacket {
         ctx.get().enqueueWork(() -> {
             BlockPos pos = message.pos;
             if (world.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
-                speaker.message = message.str.getString();
-                speaker.narrator = message.narrator;
-                speaker.volume = message.volume;
+                speaker.setSettings(message.volume, message.narrator,message.str.getString());
                 //updates client
                 BlockState state = world.getBlockState(pos);
                 world.sendBlockUpdated(pos, state, state, 3);

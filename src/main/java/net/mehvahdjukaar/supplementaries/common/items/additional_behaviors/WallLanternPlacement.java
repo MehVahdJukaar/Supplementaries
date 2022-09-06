@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
-import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class WallLanternPlacement implements AdditionalPlacement {
+public class WallLanternPlacement implements IAdditionalPlacement {
 
     @Override
     public BlockState overrideGetPlacementState(BlockPlaceContext pContext) {

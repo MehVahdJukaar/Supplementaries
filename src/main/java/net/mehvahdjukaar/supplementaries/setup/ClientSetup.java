@@ -143,7 +143,7 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
 
 
-            ItemProperties.register(Items.CROSSBOW, new ResourceLocation("rope_arrow"),
+            ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                     new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
             ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),

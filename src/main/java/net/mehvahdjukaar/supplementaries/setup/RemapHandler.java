@@ -32,7 +32,6 @@ public class RemapHandler {
     public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
         for (RegistryEvent.MissingMappings.Mapping<Block> mapping : event.getMappings(Supplementaries.MOD_ID)) {
             mapping.ignore();
-
             if (true) continue;
             String k = mapping.key.getPath();
             if (fullReMap.containsKey(k)) {

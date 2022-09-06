@@ -55,6 +55,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> TINTED_JAR_CATCHABLE = entityTag("jar_tinted_catchable");
     public static final TagKey<EntityType<?>> CAGE_CATCHABLE = entityTag("cage_catchable");
     public static final TagKey<EntityType<?>> CAGE_BABY_CATCHABLE = entityTag("cage_baby_catchable");
+    public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");
     public static final TagKey<EntityType<?>> FLUTE_PET = entityTag("flute_pet");
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     //features
