@@ -4,7 +4,7 @@
   "overrides": [
     {
       "predicate": {
-        "packed": 1
+        "supplementaries:packed": 1
       },
       "model":  "supplementaries:block/presents/present_closed_gray"
     }

@@ -1,32 +1,25 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "modid": "farmersdelight",
-          "type": "forge:mod_loaded"
-        },
-        {
-          "type": "supplementaries:flag",
-          "flag": "soap"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "tag": "farmersdelight:canvas_signs"
-          },
-          {
-            "item": "supplementaries:soap"
-          }
-        ],
-        "result": {
-          "item": "farmersdelight:canvas_sign",
-          "count": 1
-        }
-      }
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "farmersdelight:canvas_signs"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "item": "farmersdelight:canvas_sign",
+    "count": 1
+  }
 }

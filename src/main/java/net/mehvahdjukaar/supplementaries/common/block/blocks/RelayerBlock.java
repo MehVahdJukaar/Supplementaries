@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,6 +16,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 public class RelayerBlock extends DirectionalBlock {
 
@@ -86,7 +86,7 @@ public class RelayerBlock extends DirectionalBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random randomSource) {
         Direction front = state.getValue(FACING);
         Direction back = front.getOpposite();
 
@@ -117,8 +117,7 @@ public class RelayerBlock extends DirectionalBlock {
         return 0;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         if (direction == null) return false;
         return direction == state.getValue(ObserverBlock.FACING);

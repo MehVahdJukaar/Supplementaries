@@ -172,7 +172,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
             }
-            if (!worldIn.isClientSide) {
+            if (!worldIn.isClientSide && ServerConfigs.block.BLACKBOARD_GUI.get()) {
                 te.sendOpenGuiPacket(worldIn, pos, player);
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide);

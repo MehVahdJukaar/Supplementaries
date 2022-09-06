@@ -6,6 +6,7 @@
   "refmap": "supplementaries.refmap.json",
   "package": "net.mehvahdjukaar.supplementaries.mixins",
   "mixins": [
+    "AbstractHorseMixin",
     "AbstractSkullBlockMixin",
     "BeeGoalMixin",
     "BellMixin",

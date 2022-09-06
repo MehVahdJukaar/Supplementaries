@@ -28,6 +28,8 @@
     "supplementaries:copper_lantern",
     "supplementaries:crimson_lantern",
     "supplementaries:brass_lantern",
+    "supplementaries:silver_lantern",
+    "supplementaries:lead_lantern",
     "supplementaries:gold_gate",
     "supplementaries:iron_gate",
     "supplementaries:netherite_trapdoor",
@@ -63,9 +65,12 @@
     "supplementaries:ash_bricks_wall",
     "supplementaries:soap_block",
     "supplementaries:urn",
-    "supplementaries:jar"
-
-
-
+    "supplementaries:jar",
+    "supplementaries:crystal_display",
+    "supplementaries:lapis_bricks_vertical_slab",
+    "supplementaries:lapis_bricks_slab",
+    "supplementaries:lapis_bricks",
+    "supplementaries:lapis_bricks_stairs",
+    "supplementaries:lapis_bricks_wall"
   ]
 }

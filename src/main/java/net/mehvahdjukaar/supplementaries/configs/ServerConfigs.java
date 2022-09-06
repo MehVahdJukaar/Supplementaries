@@ -397,6 +397,7 @@ public class ServerConfigs {
         public static ForgeConfigSpec.BooleanValue SAFE_SIMPLE;
 
         public static ForgeConfigSpec.BooleanValue BLACKBOARD_COLOR;
+        public static ForgeConfigSpec.BooleanValue BLACKBOARD_GUI;
 
         public static ForgeConfigSpec.BooleanValue REPLACE_DAUB;
         public static ForgeConfigSpec.BooleanValue SWAP_TIMBER_FRAME;
@@ -571,6 +572,7 @@ public class ServerConfigs {
             builder.push("blackboard");
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
                     .define("colored_blackboard", false);
+            BLACKBOARD_GUI = builder.define("blackboard_gui",true);
             builder.pop();
 
             builder.push("timber_frame");

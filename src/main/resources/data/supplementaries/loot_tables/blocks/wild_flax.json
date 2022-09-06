@@ -21,6 +21,20 @@
             },
             {
               "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "items": [
+                      "minecraft:shears"
+                    ]
+                  }
+                }
+              ],
+              "name": "supplementaries:wild_flax"
+            },
+            {
+              "type": "minecraft:item",
               "functions": [
                 {
                   "function": "minecraft:apply_bonus",

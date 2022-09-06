@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "supplementaries:raked_gravel",
+    "supplementaries:sugar_cube",
     "supplementaries:ash"
   ]
 }

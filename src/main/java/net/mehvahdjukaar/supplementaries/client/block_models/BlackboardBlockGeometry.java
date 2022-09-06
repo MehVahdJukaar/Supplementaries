@@ -20,8 +20,7 @@ public record BlackboardBlockGeometry(
 
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-BlockModel
-        UnbakedModel
+
        var list = new ArrayList<Material>();
        list.add(this.model().getMaterial("white"));
        list.add(this.model().getMaterial("black"));

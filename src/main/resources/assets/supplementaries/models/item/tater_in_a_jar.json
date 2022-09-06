@@ -6,7 +6,7 @@
 		"1": "supplementaries:blocks/jar_top",
 		"2": "supplementaries:blocks/jar_cork",
 		"3": "supplementaries:blocks/jar_bottom",
-		"4": "botania:model/tiny_potato/default",
+		"4": "quark:model/tiny_potato/default",
 		"particle": "supplementaries:blocks/jar_side"
 	},
 	"elements": [

@@ -91,6 +91,7 @@ public class ClientSetup {
             ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s, RenderType.cutout()));
 
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.JAR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.FAUCET.get(), RenderType.cutout());
@@ -146,7 +147,7 @@ public class ClientSetup {
             ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                     new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pull"),
+            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pull"),
                     (stack, world, entity, s) -> {
                         if (entity == null || entity.getUseItem() != stack) {
                             return 0.0F;
@@ -155,20 +156,20 @@ public class ClientSetup {
                         }
                     });
 
-            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), new ResourceLocation("pulling"),
+            ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pulling"),
                     (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
-            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), new ResourceLocation("using"),
+            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(),Supplementaries.res("using"),
                     (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
 
 
-            ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("packed"),
+            ModRegistry.PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), Supplementaries.res("packed"),
                     (stack, world, entity, s) -> PresentBlockTile.isPacked(stack) ? 1.0F : 1F));
 
-            ModRegistry.TRAPPED_PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), new ResourceLocation("primed"),
+            ModRegistry.TRAPPED_PRESENTS_ITEMS.values().forEach(i -> ItemProperties.register(i.get(), Supplementaries.res("primed"),
                     (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
-            ItemProperties.register(ModRegistry.CANDY_ITEM.get(), new ResourceLocation("wrapping"),
+            ItemProperties.register(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
                     (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
             //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
@@ -207,6 +208,7 @@ public class ClientSetup {
         particleEngine.register(ModRegistry.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
         particleEngine.register(ModRegistry.ASH_PARTICLE.get(), AshParticleFactory::new);
         particleEngine.register(ModRegistry.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
+        particleEngine.register(ModRegistry.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
     }
 
     public static class AshParticleFactory extends SnowflakeParticle.Provider {

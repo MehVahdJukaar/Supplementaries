@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -16,6 +15,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.Random;
 
 public class SugarBlock extends FallingBlock {
 
@@ -32,7 +33,7 @@ public class SugarBlock extends FallingBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
         if (touchesLiquid(level, pos)) {
             level.blockEvent(pos, state.getBlock(), 1, 0);
         } else super.tick(state, level, pos, random);
@@ -104,7 +105,7 @@ public class SugarBlock extends FallingBlock {
                     double px = s + d;
                     double py = t + e;
                     double pz = u + f;
-                    level.addParticle(ModParticles.SUGAR_PARTICLE.get(),
+                    level.addParticle(ModRegistry.SUGAR_PARTICLE.get(),
                             (double) pos.getX() + px, (double) pos.getY() + py, (double) pos.getZ() + pz,
                             s - 0.5, 0, u - 0.5);
                 }

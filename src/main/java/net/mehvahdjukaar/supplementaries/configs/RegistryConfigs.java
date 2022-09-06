@@ -129,6 +129,11 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue LEAD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue LEAD_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue DISPENSER_MINECART_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SUGAR_CUBE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue LAPIS_BRICKS_ENABLED;
+        public static ForgeConfigSpec.BooleanValue RELAYER_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CRYSTAL_DISPLAY_ENABLED;
+
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -253,7 +258,11 @@ public class RegistryConfigs {
             BLACKSTONE_TILE_ENABLED = builder.define(RegistryConstants.BLACKSTONE_TILE_NAME, true);
             GLOBE_SEPIA = builder.define(RegistryConstants.GLOBE_SEPIA_NAME, true);
             PRESENT_ENABLED = builder.define(RegistryConstants.PRESENT_NAME, true);
-            PRESENT_ENABLED = builder.define(RegistryConstants.STATUE_NAME, true);
+            SUGAR_CUBE_ENABLED = builder.define(RegistryConstants.SUGAR_CUBE_NAME, true);
+            LAPIS_BRICKS_ENABLED = builder.define(RegistryConstants.LAPIS_BRICKS_NAME, true);
+            RELAYER_ENABLED = builder.define(RegistryConstants.RELAYER_NAME, true);
+            CRYSTAL_DISPLAY_ENABLED = builder.define(RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
+
 
 
             SILVER_TRAPDOOR_ENABLED = builder.define(RegistryConstants.SILVER_TRAPDOOR_NAME, true);

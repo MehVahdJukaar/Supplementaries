@@ -1,32 +1,25 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "modid": "create",
-          "type": "forge:mod_loaded"
-        },
-        {
-          "type": "supplementaries:flag",
-          "flag": "soap"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "tag": "create:seats"
-          },
-          {
-            "item": "supplementaries:soap"
-          }
-        ],
-        "result": {
-          "item": "create:white_seat",
-          "count": 1
-        }
-      }
+      "modid": "create",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "create:seats"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "item": "create:white_seat",
+    "count": 1
+  }
 }
