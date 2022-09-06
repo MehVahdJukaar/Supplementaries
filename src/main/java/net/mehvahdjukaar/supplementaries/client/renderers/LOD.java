@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
+@Deprecated(forRemoval = true)
 public class LOD {
     private final double distSq;
 

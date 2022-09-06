@@ -64,6 +64,7 @@ public class ConfigHandler {
         value.set((T) valueSpec.getDefault());
     }
 
+    @Deprecated(forRemoval = true)
     //maybe not needed anymore now with predicated below
     public static <T> T safeGetListString(ForgeConfigSpec spec, ForgeConfigSpec.ConfigValue<T> value) {
         Object o = value.get();
@@ -77,16 +78,16 @@ public class ConfigHandler {
         }
         return value.get();
     }
-
+    @Deprecated
     public static final Predicate<Object> STRING_CHECK = o -> o instanceof String;
-
+    @Deprecated
     public static final Predicate<Object> LIST_STRING_CHECK = (s)->{
         if(s instanceof List<?>){
             return ((Collection<?>) s).stream().allMatch(o -> o instanceof String);
         }
         return false;
     };
-
+    @Deprecated
     public static final Predicate<Object> COLOR_CHECK = s -> {
         try {
             Integer.parseUnsignedInt(((String) s).replace("0x", ""), 16);
@@ -105,14 +106,14 @@ public class ConfigHandler {
             ClientConfigs.cached.refresh();
     }
 
-
+    @Deprecated
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getPlayer().level.isClientSide) {
             //send this configuration to connected clients
             syncServerConfigs((ServerPlayer) event.getPlayer());
         }
     }
-
+    @Deprecated
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getPlayer().level.isClientSide) {
             //reload local common configs

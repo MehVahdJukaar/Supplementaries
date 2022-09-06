@@ -94,7 +94,6 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
 
-
     private boolean canConnect(LevelAccessor world, BlockPos pos, Direction dir) {
         return canConnectUp(world.getBlockState(pos.above()), world, pos.above()) ||
                 canConnectSide(world.getBlockState(pos.relative(dir.getClockWise()))) ||

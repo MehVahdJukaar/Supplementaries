@@ -11,8 +11,8 @@ public class CreatePlugin {
     public static void initialize() {
 
         try {
-            AllMovementBehaviours.addMovementBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
-            AllMovementBehaviours.addMovementBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
+            AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get().delegate, new BambooSpikesBehavior());
+            AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get().delegate, new HourglassBehavior());
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
         }

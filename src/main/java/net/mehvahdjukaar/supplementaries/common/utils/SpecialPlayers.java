@@ -38,6 +38,7 @@ public class SpecialPlayers {
         addSpecialPlayer("Plummet_studios", false, false, true, "8c1af44c-d02a-42e8-8ae6-e3f2132acbbf");
         addSpecialPlayer("Kevin2000", false, false, true, "36c058a7-c9db-4526-b787-ded8f4be48f0");
         addSpecialPlayer("DrPineapple", false, false, true, "935b65e9-6451-4c2b-92da-287846a94b07");
+        addSpecialPlayer("byunie", false, false, true, "9605accb-f9fa-4ea3-b985-bf32a840dae9");
 
 
     }

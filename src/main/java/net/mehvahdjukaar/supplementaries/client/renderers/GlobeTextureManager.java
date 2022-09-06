@@ -61,19 +61,22 @@ public class GlobeTextureManager {
         }
 
         private void updateTexture(Level world) {
-            byte[][] pixels = GlobeData.get(world).globePixels;
+            var data = GlobeData.get(world);
+            if (data != null) {
+                byte[][] pixels = data.globePixels;
 
-            for (int i = 0; i < 16; ++i) {
-                for (int j = 0; j < 32; ++j) {
-                    this.texture.getPixels().setPixelRGBA(j, i, -13061505);
+                for (int i = 0; i < 16; ++i) {
+                    for (int j = 0; j < 32; ++j) {
+                        this.texture.getPixels().setPixelRGBA(j, i, -13061505);
+                    }
                 }
-            }
-            for (int y = 0; y < pixels.length; y++) {
-                for (int x = 0; x < pixels[y].length; x++) {
-                    this.texture.getPixels().setPixelRGBA(y, x, GlobeColors.getRGBA(pixels[y][x], this.dimensionId, this.sepia));
+                for (int y = 0; y < pixels.length; y++) {
+                    for (int x = 0; x < pixels[y].length; x++) {
+                        this.texture.getPixels().setPixelRGBA(y, x, GlobeColors.getRGBA(pixels[y][x], this.dimensionId, this.sepia));
+                    }
                 }
+                this.texture.upload();
             }
-            this.texture.upload();
         }
 
         @Override

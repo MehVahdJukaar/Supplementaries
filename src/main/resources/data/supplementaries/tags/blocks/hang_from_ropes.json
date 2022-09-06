@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    {"id":"#minecraft:leaves","required":false},
     {"id":"supplementaries:rope","required":false},
     {"id":"supplementaries:sack","required":false},
     {"id":"supplementaries:hanging_flower_pot","required":false},

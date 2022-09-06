@@ -17,21 +17,11 @@ import java.util.function.Function;
 public record BlackboardBlockGeometry(
         BlockModel model) implements IModelGeometry<BlackboardBlockGeometry> {
 
-    /*
-    @Override
-    public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation) {
-        return new FrameBlockBakedModel();
-    }
-
-    @Override
-    public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, Textures.BROWN_CONCRETE_TEXTURE));
-    }
-    */
 
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-
+BlockModel
+        UnbakedModel
        var list = new ArrayList<Material>();
        list.add(this.model().getMaterial("white"));
        list.add(this.model().getMaterial("black"));
@@ -43,7 +33,7 @@ public record BlackboardBlockGeometry(
 
     @Override
     public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
-        // fetch textures before rebaking
+        // fetch textures before rebuking
         BakedModel bakedOverlay = this.model.bake(bakery, model, spriteGetter, modelTransform, modelLocation, true);
 
         return new BlackboardBakedModel(bakedOverlay, owner, bakery, spriteGetter, modelTransform, overrides);
