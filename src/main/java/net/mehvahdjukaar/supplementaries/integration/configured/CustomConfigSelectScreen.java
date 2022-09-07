@@ -47,8 +47,9 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
     private static final Field FILE_ITEM_BUTTON;
 
-    public CustomConfigSelectScreen(Screen parent, String displayName, ResourceLocation background, Map<ModConfig.Type, Set<IModConfig>> configMap) {
-        super(parent, new TextComponent(displayName), background, configMap);
+    public CustomConfigSelectScreen(Screen parent, String displayName, ResourceLocation background,
+                                    Map<ModConfig.Type, Set<IModConfig>> configMap) {
+        super(parent,new TextComponent(displayName), background, configMap);
     }
 
     public static void registerScreen() {
@@ -100,8 +101,7 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
         return new IconButton(0, 0, 33, 0, 60, new TranslatableComponent(langKey), (onPress) -> {
             Minecraft.getInstance().setScreen(new CustomConfigScreen(CustomConfigSelectScreen.this,
                     new TextComponent("\u00A76Supplementaries Configured"),
-                    config, CustomConfigSelectScreen.this.background));
-        }, (button, matrixStack, mouseX, mouseY) -> {
+                   new ForgeConfig(config), CustomConfigSelectScreen.this.background));
         });
     }
 

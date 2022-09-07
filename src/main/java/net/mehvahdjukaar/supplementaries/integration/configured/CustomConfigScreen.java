@@ -6,8 +6,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import com.mrcrayfish.configured.api.IConfigEntry;
+import com.mrcrayfish.configured.api.IModConfig;
+import com.mrcrayfish.configured.api.ValueEntry;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import com.mrcrayfish.configured.impl.ForgeConfig;
+import com.mrcrayfish.configured.impl.ForgeFolderEntry;
+import com.mrcrayfish.configured.impl.ForgeValue;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.RendererUtil;
@@ -134,7 +140,7 @@ public class CustomConfigScreen extends ConfigScreen {
     }
 
     @Nullable
-    private static final Field FOLDER_LABEL = findFieldOrNull(FolderEntry.class, "label");
+    private static final Field FOLDER_LABEL = findFieldOrNull(ForgeFolderEntry.class, "label");
     @Nullable
     private static final Field BUTTON_ON_PRESS = findFieldOrNull(Button.class, "onPress");
     @Nullable
@@ -146,7 +152,7 @@ public class CustomConfigScreen extends ConfigScreen {
     @Nullable
     private static final Field BOOLEAN_ITEM_BUTTON = findFieldOrNull(BooleanItem.class, "button");
 
-    private CustomConfigScreen(Screen parent, Component title, ModConfig config, ResourceLocation background, ConfigScreen.FolderEntry folderEntry) {
+    private CustomConfigScreen(Screen parent, Component title, IModConfig config, ResourceLocation background, ForgeFolderEntry folderEntry) {
         this(parent, title, config, background);
         //hax
         try {
@@ -156,7 +162,7 @@ public class CustomConfigScreen extends ConfigScreen {
     }
 
     //needed for custom title
-    public CustomConfigScreen(Screen parent, Component title, ModConfig config, ResourceLocation background) {
+    public CustomConfigScreen(Screen parent, Component title, IModConfig config, ResourceLocation background) {
         super(parent, title, config, background);
         this.background = background;
     }
@@ -255,14 +261,14 @@ public class CustomConfigScreen extends ConfigScreen {
 
     @Nullable
     public FolderWrapper wrapFolderItem(FolderItem old) {
-        final FolderEntry folderEntry = CustomConfigScreen.this.folderEntry;
+        final IConfigEntry folderEntry = CustomConfigScreen.this.folderEntry;
 
         try {
             String oldName = old.getLabel();
             //find correct folder
-            FolderEntry found = null;
-            for (IEntry e : folderEntry.getEntries()) {
-                if (e instanceof FolderEntry f) {
+            ForgeFolderEntry found = null;
+            for (IConfigEntry e : folderEntry.getChildren()) {
+                if (e instanceof ForgeFolderEntry f) {
                     String n = new TextComponent(ConfigScreen.createLabel((String) FOLDER_LABEL.get(e))).getContents();
                     if (n.equals(oldName)) found = f;
                 }
@@ -280,7 +286,7 @@ public class CustomConfigScreen extends ConfigScreen {
         private final ItemStack icon;
         protected final Button button;
 
-        private FolderWrapper(FolderEntry folderEntry, String label) {
+        private FolderWrapper(ForgeFolderEntry folderEntry, String label) {
             super(folderEntry);
             //make new button I can access
             this.button = new Button(10, 5, 44, 20, (new TextComponent(label)).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE), (onPress) -> {
@@ -353,15 +359,15 @@ public class CustomConfigScreen extends ConfigScreen {
 
     @Nullable
     public BooleanWrapper wrapBooleanItem(BooleanItem old, boolean displayItem) {
-        final FolderEntry folderEntry = CustomConfigScreen.this.folderEntry;
+        final IConfigEntry folderEntry = CustomConfigScreen.this.folderEntry;
         try {
-            ValueHolder<Boolean> holder = (ValueHolder<Boolean>) CONFIG_VALUE_HOLDER.get(old);
+            ForgeValue<Boolean> holder = (ForgeValue<Boolean>) CONFIG_VALUE_HOLDER.get(old);
 
             //find correct folder
             ValueEntry found = null;
-            for (IEntry e : folderEntry.getEntries()) {
-                if (e instanceof ConfigScreen.ValueEntry value) {
-                    if (holder == value.getHolder()) found = value;
+            for (var e : folderEntry.getChildren()) {
+                if (e instanceof ValueEntry value) {
+                    if (holder == value.getValue()) found = value;
                 }
             }
             if (found != null) {
@@ -376,7 +382,7 @@ public class CustomConfigScreen extends ConfigScreen {
 
         private final ItemStack item;
 
-        public BooleanWrapperItem(ValueHolder<Boolean> holder) {
+        public BooleanWrapperItem(ForgeValue<Boolean> holder) {
             super(holder);
 
             this.item = getIcon(label.getContents().toLowerCase(Locale.ROOT));
@@ -385,7 +391,7 @@ public class CustomConfigScreen extends ConfigScreen {
 
         @Override
         public void render(PoseStack poseStack, int index, int top, int left, int width, int p_230432_6_, int mouseX, int mouseY, boolean hovered, float partialTicks) {
-            boolean on = this.holder.getValue();
+            boolean on = this.holder.get();
             super.render(poseStack, index, top, left, width, p_230432_6_, mouseX, mouseY, hovered, partialTicks);
 
             int light = LightTexture.FULL_BRIGHT;
@@ -414,7 +420,7 @@ public class CustomConfigScreen extends ConfigScreen {
         protected boolean active = false;
         protected int iconOffset = 0;
 
-        public BooleanWrapper(ValueHolder<Boolean> holder) {
+        public BooleanWrapper(ForgeValue<Boolean> holder) {
             super(holder);
             try {
                 button = (Button) BOOLEAN_ITEM_BUTTON.get(this);
@@ -439,7 +445,7 @@ public class CustomConfigScreen extends ConfigScreen {
             int iconX = iconOffset + (int) (this.button.x + Math.ceil((this.button.getWidth() - ICON_WIDTH) / 2f));
             int iconY = (int) (this.button.y + Math.ceil(((this.button.getHeight() - ICON_WIDTH) / 2f)));
 
-            int u = this.holder.getValue() ? ICON_WIDTH : 0;
+            int u = this.holder.get() ? ICON_WIDTH : 0;
 
             blit(poseStack, iconX, iconY, this.button.getBlitOffset(), (float) u, (float) 0, ICON_WIDTH, ICON_WIDTH, 64, 64);
 
