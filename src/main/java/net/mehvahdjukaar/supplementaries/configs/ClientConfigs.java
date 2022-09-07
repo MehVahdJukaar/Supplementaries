@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -127,6 +128,7 @@ public class ClientConfigs {
 
     public static class block {
 
+        public static ForgeConfigSpec.BooleanValue BLACKBOARD_GUI;
         public static ForgeConfigSpec.DoubleValue BUBBLE_BLOCK_WOBBLE;
         public static ForgeConfigSpec.DoubleValue BUBBLE_BLOCK_GROW_SPEED;
         public static ForgeConfigSpec.BooleanValue PEDESTAL_SPIN;
@@ -196,6 +198,10 @@ public class ClientConfigs {
 
             builder.push("clock_block");
             CLOCK_24H = builder.comment("Display 24h time format. False for 12h format").define("24h_format", true);
+            builder.pop();
+            BlackboardBlock
+            builder.push("blackboard");
+            CLOCK_24H = builder.define("allow_gui", true);
             builder.pop();
 
             builder.push("pedestal");

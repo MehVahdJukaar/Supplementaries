@@ -155,7 +155,7 @@ dependencies {
     implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")
     implementation fg.deobf("curse.maven:map-atlases-forge-519759:3723298")
     implementation fg.deobf("curse.maven:waystones-245755:3684732")
-    implementation fg.deobf("curse.maven:configured-457570:3640884")
+    implementation fg.deobf("curse.maven:configured-457570:3946495")
     implementation fg.deobf("curse.maven:curios-309927:3670447")
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3709268")
     implementation fg.deobf("curse.maven:jei-238222:3682513")

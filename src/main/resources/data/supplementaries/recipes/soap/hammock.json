@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "modid": "comforts",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "comforts:hammocks"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "item": "comforts:hammock_white",
+    "count": 1
+  }
+}

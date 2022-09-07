@@ -382,5 +382,6 @@
   "block.supplementaries.laser_block": "Ender Beamer",
   "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
   "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
-  "item.supplementaries.amethyst_arrow": "Amethyst Arrow"
+  "item.supplementaries.amethyst_arrow": "Amethyst Arrow",
+  "supplementaries.gui.info": "open Supplementaries page"
 }

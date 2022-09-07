@@ -4,10 +4,12 @@ package net.mehvahdjukaar.supplementaries.integration.configured;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mrcrayfish.configured.api.IModConfig;
 import com.mrcrayfish.configured.client.screen.ConfigScreen;
 import com.mrcrayfish.configured.client.screen.ModConfigSelectionScreen;
 import com.mrcrayfish.configured.client.screen.widget.IconButton;
 import com.mrcrayfish.configured.client.util.ScreenUtil;
+import com.mrcrayfish.configured.impl.ForgeConfig;
 import com.mrcrayfish.configured.util.ConfigHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.Textures;
@@ -45,14 +47,14 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
 
     private static final Field FILE_ITEM_BUTTON;
 
-    public CustomConfigSelectScreen(Screen parent, String displayName, ResourceLocation background, Map<ModConfig.Type, Set<ModConfig>> configMap) {
-        super(parent, displayName, background, configMap);
+    public CustomConfigSelectScreen(Screen parent, String displayName, ResourceLocation background, Map<ModConfig.Type, Set<IModConfig>> configMap) {
+        super(parent, new TextComponent(displayName), background, configMap);
     }
 
     public static void registerScreen() {
 
         ModContainer container = ModList.get().getModContainerById(Supplementaries.MOD_ID).get();
-        Map<ModConfig.Type, Set<ModConfig>> modConfigMap = createConfigMap();
+        Map<ModConfig.Type, Set<IModConfig>> modConfigMap = createConfigMap();
 
         container.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () ->
                 new ConfigGuiHandler.ConfigGuiFactory((mc, screen) ->
@@ -60,14 +62,14 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
                                 Textures.CONFIG_BACKGROUND, modConfigMap)));
     }
 
-    private static Map<ModConfig.Type, Set<ModConfig>> createConfigMap() {
-        Map<ModConfig.Type, Set<ModConfig>> modConfigMap = new HashMap<>();
-        Set<ModConfig> s = new HashSet<>();
-        s.add(ConfigHandler.CLIENT_CONFIG_OBJECT);
+    private static Map<ModConfig.Type, Set<IModConfig>> createConfigMap() {
+        Map<ModConfig.Type, Set<IModConfig>> modConfigMap = new HashMap<>();
+        Set<IModConfig> s = new HashSet<>();
+        s.add(new ForgeConfig(ConfigHandler.CLIENT_CONFIG_OBJECT));
         modConfigMap.put(ModConfig.Type.CLIENT, s);
-        Set<ModConfig> s1 = new HashSet<>();
-        s1.add(ConfigHandler.REGISTRY_CONFIG_OBJECT);
-        s1.add(ConfigHandler.SERVER_CONFIG_OBJECT);
+        Set<IModConfig> s1 = new HashSet<>();
+        s1.add(new ForgeConfig(ConfigHandler.REGISTRY_CONFIG_OBJECT));
+        s1.add(new ForgeConfig(ConfigHandler.SERVER_CONFIG_OBJECT));
         modConfigMap.put(ModConfig.Type.COMMON, s1);
         return modConfigMap;
     }
@@ -100,12 +102,6 @@ public class CustomConfigSelectScreen extends ModConfigSelectionScreen {
                     new TextComponent("\u00A76Supplementaries Configured"),
                     config, CustomConfigSelectScreen.this.background));
         }, (button, matrixStack, mouseX, mouseY) -> {
-            if (button.isHoveredOrFocused()) {
-                if (ConfigScreen.isPlayingGame() && !ConfigHelper.isConfiguredInstalledOnServer()) {
-                    CustomConfigSelectScreen.this.renderTooltip(matrixStack, this.font.split(new TranslatableComponent("configured.gui.not_installed"),
-                            Math.max(CustomConfigSelectScreen.this.width / 2 - 43, 170)), mouseX, mouseY);
-                }
-            }
         });
     }
 

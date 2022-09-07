@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "0"
+  ],
+  "key": {
+    "0": {
+      "item": "supplementaries:sugar_cube"
+    }
+  },
+  "result": {
+    "item": "minecraft:sugar",
+    "count": 9
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sugar_cube"
+    }
+  ]
+}
