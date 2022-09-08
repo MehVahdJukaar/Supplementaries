@@ -131,7 +131,6 @@
   "fluid.supplementaries.sap": "Sap",
   "message.supplementaries.road_sign": "%d bl",
   "item.supplementaries.bomb_blue_projectile": "青色の爆弾",
-  "supplementaries.gui.info": "SupplementariesのCurseForgeページを開く",
   "block.supplementaries.checker_vertical_slab": "チェッカーの縦ハーフブロック",
   "block.supplementaries.blaze_rod": "ブレイズロッド",
   "block.supplementaries.stick": "棒",
@@ -177,8 +176,8 @@
   "message.supplementaries.command.dice": "Rolled D%1$d: %2$d",
   "death.attack.supplementaries.xp_extracting": "%1$s wasn't so experienced after all",
   "death.attack.supplementaries.xp_extracting.player": "%1$s extracted too much while fighting %2$s",
-  "advancements.adventure.way_sign.title": "This is the wae",
-  "advancements.adventure.way_sign.description": "うーん、この道標はどこを指し示しているのでしょう。",
+  "advancements.adventure.way_sign.title": "どこからどう見ても道標",
+  "advancements.adventure.way_sign.description": "村を見つけたいのなら道標に従おう!",
   "advancements.story.unenchanter.title": "なんでそんなことするんですか?",
   "advancements.story.unenchanter.description": "エンチャントされた金のリンゴのエンチャントを砥ぐ",
   "message.supplementaries.jar": "液体やクッキー、小さなモブを保管できます",
@@ -332,11 +331,22 @@
   "effect.supplementaries.overencumbered": "重量超過",
   "effect.supplementaries.overencumbered.description": "このステータス効果は、レベルⅠではダッシュができなくなり、レベルⅡではジャンプの高さも半減し、レベルⅢ以降は歩行速度も低下します",
   "message.supplementaries.cage.fail": "小さな動物しか入れることはできません",
+  "item.supplementaries.sign_post": "%の道標",
+  "block.supplementaries.hanging_sign": "%の吊り下げ看板",
+  "block.supplementaries.sugar_cube": "角砂糖",
+  "item.supplementaries.quiver": "矢筒",
+  "message.supplementaries.quiver.tooltip": "%s [%s]",
+  "block.supplementaries.crystal_display": "クリスタルディスプレイ",
+  "block.supplementaries.relayer": "リレイヤー",
+  "block.supplementaries.lapis_bricks": "ラピスラズリレンガ",
+  "block.supplementaries.lapis_bricks_wall": "ラピスラズリレンガの塀",
+  "block.supplementaries.lapis_bricks_stairs": "ラピスラズリレンガの階段",
+  "block.supplementaries.lapis_bricks_slab": "ラピスラズリレンガのハーフブロック",
+  "block.supplementaries.lapis_bricks_vertical_slab": "ラピスラズリレンガの縦ハーフブロック",
 
-  "item.supplementaries.sign_post": "%sの道標",
-  "block.supplementaries.hanging_sign": "%sの吊り下げ看板",
-  "block_type.supplementaries.hanging_sign": "%sの吊り下げ看板",
-  "block_type.supplementaries.sign_post": "%sの道標",
+  "supplementaries.gui.controls": "Supplementaries",
+  "supplementaries.keybind.quiver": "矢筒",
+
 
   "subtitle.supplementaries.clock_tick": "時計が音を立てる",
   "subtitle.supplementaries.gunpowder.ignite": "火薬が音を立てる",
@@ -365,10 +375,8 @@
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
 
 
-
-
-
-
+  "block_type.supplementaries.hanging_sign": "吊り下げ看板",
+  "block_type.supplementaries.sign_post": "道標",
 
 
   "block.supplementaries.laser_block": "エンダービーマー",
