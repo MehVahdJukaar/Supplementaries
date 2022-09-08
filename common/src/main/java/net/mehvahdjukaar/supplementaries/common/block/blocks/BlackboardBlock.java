@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BlackboardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
@@ -152,7 +153,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
 
-            if (hit.getDirection() == state.getValue(FACING)) {
+            UseMode mode = CommonConfigs.Blocks.BLACKBOARD_MODE.get();
+
+            if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 
                 if (stack.getItem() instanceof SoapItem) return InteractionResult.PASS;
                 Pair<Integer, Integer> pair = getHitSubPixel(hit);
@@ -169,12 +172,23 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                     return InteractionResult.sidedSuccess(worldIn.isClientSide);
                 }
             }
-            if (!worldIn.isClientSide) {
+            if (!worldIn.isClientSide && mode.canOpenGui()) {
                 te.sendOpenGuiPacket(worldIn, pos, player);
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide);
         }
         return InteractionResult.PASS;
+    }
+
+    public enum UseMode{
+        BOTH,GUI,MANUAL;
+
+        public boolean canOpenGui(){
+            return this != MANUAL;
+        }
+        public boolean canManualDraw(){
+            return this != GUI;
+        }
     }
 
 

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.minecraft.core.Holder;
@@ -398,6 +399,7 @@ public class CommonConfigs {
         public static Supplier<Boolean> SAFE_SIMPLE;
 
         public static Supplier<Boolean> BLACKBOARD_COLOR;
+        public static Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
 
         public static Supplier<Boolean> REPLACE_DAUB;
         public static Supplier<Boolean> SWAP_TIMBER_FRAME;
@@ -587,6 +589,8 @@ public class CommonConfigs {
             builder.push("blackboard");
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
                     .define("colored_blackboard", false);
+            BLACKBOARD_MODE = builder.comment("Interaction mode for blackboards")
+                            .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
             builder.pop();
 
             builder.push("timber_frame");

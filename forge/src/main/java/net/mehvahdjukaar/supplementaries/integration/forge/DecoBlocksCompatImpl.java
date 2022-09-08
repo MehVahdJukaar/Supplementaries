@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -147,7 +148,7 @@ public class DecoBlocksCompatImpl {
         }
 
         @Override
-        public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+        public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.7D;
             double d2 = (double) pos.getZ() + 0.5D;

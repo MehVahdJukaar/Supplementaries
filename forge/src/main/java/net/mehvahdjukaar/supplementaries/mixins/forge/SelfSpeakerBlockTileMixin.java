@@ -29,7 +29,7 @@ public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
             }
             return peripheral.cast();
         }
-        return super.getCapability(cap);
+        return super.getCapability(cap, direction);
     }
 
     @Override

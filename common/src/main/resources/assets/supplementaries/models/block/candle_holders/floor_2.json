@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"2": "wall_lantern",
-		"all": "supplementaries:candle"
+		"2": "supplementaries:blocks/candle_holder",
+		"all": "candle"
 	},
 	"elements": [
 		{
@@ -74,12 +74,12 @@
 			"to": [11, 1, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [13, 8, 13]},
 			"faces": {
-				"north": {"uv": [10, 6, 16, 7], "texture": "#2"},
-				"east": {"uv": [10, 6, 16, 7], "texture": "#2"},
-				"south": {"uv": [10, 6, 16, 7], "texture": "#2"},
-				"west": {"uv": [10, 6, 16, 7], "texture": "#2"},
-				"up": {"uv": [10, 0, 16, 6], "texture": "#2"},
-				"down": {"uv": [10, 0, 16, 6], "texture": "#2"}
+				"north": {"uv": [7, 15, 13, 16], "texture": "#2"},
+				"east": {"uv": [7, 15, 13, 16], "texture": "#2"},
+				"south": {"uv": [7, 15, 13, 16], "texture": "#2"},
+				"west": {"uv": [7, 15, 13, 16], "texture": "#2"},
+				"up": {"uv": [0, 10, 6, 16], "texture": "#2"},
+				"down": {"uv": [0, 10, 6, 16], "texture": "#2"}
 			}
 		},
 		{
@@ -88,22 +88,31 @@
 			"to": [9, 5, 9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [13, 8, 13]},
 			"faces": {
-				"north": {"uv": [4, 2, 6, 6], "texture": "#2"},
-				"east": {"uv": [4, 2, 6, 6], "texture": "#2"},
-				"south": {"uv": [4, 2, 6, 6], "texture": "#2"},
-				"west": {"uv": [4, 2, 6, 6], "texture": "#2"},
-				"up": {"uv": [4, 0, 6, 2], "texture": "#2"},
-				"down": {"uv": [4, 0, 6, 2], "texture": "#2"}
+				"north": {"uv": [14, 9, 16, 13], "texture": "#2"},
+				"east": {"uv": [14, 9, 16, 13], "texture": "#2"},
+				"south": {"uv": [14, 9, 16, 13], "texture": "#2"},
+				"west": {"uv": [14, 9, 16, 13], "texture": "#2"},
+				"up": {"uv": [14, 9, 16, 11], "texture": "#2"}
 			}
 		},
 		{
 			"name": "2d",
-			"from": [4, 1, 8],
+			"from": [4, 2, 8],
+			"to": [7, 6, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 9, 15]},
+			"faces": {
+				"north": {"uv": [11, 10, 14, 14], "texture": "#2"},
+				"south": {"uv": [6, 10, 9, 14], "texture": "#2"}
+			}
+		},
+		{
+			"name": "2d",
+			"from": [9, 2, 8],
 			"to": [12, 6, 8],
 			"rotation": {"angle": 0, "axis": "y", "origin": [15, 9, 15]},
 			"faces": {
-				"north": {"uv": [0, 11, 8, 16], "texture": "#2"},
-				"south": {"uv": [0, 11, 8, 16], "texture": "#2"}
+				"north": {"uv": [6, 10, 9, 14], "texture": "#2"},
+				"south": {"uv": [11, 10, 14, 14], "texture": "#2"}
 			}
 		},
 		{
@@ -112,12 +121,12 @@
 			"to": [13, 7, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [19, 15, 14]},
 			"faces": {
-				"north": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"east": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"south": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"west": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"up": {"uv": [0, 0, 4, 4], "texture": "#2"},
-				"down": {"uv": [0, 0, 4, 4], "texture": "#2"}
+				"north": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"east": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"south": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"west": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"up": {"uv": [0, 6, 4, 10], "texture": "#2"},
+				"down": {"uv": [0, 6, 4, 10], "texture": "#2"}
 			}
 		},
 		{
@@ -126,12 +135,12 @@
 			"to": [7, 7, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [19, 15, 14]},
 			"faces": {
-				"north": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"east": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"south": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"west": {"uv": [0, 4, 4, 5], "texture": "#2"},
-				"up": {"uv": [0, 0, 4, 4], "texture": "#2"},
-				"down": {"uv": [0, 0, 4, 4], "texture": "#2"}
+				"north": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"east": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"south": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"west": {"uv": [0, 0, 4, 1], "texture": "#2"},
+				"up": {"uv": [0, 6, 4, 10], "texture": "#2"},
+				"down": {"uv": [0, 6, 4, 10], "texture": "#2"}
 			}
 		}
 	],
@@ -159,7 +168,7 @@
 			"name": "group",
 			"origin": [19, 15, 14],
 			"color": 0,
-			"children": [6, 7, 8, 9, 10]
+			"children": [6, 7, 8, 9, 10, 11]
 		}
 	]
 }

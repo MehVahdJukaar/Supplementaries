@@ -29,6 +29,5 @@ public class WallLanternBlockTileRenderer extends EnhancedLanternBlockTileRender
         LOD lod = new LOD(camera,tile.getBlockPos());
 
         tile.setFancyRenderer(lod.isNear());
-
     }
 }

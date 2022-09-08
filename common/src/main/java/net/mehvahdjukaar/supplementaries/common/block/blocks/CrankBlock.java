@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -153,8 +154,8 @@ public class CrankBlock extends WaterBlock {
         return true;
     }
 
-
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+    @Override
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(POWER) > 0 && rand.nextFloat() < 0.25F) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
             // Direction direction1 = getFacing(state).getOpposite();

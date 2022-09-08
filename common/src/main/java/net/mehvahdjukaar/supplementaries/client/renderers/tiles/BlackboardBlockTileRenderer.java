@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -49,6 +50,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+        if (!CommonConfigs.Blocks.BLACKBOARD_MODE.get().canManualDraw()) return;
+
         Direction dir = tile.getDirection();
         float yaw = -dir.toYRot();
 
@@ -69,10 +72,10 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         HitResult hit = MC.hitResult;
         if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) hit;
-            if(blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
+            if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
                 Player player = MC.player;
-                if(player != null) {
-                    if(BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
+                if (player != null) {
+                    if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
                         Pair<Integer, Integer> pair = BlackboardBlock.getHitSubPixel(blockHit);
                         float p = 1 / 16f;
                         float x = pair.getFirst() * p;
@@ -80,7 +83,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         VertexConsumer builder2 = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferIn, RenderType::entityCutout);
                         matrixStackIn.pushPose();
 
-                        matrixStackIn.translate(x,1 - y - p, 0.001);
+                        matrixStackIn.translate(x, 1 - y - p, 0.001);
                         VertexUtils.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
                         matrixStackIn.popPose();
                     }
@@ -88,8 +91,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             }
         }
 
-       // VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getBlackboardInstance(tile).getRenderType());
-       // RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+        // VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getBlackboardInstance(tile).getRenderType());
+        // RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
 
         matrixStackIn.popPose();
 

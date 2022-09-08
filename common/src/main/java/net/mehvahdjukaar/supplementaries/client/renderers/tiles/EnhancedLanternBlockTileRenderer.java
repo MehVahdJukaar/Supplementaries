@@ -25,9 +25,8 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.pushPose();
         // rotate towards direction
         matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING).getOpposite()));
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING)));
         matrixStackIn.mulPose(RotHlpr.XN90);
-
 
         float angle = tile.getSwingAngle(partialTicks);
 
@@ -36,10 +35,8 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.translate(-0.5, -0.75 - tile.attachmentOffset, -0.375);
 
         // render block
-
         RenderUtil.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
 
-        //blockRenderer.renderBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, ModelData.EMPTY);
         matrixStackIn.popPose();
     }
 

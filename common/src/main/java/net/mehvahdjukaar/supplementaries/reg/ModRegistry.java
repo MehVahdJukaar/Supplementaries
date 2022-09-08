@@ -253,7 +253,7 @@ public class ModRegistry {
 
     //quiver
     public static final Supplier<QuiverItem> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1).rarity(Rarity.UNCOMMON)));
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1).rarity(Rarity.RARE)));
 
 
     //speedometer
@@ -542,6 +542,10 @@ public class ModRegistry {
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
+
+    //candle holder
+    public static final Supplier<Block> CANDLE_HOLDER = regWithItem("candle_holder", () -> new CandleHolderBlock(
+            BlockBehaviour.Properties.copy(SCONCE.get())),CreativeModeTab.TAB_DECORATIONS);
 
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
