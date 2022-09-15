@@ -1,0 +1,244 @@
+{
+  "variants": {
+    "power=0,facing=north": {
+      "model": "supplementaries:block/crystal_display_0"
+    },
+    "power=1,facing=north": {
+      "model": "supplementaries:block/crystal_display_1"
+    },
+    "power=2,facing=north": {
+      "model": "supplementaries:block/crystal_display_2"
+    },
+    "power=3,facing=north": {
+      "model": "supplementaries:block/crystal_display_3"
+    },
+    "power=4,facing=north": {
+      "model": "supplementaries:block/crystal_display_4"
+    },
+    "power=5,facing=north": {
+      "model": "supplementaries:block/crystal_display_5"
+    },
+    "power=6,facing=north": {
+      "model": "supplementaries:block/crystal_display_6"
+    },
+    "power=7,facing=north": {
+      "model": "supplementaries:block/crystal_display_7"
+    },
+    "power=8,facing=north": {
+      "model": "supplementaries:block/crystal_display_8"
+    },
+    "power=9,facing=north": {
+      "model": "supplementaries:block/crystal_display_9"
+    },
+    "power=10,facing=north": {
+      "model": "supplementaries:block/crystal_display_10"
+    },
+    "power=11,facing=north": {
+      "model": "supplementaries:block/crystal_display_11"
+    },
+    "power=12,facing=north": {
+      "model": "supplementaries:block/crystal_display_12"
+    },
+    "power=13,facing=north": {
+      "model": "supplementaries:block/crystal_display_13"
+    },
+    "power=14,facing=north": {
+      "model": "supplementaries:block/crystal_display_14"
+    },
+    "power=15,facing=north": {
+      "model": "supplementaries:block/crystal_display_15"
+    },
+    "power=0,facing=east": {
+      "model": "supplementaries:block/crystal_display_0",
+      "y": 90
+    },
+    "power=1,facing=east": {
+      "model": "supplementaries:block/crystal_display_1",
+      "y": 90
+    },
+    "power=2,facing=east": {
+      "model": "supplementaries:block/crystal_display_2",
+      "y": 90
+    },
+    "power=3,facing=east": {
+      "model": "supplementaries:block/crystal_display_3",
+      "y": 90
+    },
+    "power=4,facing=east": {
+      "model": "supplementaries:block/crystal_display_4",
+      "y": 90
+    },
+    "power=5,facing=east": {
+      "model": "supplementaries:block/crystal_display_5",
+      "y": 90
+    },
+    "power=6,facing=east": {
+      "model": "supplementaries:block/crystal_display_6",
+      "y": 90
+    },
+    "power=7,facing=east": {
+      "model": "supplementaries:block/crystal_display_7",
+      "y": 90
+    },
+    "power=8,facing=east": {
+      "model": "supplementaries:block/crystal_display_8",
+      "y": 90
+    },
+    "power=9,facing=east": {
+      "model": "supplementaries:block/crystal_display_9",
+      "y": 90
+    },
+    "power=10,facing=east": {
+      "model": "supplementaries:block/crystal_display_10",
+      "y": 90
+    },
+    "power=11,facing=east": {
+      "model": "supplementaries:block/crystal_display_11",
+      "y": 90
+    },
+    "power=12,facing=east": {
+      "model": "supplementaries:block/crystal_display_12",
+      "y": 90
+    },
+    "power=13,facing=east": {
+      "model": "supplementaries:block/crystal_display_13",
+      "y": 90
+    },
+    "power=14,facing=east": {
+      "model": "supplementaries:block/crystal_display_14",
+      "y": 90
+    },
+    "power=15,facing=east": {
+      "model": "supplementaries:block/crystal_display_15",
+      "y": 90
+    },
+    "power=0,facing=south": {
+      "model": "supplementaries:block/crystal_display_0",
+      "y": 180
+    },
+    "power=1,facing=south": {
+      "model": "supplementaries:block/crystal_display_1",
+      "y": 180
+    },
+    "power=2,facing=south": {
+      "model": "supplementaries:block/crystal_display_2",
+      "y": 180
+    },
+    "power=3,facing=south": {
+      "model": "supplementaries:block/crystal_display_3",
+      "y": 180
+    },
+    "power=4,facing=south": {
+      "model": "supplementaries:block/crystal_display_4",
+      "y": 180
+    },
+    "power=5,facing=south": {
+      "model": "supplementaries:block/crystal_display_5",
+      "y": 180
+    },
+    "power=6,facing=south": {
+      "model": "supplementaries:block/crystal_display_6",
+      "y": 180
+    },
+    "power=7,facing=south": {
+      "model": "supplementaries:block/crystal_display_7",
+      "y": 180
+    },
+    "power=8,facing=south": {
+      "model": "supplementaries:block/crystal_display_8",
+      "y": 180
+    },
+    "power=9,facing=south": {
+      "model": "supplementaries:block/crystal_display_9",
+      "y": 180
+    },
+    "power=10,facing=south": {
+      "model": "supplementaries:block/crystal_display_10",
+      "y": 180
+    },
+    "power=11,facing=south": {
+      "model": "supplementaries:block/crystal_display_11",
+      "y": 180
+    },
+    "power=12,facing=south": {
+      "model": "supplementaries:block/crystal_display_12",
+      "y": 180
+    },
+    "power=13,facing=south": {
+      "model": "supplementaries:block/crystal_display_13",
+      "y": 180
+    },
+    "power=14,facing=south": {
+      "model": "supplementaries:block/crystal_display_14",
+      "y": 180
+    },
+    "power=15,facing=south": {
+      "model": "supplementaries:block/crystal_display_15",
+      "y": 180
+    },
+    "power=0,facing=west": {
+      "model": "supplementaries:block/crystal_display_0",
+      "y": 270
+    },
+    "power=1,facing=west": {
+      "model": "supplementaries:block/crystal_display_1",
+      "y": 270
+    },
+    "power=2,facing=west": {
+      "model": "supplementaries:block/crystal_display_2",
+      "y": 270
+    },
+    "power=3,facing=west": {
+      "model": "supplementaries:block/crystal_display_3",
+      "y": 270
+    },
+    "power=4,facing=west": {
+      "model": "supplementaries:block/crystal_display_4",
+      "y": 270
+    },
+    "power=5,facing=west": {
+      "model": "supplementaries:block/crystal_display_5",
+      "y": 270
+    },
+    "power=6,facing=west": {
+      "model": "supplementaries:block/crystal_display_6",
+      "y": 270
+    },
+    "power=7,facing=west": {
+      "model": "supplementaries:block/crystal_display_7",
+      "y": 270
+    },
+    "power=8,facing=west": {
+      "model": "supplementaries:block/crystal_display_8",
+      "y": 270
+    },
+    "power=9,facing=west": {
+      "model": "supplementaries:block/crystal_display_9",
+      "y": 270
+    },
+    "power=10,facing=west": {
+      "model": "supplementaries:block/crystal_display_10",
+      "y": 270
+    },
+    "power=11,facing=west": {
+      "model": "supplementaries:block/crystal_display_11",
+      "y": 270
+    },
+    "power=12,facing=west": {
+      "model": "supplementaries:block/crystal_display_12",
+      "y": 270
+    },
+    "power=13,facing=west": {
+      "model": "supplementaries:block/crystal_display_13",
+      "y": 270
+    },
+    "power=14,facing=west": {
+      "model": "supplementaries:block/crystal_display_14",
+      "y": 270
+    },
+    "power=15,facing=west": {
+      "model": "supplementaries:block/crystal_display_15",
+      "y": 270
+    }
+  }
+}

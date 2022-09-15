@@ -1,0 +1,49 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"2": "overweight_farming:overweight_netherwart",
+		"particle": "block/flower_pot"
+	},
+	"elements": [
+		{
+			"from": [5.5, 5.5, 5.5],
+			"to": [10.5, 10.5, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -4, 0]},
+			"faces": {
+				"north": {"uv": [16, 11, 11, 16], "texture": "#2"},
+				"east": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"south": {"uv": [16, 11, 11, 16], "texture": "#2"},
+				"west": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"up": {"uv": [11, 6, 16, 11], "texture": "#2"},
+				"down": {"uv": [11, 1, 16, 6], "texture": "#2"}
+			}
+		},
+		{
+			"from": [11.5, -0.5, -2.5],
+			"to": [11.5, 5.5, 2.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [0, -4, 0]},
+			"faces": {
+				"north": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"east": {"uv": [4, 8, 11, 16], "texture": "#2"},
+				"south": {"uv": [11, 8, 16, 13], "texture": "#2"},
+				"west": {"uv": [4, 8, 11, 16], "texture": "#2"},
+				"up": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"down": {"uv": [11, 1, 16, 6], "texture": "#2"}
+			}
+		},
+		{
+			"from": [9, -0.5, 0.5],
+			"to": [14, 5.5, 0.5],
+			"rotation": {"angle": -45, "axis": "y", "origin": [0, -4, 0]},
+			"faces": {
+				"north": {"uv": [4, 8, 11, 16], "texture": "#2"},
+				"east": {"uv": [11, 11, 16, 16], "texture": "#2"},
+				"south": {"uv": [4, 8, 11, 16], "texture": "#2"},
+				"west": {"uv": [11, 8, 16, 13], "texture": "#2"},
+				"up": {"uv": [11, 11, 16, 16], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [11, 1, 16, 6], "rotation": 270, "texture": "#2"}
+			}
+		}
+	]
+}

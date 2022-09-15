@@ -1,0 +1,8 @@
+
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "supplementaries:items/quiver_full",
+    "layer1": "supplementaries:items/quiver_overlay_dyed"
+  }
+}

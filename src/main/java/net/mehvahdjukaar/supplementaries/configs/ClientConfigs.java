@@ -199,7 +199,7 @@ public class ClientConfigs {
             builder.push("clock_block");
             CLOCK_24H = builder.comment("Display 24h time format. False for 12h format").define("24h_format", true);
             builder.pop();
-            BlackboardBlock
+
             builder.push("blackboard");
             CLOCK_24H = builder.define("allow_gui", true);
             builder.pop();
