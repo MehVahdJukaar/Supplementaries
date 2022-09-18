@@ -1,5 +1,19 @@
 {
-  "parent": "builtin/entity",
+  "loader": "forge:separate-perspective",
+  "base": {
+    "parent": "supplementaries:item/flute_in_hand"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "supplementaries:item/flute_gui"
+    },
+    "ground": {
+      "parent": "supplementaries:item/flute_gui"
+    },
+    "fixed": {
+      "parent": "supplementaries:item/flute_gui"
+    }
+  },
   "textures": {
     "layer0": "supplementaries:items/flute",
     "particles": "supplementaries:items/flute",

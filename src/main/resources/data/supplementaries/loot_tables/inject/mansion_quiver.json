@@ -1,0 +1,27 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "random_chance",
+          "chance": 0.09
+        }
+      ],
+      "entries": [
+        {
+          "type": "item",
+          "weight": 1,
+          "name": "supplementaries:quiver",
+          "functions": [
+            {
+              "function": "supplementaries:random_arrows",
+              "min": 4,
+              "max": 18
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

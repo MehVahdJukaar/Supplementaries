@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.gui.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -11,10 +10,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
+import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.CMDclient;
@@ -23,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -31,36 +32,29 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -75,6 +69,12 @@ public class ClientSetup {
 
             //tooltips
             MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
+            MinecraftForgeClient.registerTooltipComponentFactory(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
+
+            //overlay
+            OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HOTBAR_ELEMENT, "quiver_overlay",
+                    new QuiverArrowSelectGui(Minecraft.getInstance()));
+
 
             //map markers
             CMDclient.init(event);
@@ -159,7 +159,7 @@ public class ClientSetup {
             ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pulling"),
                     (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
-            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(),Supplementaries.res("using"),
+            ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), Supplementaries.res("using"),
                     (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem().equals(stack, true) ? 1.0F : 0.0F);
 
 
@@ -293,6 +293,8 @@ public class ClientSetup {
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT_ITEM.get());
         colors.register(new CrossbowColor(), Items.CROSSBOW);
+        colors.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack), ModRegistry.QUIVER_ITEM.get());
+
     }
 
     @SubscribeEvent
@@ -321,38 +323,34 @@ public class ClientSetup {
         ClientRegistry.registerSpecialModels();
     }
 
-    @SubscribeEvent
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        if (true) return;
-        //adds to all entities
-        var entityTypes = ImmutableList.copyOf(
-                ForgeRegistries.ENTITIES.getValues().stream()
-                        .filter(DefaultAttributes::hasSupplier)
-                        .filter(e -> (e != EntityType.ENDER_DRAGON))
-                        .map(entityType -> (EntityType<LivingEntity>) entityType)
-                        .collect(Collectors.toList()));
-
-        entityTypes.forEach((entityType -> addLayer(event.getRenderer(entityType))));
-
-        //player skins
-        for (String skinType : event.getSkins()) {
-            var renderer = event.getSkin(skinType);
-            if (renderer != null) renderer.addLayer(new SlimedLayer(renderer));
-        }
-    }
-
-    private static <T extends LivingEntity, M extends EntityModel<T>, R extends LivingEntityRenderer<T, M>> void
-    addLayer(@Nullable R renderer) {
-        if (renderer != null) {
-            renderer.addLayer(new SlimedLayer<>(renderer));
-        }
-    }
-
     public static ShaderInstance instance;
 
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceManager(), Supplementaries.res("banner_mask"),
-                        DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), s -> instance = s);
+                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), s -> instance = s);
     }
+
+
+    @SuppressWarnings("unchecked")
+    @SubscribeEvent
+    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skinType : event.getSkins()) {
+            var renderer = event.getSkin(skinType);
+            if (renderer != null) {
+                renderer.addLayer(new QuiverLayer(renderer, false));
+            }
+        }
+        var renderer = event.getRenderer(EntityType.SKELETON);
+        if (renderer != null) {
+            renderer.addLayer(new QuiverLayer(renderer, true));
+        }
+        var renderer2 = event.getRenderer(EntityType.STRAY);
+        if (renderer2 != null) {
+            renderer2.addLayer(new QuiverLayer(renderer2, true));
+        }
+    }
+
+
+
 
 }

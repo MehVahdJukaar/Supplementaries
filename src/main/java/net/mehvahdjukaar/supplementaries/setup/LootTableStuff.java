@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class LootTableStuff {
@@ -25,6 +26,7 @@ public class LootTableStuff {
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
         if (RegistryConfigs.Reg.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectGlobe);
+        if (RegistryConfigs.Reg.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectQuiver);
         if (RegistryConfigs.Reg.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectRope);
         if (RegistryConfigs.Reg.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectFlax);
         if (RegistryConfigs.Reg.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTableStuff::tryInjectBlueBomb);
@@ -79,7 +81,12 @@ public class LootTableStuff {
             if (isStronghold(name)) return TableType.STRONGHOLD;
             if (isFortress(name)) return TableType.FORTRESS;
             if (isEndCity(name)) return TableType.END_CITY;
+            if (isMansion(name)) return TableType.MANSION;
             return TableType.OTHER;
+        }
+
+        private static boolean isMansion(String name) {
+            return name.equals(BuiltInLootTables.WOODLAND_MANSION.toString()) || RS && name.contains("repurposed_structures:chests/mansion");
         }
 
         private static final Pattern RS_SHIPWRECK = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/treasure_chest");
@@ -131,12 +138,19 @@ public class LootTableStuff {
         }
     }
 
+
     private static void injectLootPool(LootTableLoadEvent event, TableType type, String name) {
         String id = type.toString().toLowerCase(Locale.ROOT) + "_" + name;
         LootPool pool = LootPool.lootPool().add(
                         LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)))
                 .name("supp_" + name).build();
         event.getTable().addPool(pool);
+    }
+
+    private static void tryInjectQuiver(LootTableLoadEvent e, TableType type) {
+        if(type == TableType.DUNGEON || type == TableType.MANSION){
+            injectLootPool(e, type, "quiver");
+        }
     }
 
     public static void tryInjectGlobe(LootTableLoadEvent e, TableType type) {

@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.configs;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
+import net.mehvahdjukaar.supplementaries.common.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
 import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
@@ -29,6 +31,13 @@ public class ClientConfigs {
     }
 
     public static class items {
+        public static Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
+        public static Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
+        public static Supplier<Double> QUIVER_ARMOR_OFFSET;
+        public static Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
+        public static Supplier<Boolean> QUIVER_OVERLAY;
+        public static Supplier<Integer> QUIVER_GUI_X;
+        public static Supplier<Integer> QUIVER_GUI_Y;
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OVERLAY;
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OUTLINE;
         public static ForgeConfigSpec.ConfigValue<String> SLINGSHOT_OUTLINE_COLOR;
@@ -39,6 +48,24 @@ public class ClientConfigs {
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.comment("Items")
                     .push("items");
+
+            builder.push("quiver");
+            QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
+                    .defineInRange("armor_render_offset", -1d, -1d, 1);
+            QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
+                    .define("render_mode", QuiverLayer.QuiverMode.HIP);
+            QUIVER_SKELETON_RENDER_MODE = builder.comment("How skeleton with quivers should render it")
+                    .define("skeleton_render_mode", QuiverLayer.QuiverMode.THIGH);
+            QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
+                    .define("overlay", true);
+            QUIVER_MOUSE_MOVEMENT = builder.comment("Allows using your mouse to select an arrow in the quiver GUI")
+                    .define("mouse_movement_in_gui", true);
+            QUIVER_GUI_X = builder.comment("Quiver GUI X offset from default position")
+                    .defineInRange("gui_x_offset", 0, -1000, 1000);
+            QUIVER_GUI_Y = builder.comment("Quiver GUI Y offset from default position")
+                    .defineInRange("gui_y_offset", 0, -1000, 1000);
+            builder.pop();
+
             builder.push("slingshot");
 
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")

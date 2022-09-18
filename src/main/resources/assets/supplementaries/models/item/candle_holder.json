@@ -2,6 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/candle_holder"
+		"layer0": "supplementaries:items/candle_holders/base"
 	}
 }

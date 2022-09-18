@@ -7,6 +7,7 @@ import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
@@ -244,6 +245,26 @@ public class RegistryHelper {
         }
     }
 
+    //candle holders
+    public static Map<DyeColor, RegistryObject<Block>> registerCandleHolders(String baseName) {
+        Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
+
+        RegistryObject<Block> block = regWithItem(baseName, () -> new CandleHolderBlock(null,
+                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                getTab(CreativeModeTab.TAB_DECORATIONS,baseName));
+        map.put(null, block);
+
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            RegistryObject<Block> bb = regWithItem(name, () -> new CandleHolderBlock(color,
+                            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                    getTab(CreativeModeTab.TAB_DECORATIONS,baseName)
+            );
+            map.put(color, bb);
+        }
+        return map;
+    }
+
 
     /**
      * Utility to register a full block set
@@ -293,7 +314,7 @@ public class RegistryHelper {
         }
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
+    public static <T extends Block> RegistryObject<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
         var block = ModRegistry.BLOCKS.register(name, blockFactory);
         regBlockItem((RegistryObject<Block>) block, tab);
         return block;

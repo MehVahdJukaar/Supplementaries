@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.minecraftforge.common.ForgeConfigSpec;
+
 import java.util.List;
 
 public final class RegistryConstants {
@@ -138,4 +140,6 @@ public final class RegistryConstants {
     public static final String SKULL_CANDLE_NAME = "skull_candle";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String SUGAR_CUBE_NAME = "sugar_cube";
+    public static final String QUIVER_NAME = "quiver";
+    public static final String CANDLE_HOLDER_NAME = "candle_holder";
 }

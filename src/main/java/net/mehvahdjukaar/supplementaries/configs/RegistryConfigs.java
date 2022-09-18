@@ -49,6 +49,8 @@ public class RegistryConfigs {
 
     public static class Reg {
         public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
+        public static ForgeConfigSpec.BooleanValue QUIVER_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CANDLE_HOLDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
@@ -133,6 +135,7 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue LAPIS_BRICKS_ENABLED;
         public static ForgeConfigSpec.BooleanValue RELAYER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CRYSTAL_DISPLAY_ENABLED;
+
 
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
@@ -262,7 +265,7 @@ public class RegistryConfigs {
             LAPIS_BRICKS_ENABLED = builder.define(RegistryConstants.LAPIS_BRICKS_NAME, true);
             RELAYER_ENABLED = builder.define(RegistryConstants.RELAYER_NAME, true);
             CRYSTAL_DISPLAY_ENABLED = builder.define(RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
-
+            CANDLE_HOLDER_ENABLED = builder.define(RegistryConstants.CANDLE_HOLDER_NAME, true);
 
 
             SILVER_TRAPDOOR_ENABLED = builder.define(RegistryConstants.SILVER_TRAPDOOR_NAME, true);
@@ -286,6 +289,7 @@ public class RegistryConfigs {
             ROPE_ARROW_ENABLED = builder.define(RegistryConstants.ROPE_ARROW_NAME, true);
             BOMB_ENABLED = builder.define(RegistryConstants.BOMB_NAME, true);
             PANCAKES_ENABLED = builder.define(RegistryConstants.PANCAKE_NAME, true);
+            QUIVER_ENABLED = builder.define(RegistryConstants.QUIVER_NAME, true);
             builder.pop();
 
             builder.push("entities");

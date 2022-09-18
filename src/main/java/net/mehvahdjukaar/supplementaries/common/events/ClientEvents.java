@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -143,6 +145,13 @@ public class ClientEvents {
                 }
                 event.setRoll(event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.cached.ROPE_WOBBLE_AMPLITUDE);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMouseScrolled(InputEvent.MouseScrollEvent event) {
+        if (QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())) {
+            event.setCanceled(true);
         }
     }
 
