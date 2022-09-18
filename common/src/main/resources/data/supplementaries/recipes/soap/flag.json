@@ -17,6 +17,10 @@
     {
       "type": "supplementaries:flag",
       "flag": "soap"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flag"
     }
   ]
 }

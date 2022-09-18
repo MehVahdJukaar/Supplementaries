@@ -94,6 +94,7 @@ public class ItemsOverrideHandler {
 
         itemAction.add(new ThrowableBrickBehavior());
         itemAction.add(new ClockItemBehavior());
+        itemAction.add(new CompassItemBehavior());
 
         HPItemActionOnBlock.add(new AntiqueInkBehavior());
         HPItemActionOnBlock.add(new WrenchBehavior());
@@ -302,6 +303,27 @@ public class ItemsOverrideHandler {
         public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (world.isClientSide) {
                 ClockBlock.displayCurrentHour(world, player);
+            }
+            return InteractionResult.sidedSuccess(world.isClientSide);
+        }
+    }
+
+    private static class CompassItemBehavior extends ItemUseOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return ClientConfigs.Tweaks.COMPASS_CLICK.get();
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == Items.COMPASS;
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (world.isClientSide) {
+                GlobeBlock.displayCurrentCoordinates(world, player, player.blockPosition());
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
         }

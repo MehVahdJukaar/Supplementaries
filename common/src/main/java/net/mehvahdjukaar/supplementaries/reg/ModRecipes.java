@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -14,7 +13,8 @@ import java.util.function.Supplier;
 
 public class ModRecipes {
 
-    public static void init() {}
+    public static void init() {
+    }
 
     //recipes
     public static final Supplier<RecipeSerializer<BlackboardDuplicateRecipe>> BLACKBOARD_DUPLICATE_RECIPE = reg(

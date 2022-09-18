@@ -5,33 +5,23 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -52,11 +42,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock {
+//Ilightable?
+public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable {
 
     private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
         Int2ObjectMap<List<Vec3>> map = new Int2ObjectOpenHashMap<>();
@@ -163,6 +153,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
         if (player.getAbilities().mayBuild) {
             ItemStack stack = player.getItemInHand(hand);
+            //add candles
             if (stack.is(ItemTags.CANDLES) && stack.getItem() instanceof BlockItem blockItem) {
                 int count = state.getValue(CANDLES);
                 if (count < 4 && CommonConfigs.Tweaks.SKULL_CANDLES_MULTIPLE.get() &&
@@ -186,45 +177,36 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
                 }
                 return InteractionResult.PASS;
             }
-
-            if (!state.getValue(LIT)) {
-
-                Item item = stack.getItem();
-                if (item instanceof FlintAndSteelItem || stack.is(ModTags.FLINT_AND_STEELS)) {
-                    if (this.lightUp(player, state, pos, level, ILightable.FireSound.FLINT_AND_STEEL)) {
-
-                        stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(hand));
-                        return InteractionResult.sidedSuccess(level.isClientSide);
-                    }
-                } else if (item instanceof FireChargeItem) {
-                    if (this.lightUp(player, state, pos, level, ILightable.FireSound.FIRE_CHANGE)) {
-                        stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(hand));
-                        if (!player.isCreative()) stack.shrink(1);
-                        return InteractionResult.sidedSuccess(level.isClientSide);
-                    }
-                } else if (item instanceof PotionItem && PotionUtils.getPotion(stack) == Potions.WATER) {
-                    extinguish(player, state, level, pos);
-                    Utils.swapItem(player, hand, stack, new ItemStack(Items.GLASS_BOTTLE));
-                    return InteractionResult.sidedSuccess(level.isClientSide);
-                }
-            } else if (stack.isEmpty()) {
-                extinguish(player, state, level, pos);
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
+            //lightable logic
+            return interactWithPlayer(state, level, pos, player, hand);
         }
         return InteractionResult.PASS;
     }
 
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, ILightable.FireSound sound) {
-        state = state.setValue(LIT, true);
-        if (!world.isClientSide()) {
-            world.setBlock(pos, state, 11);
-            sound.play(world, pos);
-        }
-        world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-        return true;
+    @Override
+    public boolean isLitUp(BlockState state) {
+        return state.getValue(LIT);
     }
 
+    @Override
+    public BlockState toggleLitState(BlockState state, boolean lit) {
+        return state.setValue(LIT, lit);
+    }
 
+    @Override
+    public boolean canBeExtinguishedBy(ItemStack item) {
+        return item.isEmpty() || ILightable.super.canBeExtinguishedBy(item);
+    }
 
+    @Override
+    public void playExtinguishSound(LevelAccessor world, BlockPos pos) {
+        world.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    @Override
+    public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
+        ((CandleSkullBlock)state.getBlock()).getParticleOffsets(state).forEach((vec3) -> {
+            level.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + vec3.x(), (double)pos.getY() + vec3.y(), (double)pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+        });
+    }
 }

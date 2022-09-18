@@ -31,16 +31,21 @@ public class RegistryConfigs {
 
 
     public static boolean isEnabled(String key) {
+        if (key.contains("daub")) return DAUB_ENABLED.get();
         return switch (key) {
+            case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
+            case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
+                    RegistryConfigs.FLAX_ENABLED.get();
+            case RegistryConstants.SOAP_BLOCK_NAME -> RegistryConfigs.SOAP_ENABLED.get();
+            case RegistryConstants.CHECKER_SLAB_NAME, RegistryConstants.CHECKER_VERTICAL_SLAB_NAME ->
+                    CHECKERBOARD_ENABLED.get();
             case "planter_rich", "planter_rich_soul" -> PLANTER_ENABLED.get();
             case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
             case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
-            case RegistryConstants.FLAX_WILD_NAME -> FLAX_ENABLED.get();
             case RegistryConstants.KEY_NAME ->
                     NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
             default -> CONFIGS_BY_NAME.getOrDefault(key, () -> true).get();
         };
-
     }
 
     private static Supplier<Boolean> regConfig(ConfigBuilder builder, String name, Boolean value) {
@@ -135,6 +140,8 @@ public class RegistryConfigs {
     public static Supplier<Boolean> SUGAR_CUBE_ENABLED;
     public static Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
     public static Supplier<Boolean> LAPIS_BRICKS_ENABLED;
+    public static Supplier<Boolean> RELAYER_ENABLED;
+    public static Supplier<Boolean> CANDLE_HOLDER_ENABLED;
 
     public static Supplier<Boolean> JAR_TAB;
     public static Supplier<Boolean> CREATIVE_TAB;
@@ -237,10 +244,12 @@ public class RegistryConfigs {
         BLACKSTONE_TILE_ENABLED = regConfig(builder, RegistryConstants.BLACKSTONE_TILE_NAME, true);
         GLOBE_SEPIA = regConfig(builder, RegistryConstants.GLOBE_SEPIA_NAME, true);
         PRESENT_ENABLED = regConfig(builder, RegistryConstants.PRESENT_NAME, true);
-        PRESENT_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
-        SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_BLOCK_NAME, true);
+        STATUE_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
+        SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_CUBE_NAME, true);
         CRYSTAL_DISPLAY_ENABLED = regConfig(builder, RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
         LAPIS_BRICKS_ENABLED = regConfig(builder, RegistryConstants.LAPIS_BRICKS_NAME, true);
+        RELAYER_ENABLED = regConfig(builder, RegistryConstants.RELAYER_NAME, true);
+        CANDLE_HOLDER_ENABLED = regConfig(builder, RegistryConstants.CANDLE_HOLDER_NAME, true);
 
         SILVER_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_TRAPDOOR_NAME, true);
         SILVER_DOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_DOOR_NAME, true);
@@ -266,9 +275,6 @@ public class RegistryConfigs {
         PANCAKES_ENABLED = regConfig(builder, RegistryConstants.PANCAKE_NAME, true);
         builder.pop();
 
-        builder.push("entities");
-        //FIREFLY_ENABLED =  regConfig(builder,RegistryConstants.FIREFLY_NAME, true);
-        builder.pop();
 
         /*
         builder.comment("Here you can disable mixins if they clash with other mods ones")

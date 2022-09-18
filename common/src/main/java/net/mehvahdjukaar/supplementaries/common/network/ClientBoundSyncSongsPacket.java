@@ -6,29 +6,29 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.songs.Song;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ClientBoundSyncSongsPacket implements Message {
 
-    protected final Map<ResourceLocation, Song> songs;
+    protected final List<Song> songs;
 
-    public ClientBoundSyncSongsPacket(final Map<ResourceLocation, Song> songs) {
-        this.songs = songs;
+    public ClientBoundSyncSongsPacket(final Collection<Song> songs) {
+        this.songs = List.copyOf(songs);
     }
 
     public ClientBoundSyncSongsPacket(FriendlyByteBuf buf) {
         int size = buf.readInt();
-        this.songs = new HashMap<>();
+        this.songs = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            ResourceLocation name = buf.readResourceLocation();
             CompoundTag tag = buf.readNbt();
             if (tag != null) {
-                Song song = Song.loadFromTag(tag);
-                songs.put(name, song);
+                var r = Song.CODEC.parse(NbtOps.INSTANCE, tag);
+                r.result().ifPresent(songs::add);
             }
         }
     }
@@ -36,9 +36,11 @@ public class ClientBoundSyncSongsPacket implements Message {
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeInt(this.songs.size());
-        for (var entry : this.songs.entrySet()) {
-            buf.writeResourceLocation(entry.getKey());
-            buf.writeNbt(Song.saveToTag(entry.getValue()));
+        for (var entry : this.songs) {
+            var r = Song.CODEC.encodeStart(NbtOps.INSTANCE, entry);
+            if (r.result().isPresent()) {
+                buf.writeNbt((CompoundTag) r.result().get());
+            }
         }
     }
 

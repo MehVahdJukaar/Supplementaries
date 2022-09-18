@@ -26,7 +26,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
         super(properties);
     }
 
-    public boolean isLit(BlockState state) {
+    public boolean isLitUp(BlockState state) {
         return state.getValue(LIT);
     }
 

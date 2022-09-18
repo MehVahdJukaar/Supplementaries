@@ -12,9 +12,9 @@ import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.ModMapMarkers;
+import net.mehvahdjukaar.supplementaries.common.world.generation.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.common.world.generation.StructureLocator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -67,7 +67,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         jsons.forEach((key, json) -> {
             //CUSTOM_MAPS_TRADES.add(GSON.fromJson(json, AdventurerMapTrade.class));
             var v = AdventurerMapTrade.CODEC.parse(JsonOps.INSTANCE, json);
-             var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse structure map trade: {}", e));
+            var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse structure map trade: {}", e));
             CUSTOM_MAPS_TRADES.add(data);
         });
         if (CUSTOM_MAPS_TRADES.size() != 0)
@@ -145,9 +145,9 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         });
     }
 
-    private static void maybeAddCustomMap(List<VillagerTrades.ItemListing> listings, int level){
+    private static void maybeAddCustomMap(List<VillagerTrades.ItemListing> listings, int level) {
         for (var data : CUSTOM_MAPS_TRADES) {
-            if(level == data.villagerLevel()){
+            if (level == data.villagerLevel()) {
                 listings.add(data);
             }
         }

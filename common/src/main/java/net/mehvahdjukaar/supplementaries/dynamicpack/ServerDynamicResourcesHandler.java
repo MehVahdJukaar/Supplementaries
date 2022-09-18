@@ -5,12 +5,14 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
+import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -27,6 +29,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biome;
@@ -56,7 +59,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
     }
 
     @Override
-    public void regenerateDynamicAssets(ResourceManager resourceManager) {
+    public void regenerateDynamicAssets(ResourceManager manager) {
         /*
         try {
            var r = Utils.hackyGetRegistryAccess();
@@ -74,10 +77,10 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
         //recipes
         if(RegistryConfigs.SIGN_POST_ENABLED.get()) {
-            addSignPostRecipes(resourceManager);
+            addSignPostRecipes(manager);
         }
         if(RegistryConfigs.HANGING_SIGN_ENABLED.get()){
-            addHangingSignRecipes(resourceManager);
+            addHangingSignRecipes(manager);
         }
 
         //way signs tag
@@ -139,6 +142,28 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
+
+
+
+        //remove
+        /*
+        SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("candle_holders"))
+                .addEntries(ModRegistry.CANDLE_HOLDERS.values());
+        dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
+        dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
+
+
+
+        var loot = StaticResource.getOrLog(manager, Supplementaries.res("loot_tables/blocks/candle_holder.json"));
+        for(var c : DyeColor.values()) {
+            dynamicPack.addSimilarJsonResource(loot, "holder", "holder_" + c.getSerializedName());
+        }
+
+        var recipe = StaticResource.getOrLog(manager, Supplementaries.res("recipes/candle_holders/candle_holder.json"));
+        for(var c : DyeColor.values()) {
+            dynamicPack.addSimilarJsonResource(recipe, s->s.replace("holder",
+                    "holder_"+c.getSerializedName()).replace("candle\"",c.getSerializedName()+"_candle\""));
+        }*/
     }
 
     @Override

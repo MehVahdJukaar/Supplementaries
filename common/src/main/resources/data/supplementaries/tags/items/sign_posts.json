@@ -1,13 +1,13 @@
 {
-  "replace": false,
   "values": [
-    {"id":"supplementaries:sign_post_dark_oak","required":false},
-    {"id":"supplementaries:sign_post_oak","required":false},
-    {"id":"supplementaries:sign_post_acacia","required":false},
-    {"id":"supplementaries:sign_post_jungle","required":false},
-    {"id":"supplementaries:sign_post_spruce","required":false},
-    {"id":"supplementaries:sign_post_birch","required":false},
-    {"id":"supplementaries:sign_post_crimson","required":false},
-    {"id":"supplementaries:sign_post_warped","required":false}
+    "supplementaries:sign_post_acacia",
+    "supplementaries:sign_post_warped",
+    "supplementaries:sign_post_oak",
+    "supplementaries:sign_post_spruce",
+    "supplementaries:sign_post_mangrove",
+    "supplementaries:sign_post_jungle",
+    "supplementaries:sign_post_crimson",
+    "supplementaries:sign_post_birch",
+    "supplementaries:sign_post_dark_oak"
   ]
 }

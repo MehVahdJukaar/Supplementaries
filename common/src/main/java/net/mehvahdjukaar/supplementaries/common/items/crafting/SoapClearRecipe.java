@@ -25,8 +25,9 @@ public class SoapClearRecipe extends CustomRecipe {
         for (int k = 0; k < craftingContainer.getContainerSize(); ++k) {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {
-                if (Block.byItem(itemstack.getItem()) instanceof ShulkerBoxBlock ||
-                        itemstack.getItem() instanceof IColored || itemstack.getItem() instanceof DyeableLeatherItem) {
+                Item item = itemstack.getItem();
+                if (Block.byItem(item) instanceof ShulkerBoxBlock ||
+                        IColored.getOptional(item).isPresent() || item instanceof DyeableLeatherItem) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {
@@ -52,7 +53,7 @@ public class SoapClearRecipe extends CustomRecipe {
             ItemStack stack = craftingContainer.getItem(i);
             if (!stack.isEmpty()) {
                 Item item = stack.getItem();
-                if (item instanceof IColored || Block.byItem(item) instanceof ShulkerBoxBlock ||
+                if (IColored.getOptional(item).isPresent() || Block.byItem(item) instanceof ShulkerBoxBlock ||
                         item instanceof DyeableLeatherItem) {
                     itemstack = stack;
                 }
@@ -64,7 +65,10 @@ public class SoapClearRecipe extends CustomRecipe {
             result = itemstack.copy();
             leatherItem.clearColor(result);
             return result;
-        } else if (i instanceof IColored colored) {
+        }
+        var op = IColored.getOptional(i);
+        if (op.isPresent()) {
+            var colored = op.get();
             var map = colored.getItemColorMap();
             if (map != null) {
                 result = ((ItemLike) map.get(colored.supportsBlankColor() ? null : DyeColor.WHITE)).asItem().getDefaultInstance();

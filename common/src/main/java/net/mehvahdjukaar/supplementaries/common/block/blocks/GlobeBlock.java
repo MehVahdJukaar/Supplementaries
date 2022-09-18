@@ -57,6 +57,10 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TRIGGERED, false).setValue(FACING, Direction.NORTH));
     }
 
+    public static void displayCurrentCoordinates(Level world, Player player, BlockPos pos) {
+        player.displayClientMessage(Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+    }
+
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
@@ -79,7 +83,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
             //server
             //calls event on server and client through packet
             if (powered) {
-                world.gameEvent(null,GameEvent.BLOCK_ACTIVATE, pos);
+                world.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
                 world.blockEvent(pos, state.getBlock(), 1, 0);
             }
         }
@@ -105,7 +109,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                 if (tile.yaw > 1500 && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
                     if (advancement != null) {
-                        if(!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
                             serverPlayer.getAdvancements().award(advancement, "unlock");
                         }
                     }
@@ -114,7 +118,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                 level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 level.blockEvent(pos, state.getBlock(), 1, 0);
             } else {
-                player.displayClientMessage(Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+                displayCurrentCoordinates(level, player, pos);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

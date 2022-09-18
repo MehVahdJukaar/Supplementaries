@@ -3,7 +3,8 @@
 	"parent": "block/block",
 	"textures": {
 		"2": "supplementaries:blocks/candle_holder",
-		"all": "candle"
+		"particle": "supplementaries:blocks/candle_holder",
+		"all": "block/candle"
 	},
 	"elements": [
 		{
@@ -190,14 +191,14 @@
 			"name": "base",
 			"from": [5, 1, 15],
 			"to": [11, 7, 16],
-			"rotation": {"angle": 0, "axis": "x", "origin": [13, 8, 17]},
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 8, 17]},
 			"faces": {
-				"north": {"uv": [0, 10, 6, 16], "rotation": 180, "texture": "#2"},
-				"east": {"uv": [7, 15, 13, 16], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [0, 10, 6, 16], "texture": "#2"},
-				"west": {"uv": [7, 15, 13, 16], "rotation": 270, "texture": "#2"},
-				"up": {"uv": [7, 15, 13, 16], "texture": "#2"},
-				"down": {"uv": [7, 15, 13, 16], "rotation": 180, "texture": "#2"}
+				"north": {"uv": [0, 10, 6, 16], "texture": "#2"},
+				"east": {"uv": [7, 15, 13, 16], "rotation": 270, "texture": "#2"},
+				"south": {"uv": [0, 10, 6, 16], "rotation": 180, "texture": "#2", "cullface": "south"},
+				"west": {"uv": [7, 15, 13, 16], "rotation": 90, "texture": "#2"},
+				"up": {"uv": [7, 15, 13, 16], "rotation": 180, "texture": "#2"},
+				"down": {"uv": [7, 15, 13, 16], "texture": "#2"}
 			}
 		},
 		{

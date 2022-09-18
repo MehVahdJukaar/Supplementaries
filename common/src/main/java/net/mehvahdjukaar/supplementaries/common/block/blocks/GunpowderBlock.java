@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.GunpowderExplosion;
@@ -409,7 +409,7 @@ public class GunpowderBlock extends LightUpBlock {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
                     if (this.isFireSource(world, p)) {
-                        this.lightUp(null, state, pos, world, FireSound.FLAMING_ARROW);
+                        this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
                         world.scheduleTick(pos, this, getDelay());
                         break;
                     }
@@ -427,8 +427,8 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
-        boolean ret = super.lightUp(entity, state, pos, world, sound);
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+        boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
         if (ret) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
@@ -442,7 +442,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor world) {
-        if (!isLit(state)) {
+        if (!this.isLitUp(state)) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
                 ((Level) world).blockEvent(pos, this, 0, 0);
@@ -519,7 +519,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean isLit(BlockState state) {
+    public boolean isLitUp(BlockState state) {
         return state.getValue(BURNING) != 0;
     }
 

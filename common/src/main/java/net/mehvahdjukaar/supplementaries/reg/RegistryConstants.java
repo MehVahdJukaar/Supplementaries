@@ -124,7 +124,7 @@ public final class RegistryConstants {
     public static final String STATUE_NAME = "statue";
     public static final String FEATHER_BLOCK_NAME = "feather_block";
     public static final String FLINT_BLOCK_NAME = "flint_block";
-    public static final String SUGAR_BLOCK_NAME = "sugar_cube";
+    public static final String SUGAR_CUBE_NAME = "sugar_cube";
     public static final String GUNPOWDER_BLOCK_NAME = "gunpowder";
     public static final String BOOK_PILE_NAME = "book_pile";
     public static final String BOOK_PILE_H_NAME = "book_pile_horizontal";
@@ -136,6 +136,7 @@ public final class RegistryConstants {
     public static final String SKULL_PILE_NAME = "skull_pile";
     public static final String SKULL_CANDLE_NAME = "skull_candle";
     public static final String SKULL_CANDLE_SOUL_NAME = "skull_candle_soul";
+    public static final String CANDLE_HOLDER_NAME = "candle_holder";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
 }

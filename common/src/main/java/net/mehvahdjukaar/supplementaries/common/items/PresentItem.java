@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class PresentItem<T extends ItemLike> extends BlockItem implements IColored<T> {
+public class PresentItem extends BlockItem implements IColored {
 
-    private final Map<DyeColor, Supplier<T>> registry;
+    private final Map<DyeColor, Supplier<Block>> registry;
 
-    public PresentItem(Block block, Properties properties, Map<DyeColor, Supplier<T>> registry) {
+    public PresentItem(Block block, Properties properties, Map<DyeColor, Supplier<Block>> registry) {
         super(block, properties);
         this.registry = registry;
     }
@@ -64,7 +64,7 @@ public class PresentItem<T extends ItemLike> extends BlockItem implements IColor
 
     @Nullable
     @Override
-    public Map<DyeColor, Supplier<T>> getItemColorMap() {
+    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
         return registry;
     }
 

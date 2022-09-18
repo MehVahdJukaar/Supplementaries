@@ -5,13 +5,25 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.api.ILightable;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,13 +39,19 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
-public class CandleHolderBlock extends LightUpWaterBlock {
+//TODO: extinguish sound. same for candle skull & interaction
+public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     protected static final VoxelShape SHAPE_FLOOR = Block.box(5D, 0D, 5D, 11D, 14D, 11D);
     protected static final VoxelShape SHAPE_WALL_NORTH = Block.box(5D, 0D, 11D, 11D, 14D, 16D);
     protected static final VoxelShape SHAPE_WALL_SOUTH = Block.box(5D, 0D, 0D, 11D, 14D, 5D);
@@ -45,13 +63,9 @@ public class CandleHolderBlock extends LightUpWaterBlock {
     public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
     public static final IntegerProperty CANDLES = BlockStateProperties.CANDLES;
 
-    private static EnumMap<Direction, EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>>> PARTICLE_OFFSETS;
+    private static final EnumMap<Direction, EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>>> PARTICLE_OFFSETS;
 
     static {
-        createParticleList();
-    }
-
-    private static void createParticleList() {
         PARTICLE_OFFSETS = new EnumMap<>(Direction.class);
         EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> temp = new EnumMap<>(AttachFace.class);
         {
@@ -72,10 +86,10 @@ public class CandleHolderBlock extends LightUpWaterBlock {
         }
         {
             Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectOpenHashMap<>();
-            int2ObjectMap.put(1, List.of(new Vec3(0.5, 0.5, 0.5)));
-            int2ObjectMap.put(2, List.of(new Vec3(0.375, 0.44, 0.5), new Vec3(0.625, 0.5, 0.44)));
-            int2ObjectMap.put(3, List.of(new Vec3(0.5, 0.313, 0.625), new Vec3(0.375, 0.44, 0.5), new Vec3(0.56, 0.5, 0.44)));
-            int2ObjectMap.put(4, List.of(new Vec3(0.44, 0.313, 0.56), new Vec3(0.625, 0.44, 0.56), new Vec3(0.375, 0.44, 0.375), new Vec3(0.56, 0.5, 0.375)));
+            int2ObjectMap.put(1, List.of(new Vec3(0.5, 9/16f, 0.5)));
+            int2ObjectMap.put(2, List.of(new Vec3(0.25f, 0.875, 0.5), new Vec3(0.75, 0.875, 0.5)));
+            int2ObjectMap.put(3, List.of(new Vec3(0.5f, 0.875, 0.75), new Vec3(0.75, 0.875, 0.375), new Vec3(0.25, 0.875, 0.375)));
+            int2ObjectMap.put(4, List.of(new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.8125), new Vec3(0.1875, 0.8125, 0.8125)));
             temp.put(AttachFace.CEILING, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
         for (Direction direction : Direction.values()) {
@@ -99,16 +113,20 @@ public class CandleHolderBlock extends LightUpWaterBlock {
         }
     }
 
-    @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        createParticleList();
-        return super.use(state, worldIn, pos, player, handIn, hit);
+    private final DyeColor color;
+
+    public CandleHolderBlock(DyeColor color, Properties properties) {
+        super(properties.lightLevel(CandleHolderBlock::lightLevel));
+        this.color = color;
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, false)
+                .setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(CANDLES, 1));
     }
 
-    public CandleHolderBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, true)
-                .setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(CANDLES, 1));
+    private static int lightLevel(BlockState state) {
+        if(state.getValue(LIT)) {
+          int candles =  state.getValue(CANDLES);
+          return 3 + candles * 3;
+        }return 0;
     }
 
     @Override
@@ -118,6 +136,10 @@ public class CandleHolderBlock extends LightUpWaterBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockState = context.getLevel().getBlockState(context.getClickedPos());
+        if (blockState.is(this)) {
+            return blockState.setValue(CANDLES, Math.min(4, blockState.getValue(CANDLES) + 1));
+        }
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         for (Direction direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
@@ -132,6 +154,11 @@ public class CandleHolderBlock extends LightUpWaterBlock {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+        return !useContext.isSecondaryUseActive() && useContext.getItemInHand().is(this.asItem()) && state.getValue(CANDLES) < 4 || super.canBeReplaced(state, useContext);
     }
 
     @Override
@@ -152,6 +179,11 @@ public class CandleHolderBlock extends LightUpWaterBlock {
             };
             case CEILING -> SHAPE_CEILING;
         };
+    }
+
+    @Deprecated
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Projectile ? state.getShape(level, pos) : Shapes.empty();
     }
 
     @Override
@@ -179,62 +211,15 @@ public class CandleHolderBlock extends LightUpWaterBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rand) {
-        if (!state.getValue(LIT)) return;
+        if (state.getValue(LIT)) {
+            getParticleOffset(state).forEach(v -> addParticlesAndSound(level, v.add(pos.getX(), pos.getY(), pos.getZ()), rand));
+        }
+    }
+
+    private List<Vec3> getParticleOffset(BlockState state) {
         Direction direction = state.getValue(FACING);
         AttachFace face = state.getValue(FACE);
-
-        PARTICLE_OFFSETS.get(direction).get(face).get((int) state.getValue(CANDLES))
-                .forEach(v -> addParticlesAndSound(level, v.add(pos.getX(), pos.getY(), pos.getZ()), rand));
-        if (true) return;
-        double xm, ym, zm, xl, yl, zl, xr, zr;
-        Direction dir = direction.getClockWise();
-        double xOff = dir.getStepX() * 0.3125D;
-        double zOff = dir.getStepZ() * 0.3125D;
-        switch (state.getValue(FACE)) {
-            default -> {
-                xm = pos.getX() + 0.5D;
-                ym = pos.getY() + 1D;
-                zm = pos.getZ() + 0.5D;
-                xl = pos.getX() + 0.5D - xOff;
-                yl = pos.getY() + 0.9375D;
-                zl = pos.getZ() + 0.5D - zOff;
-                xr = pos.getX() + 0.5D + xOff;
-                zr = pos.getZ() + 0.5D + zOff;
-            }
-            case WALL -> {
-                double xo1 = -direction.getStepX() * 0.3125;
-                double zo2 = -direction.getStepZ() * 0.3125;
-                xm = pos.getX() + 0.5D + xo1;
-                ym = pos.getY() + 1;
-                zm = pos.getZ() + 0.5D + zo2;
-                xl = pos.getX() + 0.5D + xo1 - xOff;
-                yl = pos.getY() + 0.9375;
-                zl = pos.getZ() + 0.5D + zo2 - zOff;
-                xr = pos.getX() + 0.5D + xo1 + xOff;
-                zr = pos.getZ() + 0.5D + zo2 + zOff;
-            }
-            case CEILING -> {
-                //high
-                xm = pos.getX() + 0.5D + zOff;
-                zm = pos.getZ() + 0.5D - xOff;
-                ym = pos.getY() + 0.875;//0.9375D;
-
-                //2 medium
-                xl = pos.getX() + 0.5D + xOff;
-                zl = pos.getZ() + 0.5D + zOff;
-                xr = pos.getX() + 0.5D - zOff;
-                zr = pos.getZ() + 0.5D + xOff;
-                yl = pos.getY() + 0.8125;
-                double xs = pos.getX() + 0.5D - xOff;
-                double zs = pos.getZ() + 0.5D - zOff;
-                double ys = pos.getY() + 0.75;
-                level.addParticle(ParticleTypes.FLAME, xs, ys, zs, 0, 0, 0);
-            }
-        }
-        level.addParticle(ParticleTypes.FLAME, xm, ym, zm, 0, 0, 0);
-        level.addParticle(ParticleTypes.FLAME, xl, yl, zl, 0, 0, 0);
-        level.addParticle(ParticleTypes.FLAME, xr, yl, zr, 0, 0, 0);
-
+        return PARTICLE_OFFSETS.get(direction).get(face).get((int) state.getValue(CANDLES));
     }
 
     @Override
@@ -269,5 +254,46 @@ public class CandleHolderBlock extends LightUpWaterBlock {
     @Override
     public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
+        tooltip.add((Component.translatable("message.supplementaries.candle_holder")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+    }
+
+    @Nullable
+    @Override
+    public DyeColor getColor() {
+        return color;
+    }
+
+    @Override
+    @Nullable
+    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
+        return ModRegistry.CANDLE_HOLDERS;
+    }
+
+    @Override
+    public boolean supportsBlankColor() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeExtinguishedBy(ItemStack item) {
+        return item.isEmpty() || super.canBeExtinguishedBy(item);
+    }
+
+    @Override
+    public void playExtinguishSound(LevelAccessor world, BlockPos pos) {
+        world.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    @Override
+    public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
+        ((CandleHolderBlock)state.getBlock()).getParticleOffset(state).forEach((vec3) -> {
+            level.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + vec3.x(), (double)pos.getY() + vec3.y(), (double)pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+        });
     }
 }

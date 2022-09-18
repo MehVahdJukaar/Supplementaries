@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "supplementaries:block/hanging_signs/hanging_sign_warped_loader",
+      "y": 270
+    },
+    "axis=z": {
+      "model": "supplementaries:block/hanging_signs/hanging_sign_warped_loader"
+    }
+  }
+}

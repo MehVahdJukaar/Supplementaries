@@ -55,7 +55,6 @@
     "VineMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin",
-    "accessors.DispenserAccessor",
     "accessors.MobAccessor"
   ],
   "injectors": {

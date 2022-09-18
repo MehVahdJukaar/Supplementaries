@@ -49,16 +49,14 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
                 .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
     }
 
-    private static final VoxelShape INSIDE_Z = box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 16.0D);
-    private static final VoxelShape INSIDE_X = box(0.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D);
-    protected static final VoxelShape SHAPE = Shapes.join(Shapes.block(), Shapes.or(INSIDE_Z, INSIDE_X), BooleanOp.ONLY_FIRST);
-
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if (!state.getValue(HAS_BLOCK)) {
-            return (adjacentBlockState.getBlock() instanceof FrameBlock && state.getValue(HAS_BLOCK).equals(adjacentBlockState.getValue(HAS_BLOCK))) || super.skipRendering(state, adjacentBlockState, side);
+        if(adjacentBlockState.getBlock() instanceof FrameBlock){
+            boolean hasBlock = state.getValue(HAS_BLOCK);
+            boolean neighborHasBlock = adjacentBlockState.getValue(HAS_BLOCK);
+            return hasBlock == neighborHasBlock || super.skipRendering(state, adjacentBlockState, side);
         }
-        return false;
+        return super.skipRendering(state, adjacentBlockState, side);
     }
 
     @Nullable
@@ -80,8 +78,6 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         return InteractionResult.PASS;
     }
 
-
-    //TODO: fix face disappearing
     //handles dynamic culling
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
@@ -98,27 +94,6 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         return Shapes.block();
     }
 
-    /*
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        if(state.getValue(TILE)==1){
-            TileEntity te = reader.getBlockEntity(pos);
-            if (te instanceof FrameBlockTile && !((IBlockHolder) te).getHeldBlock().isAir()) {
-                return VoxelShapes.block();
-            }
-        }
-        return OCCLUSION_SHAPE;
-    }*/
-
-
-    /*
-    @Override
-    public VoxelShape getBlockSupportShape(BlockState p_230335_1_, IBlockReader p_230335_2_, BlockPos p_230335_3_) {
-        return VoxelShapes.block();
-    }
-    */
-    //needed for isnide black edges
-
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         if (state.getValue(HAS_BLOCK)) {
@@ -126,11 +101,6 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         }
         return super.getCollisionShape(state, reader, pos, context); //return OCCLUSION_SHAPE
     }
-    /*
-    @Override
-    public VoxelShape getVisualShape(BlockState p_230322_1_, IBlockReader p_230322_2_, BlockPos p_230322_3_, ISelectionContext p_230322_4_) {
-        return VoxelShapes.empty();
-    }*/
 
     //occlusion shading
     @Override

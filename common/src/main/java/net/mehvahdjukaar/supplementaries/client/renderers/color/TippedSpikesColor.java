@@ -19,14 +19,15 @@ import java.util.Map;
 
 public class TippedSpikesColor implements BlockColor, ItemColor {
 
-    private static final Map<Integer, Integer> CACHED_COLORS_0 = new HashMap<>();
-    private static final Map<Integer, Integer> CACHED_COLORS_1 = new HashMap<>();
+    //not using concurrent hashmap cause its slow since its blocking. only one thread should access these anyways but we never know
+    private static final ThreadLocal<Map<Integer, Integer>> CACHED_COLORS_0 = ThreadLocal.withInitial(HashMap::new);
+    private static final ThreadLocal<Map<Integer, Integer>> CACHED_COLORS_1 = ThreadLocal.withInitial(HashMap::new);
 
     private static int getCachedColor(int base, int tint) {
         return switch (tint) {
             default -> -1;
-            case 1 -> CACHED_COLORS_0.computeIfAbsent(base, b -> getProcessedColor(base, 0));
-            case 2 -> CACHED_COLORS_1.computeIfAbsent(base, b -> getProcessedColor(base, 1));
+            case 1 -> CACHED_COLORS_0.get().computeIfAbsent(base, b -> getProcessedColor(base, 0));
+            case 2 -> CACHED_COLORS_1.get().computeIfAbsent(base, b -> getProcessedColor(base, 1));
         };
     }
 

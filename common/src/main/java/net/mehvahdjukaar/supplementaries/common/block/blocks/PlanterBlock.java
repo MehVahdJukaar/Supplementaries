@@ -1,21 +1,29 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.function.BiConsumer;
 
 public class PlanterBlock extends WaterBlock {
 
@@ -66,6 +74,21 @@ public class PlanterBlock extends WaterBlock {
         VoxelShape shape = state.getShape(world, up);
         boolean connect = (!shape.isEmpty() && shape.bounds().minY < 0.06);
         return (connect && !(b instanceof StemBlock) && !(b instanceof CropBlock));
+    }
+
+    //override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public boolean onTreeGrow(BlockState state, LevelReader level, BiConsumer<BlockPos, BlockState> placeFunction, RandomSource randomSource, BlockPos pos, TreeConfiguration config) {
+        if (CommonConfigs.Blocks.PLANTER_BREAKS.get()) {
+            placeFunction.accept(pos, Blocks.ROOTED_DIRT.defaultBlockState());
+
+            if (level instanceof Level l) {
+                l.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), net.minecraft.world.level.block.Block.getId(state));
+                l.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
+            }
+            return true;
+        }
+        return false;
     }
 
 

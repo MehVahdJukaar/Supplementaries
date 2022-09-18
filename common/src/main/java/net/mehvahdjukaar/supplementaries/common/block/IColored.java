@@ -1,15 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-//TODO: this is shit fix
-public interface IColored<T extends ItemLike> {
+//TODO: this is shit, improve
+public interface IColored {
 
     @Nullable
     DyeColor getColor();
@@ -19,11 +21,16 @@ public interface IColored<T extends ItemLike> {
     }
 
     @Nullable
-    default Map<DyeColor, Supplier<T>> getItemColorMap() {
-        return null;
-    }
+    <T extends ItemLike> Map<DyeColor, Supplier<T>> getItemColorMap();
 
     default boolean supportsBlankColor() {
         return false;
     }
+
+    //casts the given object to this interface if it or its block are colored
+    static Optional<IColored> getOptional(ItemLike itemLike){
+        if(itemLike instanceof IColored col)return Optional.of(col);
+        if(itemLike instanceof BlockItem bi && bi.getBlock() instanceof IColored col)return Optional.of(col);
+        return Optional.empty();
+    };
 }

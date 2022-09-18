@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -154,7 +152,7 @@ public class LootTablesInjects {
     }
 
     private static void tryInjectQuiver(Consumer<LootPool.Builder> e, TableType type) {
-        if(type == TableType.DUNGEON || type == TableType.MANSION){
+        if (type == TableType.DUNGEON || type == TableType.MANSION) {
             injectLootPool(e, type, "quiver");
         }
     }

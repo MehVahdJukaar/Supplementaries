@@ -101,7 +101,6 @@ public class FaucetBlockTile extends BlockEntity {
     }
 
     //TODO: fix transfer to cauldrons
-    @SuppressWarnings("ConstantConditions")
     private boolean tryExtract(Level level, BlockPos pos, BlockState state, boolean doTransfer) {
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.nbt.CompoundTag;

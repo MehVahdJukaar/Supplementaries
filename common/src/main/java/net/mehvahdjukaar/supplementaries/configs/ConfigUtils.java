@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;
@@ -8,10 +10,8 @@ import net.minecraft.server.level.ServerPlayer;
 public class ConfigUtils {
 
 
+    @ExpectPlatform
     public static void openModConfigs() {
-        Minecraft mc = Minecraft.getInstance();
-
-        mc.setScreen(CommonConfigs.SERVER_SPEC.makeScreen(mc.screen));
     }
 
 

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,6 +55,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class TrappedPresentBlock extends WaterBlock implements EntityBlock, IColored {
 
@@ -257,5 +259,10 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
                 && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
             tile.detonate(serverLevel, pos);
         }
+    }
+
+    @Override
+    public @Nullable Map<DyeColor, Supplier<Block>> getItemColorMap() {
+        return ModRegistry.TRAPPED_PRESENTS;
     }
 }

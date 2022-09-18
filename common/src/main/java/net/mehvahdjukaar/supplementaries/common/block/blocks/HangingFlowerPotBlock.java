@@ -78,7 +78,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
             if (pot instanceof FlowerPotBlock flowerPot) {
                 ItemStack itemstack = player.getItemInHand(handIn); //&& FlowerPotHandler.isEmptyPot(flowerPot)
                 Item item = itemstack.getItem();
-                //mimics flowerPorBlock behavior
+                //mimics flowerPorBlock behavior for consistency
                 Block newPot = item instanceof BlockItem bi ? FlowerPotHandler.getFullPot(flowerPot, bi.getBlock()) : Blocks.AIR;
 
                 boolean isEmptyFlower = newPot == Blocks.AIR;
@@ -86,7 +86,7 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
                 if (isEmptyFlower != isPotEmpty) {
                     if (isPotEmpty) {
-                        if(!level.isClientSide) {
+                        if (!level.isClientSide) {
                             tile.setHeldBlock(newPot.defaultBlockState());
                             level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
                             tile.setChanged();
@@ -106,8 +106,8 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
                                 player.drop(flowerItem, false);
                             }
                         }
-                        if(!level.isClientSide) {
-                            tile.setHeldBlock(pot.defaultBlockState());
+                        if (!level.isClientSide) {
+                            tile.setHeldBlock(FlowerPotHandler.getEmptyPot(flowerPot).defaultBlockState());
                             level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
                             tile.setChanged();
                         }

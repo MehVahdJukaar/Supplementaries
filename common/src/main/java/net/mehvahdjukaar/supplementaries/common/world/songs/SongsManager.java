@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.world.songs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapTrade;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
@@ -36,8 +39,8 @@ import java.util.*;
 
 public class SongsManager extends SimpleJsonResourceReloadListener {
 
-    private static final Map<ResourceLocation, Song> SONGS = new LinkedHashMap<>();
-    private static final List<WeightedEntry.Wrapper<ResourceLocation>> SONG_WEIGHTED_LIST = new ArrayList<>();
+    private static final Map<String, Song> SONGS = new LinkedHashMap<>();
+    private static final List<WeightedEntry.Wrapper<String>> SONG_WEIGHTED_LIST = new ArrayList<>();
 
     //randomly selected currently playing songs
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
@@ -56,46 +59,38 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         SONGS.clear();
         SONG_WEIGHTED_LIST.clear();
         List<Song> temp = new ArrayList<>();
-        jsons.forEach((key, input) -> {
+        jsons.forEach((key, json) -> {
             try {
-                Song song = GSON.fromJson(input, Song.class);
-                if (song.getNotes().length == 0) {
-                    Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key + ": a song can't have 0 notes!");
-                } else {
-                    temp.add(song);
-                    SongsManager.addSong(key, song);
-                }
+                var result = Song.CODEC.parse(JsonOps.INSTANCE, json);
+                Song song = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to parse flute song: {}", e));
+                temp.add(song);
+                SongsManager.addSong(song);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
             }
         });
         if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded  " + temp.size() + " flute songs");
-        temp.forEach(Song::processForPlaying);
     }
 
-    public static void acceptClientSongs(Map<ResourceLocation, Song> songs) {
+    public static void acceptClientSongs(List<Song> songs) {
         SONGS.clear();
         SONG_WEIGHTED_LIST.clear();
-        songs.keySet().forEach(k -> {
-            Song s = songs.get(k);
-            s.processForPlaying();
-            SongsManager.addSong(k, s);
-        });
+        songs.forEach(SongsManager::addSong);
     }
 
-    private static void addSong(ResourceLocation res, Song song) {
-        SONGS.put(res, song);
-        SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(res, song.getWeight()));
+    private static void addSong(Song song) {
+        SONGS.put(song.getName(), song);
+        SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), song.getWeight()));
     }
 
     public static void sendSongsToClient(ServerPlayer player) {
-        NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+        NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
     }
 
-    public static Song setCurrentlyPlaying(UUID id, ResourceLocation songKey) {
+    public static Song setCurrentlyPlaying(UUID id, String songKey) {
         Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
-
+        song.validatePlayReady();
         return song;
     }
 
@@ -104,9 +99,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     @Nonnull
-    private static ResourceLocation selectRandomSong(RandomSource random) {
-        Optional<WeightedEntry.Wrapper<ResourceLocation>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
-        return song.map(WeightedEntry.Wrapper::getData).orElseGet(() -> new ResourceLocation(""));
+    private static String selectRandomSong(RandomSource random) {
+        Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
+        return song.map(WeightedEntry.Wrapper::getData).orElseGet(() ->"");
     }
 
     //called on server only
@@ -116,11 +111,11 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         Song song;
         if (!CURRENTLY_PAYING.containsKey(id)) {
 
-            ResourceLocation res = null;
+            String res = null;
             if (stack.hasCustomHoverName()) {
                 String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT).replace(" ", "_");
                 for (var v : SONGS.keySet()) {
-                    if (v.getPath().equals(name)) {
+                    if (v.equals(name)) {
                         res = v;
                         break;
                     }
@@ -137,7 +132,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         playSong(instrument, entity, song, timeSinceStarted);
     }
 
-    public static boolean playSong(InstrumentItem instrumentItem, LivingEntity entity, ResourceLocation sandstorm,
+    public static boolean playSong(InstrumentItem instrumentItem, LivingEntity entity, String sandstorm,
                                    long timeSinceStarted) {
         return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm, Song.EMPTY), timeSinceStarted);
     }
@@ -228,27 +223,25 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         List<Integer> finalNotes = new ArrayList<>();
 
         for (int i : arrayList) {
-            if (i < 0) finalNotes.add(i / GCD);
+            if (i < 0) finalNotes.add((i / GCD));
             else finalNotes.add(i);
         }
 
         if (name.isEmpty()) name = "recorded-" + start;
 
-        Song song = new Song(name, GCD, finalNotes.toArray(new Integer[0]), "recorded in-game");
+        Song song = new Song(name, GCD, finalNotes, "recorded in-game", 100);
 
         saveRecordedSong(song);
 
-        //temporairly adds the song
-        //TODO: remove
+        //temporarily adds the song
         SONGS.clear();
-        song.processForPlaying();
-        SONGS.put(Supplementaries.res(name), song);
+        SONGS.put(name, song);
+
         if (!level.isClientSide) {
-            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS));
+            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
         }
 
         RECORDING.clear();
-
         return song.getTranslationKey();
     }
 
@@ -277,7 +270,8 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
         try {
             try (FileWriter writer = new FileWriter(exportPath)) {
-                GSON.toJson(song, writer);
+                DataResult<JsonElement> r = Song.CODEC.encodeStart(JsonOps.INSTANCE, song);
+                r.result().ifPresent(a -> GSON.toJson(a.getAsJsonObject(), writer));
             }
         } catch (IOException e) {
             e.printStackTrace();

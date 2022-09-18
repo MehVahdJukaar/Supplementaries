@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.resources.ResourceLocation;
@@ -63,7 +63,7 @@ public class PresentDyeRecipe extends CustomRecipe {
         }
 
         //improve this is crap
-        ItemStack result = new ItemStack(((PresentItem<ItemLike>) itemstack.getItem())
+        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem())
                 .getItemColorMap().get(dyecolor).get().asItem());
 
         if (itemstack.hasTag()) {

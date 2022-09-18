@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +38,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -138,10 +141,14 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         boolean success = false;
         if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
+            if(CompatHandler.flan && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())){
+                return;
+            }
+
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
-            //block override. mimic forge event
 
+            //block override. mimic forge event
             InteractionResult overrideResult = ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
 
             if (overrideResult.consumesAction()) {
@@ -151,16 +158,15 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 //TODO: remove this hack when we test it and see if sounds still does not play
                 //null player so sound always plays
                 //hackeries because for some god damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player p = CommonUtil.getEntityStand(this, player);
+                Player fakePlayer = CommonUtil.getEntityStand(this, player);
 
                 success = ItemsUtil.place(item,
-                        new BlockPlaceContext(this.level, p, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
+                        new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
 
             }
             if (success) {
                 this.remove(RemovalReason.DISCARDED);
             }
-
         }
     }
 

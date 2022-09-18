@@ -43,7 +43,6 @@ import net.minecraftforge.fml.LogicalSide;
 public class ServerEventsForge {
 
     public static void init() {
-
         MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
     }
 
@@ -176,20 +175,6 @@ public class ServerEventsForge {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onProjectileImpact(final ProjectileImpactEvent event) {
         PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
-    }
-
-    @SubscribeEvent
-    public static void onSaplingGrow(SaplingGrowTreeEvent event) {
-        if (CommonConfigs.Blocks.PLANTER_BREAKS.get()) {
-            LevelAccessor level = event.getLevel();
-            BlockPos pos = event.getPos();
-            BlockState state = level.getBlockState(pos.below());
-            if (state.getBlock() instanceof PlanterBlock) {
-                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos.below(), net.minecraft.world.level.block.Block.getId(state));
-                level.setBlock(pos.below(), net.minecraft.world.level.block.Blocks.ROOTED_DIRT.defaultBlockState(), 2);
-                level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1, 0.71f);
-            }
-        }
     }
 
     @SubscribeEvent

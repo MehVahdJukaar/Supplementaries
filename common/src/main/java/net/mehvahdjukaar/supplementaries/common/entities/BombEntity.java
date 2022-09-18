@@ -6,7 +6,9 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -309,6 +311,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
         boolean breaks = this.getOwner() instanceof Player ||
                 PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
+
+        if(CompatHandler.flan && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))){
+            breaks = false;
+        }
 
         if (this.superCharged) {
             //second explosion when supercharged

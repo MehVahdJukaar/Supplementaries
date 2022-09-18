@@ -10,22 +10,22 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.UUID;
 
 public class ClientBoundSetSongPacket implements Message {
-    private final ResourceLocation song;
+    private final String song;
     private final UUID id;
 
     public ClientBoundSetSongPacket(FriendlyByteBuf buf) {
-        this.song = buf.readResourceLocation();
+        this.song = buf.readUtf();
         this.id = buf.readUUID();
     }
 
-    public ClientBoundSetSongPacket(UUID id, ResourceLocation resourceLocation) {
-        this.song = resourceLocation;
+    public ClientBoundSetSongPacket(UUID id, String s) {
+        this.song = s;
         this.id = id;
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(this.song);
+        buf.writeUtf(this.song);
         buf.writeUUID(this.id);
     }
 

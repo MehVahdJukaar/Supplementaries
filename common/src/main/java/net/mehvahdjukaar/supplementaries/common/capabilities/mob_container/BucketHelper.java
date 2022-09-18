@@ -4,8 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.items.JarItem;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +31,7 @@ public class BucketHelper {
         if (type != null) {
             return type;
         } else if (bucket instanceof MobBucketItem bucketItem) {
-            EntityType<?> en = ForgeHelper.getFishType(bucketItem);
+            EntityType<?> en = SuppPlatformStuff.getFishType(bucketItem);
             if (en != null) {
                 BUCKET_TO_MOB_MAP.putIfAbsent(bucket, en);
                 return en;
@@ -109,7 +108,7 @@ public class BucketHelper {
         throw new AssertionError();
     }
 
-    public static boolean isModdedFish(Entity entity){
+    public static boolean isModdedFish(Entity entity) {
         return entity instanceof WaterAnimal || entity instanceof Bucketable;
     }
 

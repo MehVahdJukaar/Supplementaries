@@ -7,7 +7,10 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -80,7 +83,8 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
         int light = state.getLightEmission();
         boolean lit = true;
-        if (Utils.getID(this.mimic.getBlock()).toString().equals("charm:redstone_lantern")) {
+        var res = Utils.getID(this.mimic.getBlock());
+        if (res.toString().equals("charm:redstone_lantern")) {
             this.isRedstoneLantern = true;
             light = 15;
             lit = false;
@@ -88,7 +92,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
         if (this.level != null && !this.mimic.isAir()) {
             var shape = state.getShape(this.level, this.worldPosition);
-            if (!shape.isEmpty()) {
+            if (!shape.isEmpty() && !res.getNamespace().equals("twigs")) {
                 this.attachmentOffset = (shape.bounds().maxY - (9 / 16d));
             }
             if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
@@ -97,7 +101,6 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
         }
         return true;
     }
-
 
     @Nullable
     @Override

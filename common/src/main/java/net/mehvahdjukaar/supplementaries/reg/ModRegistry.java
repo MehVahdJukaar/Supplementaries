@@ -108,7 +108,7 @@ public class ModRegistry {
                     .sized(0.98F, 0.7F).clientTrackingRange(8));
 
     public static final Supplier<Item> DISPENSER_MINECART_ITEM = regItem(DISPENSER_MINECART_NAME, () -> new DispenserMinecartItem(new Item.Properties()
-            .stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION)));
+            .stacksTo(1).tab(getTab(CreativeModeTab.TAB_TRANSPORTATION,DISPENSER_MINECART_NAME))));
 
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
@@ -452,46 +452,11 @@ public class ModRegistry {
             GLOBE_NAME, () -> PlatformHelper.newBlockEntityType(
                     GlobeBlockTile::new, GLOBE.get(), GLOBE_SEPIA.get()));
 
-    /*
-    //candle holder
-    public static final String CANDLE_HOLDER_NAME = "candle_holder";
-    public static final Supplier<Block> CANDLE_HOLDER = regBlock(CANDLE_HOLDER_NAME, () -> new CandleHolderBlock(
-            BlockBehaviour.Properties.of(Material.DECORATION)
-                    .instabreak()
-                    .noCollission()
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-                    .sound(SoundType.LANTERN), () -> ParticleTypes.FLAME));
-    public static final Supplier<Item> CANDLE_HOLDER_ITEM = regBlockItem(CANDLE_HOLDER, getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME));
-
-
-    //candelabra
-    public static final String CANDELABRA_NAME = "candelabra";
-    public static final Supplier<Block> CANDELABRA = regBlock(CANDELABRA_NAME, () -> new CandelabraBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD)
-                    .strength(4f, 5f)
-                    .sound(SoundType.METAL)
-                    .noOcclusion()
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-    ));
-    public static final Supplier<Item> CANDELABRA_ITEM = regBlockItem(CANDELABRA, getTab(CreativeModeTab.TAB_DECORATIONS, CANDELABRA_NAME));
-
-    //silver
-    public static final String CANDELABRA_NAME_SILVER = "candelabra_silver";
-    public static final Supplier<Block> CANDELABRA_SILVER = regBlock(CANDELABRA_NAME_SILVER, () -> new CandelabraBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
-                    .strength(4f, 5f)
-                    .sound(SoundType.METAL)
-                    .noOcclusion()
-                    .lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 14 : 0)
-    ));
-    public static final Supplier<Item> CANDELABRA_ITEM_SILVER = regBlockItem(CANDELABRA_SILVER, getTab(CreativeModeTab.TAB_DECORATIONS, CANDELABRA_NAME_SILVER));
-    */
-
     //sconce
     //normal
     public static final Supplier<Block> SCONCE = regBlock(SCONCE_NAME, () -> new SconceBlock(
             BlockBehaviour.Properties.of(Material.DECORATION)
-                    .noCollission()
+                    .noOcclusion()
                     .instabreak()
                     .sound(SoundType.LANTERN),
             14, () -> ParticleTypes.FLAME));
@@ -543,9 +508,9 @@ public class ModRegistry {
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
 
+
     //candle holder
-    public static final Supplier<Block> CANDLE_HOLDER = regWithItem("candle_holder", () -> new CandleHolderBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())),CreativeModeTab.TAB_DECORATIONS);
+    public static final Map<DyeColor,Supplier<Block>> CANDLE_HOLDERS= RegUtils.registerCandleHolders(CANDLE_HOLDER_NAME);
 
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
@@ -1211,11 +1176,11 @@ public class ModRegistry {
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //sugar block
-    public static final Supplier<Block> SUGAR_CUBE = regBlock(SUGAR_BLOCK_NAME, () -> new SugarBlock(
+    public static final Supplier<Block> SUGAR_CUBE = regBlock(SUGAR_CUBE_NAME, () -> new SugarBlock(
             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
     ));
-    public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_BLOCK_NAME, () -> new SugarCubeItem(
-            SUGAR_CUBE.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
+    public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_CUBE_NAME, () -> new SugarCubeItem(
+            SUGAR_CUBE.get(), new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS,SUGAR_CUBE_NAME ))
     ));
 
     //gunpowder block

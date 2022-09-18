@@ -29,7 +29,7 @@ logoFile = "icon.png" #optional
 [[dependencies.supplementaries]]
 modId = "forge"
 mandatory = true
-versionRange = "[42.0.0,)"
+versionRange = "[41.0.0,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -43,6 +43,6 @@ side = "BOTH"
 [[dependencies.supplementaries]]
 modId = "moonlight"
 mandatory = true
-versionRange = "[1.19.2-2.0.26,]"
+versionRange = "[1.19.2-2.0.28,]"
 ordering = "NONE"
 side = "BOTH"

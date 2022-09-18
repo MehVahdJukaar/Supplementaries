@@ -140,7 +140,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
         float tv = sprite.getHeight() * height;
         float u0 = x * 16;
         float v0 = y * 16;
-        color = -1;
+
         builder.setDirection(Direction.getNearest(normal.x(), normal.y(), normal.z()));
         builder.setSprite(sprite);
 

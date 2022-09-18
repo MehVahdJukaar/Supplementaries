@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,6 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
@@ -70,6 +73,12 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     @Override
     public DyeColor getColor() {
         return this.color;
+    }
+
+    @Override
+    @SuppressWarnings("unckecned")
+    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
+        return ModRegistry.FLAGS;
     }
 
     public static Block byColor(DyeColor color) {
@@ -128,7 +137,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof FlagBlockTile tile) {
+        if (world.getBlockEntity(pos) instanceof FlagBlockTile) {
             ItemStack itemstack = player.getItemInHand(hand);
             if (itemstack.getItem() instanceof MapItem) {
                 if (!world.isClientSide) {

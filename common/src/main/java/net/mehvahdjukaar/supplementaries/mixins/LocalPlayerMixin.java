@@ -39,7 +39,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         }
     }
 
-    //hack. this will be ugly
+    //hack. this will be ugly. Prevents quiver from slowing down
 
     @Inject(method = "aiStep",
             at = @At(value = "INVOKE",

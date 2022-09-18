@@ -49,11 +49,14 @@ public class Supplementaries {
 
         RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
+        //special recipes conditions dont work
+        //quiver keybingd
         //sugar block fall in water
         //soap in water makes soap particles
         //yeet java models in favor or json ones
         // TODO: re add soap stuff
-        //Fix throwing bricks not working on glass
+        //chains pull down candle holders and lanterns
+
         //fix snowy spirit chest not sincing after reload
 
 

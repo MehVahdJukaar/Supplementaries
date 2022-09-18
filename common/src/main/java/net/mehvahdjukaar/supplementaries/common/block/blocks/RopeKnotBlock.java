@@ -139,7 +139,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return super.getCollisionShape(state, world, pos, context);
     }
 
-    protected Pair<Map<BlockState ,VoxelShape>, Map<BlockState, VoxelShape>> makeShapes() {
+    protected Pair<Map<BlockState, VoxelShape>, Map<BlockState, VoxelShape>> makeShapes() {
         Map<BlockState, VoxelShape> shapesBuilder = new HashMap<>();
         Map<BlockState, VoxelShape> collisionBuilder = new HashMap<>();
 
@@ -189,7 +189,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
                     break;
                 }
             }
-            if (flag)shapesBuilder.put(state, v);
+            if (flag) shapesBuilder.put(state, v);
 
             boolean flag2 = true;
             for (VoxelShape existing : collisionBuilder.values()) {
@@ -201,7 +201,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             }
             if (flag2) collisionBuilder.put(state, c);
         }
-        return Pair.of(ImmutableMap.copyOf(shapesBuilder),ImmutableMap.copyOf(collisionBuilder));
+        return Pair.of(ImmutableMap.copyOf(shapesBuilder), ImmutableMap.copyOf(collisionBuilder));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -316,8 +316,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return super.getCloneItemStack(level, pos, state);
     }
 
-
-    public static @Nullable BlockState convertToRopeKnot(PostType type, BlockState state, Level world, BlockPos pos) {
+    @Nullable
+    public static BlockState convertToRopeKnot(PostType type, BlockState state, Level world, BlockPos pos) {
         Direction.Axis axis = Direction.Axis.Y;
         if (state.hasProperty(BlockStateProperties.AXIS)) {
             axis = state.getValue(BlockStateProperties.AXIS);

@@ -9,9 +9,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -33,6 +31,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -139,6 +138,26 @@ public class RegUtils {
                         clientTrackingRange, velocityUpdates, updateInterval));
     }
 
+    //candle holders
+    public static Map<DyeColor, Supplier<Block>> registerCandleHolders(String baseName) {
+        Map<DyeColor, Supplier<Block>> map = new HashMap<>();
+
+        Supplier<Block> block = regWithItem(baseName, () -> new CandleHolderBlock(null,
+                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                getTab(CreativeModeTab.TAB_DECORATIONS,baseName));
+        map.put(null, block);
+
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            Supplier<Block> bb = regWithItem(name, () -> new CandleHolderBlock(color,
+                            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                 getTab(CreativeModeTab.TAB_DECORATIONS,baseName)
+            );
+            map.put(color, bb);
+        }
+        return map;
+    }
+
     //flags
     public static Map<DyeColor, Supplier<Block>> registerFlags(String baseName) {
         ImmutableMap.Builder<DyeColor, Supplier<Block>> builder = new ImmutableMap.Builder<>();
@@ -181,30 +200,30 @@ public class RegUtils {
     public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
 
-        for (DyeColor color : DyeColor.values()) {
-            String name = baseName + "_" + color.getName();
-            Supplier<Block> block = regBlock(name, () -> presentFactory.apply(color,
-                    BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
-                            .strength(1.0F)
-                            .sound(ModSounds.PRESENT))
-            );
-            map.put(color, block);
-            //item
-
-            regItem(name, () -> new PresentItem(block.get(), (new Item.Properties())
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, name)), map));
-        }
         Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
                         .strength(1.0F)
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
-        regItem(baseName, () ->
-                new PresentItem(block.get(), (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
+        regItem(baseName, () -> new PresentItem(block.get(),
+                new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
 
+
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            Supplier<Block> bb = regBlock(name, () -> presentFactory.apply(color,
+                    BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
+                            .strength(1.0F)
+                            .sound(ModSounds.PRESENT))
+            );
+            map.put(color, bb);
+            //item
+
+            regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
+        }
         return map;
     }
-
 
     //hanging signs
     private static void registerHangingSignBlocks(Registrator<Block> event, Collection<WoodType> woodTypes) {

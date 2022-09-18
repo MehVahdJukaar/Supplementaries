@@ -4,8 +4,10 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
@@ -100,6 +102,7 @@ public class ClientConfigs {
         public static Supplier<Boolean> COLORED_ARROWS;
         public static Supplier<Boolean> COLORED_BREWING_STAND;
         public static Supplier<Boolean> CLOCK_CLICK;
+        public static Supplier<Boolean> COMPASS_CLICK;
         public static Supplier<Boolean> BOOK_GLINT;
 
         private static void init(ConfigBuilder builder) {
@@ -112,6 +115,8 @@ public class ClientConfigs {
                     .define("crossbows_colors", true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click", true);
+            COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
+                    .define("compass_right_click", false);
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
                     .define("placeable_books_glint", false);
             builder.pop();

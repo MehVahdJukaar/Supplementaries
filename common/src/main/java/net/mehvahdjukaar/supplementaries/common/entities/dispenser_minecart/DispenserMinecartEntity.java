@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.DispenserAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -199,20 +198,13 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void tick() {
         super.tick();
         this.dispenser.setLevel(this.getLevel());
         if (!this.level.isClientSide && this.isAlive() && this.powered) {
             if (!this.onActivator) this.powered = false;
             this.onActivator = false;
-        }
-    }
-
-    @Override
-    public void destroy(DamageSource pSource) {
-        super.destroy(pSource);
-        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-            this.spawnAtLocation(this.getDisplayBlockState().getBlock());
         }
     }
 
@@ -235,12 +227,11 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
             try {
-                if (Blocks.DISPENSER instanceof DispenserAccessor accessor) {
-                    DispenseItemBehavior dispenseitembehavior = accessor.invokeGetDispenseMethod(itemstack);
-                    if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
-                        MovingBlockSource<?> blockSource = new MovingBlockSource<>(this, dispenser);
-                        this.dispenser.setItem(i, dispenseitembehavior.dispense(blockSource, itemstack));
-                    }
+                DispenseItemBehavior dispenseitembehavior =
+                        ((DispenserBlock) Blocks.DISPENSER).getDispenseMethod(itemstack);
+                if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
+                    MovingBlockSource<?> blockSource = new MovingBlockSource<>(this, dispenser);
+                    this.dispenser.setItem(i, dispenseitembehavior.dispense(blockSource, itemstack));
                 }
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("Failed to execute Dispenser Minecart behavior for item {}", itemstack.getItem());

@@ -4,6 +4,10 @@
     {
       "type": "supplementaries:flag",
       "flag": "bubble_blower"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
     }
   ]
 }

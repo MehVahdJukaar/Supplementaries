@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
@@ -13,23 +15,27 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.set.BlockType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.BiFunction;
 
 
 public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
@@ -53,28 +59,50 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
-        if (RegistryConfigs.ROPE_ARROW_ENABLED.get() || ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
+        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
             this.dynamicPack.addNamespaces("minecraft");
         }
 
-        //if (ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
-            this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
-                    """ 
-                            {
-                                "parent": "item/crossbow",
-                                "textures": {
-                                    "layer0": "item/crossbow_arrow_base",
-                                    "layer1": "item/crossbow_arrow_tip"
-                                }
+        this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
+                """ 
+                        {
+                            "parent": "item/crossbow",
+                            "textures": {
+                                "layer0": "item/crossbow_arrow_base",
+                                "layer1": "item/crossbow_arrow_tip"
                             }
-                            """));
-       // }
+                        }
+                        """));
+    }
 
+    public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
+        String string = new String(resource.data, StandardCharsets.UTF_8);
+
+        string = string.replace("wood_type", woodTextPath);
+        string = string.replace("log_texture", logTexture);
+
+        //adds modified under my namespace
+        ResourceLocation newRes = Supplementaries.res("hanging_signs/" + woodTextPath + "_loader");
+        dynamicPack.addBytes(newRes, string.getBytes(), ResType.BLOCK_MODELS);
+    }
+
+
+    //-------------resource pack dependant textures-------------
+
+    @Override
+    public void regenerateDynamicAssets(ResourceManager manager) {
+
+
+        RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
+            e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
+                    List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
+                            new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
+        });
 
         //need this here for reasons I forgot
         WallLanternTexturesRegistry.reloadTextures(manager);
 
-        //generate static resources
+        //models are dynamic too as packs can change them
 
         //------hanging signs------
         {
@@ -127,6 +155,8 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
         }
 
+        //textures
+
 
         //------sing posts-----
         {
@@ -145,31 +175,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
                 }
             });
         }
-    }
 
-    public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
-        String string = new String(resource.data, StandardCharsets.UTF_8);
-
-        string = string.replace("wood_type", woodTextPath);
-        string = string.replace("log_texture", logTexture);
-
-        //adds modified under my namespace
-        ResourceLocation newRes = Supplementaries.res("hanging_signs/" + woodTextPath + "_loader");
-        dynamicPack.addBytes(newRes, string.getBytes(), ResType.BLOCK_MODELS);
-    }
-
-
-    //-------------resource pack dependant textures-------------
-
-    @Override
-    public void regenerateDynamicAssets(ResourceManager manager) {
-
-//TODO: fix
-        RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
-            e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
-                    List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
-                            new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
-        });
 
         //hanging signs block textures
         try (TextureImage template = TextureImage.open(manager,
@@ -341,6 +347,159 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
+
+    }
+
+
+    @Deprecated(forRemoval = true)
+    private static <B extends Block, T extends BlockType> void addCandleHolderStuff(ResourceManager manager, DynamicTexturePack pack) {
+
+
+        LangBuilder builder = new LangBuilder();
+        //remove
+        ModRegistry.CANDLE_HOLDERS.forEach((w, v) -> {
+            if (w != null)
+                builder.addEntry(v.get(), LangBuilder.getReadableName(w.getSerializedName() + "_candle_holder"));
+        });
+        pack.addLang(Supplementaries.res("en-us"), builder);
+
+
+
+
+        //hanging sign item textures
+        try (TextureImage base = TextureImage.open(manager,
+                Supplementaries.res("items/candle_holders/base"));
+             TextureImage candleMask = TextureImage.open(manager,
+                     Supplementaries.res("items/candle_holders/candle"));
+             TextureImage mask = TextureImage.open(manager,
+                     Supplementaries.res("items/candle_holders/base_m"))) {
+
+            Respriter respriter = Respriter.masked(base, mask);
+
+            ModRegistry.CANDLE_HOLDERS.forEach((wood, sign) -> {
+                if (wood == null) return;
+                ResourceLocation textureRes = Supplementaries.res("items/candle_holders/" +
+                        wood.getSerializedName());
+
+
+                TextureImage newImage = null;
+                Item vanillaSign = Registry.ITEM.get(new ResourceLocation(wood.getSerializedName() + "_candle"));
+
+                try (TextureImage vanillaSignTexture = TextureImage.open(manager,
+                        RPUtils.findFirstItemTextureLocation(manager, vanillaSign))) {
+
+                    Palette targetPalette = Palette.fromImage(vanillaSignTexture, candleMask);
+                    newImage = respriter.recolor(targetPalette);
+                } catch (Exception ex) {
+                    //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
+                }
+
+                if (newImage != null) {
+                    pack.addAndCloseTexture(textureRes, newImage);
+                }
+            });
+        } catch (Exception ex) {
+            //getLogger().error("Could not generate any Hanging Sign item texture : ", ex);
+        }
+
+
+        //finds one entry. used so we can grab the oak equivalent
+        var oakBlock = ModRegistry.CANDLE_HOLDERS.get(DyeColor.WHITE).get();
+
+        ItemLike oi = oakBlock;
+
+
+        ResourceLocation baseId = Utils.getID(oakBlock);
+
+
+        BiFunction<String, DyeColor, String> modifier = (s, c) ->
+                s.replace("candle_holders/", "&")
+                        .replace("blocks/candle_holder", "%")
+                        .replace("candle_holder_white", "$")
+                        .replace("white_candle", c.getSerializedName() + "_candle")
+                        .replace("&", "candle_holders/")
+                        .replace("$", "candle_holder_" + c.getSerializedName())
+                        .replace("%", "blocks/candle_holder")
+                        .replace("white_ceiling_", c.getSerializedName() + "_ceiling_")
+                        .replace("white_floor_", c.getSerializedName() + "_floor_")
+                        .replace("base", c.getSerializedName())
+                        .replace("caaa","candle_holder_"+c.getSerializedName())
+                        .replace("white_wall_", c.getSerializedName() + "_wall_");
+
+
+        Set<String> modelsLoc = new HashSet<>();
+
+        Item oakItem = ModRegistry.CANDLE_HOLDERS.get(null).get().asItem();;
+
+
+        //item model
+        try {
+            //we cant use this since it might override partent too. Custom textured items need a custom model added manually with addBlockResources
+            // modelModifier.replaceItemType(baseBlockName);
+
+
+            StaticResource oakItemModel = StaticResource.getOrFail(manager,
+                    ResType.ITEM_MODELS.getPath(Supplementaries.res("caaa")));
+
+            JsonObject json = RPUtils.deserializeJson(oakItemModel.getInputStream());
+            //adds models referenced from here. not recursive
+            modelsLoc.addAll(RPUtils.findAllResourcesInJsonRecursive(json, s -> s.equals("model") || s.equals("parent")));
+
+            if (json.has("parent")) {
+                String parent = json.get("parent").getAsString();
+                if (parent.contains("item/generated")) {
+                }
+            }
+
+            ModRegistry.CANDLE_HOLDERS.forEach((w, b) -> {
+                try {
+                    pack.addSimilarJsonResource(oakItemModel, (s) -> modifier.apply(s, w));
+                } catch (Exception e) {
+                }
+            });
+        } catch (Exception e) {
+        }
+
+
+        //blockstate
+        try {
+            StaticResource oakBlockstate = StaticResource.getOrFail(manager, ResType.BLOCKSTATES.getPath(baseId));
+
+            //models
+            JsonElement json = RPUtils.deserializeJson(oakBlockstate.getInputStream());
+
+            modelsLoc.addAll(RPUtils.findAllResourcesInJsonRecursive(json, s -> s.equals("model")));
+            List<StaticResource> oakModels = new ArrayList<>();
+
+            for (var m : modelsLoc) {
+                //remove the ones from mc namespace
+                ResourceLocation modelRes = new ResourceLocation(m);
+                if (!modelRes.getNamespace().equals("minecraft")) {
+                    StaticResource model = StaticResource.getOrLog(manager, ResType.MODELS.getPath(m));
+                    if (model != null) oakModels.add(model);
+                }
+            }
+
+            ModRegistry.CANDLE_HOLDERS.forEach((w, b) -> {
+                if (w == null || w == DyeColor.WHITE) return;
+                ResourceLocation id = Utils.getID(b);
+                try {
+                    //creates blockstate
+                    pack.addSimilarJsonResource(oakBlockstate, (s) -> modifier.apply(s, w));
+
+                    //creates block model
+                    for (StaticResource model : oakModels) {
+                        try {
+                            pack.addSimilarJsonResource(model, (s) -> modifier.apply(s, w));
+                        } catch (Exception exception) {
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            });
+        } catch (Exception e) {
+        }
+
     }
 
 

@@ -1,16 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.DataDefinedCatchableMob;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -256,7 +254,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 tooltip.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
-        this.addPlacementTooltip(tooltip);
+        if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
+            this.addPlacementTooltip(tooltip);
+        }
     }
 
     public void addPlacementTooltip(List<Component> tooltip) {

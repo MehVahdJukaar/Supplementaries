@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class FlagItem extends WoodBasedBlockItem implements IColored<Block>, ICustomItemRendererProvider {
+public class FlagItem extends WoodBasedBlockItem implements IColored, ICustomItemRendererProvider {
 
     public FlagItem(Block block, Properties properties) {
         super(block, properties, 300);

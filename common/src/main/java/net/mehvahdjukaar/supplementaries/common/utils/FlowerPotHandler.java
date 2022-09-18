@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.structures.IglooStructure;
+import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -22,7 +23,13 @@ import java.util.*;
 
 public class FlowerPotHandler {
 
+    @Contract
+    @ExpectPlatform
+    public static Block getEmptyPot(FlowerPotBlock fullPot) {
+        throw new AssertionError();
+    }
 
+    @Contract
     @ExpectPlatform
     public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
         throw new AssertionError();

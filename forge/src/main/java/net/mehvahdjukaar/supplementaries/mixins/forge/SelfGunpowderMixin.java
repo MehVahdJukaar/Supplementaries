@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.minecraft.core.BlockPos;
@@ -23,7 +22,7 @@ public abstract class SelfGunpowderMixin extends LightUpBlock {
     @Override
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide && this.canSurvive(state, world, pos)) {
-            this.lightUp(null, state, pos, world, ILightable.FireSound.FLAMING_ARROW);
+            this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
         } else {
             super.onBlockExploded(state, world, pos, explosion);
         }

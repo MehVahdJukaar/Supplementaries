@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -30,8 +31,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
@@ -40,12 +43,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +59,7 @@ public class DispenserRegistry {
 
 
     public static void registerBehaviors() {
-
+        boolean isForge = PlatformHelper.getPlatform().isForge();
 
         if (!RegistryConfigs.DISPENSERS.get()) return;
 
@@ -75,7 +81,9 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
         DispenserHelper.registerCustomBehavior(new BambooSpikesDispenserBehavior(Items.LINGERING_POTION));
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
-        DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
+        if(isForge) {
+            DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
+        }
 
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
             Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
@@ -117,13 +125,14 @@ public class DispenserRegistry {
 
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         boolean jar = RegistryConfigs.JAR_ENABLED.get();
+
         if (axe || jar) {
             for (Item i : Registry.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
                         DispenserHelper.registerCustomBehavior(new FishBucketJarDispenserBehavior(i));
                     }
-                    if (axe && i instanceof AxeItem) {
+                    if (isForge && axe && i instanceof AxeItem) {
                         DispenserHelper.registerCustomBehavior(new AxeDispenserBehavior(i));
                     }
                 } catch (Exception e) {
@@ -142,49 +151,16 @@ public class DispenserRegistry {
         @Override
         protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
             //this.setSuccessful(false);
-            /*
             ServerLevel level = source.getLevel();
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos pos = source.getPos().relative(dir);
-            BlockState state = level.getBlockState(pos);
-            Block b = state.getBlock();
 
-            FakePlayer fp = FakePlayerFactory.get(level, CommonUtil.DUMMY_PROFILE);
+            Player fp = CommonUtil.getFakePlayer(level);
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
             UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));
 
-            Optional<BlockState> optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_STRIP, false));
-            if (optional.isPresent()) {
-                level.playSound(null, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.setBlock(pos, optional.get(), 11);
-                if (stack.hurt(1, level.getRandom(), null)) {
-                    stack.setCount(0);
-                }
-                return InteractionResultHolder.success(stack);
-            }
-
-            optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_SCRAPE, false));
-            if (optional.isPresent()) {
-                level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.levelEvent(null, 3005, pos, 0);
-                level.setBlock(pos, optional.get(), 11);
-                if (stack.hurt(1, level.getRandom(), null)) {
-                    stack.setCount(0);
-                }
-                return InteractionResultHolder.success(stack);
-            }
-            optional = Optional.ofNullable(b.getToolModifiedState(state, context, ToolActions.AXE_WAX_OFF, false));
-            if (optional.isPresent()) {
-                level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.levelEvent(null, 3004, pos, 0);
-                level.setBlock(pos, optional.get(), 11);
-                if (stack.hurt(1, level.getRandom(), null)) {
-                    stack.setCount(0);
-                }
-                return InteractionResultHolder.success(stack);
-            }*/
-            //TODO: add back
-
+            var v = stack.useOn(context);
+            if(v.consumesAction())return InteractionResultHolder.sidedSuccess( stack,false);
             return InteractionResultHolder.fail(stack);
         }
     }
@@ -200,16 +176,12 @@ public class DispenserRegistry {
             //this.setSuccessful(false);
             ServerLevel level = source.getLevel();
             BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-
             if (SoapItem.tryCleaning(stack, level, pos, null)) {
                 return InteractionResultHolder.success(stack);
             }
-
             return InteractionResultHolder.fail(stack);
         }
     }
-
-
     private static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior {
 
         protected FlintAndSteelDispenserBehavior(Item item) {
@@ -223,7 +195,7 @@ public class DispenserRegistry {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
             BlockState state = world.getBlockState(blockpos);
             if (state.getBlock() instanceof ILightable block) {
-                if (block.lightUp(null, state, blockpos, world, LightUpBlock.FireSound.FLINT_AND_STEEL)) {
+                if (block.lightUp(null, state, blockpos, world, ILightable.FireSourceType.FLINT_AND_STEEL)) {
                     if (stack.hurt(1, world.random, null)) {
                         stack.setCount(0);
                     }

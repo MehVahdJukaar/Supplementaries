@@ -29,9 +29,11 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
-        exclude group: 'net.fabricmc.fabric-api'
-    }
+    //modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    //    exclude group: 'net.fabricmc.fabric-api'
+    //}
+    modImplementation("curse.maven:yacl-667299:3987709")
+
     // modCompileOnly("curse.maven:modmenu-308702:3920481")
 
     modCompileOnly("curse.maven:modmenu-308702:3850113") {
@@ -45,6 +47,8 @@ dependencies {
     modImplementation("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:3929455")
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
+  //  modImplementation("curse.maven:twigs-496913:3943447")
+  //  modImplementation("curse.maven:frame-api-580137:3943404")
 
     //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
 

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(QuiverItem.class)
-public class SelfQuiverItem extends Item {
+public abstract class SelfQuiverItem extends Item {
 
     public SelfQuiverItem(Properties arg) {
         super(arg);

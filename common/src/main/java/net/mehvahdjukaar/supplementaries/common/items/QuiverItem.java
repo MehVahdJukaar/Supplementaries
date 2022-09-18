@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -51,6 +52,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             return false;
         } else {
             ItemStack itemstack = pSlot.getItem();
+            if(itemstack.is(ModRegistry.QUIVER_ITEM.get()))return false;
             //place into slot
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
@@ -82,7 +84,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
-        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
+        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer) && !pOther.is(ModRegistry.QUIVER_ITEM.get())) {
             IQuiverData data = getQuiverData(quiver);
             if (data != null) {
                 AtomicBoolean didStuff = new AtomicBoolean(false);

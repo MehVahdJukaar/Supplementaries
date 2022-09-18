@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
@@ -33,6 +33,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
 
@@ -184,5 +187,10 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         return super.getCapability(capability, facing);
     }
     */
+
+    @Override
+    public @Nullable <T extends ItemLike> Map<DyeColor, Supplier<T>> getItemColorMap() {
+        return ((IColored)this.getBlockState().getBlock()).getItemColorMap();
+    }
 
 }

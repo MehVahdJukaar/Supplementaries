@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
@@ -70,7 +71,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN.get());
         addIcon("structures", Items.BRICKS);
-        addIcon("soap", ModRegistry.SOAP_BLOCK.get());
+        addIcon("soap", ModRegistry.SOAP.get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
         addIcon("lantern tweaks", Items.LANTERN);
         addIcon("conditional sign registration", Items.BARRIER);
@@ -78,6 +79,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
         addIcon("stasis", Items.ENCHANTED_BOOK);
     }
+
 
     public ModConfigScreen(CustomConfigSelectScreen parent, ModConfig config) {
         super(parent, config);

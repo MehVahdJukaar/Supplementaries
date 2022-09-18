@@ -24,11 +24,6 @@ import java.util.List;
 
 public class QuiverTooltipComponent implements ClientTooltipComponent {
     public static final ResourceLocation TEXTURE_LOCATION = ClientBundleTooltip.TEXTURE_LOCATION;
-    private static final int MARGIN_Y = 4;
-    private static final int BORDER_WIDTH = 1;
-    private static final int TEX_SIZE = 128;
-    private static final int SLOT_SIZE_X = 18;
-    private static final int SLOT_SIZE_Y = 20;
     private final List<ItemStack> items;
     private final int selectedSlot;
 
@@ -106,7 +101,6 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
         return 1;
     }
 
-    @Environment(value=EnvType.CLIENT)
     enum Texture {
         SLOT(0, 0, 18, 20),
         BLOCKED_SLOT(0, 40, 18, 20),

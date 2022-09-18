@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.world.explosion;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.mehvahdjukaar.supplementaries.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -117,12 +117,12 @@ public class GunpowderExplosion extends Explosion {
             }
             //lights up burnable blocks
             if (block instanceof ILightable lightable) {
-                lightable.lightUp(null, state, pos, this.level, ILightable.FireSound.FLAMING_ARROW);
+                lightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
             } else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
                     (state.getBlock() instanceof AbstractCandleBlock && !AbstractCandleBlock.isLit(state)) ||
                     (CompatHandler.deco_blocks && DecoBlocksCompat.canLightBrazier(state))) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
-                ILightable.FireSound.FLAMING_ARROW.play(level, pos);
+                ILightable.FireSourceType.FLAMING_ARROW.play(level, pos);
             }
         }
     }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +8,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.item.ItemStack;
@@ -58,7 +56,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
     public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         if (!this.quiver.isEmpty()) {
             compound.put("Quiver", quiver.save(new CompoundTag()));
-            compound.putFloat("QuiverDropChance",quiverDropChance);
+            compound.putFloat("QuiverDropChance", quiverDropChance);
         }
     }
 
@@ -97,8 +95,8 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
 
     @Override
     public boolean equipItemIfPossible(ItemStack stack) {
-        if(stack.getItem() == ModRegistry.QUIVER_ITEM.get()){
-            if(this.quiver != null){
+        if (stack.getItem() == ModRegistry.QUIVER_ITEM.get()) {
+            if (this.quiver != null) {
                 this.spawnAtLocation(quiver);
             }
             this.setQuiver(stack);

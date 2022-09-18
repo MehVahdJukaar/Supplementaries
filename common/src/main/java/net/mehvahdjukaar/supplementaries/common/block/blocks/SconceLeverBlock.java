@@ -24,7 +24,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class SconceLeverBlock extends SconceWallBlock {
@@ -119,8 +118,8 @@ public class SconceLeverBlock extends SconceWallBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSound sound) {
-        boolean ret = super.lightUp(entity, state, pos, world, sound);
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+        boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
         if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
         return ret;
     }

@@ -91,7 +91,7 @@ public class RopeArrowItem extends ArrowItem {
         if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
         if (worldIn == null) return;
         var override = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get();
-        if (override.value() != ModRegistry.ROPE) {
+        if (override.value() != ModRegistry.ROPE.get()) {
             tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location()).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }

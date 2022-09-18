@@ -8,7 +8,8 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGener
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getPlacementsForStructure (Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/RandomState;)Ljava/util/List;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
-
+#dispenser minecart
+accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
 #food items
 mutable field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;

@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,6 +25,8 @@ import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
 
@@ -38,7 +41,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     private List<Pair<Holder<BannerPattern>, DyeColor>> patterns;
 
     public FlagBlockTile(BlockPos pos, BlockState state) {
-        this(pos, state, ((IColored)state.getBlock()).getColor());
+        this(pos, state, ((IColored) state.getBlock()).getColor());
     }
 
     public FlagBlockTile(BlockPos pos, BlockState state, DyeColor color) {
@@ -124,5 +127,10 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     @Nullable
     public Component getCustomName() {
         return this.name;
+    }
+
+    @Override
+    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
+        return ModRegistry.FLAGS;
     }
 }
