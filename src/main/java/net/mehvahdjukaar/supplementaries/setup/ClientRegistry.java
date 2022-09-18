@@ -72,6 +72,8 @@ public class ClientRegistry {
 
 
     //special models locations
+    public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
+    public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");

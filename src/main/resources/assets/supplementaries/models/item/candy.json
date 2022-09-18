@@ -7,13 +7,13 @@
   "overrides": [
     {
       "predicate": {
-        "wrapping": 1
+        "supplementaries:wrapping": 0.5
       },
       "model":  "supplementaries:item/candy_halloween"
     },
     {
       "predicate": {
-        "wrapping": 2
+        "supplementaries:wrapping": 1
       },
       "model":  "supplementaries:item/candy_christmas"
     }

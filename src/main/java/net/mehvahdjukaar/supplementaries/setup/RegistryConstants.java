@@ -1,5 +1,9 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
+import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.List;
+
 public final class RegistryConstants {
     public static final String STASIS_NAME = "stasis";
 
@@ -72,6 +76,9 @@ public final class RegistryConstants {
     public static final String LOCK_BLOCK_NAME = "lock_block";
     public static final String BELLOWS_NAME = "bellows";
     public static final String CLOCK_BLOCK_NAME = "clock_block";
+    public static final String CRYSTAL_DISPLAY_NAME = "crystal_display";
+    public static final String RELAYER_NAME = "relayer";
+    public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
     public static final String SCONCE_LEVER_NAME = "sconce_lever";
     public static final String CRANK_NAME = "crank";
     public static final String WIND_VANE_NAME = "wind_vane";
@@ -132,4 +139,7 @@ public final class RegistryConstants {
     public static final String SKULL_PILE_NAME = "skull_pile";
     public static final String SKULL_CANDLE_NAME = "skull_candle";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
+    public static final String SUGAR_CUBE_NAME = "sugar_cube";
+    public static final String QUIVER_NAME = "quiver";
+    public static final String CANDLE_HOLDER_NAME = "candle_holder";
 }

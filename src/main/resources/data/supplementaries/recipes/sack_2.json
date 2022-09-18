@@ -1,0 +1,33 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "1 1",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:wheat"
+    },
+    "2": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "supplementaries:sack",
+    "count": 1
+  }
+}

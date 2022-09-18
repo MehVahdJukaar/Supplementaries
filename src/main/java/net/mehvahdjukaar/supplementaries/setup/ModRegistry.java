@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.JarTab;
 import net.mehvahdjukaar.supplementaries.common.items.tabs.SupplementariesTab;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WorldGenHandler;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraftforge.client.model.SeparatePerspectiveModel;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
@@ -61,6 +63,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.setup.RegistryConstants.*;
 import static net.mehvahdjukaar.supplementaries.setup.RegistryHelper.*;
@@ -111,6 +114,7 @@ public class ModRegistry {
     public static CreativeModeTab JAR_TAB = null;
 
     public static final LootItemFunctionType CURSE_LOOT_FUNCTION = new LootItemFunctionType(new CurseLootFunction.Serializer());
+    public static final LootItemFunctionType RANDOM_ARROW_FUNCTION = new LootItemFunctionType(new RandomArrowFunction.Serializer());
 
 
     //using this to register overwrites and conditional block items
@@ -164,6 +168,7 @@ public class ModRegistry {
     public static final RegistryObject<SimpleParticleType> SUDS_PARTICLE = regParticle("suds");
     public static final RegistryObject<SimpleParticleType> ASH_PARTICLE = regParticle("ash");
     public static final RegistryObject<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = regParticle("bubble_block");
+    public static final RegistryObject<SimpleParticleType> SUGAR_PARTICLE = regParticle("sugar");
 
     //recipes
     public static final RegistryObject<RecipeSerializer<?>> BLACKBOARD_DUPLICATE_RECIPE = RECIPES.register("blackboard_duplicate", () ->
@@ -353,6 +358,11 @@ public class ModRegistry {
     //wrench
     public static final RegistryObject<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
+
+    //quiver
+    public static final RegistryObject<Item> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1).rarity(Rarity.RARE)));
+
 
     //speedometer
     /*
@@ -632,6 +642,10 @@ public class ModRegistry {
     public static final RegistryObject<Item> SCONCE_ITEM_GREEN = ITEMS.register(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
 
+    //candle holder
+    public static final Map<DyeColor, RegistryObject<Block>> CANDLE_HOLDERS = registerCandleHolders(CANDLE_HOLDER_NAME);
+
+SeparatePerspectiveModel
     //copper lantern
     public static final RegistryObject<Block> COPPER_LANTERN = BLOCKS.register(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
@@ -788,6 +802,11 @@ public class ModRegistry {
     ));
     public static final RegistryObject<Item> COG_BLOCK_ITEM = regBlockItem(COG_BLOCK, getTab(CreativeModeTab.TAB_REDSTONE, COG_BLOCK_NAME));
 
+    //diode block
+    public static final Supplier<Block> RELAYER = regWithItem(RELAYER_NAME, () -> new RelayerBlock(
+            BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
+    ), CreativeModeTab.TAB_REDSTONE);
+
     //piston launcher base
     public static final RegistryObject<Block> SPRING_LAUNCHER = BLOCKS.register(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
@@ -893,6 +912,13 @@ public class ModRegistry {
             ClockBlockTile::new, CLOCK_BLOCK.get()).build(null));
 
     public static final RegistryObject<Item> CLOCK_BLOCK_ITEM = regBlockItem(CLOCK_BLOCK, getTab(CreativeModeTab.TAB_REDSTONE, CLOCK_BLOCK_NAME));
+
+    //crystal display
+    public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
+            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+                    .sound(SoundType.POLISHED_DEEPSLATE)
+                    .strength(0.5f, 0.5f)
+    ), CreativeModeTab.TAB_REDSTONE);
 
     //sconce lever
     public static final RegistryObject<Block> SCONCE_LEVER = BLOCKS.register(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
@@ -1214,6 +1240,12 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = TILES.register(TIMBER_FRAME_NAME, () -> BlockEntityType.Builder.of(
             FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()).build(null));
 
+    //lapis bricks
+    public static final EnumMap<VariantType2, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
+            registerFullBlockSet(Supplementaries.res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
+                            .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F),
+                    isDisabled(LAPIS_BRICKS_NAME));
+
     //ashen bricks
     public static EnumMap<BlockRegistryHelper.VariantType, RegistryObject<Block>> ASH_BRICKS_BLOCKS =
             BlockRegistryHelper.registerFullBlockSet(BLOCKS, ITEMS, ASH_BRICKS_NAME, Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
@@ -1286,6 +1318,14 @@ public class ModRegistry {
     public static final RegistryObject<Block> FLINT_BLOCK = BLOCKS.register(FLINT_BLOCK_NAME, () -> new FlintBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)));
     public static final RegistryObject<Item> FLINT_BLOCK_ITEM = regBlockItem(FLINT_BLOCK, getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, FLINT_BLOCK_NAME));
+
+    //sugar block
+    public static final Supplier<Block> SUGAR_CUBE = BLOCKS.register(SUGAR_CUBE_NAME, () -> new SugarBlock(
+            BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+    ));
+    public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_CUBE_NAME, () -> new SugarCubeItem(
+            SUGAR_CUBE.get(), new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
+    ));
 
     //gunpowder block
     public static final RegistryObject<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(

@@ -1,33 +1,25 @@
-
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "flag": "soap",
-          "type": "supplementaries:flag"
-        },
-        {
-          "modid": "snowyspirit",
-          "type": "forge:mod_loaded"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "tag": "snowyspirit:glow_lights"
-          },
-          {
-            "item": "supplementaries:soap"
-          }
-        ],
-        "result": {
-          "item": "snowyspirit:glow_lights_white",
-          "count": 1
-        }
-      }
+      "flag": "soap",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "snowyspirit",
+      "type": "forge:mod_loaded"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "snowyspirit:glow_lights"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "item": "snowyspirit:glow_lights_white",
+    "count": 1
+  }
 }

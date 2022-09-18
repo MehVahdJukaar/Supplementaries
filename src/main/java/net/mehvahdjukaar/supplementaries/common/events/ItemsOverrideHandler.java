@@ -435,9 +435,12 @@ public class ItemsOverrideHandler {
         @Override
         public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             BlockPos pos = hit.getBlockPos();
-            if (MapHelper.toggleMarkersAtPos(level, pos, stack, player)) {
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
+            try {
+                //try because map atlas is still buggy
+                if (MapHelper.toggleMarkersAtPos(level, pos, stack, player)) {
+                    return InteractionResult.sidedSuccess(level.isClientSide);
+                }
+            }catch (Exception ignored){}
             return InteractionResult.PASS;
         }
     }

@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hanging_sign"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "131",
+    "222",
+    "222"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_nugget"
+    },
+    "3": {
+      "item": "minecraft:stick"
+    },
+    "2": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "supplementaries:hanging_sign_oak",
+    "count": 2
+  }
+}

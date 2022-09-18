@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Deprecated(forRemoval = true)
 public class RotHlpr {
 
     public static final Quaternion Y180 = Vector3f.YP.rotationDegrees(180);

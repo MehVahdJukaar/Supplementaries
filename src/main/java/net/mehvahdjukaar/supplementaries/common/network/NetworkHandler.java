@@ -52,6 +52,10 @@ public class NetworkHandler {
         register(ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::buffer,
                 ServerBoundSetBlackboardPacket::new, ServerBoundSetBlackboardPacket::handler);
 
+        register(ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::buffer,
+                ServerBoundCycleQuiverPacket::new, ServerBoundCycleQuiverPacket::handler);
+
+
         register(SyncConfigsPacket.class, SyncConfigsPacket::buffer,
                 SyncConfigsPacket::new, SyncConfigsPacket::handler);
 

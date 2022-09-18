@@ -16,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.LIST_STRING_CHECK;
 import static net.mehvahdjukaar.supplementaries.configs.ConfigHandler.STRING_CHECK;
@@ -70,8 +71,21 @@ public class ServerConfigs {
         public static ForgeConfigSpec.EnumValue<Hands> WRENCH_BYPASS;
         public static ForgeConfigSpec.IntValue BUBBLE_BLOWER_COST;
 
+        public static Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
+        public static Supplier<Integer> QUIVER_SLOTS;
+        public static Supplier<Double> QUIVER_SKELETON_SPAWN;
+
         private static void init(ForgeConfigSpec.Builder builder) {
             builder.push("items");
+
+            builder.push("quiver");
+            QUIVER_PREVENTS_SLOWS = builder.comment("Allows using a quiver without being slowed down")
+                    .define("use_without_slow", true);
+            QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
+                    .defineInRange("slots", 6, 1, 9);
+            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
+                    .defineInRange("quiver_skeleton_chance", 0.2d,0,1);
+            builder.pop();
 
             builder.push("bubble_blower");
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")

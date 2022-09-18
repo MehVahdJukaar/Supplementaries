@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:lapis_bricks"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "result": "supplementaries:lapis_bricks_vertical_slab",
+  "count": 2
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "##2",
+    "111"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:redstone"
+    },
+    "1": {
+      "item": "minecraft:cobblestone"
+    },
+    "2": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "relayer"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:relayer"
+  }
+}

@@ -9,6 +9,10 @@
     {
       "type": "supplementaries:flag",
       "flag": "stone_tile"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
     }
   ],
   "result": {

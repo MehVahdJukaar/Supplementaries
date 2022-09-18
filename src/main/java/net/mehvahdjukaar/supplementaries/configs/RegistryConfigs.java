@@ -29,6 +29,7 @@ public class RegistryConfigs {
         REGISTRY_CONFIG = REGISTRY_BUILDER.build();
     }
 
+    @Deprecated(forRemoval = true)
     //TODO: maybe merge with common
     //called from mixin config so they can be accessed super early
     public static void load() {
@@ -48,6 +49,8 @@ public class RegistryConfigs {
 
     public static class Reg {
         public static ForgeConfigSpec.BooleanValue ASH_ENABLED;
+        public static ForgeConfigSpec.BooleanValue QUIVER_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CANDLE_HOLDER_ENABLED;
         public static ForgeConfigSpec.BooleanValue ASH_BRICKS_ENABLED;
         public static ForgeConfigSpec.BooleanValue PLANTER_ENABLED;
         public static ForgeConfigSpec.BooleanValue CLOCK_ENABLED;
@@ -128,6 +131,12 @@ public class RegistryConfigs {
         public static ForgeConfigSpec.BooleanValue LEAD_TRAPDOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue LEAD_DOOR_ENABLED;
         public static ForgeConfigSpec.BooleanValue DISPENSER_MINECART_ENABLED;
+        public static ForgeConfigSpec.BooleanValue SUGAR_CUBE_ENABLED;
+        public static ForgeConfigSpec.BooleanValue LAPIS_BRICKS_ENABLED;
+        public static ForgeConfigSpec.BooleanValue RELAYER_ENABLED;
+        public static ForgeConfigSpec.BooleanValue CRYSTAL_DISPLAY_ENABLED;
+
+
 
         public static ForgeConfigSpec.BooleanValue JAR_TAB;
         public static ForgeConfigSpec.BooleanValue CREATIVE_TAB;
@@ -252,7 +261,11 @@ public class RegistryConfigs {
             BLACKSTONE_TILE_ENABLED = builder.define(RegistryConstants.BLACKSTONE_TILE_NAME, true);
             GLOBE_SEPIA = builder.define(RegistryConstants.GLOBE_SEPIA_NAME, true);
             PRESENT_ENABLED = builder.define(RegistryConstants.PRESENT_NAME, true);
-            PRESENT_ENABLED = builder.define(RegistryConstants.STATUE_NAME, true);
+            SUGAR_CUBE_ENABLED = builder.define(RegistryConstants.SUGAR_CUBE_NAME, true);
+            LAPIS_BRICKS_ENABLED = builder.define(RegistryConstants.LAPIS_BRICKS_NAME, true);
+            RELAYER_ENABLED = builder.define(RegistryConstants.RELAYER_NAME, true);
+            CRYSTAL_DISPLAY_ENABLED = builder.define(RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
+            CANDLE_HOLDER_ENABLED = builder.define(RegistryConstants.CANDLE_HOLDER_NAME, true);
 
 
             SILVER_TRAPDOOR_ENABLED = builder.define(RegistryConstants.SILVER_TRAPDOOR_NAME, true);
@@ -276,6 +289,7 @@ public class RegistryConfigs {
             ROPE_ARROW_ENABLED = builder.define(RegistryConstants.ROPE_ARROW_NAME, true);
             BOMB_ENABLED = builder.define(RegistryConstants.BOMB_NAME, true);
             PANCAKES_ENABLED = builder.define(RegistryConstants.PANCAKE_NAME, true);
+            QUIVER_ENABLED = builder.define(RegistryConstants.QUIVER_NAME, true);
             builder.pop();
 
             builder.push("entities");

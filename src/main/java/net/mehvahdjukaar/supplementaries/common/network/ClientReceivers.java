@@ -5,10 +5,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.particles.ParticleUtil;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -44,6 +46,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockPos pos = message.getPos();
             if (l.getBlockEntity(pos) instanceof IScreenProvider tile) {
+                if(tile instanceof BlackboardBlockTile && !ClientConfigs.block.BLACKBOARD_GUI.get())return;
                 withPlayerDo((p) -> tile.openScreen(l, pos, p));
             }
         });

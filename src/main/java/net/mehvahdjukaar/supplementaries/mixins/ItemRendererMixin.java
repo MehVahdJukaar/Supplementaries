@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotRendererHelper;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -77,6 +79,39 @@ public abstract class ItemRendererMixin {
                     }
                 }
             }
+        }else if(stack.getItem() == ModRegistry.QUIVER_ITEM.get()){
+            boolean overlay = ClientConfigs.items.QUIVER_OVERLAY.get();
+            if (overlay ) {
+                LocalPlayer player = Minecraft.getInstance().player;
+
+                if (player != null) {
+                    ItemStack ammo = QuiverItem.getQuiverData(stack).getSelected();
+                    renderAmmo(x, y, blitOffset, ammo);
+                }
+            }
+        }
+    }
+
+
+    public void renderAmmo(int x, int y, float blitOffset, ItemStack ammo) {
+        if (!ammo.isEmpty()) {
+
+            PoseStack posestack = RenderSystem.getModelViewStack();
+            posestack.pushPose();
+            float xOff = 22;
+            float yOff = 8;
+            posestack.translate(16.0F * (-0.25D) + (xOff + x) * (1 - 0.4f),
+                    16.0F * (0.25D + 0.025) + (yOff + y) * (1 - 0.4f),
+                    16.0F + (200.0F + blitOffset) * (1 - 0.4f));
+            posestack.scale(0.4f, 0.4f, 0.4f);
+
+            //0.4 scale
+            RenderSystem.applyModelViewMatrix();
+
+            Minecraft.getInstance().getItemRenderer().renderGuiItem(ammo, x, y);
+
+            posestack.popPose();
+            RenderSystem.applyModelViewMatrix();
         }
     }
 

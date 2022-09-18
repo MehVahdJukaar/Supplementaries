@@ -14,13 +14,8 @@
   },
   "conditions": [
     {
-      "type": "forge:and",
-      "values": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "flint"
-        }
-      ]
+      "type": "supplementaries:flag",
+      "flag": "flint_block"
     }
   ]
 }

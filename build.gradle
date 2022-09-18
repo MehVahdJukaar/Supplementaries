@@ -146,9 +146,9 @@ dependencies {
     implementation fg.deobf("curse.maven:farmersdelight-398521:3739914")
     implementation fg.deobf("curse.maven:flywheel-486392:3934664")
     implementation fg.deobf("curse.maven:create-328085:3934676")
-    implementation fg.deobf("curse.maven:patchouli-306770:3680301")
+    //implementation fg.deobf("curse.maven:patchouli-306770:3680301")
 
-    implementation fg.deobf("curse.maven:botania-225643:3732401")
+    compileOnly fg.deobf("curse.maven:botania-225643:3732401")
     implementation fg.deobf("curse.maven:quark-243121:3708587")
     implementation fg.deobf("curse.maven:autoreglib-250363:3642382")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3681919")
@@ -160,7 +160,6 @@ dependencies {
     implementation fg.deobf("curse.maven:cc-tweaked-282001:3709268")
     implementation fg.deobf("curse.maven:jei-238222:3682513")
     implementation fg.deobf("curse.maven:jade-324717:3681449")
-    //implementation fg.deobf("curse.maven:patchouli-306770:3846086")
 
     //implementation fg.deobf("curse.maven:patchouli-306770:3729975")
     implementation fg.deobf("curse.maven:framedblocks-441647:3672359")

@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "checker_block"
+    },
+    {
+      "flag": "vertical_slabs",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:checker_vertical_slab"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:checker_slab",
+    "count": 1
+  }
+}

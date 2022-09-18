@@ -1,72 +1,26 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "type": "forge:not",
-          "value": {
-            "type": "forge:tag_empty",
-            "tag": "forge:ingots/copper"
-          }
-        },
-        {
-          "type": "supplementaries:flag",
-          "flag": "copper_lantern"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          " 2 ",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:ingots/copper"
-          },
-          "2": {
-            "item": "minecraft:blaze_powder"
-          }
-        },
-        "result": {
-          "item": "supplementaries:copper_lantern",
-          "count": 2
-        }
-      }
-    },
-    {
-      "conditions": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "copper_lantern"
-        },
-        {
-          "type": "forge:tag_empty",
-          "tag": "forge:ingots/copper"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          " 1 ",
-          " 2 ",
-          " 1 "
-        ],
-        "key": {
-          "1": {
-            "tag": "forge:ingots/iron"
-          },
-          "2": {
-            "item": "minecraft:blaze_powder"
-          }
-        },
-        "result": {
-          "item": "supplementaries:copper_lantern",
-          "count": 2
-        }
-      }
+      "type": "supplementaries:flag",
+      "flag": "copper_lantern"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 2 ",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:copper_ingot"
+    },
+    "2": {
+      "item": "minecraft:blaze_powder"
+    }
+  },
+  "result": {
+    "item": "supplementaries:copper_lantern",
+    "count": 2
+  }
 }

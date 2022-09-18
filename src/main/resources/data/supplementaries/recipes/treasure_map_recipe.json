@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:treasure_map"
+  "type": "supplementaries:treasure_map",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ]
 }

@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.setup;
 
 import com.google.common.collect.ImmutableMap;
+import net.mehvahdjukaar.selene.block_set.BlockRegistryHelper;
 import net.mehvahdjukaar.selene.block_set.BlockSetManager;
 import net.mehvahdjukaar.selene.block_set.wood.WoodType;
+import net.mehvahdjukaar.selene.blocks.VerticalSlabBlock;
 import net.mehvahdjukaar.selene.items.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
@@ -20,9 +23,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.BannerBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -32,12 +33,11 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("ConstantConditions")
@@ -245,5 +245,78 @@ public class RegistryHelper {
         }
     }
 
+    //candle holders
+    public static Map<DyeColor, RegistryObject<Block>> registerCandleHolders(String baseName) {
+        Map<DyeColor, RegistryObject<Block>> map = new HashMap<>();
 
+        RegistryObject<Block> block = regWithItem(baseName, () -> new CandleHolderBlock(null,
+                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                getTab(CreativeModeTab.TAB_DECORATIONS,baseName));
+        map.put(null, block);
+
+        for (DyeColor color : DyeColor.values()) {
+            String name = baseName + "_" + color.getName();
+            RegistryObject<Block> bb = regWithItem(name, () -> new CandleHolderBlock(color,
+                            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                    getTab(CreativeModeTab.TAB_DECORATIONS,baseName)
+            );
+            map.put(color, bb);
+        }
+        return map;
+    }
+
+
+    /**
+     * Utility to register a full block set
+     *
+     * @return registry object map
+     */
+    public static EnumMap<VariantType2, Supplier<Block>> registerFullBlockSet(
+            ResourceLocation baseName, BlockBehaviour.Properties properties, boolean isHidden) {
+
+        EnumMap<VariantType2, Supplier<Block>> map = new EnumMap<>(VariantType2.class);
+        for (VariantType2 type : VariantType2.values()) {
+            String name = baseName.getPath();
+            if (!type.equals(VariantType2.BLOCK)) name += "_" + type.name().toLowerCase(Locale.ROOT);
+            Supplier<Block> base = type != VariantType2.BLOCK ? map.get(VariantType2.BLOCK) : null;
+            var block = ModRegistry.BLOCKS.register(name,
+                    () -> type.create(properties, base));
+            CreativeModeTab tab = switch (type) {
+                case VERTICAL_SLAB ->
+                        !isHidden && ModList.get().isLoaded("quark") ? CreativeModeTab.TAB_BUILDING_BLOCKS : null;
+                case WALL -> !isHidden ? CreativeModeTab.TAB_DECORATIONS : null;
+                default -> !isHidden ? CreativeModeTab.TAB_BUILDING_BLOCKS : null;
+            };
+            regItem(name, () -> new BlockItem(block.get(), (new Item.Properties()).tab(tab)));
+            map.put(type, block);
+        }
+        return map;
+    }
+
+    public enum VariantType2 {
+        BLOCK(Block::new),
+        SLAB(SlabBlock::new),
+        VERTICAL_SLAB(VerticalSlabBlock::new),
+        WALL(WallBlock::new),
+        STAIRS((a,b)->new StairBlock(()->a.get().defaultBlockState(),b));
+        private final BiFunction<Supplier<Block>, BlockBehaviour.Properties, Block> constructor;
+
+        VariantType2(BiFunction<Supplier<Block>, BlockBehaviour.Properties, Block> constructor) {
+            this.constructor = constructor;
+        }
+
+        VariantType2(Function<BlockBehaviour.Properties, Block> constructor) {
+            this.constructor = (b, p) -> constructor.apply(p);
+        }
+
+        private Block create(BlockBehaviour.Properties properties, @Nullable Supplier<Block> parent) {
+            return this.constructor.apply(parent, properties);
+        }
+    }
+
+    public static <T extends Block> RegistryObject<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
+        var block = ModRegistry.BLOCKS.register(name, blockFactory);
+        regBlockItem((RegistryObject<Block>) block, tab);
+        return block;
+    }
 }

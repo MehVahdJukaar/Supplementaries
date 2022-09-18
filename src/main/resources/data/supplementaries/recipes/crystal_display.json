@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "crystal_display"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "12",
+    "12",
+    "12"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:deepslate"
+    },
+    "2": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "supplementaries:crystal_display",
+    "count": 2
+  }
+}

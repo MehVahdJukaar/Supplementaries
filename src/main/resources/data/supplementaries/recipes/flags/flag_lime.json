@@ -1,34 +1,27 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "conditions": [
     {
-      "conditions": [
-        {
-          "type": "supplementaries:flag",
-          "flag": "flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "group": "flag",
-        "pattern": [
-          "111",
-          "111",
-          "2  "
-        ],
-        "key": {
-          "1": {
-            "item": "minecraft:lime_wool"
-          },
-          "2": {
-            "item": "minecraft:stick"
-          }
-        },
-        "result": {
-          "item": "supplementaries:flag_lime",
-          "count": 1
-        }
-      }
+      "type": "supplementaries:flag",
+      "flag": "flag"
     }
-  ]
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "flag",
+  "pattern": [
+    "111",
+    "111",
+    "2  "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:lime_wool"
+    },
+    "2": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "supplementaries:flag_lime",
+    "count": 1
+  }
 }

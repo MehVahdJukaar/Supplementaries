@@ -13,7 +13,7 @@
       "item": "minecraft:cobblestone"
     },
     "4": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     },
     "7": {
       "item": "minecraft:redstone"
