@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
-import net.mehvahdjukaar.supplementaries.common.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 

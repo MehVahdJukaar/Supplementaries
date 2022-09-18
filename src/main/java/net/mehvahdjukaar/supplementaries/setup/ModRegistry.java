@@ -645,7 +645,6 @@ public class ModRegistry {
     //candle holder
     public static final Map<DyeColor, RegistryObject<Block>> CANDLE_HOLDERS = registerCandleHolders(CANDLE_HOLDER_NAME);
 
-SeparatePerspectiveModel
     //copper lantern
     public static final RegistryObject<Block> COPPER_LANTERN = BLOCKS.register(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)

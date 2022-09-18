@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -49,6 +51,7 @@ public class ModSetup {
             CapturedMobsHelper::refresh,
             NetworkHandler::registerMessages,
             LootTableStuff::init,
+            RandomArrowFunction::setup,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,

@@ -33,6 +33,7 @@
     "LoomMenuMixin",
     "MineshaftLanternMixin",
     "PistonBlockEntityMixin",
+    "PlayerProjectileMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",
     "ServerLevelMixin",
