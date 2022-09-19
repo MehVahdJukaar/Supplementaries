@@ -71,7 +71,7 @@ public class ClientConfigs {
             QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
                     .define("armor_render_offset", -1d, -1d, 1);
             QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
-                    .define("render_mode", QuiverLayer.QuiverMode.HIP);
+                    .define("render_mode", QuiverLayer.QuiverMode.THIGH);
             QUIVER_SKELETON_RENDER_MODE = builder.comment("How skeleton with quivers should render it")
                     .define("skeleton_render_mode", QuiverLayer.QuiverMode.THIGH);
             QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")

@@ -108,7 +108,7 @@ public class ModRegistry {
                     .sized(0.98F, 0.7F).clientTrackingRange(8));
 
     public static final Supplier<Item> DISPENSER_MINECART_ITEM = regItem(DISPENSER_MINECART_NAME, () -> new DispenserMinecartItem(new Item.Properties()
-            .stacksTo(1).tab(getTab(CreativeModeTab.TAB_TRANSPORTATION,DISPENSER_MINECART_NAME))));
+            .stacksTo(1).tab(getTab(CreativeModeTab.TAB_TRANSPORTATION, DISPENSER_MINECART_NAME))));
 
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
@@ -510,7 +510,12 @@ public class ModRegistry {
 
 
     //candle holder
-    public static final Map<DyeColor,Supplier<Block>> CANDLE_HOLDERS= RegUtils.registerCandleHolders(CANDLE_HOLDER_NAME);
+    public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(CANDLE_HOLDER_NAME);
+    //soul candle holder
+    public static final Supplier<Block> SOUL_CANDLE_HOLDER = regWithItem(CANDLE_HOLDER_NAME + "_soul", () -> new CandleHolderBlock(null,
+                    BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()),
+                    CompatHandler.buzzier_bees ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME),
+            getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME), "buzzier_bees");
 
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
@@ -1180,7 +1185,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
     ));
     public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_CUBE_NAME, () -> new SugarCubeItem(
-            SUGAR_CUBE.get(), new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS,SUGAR_CUBE_NAME ))
+            SUGAR_CUBE.get(), new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, SUGAR_CUBE_NAME))
     ));
 
     //gunpowder block

@@ -34,14 +34,14 @@ dependencies {
     //}
     modImplementation("curse.maven:yacl-667299:3987709")
 
-    // modCompileOnly("curse.maven:modmenu-308702:3920481")
+   // modCompileOnly("curse.maven:modmenu-308702:3920481")
 
-    modCompileOnly("curse.maven:modmenu-308702:3850113") {
+    modImplementation("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
-    modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
-        exclude module: "fabric-api"
-    }
+    //modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
+   //     exclude module: "fabric-api"
+   // }
 
     // modImplementation("curse.maven:roughly-enough-items-310111:3900965")
     modImplementation("curse.maven:flan-404578:3902630")

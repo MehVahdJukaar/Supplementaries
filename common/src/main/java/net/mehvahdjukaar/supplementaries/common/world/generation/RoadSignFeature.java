@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.world.generation;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -236,7 +238,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
                         sign.textHolder.setLine(1, getSignText(dist2));
                 }
 
-                float yaw = Mth.wrapDegrees(90 + 360*MthUtils.averageAngles((180 - sign.yawUp) / 360f, (180 - sign.yawDown) / 360f));
+                float yaw = Mth.wrapDegrees(90 + 360 * MthUtils.averageAngles((180 - sign.yawUp) / 360f, (180 - sign.yawDown) / 360f));
                 Direction backDir = Direction.fromYRot(yaw);
 
                 float diff = Mth.degreesDifference(yaw, backDir.toYRot());
@@ -293,6 +295,9 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
                     pos = pos.above(2);
 
                     BlockState light = hasFirefly ? JAR : LANTERN;
+                    if (rand.nextInt(5) == 1) {
+                        light = ModRegistry.CANDLE_HOLDERS.get(null).get().defaultBlockState().setValue(CandleHolderBlock.FACE, AttachFace.CEILING);
+                    }
 
                     Direction dir = lampDir.get(rand.nextInt(lampDir.size()));
 

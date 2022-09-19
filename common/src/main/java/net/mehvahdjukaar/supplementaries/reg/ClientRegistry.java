@@ -210,6 +210,7 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SOUL_CANDLE_HOLDER.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c-> ClientPlatformHelper.registerRenderType(c.get(), RenderType.cutout()));
 
 

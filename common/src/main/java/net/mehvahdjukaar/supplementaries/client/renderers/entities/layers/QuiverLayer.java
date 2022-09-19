@@ -45,6 +45,9 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
         }
 
         if (!quiver.isEmpty()) {
+
+            poseStack.pushPose();
+
             this.getParentModel().body.translateAndRotate(poseStack);
 
             boolean flipped = livingEntity.getMainArm() == HumanoidArm.RIGHT;
@@ -102,7 +105,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
             itemRenderer.renderStatic(livingEntity, quiver, ItemTransforms.TransformType.HEAD, false,
                     poseStack, buffer, livingEntity.level, packedLight, OverlayTexture.NO_OVERLAY, 0);
 
-
+            poseStack.popPose();
         }
     }
 

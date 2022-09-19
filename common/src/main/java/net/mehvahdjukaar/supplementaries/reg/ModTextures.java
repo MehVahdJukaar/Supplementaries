@@ -10,6 +10,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.*;
@@ -84,17 +85,17 @@ public class ModTextures {
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     static{
-
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
         }
 
         //first key and default one too
-        SKULL_CANDLES_TEXTURES.put(null, Supplementaries.res("textures/entity/skull_candles/default.png"));
+        SKULL_CANDLES_TEXTURES.put(Blocks.CANDLE, Supplementaries.res("textures/entity/skull_candles/default.png"));
         for (DyeColor color : DyeColor.values()) {
             Block candle = Registry.BLOCK.get(new ResourceLocation(color.getName() + "_candle"));
             SKULL_CANDLES_TEXTURES.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
+        //worst case this becomes null
         SKULL_CANDLES_TEXTURES.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
     }
 
@@ -117,7 +118,7 @@ public class ModTextures {
             for (BannerPattern pattern : Registry.BANNER_PATTERN) {
 
                 FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
-                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":","/")));
+                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":","/").replace(".","/")));
             }
         }
         try {

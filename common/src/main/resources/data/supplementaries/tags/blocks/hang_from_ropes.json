@@ -8,6 +8,7 @@
     {"id":"supplementaries:rope_chandelier","required":false},
     {"id":"supplementaries:rope_soul_chandelier","required":false},
     {"id":"farmersdelight:rope","required":false},
+    {"id":"farmersdelight:tomatoes","required":false},
     {"id":"inspirations:rope","required":false},
     {"id":"inspirations:vine","required":false},
     {"id":"druidcraft:rope","required":false},

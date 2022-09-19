@@ -22,6 +22,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import org.jetbrains.annotations.Nullable;
+import vectorwing.farmersdelight.common.block.BuddingTomatoBlock;
+import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +53,6 @@ public class RemapHandler {
         public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
             return ToolActions.DEFAULT_HOE_ACTIONS.contains(toolAction);
         }
-
     }
 
 

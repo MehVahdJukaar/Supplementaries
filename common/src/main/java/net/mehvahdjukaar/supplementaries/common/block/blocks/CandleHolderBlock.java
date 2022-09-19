@@ -5,21 +5,19 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +34,6 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -86,7 +83,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         }
         {
             Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectOpenHashMap<>();
-            int2ObjectMap.put(1, List.of(new Vec3(0.5, 9/16f, 0.5)));
+            int2ObjectMap.put(1, List.of(new Vec3(0.5, 9 / 16f, 0.5)));
             int2ObjectMap.put(2, List.of(new Vec3(0.25f, 0.875, 0.5), new Vec3(0.75, 0.875, 0.5)));
             int2ObjectMap.put(3, List.of(new Vec3(0.5f, 0.875, 0.75), new Vec3(0.75, 0.875, 0.375), new Vec3(0.25, 0.875, 0.375)));
             int2ObjectMap.put(4, List.of(new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.8125), new Vec3(0.1875, 0.8125, 0.8125)));
@@ -114,19 +111,26 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     }
 
     private final DyeColor color;
+    private final Supplier<ParticleType<? extends ParticleOptions>> particle;
 
     public CandleHolderBlock(DyeColor color, Properties properties) {
+        this(color, properties, () -> ParticleTypes.SMALL_FLAME);
+    }
+
+    public CandleHolderBlock(DyeColor color, Properties properties, Supplier<ParticleType<? extends ParticleOptions>> particle) {
         super(properties.lightLevel(CandleHolderBlock::lightLevel));
         this.color = color;
+        this.particle = particle;
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, false)
                 .setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(CANDLES, 1));
     }
 
     private static int lightLevel(BlockState state) {
-        if(state.getValue(LIT)) {
-          int candles =  state.getValue(CANDLES);
-          return 3 + candles * 3;
-        }return 0;
+        if (state.getValue(LIT)) {
+            int candles = state.getValue(CANDLES);
+            return 3 + candles * 3;
+        }
+        return 0;
     }
 
     @Override
@@ -150,7 +154,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             }
 
             if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
-                return blockstate.setValue(WATERLOGGED, flag).setValue(LIT, !flag);
+                return blockstate.setValue(WATERLOGGED, flag).setValue(LIT, false);
             }
         }
         return null;
@@ -197,15 +201,15 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     }
 
 
-    private static void addParticlesAndSound(Level level, Vec3 offset, RandomSource random) {
+    private void addParticlesAndSound(Level level, Vec3 offset, RandomSource random) {
         float f = random.nextFloat();
         if (f < 0.3F) {
             level.addParticle(ParticleTypes.SMOKE, offset.x, offset.y, offset.z, 0.0, 0.0, 0.0);
             if (f < 0.17F) {
-                //    level.playLocalSound(offset.x + 0.5, offset.y + 0.5, offset.z + 0.5, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+                level.playLocalSound(offset.x + 0.5, offset.y + 0.5, offset.z + 0.5, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
             }
         }
-        level.addParticle(ParticleTypes.SMALL_FLAME, offset.x, offset.y, offset.z, 0.0, 0.0, 0.0);
+        level.addParticle((ParticleOptions) this.particle.get(), offset.x, offset.y, offset.z, 0.0, 0.0, 0.0);
     }
 
 
@@ -292,8 +296,8 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
 
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
-        ((CandleHolderBlock)state.getBlock()).getParticleOffset(state).forEach((vec3) -> {
-            level.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + vec3.x(), (double)pos.getY() + vec3.y(), (double)pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+        ((CandleHolderBlock) state.getBlock()).getParticleOffset(state).forEach((vec3) -> {
+            level.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + vec3.x(), (double) pos.getY() + vec3.y(), (double) pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
 }

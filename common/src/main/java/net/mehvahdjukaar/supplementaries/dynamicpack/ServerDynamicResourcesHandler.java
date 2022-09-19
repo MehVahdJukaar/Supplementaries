@@ -142,28 +142,6 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
-
-
-
-        //remove
-        /*
-        SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("candle_holders"))
-                .addEntries(ModRegistry.CANDLE_HOLDERS.values());
-        dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
-        dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
-
-
-
-        var loot = StaticResource.getOrLog(manager, Supplementaries.res("loot_tables/blocks/candle_holder.json"));
-        for(var c : DyeColor.values()) {
-            dynamicPack.addSimilarJsonResource(loot, "holder", "holder_" + c.getSerializedName());
-        }
-
-        var recipe = StaticResource.getOrLog(manager, Supplementaries.res("recipes/candle_holders/candle_holder.json"));
-        for(var c : DyeColor.values()) {
-            dynamicPack.addSimilarJsonResource(recipe, s->s.replace("holder",
-                    "holder_"+c.getSerializedName()).replace("candle\"",c.getSerializedName()+"_candle\""));
-        }*/
     }
 
     @Override
