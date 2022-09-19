@@ -70,7 +70,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     public static ItemStack createRandomQuiver(Random random, float specialMultiplier) {
         ItemStack quiver = new ItemStack(ModRegistry.QUIVER_ITEM.get());
 
-        int amount = random.nextInt(3, (int) (8 + (specialMultiplier * 4)));
+        int amount = random.nextInt(3, (int)Math.max(6,(8 + (specialMultiplier * 4))));
         return createRandomQuiver(random, quiver, amount);
     }
 

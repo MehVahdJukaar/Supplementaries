@@ -14,7 +14,7 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -142,6 +142,7 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
+            ModRegistry.CANDLE_HOLDERS.values().forEach(c-> ItemBlockRenderTypes.setRenderLayer(c.get(), RenderType.cutout()));
 
 
             ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),

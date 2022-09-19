@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

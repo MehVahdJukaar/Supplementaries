@@ -1,8 +1,8 @@
-package net.mehvahdjukaar.supplementaries.common.entities;
+package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -43,6 +43,8 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
         }
 
         if (!quiver.isEmpty()) {
+            poseStack.pushPose();
+
             this.getParentModel().body.translateAndRotate(poseStack);
 
             boolean flipped = livingEntity.getMainArm() == HumanoidArm.RIGHT;
@@ -101,6 +103,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
                     poseStack, buffer, livingEntity.level, packedLight, OverlayTexture.NO_OVERLAY, 0);
 
 
+            poseStack.popPose();
         }
     }
 

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
