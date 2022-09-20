@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -30,13 +31,13 @@ public class ClientConfigs {
     }
 
     public static class items {
-        public static Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
-        public static Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
-        public static Supplier<Double> QUIVER_ARMOR_OFFSET;
-        public static Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
-        public static Supplier<Boolean> QUIVER_OVERLAY;
-        public static Supplier<Integer> QUIVER_GUI_X;
-        public static Supplier<Integer> QUIVER_GUI_Y;
+        public static ForgeConfigSpec.EnumValue<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
+        public static ForgeConfigSpec.EnumValue<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
+        public static ForgeConfigSpec.DoubleValue QUIVER_ARMOR_OFFSET;
+        public static ForgeConfigSpec.BooleanValue QUIVER_MOUSE_MOVEMENT;
+        public static ForgeConfigSpec.BooleanValue QUIVER_OVERLAY;
+        public static ForgeConfigSpec.IntValue QUIVER_GUI_X;
+        public static ForgeConfigSpec.IntValue QUIVER_GUI_Y;
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OVERLAY;
         public static ForgeConfigSpec.BooleanValue SLINGSHOT_OUTLINE;
         public static ForgeConfigSpec.ConfigValue<String> SLINGSHOT_OUTLINE_COLOR;
@@ -52,9 +53,9 @@ public class ClientConfigs {
             QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
                     .defineInRange("armor_render_offset", -1d, -1d, 1);
             QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
-                    .define("render_mode", QuiverLayer.QuiverMode.HIP);
+                    .defineEnum("render_mode", QuiverLayer.QuiverMode.HIP);
             QUIVER_SKELETON_RENDER_MODE = builder.comment("How skeleton with quivers should render it")
-                    .define("skeleton_render_mode", QuiverLayer.QuiverMode.THIGH);
+                    .defineEnum("skeleton_render_mode", QuiverLayer.QuiverMode.THIGH);
             QUIVER_OVERLAY = builder.comment("Adds an overlay to quivers in gui displaying currently selected arrow")
                     .define("overlay", true);
             QUIVER_MOUSE_MOVEMENT = builder.comment("Allows using your mouse to select an arrow in the quiver GUI")
