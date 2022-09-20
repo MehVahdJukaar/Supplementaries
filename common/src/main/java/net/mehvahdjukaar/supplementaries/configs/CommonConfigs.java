@@ -668,7 +668,6 @@ public class CommonConfigs {
             builder.comment("Configure spawning conditions")
                     .push("spawns");
 
-
             builder.push("way_sign");
             WAY_SIGN_ENABLED = builder.comment("Entirely disables them from spawning")
                     .define("enabled", true);

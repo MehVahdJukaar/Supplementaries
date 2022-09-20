@@ -166,9 +166,9 @@ dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${rootProject.moonlight_version}")
-    modImplementation("vectorwing:FarmersDelight:1")
+    //modImplementation("vectorwing:FarmersDelight:1")
 
-   // modImplementation("curse.maven:farmers-delight-398521:3916069")
+    modImplementation("curse.maven:farmers-delight-398521:3916069")
 
     modImplementation("curse.maven:jei-238222:3928388")
     modImplementation("curse.maven:configured-457570:3946498")

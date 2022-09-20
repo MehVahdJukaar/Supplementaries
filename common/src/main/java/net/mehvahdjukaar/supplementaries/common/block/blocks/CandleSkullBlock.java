@@ -45,7 +45,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 
-//Ilightable?
 public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable {
 
     private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {

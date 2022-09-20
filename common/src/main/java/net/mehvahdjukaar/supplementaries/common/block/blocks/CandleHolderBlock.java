@@ -128,7 +128,8 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     private static int lightLevel(BlockState state) {
         if (state.getValue(LIT)) {
             int candles = state.getValue(CANDLES);
-            return 3 + candles * 3;
+            return 7+candles*2;
+            //return 3 + candles * 3;
         }
         return 0;
     }
