@@ -27,22 +27,30 @@ configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
 logoFile = "icon.png" #optional
 
 [[dependencies.supplementaries]]
-modId = "forge"
-mandatory = true
-versionRange = "[41.0.0,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "forge"
+    mandatory = true
+    versionRange = "[41.0.0,)"
+    ordering = "NONE"
+    side = "BOTH"
 
 [[dependencies.supplementaries]]
-modId = "minecraft"
-mandatory = true
-versionRange = "[1.19.1,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.19.1,)"
+    ordering = "NONE"
+    side = "BOTH"
 
 [[dependencies.supplementaries]]
-modId = "moonlight"
-mandatory = true
-versionRange = "[1.19.2-2.0.28,]"
-ordering = "NONE"
-side = "BOTH"
+    modId = "moonlight"
+    mandatory = true
+    versionRange = "[1.19.2-2.0.28,]"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.supplementaries]]
+    modId = "farmersdelight"
+    mandatory = false
+    versionRange = "[1.19-1.2.0,]"
+    ordering = "NONE"
+    side = "BOTH"
+

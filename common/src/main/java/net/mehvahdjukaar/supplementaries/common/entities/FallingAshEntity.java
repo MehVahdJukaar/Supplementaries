@@ -143,8 +143,6 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
                                         }
                                     }
                                 }
-
-
                                 return;
                             }
                         }

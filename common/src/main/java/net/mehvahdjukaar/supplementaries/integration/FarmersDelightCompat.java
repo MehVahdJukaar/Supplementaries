@@ -12,10 +12,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +26,8 @@ import java.util.function.Supplier;
 
 public class FarmersDelightCompat {
 
-    @ExpectPlatform
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
-        throw new AssertionError();
-    }
 
+    @ExpectPlatform
     public static void init() {
     }
 
@@ -41,6 +41,23 @@ public class FarmersDelightCompat {
             RegUtils.regWithItem(PLANTER_RICH_SOUL_NAME, () ->
                     new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
                             .randomTicks(), CompatObjects.RICH_SOUL_SOIL), CreativeModeTab.TAB_DECORATIONS);
+
+
+    @ExpectPlatform
+    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
+        throw new AssertionError();
+    }
+
+    @Contract
+    @ExpectPlatform
+    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
+        throw new ArrayStoreException();
+    }
 
 
     public static class PlanterRichBlock extends PlanterBlock {

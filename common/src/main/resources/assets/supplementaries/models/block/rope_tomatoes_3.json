@@ -1,0 +1,10 @@
+{
+	"parent": "supplementaries:block/crop_with_rope",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"crop": "farmersdelight:block/tomatoes_vine_stage3",
+		"2": "farmersdelight:block/tomatoes_coiled_rope",
+		"rope_side": "supplementaries:blocks/rope",
+		"rope_top": "supplementaries:blocks/rope"
+	}
+}

@@ -12,16 +12,19 @@ public class CompatHandlerClientImpl {
         if (CompatHandler.configured && RegistryConfigs.CUSTOM_CONFIGURED_SCREEN.get()) {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }
-        if(CompatHandler.deco_blocks){
+        if (CompatHandler.deco_blocks) {
             DecoBlocksClientCompat.registerRenderLayers();
         }
-        if(CompatHandler.quark){
+        if (CompatHandler.quark) {
             QuarkClientCompatImpl.registerRenderLayers();
+        }
+        if (CompatHandler.farmers_delight) {
+            FarmersDelightCompatImpl.registerRenderLayers();
         }
     }
 
-    public static void init(){
-        if(CompatHandler.quark){
+    public static void init() {
+        if (CompatHandler.quark) {
             QuarkClientCompatImpl.init();
         }
     }

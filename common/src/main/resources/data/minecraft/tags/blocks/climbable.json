@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:rope"
+	"supplementaries:rope",
+    {"id":"supplementaries:rope_tomatoes","required":false}
   ]
 }

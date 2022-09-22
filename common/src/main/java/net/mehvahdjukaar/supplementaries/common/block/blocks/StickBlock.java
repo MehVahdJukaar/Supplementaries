@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,15 +48,10 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
-    protected static final VoxelShape Y_Z_AXIS_AABB = Shapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
-            Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D));
-    protected static final VoxelShape Y_X_AXIS_AABB = Shapes.or(Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D),
-            Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D));
-    protected static final VoxelShape X_Z_AXIS_AABB = Shapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
-            Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D));
-    protected static final VoxelShape X_Y_Z_AXIS_AABB = Shapes.or(Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D),
-            Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D),
-            Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D));
+    protected static final VoxelShape Y_Z_AXIS_AABB = Shapes.or(Y_AXIS_AABB, Z_AXIS_AABB);
+    protected static final VoxelShape Y_X_AXIS_AABB = Shapes.or(Y_AXIS_AABB, X_AXIS_AABB);
+    protected static final VoxelShape X_Z_AXIS_AABB = Shapes.or(X_AXIS_AABB, Z_AXIS_AABB);
+    protected static final VoxelShape X_Y_Z_AXIS_AABB = Shapes.or(X_AXIS_AABB, Y_AXIS_AABB, Z_AXIS_AABB);
 
     public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
     public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
@@ -96,6 +93,10 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
+        return getStickShape(x, y, z);
+    }
+
+    public static VoxelShape getStickShape(boolean x, boolean y, boolean z) {
         if (x) {
             if (y) {
                 if (z) return X_Y_Z_AXIS_AABB;
@@ -114,12 +115,13 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-        if (blockstate.is(this)) {
+        if (blockstate.is(this) || (CompatHandler.farmers_delight && FarmersDelightCompat.canAddStickToTomato(blockstate, axis))) {
             return blockstate.setValue(axis, true);
         } else {
             return super.getStateForPlacement(context).setValue(AXIS_Y, false).setValue(axis, true);
         }
     }
+
 
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
@@ -218,5 +220,14 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
         return List.of(new ItemStack(this.asItem(), i));
     }
 
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (this == ModRegistry.STICK_BLOCK.get()) {
+            if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+                FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,false);
+            }
+        }
 
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
 }

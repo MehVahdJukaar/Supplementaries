@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,26 +11,43 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
-public class SugarBlock extends FallingBlock {
+public class SugarBlock extends ConcretePowderBlock {
 
     public SugarBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+        super(Blocks.WATER,properties);
     }
 
     @Override
     public void onLand(Level level, BlockPos pos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlock) {
+        if(level instanceof ServerLevel serverLevel){
+            this.tick(blockState, serverLevel, pos, level.random);
+        }
         if (isWater(blockState2)) {
             //level.addDestroyBlockEffect(blockPos, blockState);
-            level.destroyBlock(pos, false);
+       //     level.destroyBlock(pos, false);
         }
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState();
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+        return state;
     }
 
     @Override
@@ -85,6 +103,7 @@ public class SugarBlock extends FallingBlock {
         return bl;
     }
 
+
     private boolean isWater(BlockState state) {
         return state.getFluidState().is(FluidTags.WATER);
     }
@@ -127,4 +146,5 @@ public class SugarBlock extends FallingBlock {
         SoundType soundtype = state.getSoundType();
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
+
 }

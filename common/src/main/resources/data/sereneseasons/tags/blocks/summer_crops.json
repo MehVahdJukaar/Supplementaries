@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flax",
     {"id":"supplementaries:rope_tomatoes","required":false},
     {"id":"supplementaries:stick_tomatoes","required":false}
   ]

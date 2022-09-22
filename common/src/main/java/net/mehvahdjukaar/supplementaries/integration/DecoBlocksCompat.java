@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Contract;
 
 public class DecoBlocksCompat {
 
@@ -18,6 +19,7 @@ public class DecoBlocksCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean isPalisade(BlockState state) {
         throw new AssertionError();

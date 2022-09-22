@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
@@ -43,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection {
 
     private final Map<BlockState, VoxelShape> SHAPES_MAP;
     private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP;
@@ -115,7 +117,11 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            return tile.getShape();
+            try {
+                return tile.getShape();
+            }catch (Exception e){
+                Supplementaries.LOGGER.error("Failed to get block shape for rope knot block at {}", pos);
+            }
         }
         return super.getShape(state, world, pos, context);
     }
@@ -125,7 +131,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
-
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
         return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
@@ -134,7 +139,11 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            return tile.getCollisionShape();
+            try {
+                return tile.getCollisionShape();
+            }catch (Exception e){
+                Supplementaries.LOGGER.error("Failed to get collision shape for rope knot block at {}", pos);
+            }
         }
         return super.getCollisionShape(state, world, pos, context);
     }
@@ -211,7 +220,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), RopeBlock.shouldConnectToFace(state, facingState, facingPos, facing, world));
+        BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
         if (world.getBlockEntity(currentPos) instanceof RopeKnotBlockTile tile) {
             BlockState oldHeld = tile.getHeldBlock();
 
@@ -234,14 +243,16 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
             //manually refreshTextures facing states
             //world.setBlock(currentPos,newHeld,2);
-            BlockState newFacing = facingState.updateShape(facing.getOpposite(), newHeld, world, facingPos, currentPos);
+            if(!(facingState.getBlock() instanceof IRopeConnection)) {
+                BlockState newFacing = facingState.updateShape(facing.getOpposite(), newHeld, world, facingPos, currentPos);
 
-            if (newFacing != facingState) {
-                if (otherTile != null) {
-                    otherTile.setHeldBlock(newFacing);
-                    otherTile.setChanged();
-                } else {
-                    world.setBlock(facingPos, newFacing, 2);
+                if (newFacing != facingState) {
+                    if (otherTile != null) {
+                        otherTile.setHeldBlock(newFacing);
+                        otherTile.setChanged();
+                    } else {
+                        world.setBlock(facingPos, newFacing, 2);
+                    }
                 }
             }
 
@@ -337,5 +348,14 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         }
         newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
         return newState;
+    }
+
+    @Override
+    public boolean canSideAcceptConnection(BlockState state, Direction direction) {
+        if(state.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y){
+            return direction.getAxis() != Direction.Axis.Y;
+        }else{
+            return direction.getAxis() == Direction.Axis.Y;
+        }
     }
 }

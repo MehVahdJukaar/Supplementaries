@@ -132,7 +132,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             }
         }
         String name = Utils.getID(entity.getType()).toString();
-        if (name.contains("alexmobs") && name.contains("centipede")) return false; //hardcodig this one
+        if (name.contains("alexsmobs") && name.contains("centipede")) return false; //hardcodig this one
         if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobHandler.COMMAND_MOBS.contains(name)) {
             return true;
         }

@@ -201,7 +201,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        //needed for when it drops from falling block
+        //needed for when it drops from falling block since it has a block entity
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
             List<ItemStack> l = new ArrayList<>();
             for (int i = 0; i < tile.getContainerSize(); ++i) {
@@ -222,7 +222,13 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
             ServerLevel serverlevel = lootContext.getLevel();
             LootTable loottable = serverlevel.getServer().getLootTables().get(resourcelocation);
-            return loottable.getRandomItems(lootContext);
+            List<ItemStack> selectedLoot;
+            do{
+                selectedLoot = loottable.getRandomItems(lootContext);
+                //remove disabled stuff. hacky
+                selectedLoot = selectedLoot.stream().filter(e -> e.getItem().getItemCategory() != null).toList();
+            }while(selectedLoot.isEmpty());
+            return selectedLoot;
         }
     }
 

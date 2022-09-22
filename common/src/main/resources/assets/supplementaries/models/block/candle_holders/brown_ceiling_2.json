@@ -5,6 +5,6 @@
 		"2": "supplementaries:blocks/candle_holder",
 		"3": "block/chain",
 		"particle": "supplementaries:blocks/candle_holder",
-		"all": "block/candle"
+		"all": "block/brown_candle"
 	}
 }

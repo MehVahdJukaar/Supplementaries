@@ -64,8 +64,14 @@ public class RelayerBlock extends DirectionalBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        if (pos.relative(state.getValue(FACING)).equals(fromPos)) this.updatePower(state, world, pos);
+        if (moving || pos.relative(state.getValue(FACING)).equals(fromPos)) this.updatePower(state, world, pos);
+    }
 
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if (!level.isClientSide() && isMoving) {
+            this.updatePower(state, level, pos);
+        }
     }
 
     private void updatePower(BlockState state, Level level, BlockPos pos) {
@@ -83,6 +89,10 @@ public class RelayerBlock extends DirectionalBlock {
         BlockState b = level.getBlockState(behind);
         if (b.getBlock() instanceof RedStoneWireBlock) {
             pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
+        }else if(b.getBlock() instanceof DiodeBlock repeaterBlock){
+            pow = Math.max(repeaterBlock.getOutputSignal(level, behind, b), pow);
+        }else if(b.is(this)){
+            pow = Math.max(b.getValue(POWER), pow);
         }
         return pow;
     }

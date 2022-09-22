@@ -12,5 +12,5 @@
   "flowing_texture": "moonlight:soft_fluids/potion_flow",
   "from_mod": "alexsmobs",
   "still_texture": "moonlight:soft_fluids/potion_still",
-  "translation_key": "item.alexmobs.komodo_spit"
+  "translation_key": "item.alexsmobs.komodo_spit"
 }

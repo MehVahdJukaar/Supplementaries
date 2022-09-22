@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
+import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -63,7 +64,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class RopeBlock extends WaterBlock {
+public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     //TODO: make solid when player is not colliding
     public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
@@ -161,39 +162,11 @@ public class RopeBlock extends WaterBlock {
 
     }
 
-    public static boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
+    public boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
         BlockPos facingPos = currentPos.relative(dir);
-        return shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
+        return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }
 
-    public static boolean shouldConnectToFace(BlockState thisState, BlockState facingState, BlockPos facingPos, Direction dir, LevelReader world) {
-        Block thisBlock = thisState.getBlock();
-        Block b = facingState.getBlock();
-        boolean isKnot = thisBlock == ModRegistry.ROPE_KNOT.get();
-        boolean isVerticalKnot = isKnot && thisState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y;
-
-        switch (dir) {
-            case UP -> {
-                if (isVerticalKnot) return false;
-                return RopeBlock.isSupportingCeiling(facingState, facingPos, world);
-            }
-            case DOWN -> {
-                if (isVerticalKnot) return false;
-                return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
-            }
-            default -> {
-                if (CommonConfigs.Blocks.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
-                    return true;
-                }
-                if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
-                    return thisBlock != b && (dir.getAxis() == Direction.Axis.Y || facingState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y);
-                } else if (isKnot && !isVerticalKnot) {
-                    return false;
-                }
-                return b == ModRegistry.ROPE.get();
-            }
-        }
-    }
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
@@ -210,6 +183,9 @@ public class RopeBlock extends WaterBlock {
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
             DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
+        }
+        if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+            FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
         }
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -261,25 +237,23 @@ public class RopeBlock extends WaterBlock {
         //return!(!state.get(UP)&&state.get(NORTH).isNone()&&state.get(SOUTH).isNone()&&state.get(EAST).isNone()&&state.get(WEST).isNone());
     }
 
-    public static boolean isSupportingCeiling(BlockState facingState, BlockPos pos, LevelReader world) {
-        Block b = facingState.getBlock();
-        return canSupportCenter(world, pos, Direction.DOWN) || facingState.is(ModTags.ROPE_SUPPORT_TAG) ||
-                (facingState.is(ModRegistry.ROPE_KNOT.get()) && facingState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y);
+    public static boolean isSupportingCeiling(BlockState upState, BlockPos pos, LevelReader world) {
+        if(upState.getBlock() instanceof  IRopeConnection ropeConnection){
+            return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
+        }
+        return canSupportCenter(world, pos, Direction.DOWN) || upState.is(ModTags.ROPE_SUPPORT_TAG);
     }
 
     public static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
         return isSupportingCeiling(world.getBlockState(pos), pos, world);
     }
 
-    public static boolean canConnectDown(BlockPos currentPos, LevelReader world) {
-        BlockState state = world.getBlockState(currentPos.below());
-        return canConnectDown(state);
-    }
-
     public static boolean canConnectDown(BlockState downState) {
         Block b = downState.getBlock();
-        return (downState.is(ModRegistry.ROPE.get()) || downState.is(ModTags.ROPE_HANG_TAG)
-                || (downState.is(ModRegistry.ROPE_KNOT.get()) && downState.getValue(RopeKnotBlock.AXIS) != Direction.Axis.Y)
+        if(b instanceof IRopeConnection ropeConnection){
+            return ropeConnection.canSideAcceptConnection(downState, Direction.UP);
+        }
+        return (downState.is(ModTags.ROPE_HANG_TAG)
                 || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
                 || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
                 || (downState.hasProperty(BlockStateProperties.HANGING) && downState.getValue(BlockStateProperties.HANGING)));
@@ -602,6 +576,11 @@ public class RopeBlock extends WaterBlock {
         return super.mirror(state, mirror);
     }
 
+    @Override
+    public boolean canSideAcceptConnection(BlockState state, Direction direction) {
+        return true;
+    }
+
     public static boolean playEntitySlideSound(LivingEntity entity, int ropeTicks) {
         if (ropeTicks % 14 == 0) {
             if (!entity.isSilent()) {
@@ -613,5 +592,7 @@ public class RopeBlock extends WaterBlock {
         }
         return false;
     }
+
+
 
 }

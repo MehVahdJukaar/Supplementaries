@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.*;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -213,7 +215,7 @@ public class ModBlockProperties {
 
         public static Topping fromFluid(SoftFluid s) {
             if (s == VanillaSoftFluids.HONEY.get()) return HONEY;
-            String name = s.getRegistryName().getPath();
+            String name = Utils.getID(s).getPath();
             if (name.equals("chocolate")) return CHOCOLATE;
             var containers = s.getFilledContainer(Items.GLASS_BOTTLE);
             if (containers.isPresent() && containers.get().builtInRegistryHolder().is(ModTags.SYRUP)) return SYRUP;
@@ -280,27 +282,9 @@ public class ModBlockProperties {
 
         public static RakeDirection fromDirections(List<Direction> directions) {
             for (RakeDirection shape : values()) {
-                if (shape.getDirections().containsAll(directions)) return shape;
+                if (new HashSet<>(shape.getDirections()).containsAll(directions)) return shape;
             }
             return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
-        }
-    }
-
-
-    public enum BellAttachment implements StringRepresentable {
-        CEILING("ceiling"),
-        SINGLE_WALL("single_block"),
-        DOUBLE_WALL("double_block");
-
-        private final String name;
-
-        BellAttachment(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
         }
     }
 

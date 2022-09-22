@@ -10,9 +10,11 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class FarmersDelightCompatImpl {
     public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack stack) {
@@ -32,5 +34,16 @@ public class FarmersDelightCompatImpl {
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
+    }
+
+    public static void init() {
+    }
+
+    @org.jetbrains.annotations.Contract
+    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
+        return false;
+    }
+
+    public static void tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
     }
 }
