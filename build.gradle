@@ -148,8 +148,8 @@ dependencies {
     implementation fg.deobf("curse.maven:create-328085:3934676")
     //implementation fg.deobf("curse.maven:patchouli-306770:3680301")
 
-    compileOnly fg.deobf("curse.maven:botania-225643:3732401")
-    implementation fg.deobf("curse.maven:quark-243121:3708587")
+    implementation fg.deobf("curse.maven:botania-225643:3936568")
+    implementation fg.deobf("curse.maven:quark-243121:3840125")
     implementation fg.deobf("curse.maven:autoreglib-250363:3642382")
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3681919")
     implementation fg.deobf("curse.maven:mob-entity-path-visualizer-590716:3680372")

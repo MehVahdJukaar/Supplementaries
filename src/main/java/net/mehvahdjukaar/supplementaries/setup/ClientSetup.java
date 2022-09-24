@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -59,15 +58,13 @@ import java.io.IOException;
 public class ClientSetup {
 
     private static int finishedStage = 0;
+    private static boolean compat = false;
 
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
 
-            //compat
-            CompatHandlerClient.init(event);
-            finishedStage++;
             //tooltips
             MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
             MinecraftForgeClient.registerTooltipComponentFactory(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
@@ -143,7 +140,7 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
-            ModRegistry.CANDLE_HOLDERS.values().forEach(c-> ItemBlockRenderTypes.setRenderLayer(c.get(), RenderType.cutout()));
+            ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ItemBlockRenderTypes.setRenderLayer(c.get(), RenderType.cutout()));
             finishedStage++;
 
             ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
@@ -175,12 +172,16 @@ public class ClientSetup {
                     (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
             ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
-                    (stack, world, entity, s) -> ((DyeableLeatherItem)stack.getItem()).hasCustomColor(stack) ? 1 : 0);
+                    (stack, world, entity, s) -> ((DyeableLeatherItem) stack.getItem()).hasCustomColor(stack) ? 1 : 0);
 
 
             //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
             //       new SpeedometerItem.SpeedometerItemProperty());
             finishedStage = -1;
+
+            //compat
+            CompatHandlerClient.init(event);
+            compat = true;
         });
     }
 
@@ -343,8 +344,11 @@ public class ClientSetup {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        if(finishedStage!=-1){
-            throw new RuntimeException("Supplementaries Client Setup failed (step "+finishedStage+"). How?");
+        if (finishedStage != -1) {
+            throw new RuntimeException("Supplementaries Client Setup failed (step " + finishedStage + "). How?");
+        }
+        if (!compat) {
+            Supplementaries.LOGGER.error("Supplementaries encountered some errors when setting up compat modules. This is a bug");
         }
 
         for (String skinType : event.getSkins()) {
@@ -362,8 +366,6 @@ public class ClientSetup {
             renderer2.addLayer(new QuiverLayer(renderer2, true));
         }
     }
-
-
 
 
 }

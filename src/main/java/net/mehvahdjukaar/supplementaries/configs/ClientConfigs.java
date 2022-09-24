@@ -229,7 +229,7 @@ public class ClientConfigs {
             builder.pop();
 
             builder.push("blackboard");
-            CLOCK_24H = builder.define("allow_gui", true);
+            BLACKBOARD_GUI = builder.define("allow_gui", true);
             builder.pop();
 
             builder.push("pedestal");
