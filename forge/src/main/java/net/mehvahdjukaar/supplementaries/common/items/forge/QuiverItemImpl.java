@@ -109,7 +109,7 @@ public class QuiverItemImpl {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
                 return ItemHandlerHelper.insertItem(this, toInsert, false);
             }
-            return ItemStack.EMPTY;
+            return toInsert;
         }
 
         public Optional<ItemStack> removeOneStack() {

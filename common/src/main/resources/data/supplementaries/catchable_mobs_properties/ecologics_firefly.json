@@ -1,9 +1,9 @@
 {
   "animation": "floating",
-  "height_increment": 0.0,
-  "light_level": 9,
+  "height_increment": 0.125,
+  "light_level": 7,
   "owners": [
-    "ecologics:firefly"
+    "naturalist:firefly"
   ],
   "width_increment": 0.0
 }

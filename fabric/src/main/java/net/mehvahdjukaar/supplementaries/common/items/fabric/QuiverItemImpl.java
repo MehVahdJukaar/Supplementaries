@@ -1,9 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.ChestRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -88,6 +92,9 @@ public class QuiverItemImpl {
                         st.save(t);
                         return toInsert;
                     } else if (st.isEmpty()) {
+                        MultiBufferSource buffer;
+                        ChestRenderer
+                        VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.);
                         listTag.set(ind, toInsert.save(new CompoundTag()));
                         return ItemStack.EMPTY;
                     }

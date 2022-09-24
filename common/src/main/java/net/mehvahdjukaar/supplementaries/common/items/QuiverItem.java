@@ -52,7 +52,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             return false;
         } else {
             ItemStack itemstack = pSlot.getItem();
-            if(itemstack.is(ModRegistry.QUIVER_ITEM.get()))return false;
             //place into slot
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
@@ -84,7 +83,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
-        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer) && !pOther.is(ModRegistry.QUIVER_ITEM.get())) {
+        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
             IQuiverData data = getQuiverData(quiver);
             if (data != null) {
                 AtomicBoolean didStuff = new AtomicBoolean(false);
@@ -311,7 +310,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         }
 
         /**
-         * Adds one item. returns the item that is remaining and has not been added
+         * Adds one item. returns the item that is remaining and has not been added. Same item if no change was made
          */
         ItemStack tryAdding(ItemStack pInsertedStack);
 

@@ -4,7 +4,6 @@
     {"id":"minecraft:slime","required":false},
     {"id":"minecraft:bee","required":false},
     {"id":"minecraft:magma_cube","required":false},
-    {"id":"ecologics:firefly","required":false},
     {"id":"feywild:spring_pixie","required":false},
     {"id":"feywild:autumn_pixie","required":false},
     {"id":"feywild:summer_pixie","required":false},
@@ -34,7 +33,21 @@
     {"id":"fins:river_pebble_snail","required":false},
     {"id":"tconstruct:sky_slime","required":false},
     {"id":"twilightforest:maze_slime","required":false},
-    {"id":"biomemakeover:dragonfly","required":false}
+    {"id":"biomemakeover:dragonfly","required":false},
+    {"id":"naturalist:firefly","required":false},
+    {"id":"cnb:sporeling","required":false},
+    {"id":"crittersandcompanions:dragonfly","required":false},
+    {"id":"crittersandcompanions:leaf_insect","required":false},
+    {"id":"alexsmobs:cockroach","required":false},
+    {"id":"alexsmobs:leafcutter_ant","required":false},
+    {"id":"biomemakeover:rootling","required":false},
+    {"id":"naturalist:butterfly","required":false},
+    {"id":"mushlings:mushling","required":false},
+    {"id":"quark:crab","required":false},
+    {"id":"quark:frog","required":false},
+    {"id":"sprout:bounce_bug","required":false},
+    {"id":"unusualend:ender_firefly","required":false},
+    {"id":"naturalist:caterpillar","required":false}
   ]
 }
 
