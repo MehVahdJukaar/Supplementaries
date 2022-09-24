@@ -122,7 +122,7 @@ public class ModRegistry {
     public static void registerAdditionalStuff(final RegistryEvent.Register<Item> event) {
         WorldGenHandler.onRegisterAdditional();
         Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("curse_loot"), CURSE_LOOT_FUNCTION);
-        Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("random_arrow"), RANDOM_ARROW_FUNCTION);
+        Registry.register(Registry.LOOT_FUNCTION_TYPE, Supplementaries.res("random_arrows"), RANDOM_ARROW_FUNCTION);
 
         //CompatHandler.registerOptionalItems(event);
         //shulker shell

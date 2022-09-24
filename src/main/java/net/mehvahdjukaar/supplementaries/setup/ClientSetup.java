@@ -42,7 +42,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.ForgeIngameGui;
@@ -59,26 +58,28 @@ import java.io.IOException;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
+    private static int finishedStage = 0;
+
+
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
 
             //compat
             CompatHandlerClient.init(event);
-
+            finishedStage++;
             //tooltips
             MinecraftForgeClient.registerTooltipComponentFactory(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
             MinecraftForgeClient.registerTooltipComponentFactory(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
-
+            finishedStage++;
             //overlay
             OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HOTBAR_ELEMENT, "quiver_overlay",
                     new QuiverArrowSelectGui(Minecraft.getInstance()));
-
+            finishedStage++;
 
             //map markers
             CMDclient.init(event);
-
+            finishedStage++;
             //overlay
             //SlimedGuiOverlay.register();
 
@@ -89,7 +90,7 @@ public class ClientSetup {
             MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
             MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
             ModRegistry.HANGING_SIGNS.values().forEach(s -> ItemBlockRenderTypes.setRenderLayer(s, RenderType.cutout()));
-
+            finishedStage++;
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.WIND_VANE.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.CRANK.get(), RenderType.cutout());
@@ -143,7 +144,7 @@ public class ClientSetup {
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
             ModRegistry.CANDLE_HOLDERS.values().forEach(c-> ItemBlockRenderTypes.setRenderLayer(c.get(), RenderType.cutout()));
-
+            finishedStage++;
 
             ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                     new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
@@ -173,8 +174,13 @@ public class ClientSetup {
             ItemProperties.register(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
                     (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
 
+            ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
+                    (stack, world, entity, s) -> ((DyeableLeatherItem)stack.getItem()).hasCustomColor(stack) ? 1 : 0);
+
+
             //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
             //       new SpeedometerItem.SpeedometerItemProperty());
+            finishedStage = -1;
         });
     }
 
@@ -227,6 +233,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+
         CompatHandlerClient.registerEntityRenderers(event);
         //entities
         event.registerEntityRenderer(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
@@ -275,6 +282,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerBlockColors(ColorHandlerEvent.Block event) {
+
         BlockColors colors = event.getBlockColors();
         colors.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         colors.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
@@ -335,6 +343,10 @@ public class ClientSetup {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        if(finishedStage!=-1){
+            throw new RuntimeException("Supplementaries Client Setup failed (step "+finishedStage+"). How?");
+        }
+
         for (String skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
             if (renderer != null) {
