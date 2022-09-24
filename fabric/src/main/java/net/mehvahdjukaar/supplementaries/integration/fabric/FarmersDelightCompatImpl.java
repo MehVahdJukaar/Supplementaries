@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,6 +45,11 @@ public class FarmersDelightCompatImpl {
         return false;
     }
 
-    public static void tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
+    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
+        return false;
+    }
+
+    public static Block getStickTomato() {
+        return null;
     }
 }

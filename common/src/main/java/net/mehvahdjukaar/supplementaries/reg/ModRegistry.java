@@ -488,7 +488,7 @@ public class ModRegistry {
     public static final Supplier<Item> SCONCE_ITEM_ENDER = regItem(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
             (new Item.Properties()).tab(getTab("endergetic", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
 
-    //optional: infernal expansion
+    //glow
     public static final Supplier<Block> SCONCE_GLOW = regBlock(SCONCE_NAME_GLOW, () -> new SconceBlock(
             BlockBehaviour.Properties.copy(SCONCE.get()), 13,
             CompatObjects.GLOW_FLAME));
@@ -507,6 +507,17 @@ public class ModRegistry {
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
+
+    //nether brass
+    public static final Supplier<Block> SCONCE_NETHER_BRASS = regBlock(SCONCE_NAME_NETHER_BRASS, () -> new SconceBlock(
+            BlockBehaviour.Properties.copy(SCONCE.get()), 14,
+            CompatObjects.NETHER_BRASS_FLAME));
+    public static final Supplier<Block> SCONCE_WALL_NETHER_BRASS = regBlock("sconce_wall_nether_brass", () -> new SconceWallBlock(
+            BlockBehaviour.Properties.copy(SCONCE.get())
+                    .dropsLike(SCONCE_NETHER_BRASS.get()),
+            CompatObjects.NETHER_BRASS_FLAME));
+    public static final Supplier<Item> SCONCE_ITEM_NETHER_BRASS = regItem(SCONCE_NAME_NETHER_BRASS, () -> new StandingAndWallBlockItem(SCONCE_NETHER_BRASS.get(), SCONCE_WALL_NETHER_BRASS.get(),
+            (new Item.Properties()).tab(getTab("architects_palette", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
 
 
     //candle holder
@@ -1026,7 +1037,7 @@ public class ModRegistry {
 
     //sticks
     public static final Supplier<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
+            BlockBehaviour.Properties.of(new Material.Builder(MaterialColor.WOOD).nonSolid().build())
                     .strength(0.25F, 0F)
                     .sound(SoundType.WOOD), 60), () -> Items.STICK, CommonConfigs.Tweaks.PLACEABLE_STICKS);
     public static final Supplier<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(

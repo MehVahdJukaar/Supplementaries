@@ -41,6 +41,15 @@
     {
       "id": "feywild:blacksmith",
       "required": false
-    }
+    },
+    {"id":"idas:bazaar","required":false},
+    {"id":"idas:castle","required":false},
+    {"id":"idas:farmhouse","required":false},
+    {"id":"idas:bearclaw_inn","required":false},
+    {"id":"idas:treetop_tavern","required":false},
+    {"id":"idas:wizardtower","required":false},
+    {"id":"idas:farmhouse","required":false},
+    {"id":"idas:fishermans_lodge","required":false},
+    {"id":"idas:beekeepers_house","required":false}
   ]
 }

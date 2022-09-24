@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
@@ -22,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -58,7 +58,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -91,6 +90,7 @@ public class ItemsOverrideHandler {
 
         actionOnBlock.add(new DirectionalCakeConversionBehavior());
         actionOnBlock.add(new BellChainBehavior());
+        actionOnBlock.add(new FDStickBehavior());
 
         itemAction.add(new ThrowableBrickBehavior());
         itemAction.add(new ClockItemBehavior());
@@ -432,6 +432,32 @@ public class ItemsOverrideHandler {
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
+            }
+            return InteractionResult.PASS;
+        }
+    }
+
+    private static class FDStickBehavior extends BlockInteractedWithOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return CommonConfigs.Tweaks.PLACEABLE_STICKS.get() && CompatHandler.farmers_delight;
+        }
+
+        @Override
+        public boolean appliesToBlock(Block block) {
+            return block == CompatObjects.TOMATOES.get();
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(BlockState state, BlockPos pos, Level level, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit) {
+            //bell chains
+            if (stack.getItem() == Items.STICK) {
+                var tomato = FarmersDelightCompat.getStickTomato();
+                if(tomato != null){
+                    return ItemsOverrideHandler.replaceSimilarBlock(tomato,
+                            player, stack, pos, level, state, SoundType.WOOD, BlockStateProperties.AGE_3);
+                }
             }
             return InteractionResult.PASS;
         }

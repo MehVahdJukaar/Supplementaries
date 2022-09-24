@@ -47,6 +47,7 @@ public final class RegistryConstants {
     public static final String SCONCE_NAME_ENDER = "sconce_ender";
     public static final String SCONCE_NAME_GLOW = "sconce_glow";
     public static final String SCONCE_NAME_GREEN = "sconce_green";
+    public static final String SCONCE_NAME_NETHER_BRASS = "sconce_nether_brass";
     public static final String COPPER_LANTERN_NAME = "copper_lantern";
     public static final String BRASS_LANTERN_NAME = "brass_lantern";
     public static final String LEAD_LANTERN_NAME = "lead_lantern";

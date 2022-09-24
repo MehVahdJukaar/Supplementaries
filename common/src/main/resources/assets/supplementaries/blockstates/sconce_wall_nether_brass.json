@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "lit=true,facing=north": {
+      "model": "supplementaries:block/sconce_wall_nether_brass"
+    },
+    "lit=true,facing=east": {
+      "model": "supplementaries:block/sconce_wall_nether_brass",
+      "y": 90
+    },
+    "lit=true,facing=south": {
+      "model": "supplementaries:block/sconce_wall_nether_brass",
+      "y": 180
+    },
+    "lit=true,facing=west": {
+      "model": "supplementaries:block/sconce_wall_nether_brass",
+      "y": 270
+    },
+    "lit=false,facing=north": {
+      "model": "supplementaries:block/sconce_wall_nether_brass_off"
+    },
+    "lit=false,facing=east": {
+      "model": "supplementaries:block/sconce_wall_nether_brass_off",
+      "y": 90
+    },
+    "lit=false,facing=south": {
+      "model": "supplementaries:block/sconce_wall_nether_brass_off",
+      "y": 180
+    },
+    "lit=false,facing=west": {
+      "model": "supplementaries:block/sconce_wall_nether_brass_off",
+      "y": 270
+    }
+  }
+}

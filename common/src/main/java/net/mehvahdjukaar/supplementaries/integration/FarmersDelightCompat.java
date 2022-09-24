@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,8 +49,13 @@ public class FarmersDelightCompat {
         throw new AssertionError();
     }
 
+    @Nullable
     @ExpectPlatform
-    public static void tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
+    public static Block getStickTomato() {
+        throw new AssertionError();
+    }
+    @ExpectPlatform
+    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
         throw new AssertionError();
     }
 

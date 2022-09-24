@@ -6,8 +6,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
+import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,6 +28,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +52,7 @@ import java.util.function.Supplier;
 
 public class FarmersDelightCompatImpl {
 
-    public static final ModSoundType STICK_TOMATO = new ModSoundType(1.0F, 1.0F,
+    public static final ModSoundType STICK_TOMATO_SOUND = new ModSoundType(1.0F, 1.0F,
             () -> SoundEvents.CROP_BREAK,
             () -> SoundEvents.GRASS_STEP,
             () -> SoundEvents.WOOD_PLACE,
@@ -62,7 +63,7 @@ public class FarmersDelightCompatImpl {
             () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)));
 
     public static final Supplier<Block> STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
-            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT).sound(STICK_TOMATO)));
+            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT).sound(STICK_TOMATO_SOUND)));
 
     public static void init() {
     }
@@ -87,7 +88,7 @@ public class FarmersDelightCompatImpl {
         return InteractionResult.PASS;
     }
 
-    public static void tryTomatoLogging(BlockState facingState, LevelAccessor level, BlockPos facingPos, boolean isRope) {
+    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor level, BlockPos facingPos, boolean isRope) {
         if (facingState.is(ModBlocks.TOMATO_CROP.get()) && facingState.getValue(TomatoVineBlock.ROPELOGGED)) {
             if (Configuration.ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES.get()) {
                 BlockState toPlace;
@@ -98,8 +99,11 @@ public class FarmersDelightCompatImpl {
                     toPlace = STICK_TOMATOES.get().defaultBlockState();
                 }
                 level.setBlock(facingPos, toPlace, 3);
+
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -115,6 +119,9 @@ public class FarmersDelightCompatImpl {
         return false;
     }
 
+    public static Block getStickTomato() {
+        return STICK_TOMATOES.get();
+    }
 
     public interface ITomatoLoggable {
 
@@ -158,7 +165,7 @@ public class FarmersDelightCompatImpl {
         public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
             BlockPos belowPos = pos.below();
             BlockState belowState = level.getBlockState(belowPos);
-            return belowState.getBlock() instanceof TomatoVineBlock && this.hasGoodCropConditions(level, pos);
+            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(ROPELOGGED,false), level, pos)) && this.hasGoodCropConditions(level, pos);
         }
 
         @Override
@@ -231,7 +238,7 @@ public class FarmersDelightCompatImpl {
             super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 
             if (facing == Direction.DOWN && !world.isClientSide()) {
-                tryTomatoLogging(facingState, world, facingPos, true);
+                FarmersDelightCompat.tryTomatoLogging(facingState, world, facingPos, true);
             }
 
             if (facing.getAxis() == Direction.Axis.Y) {
@@ -263,7 +270,7 @@ public class FarmersDelightCompatImpl {
 
         @Override
         public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-            return StickBlock.getStickShape(state.getValue(AXIS_X),true, state.getValue(AXIS_Z));
+            return StickBlock.getStickShape(state.getValue(AXIS_X), true, state.getValue(AXIS_Z));
         }
 
         public Block getInnerBlock() {
@@ -282,7 +289,7 @@ public class FarmersDelightCompatImpl {
             super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 
             if (facing == Direction.DOWN && !world.isClientSide()) {
-                tryTomatoLogging(facingState, world, facingPos, false);
+                FarmersDelightCompat.tryTomatoLogging(facingState, world, facingPos, false);
             }
             return state;
         }

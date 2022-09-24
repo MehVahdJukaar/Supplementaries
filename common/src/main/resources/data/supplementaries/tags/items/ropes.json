@@ -10,6 +10,7 @@
     {"id":"inspirations:rope","required":false},
     {"id":"farmersdelight:rope","required":false},
     {"id":"buildersdelight:chain_2","required":false},
+    {"id":"additionaladditions:rope","required":false},
     {"id":"darkerdepths:rope","required":false}
   ]
 }
