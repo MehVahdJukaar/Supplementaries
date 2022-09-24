@@ -10,11 +10,9 @@ import net.minecraft.world.level.Level;
 import java.util.UUID;
 
 public class CommonUtilImpl {
-    public static final GameProfile DUMMY_PROFILE = new GameProfile(
-            UUID.fromString("9bf808b4-d64a-47f0-9220-e3849f80f35b"), "[player_stando]");
-
 
     public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
+        if(copyRotFrom instanceof Player p)return p;
         if(copyPosFrom instanceof Player p)return p;
         else return null; //TODO: add
     }

@@ -135,13 +135,12 @@ public class ClientRegistry {
     }
 
 
-    @SuppressWarnings("ConstantConditions")
     public static void setup() {
 
-        ModMaterials.setup();
-
         //compat
-        CompatHandlerClient.setup();
+        CompatHandlerClient.setup(); //if this fails other stuff below will to. In other words we'll at least know that it failed since nothing will work anymore
+
+        ModMaterials.setup();
 
         //map markers
         ModMapMarkersClient.init();

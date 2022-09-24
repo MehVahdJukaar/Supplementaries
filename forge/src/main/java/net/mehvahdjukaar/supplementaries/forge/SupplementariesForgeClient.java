@@ -12,10 +12,7 @@ public class SupplementariesForgeClient {
 
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            ClientRegistry.setup();
-
-        });
+        event.enqueueWork(ClientRegistry::setup);
     }
 
 }

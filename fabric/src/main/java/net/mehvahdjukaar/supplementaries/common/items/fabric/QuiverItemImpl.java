@@ -92,9 +92,6 @@ public class QuiverItemImpl {
                         st.save(t);
                         return toInsert;
                     } else if (st.isEmpty()) {
-                        MultiBufferSource buffer;
-                        ChestRenderer
-                        VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.);
                         listTag.set(ind, toInsert.save(new CompoundTag()));
                         return ItemStack.EMPTY;
                     }

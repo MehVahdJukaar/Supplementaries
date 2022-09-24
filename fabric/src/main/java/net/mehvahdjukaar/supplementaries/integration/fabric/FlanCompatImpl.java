@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 public final class FlanCompatImpl {
 
     public static boolean canBreak(@Nonnull Player player, @Nonnull BlockPos pos) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
@@ -29,6 +30,7 @@ public final class FlanCompatImpl {
     }
 
     public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
@@ -40,6 +42,7 @@ public final class FlanCompatImpl {
     }
 
     public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
@@ -51,6 +54,7 @@ public final class FlanCompatImpl {
     }
 
     public static boolean canAttack(@Nonnull Player player, @Nonnull Entity victim) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(victim.blockPosition());
@@ -62,6 +66,7 @@ public final class FlanCompatImpl {
     }
 
     public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(targetPos);
@@ -73,6 +78,7 @@ public final class FlanCompatImpl {
     }
 
     public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos interactionPos, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
+        if(player.level.isClientSide)return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(targetPos);
