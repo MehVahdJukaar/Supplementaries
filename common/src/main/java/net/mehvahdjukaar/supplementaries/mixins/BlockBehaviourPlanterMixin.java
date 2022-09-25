@@ -32,12 +32,13 @@ public abstract class BlockBehaviourPlanterMixin {
             value = "RETURN",
             ordinal = 1),
             cancellable = true)
+    @SuppressWarnings("ConstantConditions")
     public void getOffset(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Vec3> cir) {
         //null check for world since some mods like to throw a null world here...
         if (world != null && cir.getReturnValue() != Vec3.ZERO &&
                 !world.isOutsideBuildHeight(pos.getY() - 2) && world instanceof RenderChunkRegion) {
             int b = 1;
-            if (this.getBlock() instanceof DoublePlantBlock && ((BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+            if (this.getBlock() instanceof DoublePlantBlock && ((BlockBehaviour.BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;
             }
             if (world.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
