@@ -37,7 +37,7 @@ public abstract class BlockBehaviourPlanterMixin {
         if (world != null && cir.getReturnValue() != Vec3.ZERO &&
                 !world.isOutsideBuildHeight(pos.getY() - 2) && world instanceof RenderChunkRegion) {
             int b = 1;
-            if (this.getBlock() instanceof DoublePlantBlock && world.getBlockState(pos).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+            if (this.getBlock() instanceof DoublePlantBlock && ((BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;
             }
             if (world.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
