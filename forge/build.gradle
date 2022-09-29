@@ -31,10 +31,11 @@ configurations {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "required_moonlight_version", rootProject.required_moonlight_version
     //inputs.property "mod_name": project.getArchivesBaseName()
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+        expand "version": project.version, "required_moonlight_version": rootProject.required_moonlight_version
         expand "mod_name": project.getArchivesBaseName()
     }
 
@@ -171,7 +172,8 @@ dependencies {
     modImplementation("curse.maven:farmers-delight-398521:3999157")
 
     modImplementation("curse.maven:jei-238222:3928388")
-    modImplementation("curse.maven:configured-457570:3946498")
+    modImplementation ("curse.maven:configured-457570:4011355")
+
     modCompileOnly ("curse.maven:cc-tweaked-282001:3904454")
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:3857246")
@@ -186,7 +188,10 @@ dependencies {
     modImplementation("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-362528:3941638")
     modImplementation("curse.maven:map-atlases-forge-519759:3949437")
-    modImplementation("curse.maven:skinned-lanterns-414154:3970173")
+    modImplementation("curse.maven:create-328085:4007550")
+    modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
 
 
 

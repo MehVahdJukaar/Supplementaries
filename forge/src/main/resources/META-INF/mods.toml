@@ -43,7 +43,7 @@ logoFile = "icon.png" #optional
 [[dependencies.supplementaries]]
     modId = "moonlight"
     mandatory = true
-    versionRange = "[1.19.2-2.0.28,]"
+    versionRange = "[${required_moonlight_version},]"
     ordering = "NONE"
     side = "BOTH"
 

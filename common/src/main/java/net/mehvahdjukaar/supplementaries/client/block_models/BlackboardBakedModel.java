@@ -5,8 +5,9 @@ import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.client.renderer.RenderType;
@@ -78,21 +79,23 @@ public class BlackboardBakedModel implements CustomBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType,
+                                         ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
         if (data != ExtraModelData.EMPTY && state != null && side == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
-            BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
+            boolean glow = state.getValue(BlackboardBlock.GLOWING);
+            Key key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
-                var blackboard = BlackboardTextureManager.getBlackboardInstance(key);
-                quads.addAll(blackboard.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform)));
+                var blackboard = BlackboardManager.getBlackboardInstance(key);
+                quads.addAll(blackboard.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform, glow)));
             }
         }
 
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform) {
+    private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform, boolean emissive) {
         List<BakedQuad> quads;
         try (TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
              TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {
@@ -118,7 +121,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
                     int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
                     TextureAtlasSprite sprite = prevColor == 0 ? black : white;
                     quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 0.3125f,
-                            1 / 16f, length / 16f, sprite, tint, rotation));
+                            1 / 16f, length / 16f, sprite, tint, rotation, prevColor != 0 && emissive));
                     startY = y;
                     if (current != null) {
                         prevColor = current;
@@ -130,12 +133,14 @@ public class BlackboardBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height, TextureAtlasSprite sprite, int color, Transformation transform) {
+    public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
+                                            TextureAtlasSprite sprite, int color, Transformation transform,
+                                            boolean emissive) {
         Vector3f normal = new Vector3f(0, 0, -1);
 
         BakedQuadBuilder builder = BakedQuadBuilder.create();
 
-        BakedQuadBuilder.applyModelRotation(0, 0, -1, transform.getMatrix());
+        //RotHlpr.applyModelRotation(0, 0, -1, transform.getMatrix());
         float tu = sprite.getWidth() * width;
         float tv = sprite.getHeight() * height;
         float u0 = x * 16;
@@ -145,22 +150,23 @@ public class BlackboardBakedModel implements CustomBakedModel {
         builder.setSprite(sprite);
 
         putVertex(builder, normal, x + width, y + height, z,
-                u0 + tu, v0 + tv, sprite, color, transform);
+                u0 + tu, v0 + tv, sprite, color, transform, emissive);
         putVertex(builder, normal, x + width, y, z,
-                u0 + tu, v0, sprite, color, transform);
+                u0 + tu, v0, sprite, color, transform, emissive);
         putVertex(builder, normal, x, y, z,
-                u0, v0, sprite, color, transform);
+                u0, v0, sprite, color, transform, emissive);
         putVertex(builder, normal, x, y + height, z,
-                u0, v0 + tv, sprite, color, transform);
+                u0, v0 + tv, sprite, color, transform, emissive);
 
         return builder.build();
     }
 
     private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
                                   float x, float y, float z, float u, float v,
-                                  TextureAtlasSprite sprite, int color, Transformation transformation) {
+                                  TextureAtlasSprite sprite, int color,
+                                  Transformation transformation, boolean emissive) {
 
-        Vector3f posV = BakedQuadBuilder.applyModelRotation(x, y, z, transformation.getMatrix());
+        Vector3f posV = RotHlpr.rotateVertexOnCenterBy(x, y, z, transformation.getMatrix());
 
         builder.pos(posV);
 
@@ -169,6 +175,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
         builder.uv(sprite.getU(u), sprite.getV(v));
 
         builder.normal(normal.x(), normal.y(), normal.z());
+
+        if (emissive) builder.lightEmission(15);
 
         builder.endVertex();
     }

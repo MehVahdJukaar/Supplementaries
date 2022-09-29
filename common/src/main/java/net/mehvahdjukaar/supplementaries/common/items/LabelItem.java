@@ -32,10 +32,8 @@ public class LabelItem extends Item {
         } else {
             Level level = pContext.getLevel();
             BlockState state = level.getBlockState(blockpos);
-            var type = LabelEntity.AttachType.get(state);
 
-            LabelEntity label = new LabelEntity(level, relative, direction);
-            label.setAttachmentType(type);
+            LabelEntity label = new LabelEntity(level, blockpos, direction);
 
             CompoundTag compoundtag = itemstack.getTag();
             if (compoundtag != null) {

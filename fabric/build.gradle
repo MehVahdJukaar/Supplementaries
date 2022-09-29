@@ -62,7 +62,7 @@ processResources {
     inputs.property "mod_id", rootProject.mod_id
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "mod_id": rootProject.mod_id
+        expand "version": project.version, "mod_id": rootProject.mod_id, "required_moonlight_version": rootProject.required_moonlight_version
     }
 }
 

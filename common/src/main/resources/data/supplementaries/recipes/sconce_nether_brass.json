@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "212",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "item": "architects_palette:nether_brass_torch"
+    },
+    "2": {
+      "item": "architects_palette:nether_brass_nugget"
+    }
+  },
+  "result": {
+    "item": "supplementaries:sconce_nether_brass",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:and",
+      "values": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "architects_palette"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    }
+  ]
+}

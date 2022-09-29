@@ -5,14 +5,12 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -20,24 +18,14 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
@@ -76,31 +64,18 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
 
         //recipes
-        if(RegistryConfigs.SIGN_POST_ENABLED.get()) {
+        if (RegistryConfigs.SIGN_POST_ENABLED.get()) {
             addSignPostRecipes(manager);
         }
-        if(RegistryConfigs.HANGING_SIGN_ENABLED.get()){
+        if (RegistryConfigs.HANGING_SIGN_ENABLED.get()) {
             addHangingSignRecipes(manager);
         }
 
         //way signs tag
-
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-
             if (CommonConfigs.Spawns.WAY_SIGN_ENABLED.get()) {
-                for (var id : BuiltinRegistries.BIOME.keySet()) {
-                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
-
-                    if (!holder.is(BiomeTags.IS_OCEAN) &&
-                            !holder.is(BiomeTags.IS_NETHER) &&
-                            !holder.is(BiomeTags.IS_END) &&
-                            !holder.is(BiomeTags.IS_RIVER) &&
-                            !holder.is(BiomeTags.IS_JUNGLE) &&
-                            !holder.is(Biomes.MUSHROOM_FIELDS)) {
-                        builder.add(id);
-                    }
-                }
+                builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
@@ -111,14 +86,7 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
             if (CommonConfigs.Spawns.URN_PILE_ENABLED.get()) {
-                for (var id : BuiltinRegistries.BIOME.keySet()) {
-                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
-
-                    if (!holder.is(BiomeTags.IS_END) && !holder.is(BiomeTags.IS_NETHER) &&
-                            !CommonConfigs.Spawns.URN_BIOME_BLACKLIST.get().contains(id.toString())) {
-                        builder.add(id);
-                    }
-                }
+                builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
@@ -129,19 +97,12 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
             if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
-                for (var id : BuiltinRegistries.BIOME.keySet()) {
-                    Holder<Biome> holder = BuiltinRegistries.BIOME.getHolderOrThrow(ResourceKey.create(BuiltinRegistries.BIOME.key(), id));
+                builder.addTag(BiomeTags.IS_OVERWORLD);
 
-                    if (!holder.is(BiomeTags.IS_END) && !holder.is(BiomeTags.IS_NETHER) &&
-                            ( holder.is(BiomeTags.IS_BEACH) || holder.is(BiomeTags.IS_RIVER)
-                                    || holder.is(BiomeTags.IS_BADLANDS) ||
-                                    holder.is(BiomeTags.HAS_VILLAGE_DESERT))){
-                        builder.add(id);
-                    }
-                }
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }
+
     }
 
     @Override

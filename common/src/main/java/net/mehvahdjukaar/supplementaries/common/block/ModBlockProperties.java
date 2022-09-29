@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
@@ -61,6 +61,7 @@ public class ModBlockProperties {
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");
+    public static final BooleanProperty GLOWING = BooleanProperty.create("glowing");
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
     public static final IntegerProperty OPENING_PROGRESS = IntegerProperty.create("opening_progress", 0, 2);
     public static final EnumProperty<SignAttachment> SIGN_ATTACHMENT = EnumProperty.create("sign_attachment", SignAttachment.class);
@@ -73,7 +74,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
-    public static final ModelDataKey<BlackboardTextureManager.BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardTextureManager.BlackboardKey.class);
+    public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 

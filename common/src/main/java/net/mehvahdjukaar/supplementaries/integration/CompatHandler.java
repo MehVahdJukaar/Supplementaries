@@ -103,7 +103,7 @@ public class CompatHandler {
     }
 
     public static void setup() {
-        // if (create) CreatePlugin.initialize();
+        if (create) CreateCompat.initialize();
         if (computercraft) CCCompat.initialize();
 
         var i = Registry.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));

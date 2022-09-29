@@ -14,5 +14,6 @@ public class CompatHandlerClient {
 
     @ExpectPlatform
     public static void init() {
+        if(CompatHandler.flywheel) FlywheelCompat.initialize();
     }
 }

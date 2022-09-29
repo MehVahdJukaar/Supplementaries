@@ -6,9 +6,9 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-public class BlackboardTextureManager {
+public class BlackboardManager {
 
     private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
-    private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<Key, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
                 TextureInstance value = (TextureInstance) i.getValue();
@@ -40,12 +40,12 @@ public class BlackboardTextureManager {
             })
             .build(new CacheLoader<>() {
                 @Override
-                public TextureInstance load(BlackboardKey key) {
+                public TextureInstance load(Key key) {
                     return null;
                 }
             });
 
-    public static TextureInstance getBlackboardInstance(BlackboardKey key) {
+    public static TextureInstance getBlackboardInstance(Key key) {
         TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
             textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values));
@@ -54,27 +54,21 @@ public class BlackboardTextureManager {
         return textureInstance;
     }
 
-    public static TextureInstance getBlackboardInstance(long[] packed) {
-        return getBlackboardInstance(new BlackboardKey(packed));
-    }
-
-    public static TextureInstance getBlackboardInstance(BlackboardBlockTile tile) {
-        return getBlackboardInstance(tile.getTextureKey());
-    }
-
-    public static class BlackboardKey {
+    public static class Key {
         private final long[] values;
+        private final boolean glow;
 
-        public BlackboardKey(long[] packed) {
+        Key(long[] packed, boolean glowing) {
             values = packed;
+            glow = glowing;
         }
 
-        public BlackboardKey(byte[][] pixels) {
-            values = BlackboardBlockTile.packPixels(pixels);
+        public static Key of(long[] packPixels, boolean glowing) {
+            return new Key(packPixels, glowing);
         }
 
-        public byte[][] unpackValues() {
-            return BlackboardBlockTile.unpackPixels(values);
+        public static Key of(long[] packPixels) {
+            return new Key(packPixels, false);
         }
 
         @Override
@@ -88,8 +82,8 @@ public class BlackboardTextureManager {
             if (another.getClass() != this.getClass()) {
                 return false;
             }
-            BlackboardKey key = (BlackboardKey) another;
-            return Arrays.equals(this.values, key.values);
+            Key key = (Key) another;
+            return Arrays.equals(this.values, key.values) && glow == key.glow;
         }
 
         @Override
@@ -103,7 +97,7 @@ public class BlackboardTextureManager {
         private static final int WIDTH = 16;
 
         //models for each direction
-        private final Map<Direction, List<BakedQuad>> models = new HashMap<>();
+        private final Map<Direction, List<BakedQuad>> quadsCache = new HashMap<>();
         private final byte[][] pixels;
         //he be lazy
         @Nullable
@@ -135,10 +129,10 @@ public class BlackboardTextureManager {
 
         @Nonnull
         public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
-            if (!models.containsKey(dir)) {
-                this.models.put(dir, modelFactory.apply(pixels));
+            if (!quadsCache.containsKey(dir)) {
+                this.quadsCache.put(dir, modelFactory.apply(pixels));
             }
-            return models.get(dir);
+            return quadsCache.get(dir);
         }
 
         @Nonnull
@@ -162,8 +156,8 @@ public class BlackboardTextureManager {
         //should be called when cache expires
         @Override
         public void close() {
-            if(texture != null) this.texture.close();
-            if(textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
+            if (texture != null) this.texture.close();
+            if (textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
         }
     }
 

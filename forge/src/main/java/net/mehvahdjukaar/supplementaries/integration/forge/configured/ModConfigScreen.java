@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 
 
+import com.mrcrayfish.configured.api.IModConfig;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
@@ -81,12 +82,13 @@ public class ModConfigScreen extends CustomConfigScreen {
     }
 
 
-    public ModConfigScreen(CustomConfigSelectScreen parent, ModConfig config) {
+    public ModConfigScreen(CustomConfigSelectScreen parent, IModConfig config) {
         super(parent, config);
         this.icons.putAll(ICONS);
     }
 
-    public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background, Component title, Screen parent, ModConfig config) {
+    public ModConfigScreen(String modId, ItemStack mainIcon, ResourceLocation background, Component title,
+                           Screen parent, IModConfig config) {
         super(modId, mainIcon, background, title, parent, config);
         this.icons.putAll(ICONS);
     }
@@ -98,17 +100,16 @@ public class ModConfigScreen extends CustomConfigScreen {
 
     @Override
     public boolean hasFancyBooleans() {
-        return this.config == ((ConfigSpecWrapper) RegistryConfigs.REGISTRY_SPEC).getModConfig();
+        return  this.config.getFileName().contains("registry");
     }
 
     @Override
     public void onSave() {
         //sync stuff
-        if (this.config == ((ConfigSpecWrapper) CommonConfigs.SERVER_SPEC).getModConfig()) {
+        if (this.config.getFileName().contains("common")) {
             //TODO: fix. this work but shouldnt be needed and might break servers
+            //TODO: configured should have something for this
             ConfigUtils.clientRequestServerConfigReload();
-        } else if (this.config == ((ConfigSpecWrapper) ClientConfigs.CLIENT_SPEC).getModConfig()) {
-            //ClientConfigs.cached.refresh();
         }
     }
 

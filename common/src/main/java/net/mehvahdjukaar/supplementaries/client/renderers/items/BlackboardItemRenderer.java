@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -39,7 +39,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         if(com != null && com.contains("Pixels")) {
             packed = com.getLongArray("Pixels");
         }
-        var blackboard = BlackboardTextureManager.getBlackboardInstance(packed);
+        var blackboard = BlackboardManager.getBlackboardInstance(BlackboardManager.Key.of(packed));
         VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());
 
         int lu = combinedLightIn & '\uffff';

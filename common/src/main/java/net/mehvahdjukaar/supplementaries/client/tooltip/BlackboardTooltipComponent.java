@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -16,7 +16,8 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
     private final ResourceLocation texture;
 
     public BlackboardTooltipComponent(BlackboardItem.BlackboardTooltip tooltip) {
-        this.texture = BlackboardTextureManager.getBlackboardInstance(tooltip.packed()).getTextureLocation();
+        this.texture = BlackboardManager.getBlackboardInstance(
+                BlackboardManager.Key.of(tooltip.packed())).getTextureLocation();
     }
 
     @Override

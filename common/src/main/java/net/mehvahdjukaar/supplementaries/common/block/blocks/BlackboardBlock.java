@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BlackboardBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -16,6 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -50,16 +53,18 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty GLOWING = ModBlockProperties.GLOWING;
+
 
     public BlackboardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false));
+                .setValue(WATERLOGGED, false).setValue(GLOWING, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, GLOWING);
     }
 
     @Override
@@ -116,10 +121,10 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
         int x = Mth.clamp((int) fx, -15, 15);
 
         int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
+        if (v2.y < 0) y = 15 - y; //crappy logic
         return new Pair<>(x, y);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Nullable
     public static DyeColor getStackChalkColor(ItemStack stack) {
         DyeColor color = null;
@@ -138,26 +143,53 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player) && !te.isWaxed()) {
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player) && !te.isWaxed()) {
             ItemStack stack = player.getItemInHand(handIn);
-
-            if (stack.getItem() instanceof HoneycombItem) {
+            Item i = stack.getItem();
+            if (i instanceof HoneycombItem) {
                 if (player instanceof ServerPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
                 }
-                stack.shrink(1);
-                worldIn.levelEvent(player, 3003, pos, 0);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                //TODO use better particles shape
+                level.levelEvent(player, 3003, pos, 0);
                 te.setWaxed(true);
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+
+            if (i == Items.GLOW_INK_SAC && !state.getValue(GLOWING)) {
+                if (player instanceof ServerPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                }
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlockAndUpdate(pos, state.setValue(GLOWING, true));
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+
+            if (i == Items.INK_SAC && state.getValue(GLOWING)) {
+                if (player instanceof ServerPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                }
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+                level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
 
             UseMode mode = CommonConfigs.Blocks.BLACKBOARD_MODE.get();
 
             if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 
-                if (stack.getItem() instanceof SoapItem) return InteractionResult.PASS;
+                if (i instanceof SoapItem) return InteractionResult.PASS;
                 Pair<Integer, Integer> pair = getHitSubPixel(hit);
                 int x = pair.getFirst();
                 int y = pair.getSecond();
@@ -169,24 +201,25 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                         te.setPixel(x, y, newColor);
                         te.setChanged();
                     }
-                    return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
-            if (!worldIn.isClientSide && mode.canOpenGui()) {
-                te.sendOpenGuiPacket(worldIn, pos, player);
+            if (!level.isClientSide && mode.canOpenGui()) {
+                te.sendOpenGuiPacket(level, pos, player);
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
 
-    public enum UseMode{
-        BOTH,GUI,MANUAL;
+    public enum UseMode {
+        BOTH, GUI, MANUAL;
 
-        public boolean canOpenGui(){
+        public boolean canOpenGui() {
             return this != MANUAL;
         }
-        public boolean canManualDraw(){
+
+        public boolean canManualDraw() {
             return this != GUI;
         }
     }
@@ -226,6 +259,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
+            if (state.getValue(GLOWING)) {
+                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
+            }
             if (te.isWaxed()) {
                 te.setWaxed(false);
                 te.setChanged();

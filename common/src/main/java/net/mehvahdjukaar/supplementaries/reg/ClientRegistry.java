@@ -95,11 +95,8 @@ public class ClientRegistry {
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
-    public static final Map<LabelEntity.AttachType, ResourceLocation> LABEL_MODELS = new EnumMap<>(LabelEntity.AttachType.class) {{
-        put(LabelEntity.AttachType.BLOCK, Supplementaries.res("block/label"));
-        put(LabelEntity.AttachType.CHEST, Supplementaries.res("block/label_chest"));
-        put(LabelEntity.AttachType.JAR, Supplementaries.res("block/label_jar"));
-    }};
+    public static final ResourceLocation LABEL_MODEL = Supplementaries.res("block/label");
+
 
     public static KeyMapping QUIVER_KEYBIND;
 
@@ -324,7 +321,7 @@ public class ClientRegistry {
         event.register(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
-        // event.registerEntityRenderer(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
+        event.register(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
     }
 
     @EventCalled
@@ -367,8 +364,8 @@ public class ClientRegistry {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WallLanternTexturesRegistry.SPECIAL_TEXTURES.values().forEach(event::register);
         HANGING_SIGNS_BLOCK_MODELS.values().forEach(event::register);
-        LABEL_MODELS.values().forEach(event::register);
         event.register(BLACKBOARD_FRAME);
+        event.register(LABEL_MODEL);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
         event.register(BELL_ROPE);

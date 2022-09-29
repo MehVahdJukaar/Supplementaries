@@ -100,6 +100,17 @@ public class StatueBlockTile extends ItemDisplayTile {
         }
     }
 
+
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return this.canPlaceItem(index, stack);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+        return true;
+    }
+
     @Override
     public Component getDefaultName() {
         return Component.translatable("block.supplementaries.statuette");

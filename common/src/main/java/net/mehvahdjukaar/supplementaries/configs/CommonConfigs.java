@@ -659,7 +659,6 @@ public class CommonConfigs {
         public static Supplier<Boolean> URN_PILE_ENABLED;
         public static Supplier<Integer> URN_PATCH_TRIES;
         public static Supplier<Integer> URN_PER_CHUNK;
-        public static Supplier<List<String>> URN_BIOME_BLACKLIST;
 
         public static Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
 
@@ -690,9 +689,6 @@ public class CommonConfigs {
                     .define("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
                     .define("spawn_attempts", 7, 0, 100);
-            List<String> urnBlacklist = List.of("minecraft:lush_caves", "minecraft:dripstone_caves");
-            URN_BIOME_BLACKLIST = builder.comment("Biomes in which urns won't spawn")
-                    .define("biome_blacklist", urnBlacklist);
             builder.pop();
 
             builder.push("misc");

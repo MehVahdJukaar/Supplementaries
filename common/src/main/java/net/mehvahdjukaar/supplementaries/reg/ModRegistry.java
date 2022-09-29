@@ -208,27 +208,25 @@ public class ModRegistry {
     //label
 
     public static final Supplier<EntityType<LabelEntity>> LABEL =
-            null; /*
-            ENTITIES.register(LABEL_NAME, () -> (
+            regEntity(LABEL_NAME, () -> (
             EntityType.Builder.<LabelEntity>of(LabelEntity::new, MobCategory.MISC)
-                    .setCustomClientFactory(LabelEntity::new)
                     .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(10))
-            .build(LABEL_NAME));
+            );
 
-    public static final Supplier<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
-*/
+    //public static final Supplier<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
+    //        .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
+
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))
             .stacksTo(1).durability(250)));
-
+BlackboardBlock
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
             .tab(getTab(CreativeModeTab.TAB_TOOLS, SLINGSHOT_NAME))
-            .stacksTo(1).durability(192))); //setISTER(() -> SlingshotItemRenderer::new)
+            .stacksTo(1).durability(192)));
 
     //flute
     public static final Supplier<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())

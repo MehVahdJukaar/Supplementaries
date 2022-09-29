@@ -6,8 +6,9 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardTextureManager.BlackboardKey;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -24,14 +25,14 @@ import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<BlackboardKey> BLACKBOARD = ModBlockProperties.BLACKBOARD;
+    public static final ModelDataKey<Key> BLACKBOARD = ModBlockProperties.BLACKBOARD;
 
     private UUID owner = null;
     private boolean waxed = false;
     private byte[][] pixels = new byte[16][16];
 
     //client side
-    private BlackboardKey textureKey = null;
+    private Key textureKey = null;
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
@@ -46,13 +47,13 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
 
-    public BlackboardKey getTextureKey() {
+    public Key getTextureKey() {
         if (textureKey == null) refreshTextureKey();
         return textureKey;
     }
 
     public void refreshTextureKey() {
-        this.textureKey = new BlackboardKey(this.pixels);
+        this.textureKey = Key.of(packPixels(this.pixels), this.getBlockState().getValue(BlackboardBlock.GLOWING));
     }
 
     @Override

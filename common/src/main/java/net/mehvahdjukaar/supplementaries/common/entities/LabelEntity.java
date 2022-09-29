@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,36 +22,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class LabelEntity extends HangingEntity {
 
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(LabelEntity.class,
             EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Integer> ATTACHMENT = SynchedEntityData.defineId(LabelEntity.class,
-            EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> ATTACHMENT = SynchedEntityData.defineId(LabelEntity.class,
+            EntityDataSerializers.FLOAT);
 
     public LabelEntity(EntityType<? extends HangingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public LabelEntity(Level world) {
-        this((EntityType<? extends HangingEntity>) null, world);
-    }
-
-
     public LabelEntity(Level level, BlockPos pos, Direction direction) {
         super(ModRegistry.LABEL.get(), level, pos);
+        var offset = level.getBlockState(pos).getBlockSupportShape(level, pos).getFaceShape(direction).max(direction.getAxis());
+        if(direction.getAxisDirection() == Direction.AxisDirection.POSITIVE){
+
+        }
+
+
         this.setDirection(direction);
 
     }
 
-    //might aswell use this
+    //might as well use this
     @Override
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this, this.direction.get2DDataValue(), this.getPos());
@@ -66,7 +66,6 @@ public class LabelEntity extends HangingEntity {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(ATTACHMENT, 0);
         this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
     }
 
@@ -158,7 +157,7 @@ public class LabelEntity extends HangingEntity {
 
     protected void recalculateBoundingBox() {
         if (this.direction != null) {
-            double offsetFromCenter = (0.5 - 1 / 32f) + this.getAttachmentType().offset;
+            double offsetFromCenter = (0.5 - 1 / 32f);
             double d1 = (double) this.pos.getX() + 0.5D - (double) this.direction.getStepX() * offsetFromCenter;
             double d2 = (double) this.pos.getY() + 0.5D - (double) this.direction.getStepY() * offsetFromCenter;
             double d3 = (double) this.pos.getZ() + 0.5D - (double) this.direction.getStepZ() * offsetFromCenter;
@@ -180,33 +179,15 @@ public class LabelEntity extends HangingEntity {
         }
     }
 
-    public AttachType getAttachmentType() {
-        return AttachType.values()[this.entityData.get(ATTACHMENT)];
+    public BlockPos getSupportingBlockPos() {
+        return switch (this.getDirection()) {
+            default -> new BlockPos(this.position().add(0, 0, 0.05));
+            case SOUTH -> new BlockPos(this.position().add(0, 0, -0.05));
+            case WEST -> new BlockPos(this.position().add(0.05, 0, 0));
+            case EAST -> new BlockPos(this.position().add(-0.05, 0, 0));
+        };
     }
 
-    public void setAttachmentType(AttachType type) {
-        this.entityData.set(ATTACHMENT, type.ordinal());
-        this.recalculateBoundingBox();
-    }
-
-    public enum AttachType {
-        BLOCK(0),
-        CHEST(1 / 16f),
-        JAR(-3 / 16f);
-        public final float offset;
-
-        AttachType(float offset) {
-            this.offset = offset;
-        }
-
-        public static AttachType get(BlockState state) {
-            Block b = state.getBlock();
-            if (b instanceof ChestBlock) return AttachType.CHEST;
-            else if (b instanceof JarBlock) return AttachType.JAR;
-            else return AttachType.BLOCK;
-        }
-
-    }
 
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
@@ -224,17 +205,15 @@ public class LabelEntity extends HangingEntity {
     @Override
     public boolean survives() {
 
-        AttachType currentAttachment = this.getAttachmentType();
-        BlockPos blockpos = this.pos.relative(this.direction.getOpposite());
+        BlockPos pos = getSupportingBlockPos();
+        Direction dir = this.getDirection();
+        BlockState state = this.level.getBlockState(pos);
+        VoxelShape bbShape = Shapes.create(this.getBoundingBox().move(-this.pos.getX(),-this.pos.getY(),-this.pos.getZ()));
 
-        BlockState blockstate = this.level.getBlockState(blockpos);
-        AttachType type = AttachType.get(blockstate);
-        if (currentAttachment != type) {
-            this.setAttachmentType(type);
-        }
-        if (type == AttachType.BLOCK && !blockstate.isFaceSturdy(level, pos, this.direction, SupportType.CENTER)) {
-            return false;
-        }
+
+        if (Shapes.joinIsNotEmpty(state.getBlockSupportShape(level, pos).getFaceShape(dir),
+                bbShape, BooleanOp.ONLY_SECOND)) return false;
+
         return this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
 
     }
