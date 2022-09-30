@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
-import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * something called by mixin which should place or alter a block when clicked on
  */
-public record SimplePlacement(@Nullable Block placeable) implements IAdditionalPlacement {
+public record SimplePlacement(@Nullable Block placeable) implements AdditionalPlacement {
 
     public SimplePlacement(@Nullable Block placeable) {
         this.placeable = placeable;

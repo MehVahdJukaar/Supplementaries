@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * something called by mixin which allows performing extra action when an item is used
  */
-public interface IAdditionalPlacement {
+public interface AdditionalPlacement {
 
     @Nullable
     default BlockState overrideGetPlacementState(BlockPlaceContext pContext) {

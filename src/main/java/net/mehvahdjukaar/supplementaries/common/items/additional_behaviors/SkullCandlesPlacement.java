@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
-import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SkullCandlesPlacement implements IAdditionalPlacement {
+public class SkullCandlesPlacement implements AdditionalPlacement {
 
     BlockPlacerItem getMimic() {
         return ModRegistry.BLOCK_PLACER.get();

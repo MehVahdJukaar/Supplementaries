@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
 
-import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DoubleCakePlacement implements IAdditionalPlacement {
+public class DoubleCakePlacement implements AdditionalPlacement {
 
     @Override
     public BlockPlaceContext overrideUpdatePlacementContext(BlockPlaceContext pContext) {

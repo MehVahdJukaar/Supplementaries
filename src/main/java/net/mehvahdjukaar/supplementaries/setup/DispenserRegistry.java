@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightUpBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
@@ -71,6 +72,8 @@ public class DispenserRegistry {
         if(RegistryConfigs.Reg.SACK_ENABLED.get()){
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
         }
+        DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
+
 
         //jar
         boolean jar = RegistryConfigs.Reg.JAR_ENABLED.get();

@@ -133,4 +133,16 @@ public class StatueBlockTile extends ItemDisplayTile {
             return this == GLOBE || this == SEPIA_GLOBE;
         }
     }
+
+
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction direction) {
+        return this.canPlaceItem(index, stack);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+        return true;
+    }
+
 }

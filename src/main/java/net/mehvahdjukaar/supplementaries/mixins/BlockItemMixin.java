@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.api.IAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
@@ -21,7 +21,7 @@ public abstract class BlockItemMixin extends Item implements IExtendedItem {
 
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void getPlacementState(BlockPlaceContext pContext, CallbackInfoReturnable<BlockState> cir) {
-        IAdditionalPlacement behavior = this.getAdditionalBehavior();
+        AdditionalPlacement behavior = this.getAdditionalBehavior();
         if (behavior != null) {
             BlockState overrideBlockState = behavior.overrideGetPlacementState(pContext);
             if (overrideBlockState != null ) {
@@ -32,7 +32,7 @@ public abstract class BlockItemMixin extends Item implements IExtendedItem {
 
     @Inject(method = "place", at = @At("HEAD"), cancellable = true)
     private void place(BlockPlaceContext pContext, CallbackInfoReturnable<InteractionResult> cir) {
-        IAdditionalPlacement behavior = this.getAdditionalBehavior();
+        AdditionalPlacement behavior = this.getAdditionalBehavior();
         if (behavior != null) {
             var result = behavior.overridePlace(pContext);
             if (result.consumesAction()) {
@@ -43,7 +43,7 @@ public abstract class BlockItemMixin extends Item implements IExtendedItem {
 
     @Inject(method = "updatePlacementContext", at = @At("HEAD"), cancellable = true)
     private void updatePlacementContext(BlockPlaceContext pContext, CallbackInfoReturnable<BlockPlaceContext> cir) {
-        IAdditionalPlacement behavior = this.getAdditionalBehavior();
+        AdditionalPlacement behavior = this.getAdditionalBehavior();
         if (behavior != null) {
             var result = behavior.overrideUpdatePlacementContext(pContext);
             if(result != null){

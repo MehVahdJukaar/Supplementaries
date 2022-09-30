@@ -67,7 +67,7 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
 
     modId="create"
     mandatory=false
-    versionRange="[0.4c,)"
+    versionRange="[0.4d,)"
     ordering="NONE"
     side="BOTH"
 
@@ -79,4 +79,10 @@ configuredBackground= "supplementaries:textures/blocks/blackstone_tiles.png"
     ordering="NONE"
     side="CLIENT"
 
+[[dependencies.supplementaries]]
 
+    modId="configured"
+    mandatory=false
+    versionRange="[2.0.0,)"
+    ordering="NONE"
+    side="CLIENT"
