@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
+import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;

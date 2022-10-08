@@ -393,6 +393,11 @@
   "subtitle.supplementaries.slingshot.release": "Slingshot released",
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
 
+  "supplementaries.display_source.item_name": "Item Name",
+  "supplementaries.display_source.world_position": "World Position",
+  "supplementaries.display_source.time_of_day": "Time of Day",
+  "supplementaries.display_source.fluid_amount": "Fluid Amount",
+  "create.display_source.fill_level.fluid_amount": "Fluid Amount",
 
   "block_type.supplementaries.hanging_sign": "Hanging Sign",
   "block_type.supplementaries.sign_post": "Sign Post",

@@ -39,7 +39,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         if(com != null && com.contains("Pixels")) {
             packed = com.getLongArray("Pixels");
         }
-        var blackboard = BlackboardManager.getBlackboardInstance(BlackboardManager.Key.of(packed));
+        var blackboard = BlackboardManager.getBlackboardInstance(BlackboardManager.BlackboardKey.of(packed));
         VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());
 
         int lu = combinedLightIn & '\uffff';

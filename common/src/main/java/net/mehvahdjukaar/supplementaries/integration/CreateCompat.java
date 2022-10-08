@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 public class CreateCompat {
 
     @ExpectPlatform
-    public static void initialize(){
+    public static void setup(){
         throw new AssertionError();
     }
 }

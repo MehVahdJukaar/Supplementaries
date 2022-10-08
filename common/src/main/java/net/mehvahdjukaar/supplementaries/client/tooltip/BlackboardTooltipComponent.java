@@ -17,7 +17,7 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
 
     public BlackboardTooltipComponent(BlackboardItem.BlackboardTooltip tooltip) {
         this.texture = BlackboardManager.getBlackboardInstance(
-                BlackboardManager.Key.of(tooltip.packed())).getTextureLocation();
+                BlackboardManager.BlackboardKey.of(tooltip.packed())).getTextureLocation();
     }
 
     @Override

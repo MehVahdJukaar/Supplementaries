@@ -20,7 +20,7 @@ public class SpeakerBlockGui extends Screen {
     private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");
     private static final Component VOLUME_TEXT = Component.translatable("gui.supplementaries.speaker_block.volume");
 
-    private EditBox commandTextField;
+    private EditBox editBox;
     private final SpeakerBlockTile tileSpeaker;
     private boolean narrator;
     private final String message;
@@ -42,7 +42,7 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public void tick() {
-        this.commandTextField.tick();
+        this.editBox.tick();
     }
 
     private void updateMode() {
@@ -82,22 +82,22 @@ public class SpeakerBlockGui extends Screen {
         }
 
         this.updateMode();
-        this.commandTextField = new EditBox(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
+        this.editBox = new EditBox(this.font, this.width / 2 - 100, this.height / 4 + 10, 200, 20, this.title) {
             protected MutableComponent createNarrationMessage() {
                 return super.createNarrationMessage();
             }
         };
-        this.commandTextField.setValue(message);
-        this.commandTextField.setMaxLength(32);
-        this.addRenderableWidget(this.commandTextField);
-        this.setInitialFocus(this.commandTextField);
-        this.commandTextField.setFocus(true);
+        this.editBox.setValue(message);
+        this.editBox.setMaxLength(32);
+        this.addRenderableWidget(this.editBox);
+        this.setInitialFocus(this.editBox);
+        this.editBox.setFocus(true);
     }
 
     @Override
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-        this.tileSpeaker.setSettings(this.volumeSlider.getValue(), this.narrator, this.commandTextField.getValue());
+        this.tileSpeaker.setSettings(this.volumeSlider.getValue(), this.narrator, this.editBox.getValue());
         //refreshTextures server tile
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
                 this.tileSpeaker.getMessage(), this.tileSpeaker.isNarrator(), this.tileSpeaker.getVolume()));

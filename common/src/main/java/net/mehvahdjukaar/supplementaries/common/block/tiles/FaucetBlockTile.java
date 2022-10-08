@@ -27,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -226,6 +227,13 @@ public class FaucetBlockTile extends BlockEntity {
         }
 
         if (!doTransfer) return !this.tempFluidHolder.isEmpty();
+
+        if (backBlock instanceof WorldlyContainerHolder wc) {
+            //TODO: add
+            //container = wc.getContainer(backBlock, level, behind);
+            //return this.spillItemsFromInventory(level, pos, dir, tileBack);
+
+        }
         return false;
     }
     //TODO: maybe add a registry for block -> interaction like dispenser one
@@ -372,7 +380,6 @@ public class FaucetBlockTile extends BlockEntity {
 
     //------items------
 
-    @SuppressWarnings("ConstantConditions")
     public boolean spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         //TODO: maybe add here insertion in containers below
         if (this.isConnectedBelow()) return false;

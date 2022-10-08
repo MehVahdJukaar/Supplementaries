@@ -30,7 +30,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
     public ServerBoundSetTextHolderPacket(BlockPos pos, TextHolder textHolder) {
         this.pos = pos;
         this.size = textHolder.size();
-        this.signText = textHolder.getSignText();
+        this.signText = textHolder.getTextLines();
     }
 
     @Override

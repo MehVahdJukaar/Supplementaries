@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
@@ -47,7 +48,8 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     public HangingSignBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.HANGING_SIGN_TILE.get(), pos, state);
-        this.textHolder = new TextHolder(MAX_LINES);
+        this.textHolder = new TextHolder(MAX_LINES, 75);
+
         if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
         } else this.woodType = WoodTypeRegistry.OAK_TYPE;
@@ -103,7 +105,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compound, this.stacks);
 
-        this.textHolder.read(compound);
+        this.textHolder.load(compound);
         this.loadOwner(compound);
     }
 
@@ -112,7 +114,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         super.saveAdditional(tag);
         ContainerHelper.saveAllItems(tag, this.stacks);
 
-        this.textHolder.write(tag);
+        this.textHolder.save(tag);
         this.saveOwner(tag);
     }
 

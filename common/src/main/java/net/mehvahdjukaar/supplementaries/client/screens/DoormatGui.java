@@ -118,7 +118,7 @@ public class DoormatGui extends Screen {
             this.cachedLines[this.editLine] = h;
             this.tileSign.textHolder.setLine(this.editLine, Component.literal(h));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
-                (s) -> this.minecraft.font.width(s) <= DoormatBlockTileRenderer.LINE_MAX_WIDTH);
+                (s) -> this.minecraft.font.width(s) <= tileSign.textHolder.getMaxLineVisualWidth());
     }
 
     @Override

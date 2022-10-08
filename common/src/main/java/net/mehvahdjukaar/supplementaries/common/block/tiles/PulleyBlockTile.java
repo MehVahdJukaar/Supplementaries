@@ -87,9 +87,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
 
-    public boolean handleRotation(Rotation rot) {
-        if (rot == Rotation.CLOCKWISE_90) return this.pullUp(this.worldPosition, this.level, 1);
-        else return this.pullDown(this.worldPosition, this.level, 1);
+    public boolean handleRotation(Rotation rot, BlockPos pos) {
+        if (rot == Rotation.CLOCKWISE_90) return this.pullUp(pos, this.level, 1);
+        else if(rot == Rotation.COUNTERCLOCKWISE_90) return this.pullDown(pos, this.level, 1);
+        else return false;
     }
 
     public boolean pullUp(BlockPos pos, LevelAccessor world, int rot) {

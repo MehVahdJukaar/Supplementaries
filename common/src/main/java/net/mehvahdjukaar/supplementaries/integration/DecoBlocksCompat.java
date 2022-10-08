@@ -14,6 +14,7 @@ public class DecoBlocksCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean canLightBrazier(BlockState state) {
         throw new AssertionError();

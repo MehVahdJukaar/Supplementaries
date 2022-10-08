@@ -32,7 +32,7 @@ public class BlackboardManager {
 
     private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
-    private static final LoadingCache<Key, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
                 TextureInstance value = (TextureInstance) i.getValue();
@@ -40,12 +40,12 @@ public class BlackboardManager {
             })
             .build(new CacheLoader<>() {
                 @Override
-                public TextureInstance load(Key key) {
+                public TextureInstance load(BlackboardKey key) {
                     return null;
                 }
             });
 
-    public static TextureInstance getBlackboardInstance(Key key) {
+    public static TextureInstance getBlackboardInstance(BlackboardKey key) {
         TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
             textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values));
@@ -54,21 +54,21 @@ public class BlackboardManager {
         return textureInstance;
     }
 
-    public static class Key {
+    public static class BlackboardKey {
         private final long[] values;
         private final boolean glow;
 
-        Key(long[] packed, boolean glowing) {
+        BlackboardKey(long[] packed, boolean glowing) {
             values = packed;
             glow = glowing;
         }
 
-        public static Key of(long[] packPixels, boolean glowing) {
-            return new Key(packPixels, glowing);
+        public static BlackboardKey of(long[] packPixels, boolean glowing) {
+            return new BlackboardKey(packPixels, glowing);
         }
 
-        public static Key of(long[] packPixels) {
-            return new Key(packPixels, false);
+        public static BlackboardKey of(long[] packPixels) {
+            return new BlackboardKey(packPixels, false);
         }
 
         @Override
@@ -82,7 +82,7 @@ public class BlackboardManager {
             if (another.getClass() != this.getClass()) {
                 return false;
             }
-            Key key = (Key) another;
+            BlackboardKey key = (BlackboardKey) another;
             return Arrays.equals(this.values, key.values) && glow == key.glow;
         }
 

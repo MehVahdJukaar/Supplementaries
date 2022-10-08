@@ -5,16 +5,14 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +38,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class PedestalBlock extends WaterBlock implements EntityBlock {
+public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyContainerHolder {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
             Shapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
             Shapes.box(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
@@ -98,7 +96,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
     //called when a neighbor is placed
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        super.updateShape(stateIn,facing,facingState,worldIn,currentPos,facingPos);
+        super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
 
         if (facing == Direction.UP) {
             return stateIn.setValue(UP, canConnect(facingState, currentPos, worldIn, facing, stateIn.getValue(HAS_ITEM)));
@@ -189,7 +187,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        if(pState.getValue(HAS_ITEM)){
+        if (pState.getValue(HAS_ITEM)) {
             return new PedestalBlockTile(pPos, pState);
         }
         return null;
@@ -221,10 +219,9 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        if(rotation == Rotation.CLOCKWISE_180){
+        if (rotation == Rotation.CLOCKWISE_180) {
             return state;
-        }
-        else{
+        } else {
             return switch (state.getValue(AXIS)) {
                 case Z -> state.setValue(AXIS, Direction.Axis.X);
                 case X -> state.setValue(AXIS, Direction.Axis.Z);
@@ -236,5 +233,106 @@ public class PedestalBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockUtil.addOptionalOwnership(placer, world, pos);
+    }
+
+    @Override
+    public WorldlyContainer getContainer(BlockState state, LevelAccessor level, BlockPos pos) {
+        if (state.getValue(HAS_ITEM)) {
+            return (PedestalBlockTile) level.getBlockEntity(pos);
+        }
+        return new TileLessContainer(state, level, pos);
+    }
+
+    static class TileLessContainer extends SimpleContainer implements WorldlyContainer {
+        private final BlockState state;
+        private final LevelAccessor level;
+        private final BlockPos pos;
+        private PedestalBlockTile tileReference = null;
+
+        public TileLessContainer(BlockState blockState, LevelAccessor levelAccessor,
+                                 BlockPos blockPos) {
+            super(1);
+            this.state = blockState;
+            this.level = levelAccessor;
+            this.pos = blockPos;
+        }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return tileReference == null;
+        }
+
+        @Override
+        public ItemStack getItem(int slot) {
+            if (tileReference != null) return tileReference.getItem(slot);
+            return super.getItem(slot);
+        }
+
+        @Override
+        public ItemStack removeItem(int slot, int amount) {
+            if (tileReference != null) return tileReference.removeItem(slot, amount);
+            return super.removeItem(slot, amount);
+        }
+
+        @Override
+        public boolean isEmpty() {
+            if (tileReference != null) return tileReference.isEmpty();
+            return super.isEmpty();
+        }
+
+        @Override
+        public ItemStack removeItemNoUpdate(int slot) {
+            if (tileReference != null) return tileReference.removeItemNoUpdate(slot);
+            return super.removeItemNoUpdate(slot);
+        }
+
+        @Override
+        public void clearContent() {
+            if (tileReference != null) tileReference.clearContent();
+            else super.clearContent();
+        }
+
+        @Override
+        public boolean canPlaceItem(int index, ItemStack stack) {
+            if (tileReference != null) return tileReference.canPlaceItem(index, stack);
+            return super.canPlaceItem(index, stack);
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            if (tileReference != null) return tileReference.getMaxStackSize();
+            return 1;
+        }
+
+        @Override
+        public int[] getSlotsForFace(Direction side) {
+            if (tileReference != null) return tileReference.getSlotsForFace(side);
+            return new int[]{0};
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
+            if (tileReference != null) return canTakeItemThroughFace(index, itemStack, direction);
+            return true;
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+            if (tileReference != null) return tileReference.canTakeItemThroughFace(index, stack, direction);
+            return !this.isEmpty();
+        }
+
+        @Override
+        public void setChanged() {
+            if (!this.isEmpty()) {
+                level.setBlock(pos, state.setValue(PedestalBlock.HAS_ITEM, true), 3);
+                if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile) {
+
+                    var item = this.getItem(0);
+                    this.tileReference = tile;
+                    tile.setDisplayedItem(item);
+                }
+            }
+        }
     }
 }

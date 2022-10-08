@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;

@@ -46,7 +46,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     }
 
     /**
-     * simplified rotate method that only rotates pulley on it axis
+     * simplified rotate method that only rotates pulley on its axis
      * if direction is null assumes default orientation
      * @return true if rotation was successful
      */
@@ -79,7 +79,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (axis.getAxis().isHorizontal() && axis.getAxis() == oldState.getValue(AXIS)) {
 
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
-                pulley.handleRotation(rot);
+                pulley.handleRotation(rot, pos);
             }
             //try turning connected
             BlockPos connectedPos = pos.relative(axis);

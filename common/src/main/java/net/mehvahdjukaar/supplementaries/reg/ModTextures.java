@@ -30,11 +30,13 @@ public class ModTextures {
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("blocks/clock_hand");
     public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("blocks/hourglass_redstone");
     public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("blocks/hourglass_glowstone");
-    public static final ResourceLocation HOURGLASS_SUGAR = Supplementaries.res("blocks/hourglass_sugar");
     public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("blocks/hourglass_gunpowder");
     public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("blocks/blackboard_grid");
 
+
+    public static final ResourceLocation SUGAR = Supplementaries.res("blocks/sugar");
+    public static final ResourceLocation ASH = Supplementaries.res("blocks/ash");
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("blocks/timber_cross_brace");
     public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("blocks/blackboard");
 
@@ -102,7 +104,7 @@ public class ModTextures {
     public static List<ResourceLocation> getTexturesForBlockAtlas() {
         List<ResourceLocation> blocks = new ArrayList<>(List.of(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE,
-                HOURGLASS_GLOWSTONE, HOURGLASS_SUGAR, HOURGLASS_BLAZE,
+                HOURGLASS_GLOWSTONE, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
 
         for (var s : ModMaterials.SIGN_POSTS_MATERIALS.values()) {

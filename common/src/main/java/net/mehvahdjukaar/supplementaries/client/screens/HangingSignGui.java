@@ -119,7 +119,7 @@ public class HangingSignGui extends Screen {
             this.cachedLines[this.editLine] = t;
             this.tileSign.textHolder.setLine(this.editLine, Component.literal(t));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
-                (s) -> this.minecraft.font.width(s) <= HangingSignBlockTileRenderer.LINE_MAX_WIDTH);
+                (s) -> this.minecraft.font.width(s) <= tileSign.textHolder.getMaxLineVisualWidth());
     }
 
     @Override

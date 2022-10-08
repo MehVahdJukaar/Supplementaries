@@ -138,7 +138,7 @@ public class TextUtil {
     public static void renderLine(TextHolder textHolder, int line, Font font, int maxSizeX, float yOffset, PoseStack poseStack, MultiBufferSource buffer,
                                   RenderTextProperties properties) {
 
-        FormattedCharSequence formattedCharSequences = textHolder.getRenderText(line, (c) -> {
+        FormattedCharSequence formattedCharSequences = textHolder.getPreparedTextForRenderer(line, (c) -> {
             List<FormattedCharSequence> list = font.split(c, maxSizeX);
             return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
         });

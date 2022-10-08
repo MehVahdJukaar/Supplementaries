@@ -74,7 +74,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
-    public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
+    public static final ModelDataKey<BlackboardManager.BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardManager.BlackboardKey.class);
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 

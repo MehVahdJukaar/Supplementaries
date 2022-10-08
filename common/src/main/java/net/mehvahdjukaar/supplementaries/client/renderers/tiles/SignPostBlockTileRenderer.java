@@ -28,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
-    private static final int LINE_MAX_WIDTH = 90;
     private final Camera camera;
     private final Font font;
     public final ModelPart signModel;
@@ -118,7 +117,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                    TextUtil.renderLine(tile.textHolder, 0, font, LINE_MAX_WIDTH, -4, matrixStackIn, bufferIn, textProperties);
+                    TextUtil.renderLine(tile.textHolder, 0, font, tile.textHolder.getMaxLineVisualWidth(),
+                            -4, matrixStackIn, bufferIn, textProperties);
                 }
 
                 matrixStackIn.popPose();
@@ -157,7 +157,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                    TextUtil.renderLine(tile.textHolder, 1, font, LINE_MAX_WIDTH, -4, matrixStackIn, bufferIn, textProperties);
+                    TextUtil.renderLine(tile.textHolder, 1, font, tile.textHolder.getMaxLineVisualWidth(),
+                            -4, matrixStackIn, bufferIn, textProperties);
                 }
 
                 matrixStackIn.popPose();

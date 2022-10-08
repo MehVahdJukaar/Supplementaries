@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.Key;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.client.renderer.RenderType;
@@ -85,7 +85,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
         if (data != ExtraModelData.EMPTY && state != null && side == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
             boolean glow = state.getValue(BlackboardBlock.GLOWING);
-            Key key = data.get(BlackboardBlockTile.BLACKBOARD);
+            BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
                 var blackboard = BlackboardManager.getBlackboardInstance(key);
                 quads.addAll(blackboard.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform, glow)));

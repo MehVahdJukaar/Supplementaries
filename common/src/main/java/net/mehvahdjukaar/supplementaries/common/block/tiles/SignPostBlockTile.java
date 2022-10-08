@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostGui;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -54,7 +55,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
-        this.textHolder = new TextHolder(2);
+        this.textHolder = new TextHolder(2, 90);
     }
 
     //TODO: add fence mimic block
@@ -107,7 +108,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         super.load(compound);
         this.framed = compound.getBoolean("Framed");
 
-        this.textHolder.read(compound);
+        this.textHolder.load(compound);
 
         this.yawUp = compound.getFloat("YawUp");
         this.yawDown = compound.getFloat("YawDown");
@@ -127,7 +128,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         super.saveAdditional(compound);
         compound.putBoolean("Framed", this.framed);
 
-        this.textHolder.write(compound);
+        this.textHolder.save(compound);
 
         compound.putFloat("YawUp", this.yawUp);
         compound.putFloat("YawDown", this.yawDown);

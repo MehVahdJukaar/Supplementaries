@@ -76,21 +76,5 @@ public class TurnTableBlockTile extends BlockEntity {
         compound.putInt("Cooldown", this.cooldown);
         compound.putBoolean("CanRotate", this.canRotate);
     }
-    /*
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
-    }
-    */
 
 }

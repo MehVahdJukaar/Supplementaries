@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.mehvahdjukaar.supplementaries.api.ILightable;
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.Util;

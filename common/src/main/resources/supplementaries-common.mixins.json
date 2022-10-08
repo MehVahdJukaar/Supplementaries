@@ -23,7 +23,6 @@
     "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "AbstractSkullBlockMixin",
-    "BeeGoalMixin",
     "BellMixin",
     "BellTileEntityMixin",
     "BlockItemMixin",

@@ -12,11 +12,18 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HCLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -26,11 +33,17 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -52,8 +65,8 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, light);
 
         //debug. refresh
-        if (entity.tickCount % 500 == 0) {
-            ////  RenderedTexturesManager.clearCache();
+        if (entity.tickCount % 100 == 0) {
+            //  RenderedTexturesManager.clearCache();
             //  return;
         }
         poseStack.pushPose();
@@ -70,9 +83,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
         if (item != Items.AIR) {
 
-
-            FrameBufferBackedDynamicTexture tex = RenderedTexturesManager.getFlatItemTexture(item, 16,
-                    "lb", LabelEntityRenderer::pp);
+            FrameBufferBackedDynamicTexture tex = getLabelTexture(item, 16);
 
             ResourceLocation loc = tex.getTextureLocation();
 
@@ -86,21 +97,45 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
             float z = 15.8f / 16f;
             float s = 0.25f;
-            poseStack.translate(0.5, 0.5, 0);
-            vertexConsumer.vertex(tr, -s, -s, z).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-            vertexConsumer.vertex(tr, -s, s, z).color(1f, 1f, 1f, 1f).uv(1f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            poseStack.translate(0.5, 0.5, z);
+            poseStack.pushPose();
 
-            vertexConsumer.vertex(tr, s, s, z).color(1f, 1f, 1f, 1f).uv(0f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
-            vertexConsumer.vertex(tr, s, -s, z).color(1f, 1f, 1f, 1f).uv(0f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            poseStack.scale(0.75f, 0.75f, 1);
+            vertexConsumer.vertex(tr, -s, -s, 0).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            vertexConsumer.vertex(tr, -s, s, 0).color(1f, 1f, 1f, 1f).uv(1f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
 
+            vertexConsumer.vertex(tr, s, s, 0).color(1f, 1f, 1f, 1f).uv(0f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+            vertexConsumer.vertex(tr, s, -s, 0).color(1f, 1f, 1f, 1f).uv(0f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
+
+            poseStack.popPose();
+
+            drawStatueNameplate(poseStack, buffer, Utils.getID(item).getPath());
         }
 
         poseStack.popPose();
 
     }
 
+
+    private static FrameBufferBackedDynamicTexture getLabelTexture(Item item, int size) {
+        //texture id for item size pair
+        ResourceLocation res = Supplementaries.res(Utils.getID(item).toString().replace(":", "/"));
+        return RenderedTexturesManager.getRenderedTexture(res, size, t -> {
+            drawLabel(item, t);
+        }, false);
+    }
+
+    private static void drawLabel(Item item, FrameBufferBackedDynamicTexture t) {
+        RenderedTexturesManager.drawItem(t, item.getDefaultInstance());
+        t.download();
+        NativeImage img = t.getPixels();
+        postProcess(img);
+        t.upload();
+    }
+
+
     //post process image
-    public static void pp(NativeImage image) {
+    public static void postProcess(NativeImage image) {
         HCLColor dark = new RGBColor(64 / 255f, 34 / 255f, 0 / 255f, 1).asHCL();
         //HCLColor light = new RGBColor(196 / 255f, 155 / 255f, 88 / 255f, 1).asHCL();
         HCLColor light = new RGBColor(235 / 255f, 213 / 255f, 178 / 255f, 1).asHCL();
@@ -150,6 +185,42 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
         }
         //r.recolor(p);
 
+    }
+
+    private void drawStatueNameplate(PoseStack matrixStack, MultiBufferSource buffer, String name) {
+        var text = Component.literal(name).withStyle(ChatFormatting.BLACK);
+        Font font = Minecraft.getInstance().font;
+        int width = font.width(text);
+
+        matrixStack.pushPose();
+        matrixStack.translate(0, -0.25, 0);
+
+
+        float borderY = 0.125f;
+        float borderX = 0.1875f;
+        float paperWidth = 1 - (2 * borderX);
+        float paperHeight = 1 - (2 * borderY);
+        float maxLines;
+        int scalingFactor;
+        List<FormattedCharSequence> tempPageLines;
+        do {
+           scalingFactor = Mth.floor(Mth.sqrt((width * 8f) / (paperWidth * paperHeight)));
+
+            tempPageLines = font.split(text, Mth.floor(paperWidth * scalingFactor));
+            //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
+
+            maxLines = paperHeight * scalingFactor / 8f;
+            width += 1;
+            // when lines fully filled @scaling factor > actual lines -> no overflow lines
+            // rendered
+        } while (maxLines < tempPageLines.size());
+
+        matrixStack.scale(0.01F, -0.01F, 0.01F);
+
+        font.drawInBatch(text, -width / 2F, -font.lineHeight / 2f, 0xFF000000, false,
+                matrixStack.last().pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
+
+        matrixStack.popPose();
     }
 
     private ResourceLocation getModel(LabelEntity entity) {

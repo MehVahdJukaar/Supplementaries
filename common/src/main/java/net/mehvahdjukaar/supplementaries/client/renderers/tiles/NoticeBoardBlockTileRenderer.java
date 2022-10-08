@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -154,38 +153,38 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 int b = (int) ((double) NativeImage.getB(i) * d0);
                 int i1 = NativeImage.combine(0, b, g, r);
 
-                int scalingfactor;
+                int scalingFactor;
 
                 List<FormattedCharSequence> tempPageLines;
 
-                if (tile.getFlag()) {
+                if (tile.needsVisualUpdate()) {
                     FormattedText txt = TextUtil.parseText(page);
                     int width = font.width(txt);
-                    float bordery = 0.125f;
-                    float borderx = 0.1875f;
-                    float lx = 1 - (2 * borderx);
-                    float ly = 1 - (2 * bordery);
-                    float maxlines;
+                    float borderY = 0.125f;
+                    float borderX = 0.1875f;
+                    float paperWidth = 1 - (2 * borderX);
+                    float paperHeight = 1 - (2 * borderY);
+                    float maxLines;
                     do {
-                        scalingfactor = Mth.floor(Mth.sqrt((width * 8f) / (lx * ly)));
+                        scalingFactor = Mth.floor(Mth.sqrt((width * 8f) / (paperWidth * paperHeight)));
 
-                        tempPageLines = font.split(txt, Mth.floor(lx * scalingfactor));
+                        tempPageLines = font.split(txt, Mth.floor(paperWidth * scalingFactor));
                         //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
 
-                        maxlines = ly * scalingfactor / 8f;
+                        maxLines = paperHeight * scalingFactor / 8f;
                         width += 1;
                         // when lines fully filled @scaling factor > actual lines -> no overflow lines
                         // rendered
-                    } while (maxlines < tempPageLines.size());
+                    } while (maxLines < tempPageLines.size());
 
-                    tile.setFontScale(scalingfactor);
+                    tile.setFontScale(scalingFactor);
                     tile.setCachedPageLines(tempPageLines);
                 } else {
                     tempPageLines = tile.getCachedPageLines();
-                    scalingfactor = tile.getFontScale();
+                    scalingFactor = tile.getFontScale();
                 }
 
-                float scale = 1 / (float) scalingfactor;
+                float scale = 1 / (float) scalingFactor;
                 matrixStackIn.scale(scale, -scale, scale);
                 int numberoflin = tempPageLines.size();
 
@@ -198,7 +197,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     float dx = (float) (-font.width(str) / 2) + 0.5f;
 
                     // float dy = (float) scalingfactor * bordery;
-                    float dy = ((scalingfactor - (8 * numberoflin)) / 2f) + 0.5f;
+                    float dy = ((scalingFactor - (8 * numberoflin)) / 2f) + 0.5f;
 
                     if (!bookName.equals("missingno")) {
                         font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
@@ -209,11 +208,10 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 matrixStackIn.popPose();
                 matrixStackIn.popPose();
                 return;
-
             }
 
             //render item
-            if (!stack.isEmpty()) {
+            if (!stack.isEmpty() && !NoticeBoardBlockTile.isPageItem(stack.getItem())) {
 
                 Material rendermaterial = tile.getCachedPattern();
                 if (rendermaterial != null) {

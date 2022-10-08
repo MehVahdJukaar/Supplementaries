@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,27 +32,38 @@ public class TextHolder implements IAntiqueTextProvider {
 
     private final int lines;
     //text
-    private final Component[] signText;
+    private final Component[] textLines;
     //text that gets rendered
     private final FormattedCharSequence[] renderText;
+    private final int maxWidth;
     private final boolean engraved;
     private DyeColor color = DyeColor.BLACK;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
 
-    public TextHolder(int size) {
-        this(size, false);
+    public TextHolder(int size, int maxWidth) {
+        this(size, maxWidth, false);
     }
-    public TextHolder(int size, boolean engraved){
+
+    public TextHolder(int size, int maxWidth, boolean engraved) {
         this.lines = size;
+        this.maxWidth = maxWidth;
         this.renderText = new FormattedCharSequence[size];
-        this.signText = new Component[size];
-        Arrays.fill(this.signText, CommonComponents.EMPTY);
+        this.textLines = new Component[size];
+        Arrays.fill(this.textLines, CommonComponents.EMPTY);
         this.engraved = engraved;
     }
 
+    public int getMaxLineCharacters() {
+        return (int) (getMaxLineVisualWidth() / 6f);
+    }
+
+    public int getMaxLineVisualWidth() {
+        return maxWidth;
+    }
+
     //removing command source crap
-    public void read(CompoundTag compound) {
+    public void load(CompoundTag compound) {
         if (compound.contains("TextHolder")) {
             CompoundTag com = compound.getCompound("TextHolder");
             this.color = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
@@ -61,19 +72,19 @@ public class TextHolder implements IAntiqueTextProvider {
             for (int i = 0; i < this.lines; ++i) {
                 String s = com.getString("Text" + (i + 1));
                 Component mutableComponent = s.isEmpty() ? CommonComponents.EMPTY : Component.Serializer.fromJson(s);
-                this.signText[i] = mutableComponent;
+                this.textLines[i] = mutableComponent;
                 this.renderText[i] = null;
             }
         }
     }
 
-    public CompoundTag write(CompoundTag compound) {
+    public CompoundTag save(CompoundTag compound) {
         CompoundTag com = new CompoundTag();
         com.putString("Color", this.color.getName());
         com.putBoolean("GlowingText", this.hasGlowingText);
         com.putBoolean("AntiqueInk", this.hasAntiqueInk);
         for (int i = 0; i < this.lines; ++i) {
-            String s = Component.Serializer.toJson(this.signText[i]);
+            String s = Component.Serializer.toJson(this.textLines[i]);
             com.putString("Text" + (i + 1), s);
         }
         compound.put("TextHolder", com);
@@ -85,24 +96,24 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public Component getLine(int line) {
-        return this.signText[line];
+        return this.textLines[line];
     }
 
     public void setLine(int line, Component text) {
         Style style = this.hasAntiqueInk ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY;
         text = text.copy().setStyle(style);
-        this.signText[line] = text;
+        this.textLines[line] = text;
         this.renderText[line] = null;
     }
 
-    public Component[] getSignText() {
-        return signText;
+    public Component[] getTextLines() {
+        return textLines;
     }
 
     @Nullable
-    public FormattedCharSequence getRenderText(int line, Function<Component, FormattedCharSequence> f) {
-        if ((this.renderText[line] == null) && this.signText[line] != CommonComponents.EMPTY) {
-            this.renderText[line] = f.apply(this.signText[line]);
+    public FormattedCharSequence getPreparedTextForRenderer(int line, Function<Component, FormattedCharSequence> f) {
+        if ((this.renderText[line] == null) && this.textLines[line] != CommonComponents.EMPTY) {
+            this.renderText[line] = f.apply(this.textLines[line]);
         }
         return this.renderText[line];
     }
@@ -173,7 +184,7 @@ public class TextHolder implements IAntiqueTextProvider {
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     tile.setChanged();
-                    level.sendBlockUpdated(pos,tile.getBlockState(), tile.getBlockState(), 3);
+                    level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -189,8 +200,8 @@ public class TextHolder implements IAntiqueTextProvider {
     @Override
     public void setAntiqueInk(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
-        for (int i = 0; i < this.signText.length; i++) {
-            this.setLine(i, this.signText[i]);
+        for (int i = 0; i < this.textLines.length; i++) {
+            this.setLine(i, this.textLines[i]);
         }
     }
 
@@ -207,13 +218,15 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public boolean isEmpty() {
-        return Arrays.stream(this.signText).allMatch(s-> s.getString().isEmpty());
+        return Arrays.stream(this.textLines).allMatch(s -> s.getString().isEmpty());
     }
 
-    public void clear(){
-        Arrays.fill(this.signText, CommonComponents.EMPTY);
+    public void clear() {
+        Arrays.fill(this.textLines, CommonComponents.EMPTY);
         this.setTextColor(DyeColor.BLACK);
         this.setAntiqueInk(false);
         this.setGlowingText(false);
     }
+
+
 }

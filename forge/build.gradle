@@ -188,7 +188,7 @@ dependencies {
     modImplementation("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-362528:3941638")
     modImplementation("curse.maven:map-atlases-forge-519759:3949437")
-    modImplementation("curse.maven:create-328085:4007550")
+    modImplementation("curse.maven:create-328085:4011414")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")

@@ -31,7 +31,6 @@ public class LabelItem extends Item {
             return InteractionResult.FAIL;
         } else {
             Level level = pContext.getLevel();
-            BlockState state = level.getBlockState(blockpos);
 
             LabelEntity label = new LabelEntity(level, blockpos, direction);
 
@@ -49,10 +48,9 @@ public class LabelItem extends Item {
 
                 itemstack.shrink(1);
                 return InteractionResult.sidedSuccess(level.isClientSide);
-            } else {
-                return InteractionResult.CONSUME;
             }
         }
+        return InteractionResult.FAIL;
     }
 
     protected boolean mayPlace(Player pPlayer, Direction pDirection, ItemStack pHangingEntityStack, BlockPos pPos) {

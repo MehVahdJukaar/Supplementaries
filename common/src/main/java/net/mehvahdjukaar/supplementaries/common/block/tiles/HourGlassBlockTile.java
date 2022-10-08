@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -144,13 +145,14 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         SAND(SAND_TEXTURE, null, CommonConfigs.Blocks.HOURGLASS_SAND.get()),
         CONCRETE(WHITE_CONCRETE_TEXTURE, null, CommonConfigs.Blocks.HOURGLASS_CONCRETE.get()),
         GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, CommonConfigs.Blocks.HOURGLASS_DUST.get()),
-        SUGAR(HOURGLASS_SUGAR, Items.SUGAR, CommonConfigs.Blocks.HOURGLASS_SUGAR.get()),
+        SUGAR(ModTextures.SUGAR, Items.SUGAR, CommonConfigs.Blocks.HOURGLASS_SUGAR.get()),
         GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, CommonConfigs.Blocks.HOURGLASS_GLOWSTONE.get()),
         REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, CommonConfigs.Blocks.HOURGLASS_REDSTONE.get()),
         BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, CommonConfigs.Blocks.HOURGLASS_BLAZE_POWDER.get()),
         FORGE_DUST(HOURGLASS_GUNPOWDER, null, CommonConfigs.Blocks.HOURGLASS_DUST.get()),
         HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, CommonConfigs.Blocks.HOURGLASS_HONEY.get()),
-        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, CommonConfigs.Blocks.HOURGLASS_SLIME.get());
+        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, CommonConfigs.Blocks.HOURGLASS_SLIME.get()),
+        ASH(ModTextures.ASH, ModRegistry.ASH_BLOCK.get().asItem(), CommonConfigs.Blocks.HOURGLASS_DUST.get());
 
         @Nullable
         public final ResourceLocation texture;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.ILightable;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

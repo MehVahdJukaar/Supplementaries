@@ -3,17 +3,39 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
+import com.simibubi.create.content.logistics.block.display.source.FluidAmountDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
+import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
+import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.ponder.PonderRegistry;
+import com.simibubi.create.foundation.ponder.PonderTag;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
+import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
+import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -23,6 +45,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,30 +59,98 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
 public class CreateCompatImpl {
-    public static void initialize() {
 
+    public static void setup() {
         try {
             AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
+            AllMovementBehaviours.registerBehaviour(ModRegistry.PULLEY_BLOCK.get(), new PulleyBehavior());
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("notice_board_display_target"),
+                    new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
+            var textHolderTarget = AllDisplayBehaviours.register(
+                    Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
+            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
+            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
+            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
+            //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("speaker_block_display_target"),
+                    new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
+
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
+
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("blackboard_display_target"),
+                    new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
+
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
+
+            //sources
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("globe_display_target"),
+                    new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("clock_target"),
+                    new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
+
+            //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
+
+            var itemDisplaySource = AllDisplayBehaviours.register(
+                    Supplementaries.res("item_display_target"),
+                    new ItemDisplayDisplaySource());
+
+            AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
+            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
+            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
+            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("fluid_tank_target"),
+                    new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
+
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
         }
     }
 
-    public static void changeState(MovementContext context, BlockState newState) {
+    private static void changeState(MovementContext context, BlockState newState) {
         Map<BlockPos, StructureTemplate.StructureBlockInfo> blocks = context.contraption.getBlocks();
         if (blocks.containsKey(context.localPos)) {
             context.state = newState;
@@ -63,6 +158,15 @@ public class CreateCompatImpl {
             StructureTemplate.StructureBlockInfo newInfo = new StructureTemplate.StructureBlockInfo(info.pos, newState, info.nbt);
             blocks.replace(context.localPos, newInfo);
         }
+    }
+
+    private static Rotation isClockWise(UnaryOperator<Vec3> rot, Direction dir) {
+        Vec3 v = MthUtils.V3itoV3(dir.getNormal());
+        Vec3 v2 = rot.apply(v);
+        var dot = v2.dot(new Vec3(0, 1, 0)); //??
+        if (dot > 0) return Rotation.CLOCKWISE_90;
+        else if (dot < 0) return Rotation.COUNTERCLOCKWISE_90;
+        return Rotation.NONE;
     }
 
     private static class BambooSpikesBehavior implements MovementBehaviour {
@@ -104,8 +208,8 @@ public class CreateCompatImpl {
                 if (entity instanceof Player player && player.isCreative()) continue;
                 if (entity instanceof AbstractMinecart)
                     for (Entity passenger : entity.getIndirectPassengers())
-                        if (passenger instanceof AbstractContraptionEntity
-                                && ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
+                        if (passenger instanceof AbstractContraptionEntity ace
+                                && ace.getContraption() == context.contraption)
                             continue Entities;
                 //attack entities
                 if (entity.isAlive() && entity instanceof LivingEntity) {
@@ -117,7 +221,6 @@ public class CreateCompatImpl {
                         entity.hurt(damageSource, damage);
                         this.doTileStuff(context, world, (LivingEntity) entity);
                     }
-
 
                 }
                 //throw entities (i forgot why this is here. maybe its from creates saw)
@@ -168,10 +271,7 @@ public class CreateCompatImpl {
             UnaryOperator<Vec3> rot = context.rotation;
             BlockState state = context.state;
             Direction dir = state.getValue(HourGlassBlock.FACING);
-            var in = dir.getNormal();
-            Vec3 v = new Vec3(in.getX(), in.getY(), in.getZ());
-            Vec3 v2 = rot.apply(v);
-            double dot = v2.dot(new Vec3(0, 1, 0));
+            Rotation rotation = isClockWise(rot, dir);
 
             CompoundTag com = context.tileData;
 
@@ -183,12 +283,9 @@ public class CreateCompatImpl {
             if (!sandType.isEmpty()) {
                 prevProgress = progress;
 
-
-                //TODO: re do all of this
-
-                if (dot > 0 && progress != 1) {
+                if (rotation == Rotation.CLOCKWISE_90 && progress != 1) {
                     progress = Math.min(progress + sandType.increment, 1f);
-                } else if (dot < 0 && progress != 0) {
+                } else if (rotation == Rotation.COUNTERCLOCKWISE_90 && progress != 0) {
                     progress = Math.max(progress - sandType.increment, 0f);
                 }
 
@@ -230,5 +327,389 @@ public class CreateCompatImpl {
 
     }
 
+    //TODO: fix
+    private static class PulleyBehavior implements MovementBehaviour {
+
+        private static final PulleyBlockTile DUMMY = new PulleyBlockTile(BlockPos.ZERO, ModRegistry.PULLEY_BLOCK.get().defaultBlockState());
+
+
+        @Override
+        public void visitNewPosition(MovementContext context, BlockPos pos) {
+            BlockState state = context.state;
+            var axis = state.getValue(PulleyBlock.AXIS);
+            if (axis == Direction.Axis.Y) return;
+            changeState(context, state.cycle(PulleyBlock.FLIPPED));
+            Direction dir = null;
+            var center = context.contraption.anchor;
+            if (axis == Direction.Axis.X) {
+                dir = Direction.NORTH;
+            } else if (axis == Direction.Axis.Z) {
+                dir = Direction.WEST;
+            }
+            if (dir == null) return;
+
+            DUMMY.load(context.tileData);
+            DUMMY.setLevel(context.world);
+
+            Rotation rot = context.relativeMotion.length() > 0 ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
+            DUMMY.handleRotation(rot, pos);
+            context.tileData = DUMMY.saveWithFullMetadata();
+        }
+
+    }
+
+    private static class NoticeBoardDisplayTarget extends DisplayTarget {
+
+        @Override
+        public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
+            BlockEntity te = context.getTargetTE();
+            if (te instanceof NoticeBoardBlockTile lectern) {
+                ItemStack book = lectern.getDisplayedItem();
+                if (!book.isEmpty()) {
+                    if (book.is(Items.WRITABLE_BOOK)) {
+                        lectern.setDisplayedItem(book = this.signBook(book));
+                    }
+
+                    if (book.is(Items.WRITTEN_BOOK)) {
+                        ListTag tag = book.getTag().getList("pages", 8);
+                        boolean changed = false;
+
+                        for (int i = 0; i - line < text.size() && i < 50; ++i) {
+                            if (tag.size() <= i) {
+                                tag.add(StringTag.valueOf(i < line ? "" : Component.Serializer.toJson((Component) text.get(i - line))));
+                            } else if (i >= line) {
+                                if (i - line == 0) {
+                                    reserve(i, lectern, context);
+                                }
+
+                                if (i - line > 0 && this.isReserved(i - line, lectern, context)) {
+                                    break;
+                                }
+
+                                tag.set(i, StringTag.valueOf(Component.Serializer.toJson((Component) text.get(i - line))));
+                            }
+
+                            changed = true;
+                        }
+
+                        book.getTag().put("pages", tag);
+                        lectern.setDisplayedItem(book);
+                        if (changed) {
+                            context.level().sendBlockUpdated(context.getTargetPos(), lectern.getBlockState(), lectern.getBlockState(), 2);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public DisplayTargetStats provideStats(DisplayLinkContext context) {
+            return new DisplayTargetStats(50, 256, this);
+        }
+
+        @Override
+        public Component getLineOptionText(int line) {
+            return Lang.translateDirect("display_target.page", line + 1);
+        }
+
+        private ItemStack signBook(ItemStack book) {
+            ItemStack written = new ItemStack(Items.WRITTEN_BOOK);
+            CompoundTag compoundtag = book.getTag();
+            if (compoundtag != null) {
+                written.setTag(compoundtag.copy());
+            }
+
+            written.addTagElement("author", StringTag.valueOf("Data Gatherer"));
+            written.addTagElement("filtered_title", StringTag.valueOf("Printed Book"));
+            written.addTagElement("title", StringTag.valueOf("Printed Book"));
+            return written;
+        }
+    }
+
+    private static class TextHolderDisplayTarget extends DisplayTarget {
+
+        public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
+            BlockEntity te = context.getTargetTE();
+            if (te instanceof ITextHolderProvider th) {
+                var textHolder = th.getTextHolder();
+                boolean changed = false;
+
+                for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {
+                    if (i == 0) {
+                        reserve(i + line, te, context);
+                    }
+                    if (i > 0 && this.isReserved(i + line, te, context)) {
+                        break;
+                    }
+                    textHolder.setLine(i + line, text.get(i));
+                    changed = true;
+                }
+
+                if (changed) {
+                    context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+                }
+            }
+        }
+
+        @Override
+        public DisplayTargetStats provideStats(DisplayLinkContext context) {
+            var textHolder = ((ITextHolderProvider) context.getTargetTE()).getTextHolder();
+            return new DisplayTargetStats(textHolder.size(), textHolder.getMaxLineCharacters(), this);
+        }
+    }
+
+    private static class SpeakerBlockDisplayTarget extends DisplayTarget {
+
+        public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
+            BlockEntity te = context.getTargetTE();
+            if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
+                reserve(line, te, context);
+                tile.setMessage(text.get(0).getString());
+                context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+            }
+        }
+
+        @Override
+        public DisplayTargetStats provideStats(DisplayLinkContext context) {
+            return new DisplayTargetStats(1, 32, this);
+        }
+    }
+
+    private static class BlackboardDisplayTarget extends DisplayTarget {
+
+        public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
+            BlockEntity te = context.getTargetTE();
+            if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
+                var source = context.getSourceTE();
+                if (source instanceof ItemDisplayTile display) {
+                    var stack = display.getDisplayedItem();
+                    if (copyBlackboard(line, context, te, tile, stack)) return;
+                }
+                for (int i = 0; i < 32; ++i) {
+                    var pos = context.getSourceTE().getBlockPos();
+                    TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
+                            context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
+                    );
+                    if (behaviour == null) {
+                        break;
+                    }
+                    MutableObject<ItemStack> stackHolder = new MutableObject<>();
+                    behaviour.handleCenteredProcessingOnAllItems(0.25F, tis -> {
+                        stackHolder.setValue(tis.stack);
+                        return TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
+                    });
+                    ItemStack stack = stackHolder.getValue();
+                    if (stack != null && stack.getItem() instanceof BlackboardItem) {
+                        if (copyBlackboard(line, context, te, tile, stack)) return;
+                    }
+                }
+                var pixels = BlackboardBlockTile.unpackPixelsFromString(text.get(0).getString());
+                tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
+
+                context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+                reserve(line, te, context);
+            }
+        }
+
+        private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
+            if (stack.getItem() instanceof BlackboardItem) {
+                CompoundTag cmp = stack.getTagElement("BlockEntityTag");
+                if (cmp != null && cmp.contains("Pixels")) {
+                    tile.setPixels(BlackboardBlockTile.unpackPixels(cmp.getLongArray("Pixels")));
+                    context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+                    reserve(line, te, context);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public DisplayTargetStats provideStats(DisplayLinkContext context) {
+            return new DisplayTargetStats(1, 32, this);
+        }
+    }
+
+    private static class ClockDisplaySource extends SingleLineDisplaySource {
+        public static final MutableComponent EMPTY_TIME = Components.literal("--:--");
+
+        @Override
+        protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
+            Level level = context.level();
+            if (level instanceof ServerLevel sLevel) {
+                if (context.getSourceTE() instanceof ClockBlockTile tile) {
+                    boolean c12 = context.sourceConfig().getInt("Cycle") == 0;
+                    boolean isNatural = sLevel.dimensionType().natural();
+                    int dayTime = (int) (sLevel.getDayTime() % 24000L);
+                    int hours = (dayTime / 1000 + 6) % 24;
+                    int minutes = dayTime % 1000 * 60 / 1000;
+                    MutableComponent suffix = Lang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"), new Object[0]);
+                    minutes = minutes / 5 * 5;
+                    if (c12) {
+                        hours %= 12;
+                        if (hours == 0) {
+                            hours = 12;
+                        }
+                    }
+                    if (!isNatural) {
+                        hours = Create.RANDOM.nextInt(70) + 24;
+                        minutes = Create.RANDOM.nextInt(40) + 60;
+                    }
+                    MutableComponent component = Components.literal(
+                            (hours < 10 ? " " : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + (c12 ? " " : "")
+                    );
+                    return c12 ? component.append(suffix) : component;
+                }
+            }
+            return EMPTY_TIME;
+        }
+
+        protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
+            return "Instant";
+        }
+
+        protected FlapDisplaySection createSectionForValue(DisplayLinkContext context, int size) {
+            return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
+        }
+
+        protected String getTranslationKey() {
+            return "time_of_day";
+        }
+
+        @OnlyIn(Dist.CLIENT)
+        public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
+            super.initConfigurationWidgets(context, builder, isFirstLine);
+            if (!isFirstLine) {
+                builder.addSelectionScrollInput(
+                        0,
+                        60,
+                        (si, l) -> si.forOptions(Lang.translatedOptions("display_source.time", "12_hour", "24_hour"))
+                                .titled(Lang.translateDirect("display_source.time.format")),
+                        "Cycle"
+                );
+            }
+        }
+
+        protected boolean allowsLabeling(DisplayLinkContext context) {
+            return true;
+        }
+    }
+
+
+    private static class GlobeDisplaySource extends SingleLineDisplaySource {
+        public static final MutableComponent EMPTY = Components.literal("--,--");
+
+        protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
+            if (context.getSourceTE() instanceof GlobeBlockTile tile) {
+                BlockPos pos = context.getSourcePos();
+                return Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ());
+            } else {
+                return EMPTY;
+            }
+        }
+
+        protected boolean allowsLabeling(DisplayLinkContext context) {
+            return true;
+        }
+
+        protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
+            return "Instant";
+        }
+
+        protected FlapDisplaySection createSectionForValue(DisplayLinkContext context, int size) {
+            return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
+        }
+
+        protected String getTranslationKey() {
+            return "world_position";
+        }
+    }
+
+
+    private static class ItemDisplayDisplaySource extends SingleLineDisplaySource {
+
+        @Override
+        protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
+            MutableComponent combined = EMPTY_LINE.copy();
+
+            if (context.getSourceTE() instanceof ItemDisplayTile te && !te.isEmpty()) {
+                combined = combined.append(te.getDisplayedItem().getHoverName());
+            }
+            //else if(context.level().getBlockState(context.getSourcePos()) instanceof WorldlyContainerHolder wc){
+            //    combined = combined.append(wc.getContainer())
+            //}
+            return combined;
+        }
+
+        @Override
+        public int getPassiveRefreshTicks() {
+            return 20;
+        }
+
+        @Override
+        protected String getTranslationKey() {
+            return "item_name";
+        }
+
+        @Override
+        protected boolean allowsLabeling(DisplayLinkContext context) {
+            return true;
+        }
+
+        @Override
+        protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
+            return "Number";
+        }
+    }
+
+    public static class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
+
+        @Override
+        protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
+            if (context.sourceConfig().getInt("Mode") == 2) {
+                if (context.getSourceTE() instanceof ISoftFluidTankProvider tp) {
+                    return  Components.literal(tp.getSoftFluidTank().getCount()+ " mBtl");
+                }
+            }
+            return super.provideLine(context, stats);
+        }
+
+        @Override
+        protected Float getProgress(DisplayLinkContext context) {
+            BlockEntity te = context.getSourceTE();
+            if (te instanceof ISoftFluidTankProvider tp) {
+                return tp.getSoftFluidTank().getHeight(1);
+            }
+            return null;
+        }
+
+        @Override
+        protected boolean progressBarActive(DisplayLinkContext context) {
+            return context.sourceConfig().getInt("Mode") == 1;
+        }
+
+        @Override
+        protected String getTranslationKey() {
+            return "fluid_amount";
+        }
+
+        @OnlyIn(Dist.CLIENT)
+        public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
+            super.initConfigurationWidgets(context, builder, isFirstLine);
+            if (!isFirstLine) {
+                builder.addSelectionScrollInput(
+                        0,
+                        120,
+                        (si, l) -> si.forOptions(Lang.translatedOptions("display_source.fill_level", "percent", "progress_bar", "fluid_amount"))
+                                .titled(Lang.translateDirect("display_source.fill_level.display")),
+                        "Mode"
+                );
+            }
+        }
+
+        protected boolean allowsLabeling(DisplayLinkContext context) {
+            return true;
+        }
+    }
 
 }

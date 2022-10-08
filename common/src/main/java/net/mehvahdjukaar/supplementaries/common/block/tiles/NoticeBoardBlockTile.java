@@ -56,7 +56,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     public NoticeBoardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.NOTICE_BOARD_TILE.get(), pos, state);
-        this.textHolder = new TextHolder(1);
+        this.textHolder = new TextHolder(1, 90);
     }
 
     @Override
@@ -225,7 +225,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return this.cachedPageLines;
     }
 
-    public boolean getFlag() {
+    public boolean needsVisualUpdate() {
         if (this.needsVisualRefresh) {
             this.needsVisualRefresh = false;
             return true;

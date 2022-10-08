@@ -80,7 +80,7 @@ public class ClockBlockTile extends BlockEntity {
     //TODO: rewrite
     public void updateTime(int time, Level level, BlockState state, BlockPos pos) {
 
-        if (level.dimensionType().natural()) {
+        if (canReadTime(level)) {
 
             //minute here are 1 rl second -> 50m in a minecraft hour
             int minute = Mth.clamp((time % 1000) / 20, 0, 50);
@@ -124,6 +124,10 @@ public class ClockBlockTile extends BlockEntity {
             this.sTargetRoll = level.random.nextFloat() * 360;
             //TODO: make it wobbly
         }
+    }
+
+    public static boolean canReadTime(Level level) {
+        return level.dimensionType().natural();
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, ClockBlockTile tile) {

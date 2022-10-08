@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.api.ILightable;
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.DoormatGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
@@ -21,7 +22,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     public DoormatBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.DOORMAT_TILE.get(),pos, state);
-        this.textHolder = new TextHolder(MAX_LINES);
+        this.textHolder = new TextHolder(MAX_LINES, 12);
     }
 
     public TextHolder getTextHolder(){return this.textHolder;}
@@ -29,13 +30,13 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.textHolder.read(compound);
+        this.textHolder.load(compound);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        this.textHolder.write(tag);
+        this.textHolder.save(tag);
     }
 
     @Override

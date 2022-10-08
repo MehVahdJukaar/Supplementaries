@@ -4,9 +4,9 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardGui;
 import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
@@ -25,14 +25,14 @@ import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<Key> BLACKBOARD = ModBlockProperties.BLACKBOARD;
+    public static final ModelDataKey<BlackboardKey> BLACKBOARD = ModBlockProperties.BLACKBOARD;
 
     private UUID owner = null;
     private boolean waxed = false;
     private byte[][] pixels = new byte[16][16];
 
     //client side
-    private Key textureKey = null;
+    private BlackboardKey textureKey = null;
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
@@ -47,13 +47,13 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
 
-    public Key getTextureKey() {
+    public BlackboardKey getTextureKey() {
         if (textureKey == null) refreshTextureKey();
         return textureKey;
     }
 
     public void refreshTextureKey() {
-        this.textureKey = Key.of(packPixels(this.pixels), this.getBlockState().getValue(BlackboardBlock.GLOWING));
+        this.textureKey = BlackboardKey.of(packPixels(this.pixels), this.getBlockState().getValue(BlackboardBlock.GLOWING));
     }
 
     @Override
@@ -118,6 +118,30 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
             }
         }
         return bytes;
+    }
+
+    //string length = 16*4 = 64
+    public static String packPixelsToString(long[] packed) {
+        StringBuilder builder = new StringBuilder();
+        for (var l : packed) {
+            char a = (char) (l & Character.MAX_VALUE);
+            char b = (char) (l >> 16 & Character.MAX_VALUE);
+            char c = (char) (l >> 32 & Character.MAX_VALUE);
+            char d = (char) (l >> 48 & Character.MAX_VALUE);
+            builder.append(a).append(b).append(c).append(d);
+        }
+        return builder.toString();
+    }
+
+    public static long[] unpackPixelsFromString(String packed) {
+        long[] unpacked = new long[16];
+        var chars = packed.toCharArray();
+        int j = 0;
+        for (int i = 0; i+3 < chars.length; i+=4) {
+            unpacked[j] = (long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i];
+            j++;
+        }
+        return unpacked;
     }
 
     public void clear() {

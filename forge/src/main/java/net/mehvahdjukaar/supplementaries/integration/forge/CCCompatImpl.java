@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CCCompatImpl {
 
-    public static void initialize() {
+    public static void setup() {
         ComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
     }
 

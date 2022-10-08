@@ -10,9 +10,6 @@ public class CCCompatImpl {
         return false;
     }
 
-    public static void initialize() {
-    }
-
     public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties p) {
         return new SpeakerBlock(p);
     }
@@ -23,5 +20,8 @@ public class CCCompatImpl {
 
     public static String[] getText(ItemStack itemstack) {
         return new String[]{};
+    }
+
+    public static void setup() {
     }
 }

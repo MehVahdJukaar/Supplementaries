@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 public class CCCompat {
 
     @ExpectPlatform
-    public static void initialize() {
+    public static void setup() {
     }
 
     @ExpectPlatform
