@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
@@ -52,12 +53,12 @@ public class ClientReceivers {
     }
 
     public static void handlePlaySpeakerMessagePacket(ClientBoundPlaySpeakerMessagePacket message) {
-        boolean narrator = message.narrator;
+        var mode = message.mode;
         Component str = message.str;
-        if (narrator && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
+        if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
             Narrator.getNarrator().say(str.getString(), true);
         } else {
-            withPlayerDo((p) -> p.displayClientMessage(str, false));
+            withPlayerDo((p) -> p.displayClientMessage(str, mode == SpeakerBlockTile.Mode.STATUS_MESSAGE));
         }
     }
 

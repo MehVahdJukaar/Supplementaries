@@ -17,21 +17,23 @@ import net.minecraft.network.chat.MutableComponent;
 public class SpeakerBlockGui extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
     private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
+    private static final Component ACTION_BAR_TEXT = Component.translatable("gui.supplementaries.speaker_block.action_bar_message");
     private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");
     private static final Component VOLUME_TEXT = Component.translatable("gui.supplementaries.speaker_block.volume");
+    private static final Component EDIT = Component.translatable("gui.supplementaries.speaker_block.edit");
 
     private EditBox editBox;
     private final SpeakerBlockTile tileSpeaker;
-    private boolean narrator;
+    private SpeakerBlockTile.Mode mode;
     private final String message;
     private Button modeBtn;
     private ForgeSlider volumeSlider;
     private final double initialVolume;
 
     public SpeakerBlockGui(SpeakerBlockTile te) {
-        super(Component.translatable("gui.supplementaries.speaker_block.edit"));
+        super(EDIT);
         this.tileSpeaker = te;
-        this.narrator = tileSpeaker.isNarrator();
+        this.mode = tileSpeaker.getMode();
         this.message = tileSpeaker.getMessage();
         this.initialVolume = tileSpeaker.getVolume();
     }
@@ -46,15 +48,15 @@ public class SpeakerBlockGui extends Screen {
     }
 
     private void updateMode() {
-        if (this.narrator) {
-            this.modeBtn.setMessage(NARRATOR_TEXT);
-        } else {
-            this.modeBtn.setMessage(CHAT_TEXT);
+        switch (this.mode) {
+            case CHAT -> this.modeBtn.setMessage(CHAT_TEXT);
+            case NARRATOR -> this.modeBtn.setMessage(NARRATOR_TEXT);
+            case STATUS_MESSAGE -> this.modeBtn.setMessage(ACTION_BAR_TEXT);
         }
     }
 
     private void toggleMode() {
-        this.narrator = !this.narrator;
+        this.mode = SpeakerBlockTile.Mode.values()[(this.mode.ordinal() + 1) % SpeakerBlockTile.Mode.values().length];
     }
 
     @Override
@@ -64,8 +66,6 @@ public class SpeakerBlockGui extends Screen {
 
         int range = CommonConfigs.Blocks.SPEAKER_RANGE.get();
 
-        double a = this.tileSpeaker.getVolume(); //keep
-        a++;
         this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
                 VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
                 initialVolume, 1, 1, true);
@@ -97,10 +97,12 @@ public class SpeakerBlockGui extends Screen {
     @Override
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-        this.tileSpeaker.setSettings(this.volumeSlider.getValue(), this.narrator, this.editBox.getValue());
+        this.tileSpeaker.setMode(this.mode);
+        this.tileSpeaker.setMessage(this.editBox.getValue());
+        this.tileSpeaker.setVolume(this.volumeSlider.getValue());
         //refreshTextures server tile
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
-                this.tileSpeaker.getMessage(), this.tileSpeaker.isNarrator(), this.tileSpeaker.getVolume()));
+                this.tileSpeaker.getMessage(), this.tileSpeaker.getMode(), this.tileSpeaker.getVolume()));
     }
 
     private void onDone() {
@@ -127,10 +129,11 @@ public class SpeakerBlockGui extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if(this.volumeSlider == this.getFocused()) {
+        if (this.volumeSlider == this.getFocused()) {
             if (button == 0) {
                 this.volumeSlider.onRelease(mouseX, mouseY);
-                this.setFocused(null);
+                this.setFocused(this.editBox);
+                this.editBox.setFocus(true);
             }
         }
         return true;

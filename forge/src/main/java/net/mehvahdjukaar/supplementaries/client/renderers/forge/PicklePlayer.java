@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.UUID;
 
-//shh go away don't look here
+//shh, go away don't look here
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = {Dist.CLIENT})
 public class PicklePlayer {
 
@@ -38,21 +39,24 @@ public class PicklePlayer {
         PickleData.onPlayerLogin(event.getEntity());
     }
 
-    @SubscribeEvent
-    public static void chat(ClientChatEvent event) {
-        String m = event.getOriginalMessage();
+    //event dosent fire for "/" anymore....
+    //@SubscribeEvent
+    public static boolean onChatEvent(String  m) {
+       // String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
         if (m.startsWith("/jarvis")) {
             jarvis = !jarvis;
-            event.setCanceled(true);
-            if (jarvis)
+           // event.setCanceled(true);
+            if (jarvis) {
 
                 Minecraft.getInstance().player.displayClientMessage(
                         Component.literal("I am Jarman"), true);
+            }
+            return true;
         } else if (PickleData.isDev(id)) {
             if (m.startsWith("/pickle")) {
 
-                event.setCanceled(true);
+                //event.setCanceled(true);
                 boolean turnOn = !PickleData.isActive(id);
 
                 if (turnOn) {
@@ -62,8 +66,11 @@ public class PicklePlayer {
 
                 PickleData.set(id, turnOn);
                 NetworkHandler.CHANNEL.sendToServer(new PicklePacket.ServerBound(id, turnOn));
+
+                return true;
             }
         }
+        return false;
     }
 
 

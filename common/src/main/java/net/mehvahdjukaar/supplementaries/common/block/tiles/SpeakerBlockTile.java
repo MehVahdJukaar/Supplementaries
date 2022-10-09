@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +28,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     private UUID owner = null;
 
     private String message = "";
-    private boolean narrator = false;
+    private Mode mode = Mode.CHAT;
     //distance in blocks
     private double volume = CommonConfigs.Blocks.SPEAKER_RANGE.get();
     private Component customName;
@@ -45,6 +46,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public Component getCustomName() {
         return this.customName;
     }
@@ -57,22 +59,16 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         return volume;
     }
 
-    public boolean isNarrator() {
-        return narrator;
+    public Mode getMode() {
+        return mode;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setSettings(double volume, boolean narrator, String message){
-        this.volume = volume;
-        this.narrator = narrator;
-        this.message = message;
-    }
-
-    public void setNarrator(boolean narrator) {
-        this.narrator = narrator;
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
     public void setMessage(String message) {
@@ -91,8 +87,9 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
 
         this.message = compound.getString("Message");
-        if (!CommonConfigs.Blocks.SPEAKER_NARRATOR.get()) this.narrator = false;
-        else this.narrator = compound.getBoolean("Narrator");
+        var m = Mode.values()[compound.getInt("Mode")];
+        if (m == Mode.NARRATOR && !CommonConfigs.Blocks.SPEAKER_NARRATOR.get()) m = Mode.CHAT;
+        this.mode = m;
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);
     }
@@ -104,7 +101,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             compound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
         compound.putString("Message", this.message);
-        compound.putBoolean("Narrator", this.narrator);
+        compound.putInt("Mode", this.mode.ordinal());
         compound.putDouble("Volume", this.volume);
         this.saveOwner(compound);
     }
@@ -120,11 +117,14 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Style style = !state.getValue(SpeakerBlock.ANTIQUE) ? Style.EMPTY.applyFormats(ChatFormatting.ITALIC) :
                     Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT).applyFormats(ChatFormatting.ITALIC);
 
-            Component message = Component.literal(this.getName().getString() + ": " + this.message)
+            String name = this.getName().getString();
+            String s = "";
+            if (!name.isEmpty() && !name.equals("\"\"")) s += ": ";
+            Component message = Component.literal(s + this.message)
                     .withStyle(style);
 
             NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
-                    this.volume, new ClientBoundPlaySpeakerMessagePacket(message, this.narrator));
+                    this.volume, new ClientBoundPlaySpeakerMessagePacket(message, this.mode));
 
         }
     }
@@ -149,6 +149,12 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+    public enum Mode {
+        CHAT,
+        STATUS_MESSAGE,
+        NARRATOR
     }
 
 }

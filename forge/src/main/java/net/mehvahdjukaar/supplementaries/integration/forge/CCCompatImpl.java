@@ -81,14 +81,14 @@ public class CCCompatImpl {
         }
 
         @LuaFunction
-        public void setNarrator(boolean narratorOn) {
-            tile.setNarrator(narratorOn);
+        public void setNarrator(SpeakerBlockTile.Mode mode) {
+            tile.setMode(mode);
             tile.setChanged();
         }
 
         @LuaFunction
-        public boolean isNarratorEnabled() {
-            return tile.isNarrator();
+        public SpeakerBlockTile.Mode getMode() {
+            return tile.getMode();
         }
 
         @LuaFunction

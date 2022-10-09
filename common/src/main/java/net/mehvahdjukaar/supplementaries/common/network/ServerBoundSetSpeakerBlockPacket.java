@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -15,20 +14,20 @@ import java.util.Objects;
 public class ServerBoundSetSpeakerBlockPacket implements Message {
     private final BlockPos pos;
     private final Component str;
-    private final boolean narrator;
+    private final SpeakerBlockTile.Mode mode;
     private final double volume;
 
     public ServerBoundSetSpeakerBlockPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
         this.str = buf.readComponent();
-        this.narrator = buf.readBoolean();
+        this.mode = SpeakerBlockTile.Mode.values()[buf.readByte()];
         this.volume = buf.readDouble();
     }
 
-    public ServerBoundSetSpeakerBlockPacket(BlockPos pos, String str, boolean narrator, double volume) {
+    public ServerBoundSetSpeakerBlockPacket(BlockPos pos, String str, SpeakerBlockTile.Mode mode, double volume) {
         this.pos = pos;
         this.str = Component.literal(str);
-        this.narrator = narrator;
+        this.mode = mode;
         this.volume = volume;
     }
 
@@ -36,7 +35,7 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
         buf.writeComponent(this.str);
-        buf.writeBoolean(this.narrator);
+        buf.writeByte(this.mode.ordinal());
         buf.writeDouble(this.volume);
     }
 
@@ -47,7 +46,9 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
 
         BlockPos pos = this.pos;
         if (world.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
-            speaker.setSettings(this.volume, this.narrator, this.str.getString());
+            speaker.setVolume(this.volume);
+            speaker.setMode(this.mode);
+            speaker.setMessage(this.str.getString());
 
             //updates client
             BlockState state = world.getBlockState(pos);

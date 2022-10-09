@@ -27,7 +27,6 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipCompone
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.LabelEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -52,9 +51,11 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
@@ -96,7 +97,6 @@ public class ClientRegistry {
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
-    public static final ResourceLocation LABEL_MODEL = Supplementaries.res("block/label");
 
 
     public static KeyMapping QUIVER_KEYBIND;
@@ -322,7 +322,6 @@ public class ClientRegistry {
         event.register(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
-        event.register(ModRegistry.LABEL.get(), LabelEntityRenderer::new);
     }
 
     @EventCalled
@@ -366,7 +365,6 @@ public class ClientRegistry {
         WallLanternTexturesRegistry.SPECIAL_TEXTURES.values().forEach(event::register);
         HANGING_SIGNS_BLOCK_MODELS.values().forEach(event::register);
         event.register(BLACKBOARD_FRAME);
-        event.register(LABEL_MODEL);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
         event.register(BELL_ROPE);

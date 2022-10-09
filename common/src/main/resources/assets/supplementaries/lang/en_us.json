@@ -24,6 +24,7 @@
   "gui.supplementaries.speaker_block.edit": "Edit Speaker Block Message",
   "gui.supplementaries.speaker_block.chat_message" : "Narrator Message",
   "gui.supplementaries.speaker_block.narrator_message": "Chat Message",
+  "gui.supplementaries.speaker_block.action_bar_message": "Status Message",
   "entity.supplementaries.firefly": "Firefly",
   "block.supplementaries.firefly_jar": "Firefly Jar",
   "item.supplementaries.firefly": "Firefly Spawn Egg",

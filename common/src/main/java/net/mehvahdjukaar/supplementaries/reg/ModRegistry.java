@@ -205,16 +205,6 @@ public class ModRegistry {
                     .clientTrackingRange(4)
                     .updateInterval(20));
 
-    //label
-    public static final Supplier<EntityType<LabelEntity>> LABEL =
-            regEntity(LABEL_NAME, () -> (
-            EntityType.Builder.<LabelEntity>of(LabelEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE))
-            );
-
-    public static final Supplier<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
-
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())

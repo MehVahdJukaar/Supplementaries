@@ -4,6 +4,7 @@
   "package": "net.mehvahdjukaar.supplementaries.mixins.forge",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "ChatMixin",
     "BlockEntityRendererDispatcherMixin"
   ],
   "mixins": [
