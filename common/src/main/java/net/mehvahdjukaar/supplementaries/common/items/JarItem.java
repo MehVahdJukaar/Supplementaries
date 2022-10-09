@@ -56,8 +56,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
-        if (e instanceof Monster) return false;
-        if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
+        if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e) && !(e instanceof Monster)) return true;
         return type.is(ModTags.JAR_CATCHABLE) ||
                 (type.is(ModTags.JAR_BABY_CATCHABLE) && e instanceof LivingEntity le && le.isBaby()) ||
                 this.isBoat(e) || BucketHelper.isModdedFish(e);

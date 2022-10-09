@@ -24,7 +24,4 @@ public class QuarkClientCompatImpl {
     public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
 
     }
-
-    public static void onItemTooltipEvent(ItemStack stack, TooltipFlag tooltipFlag, List<Component> components) {
-    }
 }

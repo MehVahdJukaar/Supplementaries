@@ -212,8 +212,8 @@ public class ModRegistry {
                     .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE))
             );
 
-   // public static final Supplier<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
-   //         .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
+    public static final Supplier<Item> LABEL_ITEM = regItem(LABEL_NAME, () -> new LabelItem(new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_DECORATIONS, LABEL_NAME))));
 
 
     //soap bubbler

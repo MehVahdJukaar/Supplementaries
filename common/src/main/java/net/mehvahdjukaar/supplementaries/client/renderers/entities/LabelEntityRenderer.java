@@ -83,7 +83,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
         if (item != Items.AIR) {
 
-            FrameBufferBackedDynamicTexture tex = getLabelTexture(item, 16);
+            FrameBufferBackedDynamicTexture tex = getLabelTexture(item, 32);
 
             ResourceLocation loc = tex.getTextureLocation();
 
@@ -96,11 +96,11 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
             int overlay = OverlayTexture.NO_OVERLAY;
 
             float z = 15.8f / 16f;
-            float s = 0.25f;
-            poseStack.translate(0.5, 0.5, z);
+            boolean hasText = true;
+            float s = hasText ? 0.1875f : 0.25f ;
+            poseStack.translate(0.5, hasText ? 0.575 : 0.5, z);
             poseStack.pushPose();
 
-            poseStack.scale(0.75f, 0.75f, 1);
             vertexConsumer.vertex(tr, -s, -s, 0).color(1f, 1f, 1f, 1f).uv(1f, 0f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
             vertexConsumer.vertex(tr, -s, s, 0).color(1f, 1f, 1f, 1f).uv(1f, 1f).overlayCoords(overlay).uv2(light).normal(normal, 0f, 0f, 1f).endVertex();
 
@@ -109,7 +109,7 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
             poseStack.popPose();
 
-            drawStatueNameplate(poseStack, buffer, Utils.getID(item).getPath());
+            drawStatueNameplate(poseStack, buffer,entity, entity.getItem().getHoverName());
         }
 
         poseStack.popPose();
@@ -187,38 +187,63 @@ public class LabelEntityRenderer extends EntityRenderer<LabelEntity> {
 
     }
 
-    private void drawStatueNameplate(PoseStack matrixStack, MultiBufferSource buffer, String name) {
-        var text = Component.literal(name).withStyle(ChatFormatting.BLACK);
+    private void drawStatueNameplate(PoseStack matrixStack, MultiBufferSource buffer,
+                                     LabelEntity entity, Component text) {
+        matrixStack.scale(-1,1,-1);
+
         Font font = Minecraft.getInstance().font;
         int width = font.width(text);
 
         matrixStack.pushPose();
-        matrixStack.translate(0, -0.25, 0);
+        matrixStack.translate(0, 0.25, 0);
 
 
-        float borderY = 0.125f;
-        float borderX = 0.1875f;
-        float paperWidth = 1 - (2 * borderX);
-        float paperHeight = 1 - (2 * borderY);
-        float maxLines;
-        int scalingFactor;
-        List<FormattedCharSequence> tempPageLines;
-        do {
-           scalingFactor = Mth.floor(Mth.sqrt((width * 8f) / (paperWidth * paperHeight)));
+        if(entity.needsVisualUpdate()) {
+            float borderY = 0.45f;
+            float borderX = 0.275f;
+            float paperWidth = 1 - (2 * borderX);
+            float paperHeight = 1 - (2 * borderY);
+            float maxLines;
+            int scalingFactor;
+            List<FormattedCharSequence> tempPageLines;
+            do {
+                scalingFactor = Mth.floor(Mth.sqrt((width * 8f) / (paperWidth * paperHeight)));
 
-            tempPageLines = font.split(text, Mth.floor(paperWidth * scalingFactor));
-            //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
+                tempPageLines = font.split(text, Mth.floor(paperWidth * scalingFactor));
+                //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
 
-            maxLines = paperHeight * scalingFactor / 8f;
-            width += 1;
-            // when lines fully filled @scaling factor > actual lines -> no overflow lines
-            // rendered
-        } while (maxLines < tempPageLines.size());
+                maxLines = paperHeight * scalingFactor / 8f;
+                width += 1;
+                // when lines fully filled @scaling factor > actual lines -> no overflow lines
+                // rendered
+            } while (maxLines < tempPageLines.size());
 
-        matrixStack.scale(0.01F, -0.01F, 0.01F);
+            entity.setLabelText(tempPageLines);
+            entity.setLabelTextScale(scalingFactor);
+        }
 
-        font.drawInBatch(text, -width / 2F, -font.lineHeight / 2f, 0xFF000000, false,
-                matrixStack.last().pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
+        var scalingFactor = entity.getLabelTextScale();
+        var tempPageLines = entity.getLabelText();
+
+        float scale = 1 / (float) scalingFactor;
+        matrixStack.scale(scale, -scale, scale);
+        int numberOfLines = tempPageLines.size();
+
+        for (int lin = 0; lin < numberOfLines; ++lin) {
+            //String str = tempPageLines.get(lin).getFormattedText();
+            FormattedCharSequence str = tempPageLines.get(lin);
+
+            //border offsets. always add 0.5 to center properly
+            //float dx = (float) (-font.getStringWidth(str) / 2f) + 0.5f;
+            float dx = (float) (-font.width(str) / 2) + 0.5f;
+
+            // float dy = (float) scalingfactor * bordery;
+            float dy = ((scalingFactor - (8 * numberOfLines)) / 2f) + 0.5f;
+
+            font.drawInBatch(str, dx, dy + 8 * lin, 0xFF000000, false, matrixStack.last().pose(),
+                    buffer, false, 0, LightTexture.FULL_BRIGHT);
+
+        }
 
         matrixStack.popPose();
     }

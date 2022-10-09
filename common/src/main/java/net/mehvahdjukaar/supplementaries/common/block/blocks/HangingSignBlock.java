@@ -71,10 +71,10 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                 //TODO: fix left hand(shield)
                 if (handIn == InteractionHand.MAIN_HAND) {
                     //remove
-                    if (!tile.isEmpty()) {
+                    if (!tile.isEmpty() && !tile.fakeItem) {
                         if (handItem.isEmpty()) {
-                            ItemStack it = tile.removeStackFromSlot(0);
-
+                            ItemStack it = tile.removeItem();
+                            tile.fakeItem = false;
                             player.setItemInHand(handIn, it);
                             tile.setChanged();
 
@@ -87,8 +87,8 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                         if (!handItem.isEmpty()) {
                             ItemStack it = handItem.copy();
                             it.setCount(1);
-                            tile.setItems(NonNullList.withSize(1, it));
-
+                            tile.setItem(it);
+                            tile.fakeItem = false;
                             if (!player.isCreative()) {
                                 handItem.shrink(1);
                             }
@@ -148,7 +148,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    //always returns a not null blockstate.
+    //always returns a not null block state.
     public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction clickedFace) {
         BlockAttachment attachment = BlockAttachment.get(facingState, pos, world, clickedFace);
         SignAttachment old = state.getValue(ATTACHMENT);
@@ -163,7 +163,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        //always model cause I need dynamic thingie
         return RenderShape.MODEL;
     }
 
@@ -212,10 +211,10 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile) {
+            if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile && !tile.fakeItem) {
                 //InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
 
-                ItemStack itemstack = tile.getStackInSlot(0);
+                ItemStack itemstack = tile.getItem();
                 ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
                 itementity.setDefaultPickUpDelay();
                 world.addFreshEntity(itementity);

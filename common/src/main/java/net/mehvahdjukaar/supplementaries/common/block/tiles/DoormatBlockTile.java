@@ -22,9 +22,10 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     public DoormatBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.DOORMAT_TILE.get(),pos, state);
-        this.textHolder = new TextHolder(MAX_LINES, 12);
+        this.textHolder = new TextHolder(MAX_LINES, 75);
     }
 
+    @Override
     public TextHolder getTextHolder(){return this.textHolder;}
 
     @Override

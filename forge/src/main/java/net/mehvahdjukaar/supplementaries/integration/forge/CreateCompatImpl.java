@@ -10,7 +10,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.FluidAmountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
@@ -70,10 +69,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 public class CreateCompatImpl {
@@ -434,17 +435,24 @@ public class CreateCompatImpl {
                 var textHolder = th.getTextHolder();
                 boolean changed = false;
 
-                for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {
-                    if (i == 0) {
-                        reserve(i + line, te, context);
-                    }
-                    if (i > 0 && this.isReserved(i + line, te, context)) {
-                        break;
-                    }
-                    textHolder.setLine(i + line, text.get(i));
+                if (th instanceof HangingSignBlockTile hs && (hs.isEmpty() || hs.fakeItem)) {
+                    var source = context.getSourceTE();
+                    ItemStack copyStack = getDisplayedItem( context, source, i->!i.isEmpty());
+                    hs.setItem(copyStack);
+                    hs.fakeItem = true;
                     changed = true;
+                } else {
+                    for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {
+                        if (i == 0) {
+                            reserve(i + line, te, context);
+                        }
+                        if (i > 0 && this.isReserved(i + line, te, context)) {
+                            break;
+                        }
+                        textHolder.setLine(i + line, text.get(i));
+                        changed = true;
+                    }
                 }
-
                 if (changed) {
                     context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
                 }
@@ -475,34 +483,43 @@ public class CreateCompatImpl {
         }
     }
 
+    private static ItemStack getDisplayedItem(DisplayLinkContext context, BlockEntity source,
+                                              Predicate<ItemStack> predicate) {
+        if (source instanceof ItemDisplayTile display) {
+            var stack = display.getDisplayedItem();
+            if(predicate.test(stack)) return stack;
+        }
+        else {
+            for (int i = 0; i < 32; ++i) {
+                var pos = context.getSourcePos();
+                TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
+                        context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
+                );
+                if (behaviour == null) {
+                    break;
+                }
+                MutableObject<ItemStack> stackHolder = new MutableObject<>();
+                behaviour.handleCenteredProcessingOnAllItems(0.25F, tis -> {
+                    stackHolder.setValue(tis.stack);
+                    return TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
+                });
+                ItemStack stack = stackHolder.getValue();
+                if (stack != null && predicate.test(stack)) {
+                    return stack;
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
     private static class BlackboardDisplayTarget extends DisplayTarget {
 
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
             BlockEntity te = context.getTargetTE();
             if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
                 var source = context.getSourceTE();
-                if (source instanceof ItemDisplayTile display) {
-                    var stack = display.getDisplayedItem();
-                    if (copyBlackboard(line, context, te, tile, stack)) return;
-                }
-                for (int i = 0; i < 32; ++i) {
-                    var pos = context.getSourceTE().getBlockPos();
-                    TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
-                            context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
-                    );
-                    if (behaviour == null) {
-                        break;
-                    }
-                    MutableObject<ItemStack> stackHolder = new MutableObject<>();
-                    behaviour.handleCenteredProcessingOnAllItems(0.25F, tis -> {
-                        stackHolder.setValue(tis.stack);
-                        return TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
-                    });
-                    ItemStack stack = stackHolder.getValue();
-                    if (stack != null && stack.getItem() instanceof BlackboardItem) {
-                        if (copyBlackboard(line, context, te, tile, stack)) return;
-                    }
-                }
+                ItemStack copyStack = getDisplayedItem( context, source, i->i.getItem() instanceof BlackboardItem);
+                if(!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
                 var pixels = BlackboardBlockTile.unpackPixelsFromString(text.get(0).getString());
                 tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
 
@@ -512,14 +529,12 @@ public class CreateCompatImpl {
         }
 
         private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
-            if (stack.getItem() instanceof BlackboardItem) {
-                CompoundTag cmp = stack.getTagElement("BlockEntityTag");
-                if (cmp != null && cmp.contains("Pixels")) {
-                    tile.setPixels(BlackboardBlockTile.unpackPixels(cmp.getLongArray("Pixels")));
-                    context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
-                    reserve(line, te, context);
-                    return true;
-                }
+            CompoundTag cmp = stack.getTagElement("BlockEntityTag");
+            if (cmp != null && cmp.contains("Pixels")) {
+                tile.setPixels(BlackboardBlockTile.unpackPixels(cmp.getLongArray("Pixels")));
+                context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+                reserve(line, te, context);
+                return true;
             }
             return false;
         }
@@ -668,7 +683,7 @@ public class CreateCompatImpl {
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             if (context.sourceConfig().getInt("Mode") == 2) {
                 if (context.getSourceTE() instanceof ISoftFluidTankProvider tp) {
-                    return  Components.literal(tp.getSoftFluidTank().getCount()+ " mBtl");
+                    return Components.literal(tp.getSoftFluidTank().getCount() + " mBtl");
                 }
             }
             return super.provideLine(context, stats);

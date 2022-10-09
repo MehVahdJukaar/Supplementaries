@@ -11,6 +11,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
@@ -47,17 +48,33 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
-        registry.addRecipes(RecipeTypes.CRAFTING, createBlackboardDuplicate());
-        registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowCreateRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowAddRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, createFlagFromBanner());
-        registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMaoRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanShulkerRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanPresentRecipe());
-        registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
-        registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
+        if(RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
+        }
+        if(RegistryConfigs.BLACKBOARD_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createBlackboardDuplicate());
+        }
+        if(RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowCreateRecipe());
+            registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowAddRecipe());
+        }
+        if(RegistryConfigs.FLAG_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createFlagFromBanner());
+        }
+        if(RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapRecipe());
+        }
+        if(RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
+        }
+        if(RegistryConfigs.SOAP_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanShulkerRecipe());
+            registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanPresentRecipe());
+        }
+        if(RegistryConfigs.PRESENT_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
+            registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
+        }
     }
 
 
@@ -87,7 +104,7 @@ public class JEICompat implements IModPlugin {
         }
     }
 
-    public static List<CraftingRecipe> createAntiqueMaoRecipe() {
+    public static List<CraftingRecipe> createAntiqueMapRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.antique_map";
 

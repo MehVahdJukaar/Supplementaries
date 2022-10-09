@@ -86,7 +86,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
             poseStack.mulPose(RotHlpr.YN90);
             // render item
             if (!tile.isEmpty()) {
-                ItemStack stack = tile.getStackInSlot(0);
+                ItemStack stack = tile.getItem();
                 Item item = stack.getItem();
 
                 //render map

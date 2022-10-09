@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.HangingSignGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
@@ -33,6 +32,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     public final WoodType woodType;
 
+    public boolean fakeItem = true;
     private UUID owner = null;
 
     public TextHolder textHolder;
@@ -88,7 +88,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     @Override
     public ItemStack getMapStack() {
-        return this.getStackInSlot(0);
+        return this.getItem();
     }
 
     @Override
@@ -99,14 +99,16 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        this.stacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(tag, this.stacks);
 
-        this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.stacks);
-
-        this.textHolder.load(compound);
-        this.loadOwner(compound);
+        this.textHolder.load(tag);
+        this.loadOwner(tag);
+        if(tag.contains("FakeItem")) {
+            this.fakeItem = tag.getBoolean("FakeItem");
+        }
     }
 
     @Override
@@ -116,16 +118,14 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
         this.textHolder.save(tag);
         this.saveOwner(tag);
+        if(fakeItem){
+            tag.putBoolean("FakeItem", true);
+        }
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    //TODO: make this a ISidedInventory again
-    public int getSizeInventory() {
-        return stacks.size();
     }
 
     public boolean isEmpty() {
@@ -135,48 +135,22 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         return true;
     }
 
-    protected NonNullList<ItemStack> getItems() {
-        return this.stacks;
+    public ItemStack removeItem() {
+        return ContainerHelper.takeItem(this.stacks, 0);
     }
 
-    public void setItems(NonNullList<ItemStack> stacks) {
-        this.stacks = stacks;
+    public void setItem(ItemStack item) {
+       this.stacks = NonNullList.withSize(1, item);
     }
 
-    public ItemStack removeStackFromSlot(int index) {
-        return ContainerHelper.takeItem(this.getItems(), index);
-    }
-
-    public ItemStack getStackInSlot(int index) {
-        return this.getItems().get(index);
+    public ItemStack getItem() {
+        return this.stacks.get(0);
     }
 
     @Override
     public Vec3i getNormalRotationAxis(BlockState state) {
         return state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X ? new Vec3i(0, 0, -1) : new Vec3i(1, 0, 0);
     }
-
-    /*
-    public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(0, this.getSizeInventory()).toArray();
-    }
-
-    public int getInventoryStackLimit() {
-        return 1;
-    }
-
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        this.getItems().set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
-        }
-
-        this.markDirty();
-    }
-
-    public void clear() {
-        this.getItems().clear();
-    }*/
 
 }
 

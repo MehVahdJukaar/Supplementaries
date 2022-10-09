@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,10 +30,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class LabelEntity extends HangingEntity {
 
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(LabelEntity.class,
             EntityDataSerializers.ITEM_STACK);
+    private boolean needsVisualRefresh = true;
+    private int textScale;
+    private List<FormattedCharSequence> labelText;
 
     public LabelEntity(EntityType<? extends HangingEntity> entityType, Level world) {
         super(entityType, world);
@@ -164,7 +170,7 @@ public class LabelEntity extends HangingEntity {
 
             BlockPos pos = this.pos;
             var shape = level.getBlockState(pos).getBlockSupportShape(level, pos);
-            if (shape.isEmpty()){
+            if (shape.isEmpty()) {
                 return; //wait for survives to be called so this will be removed
             }
             double offset;
@@ -247,6 +253,30 @@ public class LabelEntity extends HangingEntity {
 
         return this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY).isEmpty();
 
+    }
+
+    public boolean needsVisualUpdate() {
+        if (this.needsVisualRefresh){
+            this.needsVisualRefresh = false;
+            return true;
+        }
+        return false;
+    }
+
+    public void setLabelText(List<FormattedCharSequence> tempPageLines) {
+        this.labelText = tempPageLines;
+    }
+
+    public void setLabelTextScale(int scalingFactor) {
+        this.textScale = scalingFactor;
+    }
+
+    public int getLabelTextScale() {
+        return textScale;
+    }
+
+    public List<FormattedCharSequence> getLabelText() {
+        return labelText;
     }
 /*
     public VoxelShape getFaceShape(VoxelShape shape, Direction side) {

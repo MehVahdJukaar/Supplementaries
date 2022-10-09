@@ -1,25 +1,12 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
     {
-      "conditions": [
-        {
-          "flag": "sign_post",
-          "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "minecraft:birch_sign"
-          }
-        ],
-        "result": {
-          "item": "supplementaries:sign_post_birch",
-          "count": 2
-        }
-      }
+      "item": "minecraft:birch_sign"
     }
-  ]
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_birch",
+    "count": 2
+  }
 }

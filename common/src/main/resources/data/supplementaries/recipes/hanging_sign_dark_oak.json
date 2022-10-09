@@ -1,36 +1,23 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
-    {
-      "conditions": [
-        {
-          "flag": "hanging_sign",
-          "type": "supplementaries:flag"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "131",
-          "222",
-          "222"
-        ],
-        "key": {
-          "1": {
-            "item": "minecraft:iron_nugget"
-          },
-          "2": {
-            "item": "minecraft:dark_oak_planks"
-          },
-          "3": {
-            "item": "minecraft:stick"
-          }
-        },
-        "result": {
-          "item": "supplementaries:hanging_sign_dark_oak",
-          "count": 2
-        }
-      }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "131",
+    "222",
+    "222"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:iron_nugget"
+    },
+    "2": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "3": {
+      "item": "minecraft:stick"
     }
-  ]
+  },
+  "result": {
+    "item": "supplementaries:hanging_sign_dark_oak",
+    "count": 2
+  }
 }
