@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
@@ -119,7 +120,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
             String name = this.getName().getString();
             String s = "";
-            if (!name.isEmpty() && !name.equals("\"\"")) s += ": ";
+            if (!name.isEmpty() && !name.equals("\"\"")) s += "Speaker Block: ";
             Component message = Component.literal(s + this.message)
                     .withStyle(style);
 
@@ -154,6 +155,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     public enum Mode {
         CHAT,
         STATUS_MESSAGE,
+        TITLE,
         NARRATOR
     }
 

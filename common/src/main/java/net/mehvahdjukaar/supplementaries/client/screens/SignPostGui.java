@@ -4,8 +4,9 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -208,7 +209,7 @@ public class SignPostGui extends Screen {
         if (this.tileSign.up || this.tileSign.down) {
             poseStack.translate(-3 * 0.010416667F * o[0], 0.21875, 0.1875 + 0.005);
             poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
-            TextUtil.RenderTextProperties properties = new TextUtil.RenderTextProperties(tileSign.textHolder, LightTexture.FULL_BRIGHT, () -> true);
+            var properties = tileSign.textHolder.getGUIRenderTextProperties();
 
             int cursorPos = this.textInputUtil.getCursorPos();
             int selectionPos = this.textInputUtil.getSelectionPos();

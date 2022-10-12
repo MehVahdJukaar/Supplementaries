@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -81,11 +81,11 @@ public class CommonConfigs {
 
             builder.push("quiver");
             QUIVER_PREVENTS_SLOWS = builder.comment("Allows using a quiver without being slowed down")
-                            .define("use_without_slow", true);
+                    .define("use_without_slow", true);
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
-                            .define("slots", 6, 1, 9);
+                    .define("slots", 6, 1, 9);
             QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
-                            .define("quiver_skeleton_chance", 0.2d,0,1);
+                    .define("quiver_skeleton_chance", 0.2d, 0, 1);
             builder.pop();
 
             builder.push("bubble_blower");
@@ -441,7 +441,7 @@ public class CommonConfigs {
 
             builder.push("sugar_cube");
             SUGAR_BLOCK_HORSE_SPEED_DURATION = builder.comment("Duration in seconts of speed effect garanted to horses that eat a sugar cube")
-                            .define("horse_speed_duration", 10, 0, 1000);
+                    .define("horse_speed_duration", 10, 0, 1000);
             builder.pop();
 
             builder.push("planter");
@@ -588,9 +588,9 @@ public class CommonConfigs {
 
             builder.push("blackboard");
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
-                    .define("colored_blackboard", false);
+                    .define("colored_blackboard", PlatformHelper.isModLoaded("chalk"));
             BLACKBOARD_MODE = builder.comment("Interaction mode for blackboards")
-                            .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
+                    .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
             builder.pop();
 
             builder.push("timber_frame");

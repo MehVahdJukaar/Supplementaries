@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.List;
 
@@ -58,15 +60,17 @@ public abstract class QuiverArrowSelectGui extends Gui {
         }
     }
 
+    @EventCalled
     public static boolean onMouseScrolled(double scrollDelta) {
         Player player = Minecraft.getInstance().player;
         //ItemStack quiver = player.getUseItem();
         //QuiverItem.getQuiverData(quiver).cycle(scrollDelta > 0);
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                scrollDelta > 0 ? 1 : -1, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+                scrollDelta > 0 ? -1 : 1, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
         return true;
     }
 
+    @EventCalled
     public static boolean onKeyPressed(int key, int action, int modifiers) {
         if (action == 1) {
             Player player = Minecraft.getInstance().player;

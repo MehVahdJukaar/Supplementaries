@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Camera;
@@ -76,7 +76,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
-            TextUtil.RenderTextProperties textProperties = new TextUtil.RenderTextProperties(tile.textHolder, combinedLightIn, lod::isVeryNear);
+            var textProperties = tile.textHolder.getRenderTextProperties(combinedLightIn, lod::isVeryNear);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -90,7 +90,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawUp - 90));
                 //matrixStackIn.rotate(Const.YN90);
 
-                if(tile.isSlim) matrixStackIn.translate(0,0,-1/16f);
+                if (tile.isSlim) matrixStackIn.translate(0, 0, -1 / 16f);
 
                 //sign block
                 matrixStackIn.pushPose();
@@ -103,7 +103,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.scale(1, -1, -1);
                 Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
                 //sanity check. can happen when log detection fails across versions
-                if(material != null) {
+                if (material != null) {
                     VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
                     signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
                 }
@@ -117,7 +117,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                    TextUtil.renderLine(tile.textHolder, 0, font, tile.textHolder.getMaxLineVisualWidth(),
+                    TextUtil.renderLine(tile.textHolder.getAndPrepareTextForRenderer(font, 0), font,
                             -4, matrixStackIn, bufferIn, textProperties);
                 }
 
@@ -133,7 +133,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawDown - 90));
                 matrixStackIn.translate(0, -0.5, 0);
 
-                if(tile.isSlim) matrixStackIn.translate(0,0,-1/16f);
+                if (tile.isSlim) matrixStackIn.translate(0, 0, -1 / 16f);
 
                 //sign block
                 matrixStackIn.pushPose();
@@ -157,8 +157,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                     matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
                     matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                    TextUtil.renderLine(tile.textHolder, 1, font, tile.textHolder.getMaxLineVisualWidth(),
-                            -4, matrixStackIn, bufferIn, textProperties);
+                    TextUtil.renderLine(tile.textHolder.getAndPrepareTextForRenderer(font, 1),
+                            font, -4, matrixStackIn, bufferIn, textProperties);
                 }
 
                 matrixStackIn.popPose();

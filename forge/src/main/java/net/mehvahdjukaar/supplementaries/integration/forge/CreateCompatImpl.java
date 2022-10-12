@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
+import com.simibubi.create.content.logistics.block.display.source.NixieTubeDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
@@ -31,10 +32,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -57,6 +60,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -69,13 +73,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class CreateCompatImpl {
 
@@ -119,19 +123,25 @@ public class CreateCompatImpl {
             //sources
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
-                    Supplementaries.res("globe_display_target"),
+                    Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
+
+            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
+
+            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+                    Supplementaries.res("notice_board_display_source"),
+                    new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
             PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
-                    Supplementaries.res("clock_target"),
+                    Supplementaries.res("clock_source"),
                     new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
 
             //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
 
             var itemDisplaySource = AllDisplayBehaviours.register(
-                    Supplementaries.res("item_display_target"),
+                    Supplementaries.res("item_display_source"),
                     new ItemDisplayDisplaySource());
 
             AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
@@ -142,7 +152,7 @@ public class CreateCompatImpl {
             PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
-                    Supplementaries.res("fluid_tank_target"),
+                    Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
             PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
 
@@ -437,7 +447,7 @@ public class CreateCompatImpl {
 
                 if (th instanceof HangingSignBlockTile hs && (hs.isEmpty() || hs.fakeItem)) {
                     var source = context.getSourceTE();
-                    ItemStack copyStack = getDisplayedItem( context, source, i->!i.isEmpty());
+                    ItemStack copyStack = getDisplayedItem(context, source, i -> !i.isEmpty());
                     hs.setItem(copyStack);
                     hs.fakeItem = true;
                     changed = true;
@@ -487,9 +497,8 @@ public class CreateCompatImpl {
                                               Predicate<ItemStack> predicate) {
         if (source instanceof ItemDisplayTile display) {
             var stack = display.getDisplayedItem();
-            if(predicate.test(stack)) return stack;
-        }
-        else {
+            if (predicate.test(stack)) return stack;
+        } else {
             for (int i = 0; i < 32; ++i) {
                 var pos = context.getSourcePos();
                 TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
@@ -518,14 +527,33 @@ public class CreateCompatImpl {
             BlockEntity te = context.getTargetTE();
             if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
                 var source = context.getSourceTE();
-                ItemStack copyStack = getDisplayedItem( context, source, i->i.getItem() instanceof BlackboardItem);
-                if(!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
-                var pixels = BlackboardBlockTile.unpackPixelsFromString(text.get(0).getString());
-                tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
-
+                if (!parseText(text.get(0).getString(), tile)) {
+                    ItemStack copyStack = getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
+                    if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
+                    var pixels = BlackboardBlockTile.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
+                    tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
+                }
                 context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
                 reserve(line, te, context);
             }
+        }
+
+        private final Pattern PATTERN = Pattern.compile("\\((\\d),(\\d)\\)->(\\S+)");
+
+        private boolean parseText(String string, BlackboardBlockTile tile) {
+            var m = PATTERN.matcher(string);
+            if (m.matches()) {
+                int x = Integer.parseInt(m.group(1));
+                int y = Integer.parseInt(m.group(2));
+                DyeColor dye = DyeColor.byName(m.group(3), null);
+                if (x >= 0 && x < 15 && y >= 0 && y < 15 && dye != null) {
+                    if (dye != DyeColor.WHITE && dye != DyeColor.BLACK && !CommonConfigs.Blocks.BLACKBOARD_COLOR.get())
+                        return false;
+                    tile.setPixel(x, y, BlackboardBlock.colorToByte(dye));
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
@@ -640,6 +668,38 @@ public class CreateCompatImpl {
         }
     }
 
+
+    private static class NoticeBoardDisplaySource extends SingleLineDisplaySource {
+
+        @Override
+        protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
+            if (context.getSourceTE() instanceof NoticeBoardBlockTile tile) {
+                tile.updateText();
+                return Component.literal(tile.getText());
+            } else {
+                return Component.empty();
+            }
+        }
+
+        @Override
+        protected boolean allowsLabeling(DisplayLinkContext context) {
+            return false;
+        }
+
+        @Override
+        protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
+            return "Instant";
+        }
+
+        @Override
+        protected FlapDisplaySection createSectionForValue(DisplayLinkContext context, int size) {
+            return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
+        }
+
+        protected String getTranslationKey() {
+            return "notice_board";
+        }
+    }
 
     private static class ItemDisplayDisplaySource extends SingleLineDisplaySource {
 

@@ -1,10 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
@@ -26,7 +32,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.function.Function;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class TextHolder implements IAntiqueTextProvider {
 
@@ -36,7 +43,6 @@ public class TextHolder implements IAntiqueTextProvider {
     //text that gets rendered
     private final FormattedCharSequence[] renderText;
     private final int maxWidth;
-    private final boolean engraved;
     private DyeColor color = DyeColor.BLACK;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
@@ -51,7 +57,6 @@ public class TextHolder implements IAntiqueTextProvider {
         this.renderText = new FormattedCharSequence[size];
         this.textLines = new Component[size];
         Arrays.fill(this.textLines, CommonComponents.EMPTY);
-        this.engraved = engraved;
     }
 
     public int getMaxLineCharacters() {
@@ -108,14 +113,6 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public Component[] getTextLines() {
         return textLines;
-    }
-
-    @Nullable
-    public FormattedCharSequence getPreparedTextForRenderer(int line, Function<Component, FormattedCharSequence> f) {
-        if ((this.renderText[line] == null) && this.textLines[line] != CommonComponents.EMPTY) {
-            this.renderText[line] = f.apply(this.textLines[line]);
-        }
-        return this.renderText[line];
     }
 
     public DyeColor getColor() {
@@ -205,11 +202,6 @@ public class TextHolder implements IAntiqueTextProvider {
         }
     }
 
-    //unused
-    public boolean isEngraved() {
-        return engraved;
-    }
-
     //TODO: finish notice boards dye thing
     public void clearEffects() {
         this.setTextColor(DyeColor.BLACK);
@@ -223,9 +215,30 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public void clear() {
         Arrays.fill(this.textLines, CommonComponents.EMPTY);
-        this.setTextColor(DyeColor.BLACK);
-        this.setAntiqueInk(false);
-        this.setGlowingText(false);
+        this.clearEffects();
+    }
+
+    //client stuff
+
+    @Environment(EnvType.CLIENT)
+    @Nullable
+    public FormattedCharSequence getAndPrepareTextForRenderer(Font font, int line) {
+        if ((this.renderText[line] == null) && this.textLines[line] != CommonComponents.EMPTY) {
+            List<FormattedCharSequence> list = font.split(this.textLines[line], this.getMaxLineVisualWidth());
+            this.renderText[line] = list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
+        }
+        return this.renderText[line];
+    }
+
+    @Environment(EnvType.CLIENT)
+    public TextUtil.RenderTextProperties getRenderTextProperties(int combinedLight, Supplier<Boolean> shouldShowGlow) {
+        return new TextUtil.RenderTextProperties(this.getColor(), this.hasGlowingText(), combinedLight,
+                this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY, shouldShowGlow);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public TextUtil.RenderTextProperties getGUIRenderTextProperties() {
+        return getRenderTextProperties(LightTexture.FULL_BRIGHT, () -> true);
     }
 
 

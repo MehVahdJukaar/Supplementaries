@@ -1,0 +1,28 @@
+{
+  "type": "supplementaries:add_item",
+  "conditions": [
+    {
+      "condition": "minecraft:random_chance",
+      "chance": 0.2
+    },
+    {
+      "condition": "damage_source_properties",
+      "predicate": {
+        "is_fire": true
+      }
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "flags": {
+          "is_on_fire": true
+        }
+      }
+    }
+  ],
+  "item": {
+    "id": "supplementaries:ash",
+    "Count": 1
+  }
+}

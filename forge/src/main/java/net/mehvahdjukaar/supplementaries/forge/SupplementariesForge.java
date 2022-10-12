@@ -5,13 +5,16 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.integration.forge.CreateCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -35,6 +38,7 @@ public class SupplementariesForge {
         bus.addListener(SupplementariesForge::registerOverrides);
 
         ServerEventsForge.init();
+        ModLootModifiers.init();
 
         if (PlatformHelper.getEnv().isClient()) {
             ClientRegistry.init();

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ForgeSlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -18,6 +19,7 @@ public class SpeakerBlockGui extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
     private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
     private static final Component ACTION_BAR_TEXT = Component.translatable("gui.supplementaries.speaker_block.action_bar_message");
+    private static final Component TITLE_TEXT = Component.translatable("gui.supplementaries.speaker_block.title_message");
     private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");
     private static final Component VOLUME_TEXT = Component.translatable("gui.supplementaries.speaker_block.volume");
     private static final Component EDIT = Component.translatable("gui.supplementaries.speaker_block.edit");
@@ -49,14 +51,18 @@ public class SpeakerBlockGui extends Screen {
 
     private void updateMode() {
         switch (this.mode) {
-            case CHAT -> this.modeBtn.setMessage(CHAT_TEXT);
+            default -> this.modeBtn.setMessage(CHAT_TEXT);
             case NARRATOR -> this.modeBtn.setMessage(NARRATOR_TEXT);
             case STATUS_MESSAGE -> this.modeBtn.setMessage(ACTION_BAR_TEXT);
+            case TITLE -> this.modeBtn.setMessage(TITLE_TEXT);
         }
     }
 
     private void toggleMode() {
         this.mode = SpeakerBlockTile.Mode.values()[(this.mode.ordinal() + 1) % SpeakerBlockTile.Mode.values().length];
+        if (!CommonConfigs.Blocks.SPEAKER_NARRATOR.get() && mode == SpeakerBlockTile.Mode.NARRATOR) {
+            this.mode = SpeakerBlockTile.Mode.CHAT;
+        }
     }
 
     @Override

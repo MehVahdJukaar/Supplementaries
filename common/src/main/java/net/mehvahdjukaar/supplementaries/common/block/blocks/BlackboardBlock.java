@@ -96,7 +96,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     }
 
     //I started using this convention, so I have to keep it for backwards compat
-    private static byte colorToByte(DyeColor color) {
+    public static byte colorToByte(DyeColor color) {
         return switch (color) {
             case BLACK -> (byte) 0;
             case WHITE -> (byte) 1;

@@ -5,7 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -28,7 +29,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ComplexItem;
 import net.minecraft.world.item.ItemStack;
@@ -132,7 +132,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
 
                 if (CommonUtil.FESTIVITY.isAprilsFool()) {
-                    TextUtil.renderBeeMovie(matrixStackIn, bufferIn, frontLight, font, d0);
+                    TextUtils.renderBeeMovie(matrixStackIn, bufferIn, frontLight, font, d0);
                     matrixStackIn.popPose();
                     matrixStackIn.popPose();
                     return;
@@ -140,65 +140,38 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
                 String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
                 if (bookName.equals("credits")) {
-                    TextUtil.renderCredits(matrixStackIn, bufferIn, frontLight, font, d0);
+                    TextUtils.renderCredits(matrixStackIn, bufferIn, frontLight, font, d0);
                     matrixStackIn.popPose();
                     matrixStackIn.popPose();
                     return;
                 }
-
-
                 int i = tile.getTextColor().getTextColor();
                 int r = (int) ((double) NativeImage.getR(i) * d0);
                 int g = (int) ((double) NativeImage.getG(i) * d0);
                 int b = (int) ((double) NativeImage.getB(i) * d0);
                 int i1 = NativeImage.combine(0, b, g, r);
 
-                int scalingFactor;
-
-                List<FormattedCharSequence> tempPageLines;
-
                 if (tile.needsVisualUpdate()) {
-                    FormattedText txt = TextUtil.parseText(page);
-                    int width = font.width(txt);
-                    float borderY = 0.125f;
-                    float borderX = 0.1875f;
-                    float paperWidth = 1 - (2 * borderX);
-                    float paperHeight = 1 - (2 * borderY);
-                    float maxLines;
-                    do {
-                        scalingFactor = Mth.floor(Mth.sqrt((width * 8f) / (paperWidth * paperHeight)));
-
-                        tempPageLines = font.split(txt, Mth.floor(paperWidth * scalingFactor));
-                        //tempPageLines = RenderComponentsUtil.splitText(txt, MathHelper.floor(lx * scalingfactor), font, true, true);
-
-                        maxLines = paperHeight * scalingFactor / 8f;
-                        width += 1;
-                        // when lines fully filled @scaling factor > actual lines -> no overflow lines
-                        // rendered
-                    } while (maxLines < tempPageLines.size());
-
-                    tile.setFontScale(scalingFactor);
-                    tile.setCachedPageLines(tempPageLines);
-                } else {
-                    tempPageLines = tile.getCachedPageLines();
-                    scalingFactor = tile.getFontScale();
+                    float paperWidth = 1 - (2 * 0.1875f);
+                    float paperHeight = 1 - (2 * 0.125f);
+                    var p = TextUtil.fitLinesToBox(font,
+                            TextUtil.parseText(page), paperWidth, paperHeight);
+                    tile.setFontScale(p.getSecond());
+                    tile.setCachedPageLines(p.getFirst());
                 }
+                List<FormattedCharSequence> tempPageLines = tile.getCachedPageLines();
 
-                float scale = 1 / (float) scalingFactor;
+                float scale = tile.getFontScale();
                 matrixStackIn.scale(scale, -scale, scale);
-                int numberoflin = tempPageLines.size();
+                int numberOfLines = tempPageLines.size();
 
-                for (int lin = 0; lin < numberoflin; ++lin) {
-                    //String str = tempPageLines.get(lin).getFormattedText();
+                for (int lin = 0; lin < numberOfLines; ++lin) {
                     FormattedCharSequence str = tempPageLines.get(lin);
 
                     //border offsets. always add 0.5 to center properly
-                    //float dx = (float) (-font.getStringWidth(str) / 2f) + 0.5f;
                     float dx = (float) (-font.width(str) / 2) + 0.5f;
 
-                    // float dy = (float) scalingfactor * bordery;
-                    float dy = ((scalingFactor - (8 * numberoflin)) / 2f) + 0.5f;
-
+                    float dy = (((1f/scale) - (8 * numberOfLines)) / 2f) + 0.5f;
                     if (!bookName.equals("missingno")) {
                         font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
                     } else {
@@ -213,10 +186,10 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             //render item
             if (!stack.isEmpty() && !NoticeBoardBlockTile.isPageItem(stack.getItem())) {
 
-                Material rendermaterial = tile.getCachedPattern();
-                if (rendermaterial != null) {
+                Material pattern = tile.getCachedPattern();
+                if (pattern != null) {
 
-                    VertexConsumer builder = rendermaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                    VertexConsumer builder = pattern.buffer(bufferIn, RenderType::entityNoOutline);
 
                     int i = tile.getTextColor().getTextColor();
                     float b = (NativeImage.getR(i)) / 255f;
@@ -226,7 +199,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     int lu = frontLight & '\uffff';
                     int lv = frontLight >> 16 & '\uffff';
                     VertexUtils.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,
-                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, rendermaterial.sprite());
+                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, pattern.sprite());
 
                 } else {
                     BakedModel model = itemRenderer.getModel(stack, world, null, 0);
@@ -237,10 +210,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                             combinedOverlayIn, model);
                     //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
                 }
-
                 matrixStackIn.popPose();
                 return;
-
             }
             matrixStackIn.popPose();
         }

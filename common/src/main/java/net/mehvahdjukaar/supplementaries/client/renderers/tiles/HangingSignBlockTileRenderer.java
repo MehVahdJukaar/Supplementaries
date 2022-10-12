@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
@@ -156,14 +156,13 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
             else if (lod.isNearMed()) {
                 poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                TextUtil.RenderTextProperties textProperties = new TextUtil.RenderTextProperties(tile.getTextHolder(), combinedLightIn, lod::isVeryNear);
+                var textProperties = tile.getTextHolder().getRenderTextProperties(combinedLightIn, lod::isVeryNear);
 
                 for (int v = 0; v < 2; v++) {
                     poseStack.pushPose();
                     poseStack.translate(0, -34, (0.0625 + 0.005) / 0.010416667F);
 
-                    TextUtil.renderAllLines(tile.textHolder, LINE_SEPARATION, this.font, tile.textHolder.getMaxLineVisualWidth(),
-                            poseStack, bufferIn, textProperties);
+                    TextUtils.renderTextHolderLines(tile.textHolder, LINE_SEPARATION, this.font, poseStack, bufferIn, textProperties);
 
                     poseStack.popPose();
                     poseStack.mulPose(RotHlpr.Y180);

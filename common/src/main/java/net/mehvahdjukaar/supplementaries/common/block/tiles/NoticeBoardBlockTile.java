@@ -38,7 +38,7 @@ import java.util.List;
 public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay {
     //client stuff
     private String text = null;
-    private int fontScale = 1;
+    private float fontScale = 1;
     private List<FormattedCharSequence> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
     private boolean needsVisualRefresh = true;
@@ -102,6 +102,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.needsVisualRefresh = true;
         this.cachedPageLines = Collections.emptyList();
         this.text = null;
+        updateText();
+    }
+
+    public void updateText() {
+        ItemStack itemstack = getDisplayedItem();
+        Item item = itemstack.getItem();
         CompoundTag com = itemstack.getTag();
         if ((item instanceof WrittenBookItem && WrittenBookItem.makeSureTagIsValid(com)) ||
                 (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
@@ -209,11 +215,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return text;
     }
 
-    public int getFontScale() {
+    public float getFontScale() {
         return this.fontScale;
     }
 
-    public void setFontScale(int s) {
+    public void setFontScale(float s) {
         this.fontScale = s;
     }
 

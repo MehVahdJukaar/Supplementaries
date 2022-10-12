@@ -7,19 +7,21 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
@@ -57,7 +59,14 @@ public class ClientReceivers {
         Component str = message.str;
         if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
             Narrator.getNarrator().say(str.getString(), true);
-        } else {
+        } else if(mode == SpeakerBlockTile.Mode.TITLE) {
+            Gui gui = Minecraft.getInstance().gui;
+            gui.clear();
+            if (true) {
+                gui.resetTitleTimes();
+            }
+            gui.setTitle(str);
+        } else{
             withPlayerDo((p) -> p.displayClientMessage(str, mode == SpeakerBlockTile.Mode.STATUS_MESSAGE));
         }
     }

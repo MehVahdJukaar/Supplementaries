@@ -5,7 +5,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.TextUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -39,7 +40,7 @@ public class HangingSignGui extends Screen {
 
     }
 
-    public static void open(HangingSignBlockTile teSign){
+    public static void open(HangingSignBlockTile teSign) {
         Minecraft.getInstance().setScreen(new HangingSignGui(teSign));
     }
 
@@ -155,7 +156,8 @@ public class HangingSignGui extends Screen {
         poseStack.translate(0, -0.010416667F, 0.0625 + 0.005);
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-        TextUtil.renderGuiText(this.tileSign.textHolder, this.cachedLines, this.font, poseStack, bufferSource, this.textInputUtil.getCursorPos(),
+        TextUtil.renderGuiText(this.tileSign.textHolder.getGUIRenderTextProperties(),
+                this.cachedLines, this.font, poseStack, bufferSource, this.textInputUtil.getCursorPos(),
                 this.textInputUtil.getSelectionPos(), this.editLine, blink, HangingSignBlockTileRenderer.LINE_SEPARATION);
 
         poseStack.popPose();

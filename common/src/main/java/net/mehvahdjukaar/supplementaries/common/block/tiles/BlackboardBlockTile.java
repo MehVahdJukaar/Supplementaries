@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
@@ -142,6 +143,62 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
             j++;
         }
         return unpacked;
+    }
+
+    public static long[] unpackPixelsFromStringWhiteOnly(String packed) {
+        long[] unpacked = new long[16];
+        var chars = packed.toCharArray();
+        int j = 0;
+        for (int i = 0; i+3< chars.length; i+=4) {
+            long l = 0;
+            char c = chars[i];
+            for(int k = 0; k<4; k++){
+                l = l | (((c>>k)&1)<<4*k);
+            }
+            char c2 = chars[i+1];
+            for(int k = 0; k<4; k++){
+                l = l | ((long) ((c2 >> k) & 1) <<(16+(4*k)));
+            }
+            char c3 = chars[i+2];
+            for(int k = 0; k<4; k++){
+                l = l | ((long) ((c3 >> k) & 1) <<(32+(4*k)));
+            }
+            char c4 = chars[i+3];
+            for(int k = 0; k<4; k++){
+                l = l | ((long) ((c4 >> k) & 1) <<(48+(4*k)));
+            }
+            unpacked[j] = l;
+            j++;
+        }
+        return unpacked;
+    }
+
+    public static String packPixelsToStringWhiteOnly(long[] packed) {
+        StringBuilder builder = new StringBuilder();
+        for (var l : packed) {
+            char c = 0;
+            for(int k = 0; k<4; k++){
+                byte h = (byte) ((l >>4*k)&1);
+                c = (char) (c | (h<<k));
+            }
+            char c1 = 0;
+            for(int k = 0; k<4; k++){
+                byte h = (byte) ((l >>(16+(4*k)))&1);
+                c1 = (char) (c1 | (h<<k));
+            }
+            char c2 = 0;
+            for(int k = 0; k<4; k++){
+                byte h = (byte) ((l >>(32+(4*k)))&1);
+                c2 = (char) (c2 | (h<<k));
+            }
+            char c3 = 0;
+            for(int k = 0; k<4; k++){
+                byte h = (byte) ((l >>(48+(4*k)))&1);
+                c3 = (char) (c3 | (h<<k));
+            }
+            builder.append(c).append(c1).append(c2).append(c3);
+        }
+        return builder.toString();
     }
 
     public void clear() {
