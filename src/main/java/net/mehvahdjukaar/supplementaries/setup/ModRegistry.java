@@ -1007,7 +1007,7 @@ public class ModRegistry {
 
     //netherite doors
     public static final RegistryObject<Block> NETHERITE_DOOR = BLOCKS.register(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).noOcclusion()
     ));
     public static final RegistryObject<Item> NETHERITE_DOOR_ITEM = ITEMS.register(NETHERITE_DOOR_NAME, () -> new BlockItem(NETHERITE_DOOR.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_DOOR_NAME)).fireResistant()));

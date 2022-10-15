@@ -49,6 +49,17 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
                 .build();
     }
 
+    public static long[] unpackPixelsFromString(String packed) {
+        long[] unpacked = new long[16];
+        var chars = packed.toCharArray();
+        int j = 0;
+        for (int i = 0; i+3 < chars.length; i+=4) {
+            unpacked[j] = (long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i];
+            j++;
+        }
+        return unpacked;
+    }
+
     public BlackboardKey getTextureKey() {
         if (textureKey == null) refreshTexture();
         return textureKey;

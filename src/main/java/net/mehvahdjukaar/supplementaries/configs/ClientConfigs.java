@@ -5,7 +5,9 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;

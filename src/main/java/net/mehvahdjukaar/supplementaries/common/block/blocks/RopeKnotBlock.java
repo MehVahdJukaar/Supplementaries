@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties.PostType;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPlugin;
@@ -43,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection {
 
     private final Map<BlockState, VoxelShape> SHAPES_MAP = new HashMap<>();
     private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP = new HashMap<>();
@@ -71,6 +72,15 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
                 .setValue(WATERLOGGED, false).setValue(POST_TYPE, PostType.POST)
                 .setValue(NORTH, false).setValue(SOUTH, false).setValue(WEST, false)
                 .setValue(EAST, false).setValue(UP, false).setValue(DOWN, false));
+    }
+
+    @Override
+    public boolean canSideAcceptConnection(BlockState state, Direction direction) {
+        if(state.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y){
+            return direction.getAxis() != Direction.Axis.Y;
+        }else{
+            return direction.getAxis() == Direction.Axis.Y;
+        }
     }
 
     @Override
@@ -204,7 +214,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), RopeBlock.shouldConnectToFace(state, facingState, facingPos, facing, world));
+        BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), shouldConnectToFace(state, facingState, facingPos, facing, world));
         if (world.getBlockEntity(currentPos) instanceof RopeKnotBlockTile tile) {
             BlockState oldHeld = tile.getHeldBlock();
 

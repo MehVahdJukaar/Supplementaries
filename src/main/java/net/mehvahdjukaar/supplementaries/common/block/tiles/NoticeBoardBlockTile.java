@@ -103,6 +103,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.needsVisualRefresh = true;
         this.cachedPageLines = Collections.emptyList();
         this.text = null;
+
+    }
+
+    public void updateText() {
+        ItemStack itemstack = getDisplayedItem();
+        Item item = itemstack.getItem();
         CompoundTag com = itemstack.getTag();
         if ((item instanceof WrittenBookItem && WrittenBookItem.makeSureTagIsValid(com)) ||
                 (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
@@ -277,4 +283,5 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         }
         return InteractionResult.sidedSuccess(!server);
     }
+
 }

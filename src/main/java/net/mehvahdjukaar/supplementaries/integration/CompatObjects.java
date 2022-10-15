@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -34,12 +36,14 @@ public class CompatObjects {
     public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", ForgeRegistries.PARTICLE_TYPES);
 
     public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", ForgeRegistries.BLOCKS);
+    public static final Supplier<Block> TOMATOES = makeCompatObject("farmersdelight:tomatoes", ForgeRegistries.BLOCKS);
 
     public static final Supplier<Block> RICH_SOUL_SOIL = makeCompatObject("nethers_delight:rich_soul_soil", ForgeRegistries.BLOCKS);
 
     public static final Supplier<ParticleType<?>> SHARPNEL = makeCompatObject("oreganized:lead_shrapnel", ForgeRegistries.PARTICLE_TYPES);
 
     public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", ForgeRegistries.MOB_EFFECTS);
+
 
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()

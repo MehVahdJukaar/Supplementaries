@@ -463,7 +463,7 @@ public class ServerConfigs {
 
             builder.push("rope");
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
-                    .define("block_side_attachment", false);
+                    .define("block_side_attachment", true);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
             builder.pop();

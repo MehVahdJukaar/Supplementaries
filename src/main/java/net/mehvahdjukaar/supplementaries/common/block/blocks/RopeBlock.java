@@ -5,12 +5,14 @@ import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.selene.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.util.BlockUtils.PlayerLessContext;
 import net.mehvahdjukaar.supplementaries.common.items.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.decorativeblocks.RopeChandelierBlock;
+import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.integration.quark.QuarkPistonPlugin;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSounds;
@@ -64,7 +66,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class RopeBlock extends WaterBlock {
+public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     //TODO: make solid when player is not colliding
     public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
@@ -95,6 +97,11 @@ public class RopeBlock extends WaterBlock {
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(UP, true).setValue(DOWN, true).setValue(KNOT, false).setValue(DISTANCE, 7).setValue(WATERLOGGED, false)
                 .setValue(NORTH, false).setValue(SOUTH, false).setValue(EAST, false).setValue(WEST, false));
+    }
+
+    @Override
+    public boolean canSideAcceptConnection(BlockState state, Direction direction) {
+        return true;
     }
 
     @Override
@@ -159,38 +166,9 @@ public class RopeBlock extends WaterBlock {
 
     }
 
-    public static boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
+    public boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
         BlockPos facingPos = currentPos.relative(dir);
         return shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
-    }
-
-    public static boolean shouldConnectToFace(BlockState thisState, BlockState facingState, BlockPos facingPos, Direction dir, LevelReader world) {
-        Block thisBlock = thisState.getBlock();
-        Block b = facingState.getBlock();
-        boolean isKnot = thisBlock == ModRegistry.ROPE_KNOT.get();
-        boolean isVerticalKnot = isKnot && thisState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y;
-
-        switch (dir) {
-            case UP -> {
-                if (isVerticalKnot) return false;
-                return RopeBlock.isSupportingCeiling(facingState, facingPos, world);
-            }
-            case DOWN -> {
-                if (isVerticalKnot) return false;
-                return RopeBlock.isSupportingCeiling(facingPos.above(2), world) || RopeBlock.canConnectDown(facingState);
-            }
-            default -> {
-                if (ServerConfigs.cached.ROPE_UNRESTRICTED && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
-                    return true;
-                }
-                if (facingState.is(ModRegistry.ROPE_KNOT.get())) {
-                    return thisBlock != b && (dir.getAxis() == Direction.Axis.Y || facingState.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y);
-                } else if (isKnot && !isVerticalKnot) {
-                    return false;
-                }
-                return b == ModRegistry.ROPE.get();
-            }
-        }
     }
 
     @Override
@@ -209,7 +187,9 @@ public class RopeBlock extends WaterBlock {
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
             RopeChandelierBlock.tryConverting(facingState, worldIn, facingPos);
         }
-
+        if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+            FDCompatRegistry.tryTomatoLogging(facingState, worldIn, facingPos,true);
+        }
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
     }
 

@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.farmersdelight.FDCompatRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -107,6 +109,10 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
+        return getStickShape(x, y, z);
+    }
+
+    public static VoxelShape getStickShape(boolean x, boolean y, boolean z) {
         if (x) {
             if (y) {
                 if (z) return X_Y_Z_AXIS_AABB;
@@ -121,11 +127,22 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
         return Y_AXIS_AABB;
     }
 
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (this == ModRegistry.STICK_BLOCK.get()) {
+            if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+                FDCompatRegistry.tryTomatoLogging(facingState, worldIn, facingPos,false);
+            }
+        }
+
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-        if (blockstate.is(this)) {
+        if (blockstate.is(this) || (CompatHandler.farmers_delight && FDCompatRegistry.canAddStickToTomato(blockstate, axis))) {
             return blockstate.setValue(axis, true);
         } else {
             return super.getStateForPlacement(context).setValue(AXIS_Y, false).setValue(axis, true);
