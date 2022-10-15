@@ -41,6 +41,7 @@
   "block.supplementaries.candelabra_silver": "銀の燭台",
   "block.supplementaries.item_shelf": "棚",
   "block.supplementaries.cog_block": "歯車ブロック",
+  "block.supplementaries.candle_holder": "ろうそく立て",
   "block.supplementaries.sack": "袋",
   "gui.supplementaries.blackboard.edit": "黒板の編集",
   "block.supplementaries.safe": "金庫",
@@ -401,5 +402,6 @@
   "block.supplementaries.laser_block": "エンダービーマー",
   "death.attack.supplementaries.amethyst_shard": "%1$sは飛び散った破片によって死んだ",
   "death.attack.supplementaries.amethyst_shard.player": "%1$sは%2$sによる飛び散った破片によって死んだ",
-  "item.supplementaries.amethyst_arrow": "アメジストの矢"
+  "item.supplementaries.amethyst_arrow": "アメジストの矢",
+  "supplementaries.gui.info": "Supplementariesのページを開く"
 }
