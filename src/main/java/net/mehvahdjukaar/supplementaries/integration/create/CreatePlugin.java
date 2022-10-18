@@ -531,7 +531,7 @@ public class CreatePlugin {
             }
         }
 
-        private final Pattern PATTERN = Pattern.compile("\\((\\d),(\\d)\\)->(\\S+)");
+        private final Pattern PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)->(\\S+)");
 
         private boolean parseText(String string, BlackboardBlockTile tile) {
             var m = PATTERN.matcher(string);
