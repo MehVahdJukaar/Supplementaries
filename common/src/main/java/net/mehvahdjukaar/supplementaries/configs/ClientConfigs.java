@@ -31,10 +31,6 @@ public class ClientConfigs {
         General.init(builder);
         Tweaks.init(builder);
         Items.init(builder);
-
-        builder.onChange(() -> {
-            GlobeTextureManager.GlobeColors.refreshColorsFromConfig();
-        });
         CLIENT_SPEC = builder.buildAndRegister();
     }
 
@@ -175,7 +171,6 @@ public class ClientConfigs {
         public static Supplier<Boolean> CLOCK_24H;
         public static Supplier<Boolean> GLOBE_RANDOM;
         public static Supplier<Boolean> TIPPED_BAMBOO_SPIKES_TAB;
-        public static Supplier<List<? extends List<String>>> GLOBE_COLORS;
 
         public static Supplier<GraphicsFanciness> FLAG_FANCINESS;
         public static Supplier<Boolean> FLAG_BANNER;
@@ -202,29 +197,6 @@ public class ClientConfigs {
 
             builder.push("globe");
             GLOBE_RANDOM = builder.comment("Enable a random globe texture for each world").define("random_world", true);
-
-            GLOBE_COLORS = builder.comment("""
-                            Here you can put custom colors that will be assigned to each globe depending on the dimension where its placed:
-                            To do so you'll have to make a list for one entry for every dimension you want to recolor as follows:
-                            [[<id>,<c1>,...,<c12>],[<id>,<c1>,...,<c12>],...]
-                            With the following description:
-                             - <id> being the dimension id (ie: minecraft:the_nether)
-                             - <c1> to <c12> will have to be 12 hex colors (without the #) that will represent each of the 17 globe own 'virtual biome'
-                            Following are the virtual biomes that each index is associated with:
-                             - 1: water light
-                             - 2: water medium
-                             - 3: water dark
-                             - 4: coast/taiga
-                             - 5: forest
-                             - 6: plains
-                             - 7: savanna
-                             - 8: desert
-                             - 9: snow
-                             - 10: ice
-                             - 11: iceberg/island
-                             - 12: mushroom island""")
-                    .defineForgeList("globe_colors", GlobeTextureManager.GlobeColors.getDefaultConfig(), ConfigBuilder.LIST_STRING_CHECK);
-
             builder.pop();
 
             builder.push("clock_block");

@@ -47,9 +47,9 @@ public class GlobeDataGenerator {
         public static final byte ICEBERG = 11;
         public static final byte MUSHROOM = 12;
         public static final byte MUSHROOM_S = 13;
+
+
         public static final byte TAIGA = 14;
-
-
         public static final byte MESA = 15;
         public static final byte MESA_S = 16;
         public static final byte MOUNTAIN = 17;

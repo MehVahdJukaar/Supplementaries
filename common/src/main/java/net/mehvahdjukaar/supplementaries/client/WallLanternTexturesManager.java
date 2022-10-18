@@ -26,15 +26,15 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class WallLanternTexturesRegistry extends SimpleJsonResourceReloadListener {
+public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
     private static Set<Block> POSSIBLE_LANTERNS = null;
 
-    public static final WallLanternTexturesRegistry RELOAD_INSTANCE = new WallLanternTexturesRegistry();
+    public static final WallLanternTexturesManager RELOAD_INSTANCE = new WallLanternTexturesManager();
 
-    private WallLanternTexturesRegistry() {
+    private WallLanternTexturesManager() {
         super(GSON, "textures/blocks/wall_lanterns");
     }
 

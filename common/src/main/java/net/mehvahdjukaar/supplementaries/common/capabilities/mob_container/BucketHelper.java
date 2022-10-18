@@ -2,19 +2,24 @@ package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -93,7 +98,7 @@ public class BucketHelper {
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {
-            return tryGettingFishBucketHackery(entity, (ServerLevel) entity.level);
+            return tryGettingFishBucketHackery(entity, entity.level);
         }
         return null;
     }
@@ -103,9 +108,27 @@ public class BucketHelper {
      *
      * @return filled bucket stack or empty stack
      */
-    @ExpectPlatform
-    private static ItemStack tryGettingFishBucketHackery(Entity entity, ServerLevel serverLevel) {
-        throw new AssertionError();
+    private static ItemStack tryGettingFishBucketHackery(Entity entity, Level level) {
+
+        ItemStack bucket = ItemStack.EMPTY;
+        Player player = CommonUtil.getFakePlayer(level);
+        if (player != null) {
+            //hax incoming
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
+            InteractionResult result = entity.interact(player, InteractionHand.MAIN_HAND);
+            if (!result.consumesAction()) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.BUCKET));
+                result = entity.interact(player, InteractionHand.MAIN_HAND);
+            }
+
+            if (result.consumesAction()) {
+                ItemStack filledBucket = player.getItemInHand(InteractionHand.MAIN_HAND);
+                if (!filledBucket.isEmpty() && !entity.isAlive()) {
+                    bucket = filledBucket;
+                }
+            }
+        }
+        return bucket;
     }
 
     public static boolean isModdedFish(Entity entity) {

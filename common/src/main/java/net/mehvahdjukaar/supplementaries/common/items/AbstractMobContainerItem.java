@@ -5,11 +5,13 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -331,10 +333,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
             entity.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.CONSUME;
-        } else if (player.getLevel().isClientSide) {
+        } else if (player.getLevel().isClientSide && entity instanceof LivingEntity) {
             player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
         }
-
         this.playFailSound(player);
         return InteractionResult.PASS;
     }

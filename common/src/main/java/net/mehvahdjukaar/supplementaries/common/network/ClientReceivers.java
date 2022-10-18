@@ -4,7 +4,6 @@ import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
@@ -21,7 +20,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
@@ -45,28 +43,19 @@ public class ClientReceivers {
         if (level != null) action.accept(level);
     }
 
-    public static void handleOpenScreenPacket(ClientBoundOpenScreenPacket message) {
-        withLevelDo(l -> {
-            BlockPos pos = message.pos;
-            if (l.getBlockEntity(pos) instanceof IScreenProvider tile) {
-                withPlayerDo((p) -> tile.openScreen(l, pos, p));
-            }
-        });
-    }
-
     public static void handlePlaySpeakerMessagePacket(ClientBoundPlaySpeakerMessagePacket message) {
         var mode = message.mode;
         Component str = message.str;
         if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
             Narrator.getNarrator().say(str.getString(), true);
-        } else if(mode == SpeakerBlockTile.Mode.TITLE) {
+        } else if (mode == SpeakerBlockTile.Mode.TITLE) {
             Gui gui = Minecraft.getInstance().gui;
             gui.clear();
             if (true) {
                 gui.resetTitleTimes();
             }
             gui.setTitle(str);
-        } else{
+        } else {
             withPlayerDo((p) -> p.displayClientMessage(str, mode == SpeakerBlockTile.Mode.STATUS_MESSAGE));
         }
     }

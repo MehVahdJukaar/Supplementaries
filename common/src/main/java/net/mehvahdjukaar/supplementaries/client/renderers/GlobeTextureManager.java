@@ -2,17 +2,28 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.moonlight.api.resources.ResType;
+import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
+import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 
+import java.io.IOException;
 import java.util.*;
 
 public class GlobeTextureManager {
@@ -24,7 +35,6 @@ public class GlobeTextureManager {
         Level world = Minecraft.getInstance().level;
         if (world != null) {
             getTextureInstance(world, false).updateTexture(world);
-            getTextureInstance(world, true).updateTexture(world);
         }
     }
 
@@ -47,21 +57,21 @@ public class GlobeTextureManager {
         private final ResourceLocation textureLocation;
         private final DynamicTexture texture;
         private final RenderType renderType;
-        private final String dimensionId;
+        private final ResourceLocation dimensionId;
         private final boolean sepia;
 
         private TextureInstance(Level world, boolean sepia) {
             this.sepia = sepia;
-            this.dimensionId = world.dimension().location().toString();
+            this.dimensionId = world.dimension().location();
             this.texture = new DynamicTexture(32, 16, false);
             this.updateTexture(world);
-            this.textureLocation = TEXTURE_MANAGER.register("globe/" + dimensionId.replace(":", "_"), this.texture);
+            this.textureLocation = TEXTURE_MANAGER.register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
         private void updateTexture(Level world) {
             var data = GlobeData.get(world);
-            if(data==null)return;
+            if (data == null) return;
             byte[][] pixels = data.globePixels;
 
             for (int i = 0; i < 16; ++i) {
@@ -71,7 +81,8 @@ public class GlobeTextureManager {
             }
             for (int y = 0; y < pixels.length; y++) {
                 for (int x = 0; x < pixels[y].length; x++) {
-                    this.texture.getPixels().setPixelRGBA(y, x, GlobeColors.getRGBA(pixels[y][x], this.dimensionId, this.sepia));
+                    this.texture.getPixels().setPixelRGBA(y, x,
+                            GlobeColors.getRGBA(pixels[y][x], this.dimensionId, this.sepia));
                 }
             }
             this.texture.upload();
@@ -85,7 +96,7 @@ public class GlobeTextureManager {
     }
 
     public static class GlobeColors {
-        public static final HashMap<String, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
+        public static final HashMap<ResourceLocation, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
         public static final List<Integer> DEFAULT_COLORS = new ArrayList<>();
         public static final List<Integer> SEPIA_COLORS = new ArrayList<>();
 
@@ -143,10 +154,64 @@ public class GlobeTextureManager {
         }
 
 
+        public static void refresh(ResourceManager manager) {
+
+            DIMENSION_COLOR_MAP.clear();
+            int targetColors = 13;
+            refreshColorsFromConfig();
+            for(var v : DIMENSION_COLOR_MAP.keySet()) {
+                try (
+                        TextureImage n = TextureImage.open(manager, ModTextures.HONEY_TEXTURE);
+                ) {
+                    final byte[] a = {0};
+                    SpriteUtils.forEachPixel(n.getImage(), (x, y) -> {
+                        if (a[0] < targetColors) {
+                            n.getImage().setPixelRGBA(x, y, getRGBA(a[0], v, false));
+                            a[0]++;
+                        } else {
+                            n.getImage().setPixelRGBA(x, y, 0);
+                        }
+                    });
+                    ClientDynamicResourcesHandler.INSTANCE.dynamicPack.addAndCloseTexture(
+                            Supplementaries.res(v.getPath()), n);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            {
+                var l = SpriteUtils.parsePaletteStrip(manager, ResType.TEXTURES.getPath(
+                        Supplementaries.res("entity/globes/default/sepia")), targetColors);
+                SEPIA_COLORS.clear();
+                SEPIA_COLORS.addAll(l);
+            }
+            {
+                var l = SpriteUtils.parsePaletteStrip(manager, ResType.TEXTURES.getPath(
+                        Supplementaries.res("entity/globes/default/overworld")), targetColors);
+                DIMENSION_COLOR_MAP.put(new ResourceLocation("overworld"), l);
+            }
+
+            for (DimensionType d : BuiltinRegistries.DIMENSION_TYPE) {
+
+            }
+        }
+
+        private static int getRGB(byte b, ResourceLocation dimension, boolean sepia) {
+            if (sepia) return SEPIA_COLORS.get(b);
+            return DIMENSION_COLOR_MAP.getOrDefault(dimension, DEFAULT_COLORS).get(b);
+        }
+
+        public static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
+            int rgb = getRGB(b, dimension, sepia);
+            return (255) << 24 | (rgb & 255) << 16 | (rgb >> 8 & 255) << 8 | (rgb >> 16 & 255);
+        }
+
+
         public static void refreshColorsFromConfig() {
             DIMENSION_COLOR_MAP.clear();
+            DIMENSION_COLOR_MAP.put(new ResourceLocation("sepia"),SEPIA_COLORS);
             try {
-                List<? extends List<String>> customColors = ClientConfigs.Blocks.GLOBE_COLORS.get();
+                List<? extends List<String>> customColors = getDefaultConfig();
 
                 for (List<String> l : customColors) {
                     if (l.size() >= 13) {
@@ -164,23 +229,13 @@ public class GlobeTextureManager {
                             }
                             col.add(hex);
                         }
-                        DIMENSION_COLOR_MAP.put(id, col);
+                        DIMENSION_COLOR_MAP.put(new ResourceLocation(id), col);
                     }
                 }
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("failed to parse config globe_color configs. Try deleting them");
-                DIMENSION_COLOR_MAP.put("minecraft:overworld", new ArrayList<>(DEFAULT_COLORS));
+                DIMENSION_COLOR_MAP.put(new ResourceLocation("overworld"), new ArrayList<>(DEFAULT_COLORS));
             }
-        }
-
-        private static int getRGB(byte b, String dimension, boolean sepia) {
-            if (sepia) return SEPIA_COLORS.get(b);
-            return DIMENSION_COLOR_MAP.getOrDefault(dimension, DEFAULT_COLORS).get(b);
-        }
-
-        public static int getRGBA(byte b, String dimension, boolean sepia) {
-            int rgb = getRGB(b, dimension, sepia);
-            return (255) << 24 | (rgb & 255) << 16 | (rgb >> 8 & 255) << 8 | (rgb >> 16 & 255);
         }
     }
 

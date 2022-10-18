@@ -32,6 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+//TODO: add eggs and snowballs
 public class PresentRegistry {
 
     public static void registerBehaviors() {

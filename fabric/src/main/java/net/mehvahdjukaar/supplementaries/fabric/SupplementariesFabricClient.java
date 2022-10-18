@@ -15,7 +15,6 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
 
-    @SuppressWarnings("unchecked")
     public static void initClient() {
 
         ClientRegistry.init();

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
-import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;

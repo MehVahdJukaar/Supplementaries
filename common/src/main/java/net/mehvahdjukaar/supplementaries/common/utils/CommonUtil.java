@@ -28,6 +28,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -199,7 +201,9 @@ public class CommonUtil {
         throw new AssertionError();
     }
     @ExpectPlatform
-    public static Player getFakePlayer(ServerLevel serverLevel){
+    @CheckForNull
+    @Nullable
+    public static Player getFakePlayer(Level level){
         throw new AssertionError();
     }
 

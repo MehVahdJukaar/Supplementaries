@@ -19,20 +19,17 @@ import net.minecraft.sounds.SoundEvents;
 
 
 public class BlackBoardButton extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
-
     public int u;
     public int v;
     public int x;
     public int y;
     public static final int WIDTH = 6;
-    private boolean wasHovered;
     protected boolean isHovered;
     public byte color = 0;
     private boolean focused;
 
     private final IDraggable onDragged;
-
-    protected final IPressable onPress;
+    private final IPressable onPress;
 
     public BlackBoardButton(int center_x, int center_y, int u, int v, IPressable pressedAction,
                             IDraggable dragAction) {
@@ -48,7 +45,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         this.renderButton(matrixStack);
-        this.wasHovered = this.isHovered();
+        //soboolean wasHovered = this.isHovered();
     }
 
 
@@ -66,7 +63,6 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
         blit(matrixStack, this.x, this.y, (this.u + offset) * WIDTH, this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
-
     }
 
     public void renderTooltip(PoseStack matrixStack) {
@@ -163,13 +159,11 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
     }
 
     public interface IPressable {
         void onPress(int x, int y, boolean on);
     }
-
 
     public interface IDraggable {
         void onDragged(double mouseX, double mouseY, boolean on);

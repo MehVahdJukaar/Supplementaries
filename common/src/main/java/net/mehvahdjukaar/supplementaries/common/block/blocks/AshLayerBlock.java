@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -206,6 +207,8 @@ public class AshLayerBlock extends FallingBlock {
             return i == 1;
         }
     }
+
+    @EventCalled
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
         if (CommonConfigs.Blocks.ASH_BURN.get()) {
             BlockState state = event.getState();

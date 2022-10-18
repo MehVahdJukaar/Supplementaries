@@ -17,7 +17,7 @@ public class CommonUtilImpl {
         else return null; //TODO: add
     }
 
-    public static Player getFakePlayer(ServerLevel serverLevel) {
-        throw new UnsupportedOperationException("Fake player has not been implemented on fabric. This is a bug");
+    public static Player getFakePlayer(Level serverLevel) {
+        return null;
     }
 }

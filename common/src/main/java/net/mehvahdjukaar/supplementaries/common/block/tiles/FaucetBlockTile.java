@@ -111,8 +111,8 @@ public class FaucetBlockTile extends BlockEntity {
         if (backState.isAir()) {
             return false;
         } else if (backBlock instanceof ISoftFluidProvider provider) {
-            Pair<SoftFluid, CompoundTag> stack = provider.getProvidedFluid(level, backState, behind);
-            this.prepareToTransferBottle(stack.getLeft(), stack.getRight());
+            var stack = provider.getProvidedFluid(level, backState, behind);
+            this.prepareToTransferBottle(stack.getFirst(), stack.getSecond());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid(), this.tempFluidHolder.getNbt(), 1);
                 return true;

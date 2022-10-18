@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager.BlackboardKey;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardGui;
-import net.mehvahdjukaar.supplementaries.client.screens.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
@@ -24,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected, IScreenProvider, IExtraModelDataProvider {
+public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
+        IScreenProvider, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlackboardKey> BLACKBOARD = ModBlockProperties.BLACKBOARD;
 

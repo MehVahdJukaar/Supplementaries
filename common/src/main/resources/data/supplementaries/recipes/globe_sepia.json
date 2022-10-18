@@ -16,6 +16,10 @@
     {
       "type": "supplementaries:flag",
       "flag": "globe_sepia"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
     }
   ]
 }

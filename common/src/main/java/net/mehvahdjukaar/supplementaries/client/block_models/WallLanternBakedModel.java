@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
@@ -50,7 +50,7 @@ public class WallLanternBakedModel implements CustomBakedModel {
             var supportQuads = support.getQuads(state, side, rand);
             if (!supportQuads.isEmpty()) {
                 if (mimic != null) {
-                    var sprite = WallLanternTexturesRegistry.getTextureForLantern(mimic.getBlock());
+                    var sprite = WallLanternTexturesManager.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
                         supportQuads = VertexUtils.swapSprite(supportQuads, sprite);
                     }

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
+import javax.annotation.CheckForNull;
 import java.util.UUID;
 
 public class CommonUtilImpl {
@@ -32,7 +33,11 @@ public class CommonUtilImpl {
         return p;
     }
 
-    public static Player getFakePlayer(ServerLevel serverLevel){
-        return FakePlayerFactory.get(serverLevel, DUMMY_PROFILE);
+    public static Player getFakePlayer(Level level){
+        if (level instanceof ServerLevel serverLevel) {
+            return FakePlayerFactory.get(serverLevel, DUMMY_PROFILE);
+        } else {
+            return ClientAccess.getFakeClientPlayer(level, DUMMY_PROFILE);
+        }
     }
 }

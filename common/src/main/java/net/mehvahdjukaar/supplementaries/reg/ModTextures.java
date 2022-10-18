@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesRegistry;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.*;
 
+//Needed on both sides because...
 public class ModTextures {
 
     //minecraft
@@ -110,7 +111,7 @@ public class ModTextures {
         for (var s : ModMaterials.SIGN_POSTS_MATERIALS.values()) {
             blocks.add(s.texture());
         }
-        blocks.addAll(WallLanternTexturesRegistry.SPECIAL_TEXTURES.values());
+        blocks.addAll(WallLanternTexturesManager.SPECIAL_TEXTURES.values());
         return blocks;
     }
 
