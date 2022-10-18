@@ -71,6 +71,25 @@
     {"id":"pamhc2crops:pinenutitem","required":false},
     {"id":"pamhc2crops:roastedalmonditem","required":false},
     {"id":"pamhc2crops:roastedpinenutitem","required":false},
-    {"id":"pamhc2crops:garlicitem","required":false}
+    {"id":"pamhc2crops:garlicitem","required":false},
+    {"id":"cookielicious:strawberry_cookie","required":false},
+
+    {"id":"cookielicious:vanilla_cookie","required":false},
+
+    {"id":"cookielicious:strawberry_cookie","required":false},
+
+    {"id":"cookielicious:chocolate_cookie","required":false},
+
+    {"id":"cookielicious:banana_cookie","required":false},
+
+    {"id":"cookielicious:mint_cookie","required":false},
+
+    {"id":"cookielicious:adzuki_cookie","required":false},
+
+    {"id":"buddycardsexp:buddycookie","required":false},
+
+    {"id":"honeyexpansion:honey_cookie_sausage","required":false},
+
+    {"id":"abnormals_delight:mulberry_cookie","required":false}
   ]
 }
