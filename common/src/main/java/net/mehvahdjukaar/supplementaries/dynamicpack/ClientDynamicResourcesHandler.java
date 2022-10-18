@@ -93,7 +93,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
         //need this here for reasons I forgot
         WallLanternTexturesManager.reloadTextures(manager);
-        GlobeTextureManager.GlobeColors.refresh(manager);
+        GlobeTextureManager.refreshColorsAndTextures(manager);
 
         //models are dynamic too as packs can change them
 
