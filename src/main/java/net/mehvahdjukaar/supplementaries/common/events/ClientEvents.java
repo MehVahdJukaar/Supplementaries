@@ -20,7 +20,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.common.extensions.IForgeEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,6 +44,7 @@ public class ClientEvents {
             if (ClientConfigs.cached.TOOLTIP_HINTS && event.getFlags().isAdvanced()) {
                 ItemsOverrideHandler.addOverrideTooltips(event);
             }
+            IForgeEntity
 
             if (CompatHandler.quark) {
                 QuarkTooltipPlugin.onItemTooltipEvent(event);

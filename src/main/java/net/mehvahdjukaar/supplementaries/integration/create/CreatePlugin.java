@@ -28,6 +28,7 @@ import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -83,7 +84,7 @@ import java.util.regex.Pattern;
 
 public class CreatePlugin {
 
-    public static void setup() {
+    public static void initialize() {
         try {
             AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
@@ -93,7 +94,7 @@ public class CreatePlugin {
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
+
             var textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
@@ -101,8 +102,7 @@ public class CreatePlugin {
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodType.OAK_WOOD_TYPE));
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodType.OAK_WOOD_TYPE));
+
             //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
@@ -110,7 +110,6 @@ public class CreatePlugin {
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
 
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
 
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
@@ -118,7 +117,6 @@ public class CreatePlugin {
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
 
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
 
             //sources
 
@@ -126,13 +124,11 @@ public class CreatePlugin {
                     Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_source"),
                     new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("clock_source"),
@@ -149,12 +145,10 @@ public class CreatePlugin {
             AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
             AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
 
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
@@ -531,7 +525,7 @@ public class CreatePlugin {
             }
         }
 
-        private final Pattern PATTERN = Pattern.compile("\\((\\d),(\\d)\\)->(\\S+)");
+        private final Pattern PATTERN = Pattern.compile("\\((\\d\\d?),(\\d\\d?)\\)->(\\S+)");
 
         private boolean parseText(String string, BlackboardBlockTile tile) {
             var m = PATTERN.matcher(string);

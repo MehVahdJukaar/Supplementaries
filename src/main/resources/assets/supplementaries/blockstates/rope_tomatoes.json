@@ -1,0 +1,32 @@
+
+{
+  "multipart": [
+      {   "when": { "age": 0 },
+      "apply": { "model": "supplementaries:block/rope_tomatoes_0"}
+    },
+    {   "when": { "age": 1 },
+      "apply": { "model": "supplementaries:block/rope_tomatoes_1"}
+    },
+    {   "when": { "age": 2 },
+      "apply": { "model": "supplementaries:block/rope_tomatoes_2"}
+    },
+    {   "when": { "age": 3 },
+      "apply": { "model": "supplementaries:block/rope_tomatoes_3"}
+    },
+    {   "when":  { "knot": true},
+      "apply": { "model": "supplementaries:block/rope_knot" }
+    },
+    {   "when": { "north": true },
+      "apply": { "model": "supplementaries:block/rope_connection"}
+    },
+    {   "when": { "east": true },
+      "apply": { "model": "supplementaries:block/rope_connection", "y": 90}
+    },
+    {   "when": { "south": true },
+      "apply": { "model": "supplementaries:block/rope_connection", "y": 180}
+    },
+    {   "when": { "west": true },
+      "apply": { "model": "supplementaries:block/rope_connection", "y": 270}
+    }
+  ]
+}

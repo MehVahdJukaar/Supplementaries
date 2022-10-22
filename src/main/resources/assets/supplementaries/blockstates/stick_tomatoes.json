@@ -1,0 +1,30 @@
+
+{
+  "multipart": [
+      {   "when": { "age": 0 },
+      "apply": { "model": "supplementaries:block/stick_tomatoes_0"}
+    },
+    {   "when": { "age": 1 },
+      "apply": { "model": "supplementaries:block/stick_tomatoes_1"}
+    },
+    {   "when": { "age": 2 },
+      "apply": { "model": "supplementaries:block/stick_tomatoes_2"}
+    },
+    {   "when": { "age": 3 },
+      "apply": { "model": "supplementaries:block/stick_tomatoes_3"}
+    },
+    {   "when":  { "axis_x": true},
+      "apply": {
+        "model": "supplementaries:block/stick_y_tomatoes",
+        "x": 90,
+        "y": 90
+      }
+    },
+    {   "when":  { "axis_z": true},
+      "apply": {
+        "model": "supplementaries:block/stick_y_tomatoes",
+        "x": 90
+      }
+    }
+  ]
+}
