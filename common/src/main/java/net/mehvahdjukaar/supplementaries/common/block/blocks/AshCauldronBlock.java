@@ -20,6 +20,7 @@ public class AshCauldronBlock extends LayeredCauldronBlock {
     }
 
     //lower level with water
+    @Override
     public void handlePrecipitation(BlockState pState, Level pLevel, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         pState.getValue(LEVEL);
 

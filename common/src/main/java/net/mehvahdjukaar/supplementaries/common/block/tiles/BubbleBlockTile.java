@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,8 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BubbleBlockTile extends BlockEntity {
 
     private int age = 0;
-    public float prevScale = 0.1f;
-    public float scale = 0.1f;
+    private float prevScale = 0.1f;
+    private float scale = 0.1f;
 
     public BubbleBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BUBBLE_BLOCK_TILE.get(), pos, state);
@@ -41,6 +42,10 @@ public class BubbleBlockTile extends BlockEntity {
                 ModRegistry.BUBBLE_BLOCK.get().breakBubble((ServerLevel) pLevel, pPos, pState);
             }
         }
+    }
+
+    public float getScale(float partialTicks) {
+        return Mth.lerp(partialTicks, prevScale, scale);
     }
 
     @Override

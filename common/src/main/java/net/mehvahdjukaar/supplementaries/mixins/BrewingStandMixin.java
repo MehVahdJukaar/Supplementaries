@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class BrewingStandMixin extends BlockEntity{
 
 
-    public BrewingStandMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    protected BrewingStandMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
     }
 

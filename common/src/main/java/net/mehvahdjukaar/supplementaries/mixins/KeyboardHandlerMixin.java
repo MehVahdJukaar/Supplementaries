@@ -23,7 +23,7 @@ public class KeyboardHandlerMixin {
         if (QuiverArrowSelectGui.isActive()) {
             if(QuiverArrowSelectGui.onKeyPressed(key, action, modifiers)){
                 ci.cancel();
-            };
+            }
         }
     }
 }

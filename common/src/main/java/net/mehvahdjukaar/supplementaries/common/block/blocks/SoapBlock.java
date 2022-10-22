@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
 public class SoapBlock extends Block {
-    public SoapBlock(Properties p_49795_) {
-        super(p_49795_);
+    public SoapBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class SoapBlock extends Block {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState p_53683_) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.PUSH_ONLY;
     }
 

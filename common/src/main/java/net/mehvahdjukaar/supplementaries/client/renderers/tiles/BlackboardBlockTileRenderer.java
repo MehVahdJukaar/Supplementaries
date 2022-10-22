@@ -26,14 +26,14 @@ import net.minecraft.world.phys.Vec3;
 
 public class BlackboardBlockTileRenderer implements BlockEntityRenderer<BlackboardBlockTile> {
 
-    public final int WIDTH = 6;
+    public static final int WIDTH = 6;
 
-    private final Minecraft MC;
+    private final Minecraft mc;
     private final Camera camera;
 
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.MC = Minecraft.getInstance();
-        this.camera = this.MC.gameRenderer.getMainCamera();
+        this.mc = Minecraft.getInstance();
+        this.camera = this.mc.gameRenderer.getMainCamera();
     }
 
     @Override
@@ -42,8 +42,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     }
 
     @Override
-    public boolean shouldRender(BlackboardBlockTile p_173568_, Vec3 p_173569_) {
-        return BlockEntityRenderer.super.shouldRender(p_173568_, p_173569_);
+    public boolean shouldRender(BlackboardBlockTile blockEntity, Vec3 cameraPos) {
+        return BlockEntityRenderer.super.shouldRender(blockEntity, cameraPos);
     }
 
     @Override
@@ -69,11 +69,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
-        HitResult hit = MC.hitResult;
+        HitResult hit = mc.hitResult;
         if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) hit;
             if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
-                Player player = MC.player;
+                Player player = mc.player;
                 if (player != null) {
                     if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
                         Pair<Integer, Integer> pair = BlackboardBlock.getHitSubPixel(blockHit);

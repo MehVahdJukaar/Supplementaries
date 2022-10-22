@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockItem.class)
 public abstract class BlockItemMixin extends Item implements IExtendedItem {
 
-    public BlockItemMixin(Properties pProperties) {
+    protected BlockItemMixin(Properties pProperties) {
         super(pProperties);
     }
 

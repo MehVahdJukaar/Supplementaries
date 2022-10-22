@@ -16,7 +16,7 @@ import net.minecraft.world.phys.AABB;
 
 public class PedestalBlockTile extends ItemDisplayTile {
     //needed on servers for crystals
-    public DisplayType type = DisplayType.ITEM;
+    private DisplayType type = DisplayType.ITEM;
 
     public PedestalBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PEDESTAL_TILE.get(), pos, state);
@@ -25,6 +25,10 @@ public class PedestalBlockTile extends ItemDisplayTile {
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
         return new AABB(worldPosition, worldPosition.offset(1, 2, 1));
+    }
+
+    public DisplayType getDisplayType() {
+        return type;
     }
 
     @Override

@@ -45,6 +45,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.AxolotlRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -309,7 +310,7 @@ public class ClientRegistry {
         event.register(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
-        event.register(ModRegistry.DISPENSER_MINECART.get(), (c) -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
+        event.register(ModRegistry.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
         event.register(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
         event.register(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
@@ -417,6 +418,8 @@ public class ClientRegistry {
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
         event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack), ModRegistry.QUIVER_ITEM.get());
+
+
     }
 
     @EventCalled

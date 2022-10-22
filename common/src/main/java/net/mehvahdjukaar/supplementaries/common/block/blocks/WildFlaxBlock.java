@@ -54,7 +54,7 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock {
 
     @Override
     public boolean isBonemealSuccess(Level worldIn, RandomSource rand, BlockPos pos, BlockState state) {
-        return (double) rand.nextFloat() < 0.800000011920929D;
+        return rand.nextFloat() < 0.800000011920929D;
     }
 
     @Override

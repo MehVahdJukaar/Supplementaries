@@ -113,7 +113,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
 
             ListTag pages = com.getList("pages", 8).copy();
-            if (pages.size() > 0) {
+            if (!pages.isEmpty()) {
                 if (this.pageNumber >= pages.size()) {
                     this.pageNumber = this.pageNumber % pages.size();
                 }

@@ -49,11 +49,11 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
 
     private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
         Int2ObjectMap<List<Vec3>> map = new Int2ObjectOpenHashMap<>();
-        map.defaultReturnValue(ImmutableList.of());
-        map.put(1, ImmutableList.of(new Vec3(0.5D, 0.5 + 0.5D, 0.5D)));
-        map.put(2, ImmutableList.of(new Vec3(0.375D, 0.5 + 0.44D, 0.5D), new Vec3(0.625D, 0.5 + 0.5D, 0.44D)));
-        map.put(3, ImmutableList.of(new Vec3(0.5D, 0.5 + 0.313D, 0.625D), new Vec3(0.375D, 0.5 + 0.44D, 0.5D), new Vec3(0.56D, 0.5 + 0.5D, 0.44D)));
-        map.put(4, ImmutableList.of(new Vec3(0.44D, 0.5 + 0.313D, 0.56D), new Vec3(0.625D, 0.5 + 0.44D, 0.56D), new Vec3(0.375D, 0.5 + 0.44D, 0.375D), new Vec3(0.56D, 0.5 + 0.5D, 0.375D)));
+        map.defaultReturnValue(List.of());
+        map.put(1, List.of(new Vec3(0.5D, 0.5 + 0.5D, 0.5D)));
+        map.put(2, List.of(new Vec3(0.375D, 0.5 + 0.44D, 0.5D), new Vec3(0.625D, 0.5 + 0.5D, 0.44D)));
+        map.put(3, List.of(new Vec3(0.5D, 0.5 + 0.313D, 0.625D), new Vec3(0.375D, 0.5 + 0.44D, 0.5D), new Vec3(0.56D, 0.5 + 0.5D, 0.44D)));
+        map.put(4, List.of(new Vec3(0.44D, 0.5 + 0.313D, 0.56D), new Vec3(0.625D, 0.5 + 0.44D, 0.56D), new Vec3(0.375D, 0.5 + 0.44D, 0.375D), new Vec3(0.56D, 0.5 + 0.5D, 0.375D)));
         return Int2ObjectMaps.unmodifiable(map);
     });
 
@@ -205,7 +205,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
         ((CandleSkullBlock)state.getBlock()).getParticleOffsets(state).forEach((vec3) -> {
-            level.addParticle(ParticleTypes.SMOKE, (double)pos.getX() + vec3.x(), (double)pos.getY() + vec3.y(), (double)pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+            level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
 }

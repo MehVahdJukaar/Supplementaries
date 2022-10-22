@@ -179,7 +179,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
         BlockState s = super.getStateForPlacement(context);
         if (s == null) return null;
         Direction clickedFace = context.getClickedFace();
-        // Direction[] lookingDirections = new Direction[]{clickedFace, clickedFace.getOpposite(), Direction.UP, Direction.DOWN};
         Direction.Axis axis = clickedFace.getAxis();
         if (clickedFace.getAxis() == Direction.Axis.Y) {
             axis = context.getHorizontalDirection().getCounterClockWise().getAxis();
@@ -212,7 +211,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile && !tile.fakeItem) {
-                //InventoryHelper.dropInventoryItems(world, pos, (HangingSignBlockTile) tileentity);
 
                 ItemStack itemstack = tile.getItem();
                 ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);

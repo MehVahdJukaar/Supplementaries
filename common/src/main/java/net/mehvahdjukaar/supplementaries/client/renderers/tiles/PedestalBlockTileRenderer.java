@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -37,8 +36,8 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
     }
 
-    protected boolean canRenderName(PedestalBlockTile tile) {
-        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName() && !tile.type.isGlobe()) {
+    protected boolean canRenderName(PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
+        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName() && !type.isGlobe()) {
             double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
             return d0 < 16 * 16;
         }
@@ -63,7 +62,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
         float f2 = (float) (-mc.font.width(name) / 2);
 
-        mc.font.drawInBatch(name, f2, (float) i, -1, false, matrix4f, bufferIn, false, j, combinedLightIn);
+        mc.font.drawInBatch(name, f2, i, -1, false, matrix4f, bufferIn, false, j, combinedLightIn);
         poseStack.popPose();
     }
 
@@ -73,7 +72,9 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         if (!tile.isEmpty()) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 1.125, 0.5);
-            if (this.canRenderName(tile)) {
+
+            var displayType = tile.getDisplayType();
+            if (this.canRenderName(tile, displayType )) {
                 renderName(tile.getItem(0).getHoverName(), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
             }
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
@@ -87,7 +88,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             ItemStack stack = tile.getDisplayedItem();
 
             if (ClientConfigs.Blocks.PEDESTAL_SPECIAL.get()) {
-                switch (tile.type) {
+                switch (displayType) {
                     case SWORD -> {
                         matrixStackIn.translate(0, -0.03125, 0);
                         matrixStackIn.scale(1.5f, 1.5f, 1.5f);
@@ -130,10 +131,10 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             matrixStackIn.mulPose(rotation);
                         }
 
-                        if (tile.type.isGlobe()) {
+                        if (displayType.isGlobe()) {
                             if (GlobeBlockTileRenderer.INSTANCE != null) {
 
-                                boolean sepia = tile.type == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
+                                boolean sepia = tile.getDisplayType() == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
                                 Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
                                         stack.hasCustomHoverName() ?
                                                 GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :

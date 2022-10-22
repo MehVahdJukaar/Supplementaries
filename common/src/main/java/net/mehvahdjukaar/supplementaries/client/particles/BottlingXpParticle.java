@@ -4,6 +4,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
+import java.util.Random;
+
 public class BottlingXpParticle extends TextureSheetParticle {
     private final double xStart;
     private final double yStart;
@@ -34,13 +36,15 @@ public class BottlingXpParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    public void move(double p_187110_1_, double p_187110_3_, double p_187110_5_) {
-        this.setBoundingBox(this.getBoundingBox().move(p_187110_1_, p_187110_3_, p_187110_5_));
+    @Override
+    public void move(double x, double y, double z) {
+        this.setBoundingBox(this.getBoundingBox().move(x, y, z));
         this.setLocationFromBoundingbox();
     }
 
-    public float getQuadSize(float p_217561_1_) {
-        float f = ((float)this.age + p_217561_1_) / (float)this.lifetime;
+    @Override
+    public float getQuadSize(float scaleFactor) {
+        float f = (this.age + scaleFactor) / this.lifetime;
         f = 1.0F - f;
         f = f * f;
         f = 1.0F - f;
@@ -73,9 +77,9 @@ public class BottlingXpParticle extends TextureSheetParticle {
             float f = (float)this.age / (float)this.lifetime;
             float f1 = -f + (f * f * 2.0F);
             float f2 = 1.0F - f1;
-            this.x = this.xStart + this.xd * (double)f2;
-            this.y = this.yStart + this.yd * (double)f2 + (double)(1.0F - f);
-            this.z = this.zStart + this.zd * (double)f2;
+            this.x = this.xStart + this.xd * f2;
+            this.y = this.yStart + this.yd * f2 + (1.0F - f);
+            this.z = this.zStart + this.zd * f2;
         }
     }
 

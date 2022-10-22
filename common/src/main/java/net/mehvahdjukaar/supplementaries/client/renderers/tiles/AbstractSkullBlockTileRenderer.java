@@ -29,7 +29,7 @@ public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBloc
     protected final BlockRenderDispatcher blockRenderer;
     protected final SkullModelBase overlay;
 
-    public AbstractSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+    protected AbstractSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.blockRenderer = Minecraft.getInstance().getBlockRenderer();
         this.overlay = new SkullModel(context.bakeLayer(ClientRegistry.SKULL_CANDLE_OVERLAY));
         this.dispatcher = context.getBlockEntityRenderDispatcher();

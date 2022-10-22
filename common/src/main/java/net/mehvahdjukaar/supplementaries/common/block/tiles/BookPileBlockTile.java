@@ -121,7 +121,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 if (lastColor == null) {
                     this.color = colors.get(rand.nextInt(colors.size()));
                 } else {
-                    List<BookColor> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).collect(Collectors.toList());
+                    List<BookColor> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).toList();
                     this.color = c.get(rand.nextInt(c.size()));
                 }
                 colors.remove(this.color);

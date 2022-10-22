@@ -159,10 +159,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
-    private double r() {
-        return (random.nextGaussian()) * 0.05;
-    }
-
     @Override
     public boolean hasReachedEndOfLife() {
         return super.hasReachedEndOfLife() || this.changeTimer == 0;
@@ -322,6 +318,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         BombExplosion explosion = new BombExplosion(this.level, this, null, new ExplosionDamageCalculator() {
+            @Override
             public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
                 return canBreakBlock(state, type);
             }
@@ -349,9 +346,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         public final Supplier<Item> item;
         public final Supplier<Item> item_on;
 
-        BombType(Supplier<Item> item, Supplier<Item> item_on) {
+        BombType(Supplier<Item> item, Supplier<Item> itemOn) {
             this.item = item;
-            this.item_on = item_on;
+            this.item_on = itemOn;
         }
 
         public ItemStack getDisplayStack(boolean active) {
@@ -437,7 +434,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 if (e == null) return;
                 for (Entity entity : level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
                         pos.x + 30, pos.y + 4, pos.z + 30))) {
-                    int random = (int) (Math.random() * 100);
+                    int random = (int) (level.random.nextInt() * 100);
                     boolean shouldPoison = false;
                     if (entity.distanceToSqr(e) <= 4 * 4) {
                         shouldPoison = true;

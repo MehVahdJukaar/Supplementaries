@@ -51,7 +51,7 @@ public class AshLayerBlock extends FallingBlock {
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS + 1];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2, 16.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2d, 16.0D));
     }
 
     public AshLayerBlock(Properties properties) {
@@ -157,6 +157,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         if (blockstate.is(this)) {
@@ -222,8 +223,8 @@ public class AshLayerBlock extends FallingBlock {
             if (count > 0) {
                 int layers = Mth.clamp(level.getRandom().nextInt(count), 1, 8);
                 if (layers != 0) {
-                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), (double) pos.getX() + 0.5D,
-                            (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 10 + layers,
+                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), pos.getX() + 0.5D,
+                            pos.getY() + 0.5D, pos.getZ() + 0.5D, 10 + layers,
                             0.5D, 0.5D, 0.5D, 0.0D);
                     event.setFinalState(ModRegistry.ASH_BLOCK.get().defaultBlockState()
                             .setValue(AshLayerBlock.LAYERS, layers));

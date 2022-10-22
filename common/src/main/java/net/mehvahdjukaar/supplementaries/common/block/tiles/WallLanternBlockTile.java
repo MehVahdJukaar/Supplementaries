@@ -7,10 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingFlowerPotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -25,12 +22,12 @@ import java.util.UUID;
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
-    public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC;
+    public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC;
 
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
 
     //for charm compat
-    public boolean isRedstoneLantern = false;
+    protected boolean isRedstoneLantern = false;
 
     private UUID owner = null;
 
@@ -46,10 +43,14 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
         super(ModRegistry.WALL_LANTERN_TILE.get(), pos, state);
     }
 
+    public boolean isRedstoneLantern() {
+        return isRedstoneLantern;
+    }
+
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(MIMIC, this.getHeldBlock())
+                .with(MIMIC_KEY, this.getHeldBlock())
                 .with(FANCY, this.shouldHaveTESR)
                 .build();
     }

@@ -52,13 +52,12 @@ public class LightableLanternBlock extends LanternBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter p_153475_, BlockPos p_153476_, CollisionContext p_153477_) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
         return state.getValue(HANGING) ? shapeUp : shapeDown;
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        // if (state.getValue(HANGING)) return RenderShape.ENTITYBLOCK_ANIMATED;
         return RenderShape.MODEL;
     }
 
@@ -115,12 +114,6 @@ public class LightableLanternBlock extends LanternBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockUtil.addOptionalOwnership(placer, world, pos);
     }
-
-    // @Nullable
-    //@Override
-    // public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-    //     return new LightableLanternBlockTile(pPos, pState);
-    // }
 
     //TODO: hitting sounds
     //called by mixin

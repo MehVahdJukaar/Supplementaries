@@ -73,7 +73,7 @@ public abstract class PistonBlockEntityMixin extends BlockEntity implements IBlo
 
     private AABB moveByPositionAndProgress(BlockPos pos, AABB aabb) {
         double d0 = this.getExtendedProgress(this.progress);
-        return aabb.move((double) pos.getX() + d0 * (double) this.direction.getStepX(), (double) pos.getY() + d0 * (double) this.direction.getStepY(), (double) pos.getZ() + d0 * (double) this.direction.getStepZ());
+        return aabb.move(pos.getX() + d0 * this.direction.getStepX(), pos.getY() + d0 * this.direction.getStepY(), pos.getZ() + d0 * this.direction.getStepZ());
     }
 
 

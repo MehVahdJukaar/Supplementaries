@@ -23,7 +23,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public LightUpWaterBlock(Properties properties) {
+    protected LightUpWaterBlock(Properties properties) {
         super(properties);
     }
 

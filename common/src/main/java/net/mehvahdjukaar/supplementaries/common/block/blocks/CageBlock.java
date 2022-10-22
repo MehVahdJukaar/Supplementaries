@@ -112,8 +112,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
+        return worldIn.getBlockEntity(pos) instanceof MenuProvider menu ? menu : null;
     }
 
     @Nullable

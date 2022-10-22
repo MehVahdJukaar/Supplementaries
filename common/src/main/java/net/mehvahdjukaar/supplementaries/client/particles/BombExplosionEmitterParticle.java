@@ -12,7 +12,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 
 public class BombExplosionEmitterParticle extends NoRenderParticle {
-    private final int maximumTime = 8;
+    private static final int maximumTime = 8;
     private final double radius;
 
     private BombExplosionEmitterParticle(ClientLevel world, double x, double y, double z, double radius) {

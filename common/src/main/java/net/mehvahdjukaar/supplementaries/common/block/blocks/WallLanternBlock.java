@@ -177,7 +177,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
         super.tick(state, worldIn, pos, rand);
-        if (worldIn.getBlockEntity(pos) instanceof WallLanternBlockTile te && te.isRedstoneLantern) {
+        if (worldIn.getBlockEntity(pos) instanceof WallLanternBlockTile te && te.isRedstoneLantern()) {
             if (state.getValue(LIT) && !worldIn.hasNeighborSignal(pos)) {
                 worldIn.setBlock(pos, state.cycle(LIT), 2);
                 if (te.getHeldBlock().hasProperty(LIT))
@@ -190,7 +190,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (!world.isClientSide) {
-            if (world.getBlockEntity(pos) instanceof WallLanternBlockTile tile && tile.isRedstoneLantern) {
+            if (world.getBlockEntity(pos) instanceof WallLanternBlockTile tile && tile.isRedstoneLantern()) {
                 boolean flag = state.getValue(LIT);
                 if (flag != world.hasNeighborSignal(pos)) {
                     if (flag) {

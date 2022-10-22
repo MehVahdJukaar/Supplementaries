@@ -65,7 +65,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
     }
 
     @Override
-    public void render(AbstractClientPlayer player, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource p_225623_5_, int p_225623_6_) {
+    public void render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
         this.setModelProperties(player);
 
         if (this.wasCrouching) {
@@ -73,11 +73,11 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(f));
             matrixStack.translate(0, -0.125, 0);
         }
-        super.render(player, p_225623_2_, partialTicks, matrixStack, p_225623_5_, p_225623_6_);
+        super.render(player, entityYaw, partialTicks, matrixStack, bufferSource, packedLight);
     }
 
     @Override
-    public Vec3 getRenderOffset(AbstractClientPlayer player, float p_225627_2_) {
+    public Vec3 getRenderOffset(AbstractClientPlayer player, float partialTicks) {
         return player.isCrouching() ? new Vec3(0.0D, -0.5D, 0.0D) : new Vec3(0.0D, -0.25D, 0.0D);
     }
 
@@ -169,17 +169,17 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
     }
 
     @Override
-    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
-        float f = player.getSwimAmount(p_225621_5_);
+    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
+        float f = player.getSwimAmount(partialTicks);
         if (player.isFallFlying()) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
-            float f1 = (float) player.getFallFlyingTicks() + p_225621_5_;
+            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
+            float f1 = player.getFallFlyingTicks() + partialTicks;
             float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
                 matrixStack.mulPose(Vector3f.XP.rotationDegrees(f2 * (-90.0F - player.getXRot())));
             }
 
-            Vec3 vector3d = player.getViewVector(p_225621_5_);
+            Vec3 vector3d = player.getViewVector(partialTicks);
             Vec3 vector3d1 = player.getDeltaMovement();
             double d0 = vector3d1.horizontalDistanceSqr();
             double d1 = vector3d.horizontalDistanceSqr();
@@ -189,7 +189,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
                 matrixStack.mulPose(Vector3f.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
+            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
             float f3 = player.isInWater() ? -90.0F - player.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
             matrixStack.mulPose(Vector3f.XP.rotationDegrees(f4));
@@ -197,7 +197,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
                 matrixStack.translate(0.0D, -0.25, 0.25);
             }
         } else {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, p_225621_5_);
+            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
         }
 
 

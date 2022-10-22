@@ -38,11 +38,11 @@ public abstract class BuiltinAnimation<T extends Entity> {
     @Nullable
     public static <E extends Entity> BuiltinAnimation<E> get(E entity, Type type){
         if(type == Type.BUILTIN){
-            if(entity instanceof Slime slime)return (BuiltinAnimation<E>) new SlimeAnim<>(slime);
-            else if(entity instanceof Chicken chicken)return (BuiltinAnimation<E>) new ChickenAnim(chicken);
-            else if(entity instanceof Rabbit rabbit)return (BuiltinAnimation<E>) new RabbitAnim(rabbit);
-            else if(entity instanceof Parrot parrot)return (BuiltinAnimation<E>) new ParrotAnim(parrot);
-            else if(entity instanceof Endermite endermite)return (BuiltinAnimation<E>) new EndermiteAnim(endermite);
+            if(entity instanceof Slime slime)return new SlimeAnim(slime);
+            else if(entity instanceof Chicken chicken)return new ChickenAnim(chicken);
+            else if(entity instanceof Rabbit rabbit)return new RabbitAnim(rabbit);
+            else if(entity instanceof Parrot parrot)return new ParrotAnim(parrot);
+            else if(entity instanceof Endermite endermite)return new EndermiteAnim(endermite);
         }else if(type == Type.FLOATING){
            return new FloatingAnim<>(entity);
         }
@@ -99,7 +99,9 @@ public abstract class BuiltinAnimation<T extends Entity> {
 
     private static class ChickenAnim<M extends Chicken> extends BuiltinAnimation<M> {
 
-        ChickenAnim(M m){};
+        public ChickenAnim(Chicken chicken) {
+            super();
+        }
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
@@ -120,7 +122,9 @@ public abstract class BuiltinAnimation<T extends Entity> {
 
     public static class RabbitAnim<M extends Rabbit> extends BuiltinAnimation<M> {
 
-        RabbitAnim(M m){};
+        public RabbitAnim(Rabbit rabbit) {
+            super();
+        }
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
@@ -154,7 +158,11 @@ public abstract class BuiltinAnimation<T extends Entity> {
     }
 
     public static class ParrotAnim<M extends Parrot> extends BuiltinAnimation<M> {
-        ParrotAnim(M m){};
+
+        public ParrotAnim(Parrot parrot) {
+            super();
+        }
+
         @Override
         public void tick(M mob, Level world, BlockPos pos){
             if (world.isClientSide) {
@@ -169,7 +177,11 @@ public abstract class BuiltinAnimation<T extends Entity> {
     }
 
     public static class EndermiteAnim<M extends Endermite> extends BuiltinAnimation<M> {
-        EndermiteAnim(M m){};
+
+        public EndermiteAnim(Endermite endermite) {
+            super();
+        }
+
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
             if (world.isClientSide) {

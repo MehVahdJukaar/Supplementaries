@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WanderingTrader.class)
 public abstract class WanderingTraderMixin extends AbstractVillager {
 
-    public WanderingTraderMixin(EntityType<? extends AbstractVillager> p_35267_, Level p_35268_) {
-        super(p_35267_, p_35268_);
+    protected WanderingTraderMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Inject(

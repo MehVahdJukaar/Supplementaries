@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -74,16 +75,14 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         matrixStack.pushPose();
         matrixStack.translate(0, this.riding ? -0.5 : 0.5f, 0);
 
-        super.renderToBuffer(matrixStack, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+        super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         matrixStack.popPose();
     }
-
-    public float partialTicks=0;
 
     @Override
     public void setupAnim(T player, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -91,11 +90,10 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
 
         if (swimAmount > 0 && player.isVisuallySwimming()) {
             this.body.yRot = this.rotlerpRad(limbSwing, this.body.yRot, (-(float) Math.PI / 30F));
-        }
-        else {
+        } else {
             float f1 = player.getFallFlyingTicks();
-            if(f1>0.01) {
-                f1 += partialTicks;
+            if (f1 > 0.01) {
+                f1 += SupplementariesClient.getPartialTicks();
                 float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
                 leftArm.xRot = inclination * (float) Math.PI;
                 rightArm.xRot = inclination * (float) Math.PI;
@@ -124,9 +122,9 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         }
 
         @Override
-        public void render(PoseStack p_225628_1_, MultiBufferSource p_225628_2_, int p_225628_3_, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+        public void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
             if (entity.isCrouching()) return;
-            super.render(p_225628_1_, p_225628_2_, p_225628_3_, entity, p_225628_5_, p_225628_6_, p_225628_7_, p_225628_8_, p_225628_9_, p_225628_10_);
+            super.render(matrixStack, buffer, packedLight, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
         }
     }
 
@@ -137,11 +135,11 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, MultiBufferSource buffer, int p_225628_3_, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+        public void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
             matrixStack.translate(0, 0.625, 0.09375);
             matrixStack.scale(0.625f, 0.625f, 0.625f);
 
-            super.render(matrixStack, buffer, p_225628_3_, entity, p_225628_5_, p_225628_6_, p_225628_7_, p_225628_8_, p_225628_9_, p_225628_10_);
+            super.render(matrixStack, buffer, packedLight, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
         }
 
         //@Override

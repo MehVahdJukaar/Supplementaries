@@ -43,8 +43,8 @@ public class FluidsUtilImpl {
             if (result) {
                 tileBelow.setChanged();
                 tempFluidHolder.fillCount();
+                return true;
             }
-            return true;
         }
         return false;
     }

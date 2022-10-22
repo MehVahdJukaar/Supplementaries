@@ -99,8 +99,8 @@ public class WrenchItem extends Item {
             if (success.isPresent()) {
                 dir = success.get();
 
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, itemstack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, itemstack);
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 } else {
                     //only plays them on local client. might want to change this

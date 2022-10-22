@@ -28,8 +28,8 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
     }
 
     @Override
-    public Vec3 getRenderOffset(T p_225627_1_, float p_225627_2_) {
-        return super.getRenderOffset(p_225627_1_, p_225627_2_);
+    public Vec3 getRenderOffset(T entity, float partialTicks) {
+        return super.getRenderOffset(entity, partialTicks);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
     public void render(T entity, float pEntityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
         //centers everything to hitbox y = 0 (rendered hitbox will be lowered)
         matrixStack.translate(0, -entity.getBbHeight() / 2f, 0);
-        if (entity.tickCount >= 3 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < 12.25D)) {
+        if (entity.tickCount >= 3 || (this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) >= 12.25D)) {
             matrixStack.pushPose();
             matrixStack.translate(0, 0.25, 0);
 

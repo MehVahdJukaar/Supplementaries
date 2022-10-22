@@ -22,7 +22,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    public LightUpBlock(Properties properties) {
+    protected LightUpBlock(Properties properties) {
         super(properties);
     }
 

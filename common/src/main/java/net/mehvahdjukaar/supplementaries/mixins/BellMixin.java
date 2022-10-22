@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IBellConnections;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +11,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BellBlock.class)
 public abstract class BellMixin extends Block {
 
-    public BellMixin(Properties properties) {
+    protected BellMixin(Properties properties) {
         super(properties);
     }
 
@@ -31,7 +32,7 @@ public abstract class BellMixin extends Block {
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof IBellConnections) {
             IBellConnections.BellConnection connection = IBellConnections.BellConnection.NONE;
-            if (facingState.getBlock() instanceof ChainBlock && facingState.getValue(ChainBlock.AXIS) == Direction.Axis.Y)
+            if (facingState.getBlock() instanceof ChainBlock && facingState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y)
                 connection = IBellConnections.BellConnection.CHAIN;
             else if (facingState.getBlock() instanceof RopeBlock)
                 connection = IBellConnections.BellConnection.ROPE;
@@ -46,11 +47,10 @@ public abstract class BellMixin extends Block {
     public void updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
                             BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> info) {
         try {
-            if (facing == Direction.DOWN) {
-                if (this.tryConnect(currentPos, facingState, worldIn)) {
-                    if (worldIn instanceof Level level)
-                        level.sendBlockUpdated(currentPos, stateIn, stateIn, Block.UPDATE_CLIENTS);
-                }
+            if (facing == Direction.DOWN && this.tryConnect(currentPos, facingState, worldIn)) {
+                if (worldIn instanceof Level level)
+                    level.sendBlockUpdated(currentPos, stateIn, stateIn, Block.UPDATE_CLIENTS);
+
             }
         } catch (Exception ignored) {
         }

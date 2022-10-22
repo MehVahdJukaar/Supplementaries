@@ -94,6 +94,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
     /**
      * Called when the container is closed.
      */
+    @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);

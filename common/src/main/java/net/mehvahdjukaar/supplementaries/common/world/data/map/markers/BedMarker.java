@@ -32,6 +32,7 @@ public class BedMarker extends MapBlockMarker<CustomMapDecoration> {
         return compoundnbt;
     }
 
+    @Override
     public void loadFromNBT(CompoundTag compound) {
         super.loadFromNBT(compound);
         this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);

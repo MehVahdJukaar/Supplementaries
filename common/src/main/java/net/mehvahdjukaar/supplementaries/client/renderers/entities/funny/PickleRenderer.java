@@ -65,34 +65,33 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
     }
 
     @Override
-    public void render(AbstractClientPlayer player, float p_225623_2_, float partialTicks, PoseStack matrixStack, MultiBufferSource p_225623_5_, int p_225623_6_) {
-        this.model.partialTicks = partialTicks;
+    public void render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         this.setModelProperties(player);
 
         if (this.wasCrouching) {
             float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(f));
         }
-        super.render(player, p_225623_2_, partialTicks, matrixStack, p_225623_5_, p_225623_6_);
+        super.render(player, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
 
 
     @Override
-    public Vec3 getRenderOffset(AbstractClientPlayer player, float p_225627_2_) {
+    public Vec3 getRenderOffset(AbstractClientPlayer player, float partialTicks) {
         return new Vec3(0.0D, -0.25D, 0.0D);
     }
 
     private void setModelProperties(AbstractClientPlayer player) {
-        PlayerModel<AbstractClientPlayer> playermodel = this.getModel();
-        playermodel.setAllVisible(false);
+        PlayerModel<AbstractClientPlayer> pickleModel = this.getModel();
+        pickleModel.setAllVisible(false);
         boolean c = player.isCrouching();
-        playermodel.body.visible = true;
-        playermodel.leftArm.visible = !c;
-        playermodel.rightArm.visible = !c;
-        playermodel.leftLeg.visible = !c;
-        playermodel.rightLeg.visible = !c;
-        playermodel.head.visible = !c;
-        playermodel.hat.visible = !c;
+        pickleModel.body.visible = true;
+        pickleModel.leftArm.visible = !c;
+        pickleModel.rightArm.visible = !c;
+        pickleModel.leftLeg.visible = !c;
+        pickleModel.rightLeg.visible = !c;
+        pickleModel.head.visible = !c;
+        pickleModel.hat.visible = !c;
 
         if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
         this.wasCrouching = c;
@@ -107,11 +106,11 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         }
 
         if (player.getMainArm() == HumanoidArm.RIGHT) {
-            playermodel.rightArmPose = poseRightArm;
-            playermodel.leftArmPose = poseLeftArm;
+            pickleModel.rightArmPose = poseRightArm;
+            pickleModel.leftArmPose = poseLeftArm;
         } else {
-            playermodel.rightArmPose = poseLeftArm;
-            playermodel.leftArmPose = poseRightArm;
+            pickleModel.rightArmPose = poseLeftArm;
+            pickleModel.leftArmPose = poseRightArm;
         }
     }
 

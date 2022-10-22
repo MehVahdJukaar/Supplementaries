@@ -52,5 +52,6 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
     }
 
     public record BlackboardTooltip(long[] packed) implements TooltipComponent {
+
     }
 }

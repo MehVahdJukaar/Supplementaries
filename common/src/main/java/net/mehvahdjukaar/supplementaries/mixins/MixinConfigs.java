@@ -24,7 +24,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
                     .filter(s -> !s.equals(className)).map(s -> s.substring(packageName.length() + 1))
                     //.filter(s->!s.equals(className) && !s.contains("$"))
                     //.map(s->s.substring(packageName.length() + 1))
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Could not fetch mixin classes, giving up: " + e.getMessage());
             //throw new IllegalStateException();

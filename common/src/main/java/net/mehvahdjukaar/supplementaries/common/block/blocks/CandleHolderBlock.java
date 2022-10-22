@@ -93,7 +93,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> newFaceMap = new EnumMap<>(AttachFace.class);
             for (var faceList : temp.entrySet()) {
                 Int2ObjectMap<List<Vec3>> newCandleList = new Int2ObjectOpenHashMap<>();
-                newCandleList.defaultReturnValue(ImmutableList.of());
+                newCandleList.defaultReturnValue(List.of());
                 int c = 1;
                 var oldVec = faceList.getValue();
                 for (int i = 1; i < 5; i++) {
@@ -186,7 +186,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         };
     }
 
-    @Deprecated
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Projectile ? state.getShape(level, pos) : Shapes.empty();
     }
@@ -297,8 +297,8 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
 
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
-        ((CandleHolderBlock) state.getBlock()).getParticleOffset(state).forEach((vec3) -> {
-            level.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + vec3.x(), (double) pos.getY() + vec3.y(), (double) pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+        ((CandleHolderBlock) state.getBlock()).getParticleOffset(state).forEach(vec3 -> {
+            level.addParticle(ParticleTypes.SMOKE,  pos.getX() + vec3.x(),  pos.getY() + vec3.y(),  pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
 }

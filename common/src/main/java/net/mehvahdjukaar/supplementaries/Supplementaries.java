@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;

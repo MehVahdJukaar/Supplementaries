@@ -1219,7 +1219,7 @@ public class ModRegistry {
     public static final Supplier<Block> ASH_BLOCK = regWithItem(ASH_NAME, () -> new AshLayerBlock(
             BlockBehaviour.Properties.of(Material.TOP_SNOW, MaterialColor.COLOR_GRAY)
                     .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ), CreativeModeTab.TAB_MISC);
 
 
     //ash

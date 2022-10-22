@@ -37,8 +37,8 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
     @Shadow
     private ItemStack bannerStack;
 
-    public LoomScreenFlagMixin(LoomMenu p_i51105_1_, Inventory p_i51105_2_, Component p_i51105_3_) {
-        super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
+    protected LoomScreenFlagMixin(LoomMenu loomMenu, Inventory inventory, Component component) {
+        super(loomMenu, inventory, component);
     }
 
     @Redirect(method ="containerChanged",
@@ -63,7 +63,7 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
             MultiBufferSource.BufferSource renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
             matrixStack.pushPose();
 
-            matrixStack.translate(i + 139, j + 52, 0.0D);
+            matrixStack.translate(i + 139d, j + 52d, 0.0D);
             matrixStack.scale(24.0F, -24.0F, 1.0F);
             matrixStack.translate(0.5D, 0.5D, 0.5D);
             matrixStack.mulPose(RotHlpr.Y90);

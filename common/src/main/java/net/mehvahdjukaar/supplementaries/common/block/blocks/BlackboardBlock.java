@@ -149,8 +149,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
             ItemStack stack = player.getItemInHand(handIn);
             Item i = stack.getItem();
             if (i instanceof HoneycombItem) {
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }
                 if (!player.isCreative()) {
                     stack.shrink(1);
@@ -162,8 +162,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
             }
 
             if (i == Items.GLOW_INK_SAC && !state.getValue(GLOWING)) {
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }
                 if (!player.isCreative()) {
                     stack.shrink(1);
@@ -174,8 +174,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
             }
 
             if (i == Items.INK_SAC && state.getValue(GLOWING)) {
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }
                 if (!player.isCreative()) {
                     stack.shrink(1);

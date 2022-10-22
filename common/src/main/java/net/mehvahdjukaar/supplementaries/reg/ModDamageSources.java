@@ -7,7 +7,7 @@ public class ModDamageSources extends DamageSource {
     protected ModDamageSources(String string) {
         super(string);
     }
-    public static DamageSource SPIKE_DAMAGE = new ModDamageSources("supplementaries.bamboo_spikes");
-    public static DamageSource BOTTLING_DAMAGE = new ModDamageSources("supplementaries.xp_extracting");
+    public static final DamageSource SPIKE_DAMAGE = new ModDamageSources("supplementaries.bamboo_spikes");
+    public static final DamageSource BOTTLING_DAMAGE = new ModDamageSources("supplementaries.xp_extracting");
 
 }

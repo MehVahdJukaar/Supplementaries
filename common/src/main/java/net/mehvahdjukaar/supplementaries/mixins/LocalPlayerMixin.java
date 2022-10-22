@@ -26,10 +26,11 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
 
 
     @Shadow
+    @Override
     public abstract InteractionHand getUsedItemHand();
 
-    public LocalPlayerMixin(ClientLevel p_234112_, GameProfile p_234113_, @Nullable ProfilePublicKey p_234114_) {
-        super(p_234112_, p_234113_, p_234114_);
+    protected LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
+        super(clientLevel, gameProfile, profilePublicKey);
     }
 
     @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)

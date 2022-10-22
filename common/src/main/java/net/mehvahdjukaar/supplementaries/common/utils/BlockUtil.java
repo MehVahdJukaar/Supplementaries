@@ -102,7 +102,7 @@ public class BlockUtil {
                 rotated = Block.updateFromNeighbourShapes(rotated, world, targetPos);
 
                 if (rotated != state) {
-                    if (world instanceof ServerLevel serverLevel) {
+                    if (world instanceof ServerLevel) {
                         world.setBlock(targetPos, rotated, 11);
                         //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
                     }

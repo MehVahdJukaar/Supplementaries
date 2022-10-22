@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 public class KeyLockableTile extends BlockEntity {
 
-    public String password = null;
+    private String password = null;
 
     public KeyLockableTile(BlockPos pos, BlockState state) {
         super(ModRegistry.KEY_LOCKABLE_TILE.get(), pos, state);
@@ -119,11 +119,5 @@ public class KeyLockableTile extends BlockEntity {
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
-
-    //TODO: check if needed on the client
-    //@Override
-    //public CompoundTag getUpdateTag() {
-    //    return this.saveWithoutMetadata();
-    //}
 
 }

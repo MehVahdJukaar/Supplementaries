@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
@@ -72,16 +72,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
-    }
-
-    @Override
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float f) {
-        super.fallOn(level, state, pos, entity, f);
-    }
-
-    @Override
-    public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
-        super.updateEntityAfterFallOn(level, entity);
     }
 
     @Override
@@ -193,12 +183,10 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
         BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile bambooSpikesBlockTile) {
-            if (bambooSpikesBlockTile.tryApplyPotion(PotionUtils.getPotion(stack))) {
-                world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
-                world.setBlock(pos, state.setValue(TIPPED, true), 3);
-                return true;
-            }
+        if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(PotionUtils.getPotion(stack))) {
+            world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
+            world.setBlock(pos, state.setValue(TIPPED, true), 3);
+            return true;
         }
         return false;
     }
@@ -243,7 +231,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(() -> RegistryConfigs.TIPPED_SPIKES_ENABLED.get());
+    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(RegistryConfigs.TIPPED_SPIKES_ENABLED::get);
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {

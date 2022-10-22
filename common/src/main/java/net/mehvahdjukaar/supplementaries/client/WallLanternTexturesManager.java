@@ -30,7 +30,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
-    private static Set<Block> POSSIBLE_LANTERNS = null;
+    protected static Set<Block> POSSIBLE_LANTERNS = null;
 
     public static final WallLanternTexturesManager RELOAD_INSTANCE = new WallLanternTexturesManager();
 

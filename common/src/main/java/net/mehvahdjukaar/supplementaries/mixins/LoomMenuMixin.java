@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LoomMenu.class)
 public abstract class LoomMenuMixin extends AbstractContainerMenu {
 
-    protected LoomMenuMixin(@Nullable MenuType<?> p_38851_, int p_38852_) {
-        super(p_38851_, p_38852_);
+    protected LoomMenuMixin(@Nullable MenuType<?> menuType, int i) {
+        super(menuType, i);
     }
 
     @Redirect(method ="quickMoveStack",

@@ -97,6 +97,7 @@ public class ModBlockProperties {
             return width;
         }
 
+        @Override
         public String toString() {
             return this.name;
         }
@@ -161,6 +162,7 @@ public class ModBlockProperties {
             this.name = name;
         }
 
+        @Override
         public String toString() {
             return this.name;
         }
@@ -268,6 +270,7 @@ public class ModBlockProperties {
             this.directions = Arrays.asList(dir1, dir2);
         }
 
+        @Override
         public String toString() {
             return this.name;
         }

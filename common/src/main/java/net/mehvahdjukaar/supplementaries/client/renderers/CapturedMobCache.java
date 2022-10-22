@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 public class CapturedMobCache {
 
-    public static LoadingCache<UUID, Entity> MOB_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<UUID, Entity> MOB_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(new CacheLoader<>() {
                 @Override

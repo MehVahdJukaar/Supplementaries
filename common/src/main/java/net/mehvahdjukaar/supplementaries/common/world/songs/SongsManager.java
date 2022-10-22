@@ -194,8 +194,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         //put everything in one list
         List<Integer> arrayList = new ArrayList<>();
         int lastTime = 0;
-        for (int key : treeMap.keySet()) {
-            int note = treeMap.get(key);
+        for (var entry : treeMap.entrySet()) {
+            int note = entry.getValue();
+            int key = entry.getKey();
             int interval = -(key - lastTime);
             lastTime = key;
             if (interval != 0) {

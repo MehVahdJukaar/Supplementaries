@@ -19,26 +19,34 @@ import net.minecraft.sounds.SoundEvents;
 
 
 public class BlackBoardButton extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
-    public int u;
-    public int v;
-    public int x;
-    public int y;
+    public final int u;
+    public final int v;
+    public final int x;
+    public final int y;
     public static final int WIDTH = 6;
     protected boolean isHovered;
-    public byte color = 0;
-    private boolean focused;
+    protected byte color = 0;
+    protected boolean focused;
 
     private final IDraggable onDragged;
     private final IPressable onPress;
 
-    public BlackBoardButton(int center_x, int center_y, int u, int v, IPressable pressedAction,
+    public BlackBoardButton(int centerX, int centerY, int u, int v, IPressable pressedAction,
                             IDraggable dragAction) {
-        this.x = center_x - ((8 - u) * WIDTH);
-        this.y = center_y - ((-v) * WIDTH);
+        this.x = centerX - ((8 - u) * WIDTH);
+        this.y = centerY - ((-v) * WIDTH);
         this.u = u;
         this.v = v;
         this.onPress = pressedAction;
         this.onDragged = dragAction;
+    }
+
+    public void setColor(byte color) {
+        this.color = color;
+    }
+
+    public byte getColor() {
+        return color;
     }
 
     @Override
@@ -62,7 +70,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
         float r = NativeImage.getB(rgb) / 255f;
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
-        blit(matrixStack, this.x, this.y, (this.u + offset) * WIDTH, this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
+        blit(matrixStack, this.x, this.y, (float)(this.u + offset) * WIDTH, (float)this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
     }
 
     public void renderTooltip(PoseStack matrixStack) {
@@ -144,7 +152,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= (double) this.x && mouseY >= (double) this.y && mouseX < (double) (this.x + WIDTH) && mouseY < (double) (this.y + WIDTH);
+        return mouseX >=  this.x && mouseY >=  this.y && mouseX <  (this.x + WIDTH) && mouseY <  (this.y + WIDTH);
     }
 
 

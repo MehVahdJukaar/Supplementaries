@@ -5,13 +5,11 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -51,7 +49,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     //used for containers that like jars have custom renderer for fishies
     private final boolean isAquarium;
 
-    public AbstractMobContainerItem(Block block, Properties properties, float width, float height, boolean aquarium) {
+    protected AbstractMobContainerItem(Block block, Properties properties, float width, float height, boolean aquarium) {
         super(block, properties);
         this.mobContainerWidth = width;
         this.mobContainerHeight = height;
@@ -124,8 +122,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 
-            if (entity instanceof TamableAnimal pet) {
-                if (pet.isTame() && !pet.isOwnedBy(player)) return false;
+            if (entity instanceof TamableAnimal pet && pet.isTame() && !pet.isOwnedBy(player)) {
+                return false;
             }
 
             int p = CommonConfigs.Blocks.CAGE_HEALTH_THRESHOLD.get();
@@ -182,8 +180,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             Vec3 v = context.getClickLocation();
             if (com.contains("BucketHolder")) {
                 ItemStack bucketStack = ItemStack.of(com.getCompound("BucketHolder").getCompound("Bucket"));
-                if (bucketStack.getItem() instanceof BucketItem) {
-                    ((BucketItem) bucketStack.getItem()).checkExtraContent(player, world, bucketStack, context.getClickedPos());
+                if (bucketStack.getItem() instanceof BucketItem bi) {
+                    bi.checkExtraContent(player, world, bucketStack, context.getClickedPos());
                     success = true;
                 }
             } else if (com.contains("MobHolder")) {
@@ -218,11 +216,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
                         //TODO fix sound categories
                     }
-                    //create new uuid for creative itemstack
-                    if (player.isCreative()) {
-                        if (nbt.contains("UUID")) {
-                            nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
-                        }
+                    //create new uuid for creative itemStack
+                    if (player.isCreative() && nbt.contains("UUID")){
+                        nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
                     }
                 }
             }

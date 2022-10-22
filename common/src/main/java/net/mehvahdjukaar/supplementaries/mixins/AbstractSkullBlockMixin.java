@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelReader;
@@ -19,6 +20,7 @@ public abstract class AbstractSkullBlockMixin extends BaseEntityBlock {
     }
 
     //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
     public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, @Nullable Entity entity) {
         return SoundType.BONE_BLOCK;
     }

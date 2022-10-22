@@ -9,7 +9,7 @@ import net.minecraft.commands.Commands;
 public class ModCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> commands = dispatcher.register(
+        dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
                                 .requires((p) -> p.hasPermission(2))
@@ -22,7 +22,5 @@ public class ModCommands {
                         .then(AddCageMobCommand.register(dispatcher))
                         .then(RecordSongCommand.register(dispatcher))
         );
-
-        //dispatcher.register(Commands.literal("splm").redirect(commands));
     }
 }

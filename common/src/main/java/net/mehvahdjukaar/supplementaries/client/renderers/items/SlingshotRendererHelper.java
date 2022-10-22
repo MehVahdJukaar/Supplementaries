@@ -83,25 +83,25 @@ public class SlingshotRendererHelper {
                 float r = NativeImage.getA(color) / 255f;
 
                 renderVoxelShape(matrixStack, builder, blockstate.getShape(world, pos, CollisionContext.of(camera.getEntity())),
-                        (double) pos.getX() - pX, (double) pos.getY() - pY, (double) pos.getZ() - pZ, r, g, b, a);
+                        pos.getX() - pX, pos.getY() - pY, pos.getZ() - pZ, r, g, b, a);
             }
         }
         LOOK_POS = null;
     }
 
     private static void renderVoxelShape(PoseStack pMatrixStack, VertexConsumer pBuffer, VoxelShape pShape,
-                                    double pX, double pY, double pZ, float pRed, float pGreen, float pBlue, float pAlpha) {
+                                         double pX, double pY, double pZ, float pRed, float pGreen, float pBlue, float pAlpha) {
         PoseStack.Pose last = pMatrixStack.last();
         pShape.forAllEdges((e1, e2, e3, e4, e5, e6) -> {
-            float f = (float)(e4 - e1);
-            float f1 = (float)(e5 - e2);
-            float f2 = (float)(e6 - e3);
+            float f = (float) (e4 - e1);
+            float f1 = (float) (e5 - e2);
+            float f2 = (float) (e6 - e3);
             float f3 = Mth.sqrt(f * f + f1 * f1 + f2 * f2);
             f = f / f3;
             f1 = f1 / f3;
             f2 = f2 / f3;
-            pBuffer.vertex(last.pose(), (float)(e1 + pX), (float)(e2 + pY), (float)(e3 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
-            pBuffer.vertex(last.pose(), (float)(e4 + pX), (float)(e5 + pY), (float)(e6 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
+            pBuffer.vertex(last.pose(), (float) (e1 + pX), (float) (e2 + pY), (float) (e3 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
+            pBuffer.vertex(last.pose(), (float) (e4 + pX), (float) (e5 + pY), (float) (e6 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
         });
     }
 

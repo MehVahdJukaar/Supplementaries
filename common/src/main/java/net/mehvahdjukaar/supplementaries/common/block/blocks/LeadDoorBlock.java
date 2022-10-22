@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class LeadDoorBlock extends DoorBlock {
-    public static IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
+    public static final IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
 
     public LeadDoorBlock(Properties builder) {
         super(builder);

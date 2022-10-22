@@ -64,9 +64,8 @@ public class WeatheredMap {
         MaterialColor materialColor;
         try {
             Class<MaterialColor> cl = MaterialColor.class;
-            Class<?>[] type = {int.class, int.class};
 
-            Constructor<MaterialColor> cons = cl.getDeclaredConstructor(type);
+            Constructor<MaterialColor> cons = cl.getDeclaredConstructor(int.class, int.class);
             cons.setAccessible(true);
 
             materialColor = cons.newInstance(62, 0xd3a471);
@@ -104,8 +103,8 @@ public class WeatheredMap {
         int scale = 1 << data.scale;
         int mapX = data.x;
         int mapZ = data.z;
-        int playerX = Mth.floor(entity.getX() - (double) mapX) / scale + 64;
-        int playerZ = Mth.floor(entity.getZ() - (double) mapZ) / scale + 64;
+        int playerX = Mth.floor(entity.getX() - mapX) / scale + 64;
+        int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
         int centerY = 128 / scale;
         if (level.dimensionType().hasCeiling()) {
             centerY /= 2;
@@ -219,7 +218,7 @@ public class WeatheredMap {
 
                                 materialcolor = MaterialColor.COLOR_ORANGE;
                                 if (distanceFromLand > 7 && pixelZ % 2 == 0) {
-                                    relativeShade = (pixelX + (int) (Mth.sin((float) pixelZ + 0.0F) * 7.0F)) / 8 % 5;
+                                    relativeShade = (pixelX + (int) (Mth.sin(pixelZ + 0.0F) * 7.0F)) / 8 % 5;
                                     if (relativeShade == 3) {
                                         relativeShade = 1;
                                     } else if (relativeShade == 4) {
@@ -244,7 +243,7 @@ public class WeatheredMap {
                                         relativeShade = 1;
                                     }
                                 } else {
-                                    double depthY = (maxY - somethingY) * 4.0D / (double) (scale + 4) + ((double) (pixelX + pixelZ & 1) - 0.5D) * 0.4D;
+                                    double depthY = (maxY - somethingY) * 4.0D / (scale + 4) + ((pixelX + pixelZ & 1) - 0.5D) * 0.4D;
 
                                     if (depthY > 0.6D) {
                                         relativeShade = 2;

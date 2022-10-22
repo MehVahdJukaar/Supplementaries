@@ -18,7 +18,7 @@ public abstract class BellTileEntityMixin extends BlockEntity implements IBellCo
     @Unique
     public BellConnection connection = BellConnection.NONE;
 
-    public BellTileEntityMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    protected BellTileEntityMixin(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
     }
 

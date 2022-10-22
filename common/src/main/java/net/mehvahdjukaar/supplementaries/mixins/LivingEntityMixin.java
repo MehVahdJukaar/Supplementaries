@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
-    public LivingEntityMixin(EntityType<?> entityTypeIn, Level worldIn) {
+    protected LivingEntityMixin(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 

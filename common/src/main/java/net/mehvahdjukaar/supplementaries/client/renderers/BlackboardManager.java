@@ -21,10 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -97,7 +94,7 @@ public class BlackboardManager {
         private static final int WIDTH = 16;
 
         //models for each direction
-        private final Map<Direction, List<BakedQuad>> quadsCache = new HashMap<>();
+        private final Map<Direction, List<BakedQuad>> quadsCache = new EnumMap<>(Direction.class);
         private final byte[][] pixels;
         //he be lazy
         @Nullable
@@ -127,12 +124,33 @@ public class BlackboardManager {
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
+        //helper methods
+        private static int getColoredPixel(byte i, int x, int y) {
+            int offset = i > 0 ? 16 : 0;
+            int tint = BlackboardBlock.colorFromByte(i);
+            TextureAtlas textureMap = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+            TextureAtlasSprite sprite = textureMap.getSprite(ModTextures.BLACKBOARD_TEXTURE);
+            return getTintedColor(sprite, x, y, offset, tint);
+        }
+
+        private static int getTintedColor(TextureAtlasSprite sprite, int x, int y, int offset, int tint) {
+            if (sprite == null || sprite.getFrameCount() == 0) return -1;
+            int tintR = tint >> 16 & 255;
+            int tintG = tint >> 8 & 255;
+            int tintB = tint & 255;
+
+            int pixel = ClientPlatformHelper.getPixelRGBA(sprite, 0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
+
+            // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
+            int totalB = pixel >> 16 & 255;
+            int totalG = pixel >> 8 & 255;
+            int totalR = pixel & 255;
+            return NativeImage.combine(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
+        }
+
         @Nonnull
         public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
-            if (!quadsCache.containsKey(dir)) {
-                this.quadsCache.put(dir, modelFactory.apply(pixels));
-            }
-            return quadsCache.get(dir);
+            return quadsCache.computeIfAbsent(dir, p-> modelFactory.apply(pixels));
         }
 
         @Nonnull
@@ -159,31 +177,6 @@ public class BlackboardManager {
             if (texture != null) this.texture.close();
             if (textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
         }
-    }
-
-    //helper methods
-    private static int getColoredPixel(byte i, int x, int y) {
-        int offset = i > 0 ? 16 : 0;
-        int tint = BlackboardBlock.colorFromByte(i);
-        TextureAtlas textureMap = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
-        TextureAtlasSprite sprite = textureMap.getSprite(ModTextures.BLACKBOARD_TEXTURE);
-        return getTintedColor(sprite, x, y, offset, tint);
-    }
-
-
-    private static int getTintedColor(TextureAtlasSprite sprite, int x, int y, int offset, int tint) {
-        if (sprite == null || sprite.getFrameCount() == 0) return -1;
-        int tintR = tint >> 16 & 255;
-        int tintG = tint >> 8 & 255;
-        int tintB = tint & 255;
-
-        int pixel = ClientPlatformHelper.getPixelRGBA(sprite, 0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
-
-        // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
-        int totalB = pixel >> 16 & 255;
-        int totalG = pixel >> 8 & 255;
-        int totalR = pixel & 255;
-        return NativeImage.combine(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
     }
 
 

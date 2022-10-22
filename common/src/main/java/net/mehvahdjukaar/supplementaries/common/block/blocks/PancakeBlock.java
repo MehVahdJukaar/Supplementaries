@@ -44,7 +44,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[8];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(2, 0.0D, 2, 14.0D, 2 + l * 2, 14.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(2, 0.0D, 2, 14.0D, 2d + l * 2, 14.0D));
     }
 
     public static final IntegerProperty PANCAKES = ModBlockProperties.PANCAKES_1_8;

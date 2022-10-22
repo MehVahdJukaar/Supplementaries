@@ -22,7 +22,7 @@ public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockT
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
 
-        float scale = Mth.lerp(partialTicks, tile.prevScale, tile.scale);
+        float scale = tile.getScale(partialTicks);
         poseStack.scale(scale, scale, scale);
 
         TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();

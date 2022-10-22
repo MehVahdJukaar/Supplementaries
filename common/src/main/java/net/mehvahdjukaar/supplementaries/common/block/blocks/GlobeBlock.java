@@ -99,10 +99,9 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 if (level.isClientSide) {
-                    Minecraft.getInstance().particleEngine.destroy(pos, state);
+                   level.addDestroyBlockEffect(pos, state);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
-
             }
 
             if (!level.isClientSide) {

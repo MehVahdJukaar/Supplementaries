@@ -46,7 +46,7 @@ public class BlackBoardGui extends Screen {
         byte[][] pixels = new byte[16][16];
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                pixels[xx][yy] = (this.buttons[xx][yy].color);
+                pixels[xx][yy] = (this.buttons[xx][yy].getColor());
             }
         }
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tileBoard.getBlockPos(), pixels));
@@ -77,7 +77,7 @@ public class BlackBoardGui extends Screen {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 setPixel(xx, yy, false);
-                this.buttons[xx][yy].color = 0;
+                this.buttons[xx][yy].setColor( (byte) 0);
             }
         }
     }
@@ -88,13 +88,13 @@ public class BlackBoardGui extends Screen {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].color = this.tileBoard.getPixel(xx,yy);
+                this.buttons[xx][yy].setColor(this.tileBoard.getPixel(xx,yy));
             }
         }
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, Component.translatable("gui.supplementaries.blackboard.clear"), (b) -> this.clear()));
-        this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, Component.translatable("gui.supplementaries.blackboard.clear"), b -> this.clear()));
+        this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, button -> this.close()));
     }
 
     @Override

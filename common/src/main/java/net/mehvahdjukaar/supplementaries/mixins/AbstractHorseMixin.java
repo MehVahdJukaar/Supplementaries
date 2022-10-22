@@ -60,7 +60,7 @@ public abstract class AbstractHorseMixin extends Animal {
             boolean eat = false;
             float healing = 1.0F;
             int ageIncrement = 30;
-            int temper = 5;
+            int newTemper = 5;
 
 
             if (this.getHealth() < this.getMaxHealth()) {
@@ -80,7 +80,7 @@ public abstract class AbstractHorseMixin extends Animal {
             if ((eat || !this.isTamed()) && this.getTemper() < this.getMaxTemper()) {
                 eat = true;
                 if (!this.level.isClientSide) {
-                    this.modifyTemper(temper);
+                    this.modifyTemper(newTemper);
                 }
             }
             if (duration != 0) {

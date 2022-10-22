@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 /**

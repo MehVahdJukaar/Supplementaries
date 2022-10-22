@@ -22,7 +22,7 @@ public abstract class BowMixin {
     public void getAllSupportedProjectiles(CallbackInfoReturnable<Predicate<ItemStack>> cir) {
         if(CommonConfigs.Items.ROPE_ARROW_CROSSBOW.get()){
             var v = cir.getReturnValue();
-            cir.setReturnValue((s)->{
+            cir.setReturnValue(s->{
                 if(s.getItem() instanceof RopeArrowItem) return false;
                 return v.test(s);
             });

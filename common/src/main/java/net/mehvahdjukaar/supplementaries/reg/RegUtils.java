@@ -9,7 +9,10 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -144,14 +147,14 @@ public class RegUtils {
 
         Supplier<Block> block = regWithItem(baseName, () -> new CandleHolderBlock(null,
                         BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
-                getTab(CreativeModeTab.TAB_DECORATIONS,baseName));
+                getTab(CreativeModeTab.TAB_DECORATIONS, baseName));
         map.put(null, block);
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> bb = regWithItem(name, () -> new CandleHolderBlock(color,
                             BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
-                 getTab(CreativeModeTab.TAB_DECORATIONS,baseName)
+                    getTab(CreativeModeTab.TAB_DECORATIONS, baseName)
             );
             map.put(color, bb);
         }
@@ -237,7 +240,7 @@ public class RegUtils {
                             .noCollission(),
                     wood
             );
-            wood.addChild("hanging_sign", block);
+            wood.addChild("supplementaries:hanging_sign", (Object) block);
             event.register(Supplementaries.res(name), block);
             ModRegistry.HANGING_SIGNS.put(wood, block);
         }
@@ -266,7 +269,7 @@ public class RegUtils {
                             getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.SIGN_POST_NAME)),
                     wood
             );
-            wood.addChild("sign_post", item);
+            wood.addChild("supplementaries:sign_post", (Object) item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }

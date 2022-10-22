@@ -70,13 +70,13 @@ public class BombExplosion extends Explosion {
         this.z = z;
         this.bombType = bombType;
         this.mode = interaction;
-        this.damageCalculator = context == null ? this.makeDamageCalculator(entity) : context;
+        this.damageCalculator = context == null ? this.bombMakeDamageCalculator(entity) : context;
     }
 
     private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
 
-    private ExplosionDamageCalculator makeDamageCalculator(@Nullable Entity p_234894_1_) {
-        return p_234894_1_ == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(p_234894_1_);
+    private ExplosionDamageCalculator bombMakeDamageCalculator(@Nullable Entity entity) {
+        return entity == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(entity);
     }
 
 
@@ -93,9 +93,9 @@ public class BombExplosion extends Explosion {
             if (!blockstate.isAir()) {
                 BlockPos immutable = blockpos.immutable();
                 this.level.getProfiler().push("explosion_blocks");
-                if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel) {
+                if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel serverLevel) {
                     BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level))
+                    LootContext.Builder builder = (new LootContext.Builder(serverLevel))
                             .withRandom(this.level.random)
                             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos))
                             .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
@@ -106,7 +106,7 @@ public class BombExplosion extends Explosion {
                         builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
                     }
 
-                    blockstate.getDrops(builder).forEach((stack) -> addBlockDrops(drops, stack, immutable));
+                    blockstate.getDrops(builder).forEach(stack -> addBlockDrops(drops, stack, immutable));
                 }
 
                 ForgeHelper.onBlockExploded(blockstate, this.level, blockpos, this);
@@ -140,16 +140,15 @@ public class BombExplosion extends Explosion {
     public void explode() {
         this.level.gameEvent(this.source, GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
-        int i = 16;
 
         if (mode != BlockInteraction.NONE) {
             for (int j = 0; j < 16; ++j) {
                 for (int k = 0; k < 16; ++k) {
                     for (int l = 0; l < 16; ++l) {
                         if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                            double d0 = (float) j / 15.0F * 2.0F - 1.0F;
-                            double d1 = (float) k / 15.0F * 2.0F - 1.0F;
-                            double d2 = (float) l / 15.0F * 2.0F - 1.0F;
+                            double d0 = j / 15.0F * 2.0F - 1.0F;
+                            double d1 = k / 15.0F * 2.0F - 1.0F;
+                            double d2 = l / 15.0F * 2.0F - 1.0F;
                             double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                             d0 = d0 / d3;
                             d1 = d1 / d3;
@@ -172,9 +171,9 @@ public class BombExplosion extends Explosion {
                                     set.add(blockpos);
                                 }
 
-                                d4 += d0 * (double) 0.3F;
-                                d6 += d1 * (double) 0.3F;
-                                d8 += d2 * (double) 0.3F;
+                                d4 += d0 * 0.3F;
+                                d6 += d1 * 0.3F;
+                                d8 += d2 * 0.3F;
                             }
                         }
                     }
@@ -184,12 +183,12 @@ public class BombExplosion extends Explosion {
 
         this.toBlow.addAll(set);
         float f2 = this.radius * 2.0F;
-        int k1 = Mth.floor(this.x - (double) f2 - 1.0D);
-        int l1 = Mth.floor(this.x + (double) f2 + 1.0D);
-        int i2 = Mth.floor(this.y - (double) f2 - 1.0D);
-        int i1 = Mth.floor(this.y + (double) f2 + 1.0D);
-        int j2 = Mth.floor(this.z - (double) f2 - 1.0D);
-        int j1 = Mth.floor(this.z + (double) f2 + 1.0D);
+        int k1 = Mth.floor(this.x - f2 - 1.0D);
+        int l1 = Mth.floor(this.x + f2 + 1.0D);
+        int i2 = Mth.floor(this.y - f2 - 1.0D);
+        int i1 = Mth.floor(this.y + f2 + 1.0D);
+        int j2 = Mth.floor(this.z - f2 - 1.0D);
+        int j1 = Mth.floor(this.z + f2 + 1.0D);
         List<Entity> list = this.level.getEntities(this.getSourceMob(), new AABB(k1, i2, j2, l1, i1, j1));
         ForgeHelper.onExplosionDetonate(this.level, this, list, f2);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
@@ -209,7 +208,7 @@ public class BombExplosion extends Explosion {
                         d9 = d9 / d13;
                         double d14 = getSeenPercent(vector3d, entity);
                         double d10 = (1.0D - d12) * d14;
-                        entity.hurt(this.getDamageSource(), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D)));
+                        entity.hurt(this.getDamageSource(),  ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * f2 + 1.0D)));
                         double d11 = d10;
                         boolean isPlayer = entity instanceof Player;
                         Player playerentity = null;

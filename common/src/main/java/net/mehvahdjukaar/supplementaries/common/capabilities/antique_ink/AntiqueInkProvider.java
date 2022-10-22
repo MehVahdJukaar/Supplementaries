@@ -12,6 +12,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class AntiqueInkProvider {
 
+    private AntiqueInkProvider(){
+    }
+
     public static boolean isEnabled() {
         return PlatformHelper.getPlatform().isForge() && RegistryConfigs.ANTIQUE_INK_ENABLED.get();
     }

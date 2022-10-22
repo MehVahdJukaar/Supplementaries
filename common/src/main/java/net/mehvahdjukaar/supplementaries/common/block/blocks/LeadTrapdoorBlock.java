@@ -22,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class LeadTrapdoorBlock extends TrapDoorBlock {
 
-    public static IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
+    public static final IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
 
     public LeadTrapdoorBlock(Properties properties) {
         super(properties);

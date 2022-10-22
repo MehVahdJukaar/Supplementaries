@@ -85,7 +85,7 @@ public class BellowsBlockTile extends BlockEntity {
                                 dz = halfBoundingBox.maxZ + f - entityBB.minZ;
                                 if (dz < 0) continue;
                             }
-                            case NORTH -> {
+                            default -> {
                                 dz = halfBoundingBox.minZ - f - entityBB.maxZ;
                                 if (dz > 0) continue;
                             }
@@ -123,7 +123,7 @@ public class BellowsBlockTile extends BlockEntity {
             double b;
             switch (facing) {
                 default -> {
-                    b = worldPosition.getZ() + 1;
+                    b = worldPosition.getZ() + 1d;
                     if (entityBB.minZ < b) continue;
                     dist = entity.getZ() - b;
                 }
@@ -133,7 +133,7 @@ public class BellowsBlockTile extends BlockEntity {
                     dist = b - entity.getZ();
                 }
                 case EAST -> {
-                    b = worldPosition.getX() + 1;
+                    b = worldPosition.getX() + 1d;
                     if (entityBB.minX < b) continue;
                     dist = entity.getX() - b;
                 }
@@ -143,7 +143,7 @@ public class BellowsBlockTile extends BlockEntity {
                     dist = b - entity.getX();
                 }
                 case UP -> {
-                    b = worldPosition.getY() + 1;
+                    b = worldPosition.getY() + 1d;
                     if (entityBB.minY < b) continue;
                     dist = entity.getY() - b;
                 }

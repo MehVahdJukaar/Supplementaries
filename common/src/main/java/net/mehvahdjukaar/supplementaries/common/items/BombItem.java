@@ -45,11 +45,6 @@ public class BombItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        super.fillItemCategory(pCategory, pItems);
-    }
-
-    @Override
     public boolean isFoil(ItemStack stack) {
         return glint;
     }

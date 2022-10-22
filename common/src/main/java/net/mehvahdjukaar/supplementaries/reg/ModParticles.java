@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public class ModParticles {
 
     public static void init() {
+        //touch
     }
 
     //particles

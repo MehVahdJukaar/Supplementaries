@@ -27,7 +27,7 @@ public class MimicBlockColor implements BlockColor {
         return -1;
     }
 
-    public static class noParticle implements BlockColor {
+    public static class NoParticle implements BlockColor {
         @Override
         public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
             if (tint == 0) return -1;

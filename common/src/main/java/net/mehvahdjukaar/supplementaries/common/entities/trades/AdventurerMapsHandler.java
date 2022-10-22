@@ -121,9 +121,9 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
     public static void addTradesCallback() {
 
-        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 1, itemListings -> {
-            maybeAddCustomMap(itemListings, 1);
-        });
+        RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 1, itemListings ->
+            maybeAddCustomMap(itemListings, 1)
+        );
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> {
             if (CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS.get()) {
@@ -159,13 +159,12 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
             int maxPrice = 13;
             int minPrice = 7;
-            int level = 2;
-            int i = random.nextInt(maxPrice - minPrice + 1) + minPrice;
+            int price = random.nextInt(maxPrice - minPrice + 1) + minPrice;
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, i), new ItemStack(Items.COMPASS), itemstack, 12, 5, 0.2F);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.COMPASS), itemstack, 12, 5, 0.2F);
         }
 
         private ItemStack createMap(Level level, BlockPos pos) {

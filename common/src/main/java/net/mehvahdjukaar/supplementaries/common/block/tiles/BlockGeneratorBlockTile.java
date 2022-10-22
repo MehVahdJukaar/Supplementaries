@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 //turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
@@ -42,7 +43,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
     private boolean firstTick = true;
-    private volatile List<Pair<BlockPos, Holder<Structure>>> threadResult = null;
+    private AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -59,9 +60,9 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
             EXECUTORS.submit(() -> {
                 try {
-                    tile.threadResult = StructureLocator.findNearestMapFeatures(
+                    tile.threadResult.set( StructureLocator.findNearestMapFeatures(
                             world, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
-                            false, 2);
+                            false, 2));
                 } catch (Exception e) {
                     tile.threadResult = null;
                 }
@@ -70,7 +71,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
         try {
             if (tile.threadResult != null) {
-                RoadSignFeature.applyPostProcess((ServerLevel) level, pos, tile.threadResult);
+                RoadSignFeature.applyPostProcess((ServerLevel) level, pos, tile.threadResult.get());
             }
         } catch (Exception exception) {
             tile.failAndRemove(level, pos, exception);

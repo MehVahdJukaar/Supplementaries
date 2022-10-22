@@ -21,7 +21,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import java.util.List;
 
 public abstract class MimicBlock extends Block {
-    public MimicBlock(Properties properties) {
+    protected MimicBlock(Properties properties) {
         super(properties);
     }
 
@@ -51,10 +51,10 @@ public abstract class MimicBlock extends Block {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
-        if (builder.getParameter(LootContextParams.BLOCK_ENTITY) instanceof IBlockHolder tile) {
+        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof IBlockHolder tile) {
             //checks again if the content itself can be mined
             BlockState heldState = tile.getHeldBlock();
-            if (builder.getParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
+            if (builder.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
                 if (!ForgeHelper.canHarvestBlock(state, builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
                     return drops;
                 }

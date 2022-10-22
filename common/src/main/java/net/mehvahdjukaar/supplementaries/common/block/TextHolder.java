@@ -5,8 +5,6 @@ import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.client.TextUtils;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.advancements.CriteriaTriggers;

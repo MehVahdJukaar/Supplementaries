@@ -90,9 +90,9 @@ public class SignPostItem extends WoodBasedItem {
 
                 BlockUtil.addOptionalOwnership(player, tile);
 
-                int r = Mth.floor((double) ((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
+                int r = Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
-                double y = context.getClickLocation().y - (double) blockpos.getY();
+                double y = context.getClickLocation().y - blockpos.getY();
 
                 boolean up = y > 0.5d;
 

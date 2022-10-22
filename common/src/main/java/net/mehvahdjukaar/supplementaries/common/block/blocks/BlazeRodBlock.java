@@ -22,7 +22,7 @@ public class BlazeRodBlock extends StickBlock {
 
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.fireImmune() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+        if (!entity.fireImmune() && entity instanceof LivingEntity le && !EnchantmentHelper.hasFrostWalker(le)) {
             if (!(entity instanceof Player p && p.isCreative()))
                 entity.setSecondsOnFire(2);
         }
@@ -40,22 +40,22 @@ public class BlazeRodBlock extends StickBlock {
         if (s > 0) {
             ParticleOptions particle = state.getValue(WATERLOGGED) ? ParticleTypes.BUBBLE : ParticleTypes.SMOKE;
             int c = list.get(random.nextInt(s));
-            double x, y, z = x = y =0;
+            double x, y, z;
             switch (c) {
-                case 0 -> {
-                    x = (double) pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
-                    y = (double) pos.getY() + random.nextFloat();
-                    z = (double) pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                default -> {
+                    x = pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    y = pos.getY() + random.nextFloat();
+                    z = pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                 }
                 case 1 -> {
-                    y = (double) pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
-                    x = (double) pos.getX() + random.nextFloat();
-                    z = (double) pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    y = pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    x = pos.getX() + random.nextFloat();
+                    z = pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                 }
                 case 2 -> {
-                    y = (double) pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
-                    z = (double) pos.getZ() + random.nextFloat();
-                    x = (double) pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    y = pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    z = pos.getZ() + random.nextFloat();
+                    x = pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                 }
             }
             world.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);

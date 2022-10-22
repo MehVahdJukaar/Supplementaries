@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public abstract class InstrumentItem extends Item {
 
-    public InstrumentItem(Properties pProperties) {
+    protected InstrumentItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -48,7 +48,7 @@ public abstract class InstrumentItem extends Item {
 
     public float getPitch(int note) {
         //noteblocks logic
-        return (float) Math.pow(2.0D, (double) (note - 1 - 12) / 12.0D);
+        return (float) Math.pow(2.0D, (note - 1 - 12) / 12.0D);
     }
 
     public float getVolume() {

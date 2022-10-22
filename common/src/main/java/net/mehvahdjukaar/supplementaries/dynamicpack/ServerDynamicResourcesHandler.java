@@ -18,7 +18,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -163,20 +162,18 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
                     .define('2', oak.planks)
                     .group(RegistryConstants.SIGN_POST_NAME)
                     .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(oak.planks))
-                    .save((s) -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
+                    .save(s -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
         }
 
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
-            if (w != oak) {
+            if (w != oak && i.getItemCategory() != null) {
                 //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                if (i.getItemCategory() != null) {
-                    IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
+                IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 
-                    FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                    if (newR == null) return;
-                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                    this.dynamicPack.addRecipe(newR);
-                }
+                FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                if (newR == null) return;
+                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                this.dynamicPack.addRecipe(newR);
             }
         });
     }
