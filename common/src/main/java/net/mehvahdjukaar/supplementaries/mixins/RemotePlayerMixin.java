@@ -30,7 +30,7 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverEntity 
     @Unique
     private ItemStack quiver = ItemStack.EMPTY;
 
-    public RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
+    protected RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
         super(level, blockPos, f, gameProfile, profilePublicKey);
     }
 

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -22,6 +23,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,8 +31,9 @@ import java.util.Set;
 public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
-    protected static Set<Block> POSSIBLE_LANTERNS = null;
+
+    protected static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
+    protected static final Set<Block> POSSIBLE_LANTERNS = new HashSet<>();
 
     public static final WallLanternTexturesManager RELOAD_INSTANCE = new WallLanternTexturesManager();
 
@@ -86,7 +89,8 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
         for (Block i : Registry.BLOCK) {
             if (CommonUtil.isLanternBlock(i)) builder.add(i);
         }
-        POSSIBLE_LANTERNS = builder.build();
+        POSSIBLE_LANTERNS.clear();
+        POSSIBLE_LANTERNS.addAll(builder.build());
     }
 
     @Nullable

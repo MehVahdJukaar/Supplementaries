@@ -20,7 +20,7 @@ public class TurnTableBlockTile extends BlockEntity {
     private int cooldown = 5;
     private boolean canRotate = false;
     // private long tickedGameTime;
-    public int cat = 0;
+    private int catTimer = 0;
 
     public TurnTableBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.TURN_TABLE_TILE.get(), pos, state);
@@ -33,9 +33,17 @@ public class TurnTableBlockTile extends BlockEntity {
         // allows for a rotation try nedxt period
     }
 
+    public int getCatTimer() {
+        return catTimer;
+    }
+
+    public void setCat() {
+        this.catTimer = 20 * 20;
+    }
+
     //server only
     public static void tick(Level level, BlockPos pos, BlockState state, TurnTableBlockTile tile) {
-        tile.cat = Math.max(tile.cat - 1, 0);
+        tile.catTimer = Math.max(tile.catTimer - 1, 0);
         // cd > 0
         if (tile.cooldown == 0) {
             Direction dir = state.getValue(TurnTableBlock.FACING);

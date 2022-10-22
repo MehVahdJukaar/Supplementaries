@@ -27,13 +27,13 @@ public abstract class StrongholdCrossingSconceMixin extends StructurePiece {
     @Unique
     private final BlockState sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
 
-    protected StrongholdCrossingSconceMixin(StructurePieceType p_209994_, int p_209995_, BoundingBox p_209996_) {
-        super(p_209994_, p_209995_, p_209996_);
+    protected StrongholdCrossingSconceMixin(StructurePieceType structurePieceType, int i, BoundingBox boundingBox) {
+        super(structurePieceType, i, boundingBox);
     }
 
 
     @Inject(method = "postProcess", at = @At("TAIL"))
-    public void postProcess(WorldGenLevel level, StructureManager p_229535_, ChunkGenerator p_229536_, RandomSource p_229537_, BoundingBox bb, ChunkPos p_229539_, BlockPos p_229540_, CallbackInfo ci) {
+    public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
         if (RegistryConfigs.HAS_STRONGHOLD_SCONCE)
             this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
     }

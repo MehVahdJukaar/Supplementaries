@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(UndeadHorseRenderer.class)
 public abstract class UndeadHorseRenderMixin extends AbstractHorseRenderer<AbstractHorse, HorseModel<AbstractHorse>> {
 
-    public UndeadHorseRenderMixin(EntityRendererProvider.Context p_173906_, HorseModel<AbstractHorse> p_173907_, float p_173908_) {
-        super(p_173906_, p_173907_, p_173908_);
+    protected UndeadHorseRenderMixin(EntityRendererProvider.Context context, HorseModel<AbstractHorse> abstractHorseHorseModel, float v) {
+        super(context, abstractHorseHorseModel, v);
     }
 
     @Override
     public boolean isShaking(AbstractHorse horse) {
-        return super.isShaking(horse) || (horse instanceof ICustomDataHolder && ((ICustomDataHolder) horse).getVariable());
+        return super.isShaking(horse) || (horse instanceof ICustomDataHolder dataHolder && dataHolder.getVariable());
     }
 }

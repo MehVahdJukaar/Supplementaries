@@ -45,7 +45,7 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     public StatueBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LIT) ? 7 : 0));
+        super(properties.lightLevel(state -> state.getValue(LIT) ? 7 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
@@ -61,11 +61,11 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
-        super.neighborChanged(state, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        boolean isPowered = world.hasNeighborSignal(pos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        boolean isPowered = level.hasNeighborSignal(pos);
         if (isPowered != state.getValue(POWERED)) {
-            world.setBlock(pos, state.setValue(POWERED, isPowered), 2);
+            level.setBlock(pos, state.setValue(POWERED, isPowered), 2);
         }
     }
 
@@ -139,10 +139,10 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
-            double x = (double) pos.getX() + 0.5D - 0.1875 * (double) direction.getStepX();
-            double y = (double) pos.getY() + 9/16f;
-            double z = (double) pos.getZ() + 0.5D - 0.1875 * (double) direction.getStepZ();
-            addCandleParticleAndSound(level, new Vec3(x,y,z), rand);
+            double x = pos.getX() + 0.5D - 0.1875 * direction.getStepX();
+            double y = pos.getY() + 9 / 16f;
+            double z = pos.getZ() + 0.5D - 0.1875 * direction.getStepZ();
+            addCandleParticleAndSound(level, new Vec3(x, y, z), rand);
         }
     }
 

@@ -49,7 +49,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
         super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
         if (this.quiver != null && hitByPlayer) {
             ItemStack itemStack = this.quiver;
-            if (Math.max(this.random.nextFloat() - (float) looting * 0.02F, 0.0F) < quiverDropChance) {
+            if (Math.max(this.random.nextFloat() - looting * 0.02F, 0.0F) < quiverDropChance) {
                 this.spawnAtLocation(itemStack);
                 this.quiver = ItemStack.EMPTY;
             }

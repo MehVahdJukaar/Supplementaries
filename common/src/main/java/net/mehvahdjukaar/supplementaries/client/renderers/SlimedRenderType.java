@@ -11,8 +11,8 @@ import net.minecraft.util.Mth;
 
 public class SlimedRenderType extends RenderType {
 
-    public SlimedRenderType(String p_173178_, VertexFormat p_173179_, VertexFormat.Mode p_173180_, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
-        super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
+    public SlimedRenderType(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
+        super(s, vertexFormat, mode, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
     protected static final TexturingStateShard TEXTURING_STATE_SHARD = new TexturingStateShard("entity_glint_texturing", () -> {

@@ -19,11 +19,12 @@ public class SpeakerSoundParticle extends TextureSheetParticle {
         this.lifetime = 10;
     }
 
-
+    @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
+    @Override
     public float getQuadSize(float scaleFactor) {
         float i = 0.2f;
         return this.quadSize * ((Mth.sin((float)Math.PI*3*((float)this.age/this.lifetime)))*i +1f - i/2f);

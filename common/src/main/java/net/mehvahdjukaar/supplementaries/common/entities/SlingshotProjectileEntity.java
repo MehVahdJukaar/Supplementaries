@@ -6,8 +6,8 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
@@ -48,11 +48,12 @@ import java.util.function.Supplier;
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     //only client
-    public int clientSideReturnTridentTickCount;
+    private int clientSideReturnTridentTickCount;
     private float xRotInc;
     private float yRotInc;
     private float particleCooldown = 0;
-    public Supplier<Integer> light = Suppliers.memoize(() -> {
+
+    private final Supplier<Integer> light = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem blockItem) {
             Block b = blockItem.getBlock();
@@ -100,6 +101,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.entityData.set(ID_LOYALTY, tag.getByte("Loyalty"));
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putByte("Loyalty", this.entityData.get(ID_LOYALTY));
@@ -141,7 +143,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         boolean success = false;
         if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
-            if(CompatHandler.flan && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())){
+            if (CompatHandler.flan && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())) {
                 return;
             }
 
@@ -311,5 +313,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setYRot(buffer.readFloat());
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
+    }
+
+    public int getLightEmission() {
+        return light.get();
     }
 }

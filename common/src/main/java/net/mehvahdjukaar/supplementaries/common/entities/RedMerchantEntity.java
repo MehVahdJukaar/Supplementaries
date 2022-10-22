@@ -154,27 +154,27 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag p_70037_1_) {
-        super.readAdditionalSaveData(p_70037_1_);
-        if (p_70037_1_.contains("DespawnDelay", 99)) {
-            this.despawnDelay = p_70037_1_.getInt("DespawnDelay");
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.contains("DespawnDelay", 99)) {
+            this.despawnDelay = compound.getInt("DespawnDelay");
         }
 
-        if (p_70037_1_.contains("WanderTarget")) {
-            this.wanderTarget = NbtUtils.readBlockPos(p_70037_1_.getCompound("WanderTarget"));
+        if (compound.contains("WanderTarget")) {
+            this.wanderTarget = NbtUtils.readBlockPos(compound.getCompound("WanderTarget"));
         }
 
         this.setAge(Math.max(0, this.getAge()));
     }
 
     @Override
-    public boolean removeWhenFarAway(double p_213397_1_) {
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
     }
 
     @Override
-    protected void rewardTradeXp(MerchantOffer p_213713_1_) {
-        if (p_213713_1_.shouldRewardExp()) {
+    protected void rewardTradeXp(MerchantOffer merchantOffer) {
+        if (merchantOffer.shouldRewardExp()) {
             int i = 3 + this.random.nextInt(4);
             this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
         }
@@ -186,7 +186,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.WANDERING_TRADER_HURT;
     }
 
@@ -196,8 +196,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    protected SoundEvent getDrinkingSound(ItemStack p_213351_1_) {
-        Item item = p_213351_1_.getItem();
+    protected SoundEvent getDrinkingSound(ItemStack stack) {
+        Item item = stack.getItem();
         return item == Items.MILK_BUCKET ? SoundEvents.WANDERING_TRADER_DRINK_MILK : SoundEvents.WANDERING_TRADER_DRINK_POTION;
     }
 
@@ -211,8 +211,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         return SoundEvents.WANDERING_TRADER_YES;
     }
 
-    public void setDespawnDelay(int p_213728_1_) {
-        this.despawnDelay = p_213728_1_;
+    public void setDespawnDelay(int i) {
+        this.despawnDelay = i;
     }
 
     public int getDespawnDelay() {
@@ -234,8 +234,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         }
     }
 
-    public void setWanderTarget(@Nullable BlockPos p_213726_1_) {
-        this.wanderTarget = p_213726_1_;
+    public void setWanderTarget(@Nullable BlockPos pos) {
+        this.wanderTarget = pos;
     }
 
     @Nullable
@@ -248,13 +248,13 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
         Vec3 vector3d = target.getDeltaMovement();
         double d0 = target.getX() + vector3d.x - this.getX();
-        double d1 = target.getEyeY() - (double) 3.5F - this.getY();
+        double d1 = target.getEyeY() - 3.5F - this.getY();
         double d2 = target.getZ() + vector3d.z - this.getZ();
         float f = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 
         BombEntity bomb = new BombEntity(this.level, this, BombEntity.BombType.NORMAL);
         //bomb.xRot -= -90F;
-        bomb.shoot(d0, d1 + (double) (f * 0.24F), d2, 1.25F, 0.9F);
+        bomb.shoot(d0, d1 + (f * 0.24F), d2, 1.25F, 0.9F);
 
         if (!this.isSilent()) {
             //TODO: sound here
@@ -273,7 +273,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         }
         //explosion resistant!
         if (source.isExplosion()) {
-            amount = (float) ((double) amount * 0.2D);
+            amount = (float) (amount * 0.2D);
         }
 
         return amount;
@@ -284,13 +284,14 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         final double stopDistance;
         final double speedModifier;
 
-        MoveToGoal(RedMerchantEntity p_i50459_2_, double p_i50459_3_, double p_i50459_5_) {
-            this.trader = p_i50459_2_;
-            this.stopDistance = p_i50459_3_;
-            this.speedModifier = p_i50459_5_;
+        MoveToGoal(RedMerchantEntity redMerchantEntity, double v, double v1) {
+            this.trader = redMerchantEntity;
+            this.stopDistance = v;
+            this.speedModifier = v1;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
 
+        @Override
         public void stop() {
             this.trader.setWanderTarget(null);
             RedMerchantEntity.this.navigation.stop();
@@ -307,18 +308,17 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
             BlockPos blockpos = this.trader.getWanderTarget();
             if (blockpos != null && RedMerchantEntity.this.navigation.isDone()) {
                 if (this.isTooFarAway(blockpos, 10.0D)) {
-                    Vec3 vector3d = (new Vec3((double) blockpos.getX() - this.trader.getX(), (double) blockpos.getY() - this.trader.getY(), (double) blockpos.getZ() - this.trader.getZ())).normalize();
+                    Vec3 vector3d = (new Vec3(blockpos.getX() - this.trader.getX(), blockpos.getY() - this.trader.getY(), blockpos.getZ() - this.trader.getZ())).normalize();
                     Vec3 vector3d1 = vector3d.scale(10.0D).add(this.trader.getX(), this.trader.getY(), this.trader.getZ());
                     RedMerchantEntity.this.navigation.moveTo(vector3d1.x, vector3d1.y, vector3d1.z, this.speedModifier);
                 } else {
-                    RedMerchantEntity.this.navigation.moveTo((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), this.speedModifier);
+                    RedMerchantEntity.this.navigation.moveTo(blockpos.getX(), blockpos.getY(), blockpos.getZ(), this.speedModifier);
                 }
             }
-
         }
 
-        private boolean isTooFarAway(BlockPos p_220846_1_, double p_220846_2_) {
-            return !p_220846_1_.closerToCenterThan(this.trader.position(), p_220846_2_);
+        private boolean isTooFarAway(BlockPos pos, double v) {
+            return !pos.closerToCenterThan(this.trader.position(), v);
         }
     }
 }

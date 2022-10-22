@@ -193,7 +193,6 @@ public class RegistryConfigs {
         SPEAKER_BLOCK_ENABLED = regConfig(builder, RegistryConstants.SPEAKER_BLOCK_NAME, true);
         SIGN_POST_ENABLED = regConfig(builder, RegistryConstants.SIGN_POST_NAME, true);
         HANGING_SIGN_ENABLED = regConfig(builder, RegistryConstants.HANGING_SIGN_NAME, true);
-        //WALL_LANTERN_ENABLED =  regConfig(builder,"wall_lantern", true);
         BELLOWS_ENABLED = regConfig(builder, RegistryConstants.BELLOWS_NAME, true);
         SCONCE_ENABLED = regConfig(builder, RegistryConstants.SCONCE_NAME, true);
         SCONCE_GREEN_ENABLED = regConfig(builder, RegistryConstants.SCONCE_NAME_GREEN, false);

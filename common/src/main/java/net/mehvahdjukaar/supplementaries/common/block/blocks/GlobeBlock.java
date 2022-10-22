@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.GlobeBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;

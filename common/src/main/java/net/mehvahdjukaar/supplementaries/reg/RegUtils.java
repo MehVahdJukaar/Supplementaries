@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class RegUtils {
     }
 
     //gets the tab given or null if the item is disabled
+    @Nullable
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (RegistryConfigs.isEnabled(regName)) {
             return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;

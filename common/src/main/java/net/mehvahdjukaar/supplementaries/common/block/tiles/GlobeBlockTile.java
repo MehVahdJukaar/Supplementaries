@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,19 +28,30 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private final boolean sepia;
 
+    private boolean sheared = false;
+    private int face = 0;
+
+    //cient
     private Component customName;
-
-    public float yaw = 0;
-    public float prevYaw = 0;
-    public int face = 0;
-
-    public boolean sheared = false;
-    //client
-    public Pair<GlobeModel, @Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
+    private float yaw = 0;
+    private float prevYaw = 0;
+    private Pair<GlobeModel, @Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
         this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
+    }
+
+    public int getFace() {
+        return face;
+    }
+
+    public float getRotation(float partialTicks) {
+        return Mth.lerp(partialTicks, prevYaw + face, yaw + face);
+    }
+
+    public Pair<GlobeModel, ResourceLocation> getRenderData() {
+        return renderData;
     }
 
     public boolean isSepia() {
@@ -48,11 +60,18 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public void setCustomName(Component name) {
         this.customName = name;
-        this.updateTexture();
+        this.updateRenderData();
     }
 
-    private void updateTexture() {
-        if (this.hasCustomName()) {
+    public void toggleShearing() {
+        this.sheared = !this.sheared;
+        this.updateRenderData();
+    }
+
+    private void updateRenderData() {
+        if (this.sheared) {
+            this.renderData = Pair.of(GlobeModel.SHEARED, null);
+        } else if (this.hasCustomName()) {
             this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
         } else this.renderData = Pair.of(GlobeModel.GLOBE, null);
     }
@@ -108,9 +127,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         if (id == 1) {
             this.spin();
             this.level.playSound(null, this.worldPosition,
-                       ModSounds.GLOBE_SPIN.get(),
-                        SoundSource.BLOCKS, 0.65f,
-                        MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
+                    ModSounds.GLOBE_SPIN.get(),
+                    SoundSource.BLOCKS, 0.65f,
+                    MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
         } else {
             return super.triggerEvent(id, type);
@@ -160,7 +179,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
             this.texture = res;
         }
 
-        public final String[] keyWords;
+        private final String[] keyWords;
         public final Component transKeyWord;
         public final ResourceLocation texture;
 

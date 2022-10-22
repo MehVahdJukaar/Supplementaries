@@ -4,8 +4,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
-import java.util.Random;
-
 public class BottlingXpParticle extends TextureSheetParticle {
     private final double xStart;
     private final double yStart;

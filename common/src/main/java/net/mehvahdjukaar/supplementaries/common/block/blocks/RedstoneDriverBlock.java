@@ -14,12 +14,13 @@ public class RedstoneDriverBlock extends DiodeBlock {
         super(properties);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING, POWERED);
     }
 
     @Override
-    protected int getDelay(BlockState p_196346_1_) {
+    protected int getDelay(BlockState state) {
         return 0;
     }
 

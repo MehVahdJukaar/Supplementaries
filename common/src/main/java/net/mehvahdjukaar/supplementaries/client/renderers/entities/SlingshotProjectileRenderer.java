@@ -28,13 +28,8 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
     }
 
     @Override
-    public Vec3 getRenderOffset(T entity, float partialTicks) {
-        return super.getRenderOffset(entity, partialTicks);
-    }
-
-    @Override
     protected int getBlockLightLevel(T entity, BlockPos pos) {
-        return entity.light.get();
+        return entity.getLightEmission();
     }
 
     @Override

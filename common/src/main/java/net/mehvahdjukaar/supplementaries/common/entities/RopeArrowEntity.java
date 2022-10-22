@@ -166,8 +166,8 @@ public class RopeArrowEntity extends AbstractArrow {
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();
-        if (entity instanceof Player && ((Player) entity).mayBuild()) {
-            player = (Player) entity;
+        if (entity instanceof Player player1 && player1.mayBuild()) {
+            player = player1;
         }
         BlockPos hitPos = this.prevPlacedPos;
         //Block hitBlock = this.level.getBlockState(hitPos).getBlock();

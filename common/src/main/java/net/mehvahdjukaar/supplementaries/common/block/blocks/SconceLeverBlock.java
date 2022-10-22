@@ -108,12 +108,12 @@ public class SconceLeverBlock extends SconceWallBlock {
             super.animateTick(stateIn, worldIn, pos, rand);
         } else if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING);
-            double d0 = (double) pos.getX() + 0.5D;
-            double d1 = (double) pos.getY() + 0.65D;
-            double d2 = (double) pos.getZ() + 0.5D;
+            double d0 = pos.getX() + 0.5D;
+            double d1 = pos.getY() + 0.65D;
+            double d2 = pos.getZ() + 0.5D;
             Direction direction1 = direction.getOpposite();
-            worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(this.particleData.get(), d0 + 0.125D * (double) direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.125D * direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(this.particleData.get(), d0 + 0.125D * direction1.getStepX(), d1 + 0.15D, d2 + 0.125D * direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 

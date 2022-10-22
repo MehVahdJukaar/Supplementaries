@@ -42,7 +42,7 @@ public abstract class RedMerchantSpawnerMixin {
 
     //remove
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(ServerLevel p_230253_1_, boolean p_230253_2_, boolean p_230253_3_, CallbackInfoReturnable<Integer> cir) {
+    public void tick(ServerLevel serverLevel, boolean b, boolean b1, CallbackInfoReturnable<Integer> cir) {
         if (this.redSpawnDelay > 0) {
             this.redSpawnDelay--;
         }

@@ -31,9 +31,9 @@ public class StatueBlockTile extends ItemDisplayTile {
     public GameProfile owner = null;
 
     //clientside
-    public StatuePose pose = StatuePose.STANDING;
-    public boolean isWaving = false;
-    public BlockState candle = null;
+    private StatuePose pose = StatuePose.STANDING;
+    private boolean isWaving = false;
+    private BlockState candle = null;
 
     public StatueBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.STATUE_TILE.get(), pos, state);
@@ -43,6 +43,18 @@ public class StatueBlockTile extends ItemDisplayTile {
     public void setCustomName(Component name) {
         super.setCustomName(name);
         this.updateName();
+    }
+
+    public StatuePose getPose() {
+        return pose;
+    }
+
+    public boolean isWaving() {
+        return isWaving;
+    }
+
+    public BlockState hasCandle() {
+        return candle;
     }
 
     //skull code

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,26 +16,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ConcretePowderBlock;
-import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 
 public class SugarBlock extends ConcretePowderBlock {
 
     public SugarBlock(BlockBehaviour.Properties properties) {
-        super(Blocks.WATER,properties);
+        super(Blocks.WATER, properties);
     }
 
     @Override
     public void onLand(Level level, BlockPos pos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlock) {
-        if(level instanceof ServerLevel serverLevel){
+        if (level instanceof ServerLevel serverLevel) {
             this.tick(blockState, serverLevel, pos, level.random);
         }
         if (isWater(blockState2)) {
             //level.addDestroyBlockEffect(blockPos, blockState);
-       //     level.destroyBlock(pos, false);
+            //     level.destroyBlock(pos, false);
         }
     }
 
@@ -61,7 +58,7 @@ public class SugarBlock extends ConcretePowderBlock {
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
         if (id == 1) {
             if (level.isClientSide) {
-                this.dissolve(level, pos);
+                this.spawnDissolveParticles(level, pos);
             }
             if (shouldTurnToWater(level, pos)) {
                 level.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
@@ -78,7 +75,7 @@ public class SugarBlock extends ConcretePowderBlock {
             if (direction != Direction.DOWN) {
                 mutableBlockPos.setWithOffset(pos, direction);
                 var s = level.getBlockState(mutableBlockPos);
-                if((direction == Direction.UP && isWater(s) || s.getBlock() == Blocks.WATER)){
+                if ((direction == Direction.UP && isWater(s) || s.getBlock() == Blocks.WATER)) {
                     count++;
                 }
                 if (count >= 2) return true;
@@ -109,7 +106,7 @@ public class SugarBlock extends ConcretePowderBlock {
     }
 
 
-    public void dissolve(Level level, BlockPos pos) {
+    public void spawnDissolveParticles(Level level, BlockPos pos) {
 
         double d2 = 0.25;
         int d = 0, e = 0, f = 0;
@@ -118,14 +115,14 @@ public class SugarBlock extends ConcretePowderBlock {
         for (int ax = 0; ax < amount; ++ax) {
             for (int ay = 0; ay < amount; ++ay) {
                 for (int az = 0; az < amount; ++az) {
-                    double s = ((double) ax + 0.5) / (double) amount;
-                    double t = ((double) ay + 0.5) / (double) amount;
-                    double u = ((double) az + 0.5) / (double) amount;
+                    double s = (ax + 0.5) / amount;
+                    double t = (ay + 0.5) / amount;
+                    double u = (az + 0.5) / amount;
                     double px = s + d;
                     double py = t + e;
                     double pz = u + f;
                     level.addParticle(ModParticles.SUGAR_PARTICLE.get(),
-                            (double) pos.getX() + px, (double) pos.getY() + py, (double) pos.getZ() + pz,
+                            pos.getX() + px, pos.getY() + py, pos.getZ() + pz,
                             s - 0.5, 0, u - 0.5);
                 }
             }
@@ -140,8 +137,8 @@ public class SugarBlock extends ConcretePowderBlock {
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
-        if(level.isClientSide) {
-            dissolve(level, pos);
+        if (level.isClientSide) {
+            spawnDissolveParticles(level, pos);
         }
         SoundType soundtype = state.getSoundType();
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);

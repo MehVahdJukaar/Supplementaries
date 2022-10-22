@@ -28,11 +28,11 @@ import java.util.List;
 
 //TODO: broken on servers
 public class SpringLauncherArmBlockTile extends BlockEntity {
-    public int age;
+    private int age;
     //maybe replace this with boolean?
     private double increment;
-    public double offset;
-    public double prevOffset;
+    private double offset;
+    private double prevOffset;
     private int dx;
     private int dy;
     private int dz;
@@ -56,6 +56,14 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         this.dx = v.getX();
         this.dy = v.getY();
         this.dz = v.getZ();
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public double getRenderOffset(float partialTicks) {
+        return offset;
     }
 
     //TODO: rewrite some of this old code
@@ -134,19 +142,19 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         }
     }
 
-    private void moveCollidedEntity(Entity entity, AABB p_bb) {
-        AABB e_bb = entity.getBoundingBox();
+    private void moveCollidedEntity(Entity entity, AABB aabb) {
+        AABB boundingBox = entity.getBoundingBox();
         double dx = 0;
         double dy = 0;
         double dz = 0;
         switch (this.getDirection()) {
             default -> dy = 0;
-            case UP -> dy = p_bb.maxY - e_bb.minY;
-            case DOWN -> dy = p_bb.minY - e_bb.maxY;
-            case NORTH -> dz = p_bb.minZ - e_bb.maxZ;
-            case SOUTH -> dz = p_bb.maxZ - e_bb.minZ;
-            case WEST -> dx = p_bb.minX - e_bb.maxX;
-            case EAST -> dx = p_bb.maxX - e_bb.minX;
+            case UP -> dy = aabb.maxY - boundingBox.minY;
+            case DOWN -> dy = aabb.minY - boundingBox.maxY;
+            case NORTH -> dz = aabb.minZ - boundingBox.maxZ;
+            case SOUTH -> dz = aabb.maxZ - boundingBox.minZ;
+            case WEST -> dx = aabb.minX - boundingBox.maxX;
+            case EAST -> dx = aabb.maxX - boundingBox.minX;
         }
         entity.move(MoverType.PISTON, new Vec3(dx, dy, dz));
     }

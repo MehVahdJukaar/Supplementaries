@@ -127,7 +127,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         RenderType renderType = RenderType.entityTranslucent(resourceLocation);
 
-        StatueBlockTile.StatuePose pose = tile.pose;
+        StatueBlockTile.StatuePose pose = tile.getPose();
         ItemStack stack = tile.getDisplayedItem();
 
         if (CommonUtil.FESTIVITY.isHalloween()) {
@@ -155,7 +155,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         matrixStackIn.scale(0.5f, +0.499f, 0.5f);
         VertexConsumer buffer = bufferIn.getBuffer(renderType);
 
-        this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving, slim);
+        this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving(), slim);
         this.model.renderToBuffer(matrixStackIn, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStackIn.popPose();
         this.slim = false;
@@ -167,12 +167,12 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             case CANDLE:
                 matrixStackIn.scale(1f, -1f, -1f);
                 matrixStackIn.translate(-0.5, -0.6875, -0.3125);
-                blockRenderer.renderSingleBlock(tile.candle, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+                blockRenderer.renderSingleBlock(tile.hasCandle(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
                 break;
             default:
                 //holding
                 matrixStackIn.scale(-0.5f, -0.5f, 0.5f);
-                BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
+                BakedModel itemModel = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
 
                 if (pose == StatueBlockTile.StatuePose.SWORD) {
                     matrixStackIn.translate(-0.35, -1.0625, 0.0);
@@ -197,7 +197,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                     }
                 } else {
                     this.itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
-                            combinedOverlayIn, model);
+                            combinedOverlayIn, itemModel);
 
                 }
 

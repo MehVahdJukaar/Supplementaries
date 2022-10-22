@@ -32,11 +32,6 @@ public class StructureTempBlock extends Block implements EntityBlock {
         return new StructureTempBlockTile(pPos, pState);
     }
 
-    @Override
-    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-        return super.canBeReplaced(pState, pUseContext);
-    }
-
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {

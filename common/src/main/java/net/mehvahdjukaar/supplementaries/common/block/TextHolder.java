@@ -144,29 +144,25 @@ public class TextHolder implements IAntiqueTextProvider {
                     this.hasGlowingText = false;
                     success = true;
                 }
-                //else return InteractionResult.FAIL;
             } else if (item == ModRegistry.ANTIQUE_INK.get()) {
                 if (!this.hasAntiqueInk) {
                     level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     this.setAntiqueInk(true);
                     success = true;
                 }
-                //else return InteractionResult.FAIL;
             } else if (item == Items.GLOW_INK_SAC) {
                 if (!this.hasGlowingText) {
                     level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     this.hasGlowingText = true;
                     success = true;
                 }
-                //else return InteractionResult.FAIL;
             } else {
-                DyeColor color = ForgeHelper.getColor(stack);
-                if (color != null) {
-                    if (this.setTextColor(color)) {
+                DyeColor dyeColor = ForgeHelper.getColor(stack);
+                if (dyeColor != null) {
+                    if (this.setTextColor(dyeColor)) {
                         level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         success = true;
                     }
-                    //else return InteractionResult.FAIL;
                 }
             }
             if (success) {

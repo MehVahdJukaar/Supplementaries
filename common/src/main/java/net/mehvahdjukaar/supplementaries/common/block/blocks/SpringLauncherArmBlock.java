@@ -56,10 +56,12 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
         builder.add(FACING, EXTENDING);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }

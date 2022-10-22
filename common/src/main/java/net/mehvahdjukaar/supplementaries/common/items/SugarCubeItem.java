@@ -14,14 +14,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 public class SugarCubeItem extends BlockItem {
+
     public SugarCubeItem(Block block, Properties properties) {
         super(block, properties);
     }
 
-    @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
-    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {

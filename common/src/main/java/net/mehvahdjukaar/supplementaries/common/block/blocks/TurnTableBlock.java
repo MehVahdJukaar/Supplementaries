@@ -156,9 +156,9 @@ public class TurnTableBlock extends Block implements EntityBlock {
         if (!e.isOnGround()) return;
         if (state.getValue(POWER) != 0 && state.getValue(FACING) == Direction.UP) {
             float period = getPeriod(state) + 1;
-            float ANGLE_INCREMENT = 90f / period;
+            float angleIncrement = 90f / period;
 
-            float increment = state.getValue(INVERTED) ? ANGLE_INCREMENT : -1 * ANGLE_INCREMENT;
+            float increment = state.getValue(INVERTED) ? angleIncrement : -1 * angleIncrement;
             Vec3 origin = new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             Vec3 oldPos = e.position();
             Vec3 oldOffset = oldPos.subtract(origin);
@@ -192,8 +192,9 @@ public class TurnTableBlock extends Block implements EntityBlock {
 
                 if (e instanceof Cat cat && cat.isOrderedToSit() && !world.isClientSide) {
                     if (world.getBlockEntity(pos) instanceof TurnTableBlockTile tile) {
-                        if (tile.cat == 0) {
-                            tile.cat = 20 * 20;
+                        int catTimer = tile.getCatTimer();
+                        if (catTimer == 0) {
+                            tile.setCat();
                             world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModSounds.TOM.get(), SoundSource.BLOCKS, 0.85f, 1);
                         }
                     }

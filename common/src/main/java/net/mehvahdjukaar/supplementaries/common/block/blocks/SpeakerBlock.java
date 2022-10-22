@@ -139,7 +139,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
         if (eventID == 0) {
             Direction facing = state.getValue(FACING);
             world.addParticle(ModParticles.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
-                    pos.getZ() + 0.5 + facing.getStepZ() * 0.725, (double) world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+                    pos.getZ() + 0.5 + facing.getStepZ() * 0.725,  world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
             return true;
         }
         return super.triggerEvent(state, world, pos, eventID, eventParam);

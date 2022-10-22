@@ -132,12 +132,12 @@ public class SackItem extends BlockItem {
     }
 
     //TODO: add these
-    private void playRemoveOneSound(Entity p_186343_) {
-        p_186343_.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + p_186343_.getLevel().getRandom().nextFloat() * 0.4F);
+    private void playRemoveOneSound(Entity entity) {
+        entity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
-    private void playInsertSound(Entity p_186352_) {
-        p_186352_.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + p_186352_.getLevel().getRandom().nextFloat() * 0.4F);
+    private void playInsertSound(Entity entity) {
+        entity.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
 

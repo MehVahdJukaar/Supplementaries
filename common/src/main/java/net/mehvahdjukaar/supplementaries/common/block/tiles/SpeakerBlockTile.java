@@ -121,11 +121,11 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             String name = this.getName().getString();
             String s = "";
             if (!name.isEmpty() && !name.equals("\"\"")) s += "Speaker Block: ";
-            Component message = Component.literal(s + this.message)
+            Component component = Component.literal(s + this.message)
                     .withStyle(style);
 
             NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
-                    this.volume, new ClientBoundPlaySpeakerMessagePacket(message, this.mode));
+                    this.volume, new ClientBoundPlaySpeakerMessagePacket(component, this.mode));
 
         }
     }
