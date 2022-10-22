@@ -91,7 +91,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
             if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
 
-                tile.sheared = !tile.sheared;
+                tile.toggleShearing();
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 if (level.isClientSide) {

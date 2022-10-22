@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -44,7 +45,6 @@ public class ClientEvents {
             if (ClientConfigs.cached.TOOLTIP_HINTS && event.getFlags().isAdvanced()) {
                 ItemsOverrideHandler.addOverrideTooltips(event);
             }
-            IForgeEntity
 
             if (CompatHandler.quark) {
                 QuarkTooltipPlugin.onItemTooltipEvent(event);

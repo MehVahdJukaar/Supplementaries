@@ -34,7 +34,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     public float prevYaw = 0;
     public int face = 0;
 
-    public boolean sheared = false;
+    private boolean sheared = false;
     //client
     public Pair<GlobeModel, @Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
 
@@ -49,11 +49,18 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public void setCustomName(Component name) {
         this.customName = name;
-        this.updateTexture();
+        this.updateRenderData();
     }
 
-    private void updateTexture() {
-        if (this.hasCustomName()) {
+    public void toggleShearing() {
+        this.sheared = !this.sheared;
+        this.updateRenderData();
+    }
+
+    private void updateRenderData() {
+        if (this.sheared) {
+            this.renderData = Pair.of(GlobeModel.SHEARED, null);
+        } else if (this.hasCustomName()) {
             this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
         } else this.renderData = Pair.of(GlobeModel.GLOBE, null);
     }
