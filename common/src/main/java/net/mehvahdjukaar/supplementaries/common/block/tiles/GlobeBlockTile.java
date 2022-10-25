@@ -162,6 +162,15 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         return this.getBlockState().getValue(GlobeBlock.FACING);
     }
 
+    public boolean isSpinningVeryFast() {
+        return yaw > 1500;
+    }
+
+    public int getSignalPower() {
+        if (this.yaw != 0) return 15;
+        else return this.face / -90 + 1;
+    }
+
 
     //TODO: improve. this is a mess
     public enum GlobeType {

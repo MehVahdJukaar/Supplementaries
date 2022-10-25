@@ -96,7 +96,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
             if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
 
-                tile.sheared = !tile.sheared;
+                tile.toggleShearing();
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 if (level.isClientSide) {
@@ -106,7 +106,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
             }
 
             if (!level.isClientSide) {
-                if (tile.yaw > 1500 && player instanceof ServerPlayer serverPlayer) {
+                if (tile.isSpinningVeryFast()  && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
                     if (advancement != null) {
                         if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
@@ -206,8 +206,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
-            if (tile.yaw != 0) return 15;
-            else return tile.face / -90 + 1;
+            return tile.getSignalPower();
         }
         return 0;
     }

@@ -37,8 +37,8 @@ public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<S
         matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
         matrixStackIn.mulPose(RotHlpr.X180);
         matrixStackIn.translate(-0.5, -0.5, -0.5);
-        matrixStackIn.translate(0, Mth.lerp(partialTicks, tile.prevOffset, tile.offset), 0);
-        boolean flag1 = tile.getExtending() == tile.age < 2;
+        matrixStackIn.translate(0, tile.getRenderOffset(partialTicks), 0);
+        boolean flag1 = tile.getExtending() == tile.getAge() < 2;
 
         BlockState state = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState().setValue(SpringLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
         //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());

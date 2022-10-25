@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
@@ -63,7 +64,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     }
 
     public double getRenderOffset(float partialTicks) {
-        return offset;
+        return Mth.lerp(partialTicks, this.prevOffset, this.offset);
     }
 
     //TODO: rewrite some of this old code
@@ -209,5 +210,10 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     */
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+    public void retractOnFallOn() {
+        this.age = 1;
+        this.offset = -0.5;
     }
 }

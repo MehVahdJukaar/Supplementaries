@@ -90,9 +90,8 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             if((entityIn instanceof LivingEntity) && !worldIn.isClientSide && fallDistance>(float) CommonConfigs.Blocks.LAUNCHER_HEIGHT.get()){
                 worldIn.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
-                if(worldIn.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile launcherArmBlockTile){
-                    launcherArmBlockTile.age = 1;
-                    launcherArmBlockTile.offset = -0.5;
+                if(worldIn.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile tile){
+                    tile.retractOnFallOn();
                 }
             }
             //this.bounceEntity(entityIn);
@@ -133,10 +132,12 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         builder.add(FACING, SHORT);
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
@@ -188,13 +189,6 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         }
     }
 
-    /**
-     * Update the provided state given the provided neighbor facing and neighbor
-     * state, returning a new state. For example, fences make their connections to
-     * the passed in state if possible, and wet concrete powder immediately returns
-     * its solidified counterpart. Note that this method should ideally consider
-     * only the specific face passed in.
-     */
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
                                           BlockPos facingPos) {
