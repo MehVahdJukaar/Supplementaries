@@ -69,7 +69,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         VertexConsumer builder = ModMaterials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 
-        float dh = Mth.lerp(partialTicks, tile.prevHeight, tile.height);
+        float dh = tile.getHeight(partialTicks);
 
         matrixStackIn.pushPose();
 

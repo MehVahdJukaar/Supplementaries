@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
-import net.mehvahdjukaar.supplementaries.common.world.data.GlobeDataGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -14,7 +13,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class GlobeTextureManager {
 

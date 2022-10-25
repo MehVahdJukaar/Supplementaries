@@ -20,7 +20,7 @@ public abstract class CapturedMobInstance<T extends Entity> {
     protected final float containerWidth;
     protected final float containerHeight;
 
-    public CapturedMobInstance(T entity,float width, float height) {
+    protected CapturedMobInstance(T entity,float width, float height) {
         this.entity = entity;
         this.containerWidth = width;
         this.containerHeight = height;

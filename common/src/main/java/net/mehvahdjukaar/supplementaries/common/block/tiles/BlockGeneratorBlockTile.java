@@ -43,7 +43,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
     private boolean firstTick = true;
-    private AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = null;
+    private AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = new AtomicReference<>(null);
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -70,7 +70,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         }
 
         try {
-            if (tile.threadResult != null) {
+            if (tile.threadResult.get() != null) {
                 RoadSignFeature.applyPostProcess((ServerLevel) level, pos, tile.threadResult.get());
             }
         } catch (Exception exception) {

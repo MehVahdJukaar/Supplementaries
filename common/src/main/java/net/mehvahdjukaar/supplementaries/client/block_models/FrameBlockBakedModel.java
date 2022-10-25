@@ -54,7 +54,6 @@ public class FrameBlockBakedModel implements CustomBakedModel {
             } catch (Exception ignored) {
             }
 
-            //IBakedModel overlay = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getBlockModel(state.setValue(FrameBlock.TILE,2));
             try {
                 quads.addAll(overlay.getQuads(state, side, rand));
             } catch (Exception ignored) {

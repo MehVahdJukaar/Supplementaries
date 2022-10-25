@@ -441,6 +441,7 @@ public class CreateCompatImpl {
 
     private static class TextHolderDisplayTarget extends DisplayTarget {
 
+        @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
             BlockEntity te = context.getTargetTE();
             if (te instanceof ITextHolderProvider th) {
@@ -480,6 +481,7 @@ public class CreateCompatImpl {
 
     private static class SpeakerBlockDisplayTarget extends DisplayTarget {
 
+        @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
             BlockEntity te = context.getTargetTE();
             if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
@@ -525,6 +527,7 @@ public class CreateCompatImpl {
 
     private static class BlackboardDisplayTarget extends DisplayTarget {
 
+        @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
             BlockEntity te = context.getTargetTE();
             if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
@@ -541,7 +544,7 @@ public class CreateCompatImpl {
         }
 
 
-        private final Pattern PATTERN = Pattern.compile("\\((\\d\\d?),(\\d\\d?)\\)->(\\S+)");
+        private static final Pattern PATTERN = Pattern.compile("\\((\\d\\d?),(\\d\\d?)\\)->(\\S+)");
 
         private boolean parseText(String string, BlackboardBlockTile tile) {
             var m = PATTERN.matcher(string);
@@ -610,18 +613,22 @@ public class CreateCompatImpl {
             return EMPTY_TIME;
         }
 
+        @Override
         protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
             return "Instant";
         }
 
+        @Override
         protected FlapDisplaySection createSectionForValue(DisplayLinkContext context, int size) {
             return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
         }
 
+        @Override
         protected String getTranslationKey() {
             return "time_of_day";
         }
 
+        @Override
         @OnlyIn(Dist.CLIENT)
         public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
             super.initConfigurationWidgets(context, builder, isFirstLine);
@@ -636,6 +643,7 @@ public class CreateCompatImpl {
             }
         }
 
+        @Override
         protected boolean allowsLabeling(DisplayLinkContext context) {
             return true;
         }
@@ -645,6 +653,7 @@ public class CreateCompatImpl {
     private static class GlobeDisplaySource extends SingleLineDisplaySource {
         public static final MutableComponent EMPTY = Components.literal("--,--");
 
+        @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             if (context.getSourceTE() instanceof GlobeBlockTile tile) {
                 BlockPos pos = context.getSourcePos();
@@ -654,18 +663,22 @@ public class CreateCompatImpl {
             }
         }
 
+        @Override
         protected boolean allowsLabeling(DisplayLinkContext context) {
             return true;
         }
 
+        @Override
         protected String getFlapDisplayLayoutName(DisplayLinkContext context) {
             return "Instant";
         }
 
+        @Override
         protected FlapDisplaySection createSectionForValue(DisplayLinkContext context, int size) {
             return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
         }
 
+        @Override
         protected String getTranslationKey() {
             return "world_position";
         }
@@ -699,6 +712,7 @@ public class CreateCompatImpl {
             return new FlapDisplaySection((float) size * 7.0F, "instant", false, false);
         }
 
+        @Override
         protected String getTranslationKey() {
             return "notice_board";
         }
@@ -785,6 +799,7 @@ public class CreateCompatImpl {
             }
         }
 
+        @Override
         protected boolean allowsLabeling(DisplayLinkContext context) {
             return true;
         }

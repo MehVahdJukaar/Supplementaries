@@ -42,17 +42,29 @@ public class BellowsBlockTile extends BlockEntity {
 
     private static final float MAX_COMPRESSION = 2 / 16f;//0.09375f;
 
-    public float height = 0;
-    public float prevHeight = 0;
-    public int manualPress = 0;
+    private float height = 0;
+    private float prevHeight = 0;
+    private int manualPress = 0;
     private long startTime = 0;
-    public boolean isPressed = false;
+    private boolean isPressed = false;
 
     //for sounds
     private boolean lastBlowing = false;
 
     public BellowsBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BELLOWS_TILE.get(), pos, state);
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getHeight(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevHeight, this.height);
+    }
+
+    public void setManualPress(){
+        manualPress = 10;
     }
 
     //@Override

@@ -47,7 +47,6 @@ public class FrameBlockTile extends MimicBlockTile {
 
     @Override
     public boolean setHeldBlock(BlockState state) {
-        //int oldLight = this.getLightValue();
         this.mimic = state;
 
         if (this.level instanceof ServerLevel) {

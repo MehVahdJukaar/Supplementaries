@@ -121,7 +121,6 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
             File exportPath = new File(folder, data.getOwners().get(0).toString().replace(":","_")+ ".json");
             try (FileWriter writer = new FileWriter(exportPath)) {
                 var j = DataDefinedCatchableMob.CODEC.encodeStart(JsonOps.INSTANCE, data);
-                JsonWriter w = new JsonWriter(writer);
 
                 CapturedMobHandler.GSON.toJson(sortJson(j.result().get().getAsJsonObject()), writer);
             }

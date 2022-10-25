@@ -4,9 +4,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -16,10 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ComposterBlock;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -52,6 +50,26 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
     }
 
     public record BlackboardTooltip(long[] packed) implements TooltipComponent {
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (BlackboardTooltip) obj;
+            return Arrays.equals(this.packed, that.packed);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(List.of(packed));
+        }
+
+        @Override
+        public String toString() {
+            return "BlackboardTooltip[" +
+                    "packed=" + Arrays.toString(packed) + ']';
+        }
+
 
     }
 }

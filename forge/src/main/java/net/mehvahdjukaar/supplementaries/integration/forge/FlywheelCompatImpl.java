@@ -65,7 +65,7 @@ public class FlywheelCompatImpl {
         @Override
         public void beginFrame() {
 
-            float dh = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevHeight, blockEntity.height);
+            float dh = blockEntity.getHeight(AnimationTickHolder.getPartialTicks());
 
             this.stack.pushPose();
 

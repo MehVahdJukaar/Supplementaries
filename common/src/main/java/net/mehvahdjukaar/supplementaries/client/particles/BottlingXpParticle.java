@@ -65,6 +65,7 @@ public class BottlingXpParticle extends TextureSheetParticle {
         return j | k << 16;
     }*/
 
+    @Override
     public void tick() {
         this.xo = this.x;
         this.yo = this.y;

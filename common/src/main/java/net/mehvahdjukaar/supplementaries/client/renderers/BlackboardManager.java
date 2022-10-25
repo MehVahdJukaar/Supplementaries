@@ -5,9 +5,11 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -18,10 +20,14 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -33,7 +39,9 @@ public class BlackboardManager {
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
                 TextureInstance value = (TextureInstance) i.getValue();
-                if (value != null) value.close();
+                if (value != null) {
+                    RenderSystem.recordRenderCall(value::close);
+                }
             })
             .build(new CacheLoader<>() {
                 @Override
@@ -150,7 +158,7 @@ public class BlackboardManager {
 
         @Nonnull
         public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
-            return quadsCache.computeIfAbsent(dir, p-> modelFactory.apply(pixels));
+            return quadsCache.computeIfAbsent(dir, p -> modelFactory.apply(pixels));
         }
 
         @Nonnull

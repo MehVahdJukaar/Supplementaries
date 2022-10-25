@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CatSitOnBlockGoal.class)
 public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
 
-    public CatSitOnBlockGoalMixin(PathfinderMob creature, double speedIn, int length) {
+    protected CatSitOnBlockGoalMixin(PathfinderMob creature, double speedIn, int length) {
         super(creature, speedIn, length);
     }
 

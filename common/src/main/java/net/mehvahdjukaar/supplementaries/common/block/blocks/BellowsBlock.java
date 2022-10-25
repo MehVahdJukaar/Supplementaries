@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -68,7 +67,7 @@ public class BellowsBlock extends Block implements EntityBlock {
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
         if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
-            float height = tile.height;
+            float height = tile.getHeight();
             //3 digit
             height = (float) (Math.round(height * 1000.0) / 1000.0);
 
@@ -165,10 +164,10 @@ public class BellowsBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if(state.getValue(POWER)==0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile){
-            tile.manualPress = 10;
+        if (state.getValue(POWER) == 0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
+            tile.setManualPress();
             level.playSound(null, pos,
-                   ModSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 0.1f, 1.5f);
+                    ModSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 0.1f, 1.5f);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return super.use(state, level, pos, player, hand, hit);

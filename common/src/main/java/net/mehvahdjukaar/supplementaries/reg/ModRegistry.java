@@ -962,8 +962,10 @@ public class ModRegistry {
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
-            BlockBehaviour.Properties.copy(Blocks.ROSE_BUSH)
+            BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT)
+                    .noCollission()
                     .randomTicks()
+                    .offsetType(BlockBehaviour.OffsetType.NONE)
                     .instabreak()
                     .sound(SoundType.CROP))
     );

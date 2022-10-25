@@ -23,7 +23,7 @@ public class GlobeData extends SavedData {
     //generate new from seed
     public GlobeData(long seed) {
         this.seed = seed;
-        this.globePixels = GlobeDataGenerator.generate(this.seed);
+        this.globePixels = GlobeTextureGenerator.generate(this.seed);
     }
 
     //from tag

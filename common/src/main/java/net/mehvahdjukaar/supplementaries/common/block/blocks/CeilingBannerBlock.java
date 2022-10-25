@@ -77,10 +77,11 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
         return state.getValue(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
     }
 
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         if (context.getClickedFace() == Direction.DOWN) {
             BlockState blockstate = this.defaultBlockState();
@@ -96,14 +97,17 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         return null;
     }
 
+    @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, ATTACHED);
     }

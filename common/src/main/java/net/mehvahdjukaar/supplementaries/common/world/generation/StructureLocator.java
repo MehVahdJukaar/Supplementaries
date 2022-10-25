@@ -36,23 +36,23 @@ public class StructureLocator {
     }
 
     @Nullable
-    static public Pair<BlockPos, Holder<Structure>> findNearestRandomMapFeature(
+    public static Pair<BlockPos, Holder<Structure>> findNearestRandomMapFeature(
             ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated) {
         var found = findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, 1, false);
 
-        if (found.size() > 0) return found.get(0);
+        if (!found.isEmpty()) return found.get(0);
         return null;
     }
 
-    static public List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
+    public static List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
             ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated, int requiredCount) {
         return findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, requiredCount, false);
     }
 
 
-    static public List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
+    public static List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
             ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
 
@@ -89,7 +89,7 @@ public class StructureLocator {
 
         List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>> list = new ArrayList<>(reachableTargetsMap.size());
 
-        int maxSpacing = 0;
+        int maxSpacing = 1;
 
         StructureManager structuremanager = level.structureManager();
 
@@ -161,10 +161,11 @@ public class StructureLocator {
 
                 //checks this first structure batch
 
-                for (Vec2i vec2i : possiblePositions.keySet()) {
+                for (var e : possiblePositions.entrySet()) {
+                    var vec2i = e.getKey();
                     //check each chunkpos one by one
                     ChunkPos chunkPos = new ChunkPos(vec2i.x() + chunkX, vec2i.y() + chunkZ);
-                    var structuresThatCanSpawnAtChunkPos = possiblePositions.get(vec2i);
+                    var structuresThatCanSpawnAtChunkPos = e.getValue();
                     for (var pp : structuresThatCanSpawnAtChunkPos) {
                         foundStructures.addAll(getStructuresAtChunkPos(pp.getSecond(), level, manager, newlyGenerated, pp.getFirst(), chunkPos));
                     }
