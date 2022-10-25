@@ -45,13 +45,14 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         return this.name != null ? this.name : Component.translatable("block.minecraft.banner");
     }
 
+    @Override
     @Nullable
     public Component getCustomName() {
         return this.name;
     }
 
-    public void setCustomName(Component p_213136_1_) {
-        this.name = p_213136_1_;
+    public void setCustomName(Component component) {
+        this.name = component;
     }
 
     @Override
@@ -83,6 +84,7 @@ public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
         this.patterns = null;
     }
 
+    @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);

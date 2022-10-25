@@ -136,15 +136,18 @@ public class BlackboardBakedModel implements CustomBakedModel {
     public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
                                             TextureAtlasSprite sprite, int color, Transformation transform,
                                             boolean emissive) {
-        Vector3f normal = new Vector3f(0, 0, -1);
+        Vector3f normal = new Vector3f(0, 0, 1);
 
         BakedQuadBuilder builder = BakedQuadBuilder.create();
 
+
+        //applied by the builder itself
         //RotHlpr.applyModelRotation(0, 0, -1, transform.getMatrix());
-        float tu = sprite.getWidth() * width;
-        float tv = sprite.getHeight() * height;
-        float u0 = x * 16;
-        float v0 = y * 16;
+        //unflips uv... It just works
+        float tu = (1 - (1 + sprite.getWidth() * width));
+        float tv = (1 - (1 + sprite.getHeight() * height));
+        float u0 = (1 - x) * 16;
+        float v0 = (1 - y) * 16;
 
         builder.setDirection(Direction.getNearest(normal.x(), normal.y(), normal.z()));
         builder.setSprite(sprite);

@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -39,6 +41,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import vectorwing.farmersdelight.common.Configuration;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
@@ -107,8 +111,10 @@ public class FarmersDelightCompatImpl {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
     public static void registerRenderLayers() {
-        //ItemBlockRenderTypes.setRenderLayer(ROPE_TOMATO.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ROPE_TOMATO.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(STICK_TOMATOES.get(), RenderType.cutout());
     }
 
 

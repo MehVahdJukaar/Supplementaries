@@ -52,7 +52,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UrnBlock extends FallingBlock implements EntityBlock {
@@ -203,7 +202,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         //needed for when it drops from falling block since it has a block entity
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
-            List<ItemStack> l = new ArrayList<>();
+            List<ItemStack> l = super.getDrops(state, builder); //of it's not treasure
             for (int i = 0; i < tile.getContainerSize(); ++i) {
                 l.add(tile.getItem(i));
             }
@@ -223,11 +222,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             ServerLevel serverlevel = lootContext.getLevel();
             LootTable loottable = serverlevel.getServer().getLootTables().get(resourcelocation);
             List<ItemStack> selectedLoot;
-            do{
+            do {
                 selectedLoot = loottable.getRandomItems(lootContext);
                 //remove disabled stuff. hacky
                 selectedLoot = selectedLoot.stream().filter(e -> e.getItem().getItemCategory() != null).toList();
-            }while(selectedLoot.isEmpty());
+            } while (selectedLoot.isEmpty());
             return selectedLoot;
         }
     }

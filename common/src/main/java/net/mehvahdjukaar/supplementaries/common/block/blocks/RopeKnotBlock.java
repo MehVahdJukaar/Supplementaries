@@ -63,7 +63,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
 
     protected static final Map<Direction, BooleanProperty> FENCE_PROPERTY = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((d) -> d.getKey().getAxis().isHorizontal()).collect(Util.toMap());
-    protected static final Map<Direction, EnumProperty<WallSide>> WALL_PROPERTY = ImmutableMap.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
+    protected static final Map<Direction, EnumProperty<WallSide>> WALL_PROPERTY = Map.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
 
     public RopeKnotBlock(Properties properties) {
         super(properties);
@@ -303,7 +303,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult p_225533_6_) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
             if (!world.isClientSide) {
                 if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
