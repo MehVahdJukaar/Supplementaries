@@ -84,11 +84,11 @@ public class BlackboardBakedModel implements CustomBakedModel {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
         if (data != ExtraModelData.EMPTY && state != null && side == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
-            boolean glow = state.getValue(BlackboardBlock.GLOWING);
             BlackboardKey key = data.get(BlackboardBlockTile.BLACKBOARD);
             if (key != null) {
                 var blackboard = BlackboardManager.getBlackboardInstance(key);
-                quads.addAll(blackboard.getOrCreateModel(dir, b -> generateQuads(b, this.modelTransform, glow)));
+                quads.addAll(blackboard.getOrCreateModel(dir, () ->
+                        generateQuads(blackboard.getPixels(), this.modelTransform, blackboard.isGlow())));
             }
         }
 

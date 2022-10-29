@@ -12,14 +12,19 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class BlackBoardGui extends Screen {
+
+    private static final MutableComponent CLEAR = Component.translatable("gui.supplementaries.blackboard.clear");
+    private static final MutableComponent EDIT = Component.translatable("gui.supplementaries.blackboard.edit");
+
     private final BlackboardBlockTile tileBoard;
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
     private BlackBoardGui(BlackboardBlockTile teBoard) {
-        super(Component.translatable("gui.supplementaries.blackboard.edit"));
+        super(EDIT);
         this.tileBoard = teBoard;
     }
 
@@ -93,7 +98,7 @@ public class BlackBoardGui extends Screen {
         }
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, Component.translatable("gui.supplementaries.blackboard.clear"), b -> this.clear()));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, CLEAR, b -> this.clear()));
         this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, button -> this.close()));
     }
 

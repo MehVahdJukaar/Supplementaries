@@ -21,9 +21,11 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.security.Provider;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlackboardManager {
 
@@ -45,7 +47,7 @@ public class BlackboardManager {
     public static TextureInstance getBlackboardInstance(BlackboardKey key) {
         TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values));
+            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values), key.glow);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
@@ -96,6 +98,7 @@ public class BlackboardManager {
         //models for each direction
         private final Map<Direction, List<BakedQuad>> quadsCache = new EnumMap<>(Direction.class);
         private final byte[][] pixels;
+        private final boolean glow;
         //he be lazy
         @Nullable
         private DynamicTexture texture;
@@ -104,9 +107,19 @@ public class BlackboardManager {
         @Nullable
         private ResourceLocation textureLocation;
 
-        private TextureInstance(byte[][] pixels) {
+        private TextureInstance(byte[][] pixels, boolean glow) {
             this.pixels = pixels;
+            this.glow = glow;
         }
+
+        public byte[][] getPixels() {
+            return pixels;
+        }
+
+        public boolean isGlow() {
+            return glow;
+        }
+
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
@@ -149,8 +162,8 @@ public class BlackboardManager {
         }
 
         @Nonnull
-        public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
-            return quadsCache.computeIfAbsent(dir, p-> modelFactory.apply(pixels));
+        public List<BakedQuad> getOrCreateModel(Direction dir, Supplier<List<BakedQuad>> modelFactory) {
+            return quadsCache.computeIfAbsent(dir, p-> modelFactory.get());
         }
 
         @Nonnull

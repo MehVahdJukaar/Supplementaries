@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "minecraft:wool_carpets"
+      "tag": "minecraft:carpets"
     },
     {
       "item": "supplementaries:soap"
