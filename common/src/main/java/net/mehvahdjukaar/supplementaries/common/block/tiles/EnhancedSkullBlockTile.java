@@ -58,6 +58,7 @@ public class EnhancedSkullBlockTile extends BlockEntity {
         return null;
     }
 
+    @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);

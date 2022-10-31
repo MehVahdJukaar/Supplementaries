@@ -22,14 +22,14 @@ public abstract class MineshaftLanternMixin extends StructurePiece {
     @Unique
     private static final BlockState torch = Blocks.WALL_TORCH.defaultBlockState();
 
-    protected MineshaftLanternMixin(StructurePieceType p_209994_, int p_209995_, BoundingBox p_209996_) {
-        super(p_209994_, p_209995_, p_209996_);
+    protected MineshaftLanternMixin(StructurePieceType structurePieceType, int i, BoundingBox boundingBox) {
+        super(structurePieceType, i, boundingBox);
     }
 
 
-    protected boolean isSupportingBox(BlockGetter p_189918_1_, BoundingBox p_189918_2_, int p_189918_3_, int p_189918_4_, int p_189918_5_, int p_189918_6_) {
-        for (int i = p_189918_3_; i <= p_189918_4_; ++i) {
-            if (this.getBlock(p_189918_1_, i, p_189918_5_ + 1, p_189918_6_, p_189918_2_).isAir()) {
+    protected boolean isSupportingBox(BlockGetter blockGetter, BoundingBox boundingBox, int i1, int i2, int i3, int i4) {
+        for (int i = i1; i <= i2; ++i) {
+            if (this.getBlock(blockGetter, i, i3 + 1, i4, boundingBox).isAir()) {
                 return false;
             }
         }

@@ -10,7 +10,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.NixieTubeDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
@@ -52,7 +51,6 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
@@ -66,7 +64,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -448,11 +445,11 @@ public class CreateCompatImpl {
                 var textHolder = th.getTextHolder();
                 boolean changed = false;
 
-                if (th instanceof HangingSignBlockTile hs && (hs.isEmpty() || hs.fakeItem)) {
+                if (th instanceof HangingSignBlockTile hs && (hs.isEmpty() || hs.hasFakeItem())) {
                     var source = context.getSourceTE();
                     ItemStack copyStack = getDisplayedItem(context, source, i -> !i.isEmpty());
                     hs.setItem(copyStack);
-                    hs.fakeItem = true;
+                    hs.setFakeItem(true);
                     changed = true;
                 } else {
                     for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {

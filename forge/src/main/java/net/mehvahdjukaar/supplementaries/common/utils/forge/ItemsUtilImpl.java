@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemsUtilImpl {
 
-    @javax.annotation.Nullable
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
         if (slot.mayPickup(player)) {
 
@@ -61,7 +60,6 @@ public class ItemsUtilImpl {
         return false;
     }
 
-    @Nullable
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
         if (slot.mayPickup(player)) {
 

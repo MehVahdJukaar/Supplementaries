@@ -36,7 +36,7 @@ public class HangingSignGui extends Screen {
     private HangingSignGui(HangingSignBlockTile teSign) {
         super(Component.translatable("sign.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.getTextHolder()::getLine).map(Component::getString).toArray(String[]::new);
 
     }
 
@@ -118,9 +118,9 @@ public class HangingSignGui extends Screen {
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (t) -> {
             this.cachedLines[this.editLine] = t;
-            this.tileSign.textHolder.setLine(this.editLine, Component.literal(t));
+            this.tileSign.getTextHolder().setLine(this.editLine, Component.literal(t));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
-                (s) -> this.minecraft.font.width(s) <= tileSign.textHolder.getMaxLineVisualWidth());
+                (s) -> this.minecraft.font.width(s) <= tileSign.getTextHolder().getMaxLineVisualWidth());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class HangingSignGui extends Screen {
         poseStack.translate(0, -0.010416667F, 0.0625 + 0.005);
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-        TextUtil.renderGuiText(this.tileSign.textHolder.getGUIRenderTextProperties(),
+        TextUtil.renderGuiText(this.tileSign.getTextHolder().getGUIRenderTextProperties(),
                 this.cachedLines, this.font, poseStack, bufferSource, this.textInputUtil.getCursorPos(),
                 this.textInputUtil.getSelectionPos(), this.editLine, blink, HangingSignBlockTileRenderer.LINE_SEPARATION);
 

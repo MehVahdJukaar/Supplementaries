@@ -44,22 +44,23 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.setColor(ClientConfigs.Particles.TURN_INITIAL_COLOR.get());
         this.setFadeColor(ClientConfigs.Particles.TURN_FADE_COLOR.get());
         this.setSpriteFromAge(sprite);
-        this.alpha = al;
+        this.alpha = AL;
         this.hasPhysics = false;
     }
 
-    private static final float al = 0.6f;
+    private static final float AL = 0.6f;
 
     @Override
     public void tick() {
         super.tick();
-        this.setAlpha(al - (this.age / (float) this.lifetime) * al * 0.7f);
+        this.setAlpha(AL - (this.age / (float) this.lifetime) * AL * 0.7f);
     }
 
+    @Override
     public void setFadeColor(int pRgb) {
-        this.fadeR = (float) ((pRgb & 16711680) >> 16) / 255.0F;
-        this.fadeG = (float) ((pRgb & '\uff00') >> 8) / 255.0F;
-        this.fadeB = (float) ((pRgb & 255)) / 255.0F;
+        this.fadeR = ((pRgb & 16711680) >> 16) / 255.0F;
+        this.fadeG = ((pRgb & '\uff00') >> 8) / 255.0F;
+        this.fadeB = (pRgb & 255) / 255.0F;
         super.setFadeColor(pRgb);
     }
 

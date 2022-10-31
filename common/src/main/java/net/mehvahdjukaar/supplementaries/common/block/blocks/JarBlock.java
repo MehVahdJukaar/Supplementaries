@@ -67,12 +67,13 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @PlatformOnly(PlatformOnly.FORGE)
+    @Nullable
     public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
         int color = getJarLiquidColor(pos, world);
         if (color == -1) return null;
-        float r = (float) ((color >> 16 & 255)) / 255.0F;
-        float g = (float) ((color >> 8 & 255)) / 255.0F;
-        float b = (float) ((color & 255)) / 255.0F;
+        float r =  (color >> 16 & 255) / 255.0F;
+        float g =  (color >> 8 & 255) / 255.0F;
+        float b =  (color & 255) / 255.0F;
         return new float[]{r, g, b};
     }
 
@@ -161,8 +162,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
+        return worldIn.getBlockEntity(pos) instanceof MenuProvider menuProvider ? menuProvider : null;
     }
 
     @Nullable

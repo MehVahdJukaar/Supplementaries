@@ -108,8 +108,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
+        return worldIn.getBlockEntity(pos) instanceof MenuProvider menuProvider ? menuProvider : null;
     }
 
     @Nullable
@@ -137,7 +136,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof HourGlassBlockTile tile) {
-            return tile.power;
+            return tile.getPower();
         } else
             return 0;
     }

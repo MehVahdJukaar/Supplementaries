@@ -39,7 +39,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -168,7 +167,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
                     itemstack.setHoverName(tile.getCustomName());
                 }
 
-                ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
+                ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
                 worldIn.addFreshEntity(itementity);
             } else {
@@ -245,11 +244,11 @@ public class SackBlock extends FallingBlock implements EntityBlock {
             for (int j = 0; j < slots; ++j) {
                 ItemStack itemstack = tile.getItem(j);
                 if (!itemstack.isEmpty()) {
-                    f += (float) itemstack.getCount() / (float) Math.min(tile.getMaxStackSize(), itemstack.getMaxStackSize());
+                    f += itemstack.getCount() / (float) Math.min(tile.getMaxStackSize(), itemstack.getMaxStackSize());
                     ++i;
                 }
             }
-            f = f / (float) slots;
+            f = f / slots;
             return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
         }
         return 0;
@@ -257,8 +256,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity blockEntity = worldIn.getBlockEntity(pos);
-        return blockEntity instanceof MenuProvider ? (MenuProvider) blockEntity : null;
+        return worldIn.getBlockEntity(pos) instanceof MenuProvider menuProvider ? menuProvider : null;
     }
 
     @Override

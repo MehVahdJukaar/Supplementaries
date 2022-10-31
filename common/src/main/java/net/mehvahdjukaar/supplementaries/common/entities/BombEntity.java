@@ -46,7 +46,7 @@ import java.util.function.Supplier;
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
 
     private final boolean hasFuse = CommonConfigs.Items.BOMB_FUSE.get() != 0;
-    private BombType type;
+    private BombType type = BombType.NORMAL;
     private boolean active = true;
     private int changeTimer = -1;
     private boolean superCharged = false;

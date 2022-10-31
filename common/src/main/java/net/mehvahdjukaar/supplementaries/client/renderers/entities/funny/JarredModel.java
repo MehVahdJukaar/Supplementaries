@@ -75,7 +75,7 @@ public class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
         matrixStack.scale(0.5f, 0.5f, 0.5f);
         ModelPart arm = this.getArm(handSide);
 
-        float f = 1F * (float) (handSide == HumanoidArm.RIGHT ? 1 : -1);
+        float f = 1F * (handSide == HumanoidArm.RIGHT ? 1 : -1);
         arm.x += f;
         arm.y -= 1;
         arm.z += 1;
@@ -84,12 +84,12 @@ public class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer p_225598_2_, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         matrixStack.pushPose();
         matrixStack.translate(0, this.riding ? -0.5 : 0.5f, 0);
 
-        super.renderToBuffer(matrixStack, p_225598_2_, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
+        super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         matrixStack.popPose();
     }
 

@@ -9,13 +9,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Contract;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class FluidsUtil {
 
     @ExpectPlatform
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
+                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, BooleanSupplier transferFunction) {
         throw new AssertionError();
     }
 

@@ -110,7 +110,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
 
     //debug
-    private static void saveFile(DataDefinedCatchableMob data) {
+    public static void saveFile(DataDefinedCatchableMob data) {
         File folder = PlatformHelper.getGamePath().resolve("test_cap").toFile();
 
         if (!folder.exists()) {

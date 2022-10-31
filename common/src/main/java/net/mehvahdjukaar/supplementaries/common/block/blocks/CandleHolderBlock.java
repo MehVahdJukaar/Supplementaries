@@ -128,8 +128,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     private static int lightLevel(BlockState state) {
         if (state.getValue(LIT)) {
             int candles = state.getValue(CANDLES);
-            return 7+candles*2;
-            //return 3 + candles * 3;
+            return 7 + candles * 2;
         }
         return 0;
     }
@@ -298,7 +297,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
         ((CandleHolderBlock) state.getBlock()).getParticleOffset(state).forEach(vec3 -> {
-            level.addParticle(ParticleTypes.SMOKE,  pos.getX() + vec3.x(),  pos.getY() + vec3.y(),  pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
+            level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
 }

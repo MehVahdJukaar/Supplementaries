@@ -36,6 +36,7 @@ public class FlagItem extends WoodBasedBlockItem implements IColored, ICustomIte
         return ((FlagBlock) this.getBlock()).getColor();
     }
 
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
     }

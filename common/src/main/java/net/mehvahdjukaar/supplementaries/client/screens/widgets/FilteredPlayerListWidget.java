@@ -105,8 +105,8 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int key) {
         this.isDragging = this.canScroll() &&
-                mouseX > (double) (x + SCROLLER_X) && mouseX < (double) (x + SCROLLER_X + SCROLLER_W) &&
-                mouseY > (double) (y) && mouseY <= (double) (y + HEIGHT + 1);
+                mouseX >  (x + SCROLLER_X) && mouseX <  (x + SCROLLER_X + SCROLLER_W) &&
+                mouseY >  (y) && mouseY <=  (y + HEIGHT + 1);
 
         if (this.isMouseOver(mouseX, mouseY)) {
             SimplePlayerEntry e = this.getEntryAtPosition(mouseX, mouseY);
@@ -123,8 +123,8 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
         if (this.isDragging) {
 
             int j = this.filtered.size() - ENTRY_PER_SCREEN;
-            float f = ((float) dy - (float) y - 13.5F) / ((float) (y1 - y) - SCROLLER_H);
-            f = f * (float) j + 0.5F;
+            float f = ((float) dy -  y - 13.5F) / ((float) (y1 - y) - SCROLLER_H);
+            f = f *  j + 0.5F;
             this.scrollOff = Mth.clamp((int) f, 0, j);
             return true;
         }
@@ -135,7 +135,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
     public boolean mouseScrolled(double a, double b, double c) {
         if (this.canScroll()) {
             int j = this.filtered.size() - ENTRY_PER_SCREEN;
-            this.scrollOff = (int) ((double) this.scrollOff - c);
+            this.scrollOff = (int) ( this.scrollOff - c);
             this.scrollOff = Mth.clamp(this.scrollOff, 0, j);
         }
 
@@ -159,15 +159,15 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseY >= (double) this.y && mouseY <= (double) this.y1 &&
-                mouseX >= (double) this.x && mouseX <= (double) this.x1;
+        return mouseY >=  this.y && mouseY <=  this.y1 &&
+                mouseX >=  this.x && mouseX <=  this.x1;
     }
 
     //call is mouse over before this
     @Nullable
     protected final SimplePlayerEntry getEntryAtPosition(double mouseX, double mouseY) {
         if (mouseX > x1) return null;
-        int rel = Mth.floor(mouseY - (double) this.y);
+        int rel = Mth.floor(mouseY -  this.y);
         int ind = this.scrollOff + rel / ITEM_HEIGHT;
         return rel >= 0 && ind < this.filtered.size() ? this.filtered.get(ind) : null;
     }
@@ -270,7 +270,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
             GuiComponent.blit(poseStack, i, j, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.disableBlend();
 
-            this.font.draw(poseStack, this.playerName, (float) k, (float) j, hovered ? -1 : 0);
+            this.font.draw(poseStack, this.playerName,  k,  j, hovered ? -1 : 0);
 
         }
 

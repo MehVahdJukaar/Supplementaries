@@ -102,13 +102,11 @@ public class ItemsUtil {
     }
 
 
-    @Nullable
     @ExpectPlatform
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
         throw new AssertionError();
     }
 
-    @Nullable
     @ExpectPlatform
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
         throw new AssertionError();

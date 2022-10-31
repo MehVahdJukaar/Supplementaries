@@ -51,7 +51,9 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -115,7 +117,6 @@ public class ClientRegistry {
         ClientPlatformHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
         ClientPlatformHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
         ClientPlatformHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
-
         ClientPlatformHelper.addAtlasTextureCallback(TextureAtlas.LOCATION_BLOCKS, e -> {
             ModTextures.getTexturesForBlockAtlas().forEach(e::addSprite);
         });

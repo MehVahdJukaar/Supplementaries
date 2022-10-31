@@ -148,9 +148,8 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof HangingFlowerPotBlockTile tile) {
-            Block b = tile.getHeldBlock().getBlock();
-            if (b instanceof FlowerPotBlock)
-                return Arrays.asList(new ItemStack(((FlowerPotBlock) b).getContent()), new ItemStack(Items.FLOWER_POT));
+            if (tile.getHeldBlock().getBlock() instanceof FlowerPotBlock flowerPotBlock)
+                return Arrays.asList(new ItemStack(flowerPotBlock.getContent()), new ItemStack(Items.FLOWER_POT));
         }
         return super.getDrops(state, builder);
     }

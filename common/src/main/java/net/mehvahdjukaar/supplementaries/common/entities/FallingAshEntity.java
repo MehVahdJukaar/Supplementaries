@@ -67,7 +67,7 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
             return;
         }
         BlockState blockState = this.getBlockState();
-        if (blockState.isAir()) {
+        if (!blockState.is(ModRegistry.ASH_BLOCK.get())) {
             this.discard();
         } else {
             Block block = blockState.getBlock();

@@ -39,8 +39,8 @@ public class RopeItem extends BlockItem {
                 }
 
                 ItemStack stack = context.getItemInHand();
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, stack);
                 }
 
                 SoundType soundtype = ModRegistry.ROPE.get().defaultBlockState().getSoundType();
@@ -48,8 +48,8 @@ public class RopeItem extends BlockItem {
                 if (player == null || !player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }

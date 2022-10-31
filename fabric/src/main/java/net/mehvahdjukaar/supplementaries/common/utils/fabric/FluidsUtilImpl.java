@@ -7,11 +7,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class FluidsUtilImpl {
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
+                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, BooleanSupplier transferFunction) {
         return false;
     }
 

@@ -182,7 +182,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
         }
 
 
-        if (villages.size() >= 1) {
+        if (!villages.isEmpty()) {
 
 
             RandomSource rand = level.random;

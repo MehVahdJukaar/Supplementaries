@@ -34,7 +34,7 @@ public class FodderBlock extends WaterBlock {
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2 + 2, 16.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2D + 2D, 16.0D));
     }
 
     public FodderBlock(Properties properties) {
@@ -51,7 +51,7 @@ public class FodderBlock extends WaterBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return SHAPE_BY_LAYER[state.getValue(LAYERS) - 1];
     }
 
@@ -102,6 +102,7 @@ public class FodderBlock extends WaterBlock {
         return super.updateShape(state, direction, facingState, world, currentPos, otherPos);
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());

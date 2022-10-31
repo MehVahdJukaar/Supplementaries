@@ -115,7 +115,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 

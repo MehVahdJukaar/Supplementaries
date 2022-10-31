@@ -34,6 +34,7 @@ public class FlagMarker extends NamedMapBlockMarker<ColoredDecoration> {
         return compoundnbt;
     }
 
+    @Override
     public void loadFromNBT(CompoundTag compound) {
         super.loadFromNBT(compound);
         this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);

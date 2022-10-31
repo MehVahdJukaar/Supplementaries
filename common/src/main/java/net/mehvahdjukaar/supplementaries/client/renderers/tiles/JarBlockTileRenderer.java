@@ -111,8 +111,9 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     matrixStackIn.pushPose();
                     matrixStackIn.translate(0.5, 0.0015 + LIQUID_DIMENSIONS.z(), 0.5);
                     VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
-                    TextureAtlasSprite sprite_s = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.SAND_TEXTURE);
-                    VertexUtils.addCube(builder, matrixStackIn, 0.99f * LIQUID_DIMENSIONS.x(), LIQUID_DIMENSIONS.y() / 12, sprite_s, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
+                    TextureAtlasSprite sandSprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.SAND_TEXTURE);
+                    VertexUtils.addCube(builder, matrixStackIn, 0.99f * LIQUID_DIMENSIONS.x(), LIQUID_DIMENSIONS.y() / 12,
+                            sandSprite, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                     matrixStackIn.popPose();
                 }
                 matrixStackIn.pushPose();

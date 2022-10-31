@@ -60,6 +60,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -314,12 +315,12 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         Block b = state.getBlock();
         if (predicate.test(state)) {
             return findAndRingBell(world, pos.above(), player, it + 1, predicate);
-        } else if (b instanceof BellBlock && it != 0) {
+        } else if (b instanceof BellBlock bellBlock  && it != 0) {
             //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
             BlockHitResult hit = new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                     state.getValue(BellBlock.FACING).getClockWise(), pos, true);
             //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
-            return ((BellBlock) b).onHit(world, state, hit, player, true);
+            return bellBlock.onHit(world, state, hit, player, true);
         }
         return false;
     }
@@ -410,7 +411,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         } else {
             //if (dist == 0) return false;
             BlockPos up = pos.above();
-            if (!(world.getBlockState(up).getBlock() == ropeBlock)) return false;
+            if ((world.getBlockState(up).getBlock() != ropeBlock)) return false;
             FluidState fromFluid = world.getFluidState(up);
             boolean water = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource());
             world.setBlockAndUpdate(up, water ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
@@ -451,8 +452,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                 Block block = placedState.getBlock();
                 if (block == state.getBlock()) {
                     block.setPlacedBy(world, context.getClickedPos(), placedState, player, stack);
-                    if (player instanceof ServerPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, context.getClickedPos(), stack);
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, context.getClickedPos(), stack);
                     }
                 }
             }

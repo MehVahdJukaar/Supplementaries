@@ -12,13 +12,14 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 @SuppressWarnings("ConstantConditions")
 public class FluidsUtilImpl {
 
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, Supplier<Boolean> transferFunction) {
+                                                     SoftFluidTank tempFluidHolder, boolean doTransfer, BooleanSupplier transferFunction) {
         IFluidHandler handlerBack = tileBack.getCapability(ForgeCapabilities.FLUID_HANDLER, dir).orElse(null);
         //TODO: fix create fluid int bug
         if (handlerBack != null && !Utils.getID(backBlock).getPath().equals("fluid_interface")) {
@@ -26,7 +27,7 @@ public class FluidsUtilImpl {
             if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
             ((SoftFluidTankImpl) tempFluidHolder).copy(handlerBack);
             tempFluidHolder.setCount(2);
-            if (doTransfer && transferFunction.get()) {
+            if (doTransfer && transferFunction.getAsBoolean()) {
                 handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
                 tileBack.setChanged();
                 return true;

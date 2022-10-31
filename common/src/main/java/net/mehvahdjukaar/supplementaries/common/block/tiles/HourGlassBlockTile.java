@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,10 +32,10 @@ import java.util.stream.IntStream;
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
 
 public class HourGlassBlockTile extends ItemDisplayTile {
-    public HourGlassSandType sandType = HourGlassSandType.DEFAULT;
-    public float progress = 0; //0-1 percentage of progress
-    public float prevProgress = 0;
-    public int power = 0;
+    private HourGlassSandType sandType = HourGlassSandType.DEFAULT;
+    private float progress = 0; //0-1 percentage of progress
+    private float prevProgress = 0;
+    private int power = 0;
     //client
     private TextureAtlasSprite cachedTexture = null;
 
@@ -53,6 +54,14 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         }
         this.prevProgress = p;
         this.progress = p;
+    }
+
+    public HourGlassSandType getSandType() {
+        return sandType;
+    }
+
+    public float getProgress(float partialTicks) {
+       return Mth.lerp(partialTicks, this.prevProgress, this.progress);
     }
 
     public TextureAtlasSprite getOrCreateSprite() {
@@ -139,6 +148,9 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         return this.getBlockState().getValue(HourGlassBlock.FACING);
     }
 
+    public int getPower() {
+        return power;
+    }
 
     public enum HourGlassSandType {
         DEFAULT(null, null, 0),

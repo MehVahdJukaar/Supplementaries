@@ -87,12 +87,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
     @Override
     public void render(HourGlassBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        if (tile.sandType.isEmpty()) return;
+        if (tile.getSandType().isEmpty()) return;
         TextureAtlasSprite sprite = tile.getOrCreateSprite();
 
-        float h = Mth.lerp(partialTicks, tile.prevProgress, tile.progress);
         Direction dir = tile.getBlockState().getValue(HourGlassBlock.FACING);
 
-        renderSand(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, sprite, h, dir);
+        renderSand(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, sprite, tile.getProgress(partialTicks), dir);
     }
 }

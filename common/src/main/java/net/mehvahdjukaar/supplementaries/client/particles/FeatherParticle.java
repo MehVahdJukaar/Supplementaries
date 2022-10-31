@@ -170,7 +170,5 @@ public class FeatherParticle extends TextureSheetParticle {
             particle.setSprite(spriteSet.get(i, 2));
             return particle;
         }
-
-
     }
 }

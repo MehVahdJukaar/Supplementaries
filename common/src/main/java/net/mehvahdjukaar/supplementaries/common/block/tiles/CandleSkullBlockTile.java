@@ -72,7 +72,6 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
                 BlockState state = this.getBlockState();
                 BlockState newState = BlockUtil.replaceProperty(this.candle, state, CandleBlock.CANDLES);
                 this.level.setBlockAndUpdate(this.worldPosition, newState);
-                //this.level.sendBlockUpdated(this.worldPosition, state,newState,2);
                 this.setChanged();
             }
             return true;

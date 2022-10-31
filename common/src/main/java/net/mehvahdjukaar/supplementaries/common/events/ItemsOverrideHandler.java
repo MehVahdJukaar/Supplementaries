@@ -249,7 +249,7 @@ public class ItemsOverrideHandler {
     }
 
 
-    private static abstract class BlockInteractedWithOverride {
+    private abstract static class BlockInteractedWithOverride {
 
         public abstract boolean isEnabled();
 
@@ -259,7 +259,7 @@ public class ItemsOverrideHandler {
                                                               ItemStack stack, BlockHitResult hit);
     }
 
-    private static abstract class ItemUseOverride {
+    private abstract static class ItemUseOverride {
 
         public abstract boolean isEnabled();
 
@@ -274,12 +274,13 @@ public class ItemsOverrideHandler {
                                                               ItemStack stack, BlockHitResult hit, boolean isRanged);
     }
 
-    private static abstract class ItemUseOnBlockOverride extends ItemUseOverride {
+    private abstract static class ItemUseOnBlockOverride extends ItemUseOverride {
 
         public boolean shouldBlockMapToItem(Item item) {
             return appliesToItem(item);
         }
 
+        @Override
         @Nullable
         public MutableComponent getTooltip() {
             return null;
@@ -813,8 +814,8 @@ public class ItemsOverrideHandler {
         if (!world.setBlock(pos, newState, 3)) {
             return InteractionResult.FAIL;
         }
-        if (player instanceof ServerPlayer) {
-            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, stack);
+        if (player instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, stack);
         }
         world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 

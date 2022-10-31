@@ -32,10 +32,10 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     public final WoodType woodType;
 
-    public boolean fakeItem = true;
+    private boolean fakeItem = true;
     private UUID owner = null;
 
-    public TextHolder textHolder;
+    private TextHolder textHolder;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
     static {
@@ -53,6 +53,14 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
         if (this.getBlockState().getBlock() instanceof HangingSignBlock block) {
             this.woodType = block.woodType;
         } else this.woodType = WoodTypeRegistry.OAK_TYPE;
+    }
+
+    public boolean hasFakeItem() {
+        return fakeItem;
+    }
+
+    public void setFakeItem(boolean fakeItem) {
+        this.fakeItem = fakeItem;
     }
 
     @Override

@@ -58,6 +58,7 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
         this.showProgressBar = b;
     }
 
+    @Override
     public void slotsChanged(Container pInventory) {
         this.tradeContainer.updateSellItem();
         super.slotsChanged(pInventory);
@@ -67,6 +68,7 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
         this.tradeContainer.setSelectionHint(i);
     }
 
+    @Override
     public boolean stillValid(Player pPlayer) {
         return this.trader.getTradingPlayer() == pPlayer;
     }
@@ -99,29 +101,31 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
         return this.canRestock;
     }
 
+    @Override
     public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
         return false;
     }
 
-    public ItemStack quickMoveStack(Player p_82846_1_, int p_82846_2_) {
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(p_82846_2_);
+        Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (p_82846_2_ == 2) {
+            if (index == 2) {
                 if (!this.moveItemStackTo(itemstack1, 3, 39, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onQuickCraft(itemstack1, itemstack);
                 this.playTradeSound();
-            } else if (p_82846_2_ != 0 && p_82846_2_ != 1) {
-                if (p_82846_2_ >= 3 && p_82846_2_ < 30) {
+            } else if (index != 0 && index != 1) {
+                if (index >= 3 && index < 30) {
                     if (!this.moveItemStackTo(itemstack1, 30, 39, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !this.moveItemStackTo(itemstack1, 3, 30, false)) {
+                } else if (index >= 30 && index < 39 && !this.moveItemStackTo(itemstack1, 3, 30, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemstack1, 3, 39, false)) {
@@ -138,7 +142,7 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(p_82846_1_, itemstack1);
+            slot.onTake(player, itemstack1);
         }
 
         return itemstack;
@@ -157,7 +161,7 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
         super.removed(pPlayer);
         this.trader.setTradingPlayer(null);
         if (!this.trader.isClientSide()) {
-            if (!pPlayer.isAlive() || pPlayer instanceof ServerPlayer && ((ServerPlayer) pPlayer).hasDisconnected()) {
+            if (!pPlayer.isAlive() || pPlayer instanceof ServerPlayer serverPlayer && serverPlayer.hasDisconnected()) {
                 ItemStack itemstack = this.tradeContainer.removeItemNoUpdate(0);
                 if (!itemstack.isEmpty()) {
                     pPlayer.drop(itemstack, false);

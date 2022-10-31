@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.SignAttachment;
@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -64,17 +63,17 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
             if (level.getBlockEntity(pos) instanceof HangingSignBlockTile tile && tile.isAccessibleBy(player)) {
                 ItemStack handItem = player.getItemInHand(handIn);
 
-                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile);
+                InteractionResult result = tile.getTextHolder().playerInteract(level, pos, player, handIn, tile);
                 if (result != InteractionResult.PASS) return result;
 
                 //place item
                 //TODO: fix left hand(shield)
                 if (handIn == InteractionHand.MAIN_HAND) {
                     //remove
-                    if (!tile.isEmpty() && !tile.fakeItem) {
+                    if (!tile.isEmpty() && !tile.hasFakeItem()) {
                         if (handItem.isEmpty()) {
                             ItemStack it = tile.removeItem();
-                            tile.fakeItem = false;
+                            tile.setFakeItem(false);
                             player.setItemInHand(handIn, it);
                             tile.setChanged();
 
@@ -88,7 +87,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                             ItemStack it = handItem.copy();
                             it.setCount(1);
                             tile.setItem(it);
-                            tile.fakeItem = false;
+                            tile.setFakeItem(false);
                             if (!player.isCreative()) {
                                 handItem.shrink(1);
                             }
@@ -210,7 +209,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile && !tile.fakeItem) {
+            if (world.getBlockEntity(pos) instanceof HangingSignBlockTile tile && !tile.hasFakeItem()) {
 
                 ItemStack itemstack = tile.getItem();
                 ItemEntity itementity = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemstack);
@@ -231,7 +230,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ?HangingSignBlockTile::clientTick : null);
+        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ? HangingSignBlockTile::clientTick : null);
     }
 
     @Override

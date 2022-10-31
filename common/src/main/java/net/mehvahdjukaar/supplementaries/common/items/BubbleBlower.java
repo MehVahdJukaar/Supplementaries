@@ -153,7 +153,6 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
 
-
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
@@ -168,6 +167,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     private void setDamage(ItemStack stack, int damage) {
         stack.getOrCreateTag().putInt("Damage", Math.max(0, damage));
     }
+
     @PlatformOnly(PlatformOnly.FABRIC)
     public int getMaxDamage(ItemStack stack) {
         return 250;
@@ -268,7 +268,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = (float) stack.getUseDuration() - ((float) entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = stack.getUseDuration() - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = 1;//getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {

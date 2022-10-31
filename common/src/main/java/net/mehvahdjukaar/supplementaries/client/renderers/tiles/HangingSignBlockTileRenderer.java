@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -54,8 +55,8 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
     }
 
     @Override
-    public void render(HangingSignBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
-                       int combinedOverlayIn) {
+    public void render(HangingSignBlockTile tile, float partialTicks, PoseStack poseStack,
+                       MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         poseStack.pushPose();
         BlockState state = tile.getBlockState();
@@ -85,6 +86,8 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
             poseStack.translate(0.5, 0.5 - 0.1875, 0.5);
             poseStack.mulPose(RotHlpr.YN90);
             // render item
+            TextHolder textHolder = tile.getTextHolder();
+
             if (!tile.isEmpty()) {
                 ItemStack stack = tile.getItem();
                 Item item = stack.getItem();
@@ -116,11 +119,11 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
 
                         VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
 
-                        float[] color = tile.textHolder.getColor().getTextureDiffuseColors();
+                        float[] color = textHolder.getColor().getTextureDiffuseColors();
                         float b = color[2];
                         float g = color[1];
                         float r = color[0];
-                        if (tile.textHolder.hasGlowingText()){
+                        if (textHolder.hasGlowingText()){
                             combinedLightIn = LightTexture.FULL_BRIGHT;
                         }
 
@@ -156,13 +159,13 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
             else if (lod.isNearMed()) {
                 poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-                var textProperties = tile.getTextHolder().getRenderTextProperties(combinedLightIn, lod::isVeryNear);
+                var textProperties = textHolder.getRenderTextProperties(combinedLightIn, lod::isVeryNear);
 
                 for (int v = 0; v < 2; v++) {
                     poseStack.pushPose();
                     poseStack.translate(0, -34, (0.0625 + 0.005) / 0.010416667F);
 
-                    TextUtils.renderTextHolderLines(tile.textHolder, LINE_SEPARATION, this.font, poseStack, bufferIn, textProperties);
+                    TextUtils.renderTextHolderLines(textHolder, LINE_SEPARATION, this.font, poseStack, bufferIn, textProperties);
 
                     poseStack.popPose();
                     poseStack.mulPose(RotHlpr.Y180);

@@ -41,7 +41,7 @@ public class FallingLiquidParticle extends TextureSheetParticle {
                 this.zd *= 0.98F;
                 BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (fluidstate.getType() == this.fluid && this.y < (double)((float)blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (fluidstate.getType() == this.fluid && this.y < (blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
             }

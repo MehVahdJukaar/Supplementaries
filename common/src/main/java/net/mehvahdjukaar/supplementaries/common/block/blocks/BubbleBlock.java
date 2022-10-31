@@ -53,7 +53,7 @@ public class BubbleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos p_60557_, CollisionContext collisionContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return Shapes.block();
     }
 
@@ -135,7 +135,7 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState state, BlockEntityType<T> tBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> tBlockEntityType) {
         return BlockUtil.getTicker(tBlockEntityType, ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTile::tick);
     }
 }

@@ -32,7 +32,7 @@ public class BucketHelper {
     //only use this to access the map
     @Nullable
     public static EntityType<?> getEntityTypeFromBucket(Item bucket) {
-        EntityType type = BUCKET_TO_MOB_MAP.get(bucket);
+        EntityType<?> type = BUCKET_TO_MOB_MAP.get(bucket);
         if (type != null) {
             return type;
         } else if (bucket instanceof MobBucketItem bucketItem) {

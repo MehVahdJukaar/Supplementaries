@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -32,7 +33,7 @@ public class FrameBraceBlock extends FrameBlock { //implements IRotationLockable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getClickedPos();
         Direction direction = context.getClickedFace();
-        return super.getStateForPlacement(context).setValue(FLIPPED, direction != Direction.DOWN && (direction == Direction.UP || !(context.getClickLocation().y - (double) blockpos.getY() > 0.5D)));
+        return super.getStateForPlacement(context).setValue(FLIPPED, direction != Direction.DOWN && (direction == Direction.UP || (context.getClickLocation().y - blockpos.getY() <= 0.5D)));
     }
 
     //quark rot lock

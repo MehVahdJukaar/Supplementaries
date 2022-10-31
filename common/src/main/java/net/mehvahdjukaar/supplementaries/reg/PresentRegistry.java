@@ -172,6 +172,7 @@ public class PresentRegistry {
             });
         }
 
+        @Override
         protected float getPower() {
             return 0.5F;
         }

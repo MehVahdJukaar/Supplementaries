@@ -43,6 +43,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
 
         //tile inventory
         this.inventory = Objects.requireNonNullElseGet(inventory, () -> new SimpleContainer(1) {
+            @Override
             public void setChanged() {
                 super.setChanged();
                 PresentContainerMenu.this.slotsChanged(this);

@@ -151,7 +151,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
     }
 
     @Override
-    protected void renderNameTag(AbstractClientPlayer player, Component name, PoseStack matrixStack, MultiBufferSource buffer, int p_225629_5_) {
+    protected void renderNameTag(AbstractClientPlayer player, Component name, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         double d0 = this.entityRenderDispatcher.distanceToSqr(player);
         matrixStack.pushPose();
         if (d0 < 100.0D) {
@@ -159,12 +159,12 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
             Objective objective = scoreboard.getDisplayObjective(2);
             if (objective != null) {
                 Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), objective);
-                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, p_225629_5_);
+                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, packedLight);
                 matrixStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
             }
         }
 
-        super.renderNameTag(player, name, matrixStack, buffer, p_225629_5_);
+        super.renderNameTag(player, name, matrixStack, buffer, packedLight);
         matrixStack.popPose();
     }
 

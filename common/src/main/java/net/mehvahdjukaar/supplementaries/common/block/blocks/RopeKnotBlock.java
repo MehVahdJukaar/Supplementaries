@@ -166,7 +166,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             VoxelShape v;
             VoxelShape c;
             int w = state.getValue(POST_TYPE).getWidth();
-            int o = (16 - w) / 2;
+            double o = (16 - w) / 2d;
             switch (state.getValue(AXIS)) {
                 default -> {
                     v = Block.box(o, 0D, o, o + w, 16D, o + w);
