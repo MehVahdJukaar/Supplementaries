@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +40,7 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
         if (cmp != null && cmp.contains("Pixels")) {
-            return Optional.of(new BlackboardTooltip(cmp.getLongArray("Pixels")));
+            return Optional.of(BlackboardManager.Key.of(cmp.getLongArray("Pixels")));
         }
         return Optional.empty();
     }

@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -49,7 +49,6 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     @Override
     public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-
         if (!CommonConfigs.Blocks.BLACKBOARD_MODE.get().canManualDraw()) return;
 
         Direction dir = tile.getDirection();
@@ -59,16 +58,6 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         BlockPos pos = tile.getBlockPos();
         if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;
 
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(RotHlpr.rot(dir));
-        matrixStackIn.mulPose(RotHlpr.XN90);
-        matrixStackIn.translate(-0.5, -0.5, -0.1875);
-
-
-        int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff';
-
         HitResult hit = mc.hitResult;
         if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
             BlockHitResult blockHit = (BlockHitResult) hit;
@@ -76,25 +65,31 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                 Player player = mc.player;
                 if (player != null) {
                     if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
-                        Pair<Integer, Integer> pair = BlackboardBlock.getHitSubPixel(blockHit);
+
+                        matrixStackIn.pushPose();
+                        matrixStackIn.translate(0.5, 0.5, 0.5);
+                        matrixStackIn.mulPose(RotHlpr.rot(dir));
+                        matrixStackIn.mulPose(RotHlpr.XN90);
+                        matrixStackIn.translate(-0.5, -0.5, -0.1875);
+
+                        int lu = combinedLightIn & '\uffff';
+                        int lv = combinedLightIn >> 16 & '\uffff';
+
+                        Vec2i pair = BlackboardBlock.getHitSubPixel(blockHit);
                         float p = 1 / 16f;
-                        float x = pair.getFirst() * p;
-                        float y = pair.getSecond() * p;
+                        float x = pair.x() * p;
+                        float y = pair.y() * p;
                         VertexConsumer builder2 = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferIn, RenderType::entityCutout);
                         matrixStackIn.pushPose();
 
                         matrixStackIn.translate(x, 1 - y - p, 0.001);
                         VertexUtils.addQuadSide(builder2, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
                         matrixStackIn.popPose();
+
+                        matrixStackIn.popPose();
                     }
                 }
             }
         }
-
-        // VertexConsumer builder = bufferIn.getBuffer(BlackboardTextureManager.INSTANCE.getBlackboardInstance(tile).getRenderType());
-        // RendererUtil.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
-
-        matrixStackIn.popPose();
-
     }
 }

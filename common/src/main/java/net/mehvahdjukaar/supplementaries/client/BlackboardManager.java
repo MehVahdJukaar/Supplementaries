@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,15 +30,17 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlackboardManager {
 
     private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
-    private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<Key, Blackboard> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
+                Blackboard value = (Blackboard) i.getValue();
+                if (value != null) value.close();
                 TextureInstance value = (TextureInstance) i.getValue();
                 if (value != null) {
                     RenderSystem.recordRenderCall(value::close);
@@ -45,35 +48,35 @@ public class BlackboardManager {
             })
             .build(new CacheLoader<>() {
                 @Override
-                public TextureInstance load(BlackboardKey key) {
+                public Blackboard load(Key key) {
                     return null;
                 }
             });
 
-    public static TextureInstance getBlackboardInstance(BlackboardKey key) {
-        TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
+    public static Blackboard getInstance(Key key) {
+        Blackboard textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values));
+            textureInstance = new Blackboard(BlackboardBlockTile.unpackPixels(key.values), key.glow);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    public static class BlackboardKey {
+    public static class Key implements TooltipComponent {
         private final long[] values;
         private final boolean glow;
 
-        BlackboardKey(long[] packed, boolean glowing) {
+        Key(long[] packed, boolean glowing) {
             values = packed;
             glow = glowing;
         }
 
-        public static BlackboardKey of(long[] packPixels, boolean glowing) {
-            return new BlackboardKey(packPixels, glowing);
+        public static Key of(long[] packPixels, boolean glowing) {
+            return new Key(packPixels, glowing);
         }
 
-        public static BlackboardKey of(long[] packPixels) {
-            return new BlackboardKey(packPixels, false);
+        public static Key of(long[] packPixels) {
+            return new Key(packPixels, false);
         }
 
         @Override
@@ -87,7 +90,7 @@ public class BlackboardManager {
             if (another.getClass() != this.getClass()) {
                 return false;
             }
-            BlackboardKey key = (BlackboardKey) another;
+            Key key = (Key) another;
             return Arrays.equals(this.values, key.values) && glow == key.glow;
         }
 
@@ -98,12 +101,13 @@ public class BlackboardManager {
     }
 
 
-    public static class TextureInstance implements AutoCloseable {
+    public static class Blackboard implements AutoCloseable {
         private static final int WIDTH = 16;
 
         //models for each direction
         private final Map<Direction, List<BakedQuad>> quadsCache = new EnumMap<>(Direction.class);
         private final byte[][] pixels;
+        private final boolean glow;
         //he be lazy
         @Nullable
         private DynamicTexture texture;
@@ -112,9 +116,19 @@ public class BlackboardManager {
         @Nullable
         private ResourceLocation textureLocation;
 
-        private TextureInstance(byte[][] pixels) {
+        private Blackboard(byte[][] pixels, boolean glow) {
             this.pixels = pixels;
+            this.glow = glow;
         }
+
+        public byte[][] getPixels() {
+            return pixels;
+        }
+
+        public boolean isGlow() {
+            return glow;
+        }
+
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
@@ -157,8 +171,8 @@ public class BlackboardManager {
         }
 
         @Nonnull
-        public List<BakedQuad> getOrCreateModel(Direction dir, Function<byte[][], List<BakedQuad>> modelFactory) {
-            return quadsCache.computeIfAbsent(dir, p -> modelFactory.apply(pixels));
+        public List<BakedQuad> getOrCreateModel(Direction dir, Supplier<List<BakedQuad>> modelFactory) {
+            return quadsCache.computeIfAbsent(dir, p-> modelFactory.get());
         }
 
         @Nonnull
@@ -186,7 +200,5 @@ public class BlackboardManager {
             if (textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
         }
     }
-
-
 }
 

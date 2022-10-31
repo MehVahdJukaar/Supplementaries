@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.renderers.BlackboardManager;
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
@@ -74,7 +74,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
-    public static final ModelDataKey<BlackboardManager.BlackboardKey> BLACKBOARD = new ModelDataKey<>(BlackboardManager.BlackboardKey.class);
+    public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
 
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 

@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -27,10 +28,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -113,7 +111,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
         };
     }
 
-    public static Pair<Integer, Integer> getHitSubPixel(BlockHitResult hit) {
+    public static Vec2i getHitSubPixel(BlockHitResult hit) {
         Vec3 v2 = hit.getLocation();
         Vec3 v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
@@ -122,7 +120,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
         int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
         if (v2.y < 0) y = 15 - y; //crappy logic
-        return new Pair<>(x, y);
+        return new Vec2i(x, y);
     }
 
     @Nullable
@@ -190,9 +188,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
             if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 
                 if (i instanceof SoapItem) return InteractionResult.PASS;
-                Pair<Integer, Integer> pair = getHitSubPixel(hit);
-                int x = pair.getFirst();
-                int y = pair.getSecond();
+                Vec2i pair = getHitSubPixel(hit);
+                int x = pair.x();
+                int y = pair.y();
 
                 DyeColor color = getStackChalkColor(stack);
                 if (color != null) {
