@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client;
 
 
 import com.google.common.cache.CacheBuilder;
@@ -7,6 +7,7 @@ import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -40,8 +41,6 @@ public class BlackboardManager {
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
                 Blackboard value = (Blackboard) i.getValue();
-                if (value != null) value.close();
-                TextureInstance value = (TextureInstance) i.getValue();
                 if (value != null) {
                     RenderSystem.recordRenderCall(value::close);
                 }
