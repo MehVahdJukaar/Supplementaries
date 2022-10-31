@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client;
 
 
 import com.google.common.cache.CacheBuilder;
@@ -18,56 +18,55 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.security.Provider;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlackboardManager {
 
     private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
-    private static final LoadingCache<BlackboardKey, TextureInstance> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<Key, Blackboard> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
-                TextureInstance value = (TextureInstance) i.getValue();
+                Blackboard value = (Blackboard) i.getValue();
                 if (value != null) value.close();
             })
             .build(new CacheLoader<>() {
                 @Override
-                public TextureInstance load(BlackboardKey key) {
+                public Blackboard load(Key key) {
                     return null;
                 }
             });
 
-    public static TextureInstance getBlackboardInstance(BlackboardKey key) {
-        TextureInstance textureInstance = TEXTURE_CACHE.getIfPresent(key);
+    public static Blackboard getInstance(Key key) {
+        Blackboard textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new TextureInstance(BlackboardBlockTile.unpackPixels(key.values), key.glow);
+            textureInstance = new Blackboard(BlackboardBlockTile.unpackPixels(key.values), key.glow);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    public static class BlackboardKey {
+    public static class Key implements TooltipComponent {
         private final long[] values;
         private final boolean glow;
 
-        BlackboardKey(long[] packed, boolean glowing) {
+        Key(long[] packed, boolean glowing) {
             values = packed;
             glow = glowing;
         }
 
-        public static BlackboardKey of(long[] packPixels, boolean glowing) {
-            return new BlackboardKey(packPixels, glowing);
+        public static Key of(long[] packPixels, boolean glowing) {
+            return new Key(packPixels, glowing);
         }
 
-        public static BlackboardKey of(long[] packPixels) {
-            return new BlackboardKey(packPixels, false);
+        public static Key of(long[] packPixels) {
+            return new Key(packPixels, false);
         }
 
         @Override
@@ -81,7 +80,7 @@ public class BlackboardManager {
             if (another.getClass() != this.getClass()) {
                 return false;
             }
-            BlackboardKey key = (BlackboardKey) another;
+            Key key = (Key) another;
             return Arrays.equals(this.values, key.values) && glow == key.glow;
         }
 
@@ -92,7 +91,7 @@ public class BlackboardManager {
     }
 
 
-    public static class TextureInstance implements AutoCloseable {
+    public static class Blackboard implements AutoCloseable {
         private static final int WIDTH = 16;
 
         //models for each direction
@@ -107,7 +106,7 @@ public class BlackboardManager {
         @Nullable
         private ResourceLocation textureLocation;
 
-        private TextureInstance(byte[][] pixels, boolean glow) {
+        private Blackboard(byte[][] pixels, boolean glow) {
             this.pixels = pixels;
             this.glow = glow;
         }
@@ -191,7 +190,5 @@ public class BlackboardManager {
             if (textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
         }
     }
-
-
 }
 

@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
+    private final AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = new AtomicReference<>(null);
     private boolean firstTick = true;
-    private AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -63,15 +64,15 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                     tile.threadResult.set( StructureLocator.findNearestMapFeatures(
                             world, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
                             false, 2));
-                } catch (Exception e) {
-                    tile.threadResult = null;
+                } catch (Exception ignored) {
                 }
             });
         }
 
         try {
-            if (tile.threadResult != null) {
-                RoadSignFeature.applyPostProcess((ServerLevel) level, pos, tile.threadResult.get());
+           var result =  tile.threadResult.get();
+            if (result != null) {
+                RoadSignFeature.applyPostProcess((ServerLevel) level, pos, result);
             }
         } catch (Exception exception) {
             tile.failAndRemove(level, pos, exception);

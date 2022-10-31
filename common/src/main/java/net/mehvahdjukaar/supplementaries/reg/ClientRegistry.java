@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
@@ -394,7 +395,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
-        event.register(BlackboardItem.BlackboardTooltip.class, BlackboardTooltipComponent::new);
+        event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
         event.register(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
         if (CompatHandler.quark) QuarkClientCompat.registerTooltipComponent(event);
     }
