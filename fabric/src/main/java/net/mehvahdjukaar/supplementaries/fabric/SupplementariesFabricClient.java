@@ -15,7 +15,7 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
 
-    public static void initClient() {
+    public static void clientSetup() {
 
         ClientRegistry.init();
         ClientRegistry.setup();

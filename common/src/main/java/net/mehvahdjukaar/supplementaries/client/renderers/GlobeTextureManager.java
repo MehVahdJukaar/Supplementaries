@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -13,6 +14,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class GlobeTextureManager {
 
@@ -81,6 +83,15 @@ public class GlobeTextureManager {
             this.texture.close();
             TEXTURE_MANAGER.release(textureLocation);
         }
+
+        private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
+            if (sepia) return SEPIA_COLORS.get(b);
+            var l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
+            if(l != null){
+               return l.get(b);
+            }
+            return 1;
+        }
     }
 
 
@@ -107,15 +118,14 @@ public class GlobeTextureManager {
                 DIMENSION_COLOR_MAP.put(new ResourceLocation(name.replace(".", ":")), l);
             }
         }
+        if(DIMENSION_COLOR_MAP.isEmpty()){
+            Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
+        }
 
         refreshTextures();
     }
 
-    private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
-        if (sepia) return SEPIA_COLORS.get(b);
-        return DIMENSION_COLOR_MAP.getOrDefault(dimension,
-                DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld"))).get(b);
-    }
+
 
 
 }

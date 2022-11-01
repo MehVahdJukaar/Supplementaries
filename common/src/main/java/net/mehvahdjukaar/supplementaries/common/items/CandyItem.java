@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CandyItem extends Item {
+    //TODO: use capability here
 
     private static final FoodProperties CANDIE_FOOD = (new FoodProperties.Builder())
             .nutrition(1).saturationMod(0.2F).fast().alwaysEat().build();
@@ -51,7 +52,7 @@ public class CandyItem extends Item {
     public static void increaseSweetTooth(Level world, LivingEntity entity, int amount) {
         if (!world.isClientSide && entity instanceof Player) {
             UUID id = entity.getUUID();
-            int i = SWEET_TOOTH_COUNTER.getOrDefault(id,0);
+            int i = SWEET_TOOTH_COUNTER.getOrDefault(id, 0);
             i += amount;
             if (i > EFFECT_THRESHOLD) {
                 entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 400));

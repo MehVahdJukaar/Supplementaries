@@ -3,6 +3,14 @@
   "values": [
     "#minecraft:village",
     {
+      "id": "hauntedharvest:abandoned_farm",
+      "required": false
+    },
+    {
+      "id": "harvestseason:abandoned_farm",
+      "required": false
+    },
+    {
       "id": "pokecube_legends:village",
       "required": false
     },

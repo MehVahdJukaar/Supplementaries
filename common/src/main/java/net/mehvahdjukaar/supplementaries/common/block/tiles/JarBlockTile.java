@@ -35,14 +35,14 @@ import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
 
-    private final int CAPACITY = CommonConfigs.Blocks.JAR_CAPACITY.get();
+    private final int capacity = CommonConfigs.Blocks.JAR_CAPACITY.get();
 
     public final MobContainer mobContainer;
     public final SoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state);
-        this.fluidHolder = SoftFluidTank.create(CAPACITY);
+        this.fluidHolder = SoftFluidTank.create(capacity);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
     }
@@ -200,7 +200,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public int getMaxStackSize() {
-        return this.CAPACITY;
+        return this.capacity;
     }
 
     @Override
