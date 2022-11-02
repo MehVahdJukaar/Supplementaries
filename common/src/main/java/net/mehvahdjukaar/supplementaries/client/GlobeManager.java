@@ -35,7 +35,7 @@ public class GlobeManager {
 
     private static TextureInstance getTextureInstance(Level world, boolean sepia) {
         return TEXTURE_CACHE.computeIfAbsent(getTextureId(world, sepia),
-                (i) -> new TextureInstance(world, sepia));
+                i -> new TextureInstance(world, sepia));
     }
 
     private static String getTextureId(Level level, boolean sepia) {

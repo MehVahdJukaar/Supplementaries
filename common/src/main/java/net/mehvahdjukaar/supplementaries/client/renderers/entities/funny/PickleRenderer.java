@@ -11,9 +11,8 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.ArrowLayer;
-import net.minecraft.client.renderer.entity.layers.BeeStingerLayer;
-import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
+import net.minecraft.client.renderer.entity.layers.*;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -42,8 +41,10 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         this.addLayer(new PickleModel.PickleArmor<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
 
         this.addLayer(new ArrowLayer<>(context, this));
+
         this.addLayer(new PickleModel.PickleElytra<>(this, context.getModelSet()));
         this.addLayer(new BeeStingerLayer<>(this));
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
     }
 
     protected float axisFacing = 0;

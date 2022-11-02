@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +47,6 @@ public class PicklePlayer {
             jarvis = !jarvis;
             // event.setCanceled(true);
             if (jarvis) {
-
                 Minecraft.getInstance().player.displayClientMessage(
                         Component.literal("I am Jarman"), true);
             }
