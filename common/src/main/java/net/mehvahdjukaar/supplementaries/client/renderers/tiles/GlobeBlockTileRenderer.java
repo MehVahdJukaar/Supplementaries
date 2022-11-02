@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -21,11 +21,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -133,7 +131,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            builder = buffer.getBuffer(GlobeTextureManager.getRenderType(level, isSepia));
+            builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
         } else {
             builder = buffer.getBuffer(RenderType.entityCutout(texture));
         }

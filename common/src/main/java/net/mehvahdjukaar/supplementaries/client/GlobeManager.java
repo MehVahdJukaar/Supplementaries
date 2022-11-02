@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.renderers;
+package net.mehvahdjukaar.supplementaries.client;
 
 
 import com.google.common.collect.Maps;
@@ -14,12 +14,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
-import java.util.function.Supplier;
 
-public class GlobeTextureManager {
+public class GlobeManager {
 
-    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
     private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
+
+    private static final HashMap<ResourceLocation, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
+    private static final List<Integer> SEPIA_COLORS = new ArrayList<>();
 
     public static void refreshTextures() {
         Level world = Minecraft.getInstance().level;
@@ -55,7 +56,8 @@ public class GlobeTextureManager {
             this.dimensionId = world.dimension().location();
             this.texture = new DynamicTexture(32, 16, false);
             this.updateTexture(world);
-            this.textureLocation = TEXTURE_MANAGER.register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
+            this.textureLocation = Minecraft.getInstance().getTextureManager()
+                    .register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
@@ -81,7 +83,7 @@ public class GlobeTextureManager {
         @Override
         public void close() {
             this.texture.close();
-            TEXTURE_MANAGER.release(textureLocation);
+            Minecraft.getInstance().getTextureManager().release(textureLocation);
         }
 
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
@@ -94,9 +96,6 @@ public class GlobeTextureManager {
         }
     }
 
-
-    private static final HashMap<ResourceLocation, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
-    private static final List<Integer> SEPIA_COLORS = new ArrayList<>();
 
     /**
      * Refresh colors and textures
@@ -124,9 +123,6 @@ public class GlobeTextureManager {
 
         refreshTextures();
     }
-
-
-
 
 }
 

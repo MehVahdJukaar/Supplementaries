@@ -15,8 +15,8 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -93,7 +93,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
         //need this here for reasons I forgot
         WallLanternTexturesManager.reloadTextures(manager);
-        GlobeTextureManager.refreshColorsAndTextures(manager);
+        GlobeManager.refreshColorsAndTextures(manager);
 
         //models are dynamic too as packs can change them
 

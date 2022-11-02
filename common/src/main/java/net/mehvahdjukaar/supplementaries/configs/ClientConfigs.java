@@ -4,10 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
