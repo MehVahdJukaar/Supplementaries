@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Objects;
+
 import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
 
 
@@ -27,12 +29,14 @@ public class RopeKnotBlockTile extends MimicBlockTile {
 
     public VoxelShape getCollisionShape() {
         if (collisionShape == null) this.recalculateShapes(this.getBlockState());
-        return collisionShape;
+        //might cause issue in worldgen so better be sure
+        return Objects.requireNonNullElseGet(collisionShape, Shapes::empty);
     }
 
     public VoxelShape getShape() {
         if (shape == null) this.recalculateShapes(this.getBlockState());
-        return shape;
+        //might cause issue in worldgen so better be sure
+        return Objects.requireNonNullElseGet(shape, Shapes::empty);
     }
 
     private static final VoxelShape DOWN_SHAPE = Block.box(6, 0, 6, 10, 6, 10);
@@ -65,7 +69,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
             this.collisionShape = c.optimize();
             this.shape = s.optimize();
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: " + e);
+            Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: ", e);
         }
     }
 

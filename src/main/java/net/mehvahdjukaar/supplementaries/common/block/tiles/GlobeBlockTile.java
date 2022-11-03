@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.mehvahdjukaar.supplementaries.setup.ModSounds;
@@ -59,7 +60,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private void updateRenderData() {
         if (this.sheared) {
-            this.renderData = Pair.of(GlobeModel.SHEARED, null);
+            this.renderData = Pair.of(GlobeModel.SHEARED, GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
             this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
         } else this.renderData = Pair.of(GlobeModel.GLOBE, null);

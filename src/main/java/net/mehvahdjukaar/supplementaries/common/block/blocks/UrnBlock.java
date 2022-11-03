@@ -29,6 +29,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -199,7 +200,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
-            List<ItemStack> l = new ArrayList<>();
+            List<ItemStack> l = super.getDrops(state, builder); //of it's not treasure
             for (int i = 0; i < tile.getContainerSize(); ++i) {
                 l.add(tile.getItem(i));
             }
