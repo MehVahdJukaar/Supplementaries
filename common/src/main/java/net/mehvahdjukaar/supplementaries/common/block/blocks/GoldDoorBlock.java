@@ -69,7 +69,7 @@ public class GoldDoorBlock extends DoorBlock {
 
     @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoor(Level world, BlockState state, BlockPos pos) {
-        if ((CompatHandler.quark && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
+        if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
             Direction direction = state.getValue(DoorBlock.FACING);
             boolean isOpen = state.getValue(DoorBlock.OPEN);
             DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);
@@ -86,7 +86,7 @@ public class GoldDoorBlock extends DoorBlock {
 
     @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand) {
-        if ((CompatHandler.quark && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.doubledoors)) {
+        if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
             Direction direction = state.getValue(DoorBlock.FACING);
             boolean isOpen = state.getValue(DoorBlock.OPEN);
             DoorHingeSide isMirrored = state.getValue(DoorBlock.HINGE);

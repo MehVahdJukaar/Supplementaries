@@ -36,7 +36,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class CrankBlock extends WaterBlock {
     protected static final VoxelShape SHAPE_DOWN = Block.box(2, 11, 2, 14, 16, 14);
@@ -87,16 +86,15 @@ public class CrankBlock extends WaterBlock {
                                  BlockHitResult hit) {
         if (worldIn.isClientSide) {
             Direction direction = state.getValue(FACING).getOpposite();
-            // Direction direction1 = getFacing(state).getOpposite();
-            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
-            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
-            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
+            double d0 = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
+            double d1 = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
+            double d2 = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
             return InteractionResult.SUCCESS;
         } else {
             boolean ccw = player.isShiftKeyDown();
             this.activate(state, worldIn, pos, ccw);
-            float f = 0.55f + state.getValue(POWER) * 0.04f ; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
+            float f = 0.55f + state.getValue(POWER) * 0.04f; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
             worldIn.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
             worldIn.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
 
@@ -158,10 +156,9 @@ public class CrankBlock extends WaterBlock {
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(POWER) > 0 && rand.nextFloat() < 0.25F) {
             Direction direction = stateIn.getValue(FACING).getOpposite();
-            // Direction direction1 = getFacing(state).getOpposite();
-            double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction.getStepX();
-            double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction.getStepY();
-            double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction.getStepZ();
+            double d0 = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
+            double d1 = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
+            double d2 = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
             worldIn.addParticle(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -208,6 +205,7 @@ public class CrankBlock extends WaterBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;

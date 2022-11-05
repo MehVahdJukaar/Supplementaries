@@ -15,7 +15,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -73,7 +72,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
             Block b = null;
             if (item instanceof BlockItem bi) {
                 b = bi.getBlock();
-            } else if (CompatHandler.dynamictrees) {
+            } else if (CompatHandler.DYNAMICTREES) {
                 b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
             }
             if (b == null) b = Blocks.AIR;

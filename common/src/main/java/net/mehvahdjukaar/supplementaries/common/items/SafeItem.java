@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.SlotAccess;
@@ -52,7 +51,7 @@ public class SafeItem extends BlockItem {
     @Override
     @SuppressWarnings("ConstantConditions")
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.quark && QuarkClientCompat.canRenderBlackboardTooltip()) {
+        if (CompatHandler.QUARK && QuarkClientCompat.canRenderBlackboardTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
                 return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, 27));

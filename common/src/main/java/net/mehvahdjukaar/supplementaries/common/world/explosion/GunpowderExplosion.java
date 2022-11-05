@@ -62,22 +62,22 @@ public class GunpowderExplosion extends Explosion {
      */
     @Override
     public void explode() {
-        int x = Mth.floor(this.x);
-        int y = Mth.floor(this.y);
-        int z = Mth.floor(this.z);
+        int px = Mth.floor(this.x);
+        int py = Mth.floor(this.y);
+        int pz = Mth.floor(this.z);
 
         this.radius *= 2.0F;
 
         ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
 
-        explodeBlock(x + 1, y, z);
-        explodeBlock(x - 1, y, z);
-        explodeBlock(x, y + 1, z);
-        explodeBlock(x, y - 1, z);
-        explodeBlock(x, y, z + 1);
-        explodeBlock(x, y, z - 1);
+        explodeBlock(px + 1, py, pz);
+        explodeBlock(px - 1, py, pz);
+        explodeBlock(px, py + 1, pz);
+        explodeBlock(px, py - 1, pz);
+        explodeBlock(px, py, pz + 1);
+        explodeBlock(px, py, pz - 1);
 
-        BlockPos pos = new BlockPos(x, y, z);
+        BlockPos pos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
         BlockState s = level.getBlockState(pos);
         if (s.getMaterial().isReplaceable() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
@@ -120,7 +120,7 @@ public class GunpowderExplosion extends Explosion {
                 lightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
             } else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
                     (state.getBlock() instanceof AbstractCandleBlock && !AbstractCandleBlock.isLit(state)) ||
-                    (CompatHandler.deco_blocks && DecoBlocksCompat.canLightBrazier(state))) {
+                    (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.canLightBrazier(state))) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
                 ILightable.FireSourceType.FLAMING_ARROW.play(level, pos);
             }
@@ -139,9 +139,9 @@ public class GunpowderExplosion extends Explosion {
 
             BlockPos immutable = blockpos.immutable();
             this.level.getProfiler().push("explosion_blocks");
-            if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel) {
+            if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel serverLevel) {
                 BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                LootContext.Builder builder = (new LootContext.Builder((ServerLevel) this.level)).withRandom(this.level.random)
+                LootContext.Builder builder = (new LootContext.Builder(serverLevel)).withRandom(this.level.random)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                         .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, null);
 
@@ -167,7 +167,7 @@ public class GunpowderExplosion extends Explosion {
         }
     }
 
-    private void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
+    private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
         int i = drops.size();
         for (int j = 0; j < i; ++j) {
             Pair<ItemStack, BlockPos> pair = drops.get(j);

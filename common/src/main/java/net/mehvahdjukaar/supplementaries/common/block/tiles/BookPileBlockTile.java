@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.common.effects.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class BookPileBlockTile extends ItemDisplayTile {
 
@@ -151,7 +149,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
         public VertexConsumer getBuilder(MultiBufferSource buffer) {
             if (this.isEnchanted && ClientConfigs.Tweaks.BOOK_GLINT.get()) {
                 VertexConsumer foilBuilder = null;
-                if (CompatHandler.enchantedbookredesign) {
+                if (CompatHandler.ENCHANTEDBOOKREDESIGN) {
                     foilBuilder = EnchantRedesignCompat.getBookColoredFoil(this.stack, buffer);
                 }
                 if (foilBuilder == null) {

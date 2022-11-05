@@ -27,8 +27,8 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
     @Shadow
     Container repairSlots;
 
-    protected GrindstoneMenuMixin(@Nullable MenuType<?> p_i50105_1_, int p_i50105_2_) {
-        super(p_i50105_1_, p_i50105_2_);
+    protected GrindstoneMenuMixin(@Nullable MenuType<?> menuType, int i) {
+        super(menuType, i);
     }
 
 

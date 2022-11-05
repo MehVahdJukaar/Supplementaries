@@ -112,14 +112,14 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
     }
 
     public static Vec2i getHitSubPixel(BlockHitResult hit) {
-        Vec3 v2 = hit.getLocation();
-        Vec3 v = v2.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
+        Vec3 pos = hit.getLocation();
+        Vec3 v = pos.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
         if (fx < 0) fx += 16;
         int x = Mth.clamp((int) fx, -15, 15);
 
         int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
-        if (v2.y < 0) y = 15 - y; //crappy logic
+        if (pos.y < 0) y = 15 - y; //crappy logic
         return new Vec2i(x, y);
     }
 

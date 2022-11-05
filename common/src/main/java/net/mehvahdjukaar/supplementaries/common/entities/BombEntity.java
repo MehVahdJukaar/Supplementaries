@@ -308,7 +308,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         boolean breaks = this.getOwner() instanceof Player ||
                 PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
 
-        if(CompatHandler.flan && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))){
+        if(CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))){
             breaks = false;
         }
 

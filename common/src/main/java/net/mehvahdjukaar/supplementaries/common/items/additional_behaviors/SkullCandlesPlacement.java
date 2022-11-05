@@ -28,7 +28,7 @@ public class SkullCandlesPlacement implements AdditionalPlacement {
 
     @Override
     public BlockState overrideGetPlacementState(BlockPlaceContext pContext) {
-        if (CompatHandler.torchslab) {
+        if (CompatHandler.TORCHSLAB) {
             double y = pContext.getClickLocation().y() % 1;
             if (y < 0.5) return null;
         }

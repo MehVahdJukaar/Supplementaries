@@ -36,7 +36,7 @@ public class ConfigButton extends Button {
 
     public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
         if (screen instanceof TitleScreen || screen instanceof PauseScreen) {
-            boolean isOnRight = CompatHandler.quark && QuarkClientCompat.shouldHaveButtonOnRight();
+            boolean isOnRight = CompatHandler.QUARK && QuarkClientCompat.shouldHaveButtonOnRight();
             List<String> targets = isOnRight ?
                     Arrays.asList(Component.translatable("menu.online").getString(), Component.translatable("fml.menu.modoptions").getString(), Component.translatable("menu.shareToLan").getString())
                     : Arrays.asList(Component.translatable("menu.options").getString(), Component.translatable("fml.menu.mods").getString());

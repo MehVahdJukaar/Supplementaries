@@ -442,7 +442,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean isEnabled() {
-            return CommonConfigs.Tweaks.PLACEABLE_STICKS.get() && CompatHandler.farmers_delight;
+            return CommonConfigs.Tweaks.PLACEABLE_STICKS.get() && CompatHandler.FARMERS_DELIGHT;
         }
 
         @Override
@@ -473,7 +473,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof MapItem || (CompatHandler.mapatlas && MapAtlasCompat.isAtlas(item));
+            return item instanceof MapItem || (CompatHandler.MAPATLAS && MapAtlasCompat.isAtlas(item));
         }
 
         @Override
@@ -778,7 +778,7 @@ public class ItemsOverrideHandler {
                         ItemStack copy = stack.copy();
 
                         Block b;
-                        if (CompatHandler.buzzier_bees && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
+                        if (CompatHandler.BUZZIER_BEES && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
                             b = ModRegistry.SKULL_CANDLE_SOUL.get();
                         } else b = ModRegistry.SKULL_CANDLE.get();
 

@@ -38,7 +38,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Optional;
 
@@ -132,7 +131,7 @@ public class FaucetBlockTile extends BlockEntity {
         }
         //TODO: move in compat class
         //honey pot
-        else if (CompatHandler.buzzier_bees && backState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
+        else if (CompatHandler.BUZZIER_BEES && backState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
             if (backState.getValue(ModBlockProperties.HONEY_LEVEL_POT) > 0) {
                 this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
                 if (doTransfer && tryFillingBlockBelow(level, pos)) {
@@ -144,7 +143,7 @@ public class FaucetBlockTile extends BlockEntity {
             return false;
         }
         //sap log
-        else if (CompatHandler.autumnity && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
+        else if (CompatHandler.AUTUMNITY && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
             this.prepareToTransferBottle(ModSoftFluids.SAP.get());
             if (doTransfer && tryFillingBlockBelow(level, pos)) {
                 Optional<Block> log = Registry.BLOCK.getOptional(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
@@ -162,7 +161,7 @@ public class FaucetBlockTile extends BlockEntity {
         else if (backBlock == Blocks.WATER_CAULDRON) {
             int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (waterLevel > 0) {
-                if (CompatHandler.inspirations) {
+                if (CompatHandler.INSPIRATIONS) {
                     return InspirationCompat.doCauldronStuff(level.getBlockEntity(behind), this.tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
                 }
 
@@ -285,7 +284,7 @@ public class FaucetBlockTile extends BlockEntity {
                 return false;
             }
             //honey pot
-            else if (CompatHandler.buzzier_bees && belowState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
+            else if (CompatHandler.BUZZIER_BEES && belowState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
                 int h = belowState.getValue(ModBlockProperties.HONEY_LEVEL_POT);
                 if (h < 4) {
                     level.setBlock(below, belowState.setValue(ModBlockProperties.HONEY_LEVEL_POT, h + 1), 3);
@@ -298,7 +297,7 @@ public class FaucetBlockTile extends BlockEntity {
             return true;
         } else if (belowBlock instanceof AbstractCauldronBlock) {
             //if any other mod adds a cauldron tile this will crash
-            if (CompatHandler.inspirations) {
+            if (CompatHandler.INSPIRATIONS) {
                 return InspirationCompat.tryAddFluid(level.getBlockEntity(below), this.tempFluidHolder);
             } else if (softFluid == VanillaSoftFluids.WATER.get()) {
                 //TODO: finish

@@ -24,9 +24,9 @@ public class FeatherParticle extends TextureSheetParticle {
         this.lifetime = 360 + this.random.nextInt(60);
         this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f);
         this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
-        this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
+        this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) *  0.008F;
         this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
-        this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.008F;
+        this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) *  0.008F;
         this.gravity = 0.007F;
     }
 
@@ -115,7 +115,7 @@ public class FeatherParticle extends TextureSheetParticle {
         }
     }
 
-
+    @Override
     public void render(VertexConsumer builder, Camera info, float partialTicks) {
         Vec3 vector3d = info.getPosition();
         float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vector3d.x());

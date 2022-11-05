@@ -60,7 +60,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -182,10 +181,10 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(facing), shouldConnectToDir(stateIn, currentPos, worldIn, facing));
 
 
-        if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.deco_blocks) {
+        if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.DECO_BLOCKS) {
             DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
-        if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+        if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
             FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
         }
 
@@ -211,7 +210,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isClientSide) {
             worldIn.scheduleTick(pos, this, 1);
-            if (CompatHandler.deco_blocks) {
+            if (CompatHandler.DECO_BLOCKS) {
                 BlockPos down = pos.below();
                 DecoBlocksCompat.tryConvertingRopeChandelier(worldIn.getBlockState(down), worldIn, down);
             }
@@ -486,7 +485,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             BlockEntity tile = world.getBlockEntity(fromPos);
             if (tile != null) {
                 //moves everything if quark is not enabled. bad :/ install quark guys
-                if (CompatHandler.quark && !QuarkCompat.canMoveBlockEntity(state)) {
+                if (CompatHandler.QUARK && !QuarkCompat.canMoveBlockEntity(state)) {
                     return false;
                 } else {
                     tile.setRemoved();

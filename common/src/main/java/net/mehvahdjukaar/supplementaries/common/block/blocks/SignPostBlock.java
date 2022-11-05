@@ -118,7 +118,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                             return InteractionResult.CONSUME;
                         }
                         return InteractionResult.FAIL;
-                    } else if (CompatHandler.framedblocks && tile.framed) {
+                    } else if (CompatHandler.FRAMEDBLOCKS && tile.framed) {
                         boolean success = FramedBlocksCompat.interactWithFramedSignPost(tile, player, handIn, itemstack, level, pos);
                         if (success) return InteractionResult.CONSUME;
                     } else if (item instanceof SignPostItem) {

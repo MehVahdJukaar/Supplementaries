@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.fluids.FluidContainerList;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -74,7 +72,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean isQuarkTome(Item i) {
-        return CompatHandler.quark && CompatObjects.TOME.get() == i;
+        return CompatHandler.QUARK && CompatObjects.TOME.get() == i;
     }
 
     @Override

@@ -2,13 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.GlobeBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -58,7 +56,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TRIGGERED, false).setValue(FACING, Direction.NORTH));
     }
 
-    public static void displayCurrentCoordinates(Level world, Player player, BlockPos pos) {
+    public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
         player.displayClientMessage(Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
     }
 
@@ -100,13 +98,13 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 if (level.isClientSide) {
-                   level.addDestroyBlockEffect(pos, state);
+                    level.addDestroyBlockEffect(pos, state);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
 
             if (!level.isClientSide) {
-                if (tile.isSpinningVeryFast()  && player instanceof ServerPlayer serverPlayer) {
+                if (tile.isSpinningVeryFast() && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
                     if (advancement != null) {
                         if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
@@ -165,8 +163,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        return !worldIn.isEmptyBlock(pos.below());
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return canSupportCenter(level, pos.below(), Direction.UP);
     }
 
     @Override
@@ -175,7 +173,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -204,8 +202,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
             return tile.getSignalPower();
         }
         return 0;

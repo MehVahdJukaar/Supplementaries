@@ -91,7 +91,7 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
 
-        if (CompatHandler.farmers_delight) {
+        if (CompatHandler.FARMERS_DELIGHT) {
             InteractionResult res = FarmersDelightCompat.onCakeInteract(state, pos, level, itemstack);
             if (res.consumesAction()) return res;
         }

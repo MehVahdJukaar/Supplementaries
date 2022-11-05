@@ -63,7 +63,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        if (!CompatHandler.quark || !QuarkClientCompat.canRenderQuarkTooltip()) {
+        if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (tag.contains("LootTable", 8)) {
@@ -122,7 +122,7 @@ public class SackItem extends BlockItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.quark && QuarkClientCompat.canRenderQuarkTooltip()) {
+        if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
                 return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));

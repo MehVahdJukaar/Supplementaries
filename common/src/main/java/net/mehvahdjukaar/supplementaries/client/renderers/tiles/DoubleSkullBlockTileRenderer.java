@@ -26,10 +26,7 @@ public class DoubleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer
 
             poseStack.translate(0, 0.5, 0);
 
-
             renderInner(upSkull, pPartialTicks, poseStack, buffer, pCombinedLight, pCombinedOverlay);
-
-           // blockRenderer.renderSingleBlock(upSkull, poseStack, buffer, pCombinedLight, pCombinedOverlay, ModelData.EMPTY);
 
             ResourceLocation texture = tile.getWaxTexture();
             if (texture != null) {

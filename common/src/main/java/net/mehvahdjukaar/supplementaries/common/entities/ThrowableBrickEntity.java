@@ -75,7 +75,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super.onHitBlock(rayTraceResult);
         if (!this.level.isClientSide) {
             Entity entity = this.getOwner();
-            if (entity instanceof Player && !((Player) entity).mayBuild()) return;
+            if (entity instanceof Player player && !player.mayBuild()) return;
             if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatformHelper.isMobGriefingOn(this.level, this)) {
 
                 BlockPos pos = rayTraceResult.getBlockPos();
@@ -106,11 +106,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
 
     @Override
-    protected void onHitEntity(EntityHitResult p_213868_1_) {
-        super.onHitEntity(p_213868_1_);
-        Entity entity = p_213868_1_.getEntity();
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        super.onHitEntity(entityHitResult);
+        Entity entity = entityHitResult.getEntity();
         int i = 1;
-        entity.hurt(DamageSource.thrown(this, this.getOwner()), (float) i);
+        entity.hurt(DamageSource.thrown(this, this.getOwner()), i);
     }
 
 

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -17,16 +17,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
 
 
 public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTile> {
-    public final Material HAND_TEXTURE = new Material(TextureAtlas.LOCATION_BLOCKS, ModTextures.CLOCK_HAND_TEXTURE);
 
     public final ModelPart hourHand;
     public final ModelPart minuteHand;
-
 
     public static LayerDefinition createMesh() {
         MeshDefinition mesh = new MeshDefinition();
@@ -54,7 +50,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
     public void render(ClockBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        VertexConsumer builder = HAND_TEXTURE.buffer(bufferIn, RenderType::entityCutoutNoCull);
+        VertexConsumer builder = ModMaterials.CLOCK_HAND.buffer(bufferIn, RenderType::entityCutoutNoCull);
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5d, 0.5d, 0.5d);

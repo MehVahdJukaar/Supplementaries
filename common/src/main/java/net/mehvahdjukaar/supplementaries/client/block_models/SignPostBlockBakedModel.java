@@ -35,7 +35,7 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
             BlockState mimic = data.get(ModBlockProperties.MIMIC);
             Boolean isFramed = data.get(ModBlockProperties.FRAMED);
 
-            boolean framed = CompatHandler.framedblocks && (isFramed != null && isFramed);
+            boolean framed = CompatHandler.FRAMEDBLOCKS && (isFramed != null && isFramed);
 
             //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
             //always solid.

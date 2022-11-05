@@ -63,7 +63,7 @@ public class DispenserRegistry {
 
         if (!RegistryConfigs.DISPENSERS.get()) return;
 
-        if (RegistryConfigs.PANCAKES_ENABLED.get() && CompatHandler.quark && QuarkCompat.isJukeboxModuleOn()) {
+        if (RegistryConfigs.PANCAKES_ENABLED.get() && CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
             DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
@@ -219,7 +219,7 @@ public class DispenserRegistry {
             Position dispensePosition = DispenserBlock.getDispensePosition(source);
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             Projectile projectileEntity = this.getProjectileEntity(world, dispensePosition, stack);
-            projectileEntity.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            projectileEntity.shoot(direction.getStepX(),  direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
             world.addFreshEntity(projectileEntity);
             stack.shrink(1);
             return InteractionResultHolder.success(stack);
@@ -247,6 +247,7 @@ public class DispenserRegistry {
 
     public static class PancakeDiscBehavior extends OptionalDispenseItemBehavior {
 
+        @Override
         @Nonnull
         protected ItemStack execute(BlockSource source, @Nonnull ItemStack stack) {
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
@@ -390,7 +391,7 @@ public class DispenserRegistry {
 
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 
-            pearl.shoot(direction.getStepX(), (float) direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
+            pearl.shoot(direction.getStepX(),  direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
             level.addFreshEntity(pearl);
 
             stack.shrink(1);

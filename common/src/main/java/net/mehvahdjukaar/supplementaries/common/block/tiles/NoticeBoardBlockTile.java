@@ -28,7 +28,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -122,7 +121,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.text = pages.getString(this.pageNumber);
             }
 
-        } else if (CompatHandler.computercraft) {
+        } else if (CompatHandler.COMPUTERCRAFT) {
             if (CCCompat.isPrintedBook(item)) {
 
                 if (com != null) {
@@ -174,7 +173,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @SuppressWarnings("ConstantConditions")
     public static boolean isPageItem(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.computercraft && CCCompat.isPrintedBook(item));
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
     }
 
     @Override

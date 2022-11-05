@@ -16,10 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -27,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 
-public class Credits {
+public class Credits implements Serializable {
 
     private static final Codec<Credits> CODEC = RecordCodecBuilder.create((i) -> i.group(
                     Codec.unboundedMap(Codec.STRING, Supporter.CODEC).fieldOf("supporters").forGetter(p->p.supporters),
@@ -45,9 +42,9 @@ public class Credits {
     //empty default one
     public static Credits INSTANCE = new Credits(Map.of(), List.of(), List.of(), List.of(), List.of(), List.of());
 
-    transient private final List<UUID> devs = new ArrayList<>();
-    transient private final Map<String, Pair<UUID, String>> statues = new HashMap<>();
-    transient private final Map<String, ResourceLocation> globes = new HashMap<>();
+    private final transient List<UUID> devs = new ArrayList<>();
+    private final transient Map<String, Pair<UUID, String>> statues = new HashMap<>();
+    private final transient Map<String, ResourceLocation> globes = new HashMap<>();
 
     private final Map<String, Supporter> supporters;
     private final List<String> otherArtists;
@@ -213,9 +210,10 @@ public class Credits {
     }
 
     //don't convert to record, gson doesn't like them
+    @SuppressWarnings("all")
     private static final class Supporter {
 
-        private static Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
+        private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
                         UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
                         Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
                         Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe))

@@ -99,7 +99,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         long time = player.level.getGameTime();
         if (this.isUnused() &&
-                Mth.abs(time - lastActivated) > 10) {
+                Mth.abs((float)time - lastActivated) > 10) {
             if (this.canOpen(player)) {
                 PlatformHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);

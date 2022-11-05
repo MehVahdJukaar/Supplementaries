@@ -125,7 +125,7 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
             if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
                 ItemStack itemstack = tile.getPresentItem(this);
 
-                ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
+                ItemEntity itementity = new ItemEntity(worldIn,  pos.getX() + 0.5D,  pos.getY() + 0.5D,  pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
                 worldIn.addFreshEntity(itementity);
             } else {
@@ -218,9 +218,9 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
                 RandomSource random = pLevel.random;
 
 
-                double cx = (double) pPos.getX() + 0.5D;
-                double cy = (double) pPos.getY() + 0.5F + 0.4;
-                double cz = (double) pPos.getZ() + 0.5D;
+                double cx =  pPos.getX() + 0.5D;
+                double cy =  pPos.getY() + 0.5 + 0.4;
+                double cz =  pPos.getZ() + 0.5D;
 
                 for (int i = 0; i < 10; ++i) {
                     double speed = random.nextDouble() * 0.15D + 0.015D;
@@ -252,8 +252,8 @@ public class TrappedPresentBlock extends WaterBlock implements EntityBlock, ICol
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos p_220069_5_, boolean p_220069_6_) {
-        super.neighborChanged(state, world, pos, block, p_220069_5_, p_220069_6_);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
         boolean isPowered = world.hasNeighborSignal(pos);
         if (world instanceof ServerLevel serverLevel && isPowered && state.getValue(PRIMED)
                 && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {

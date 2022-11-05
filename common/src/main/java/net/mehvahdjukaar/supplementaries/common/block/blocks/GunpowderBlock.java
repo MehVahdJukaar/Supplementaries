@@ -127,8 +127,8 @@ public class GunpowderBlock extends LightUpBlock {
         return this.getConnectionState(context.getLevel(), this.crossState, context.getClickedPos());
     }
 
-    @Deprecated
-    public boolean canBeReplaced(BlockState p_225541_1_, Fluid p_225541_2_) {
+    @Override
+    public boolean canBeReplaced(BlockState state, Fluid fluid) {
         return this.material.isReplaceable() || !this.material.isSolid();
     }
 
@@ -263,7 +263,7 @@ public class GunpowderBlock extends LightUpBlock {
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
         return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock || b instanceof AbstractCandleBlock ||
-                (CompatHandler.deco_blocks && DecoBlocksCompat.isBrazier(b));
+                (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isBrazier(b));
     }
 
     @Override
@@ -486,7 +486,7 @@ public class GunpowderBlock extends LightUpBlock {
         if (b instanceof FireBlock || b instanceof MagmaBlock || (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock)) ||
                 b == ModRegistry.BLAZE_ROD_BLOCK.get())
             return true;
-        if (b instanceof CampfireBlock || (CompatHandler.deco_blocks && DecoBlocksCompat.isBrazier(b))) {
+        if (b instanceof CampfireBlock || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isBrazier(b))) {
             return state.getValue(CampfireBlock.LIT);
         }
         return world.getFluidState(pos).getType() == Fluids.LAVA;
@@ -569,9 +569,9 @@ public class GunpowderBlock extends LightUpBlock {
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {
             float f2 = from + f * rand.nextFloat();
-            double x = pos.getX() + 0.5D + (double) (0.4375F * (float) dir1.getStepX()) + (double) (f2 * (float) dir2.getStepX());
-            double y = pos.getY() + 0.5D + (double) (0.4375F * (float) dir1.getStepY()) + (double) (f2 * (float) dir2.getStepY());
-            double z = pos.getZ() + 0.5D + (double) (0.4375F * (float) dir1.getStepZ()) + (double) (f2 * (float) dir2.getStepZ());
+            double x = pos.getX() + 0.5D +  (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
+            double y = pos.getY() + 0.5D +  (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
+            double z = pos.getZ() + 0.5D +  (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
 
             float velY = (burning / 15.0F) * 0.03F;
             float velX = rand.nextFloat() * 0.02f - 0.01f;

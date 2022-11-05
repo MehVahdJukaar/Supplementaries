@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -27,7 +26,6 @@ import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -46,15 +44,12 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.AxolotlRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -263,11 +258,11 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientPlatformHelper.KeyBindEvent event) {
-        QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
+       /* QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
                 InputConstants.Type.KEYSYM,
                 InputConstants.getKey("key.keyboard.v").getValue(),
                 "supplementaries.gui.controls");
-        event.register(QUIVER_KEYBIND);
+        event.register(QUIVER_KEYBIND);*/ //TODO: add
     }
 
     @EventCalled
@@ -398,7 +393,7 @@ public class ClientRegistry {
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
         event.register(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
-        if (CompatHandler.quark) QuarkClientCompat.registerTooltipComponent(event);
+        if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }
 
     @EventCalled

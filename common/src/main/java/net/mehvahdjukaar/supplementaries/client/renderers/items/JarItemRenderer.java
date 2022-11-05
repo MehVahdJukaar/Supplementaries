@@ -65,8 +65,6 @@ public class JarItemRenderer extends CageItemRenderer {
                 if (fluid != null && !fluid.isEmpty() && count > 0) {
                     renderFluid(getHeight(count, 0.75f), color, 0, fluid.getStillTexture(),
                             matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
-                }if(fluid == null){
-                    int aaa = 1;//this should not happen
                 }
             }
         }
@@ -93,10 +91,9 @@ public class JarItemRenderer extends CageItemRenderer {
                 matrixStackIn.popPose();
             }
         }
-
     }
 
-    public static float getHeight(float count, float maxHeight) {
+    private static float getHeight(float count, float maxHeight) {
         return maxHeight * count / (float) CommonConfigs.Blocks.JAR_CAPACITY.get();
     }
 }

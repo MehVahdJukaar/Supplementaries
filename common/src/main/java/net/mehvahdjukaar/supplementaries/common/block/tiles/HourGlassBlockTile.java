@@ -175,7 +175,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         HourGlassSandType(ResourceLocation texture, Item item, int t) {
             this.texture = texture;
             this.item = item;
-            this.increment = 1f / (float) t;
+            this.increment = 1f / t;
         }
 
         public boolean isEmpty() {

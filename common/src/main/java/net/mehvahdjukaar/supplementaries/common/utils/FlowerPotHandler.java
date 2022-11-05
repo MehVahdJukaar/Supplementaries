@@ -13,8 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.levelgen.structure.StructureType;
-import net.minecraft.world.level.levelgen.structure.structures.IglooStructure;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
@@ -81,11 +79,11 @@ public class FlowerPotHandler {
         toAdd.add(Utils.getID(Items.FLOWERING_AZALEA).toString());
         toAdd.add(Utils.getID(Items.AZALEA).toString());
         toAdd.add(Utils.getID(ModRegistry.FLAX_SEEDS_ITEM.get()).toString());
-        if (CompatHandler.snowyspirit) {
+        if (CompatHandler.SNOWYSPIRIT) {
             toAdd.add("snowyspirit:ginger_flower");
         }
 
-        if (CompatHandler.quark) {
+        if (CompatHandler.QUARK) {
             Item[] items = new Item[]{
                     Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,
                     Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.WEEPING_VINES,
@@ -97,11 +95,11 @@ public class FlowerPotHandler {
             Arrays.stream(items).forEach(i -> toAdd.add(Utils.getID(i).toString()));
         }
 
-        if (CompatHandler.pokecube_legends) {
+        if (CompatHandler.POKECUBE_LEGENDS) {
             toAdd.add("pokecube_legends:crystallized_cactus");
         }
 
-        if (CompatHandler.pokecube) {
+        if (CompatHandler.POKECUBE) {
             String[] berries = new String[]{
                     "pokecube:berry_aspear",
                     "pokecube:berry_cheri",
@@ -129,11 +127,11 @@ public class FlowerPotHandler {
             toAdd.addAll(Arrays.asList(berries));
         }
 
-        if (CompatHandler.moreminecarts) {
+        if (CompatHandler.MOREMINECARTS) {
             toAdd.add("moreminecarts:chunkrodite_block");
             toAdd.add("moreminecarts:glass_cactus");
         }
-        if (CompatHandler.habitat) {
+        if (CompatHandler.HABITAT) {
             toAdd.add("habitat:rafflesia");
             toAdd.add("habitat:orange_ball_cactus");
             toAdd.add("habitat:red_ball_cactus");
@@ -141,18 +139,18 @@ public class FlowerPotHandler {
             toAdd.add("habitat:yellow_ball_cactus");
             toAdd.add("habitat:kabloom_pulp");
         }
-        if (CompatHandler.endergetic) {
+        if (CompatHandler.ENDERGETIC) {
             toAdd.add("endergetic:tall_poise_bush");
         }
-        if (CompatHandler.simplefarming) {
+        if (CompatHandler.SIMPLEFARMING) {
             toAdd.add("simplefarming:cantaloupe_block");
             toAdd.add("simplefarming:honeydew_block");
             toAdd.add("simplefarming:squash_block");
         }
-        if (CompatHandler.atmospheric) {
+        if (CompatHandler.ATMOSPHERIC) {
             toAdd.add("atmospheric:barrel_cactus");
         }
-        if (CompatHandler.overweight_farming) {
+        if (CompatHandler.OVERWEIGHT_FARMING) {
             toAdd.add("overweight_farming:overweight_cabbage");
             toAdd.add("overweight_farming:overweight_potato");
             toAdd.add("overweight_farming:overweight_poisonous_potato");

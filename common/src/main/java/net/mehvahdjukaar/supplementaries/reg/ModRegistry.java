@@ -511,7 +511,7 @@ public class ModRegistry {
     //soul candle holder
     public static final Supplier<Block> SOUL_CANDLE_HOLDER = regWithItem(CANDLE_HOLDER_NAME + "_soul", () -> new CandleHolderBlock(null,
                     BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()),
-                    CompatHandler.buzzier_bees ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME),
+                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME),
             getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME), "buzzier_bees");
 
     //copper lantern
@@ -708,7 +708,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
-        return CompatHandler.computercraft ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
+        return CompatHandler.COMPUTERCRAFT ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
     }, CreativeModeTab.TAB_REDSTONE, 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(

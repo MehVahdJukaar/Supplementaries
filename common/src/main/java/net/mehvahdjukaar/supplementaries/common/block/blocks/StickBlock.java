@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.google.common.collect.ImmutableMap;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
@@ -116,7 +115,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
         BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-        if (blockstate.is(this) || (CompatHandler.farmers_delight && FarmersDelightCompat.canAddStickToTomato(blockstate, axis))) {
+        if (blockstate.is(this) || (CompatHandler.FARMERS_DELIGHT && FarmersDelightCompat.canAddStickToTomato(blockstate, axis))) {
             return blockstate.setValue(axis, true);
         } else {
             return super.getStateForPlacement(context).setValue(AXIS_Y, false).setValue(axis, true);
@@ -224,7 +223,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (this == ModRegistry.STICK_BLOCK.get()) {
-            if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.farmers_delight) {
+            if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
                 FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,false);
             }
         }

@@ -19,12 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlackboardItemRenderer extends ItemStackRenderer {
     private static final BlockState STATE = ModRegistry.BLACKBOARD.get().defaultBlockState();
-    private final BlockRenderDispatcher blockRenderer;
-
-
-    public BlackboardItemRenderer(){
-        this.blockRenderer = Minecraft.getInstance().getBlockRenderer();
-    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -32,7 +26,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
 
-        blockRenderer.renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
         CompoundTag com = stack.getTagElement("BlockEntityTag");
         long[] packed = new long[16];

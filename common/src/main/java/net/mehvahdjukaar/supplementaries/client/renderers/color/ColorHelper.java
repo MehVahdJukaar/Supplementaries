@@ -30,7 +30,7 @@ public class ColorHelper {
 
     public static int getRainbowColorPost(float division) {
         float scale = 3600f / division;
-        float h = (((int) ((System.currentTimeMillis()) % (int) scale) / scale));
+        float h = ((int) ((System.currentTimeMillis()) % (int) scale) / scale);
         HSLColor hsl = prettyfyColor(new HSLColor(h, 0.6f, 0.5f,1));
         return hsl.asRGB().toInt();
     }
@@ -43,7 +43,7 @@ public class ColorHelper {
 
     public static int getRainbowColor(float division) {
         float scale = 3600f / division;
-        float h = (((int) ((System.currentTimeMillis()) % (int) scale) / scale));
+        float h = ((int) ((System.currentTimeMillis()) % (int) scale) / scale);
         var color = new HSLColor(h, 0.6f, 0.5f, 1);
         return color.asRGB().toInt();
     }

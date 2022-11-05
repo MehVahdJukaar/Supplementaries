@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelec
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.CreateCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -38,7 +37,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Post event) {
-        if (CompatHandler.configured) {
+        if (CompatHandler.CONFIGURED) {
             ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
         }
     }

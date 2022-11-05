@@ -50,6 +50,7 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean isVerticalSlabEnabled() {
         throw new AssertionError();

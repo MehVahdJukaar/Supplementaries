@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.CCCompatImpl;
@@ -23,7 +22,7 @@ public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
-        if (CompatHandler.computercraft && CCCompatImpl.isPeripheralCap(cap)) {
+        if (CompatHandler.COMPUTERCRAFT && CCCompatImpl.isPeripheralCap(cap)) {
             if (peripheral == null) {
                 peripheral = CCCompatImpl.getPeripheralSupplier((SpeakerBlockTile) (Object) this);
             }

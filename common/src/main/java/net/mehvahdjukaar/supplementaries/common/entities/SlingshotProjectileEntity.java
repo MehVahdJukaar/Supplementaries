@@ -143,7 +143,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         boolean success = false;
         if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
-            if (CompatHandler.flan && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())) {
+            if (CompatHandler.FLAN && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())) {
                 return;
             }
 

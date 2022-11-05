@@ -138,7 +138,6 @@ public class ClockBlockTile extends BlockEntity {
             tile.updateTime(dayTime, pLevel, pState, pPos);
 
         }
-        //TODO: fix hour hand
         //hours
         tile.prevRoll = tile.roll;
         if (tile.roll != tile.targetRoll) {

@@ -43,7 +43,7 @@ public class VillagerTradesHandler {
         }
         if (RegistryConfigs.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
-            if (CompatHandler.oreganized) {
+            if (CompatHandler.OREGANIZED) {
                 trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
             }
         }

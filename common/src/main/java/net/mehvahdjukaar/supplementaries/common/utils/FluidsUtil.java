@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Contract;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class FluidsUtil {
 

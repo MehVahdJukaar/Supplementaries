@@ -31,7 +31,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.util.Lazy;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class DecoBlocksCompatImpl {
@@ -56,7 +55,7 @@ public class DecoBlocksCompatImpl {
                         .noOcclusion()
                         .lightLevel((state) -> 11), CompatObjects.SOUL_CHANDELIER, () -> ParticleTypes.SOUL_FIRE_FLAME));
 
-        if (CompatHandler.deco_blocks_abnormals) {
+        if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
             ENDER_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_ender_chandelier"), () ->
                     new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
                             .strength(0.3F)
@@ -66,7 +65,7 @@ public class DecoBlocksCompatImpl {
                             CompatObjects.ENDER_FLAME));
         } else ENDER_CHANDELIER_ROPE = null;
 
-        if (CompatHandler.much_more_mod_compat) {
+        if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
             GLOW_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_glow_chandelier"), () ->
                     new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
                             .strength(0.3F)

@@ -130,7 +130,7 @@ public class ItemsUtilImpl {
                 }
             }
 
-            if (CompatHandler.quark) {
+            if (CompatHandler.QUARK) {
                 ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
                 amount += QuarkCompat.getSacksInBackpack(backpack);
             }
@@ -141,7 +141,7 @@ public class ItemsUtilImpl {
     public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
         KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.NO_KEY;
-        if (CompatHandler.curios) {
+        if (CompatHandler.CURIOS) {
             found = CuriosCompat.isKeyInCurio(player, key);
             if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
         }

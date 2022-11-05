@@ -220,10 +220,4 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         growCropBy(level, pos, state, 1);
         return true;
     }
-
-    @Override
-    public boolean isMaxAge(BlockState pState) {
-        return super.isMaxAge(pState);
-    }
-
 }

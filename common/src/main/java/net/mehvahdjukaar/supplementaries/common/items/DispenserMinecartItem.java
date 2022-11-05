@@ -26,16 +26,13 @@ public class DispenserMinecartItem extends Item {
     public static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 
-        /**
-         * Dispense the specified stack, play the dispense sound and spawn particles.
-         */
         @Override
         public ItemStack execute(BlockSource pSource, ItemStack pStack) {
             Direction direction = pSource.getBlockState().getValue(DispenserBlock.FACING);
             Level level = pSource.getLevel();
-            double d0 = pSource.x() + (double) direction.getStepX() * 1.125D;
-            double d1 = Math.floor(pSource.y()) + (double) direction.getStepY();
-            double d2 = pSource.z() + (double) direction.getStepZ() * 1.125D;
+            double d0 = pSource.x() +  direction.getStepX() * 1.125D;
+            double d1 = Math.floor(pSource.y()) +  direction.getStepY();
+            double d2 = pSource.z() +  direction.getStepZ() * 1.125D;
             BlockPos blockpos = pSource.getPos().relative(direction);
             BlockState blockstate = level.getBlockState(blockpos);
             RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock ? ForgeHelper.getRailDirection(railBlock, blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
@@ -52,7 +49,7 @@ public class DispenserMinecartItem extends Item {
                 }
 
                 BlockState blockstate1 = level.getBlockState(blockpos.below());
-                RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock ? blockstate1.getValue(((BaseRailBlock) blockstate1.getBlock()).getShapeProperty()) : RailShape.NORTH_SOUTH;
+                RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock railBlock? blockstate1.getValue(railBlock.getShapeProperty()) : RailShape.NORTH_SOUTH;
                 if (direction != Direction.DOWN && railshape1.isAscending()) {
                     d3 = -0.4D;
                 } else {
@@ -70,11 +67,9 @@ public class DispenserMinecartItem extends Item {
             return pStack;
         }
 
-        /**
-         * Play the dispense sound from the specified block.
-         */
-        protected void playSound(BlockSource p_42947_) {
-            p_42947_.getLevel().levelEvent(1000, p_42947_.getPos(), 0);
+        @Override
+        protected void playSound(BlockSource blockSource) {
+            blockSource.getLevel().levelEvent(1000, blockSource.getPos(), 0);
         }
     };
 
@@ -101,7 +96,7 @@ public class DispenserMinecartItem extends Item {
                     d0 = 0.5D;
                 }
 
-                AbstractMinecart abstractminecart = new DispenserMinecartEntity(level, (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D);
+                AbstractMinecart abstractminecart = new DispenserMinecartEntity(level,  blockpos.getX() + 0.5D,  blockpos.getY() + 0.0625D + d0,  blockpos.getZ() + 0.5D);
                 if (itemstack.hasCustomHoverName()) {
                     abstractminecart.setCustomName(itemstack.getHoverName());
                 }

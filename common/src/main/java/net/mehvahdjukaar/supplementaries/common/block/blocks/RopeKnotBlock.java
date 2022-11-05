@@ -234,7 +234,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
             BlockState newHeld = null;
 
-            if (CompatHandler.quark) {
+            if (CompatHandler.QUARK) {
                 newHeld = QuarkCompat.updateWoodPostShape(oldHeld, facing, facingState);
             }
             if (newHeld == null) {

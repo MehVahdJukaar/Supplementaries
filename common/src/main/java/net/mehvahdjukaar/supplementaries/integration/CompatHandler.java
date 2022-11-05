@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -16,88 +14,88 @@ import net.minecraft.world.level.block.Block;
 
 public class CompatHandler {
 
-    public static final boolean quark;
-    public static final boolean deco_blocks;
-    public static final boolean configured;
-    public static final boolean create;
-    public static final boolean torchslab;
-    public static final boolean curios;
-    public static final boolean farmers_delight;
-    public static final boolean infernalexp;
-    public static final boolean inspirations;
-    public static final boolean framedblocks;
-    public static final boolean rgblib;
-    public static final boolean endergetic;
-    public static final boolean buzzier_bees;
-    public static final boolean autumnity;
-    public static final boolean deco_blocks_abnormals;
-    public static final boolean much_more_mod_compat;
-    public static final boolean flywheel;
-    public static final boolean repurposed_structures;
-    public static final boolean tetra;
-    public static final boolean pokecube_legends;
-    public static final boolean pokecube;
-    public static final boolean dynamictrees;
-    public static final boolean moreminecarts;
-    public static final boolean habitat;
-    public static final boolean simplefarming;
-    public static final boolean atmospheric;
-    public static final boolean enchantedbookredesign;
-    public static final boolean computercraft;
-    public static final boolean customvillagertrades;
-    public static final boolean nethersdelight;
-    public static final boolean doubledoors;
-    public static final boolean malum;
-    public static final boolean botania;
-    public static final boolean mapatlas;
-    public static final boolean waystones;
-    public static final boolean overweight_farming;
-    public static final boolean snowyspirit;
-    public static final boolean oreganized;
-    public static final boolean cloth_config;
-    public static final boolean flan;
+    public static final boolean QUARK;
+    public static final boolean DECO_BLOCKS;
+    public static final boolean CONFIGURED;
+    public static final boolean CREATE;
+    public static final boolean TORCHSLAB;
+    public static final boolean CURIOS;
+    public static final boolean FARMERS_DELIGHT;
+    public static final boolean INFERNALEXP;
+    public static final boolean INSPIRATIONS;
+    public static final boolean FRAMEDBLOCKS;
+    public static final boolean RGBLIB;
+    public static final boolean ENDERGETIC;
+    public static final boolean BUZZIER_BEES;
+    public static final boolean AUTUMNITY;
+    public static final boolean DECO_BLOCKS_ABNORMALS;
+    public static final boolean MUCH_MORE_MOD_COMPAT;
+    public static final boolean FLYWHEEL;
+    public static final boolean REPURPOSED_STRUCTURES;
+    public static final boolean TETRA;
+    public static final boolean POKECUBE_LEGENDS;
+    public static final boolean POKECUBE;
+    public static final boolean DYNAMICTREES;
+    public static final boolean MOREMINECARTS;
+    public static final boolean HABITAT;
+    public static final boolean SIMPLEFARMING;
+    public static final boolean ATMOSPHERIC;
+    public static final boolean ENCHANTEDBOOKREDESIGN;
+    public static final boolean COMPUTERCRAFT;
+    public static final boolean CUSTOMVILLAGERTRADES;
+    public static final boolean NETHERSDELIGHT;
+    public static final boolean DOUBLEDOORS;
+    public static final boolean MALUM;
+    public static final boolean BOTANIA;
+    public static final boolean MAPATLAS;
+    public static final boolean WAYSTONES;
+    public static final boolean OVERWEIGHT_FARMING;
+    public static final boolean SNOWYSPIRIT;
+    public static final boolean OREGANIZED;
+    public static final boolean CLOTH_CONFIG;
+    public static final boolean FLAN;
 
     static {
-        quark = isLoaded("quark");
-        deco_blocks = isLoaded("decorative_blocks");
-        configured = isLoaded("configured");
-        oreganized = isLoaded("oreganized");
-        create = isLoaded("create");
-        torchslab = isLoaded("torchslabmod");
-        curios = isLoaded("curios");
-        farmers_delight = isLoaded("farmersdelight");
-        infernalexp = isLoaded("infernalexp");
-        inspirations = isLoaded("inspirations");
-        framedblocks = isLoaded("framedblocks");
-        rgblib = isLoaded("rgblib");
-        endergetic = isLoaded("endergetic");
-        deco_blocks_abnormals = isLoaded("decorative_blocks_abnormals");
-        much_more_mod_compat = isLoaded("muchmoremodcompat");
-        autumnity = isLoaded("autumnity");
-        buzzier_bees = isLoaded("buzzier_bees");
-        flywheel = isLoaded("flywheel");
-        repurposed_structures = isLoaded("repurposed_structures");
-        tetra = isLoaded("tetra");
-        pokecube_legends = isLoaded("pokecube_legends");
-        pokecube = isLoaded("pokecube");
-        dynamictrees = isLoaded("dynamictrees");
-        moreminecarts = isLoaded("moreminecarts");
-        habitat = isLoaded("habitat");
-        simplefarming = isLoaded("simplefarming");
-        atmospheric = isLoaded("atmospheric");
-        enchantedbookredesign = isLoaded("enchantedbookredesign");
-        customvillagertrades = isLoaded("customvillagertrades");
-        computercraft = isLoaded("computercraft");
-        nethersdelight = isLoaded("nethers_delight");
-        doubledoors = isLoaded("doubledoors");
-        malum = isLoaded("malum");
-        botania = isLoaded("botania");
-        mapatlas = isLoaded("map_atlases");
-        waystones = isLoaded("waystones");
-        overweight_farming = isLoaded("overweight_farming");
-        snowyspirit = isLoaded("snowyspirit");
-        cloth_config = isLoaded("cloth_config");
-        flan = isLoaded("flan");
+        QUARK = isLoaded("quark");
+        DECO_BLOCKS = isLoaded("decorative_blocks");
+        CONFIGURED = isLoaded("configured");
+        OREGANIZED = isLoaded("oreganized");
+        CREATE = isLoaded("create");
+        TORCHSLAB = isLoaded("torchslabmod");
+        CURIOS = isLoaded("curios");
+        FARMERS_DELIGHT = isLoaded("farmersdelight");
+        INFERNALEXP = isLoaded("infernalexp");
+        INSPIRATIONS = isLoaded("inspirations");
+        FRAMEDBLOCKS = isLoaded("framedblocks");
+        RGBLIB = isLoaded("rgblib");
+        ENDERGETIC = isLoaded("endergetic");
+        DECO_BLOCKS_ABNORMALS = isLoaded("decorative_blocks_abnormals");
+        MUCH_MORE_MOD_COMPAT = isLoaded("muchmoremodcompat");
+        AUTUMNITY = isLoaded("autumnity");
+        BUZZIER_BEES = isLoaded("buzzier_bees");
+        FLYWHEEL = isLoaded("flywheel");
+        REPURPOSED_STRUCTURES = isLoaded("repurposed_structures");
+        TETRA = isLoaded("tetra");
+        POKECUBE_LEGENDS = isLoaded("pokecube_legends");
+        POKECUBE = isLoaded("pokecube");
+        DYNAMICTREES = isLoaded("dynamictrees");
+        MOREMINECARTS = isLoaded("moreminecarts");
+        HABITAT = isLoaded("habitat");
+        SIMPLEFARMING = isLoaded("simplefarming");
+        ATMOSPHERIC = isLoaded("atmospheric");
+        ENCHANTEDBOOKREDESIGN = isLoaded("enchantedbookredesign");
+        CUSTOMVILLAGERTRADES = isLoaded("customvillagertrades");
+        COMPUTERCRAFT = isLoaded("computercraft");
+        NETHERSDELIGHT = isLoaded("nethers_delight");
+        DOUBLEDOORS = isLoaded("doubledoors");
+        MALUM = isLoaded("malum");
+        BOTANIA = isLoaded("botania");
+        MAPATLAS = isLoaded("map_atlases");
+        WAYSTONES = isLoaded("waystones");
+        OVERWEIGHT_FARMING = isLoaded("overweight_farming");
+        SNOWYSPIRIT = isLoaded("snowyspirit");
+        CLOTH_CONFIG = isLoaded("cloth_config");
+        FLAN = isLoaded("flan");
     }
 
     private static boolean isLoaded(String name) {
@@ -105,8 +103,8 @@ public class CompatHandler {
     }
 
     public static void setup() {
-        if (create) CreateCompat.setup();
-        if (computercraft) CCCompat.setup();
+        if (CREATE) CreateCompat.setup();
+        if (COMPUTERCRAFT) CCCompat.setup();
 
         var i = Registry.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
 
@@ -114,9 +112,9 @@ public class CompatHandler {
     }
 
     public static void initOptionalRegistries() {
-        if (farmers_delight) FarmersDelightCompat.init();
-        if (deco_blocks) DecoBlocksCompat.init();
-        if (quark) QuarkCompat.init();
+        if (FARMERS_DELIGHT) FarmersDelightCompat.init();
+        if (DECO_BLOCKS) DecoBlocksCompat.init();
+        if (QUARK) QuarkCompat.init();
 
         //if (inspirations) CauldronRecipes.registerStuff();
     }
@@ -128,6 +126,6 @@ public class CompatHandler {
 
 
     public static boolean isVerticalSlabEnabled() {
-        return quark && QuarkCompat.isVerticalSlabEnabled();
+        return QUARK && QuarkCompat.isVerticalSlabEnabled();
     }
 }

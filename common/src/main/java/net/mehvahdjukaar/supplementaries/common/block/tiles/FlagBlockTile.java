@@ -50,8 +50,8 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         this.offset = 3f * (Mth.sin(this.worldPosition.getX()) + Mth.sin(this.worldPosition.getZ()));
     }
 
-    public void setCustomName(Component p_213136_1_) {
-        this.name = p_213136_1_;
+    public void setCustomName(Component component) {
+        this.name = component;
     }
 
     public List<Pair<Holder<BannerPattern>, DyeColor>> getPatterns() {
@@ -124,6 +124,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         return this.name != null ? this.name : Component.translatable("block.supplementaries.flag_" + this.baseColor.getName());
     }
 
+    @Override
     @Nullable
     public Component getCustomName() {
         return this.name;

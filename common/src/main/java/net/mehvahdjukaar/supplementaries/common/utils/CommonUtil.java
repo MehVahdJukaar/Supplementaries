@@ -1,18 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import com.mojang.authlib.GameProfile;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.client.ClientAccess;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +26,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import java.util.Calendar;
-import java.util.UUID;
 
 public class CommonUtil {
 
@@ -94,12 +88,13 @@ public class CommonUtil {
         }
     }
 
-    public static Festivity FESTIVITY = Festivity.get();
+    public static final Festivity FESTIVITY = Festivity.get();
 
     public static boolean isLanternBlock(Block b) {
         ResourceLocation id = Utils.getID(b);
         String namespace = id.getNamespace();
-        if (namespace.equals("skinnedlanterns") || (namespace.equals("twigs") && id.getPath().contains("paper_lantern") )) return true;
+        if (namespace.equals("skinnedlanterns") || (namespace.equals("twigs") && id.getPath().contains("paper_lantern")))
+            return true;
         if (b instanceof LanternBlock) { //!CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)
             return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
         }
@@ -171,11 +166,11 @@ public class CommonUtil {
 
     //cylinder distance
     public static boolean withinDistanceDown(BlockPos pos, Vec3 vector, double distW, double distDown) {
-        double dx = vector.x() - ((double) pos.getX() + 0.5);
-        double dy = vector.y() - ((double) pos.getY() + 0.5);
-        double dz = vector.z() - ((double) pos.getZ() + 0.5);
-        double mydistW = (dx * dx + dz * dz);
-        return (mydistW < (distW * distW) && (dy < distW && dy > -distDown));
+        double dx = vector.x() - (pos.getX() + 0.5);
+        double dy = vector.y() - (pos.getY() + 0.5);
+        double dz = vector.z() - (pos.getZ() + 0.5);
+        double myDistW = (dx * dx + dz * dz);
+        return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
 
 
@@ -200,10 +195,11 @@ public class CommonUtil {
     public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     @CheckForNull
     @Nullable
-    public static Player getFakePlayer(Level level){
+    public static Player getFakePlayer(Level level) {
         throw new AssertionError();
     }
 

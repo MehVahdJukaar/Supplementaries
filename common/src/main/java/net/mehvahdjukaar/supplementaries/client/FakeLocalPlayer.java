@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class FakeLocalPlayer extends AbstractClientPlayer {
     public FakeLocalPlayer(ClientLevel pClientLevel, GameProfile pGameProfile) {
-        super(pClientLevel, pGameProfile,null);
+        super(pClientLevel, pGameProfile, null);
         this.noPhysics = true;
     }
 
@@ -45,11 +45,6 @@ public class FakeLocalPlayer extends AbstractClientPlayer {
      */
     //this better be a client level
     public static FakeLocalPlayer get(ClientLevel level, GameProfile username) {
-        if (!FAKE_PLAYERS.containsKey(username)) {
-            FakeLocalPlayer fakePlayer = new FakeLocalPlayer(level, username);
-            FAKE_PLAYERS.put(username, fakePlayer);
-        }
-
-        return FAKE_PLAYERS.get(username);
+        return FAKE_PLAYERS.computeIfAbsent(username, u -> new FakeLocalPlayer(level, username));
     }
 }

@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 public class SlingshotRendererHelper {
 
     private static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
+    private static BlockPos LOOK_POS = null;
 
     public static ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
         if (world != null) {
@@ -39,10 +40,6 @@ public class SlingshotRendererHelper {
         }
         return CLIENT_CURRENT_AMMO;
     }
-
-
-    private static BlockPos LOOK_POS = null;
-
 
     public static void grabNewLookPos(Player player) {
 

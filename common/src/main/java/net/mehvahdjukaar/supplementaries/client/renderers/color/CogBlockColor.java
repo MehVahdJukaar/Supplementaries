@@ -13,7 +13,7 @@ public class CogBlockColor implements BlockColor {
 
     static {
         for (int i = 0; i <= 15; ++i) {
-            float f = (float) i / 15.0F;
+            float f =  i / 15.0F;
             float f1 = f * 0.5F + (f > 0.0F ? 0.5F : 0.3F);
             float f2 = Mth.clamp(f * f * 0.5F - 0.3F, 0.0F, 1.0F);
             float f3 = Mth.clamp(f * f * 0.6F - 0.7F, 0.0F, 1.0F);

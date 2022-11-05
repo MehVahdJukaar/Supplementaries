@@ -68,7 +68,7 @@ public class LootTablesInjects {
 
     private static class LootHelper {
 
-        static boolean RS = CompatHandler.repurposed_structures;
+        static boolean RS = CompatHandler.REPURPOSED_STRUCTURES;
 
         public static TableType getType(String name) {
             if (isShipwreck(name)) return TableType.SHIPWRECK_TREASURE;

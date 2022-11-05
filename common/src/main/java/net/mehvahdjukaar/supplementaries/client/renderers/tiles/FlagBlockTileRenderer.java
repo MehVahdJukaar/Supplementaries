@@ -88,14 +88,14 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-                float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) ((((w / l) - t * 2 * (float) Math.PI)))));
+                float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
                 renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
                 for (int dX = 0; dX < w; dX += segmentLen) {
 
-                    float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((((dX / l) - t * 2 * (float) Math.PI)))));
+                    float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
                     renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
                     matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));

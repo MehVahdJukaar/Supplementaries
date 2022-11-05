@@ -24,7 +24,7 @@ public class WaystoneMarker extends NamedMapBlockMarker<CustomMapDecoration> {
 
     @Nullable
     public static WaystoneMarker getFromWorld(BlockGetter world, BlockPos pos) {
-        if (CompatHandler.waystones) {
+        if (CompatHandler.WAYSTONES) {
             var te = world.getBlockEntity(pos);
 
             if (WaystonesCompat.isWaystone(te)) {

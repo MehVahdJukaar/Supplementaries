@@ -61,7 +61,7 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         Direction direction = context.getClickedFace();
         if (!context.replacingClickedOnBlock() && direction.getAxis().isHorizontal()) {
-            blockstate = blockstate.setValue(FACING, direction).setValue(HALF, context.getClickLocation().y - (double) context.getClickedPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
+            blockstate = blockstate.setValue(FACING, direction).setValue(HALF, context.getClickLocation().y -  context.getClickedPos().getY() > 0.5D ? Half.TOP : Half.BOTTOM);
         } else {
             blockstate = blockstate.setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(HALF, direction == Direction.UP ? Half.BOTTOM : Half.TOP);
         }

@@ -38,7 +38,7 @@ public class FarmersDelightCompat {
                     .randomTicks(), CompatObjects.RICH_SOIL), CreativeModeTab.TAB_DECORATIONS);
 
     public static final String PLANTER_RICH_SOUL_NAME = "planter_rich_soul";
-    public static final Supplier<Block> PLANTER_RICH_SOUL = !CompatHandler.nethersdelight ? null :
+    public static final Supplier<Block> PLANTER_RICH_SOUL = !CompatHandler.NETHERSDELIGHT ? null :
             RegUtils.regWithItem(PLANTER_RICH_SOUL_NAME, () ->
                     new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
                             .randomTicks(), CompatObjects.RICH_SOUL_SOIL), CreativeModeTab.TAB_DECORATIONS);

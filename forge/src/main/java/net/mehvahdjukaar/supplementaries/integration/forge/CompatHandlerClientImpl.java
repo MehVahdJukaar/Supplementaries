@@ -9,22 +9,22 @@ import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigS
 public class CompatHandlerClientImpl {
 
     public static void setup() {
-        if (CompatHandler.configured && RegistryConfigs.CUSTOM_CONFIGURED_SCREEN.get()) {
+        if (CompatHandler.CONFIGURED && RegistryConfigs.CUSTOM_CONFIGURED_SCREEN.get()) {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }
-        if (CompatHandler.deco_blocks) {
+        if (CompatHandler.DECO_BLOCKS) {
             DecoBlocksClientCompat.registerRenderLayers();
         }
-        if (CompatHandler.quark) {
+        if (CompatHandler.QUARK) {
             QuarkClientCompatImpl.registerRenderLayers();
         }
-        if (CompatHandler.farmers_delight) {
+        if (CompatHandler.FARMERS_DELIGHT) {
             FarmersDelightCompatImpl.registerRenderLayers();
         }
     }
 
     public static void init() {
-        if (CompatHandler.quark) {
+        if (CompatHandler.QUARK) {
             QuarkClientCompatImpl.init();
         }
     }

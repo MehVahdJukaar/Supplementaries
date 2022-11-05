@@ -19,7 +19,7 @@ public class TextUtils {
     private static final List<FormattedCharSequence> CREDITS = new ArrayList<>();
     private static final List<FormattedCharSequence> BEE_MOVIE = new ArrayList<>();
 
-    private static final float SCALING_FACTOR = 16 * 8;
+    private static final float SCALING_FACTOR = 16 * 8F;
     private static final float SCALE = 1 / SCALING_FACTOR;
 
     static {
@@ -67,7 +67,7 @@ public class TextUtils {
         for (int n = 0; n < 13; ++n) {
             if (startLin + n >= numberOfLines) break;
             FormattedCharSequence str = text.get(startLin + n);
-            float dx = (float) (-fontRenderer.width(str) / 2) + 0.5f;
+            float dx =  (-fontRenderer.width(str) / 2f) + 0.5f;
             int a = (int) (255 * (-Math.pow(((-o + n - 6f) / 7.2f), 2) + 1));
             int col = (int) (255 * side);
             int rgba = NativeImage.combine(a, col, col, col);

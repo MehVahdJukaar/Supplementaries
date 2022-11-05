@@ -126,7 +126,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
             } else {
                 AABB bb = new AABB(x - r, y - r, z - r, x + r, y + r, z + r);
-                List<Entity> entities = worldIn.getEntities(playerIn, bb, (e) -> e instanceof TamableAnimal);
+                List<Entity> entities = worldIn.getEntities(playerIn, bb, TamableAnimal.class::isInstance);
                 for (Entity e : entities) {
                     TamableAnimal pet = ((TamableAnimal) e);
                     if (pet.isTame() && !pet.isOrderedToSit() && pet.getOwnerUUID().equals(playerIn.getUUID())) {
@@ -189,7 +189,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         SimpleParticleType particle = entity.isUnderWater() ? ParticleTypes.BUBBLE : ParticleTypes.NOTE;
 
-        level.addParticle(particle, x, y, z, (double) level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+        level.addParticle(particle, x, y, z,  level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
             matrixStack.translate(-0.4 * mirror, 0.2, 0);
 
-            float timeLeft = (float) stack.getUseDuration() - ((float) entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft =  stack.getUseDuration() - ( entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
 
             float sin = Mth.sin((timeLeft - 0.1F) * 1.3F);
 
@@ -331,7 +331,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
                 poseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
                 poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
 
-                poseStack.translate((float) (leftHand ? -1 : 1) / 16.0F, 0.125D, -0.625D);
+                poseStack.translate( (leftHand ? -1 : 1) / 16.0F, 0.125D, -0.625D);
 
                 transform = leftHand ? ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND : ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
             }

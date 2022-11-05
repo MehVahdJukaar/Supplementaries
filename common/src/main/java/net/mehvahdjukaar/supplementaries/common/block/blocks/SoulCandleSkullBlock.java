@@ -21,7 +21,7 @@ public class SoulCandleSkullBlock extends CandleSkullBlock{
 
     public SoulCandleSkullBlock(Properties properties) {
         super(properties);
-        this.particle = CompatHandler.buzzier_bees ? CompatObjects.SMALL_SOUL_FLAME : ()->ParticleTypes.SOUL_FIRE_FLAME;
+        this.particle = CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : ()->ParticleTypes.SOUL_FIRE_FLAME;
     }
 
     @Override

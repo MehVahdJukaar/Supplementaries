@@ -80,7 +80,7 @@ public class EquipAndRangeAttackGoal extends Goal {
             this.seeTime = 0;
         }
 
-        if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 5) {
+        if ((d0 <=  this.attackRadiusSqr) && this.seeTime >= 5) {
             this.mob.getNavigation().stop();
         } else {
             this.mob.getNavigation().moveTo(this.target, this.speedModifier);
@@ -96,11 +96,11 @@ public class EquipAndRangeAttackGoal extends Goal {
             float f = Mth.sqrt((float) d0) / this.attackRadius;
             float lvt_5_1_ = Mth.clamp(f, 0.1F, 1.0F);
             this.mob.performRangedAttack(this.target, lvt_5_1_);
-            this.attackTime = Mth.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            this.attackTime = Mth.floor(f *  (this.attackIntervalMax - this.attackIntervalMin) +  this.attackIntervalMin);
             this.mob.attackCooldown = cooldown + mob.getRandom().nextInt(20);
         } else if (this.attackTime < 0) {
             float f2 = Mth.sqrt((float) d0) / this.attackRadius;
-            this.attackTime = Mth.floor(f2 * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            this.attackTime = Mth.floor(f2 *  (this.attackIntervalMax - this.attackIntervalMin) +  this.attackIntervalMin);
         }
 
 

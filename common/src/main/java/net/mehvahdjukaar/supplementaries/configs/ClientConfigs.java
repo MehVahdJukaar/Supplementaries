@@ -4,10 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.util.Arrays;
@@ -133,7 +130,7 @@ public class ClientConfigs {
             builder.comment("General settings")
                     .push("general");
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
-                    .define("config_button", CompatHandler.configured);
+                    .define("config_button", CompatHandler.CONFIGURED);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")

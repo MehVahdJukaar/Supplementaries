@@ -13,7 +13,7 @@ public class GunpowderBlockColor implements BlockColor {
 
     static {
         for (int i = 0; i < 9; i++) {
-            float litAmount = (float) i / 8.0F;
+            float litAmount =  i / 8.0F;
             float red = litAmount * 0.7F + 0.3F;
 
             float green = litAmount * litAmount * 0.4F + 0.3F;

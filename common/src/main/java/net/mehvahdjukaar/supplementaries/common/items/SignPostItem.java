@@ -71,7 +71,7 @@ public class SignPostItem extends WoodBasedItem {
         var attachType = getAttachType(state);
         if (attachType != AttachType.NONE) {
 
-            if (CompatHandler.framedblocks) {
+            if (CompatHandler.FRAMEDBLOCKS) {
                 Block f = FramedBlocksCompat.tryGettingFramedBlock(targetBlock, world, blockpos);
                 if (f != null) {
                     framed = true;

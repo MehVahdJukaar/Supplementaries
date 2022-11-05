@@ -53,7 +53,7 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     protected boolean currentlyHasTESR = false; // old
     private int ticksToSwitchMode = 0;
 
-    public SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    protected SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 

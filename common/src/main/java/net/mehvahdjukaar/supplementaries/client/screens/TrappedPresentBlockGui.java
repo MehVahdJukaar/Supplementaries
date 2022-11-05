@@ -24,16 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
 
-
-    private final TrappedPresentBlockTile tile;
-
-    private PackButton packButton;
-
-    private boolean primed;
-    //hasn't received items yet
-    private boolean needsInitialization = true;
-
-    public static MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentBlockGui> GUI_FACTORY =
+    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentBlockGui> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof TrappedPresentBlockTile presentBlockTile) {
@@ -41,6 +32,14 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
                 }
                 return null;
             };
+
+    private final TrappedPresentBlockTile tile;
+
+    private PackButton packButton;
+    private boolean primed;
+    //hasn't received items yet
+    private boolean needsInitialization = true;
+
 
     public TrappedPresentBlockGui(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
         super(container, inventory, text);
@@ -109,7 +108,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
     }
 
     @Override
-    public void dataChanged(AbstractContainerMenu container, int p_150525_, int p_150526_) {
+    public void dataChanged(AbstractContainerMenu container, int dataSlotIndex, int value) {
         this.slotChanged(container, 0, container.getSlot(0).getItem());
     }
 
@@ -173,7 +172,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;

@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -24,7 +23,7 @@ public class ClientEventsFabric {
     public static void init() {
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            if (CompatHandler.cloth_config) {
+            if (CompatHandler.CLOTH_CONFIG) {
                 List<? extends GuiEventListener> listeners = s.children();
                 ClientEvents.addConfigButton(s, listeners, e -> {
                     List<GuiEventListener> c = (List<GuiEventListener>) s.children();

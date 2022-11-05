@@ -109,7 +109,7 @@ public class QuarkCompatImpl {
                 AABB entityBB = entity.getBoundingBox();
                 if (pistonBB.intersects(entityBB)) {
                     //apply potions using quark moving tiles
-                    if (CompatHandler.quark) {
+                    if (CompatHandler.QUARK) {
                         //get tile
                         if (getMovingBlockEntity(pos, level) instanceof BambooSpikesBlockTile tile) {
                             //apply effects
