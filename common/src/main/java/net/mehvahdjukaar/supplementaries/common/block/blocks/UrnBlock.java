@@ -206,7 +206,6 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             for (int i = 0; i < tile.getContainerSize(); ++i) {
                 l.add(tile.getItem(i));
             }
-            l.addAll(super.getDrops(state, builder));
             return l;
         }
         //hax

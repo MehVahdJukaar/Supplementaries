@@ -148,7 +148,7 @@ public class ModBlockProperties {
     }
 
     //for wall lanterns
-    public enum BlockAttachment implements StringRepresentable {
+        public enum BlockAttachment implements StringRepresentable {
         BLOCK("block"),
         BEAM("beam"),
         WALL("wall"),

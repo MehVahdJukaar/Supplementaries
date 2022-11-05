@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data;
 
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncGlobeDataPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -71,7 +71,7 @@ public class GlobeData extends SavedData {
 
     public static void setClientData(GlobeData data) {
         CLIENT_SIDE_INSTANCE = data;
-        GlobeTextureManager.refreshTextures();
+        GlobeManager.refreshTextures();
     }
 
     public static void sendDataToClient(ServerPlayer player) {

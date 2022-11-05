@@ -7,10 +7,8 @@ import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -22,7 +20,6 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -34,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class BlackboardManager {
-
-    private static final TextureManager TEXTURE_MANAGER = Minecraft.getInstance().getTextureManager();
 
     private static final LoadingCache<Key, Blackboard> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
@@ -141,7 +136,8 @@ public class BlackboardManager {
             this.texture.upload();
 
             //texture manager has its own internal id
-            this.textureLocation = TEXTURE_MANAGER.register("blackboard/", this.texture);
+            this.textureLocation = Minecraft.getInstance().getTextureManager()
+                    .register("blackboard/", this.texture);
             this.renderType = RenderType.entitySolid(textureLocation);
         }
 
@@ -196,7 +192,9 @@ public class BlackboardManager {
         @Override
         public void close() {
             if (texture != null) this.texture.close();
-            if (textureLocation != null) TEXTURE_MANAGER.release(textureLocation);
+            if (textureLocation != null) {
+                Minecraft.getInstance().getTextureManager().release(textureLocation);
+            }
         }
     }
 }

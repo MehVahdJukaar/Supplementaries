@@ -22,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -20,6 +20,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 
 public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
@@ -145,7 +146,7 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         //@Override
         @PlatformOnly(PlatformOnly.FORGE)
         public boolean shouldRender(ItemStack stack, T entity) {
-            return !entity.isCrouching();
+            return !entity.isCrouching() && stack.getItem() == Items.ELYTRA;
         }
     }
 }

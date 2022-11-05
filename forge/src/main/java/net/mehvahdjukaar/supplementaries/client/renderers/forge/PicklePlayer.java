@@ -9,16 +9,13 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.BeetrootBlock;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,14 +40,13 @@ public class PicklePlayer {
 
     //event dosent fire for "/" anymore....
     //@SubscribeEvent
-    public static boolean onChatEvent(String  m) {
-       // String m = event.getOriginalMessage();
+    public static boolean onChatEvent(String m) {
+        // String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
         if (m.startsWith("/jarvis")) {
             jarvis = !jarvis;
-           // event.setCanceled(true);
+            // event.setCanceled(true);
             if (jarvis) {
-
                 Minecraft.getInstance().player.displayClientMessage(
                         Component.literal("I am Jarman"), true);
             }
