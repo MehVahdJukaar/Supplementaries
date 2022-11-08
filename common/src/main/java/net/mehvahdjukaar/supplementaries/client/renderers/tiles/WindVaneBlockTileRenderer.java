@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.util.Mth;
 
 
 public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBlockTile> {
@@ -28,7 +26,7 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90 + tile.getYaw(partialTicks)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.getYaw(partialTicks)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
         RenderUtil.renderBlockModel(ClientRegistry.WIND_VANE_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,

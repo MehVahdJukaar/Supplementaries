@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.dynamictrees;
+package net.mehvahdjukaar.supplementaries.integration.forge.dynamictrees;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;

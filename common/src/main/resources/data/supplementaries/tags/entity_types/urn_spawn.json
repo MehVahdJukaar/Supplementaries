@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:silverfish","required":true},
+    {"id":"minecraft:slime","required":true},
+    {"id":"minecraft:bat","required":true},
+    {"id":"alexsmobs:fly","required":false},
+    {"id":"mowziesmobs:grottol","required":false}
+  ]
+}
+

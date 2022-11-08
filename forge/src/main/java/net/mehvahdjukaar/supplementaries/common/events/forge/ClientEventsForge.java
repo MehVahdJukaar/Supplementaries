@@ -113,6 +113,7 @@ public class ClientEventsForge {
 
     public static boolean keyDown = false;
 
+    /*
     @SubscribeEvent
     public static void onKeyPress(ScreenEvent.KeyPressed event) {
         if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
@@ -130,7 +131,7 @@ public class ClientEventsForge {
         if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
 
         }
-    }
+    }*/
 
 
 }

@@ -49,7 +49,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             FULL_BOTTOM,
             Block.box(2, 0, 2, 14, 3, 14),
             Block.box(1, 0, 1, 15, 7, 15),
-            Block.box(1, 0, 1, 15, 11, 15),
+            Block.box(1, 0, 1, 15, 14, 15),
             Block.box(1, 0, 1, 15, 16, 15),};
 
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
@@ -149,14 +149,10 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) return; //only bottom one handles ticking
         if (level.getRawBrightness(pos, 0) >= 9) {
-            int age = this.getAge(state);
             if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
                 float f = getGrowthSpeed(this, level, pos);
                 if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
-                    if (age + 1 >= DOUBLE_AGE) {
-                        level.setBlock(pos.above(), this.getStateForAge(age + 1).setValue(HALF, DoubleBlockHalf.UPPER), 3);
-                    }
-                    level.setBlock(pos, this.getStateForAge(age + 1), 2);
+                    this.growCropBy(level, pos, state, 1);
                     ForgeHelper.onCropsGrowPost(level, pos, state);
                 }
             }
@@ -169,6 +165,10 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
             if (ev != null) return ev;
+            else {
+                BlockState below = world.getBlockState(pos.below());
+                return this.use(below, world, pos.below(), player, hand, rayTraceResult);
+            }
         }
         return old;
     }
@@ -181,7 +181,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     //for bonemeal
     @Override
     public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER && (!this.isMaxAge(state) && (this.canGrowUp(worldIn, pos) || this.getAge(state) < DOUBLE_AGE - 1));
+        return (!this.isMaxAge(state) && (this.canGrowUp(worldIn, pos) || this.getAge(state) < DOUBLE_AGE - 1));
     }
 
     //here I'm assuming canGrow has already been called
@@ -199,7 +199,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         newAge = Math.min(newAge, this.getMaxAge());
 
         if (newAge >= DOUBLE_AGE) {
-            if (!this.canGrowUp(level, pos)) return;
             level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
         }
         level.setBlock(pos, getStateForAge(newAge), 2);

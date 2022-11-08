@@ -346,7 +346,11 @@ public class CommonConfigs {
 
     public static class Blocks {
 
+
+        public static Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
+
         public static Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
+        public static Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 
         public static Supplier<Integer> BUBBLE_LIFETIME;
         public static Supplier<Boolean> BUBBLE_BREAK;
@@ -434,7 +438,14 @@ public class CommonConfigs {
             builder.comment("Server side blocks configs")
                     .push("blocks");
 
+            builder.push("urn");
+            URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
+                            .define("critter_spawn_chance",0.01f, 0, 1);
+            builder.pop();
+
             builder.push("bamboo_spikes");
+            BAMBOO_SPIKES_DROP_LOOT = builder.comment("Allows entities killed by spikes to drop loot as if they were killed by a player")
+                    .define("player_loot", false);
             BAMBOO_SPIKES_ALTERNATIVE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("alternative_mode", true);
             builder.pop();

@@ -37,7 +37,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -208,7 +207,7 @@ public class CreateCompatImpl {
         public void damageEntities(MovementContext context) {
             Level world = context.world;
             Vec3 pos = context.position;
-            DamageSource damageSource = getDamageSource();
+            DamageSource damageSource = BambooSpikesBlock.getDamageSource(world);
 
             Entities:
             for (Entity entity : world.getEntitiesOfClass(Entity.class,
@@ -222,14 +221,14 @@ public class CreateCompatImpl {
                                 && ace.getContraption() == context.contraption)
                             continue Entities;
                 //attack entities
-                if (entity.isAlive() && entity instanceof LivingEntity) {
+                if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
                     if (!world.isClientSide) {
 
                         double pow = 5 * Math.pow(context.relativeMotion.length(), 0.4) + 1;
                         float damage = !isSameDir(context) ? 1 :
                                 (float) Mth.clamp(pow, 2, 6);
                         entity.hurt(damageSource, damage);
-                        this.doTileStuff(context, world, (LivingEntity) entity);
+                        this.doTileStuff(context, world, livingEntity);
                     }
 
                 }
@@ -267,11 +266,6 @@ public class CreateCompatImpl {
         public boolean isOnCooldown(Level world, long lastTicked) {
             return world.getGameTime() - lastTicked < 20;
         }
-
-        protected DamageSource getDamageSource() {
-            return ModDamageSources.SPIKE_DAMAGE;
-        }
-
     }
 
     private static class HourglassBehavior implements MovementBehaviour {

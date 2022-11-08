@@ -167,7 +167,6 @@ dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${rootProject.moonlight_version}")
-    //modImplementation("vectorwing:FarmersDelight:1")
 
     modImplementation("curse.maven:farmers-delight-398521:3999157")
 
@@ -191,6 +190,8 @@ dependencies {
     modImplementation("curse.maven:create-328085:4011414")
     modImplementation("curse.maven:biomes-o-plenty-220318:4034263")
     modImplementation("curse.maven:terrablender-563928:4013816")
+    modImplementation("curse.maven:breezy-690628:4055467")
+    modImplementation("curse.maven:geckolib-388172:4064451")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")

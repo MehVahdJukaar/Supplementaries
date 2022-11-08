@@ -5,9 +5,13 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -18,18 +22,18 @@ import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
@@ -52,6 +56,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UrnBlock extends FallingBlock implements EntityBlock {
@@ -260,5 +265,25 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         spawnExtraBrokenParticles(pState, pos, pLevel);
     }
 
-
+    @Override
+    public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean bl) {
+        super.spawnAfterBreak(state, level, pos, stack, bl);
+        if (level.random.nextFloat() < CommonConfigs.Blocks.URN_ENTITY_SPAWN_CHANCE.get() &&
+                level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
+            List<EntityType<?>> list = new ArrayList<>();
+            for (var e : Registry.ENTITY_TYPE.getTagOrEmpty(ModTags.URN_SPAWN)) {
+                list.add(e.value());
+            }
+            if (!list.isEmpty()) {
+                var e = list.get(level.getRandom().nextInt(list.size()));
+                Entity entity = e.create(level);
+                if (entity != null) {
+                    if(entity instanceof Slime slime)slime.setSize(0, true);
+                    entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F);
+                    level.addFreshEntity(entity);
+                }
+            }
+        }
+    }
 }

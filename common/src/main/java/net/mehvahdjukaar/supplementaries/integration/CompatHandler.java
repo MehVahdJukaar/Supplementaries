@@ -54,6 +54,7 @@ public class CompatHandler {
     public static final boolean OREGANIZED;
     public static final boolean CLOTH_CONFIG;
     public static final boolean FLAN;
+    public static final boolean BREEZY;
 
     static {
         QUARK = isLoaded("quark");
@@ -96,6 +97,7 @@ public class CompatHandler {
         SNOWYSPIRIT = isLoaded("snowyspirit");
         CLOTH_CONFIG = isLoaded("cloth_config");
         FLAN = isLoaded("flan");
+        BREEZY = isLoaded("breezy");
     }
 
     private static boolean isLoaded(String name) {

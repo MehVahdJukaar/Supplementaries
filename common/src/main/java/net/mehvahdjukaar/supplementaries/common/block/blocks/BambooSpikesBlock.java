@@ -6,20 +6,25 @@ import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -35,6 +40,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,6 +78,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
+    }
+    
+    public static DamageSource getDamageSource(Level level) {
+        if ( CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
+            return new ModDamageSources.SpikePlayer("spike", CommonUtil.getFakePlayer(level)).setProjectile();
+        }
+        return ModDamageSources.SPIKE_DAMAGE;
     }
 
     @Override
@@ -144,7 +157,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     //TODO: fix pathfinding
 
     @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof Player player && player.isCreative()) return;
         if (entityIn instanceof LivingEntity le && entityIn.isAlive()) {
             boolean up = state.getValue(FACING) == Direction.UP;
@@ -154,14 +167,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             entityIn.makeStuckInBlock(state, new Vec3(0.95D, vy, 0.95D));
             entityIn.fallDistance = fall;
 
-            if (!worldIn.isClientSide) {
+            if (!level.isClientSide) {
                 if (up && entityIn instanceof Player && entityIn.isShiftKeyDown()) return;
                 float damage = entityIn.getY() > (pos.getY() + 0.0625) ? 3 : 1.5f;
-                entityIn.hurt(ModDamageSources.SPIKE_DAMAGE, damage);
+                entityIn.hurt(getDamageSource(level), damage);
                 if (state.getValue(TIPPED)) {
-                    if (worldIn.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
-                        if (te.interactWithEntity(le, worldIn)) {
-                            worldIn.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
+                    if (level.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
+                        if (te.interactWithEntity(le, level)) {
+                            level.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
                         }
                     }
                 }

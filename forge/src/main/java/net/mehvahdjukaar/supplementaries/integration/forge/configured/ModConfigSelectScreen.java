@@ -43,7 +43,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
                 "https://www.patreon.com/user?u=53696377", "Support me on Patreon :D");
 
         LinkButton kofi = LinkButton.create(MISC_ICONS, this, centerX - 45 - 22 * 2, y, 2, 2,
-                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffe");
+                "https://ko-fi.com/mehvahdjukaar", "Donate a Coffee");
 
         LinkButton curseforge = LinkButton.create(MISC_ICONS, this, centerX - 45 - 22 * 3, y, 1, 2,
                 "https://www.curseforge.com/minecraft/mc-mods/supplementaries", "CurseForge Page");

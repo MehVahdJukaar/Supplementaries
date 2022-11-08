@@ -127,7 +127,7 @@ public class QuarkCompatImpl {
                             updateMovingTile(pos, level, tile);
                         }
                     }
-                    entity.hurt(ModDamageSources.SPIKE_DAMAGE, sameDir ? 3 : 1);
+                    entity.hurt(BambooSpikesBlock.getDamageSource(level), sameDir ? 3 : 1);
                 }
             }
         }
