@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -135,7 +135,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
-                AntiqueInkProvider.setAntiqueInk(tile, message.ink);
+                AntiqueInkHelper.setAntiqueInk(tile, message.ink);
             }
         });
     }

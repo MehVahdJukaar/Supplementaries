@@ -10,14 +10,13 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -81,8 +80,8 @@ public class DispenserRegistry {
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
         DispenserHelper.registerCustomBehavior(new BambooSpikesDispenserBehavior(Items.LINGERING_POTION));
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
-        if(isForge) {
-            DispenserHelper.registerCustomBehavior(new SoapBehavior(ModRegistry.SOAP.get()));
+        if (isForge) {
+            DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
         }
 
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
@@ -133,7 +132,7 @@ public class DispenserRegistry {
                         DispenserHelper.registerCustomBehavior(new FishBucketJarDispenserBehavior(i));
                     }
                     if (isForge && axe && i instanceof AxeItem) {
-                        DispenserHelper.registerCustomBehavior(new AxeDispenserBehavior(i));
+                        DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(i));
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);
@@ -142,46 +141,29 @@ public class DispenserRegistry {
         }
     }
 
-    private static class AxeDispenserBehavior extends AdditionalDispenserBehavior {
+    private static class FakePlayerUseItemBehavior extends AdditionalDispenserBehavior {
 
-        protected AxeDispenserBehavior(Item item) {
+        protected FakePlayerUseItemBehavior(Item item) {
             super(item);
         }
 
         @Override
         protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-            //this.setSuccessful(false);
             ServerLevel level = source.getLevel();
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos pos = source.getPos().relative(dir);
 
             Player fp = CommonUtil.getFakePlayer(level);
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
-            UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));
+            UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));
 
             var v = stack.useOn(context);
-            if(v.consumesAction())return InteractionResultHolder.sidedSuccess( stack,false);
+            if (v.consumesAction()) return InteractionResultHolder.sidedSuccess(stack, false);
             return InteractionResultHolder.fail(stack);
         }
     }
 
-    private static class SoapBehavior extends AdditionalDispenserBehavior {
-
-        protected SoapBehavior(Item item) {
-            super(item);
-        }
-
-        @Override
-        protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-            //this.setSuccessful(false);
-            ServerLevel level = source.getLevel();
-            BlockPos pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            if (SoapItem.tryCleaning(stack, level, pos, null)) {
-                return InteractionResultHolder.success(stack);
-            }
-            return InteractionResultHolder.fail(stack);
-        }
-    }
     private static class FlintAndSteelDispenserBehavior extends AdditionalDispenserBehavior {
 
         protected FlintAndSteelDispenserBehavior(Item item) {
@@ -219,7 +201,7 @@ public class DispenserRegistry {
             Position dispensePosition = DispenserBlock.getDispensePosition(source);
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             Projectile projectileEntity = this.getProjectileEntity(world, dispensePosition, stack);
-            projectileEntity.shoot(direction.getStepX(),  direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
+            projectileEntity.shoot(direction.getStepX(), direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
             world.addFreshEntity(projectileEntity);
             stack.shrink(1);
             return InteractionResultHolder.success(stack);
@@ -391,7 +373,7 @@ public class DispenserRegistry {
 
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 
-            pearl.shoot(direction.getStepX(),  direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
+            pearl.shoot(direction.getStepX(), direction.getStepY() + 0.1F, direction.getStepZ(), this.getPower(), this.getUncertainty());
             level.addFreshEntity(pearl);
 
             stack.shrink(1);

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
+package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.minecraft.core.BlockPos;

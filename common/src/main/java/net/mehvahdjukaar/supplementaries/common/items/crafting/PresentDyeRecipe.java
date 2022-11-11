@@ -63,8 +63,7 @@ public class PresentDyeRecipe extends CustomRecipe {
         }
 
         //improve this is crap
-        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem())
-                .getItemColorMap().get(dyecolor).get().asItem());
+        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem()).changeItemColor(dyecolor).asItem());
 
         if (itemstack.hasTag()) {
             result.setTag(itemstack.getTag().copy());

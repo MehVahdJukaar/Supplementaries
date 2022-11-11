@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -40,7 +41,6 @@ import java.util.function.Supplier;
 
 public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
-    private static final Map<DyeColor, Block> BY_COLOR = Maps.newHashMap();
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private final DyeColor color;
@@ -48,7 +48,6 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     public FlagBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
-        BY_COLOR.put(color, this);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
 
         if(PlatformHelper.getPlatform().isFabric())
@@ -75,14 +74,12 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
         return this.color;
     }
 
+    @Nullable
     @Override
-    @SuppressWarnings("unckecned")
-    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
-        return ModRegistry.FLAGS;
-    }
-
-    public static Block byColor(DyeColor color) {
-        return BY_COLOR.getOrDefault(color, Blocks.WHITE_BANNER);
+    public Item changeItemColor(@Nullable DyeColor color) {
+        var c =  ModRegistry.FLAGS.get(color);
+        if(c != null)return c.get().asItem();
+        return null;
     }
 
     @Override

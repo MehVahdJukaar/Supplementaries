@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import net.mehvahdjukaar.supplementaries.common.capabilities.forge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.BlockPos;

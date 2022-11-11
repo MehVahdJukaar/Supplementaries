@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.effects;
+package net.mehvahdjukaar.supplementaries.common.misc;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

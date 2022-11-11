@@ -180,6 +180,8 @@ dependencies {
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
     modImplementation("curse.maven:waystones-245755:3835119")
+    modImplementation("com.itayfeder.tinted:Tinted:1.19.2-1.1.0")
+    modImplementation("curse.maven:shimmer-627824:4028644")
 
     modImplementation("curse.maven:balm-531761:3881348")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")

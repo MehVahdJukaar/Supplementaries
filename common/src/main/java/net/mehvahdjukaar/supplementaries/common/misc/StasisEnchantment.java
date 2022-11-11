@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.effects;
+package net.mehvahdjukaar.supplementaries.common.misc;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.items.BubbleBlower;
@@ -20,7 +20,6 @@ public class StasisEnchantment extends Enchantment {
         super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW,
                 new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }
-
 
     @Override
     public int getMinCost(int level) {

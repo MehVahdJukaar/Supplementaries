@@ -211,7 +211,7 @@ public class RegUtils {
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
         regItem(baseName, () -> new PresentItem(block.get(),
-                new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
+                new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))));
 
 
         for (DyeColor color : DyeColor.values()) {
@@ -225,7 +225,7 @@ public class RegUtils {
             //item
 
             regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName)), map));
+                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))));
         }
         return map;
     }

@@ -60,10 +60,7 @@ public class SupplementariesForge {
 
 
     public static void init(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            Supplementaries.commonSetup();
-        });
-
+        event.enqueueWork(Supplementaries::commonSetup);
     }
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");

@@ -9,11 +9,12 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.capabilities.antique_ink.AntiqueInkProvider;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
+import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -97,6 +98,7 @@ public class ItemsOverrideHandler {
         itemAction.add(new CompassItemBehavior());
 
         HPItemActionOnBlock.add(new AntiqueInkBehavior());
+        HPItemActionOnBlock.add(new SoapBehavior());
         HPItemActionOnBlock.add(new WrenchBehavior());
         HPItemActionOnBlock.add(new SkullCandlesBehavior());
 
@@ -600,15 +602,11 @@ public class ItemsOverrideHandler {
         }
     }
 
-    //TODO: re add
-    /*
-    private static class SoapClearBehavior extends ItemUseOnBlockOverride {
-
-        boolean enabled = RegistryConfigs.SOAP_ENABLED.get();
+    private static class SoapBehavior extends ItemUseOnBlockOverride {
 
         @Override
         public boolean isEnabled() {
-            return enabled;
+            return RegistryConfigs.SOAP_ENABLED.get();
         }
 
         @Override
@@ -617,47 +615,31 @@ public class ItemsOverrideHandler {
         }
 
         @Override
-        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+        public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
-
-                boolean newState = !stack.is(Items.INK_SAC);
                 BlockPos pos = hit.getBlockPos();
-                BlockEntity tile = world.getBlockEntity(pos);
-                if (tile != null) {
-                    var cap = tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-                    AtomicBoolean success = new AtomicBoolean(false);
-                    cap.ifPresent(c -> {
-                        if (c.hasAntiqueInk() != newState) {
-                            c.setAntiqueInk(newState);
-                            tile.setChanged();
-                            if (world instanceof ServerLevel serverLevel) {
-                                NetworkHandler.sendToAllInRangeClients(pos, serverLevel, 256,
-                                        new ClientBoundSyncAntiqueInk(pos, newState));
-                            }
-                            success.set(true);
-                        }
-                    });
-                    if (success.get()) {
-                        if (newState) {
-                            world.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        } else {
-                            world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        }
-                        if (!player.isCreative()) stack.shrink(1);
-                        return InteractionResult.sidedSuccess(world.isClientSide);
+                if(SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))){
+                    if(player instanceof ServerPlayer serverPlayer) {
+                        if(!player.getAbilities().instabuild) stack.shrink(1);
+
+                        level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+
+                        level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) serverPlayer, pos, stack);
                     }
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
             return InteractionResult.PASS;
         }
     }
-    */
 
     private static class AntiqueInkBehavior extends ItemUseOnBlockOverride {
 
         @Override
         public boolean isEnabled() {
-            return AntiqueInkProvider.isEnabled();
+            return AntiqueInkHelper.isEnabled();
         }
 
         @Override
@@ -672,7 +654,7 @@ public class ItemsOverrideHandler {
                 BlockPos pos = hit.getBlockPos();
                 BlockEntity tile = world.getBlockEntity(pos);
                 if (tile != null && (!(tile instanceof IOwnerProtected op) || op.isAccessibleBy(player))) {
-                    if (AntiqueInkProvider.toggleAntiqueInkOnSigns(world, player, stack, newState, pos, tile)) {
+                    if (AntiqueInkHelper.toggleAntiqueInkOnSigns(world, player, stack, newState, pos, tile)) {
                         return InteractionResult.sidedSuccess(world.isClientSide);
                     }
                 }

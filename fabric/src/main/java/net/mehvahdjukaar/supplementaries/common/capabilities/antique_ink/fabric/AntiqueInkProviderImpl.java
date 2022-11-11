@@ -11,7 +11,4 @@ public class AntiqueInkProviderImpl {
     public static boolean toggleAntiqueInkOnSigns(Level world, Player player, ItemStack stack, boolean newState, BlockPos pos, BlockEntity tile) {
         return false;
     }
-
-    public static void setAntiqueInk(BlockEntity tile, boolean ink) {
-    }
 }

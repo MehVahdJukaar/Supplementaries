@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -31,32 +32,29 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
 
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
-        try {
-            BlockState mimic = data.get(ModBlockProperties.MIMIC);
-            Boolean isFramed = data.get(ModBlockProperties.FRAMED);
+        BlockState mimic = data.get(ModBlockProperties.MIMIC);
+        Boolean isFramed = data.get(ModBlockProperties.FRAMED);
 
-            boolean framed = CompatHandler.FRAMEDBLOCKS && (isFramed != null && isFramed);
+        boolean framed = CompatHandler.FRAMEDBLOCKS && (isFramed != null && isFramed);
 
-            //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
-            //always solid.
+        //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
+        //always solid.
 
-            if (mimic != null && !mimic.isAir()) {
+        if (mimic != null && !mimic.isAir()) {
 
-                ExtraModelData data2;
-                if (framed) {
-                    //TODO: fix
-                    data2 = FramedBlocksCompat.getModelData(mimic);
-                    mimic = FramedBlocksCompat.getFramedFence();
-                } else {
-                    data2 = ExtraModelData.EMPTY;
-                }
-                BakedModel model = blockModelShaper.getBlockModel(mimic);
-
-                return model.getQuads(mimic, side, rand);
+            ExtraModelData data2;
+            if (framed) {
+                //TODO: fix
+                data2 = FramedBlocksCompat.getModelData(mimic);
+                mimic = FramedBlocksCompat.getFramedFence();
+            } else {
+                data2 = ExtraModelData.EMPTY;
             }
-        } catch (Exception ignored) {
-            int a = 1;
+            BakedModel model = blockModelShaper.getBlockModel(mimic);
+
+            return model.getQuads(mimic, side, rand);
         }
+
         return Collections.emptyList();
     }
 

@@ -5,10 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -20,11 +17,8 @@ import java.util.function.Supplier;
 
 public class PresentItem extends BlockItem implements IColored {
 
-    private final Map<DyeColor, Supplier<Block>> registry;
-
-    public PresentItem(Block block, Properties properties, Map<DyeColor, Supplier<Block>> registry) {
+    public PresentItem(Block block, Properties properties) {
         super(block, properties);
-        this.registry = registry;
     }
 
     @Override
@@ -64,8 +58,8 @@ public class PresentItem extends BlockItem implements IColored {
 
     @Nullable
     @Override
-    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
-        return registry;
+    public Item changeItemColor(@Nullable DyeColor color) {
+        return ((PresentBlock) this.getBlock()).changeItemColor(color);
     }
 
     @Override

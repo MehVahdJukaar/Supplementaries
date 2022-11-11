@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
+package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

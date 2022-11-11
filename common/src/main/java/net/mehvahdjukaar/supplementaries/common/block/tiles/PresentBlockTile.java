@@ -2,23 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
-import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -26,16 +16,10 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
-public class PresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
+public class PresentBlockTile extends AbstractPresentBlockTile {
 
     //"" means not packed. this is used for packed but can be opened by everybody
     public static final String PUBLIC_KEY = "@e";
@@ -45,27 +29,12 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     private String description = "";
 
     public PresentBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.PRESENT_TILE.get(), pos, state, 1);
+        super(ModRegistry.PRESENT_TILE.get(), pos, state);
     }
 
     @Override
     public boolean canHoldItems() {
         return this.isPacked();
-    }
-
-    @Override
-    @Nullable
-    public DyeColor getColor() {
-        return ((PresentBlock) this.getBlockState().getBlock()).getColor();
-    }
-
-    public static boolean isPacked(ItemStack stack) {
-        CompoundTag com = stack.getTag();
-        if (com != null) {
-            CompoundTag nbt = com.getCompound("BlockEntityTag");
-            return nbt.getBoolean("Packed");
-        }
-        return false;
     }
 
     public boolean isPacked() {
@@ -131,6 +100,7 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
                 this.sender.equalsIgnoreCase(player.getName().getString());
     }
 
+    @Override
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         if (this.isUnused()) {
             if (this.canOpen(player)) {
@@ -147,18 +117,6 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
     @Override
     public Component getDefaultName() {
         return Component.translatable("gui.supplementaries.present");
-    }
-
-    @Override
-    protected void updateBlockState(BlockState state, boolean b) {
-    }
-
-    @Override
-    protected void playOpenSound(BlockState state) {
-    }
-
-    @Override
-    protected void playCloseSound(BlockState state) {
     }
 
     @Override
@@ -185,46 +143,6 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         return new PresentContainerMenu(id, player, this, this.worldPosition);
     }
 
-    public static boolean isAcceptableItem(ItemStack stack) {
-        return CommonUtil.isAllowedInShulker(stack) && !(stack.getItem() instanceof PresentItem);
-    }
-
-    @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        return isAcceptableItem(stack);
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return false;
-    }
-
-    //sync stuff to client
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public ItemStack getPresentItem(ItemLike block) {
-        CompoundTag compoundTag = new CompoundTag();
-        this.saveAdditional(compoundTag);
-        ItemStack itemstack = new ItemStack(block);
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (this.hasCustomName()) {
-            itemstack.setHoverName(this.getCustomName());
-        }
-        return itemstack;
-    }
-
     @Nullable
     public Component getSenderMessage() {
         return getSenderMessage(this.sender);
@@ -249,19 +167,5 @@ public class PresentBlockTile extends OpeneableContainerBlockEntity implements I
         } else {
             return Component.translatable("message.supplementaries.present.to", recipient);
         }
-    }
-
-    //this shouldn't be needed
-    //TODO: check
-    /*
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ForgeCapabilities.ITEM_HANDLER) return LazyOptional.empty();
-        return super.getCapability(capability, facing);
-    }*/
-
-    @Override
-    public @Nullable <T extends ItemLike> Map<DyeColor, Supplier<T>> getItemColorMap() {
-        return ((IColored)this.getBlockState().getBlock()).getItemColorMap();
     }
 }

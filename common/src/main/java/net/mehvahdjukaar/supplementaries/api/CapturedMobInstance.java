@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.api;
 
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.CapturedMobHandler;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class CapturedMobInstance<T extends Entity> {

@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
@@ -62,7 +63,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     }
 
     public ItemStack getItem(BlockState state) {
-        ItemStack itemstack = new ItemStack(FlagBlock.byColor(this.getColor()));
+        ItemStack itemstack = new ItemStack(ModRegistry.FLAGS.get(this.baseColor).get());
         if (this.itemPatterns != null && !this.itemPatterns.isEmpty()) {
             itemstack.getOrCreateTagElement("BlockEntityTag").put("Patterns", this.itemPatterns.copy());
         }
@@ -70,11 +71,6 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
             itemstack.setHoverName(this.name);
         }
         return itemstack;
-    }
-
-    @Override
-    public DyeColor getColor() {
-        return this.baseColor;
     }
 
     @Override
@@ -130,8 +126,15 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         return this.name;
     }
 
+    @Nullable
     @Override
-    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
-        return ModRegistry.FLAGS;
+    public DyeColor getColor() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Item changeItemColor(@org.jetbrains.annotations.Nullable DyeColor color) {
+        return ((IColored) this.getBlockState().getBlock()).changeItemColor(color);
     }
 }

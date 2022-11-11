@@ -69,9 +69,9 @@ public class SoapClearRecipe extends CustomRecipe {
         var op = IColored.getOptional(i);
         if (op.isPresent()) {
             var colored = op.get();
-            var map = colored.getItemColorMap();
-            if (map != null) {
-                result = ((ItemLike) map.get(colored.supportsBlankColor() ? null : DyeColor.WHITE)).asItem().getDefaultInstance();
+            var r = colored.changeItemColor(colored.supportsBlankColor() ? null : DyeColor.WHITE);
+            if (r != null) {
+                result = r.getDefaultInstance();
             } else {
                 result = itemstack.copy();
             }

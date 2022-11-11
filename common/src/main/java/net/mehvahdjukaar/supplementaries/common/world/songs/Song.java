@@ -5,11 +5,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.BuiltinAnimation;
-import net.mehvahdjukaar.supplementaries.common.capabilities.mob_container.DataDefinedCatchableMob;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;

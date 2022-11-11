@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -273,10 +274,12 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return color;
     }
 
-    @Override
     @Nullable
-    public Map<DyeColor, Supplier<Block>> getItemColorMap() {
-        return ModRegistry.CANDLE_HOLDERS;
+    @Override
+    public Item changeItemColor(@Nullable DyeColor color) {
+        var c =  ModRegistry.CANDLE_HOLDERS.get(color);
+        if(c != null)return c.get().asItem();
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -11,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = {"net.minecraft.world.inventory.GrindstoneMenu$4"})
 public abstract class GrindstoneTestSlotMixin {
-
 
     @Inject(method = {"getExperienceFromItem"}, at = @At("HEAD"), cancellable = true)
     private void getExperienceFromItem(ItemStack stack, CallbackInfoReturnable<Integer> cir){

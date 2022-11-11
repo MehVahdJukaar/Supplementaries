@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.gson.JsonParser;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
@@ -13,7 +14,12 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.HCLColor;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.moonlight.api.util.math.kmeans.DataSet;
+import net.mehvahdjukaar.moonlight.api.util.math.kmeans.KMeans;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
@@ -22,12 +28,17 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 
 public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
@@ -83,7 +94,6 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
-
 
         RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
             e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
@@ -176,6 +186,25 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
              TextureImage mask = TextureImage.open(manager,
                      Supplementaries.res("blocks/hanging_signs/board_mask"))) {
 
+            {
+                List<HCLColor> colors = new ArrayList<>();
+
+                for (var c : DyeColor.values()) {
+                    try (TextureImage wool = TextureImage.open(manager,
+                            RPUtils.findFirstBlockTextureLocation(manager,((BlockItem) BlocksColorAPI.getColoredItem("wool", c)).getBlock()))) {
+                        colors.add(wool.getAverageColor().asHCL());
+                    } catch (Exception e) {
+                    }
+                }
+                colors.sort(Comparator.comparingDouble(c -> c.asHSV().hue()));
+                var t = template.makeCopy();
+                int x = 0;
+                for (var v : colors) {
+                    t.getImage().setPixelRGBA(x, 0, v.asRGB().toInt());
+                    x++;
+                }
+                dynamicPack.addAndCloseTexture(new ResourceLocation("test_palette"), t);
+            }
 
             Respriter respriter = Respriter.masked(template, mask);
 

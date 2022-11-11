@@ -1,18 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,16 +17,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nullable;
 
 public class SoapItem extends Item {
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
             .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
-                     new MobEffectInstance(MobEffects.POISON, 120, 2), 1).build();
+                    new MobEffectInstance(MobEffects.POISON, 120, 2), 1).build();
 
     public SoapItem(Properties pProperties) {
         super(pProperties.food(SOAP_FOOD));
@@ -59,7 +52,7 @@ public class SoapItem extends Item {
             double x = entity.getX() + v.x;
             double y = entity.getEyeY() + v.y - 0.12;
             double z = entity.getZ() + v.z;
-            for(int j = 0; j<4; j++) {
+            for (int j = 0; j < 4; j++) {
                 RandomSource r = entity.getRandom();
                 v = v.scale(0.1 + r.nextFloat() * 0.1f);
                 double dx = v.x + ((0.5 - r.nextFloat()) * 0.9);
@@ -85,23 +78,6 @@ public class SoapItem extends Item {
             return a != null;
         }
         return false;
-    }
-
-    //TODO: replace with event
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-
-        if (tryCleaning(context.getItemInHand(), level, context.getClickedPos(), context.getPlayer()))
-            return InteractionResult.sidedSuccess(level.isClientSide);
-
-        return super.useOn(context);
-    }
-
-
-    @ExpectPlatform
-    public static boolean tryCleaning(ItemStack stack, Level level, BlockPos pos, @Nullable Player player) {
-        throw new AssertionError();
     }
 
 }

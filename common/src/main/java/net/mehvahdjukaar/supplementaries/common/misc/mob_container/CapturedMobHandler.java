@@ -1,31 +1,24 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
+package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.JsonOps;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.VisibleForDebug;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -95,19 +88,12 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     public static ICatchableMob getCatchableMobCapOrDefault(Entity entity) {
         if (entity instanceof ICatchableMob cap) return cap;
-        var forgeCap = getForgeCap(entity);
+        var forgeCap = SuppPlatformStuff.getForgeCap(entity, ICatchableMob.class);
         if (forgeCap != null) return forgeCap;
         var prop = getDataCap(entity.getType(), BucketHelper.isModdedFish(entity));
         if (prop != null) return prop;
         return ICatchableMob.DEFAULT;
     }
-
-    @ExpectPlatform
-    private static ICatchableMob getForgeCap(Entity entity) {
-        throw new AssertionError();
-    }
-
-
 
     //debug
     public static void saveFile(DataDefinedCatchableMob data) {

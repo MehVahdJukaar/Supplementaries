@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
+import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -37,28 +39,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity implements IColored, IDynamicContainer {
+public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     private long lastActivated = 0;
 
     public TrappedPresentBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.TRAPPED_PRESENT_TILE.get(), pos, state, 1);
+        super(ModRegistry.TRAPPED_PRESENT_TILE.get(), pos, state);
     }
 
     @Override
     public boolean canHoldItems() {
         return this.isPrimed();
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return 1;
-    }
-
-    @Override
-    @Nullable
-    public DyeColor getColor() {
-        return ((TrappedPresentBlock) this.getBlockState().getBlock()).getColor();
     }
 
     public static boolean isPrimed(ItemStack stack) {
@@ -71,7 +62,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
     }
 
     public boolean isPrimed() {
-        return this.getBlockState().getValue(TrappedPresentBlock.PRIMED);
+        return this.getBlockState().getValue(TrappedPresentBlock.PACKED);
     }
 
     public void updateState(boolean primed) {
@@ -87,7 +78,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }
-            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, primed), 3);
+            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(TrappedPresentBlock.PACKED, primed), 3);
         }
     }
 
@@ -96,6 +87,7 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
         return !this.isPrimed();
     }
 
+    @Override
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         long time = player.level.getGameTime();
         if (this.isUnused() &&
@@ -126,71 +118,8 @@ public class TrappedPresentBlockTile extends OpeneableContainerBlockEntity imple
     }
 
     @Override
-    protected void updateBlockState(BlockState state, boolean b) {
-    }
-
-    @Override
-    protected void playOpenSound(BlockState state) {
-    }
-
-    @Override
-    protected void playCloseSound(BlockState state) {
-    }
-
-    @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new TrappedPresentContainerMenu(id, player, this, this.worldPosition);
-    }
-
-    @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        return PresentBlockTile.isAcceptableItem(stack);
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return false;
-    }
-
-    //sync stuff to client. Needed for pick block
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public ItemStack getPresentItem(ItemLike block) {
-        CompoundTag compoundTag = new CompoundTag();
-        this.saveAdditional(compoundTag);
-        ItemStack itemstack = new ItemStack(block);
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (this.hasCustomName()) {
-            itemstack.setHoverName(this.getCustomName());
-        }
-        return itemstack;
-    }
-
-    //this shouldnt be needed
-    //TODO: check
-    /*
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (capability == ForgeCapabilities.ITEM_HANDLER) return LazyOptional.empty();
-        return super.getCapability(capability, facing);
-    }
-    */
-
-    @Override
-    public @Nullable <T extends ItemLike> Map<DyeColor, Supplier<T>> getItemColorMap() {
-        return ((IColored)this.getBlockState().getBlock()).getItemColorMap();
     }
 
 }

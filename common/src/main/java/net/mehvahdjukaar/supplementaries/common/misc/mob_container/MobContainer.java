@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.capabilities.mob_container;
+package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -49,7 +49,7 @@ public class MobContainer {
     //static mob instance created from entity data.
     //handles the animations. Also contains a reference to the entity properties and visual entity itself
     @Nullable
-    private CapturedMobInstance mobInstance;
+    private CapturedMobInstance<?> mobInstance;
     //mob settings. In case of bucket holder these wil only consist of default cap or data ones
     private ICatchableMob mobProperties;
     private boolean needsInitialization = false;
@@ -68,8 +68,8 @@ public class MobContainer {
     }
 
     public void load(CompoundTag tag) {
-        MobNBTData data = MobNBTData.load(tag);
-        this.setData(data);
+        MobNBTData d = MobNBTData.load(tag);
+        this.setData(d);
     }
 
     private void setData(@Nullable MobNBTData data) {
@@ -369,7 +369,7 @@ public class MobContainer {
         var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
         float babyScale = 1;
 
-        if (mob instanceof LivingEntity && ((LivingEntity) mob).isBaby()) {
+        if (mob instanceof LivingEntity livingEntity && livingEntity.isBaby()) {
             if ((mob instanceof Villager)) babyScale = 1.125f;
             else if (mob instanceof AgeableMob) babyScale = 2f;
             else babyScale = 1.125f;
