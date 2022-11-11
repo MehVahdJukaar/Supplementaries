@@ -35,7 +35,6 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(angle));
         matrixStackIn.translate(-0.5, -0.75 - tile.getAttachmentOffset(), -0.375);
 
-
         // render block
         SuppPlatformStuff.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
 

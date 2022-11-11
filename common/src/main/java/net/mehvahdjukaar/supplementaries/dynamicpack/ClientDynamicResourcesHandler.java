@@ -186,26 +186,6 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
              TextureImage mask = TextureImage.open(manager,
                      Supplementaries.res("blocks/hanging_signs/board_mask"))) {
 
-            {
-                List<HCLColor> colors = new ArrayList<>();
-
-                for (var c : DyeColor.values()) {
-                    try (TextureImage wool = TextureImage.open(manager,
-                            RPUtils.findFirstBlockTextureLocation(manager,((BlockItem) BlocksColorAPI.getColoredItem("wool", c)).getBlock()))) {
-                        colors.add(wool.getAverageColor().asHCL());
-                    } catch (Exception e) {
-                    }
-                }
-                colors.sort(Comparator.comparingDouble(c -> c.asHSV().hue()));
-                var t = template.makeCopy();
-                int x = 0;
-                for (var v : colors) {
-                    t.getImage().setPixelRGBA(x, 0, v.asRGB().toInt());
-                    x++;
-                }
-                dynamicPack.addAndCloseTexture(new ResourceLocation("test_palette"), t);
-            }
-
             Respriter respriter = Respriter.masked(template, mask);
 
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {

@@ -1,0 +1,96 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "net.mehvahdjukaar",
+    "module": "moonlight-forge",
+    "version": "1.19.2-2.1.5",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.4"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "moonlight-forge-1.19.2-2.1.5-forge.jar",
+          "url": "moonlight-forge-1.19.2-2.1.5-forge.jar",
+          "size": 710404,
+          "sha512": "38cd025ea45cf97a6939b3951f11ac0051b70c6e82cd8d1da4e2b863fefabbc513f1148f86d837e6b7c7e63bea33262e55bb11ad211e0362d6a9bc96fc40ad04",
+          "sha256": "db68354acdf4ece2c099a73ae58869a91552a291d46e47a4fdd1d0a18a192735",
+          "sha1": "bfc392afee307547437334b6b488e6eadd2e421f",
+          "md5": "4ca38e08670a4b829afad0277648c618"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "curse.maven",
+          "module": "configured-457570",
+          "version": {
+            "requires": "4011355"
+          }
+        },
+        {
+          "group": "curse.maven",
+          "module": "map-atlases-forge-519759",
+          "version": {
+            "requires": "3949437"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "moonlight-forge-1.19.2-2.1.5-forge.jar",
+          "url": "moonlight-forge-1.19.2-2.1.5-forge.jar",
+          "size": 710404,
+          "sha512": "38cd025ea45cf97a6939b3951f11ac0051b70c6e82cd8d1da4e2b863fefabbc513f1148f86d837e6b7c7e63bea33262e55bb11ad211e0362d6a9bc96fc40ad04",
+          "sha256": "db68354acdf4ece2c099a73ae58869a91552a291d46e47a4fdd1d0a18a192735",
+          "sha1": "bfc392afee307547437334b6b488e6eadd2e421f",
+          "md5": "4ca38e08670a4b829afad0277648c618"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "moonlight-forge-1.19.2-2.1.5-sources.jar",
+          "url": "moonlight-forge-1.19.2-2.1.5-sources.jar",
+          "size": 395639,
+          "sha512": "ad548bb79644b7d6d537eea697cd1950b908e7fa7a39ac6c913e62b41a3b335f0d7b4fac449c9e68eac417f689db6987218e913856b27163af49093dedcdebff",
+          "sha256": "b72dc7973aa589b0c56c6be375fb094a4b48fa2603a448a62258151eb7925114",
+          "sha1": "b0cfa73c3365cc38df1aabcf55e69bf770a18b08",
+          "md5": "ec5db1e746165985dff758c9d2b6f43c"
+        }
+      ]
+    }
+  ]
+}

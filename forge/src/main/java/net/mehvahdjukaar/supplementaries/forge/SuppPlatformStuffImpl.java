@@ -5,6 +5,9 @@ import com.lowdragmc.shimmer.client.shader.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.moonlight.api.set.leaves.LeavesTypeRegistry;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
@@ -78,14 +81,15 @@ public class SuppPlatformStuffImpl {
 
     public static void renderBlock(int i, PoseStack poseStack, MultiBufferSource bufferIn, BlockState state, Level level, BlockPos blockPos, BlockRenderDispatcher blockRenderer) {
         // a MultiBufferSource for entity or BlockEntityRenderer
+        //.renderBlock(i, finalStack, bufferIn, state, level, blockPos, blockRenderer);
         PoseStack finalStack = RenderUtils.copyPoseStack(poseStack); // we provide a way to copy the poststack
         PostProcessing.BLOOM_UNITY.postEntity(bufferSource -> {
+            RenderUtil.renderBlock();
             BakedModel model = blockRenderer.getBlockModel(state);
             for (var renderType : model.getRenderTypes(state, RandomSource.create(i), ModelData.EMPTY)) {
                 blockRenderer.getModelRenderer().tesselateBlock(level, model, state, blockPos, finalStack, bufferIn.getBuffer(renderType), false, RandomSource.create(), i,
                         OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
             }
-            //.renderBlock(i, finalStack, bufferIn, state, level, blockPos, blockRenderer);
         });
         PostProcessing.BLOOM_UNITY.renderEntityPost(new ProfilerFiller() {
             @Override
