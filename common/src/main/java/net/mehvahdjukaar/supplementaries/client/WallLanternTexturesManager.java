@@ -31,6 +31,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
 
     public static final Map<Block, ResourceLocation> SPECIAL_TEXTURES = new IdentityHashMap<>();
     protected static final Set<Block> POSSIBLE_LANTERNS = new HashSet<>();
+    private static boolean initialized = false;
 
     public static final WallLanternTexturesManager RELOAD_INSTANCE = new WallLanternTexturesManager();
 
@@ -44,7 +45,10 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
     }
 
     public static void reloadTextures(ResourceManager manager) {
-        if (POSSIBLE_LANTERNS == null) initialize();
+        if (initialized) {
+            initialize();
+            initialized = true;
+        }
         SPECIAL_TEXTURES.clear();
         for (Block i : POSSIBLE_LANTERNS) {
 

@@ -33,8 +33,4 @@ public class SuppPlatformStuff {
     public static BlockState getUnoxidised(Level level, BlockPos pos, BlockState state) {
         throw new AssertionError();
     }
-
-    @ExpectPlatform
-    public static void renderBlock(int i, PoseStack matrixStackIn, MultiBufferSource bufferIn, BlockState state, Level level, BlockPos blockPos, BlockRenderDispatcher blockRenderer) {
-    }
 }

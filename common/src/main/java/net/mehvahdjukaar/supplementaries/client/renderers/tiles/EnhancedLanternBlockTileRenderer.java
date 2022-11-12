@@ -4,9 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ShimmerCompat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -36,7 +37,12 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.translate(-0.5, -0.75 - tile.getAttachmentOffset(), -0.375);
 
         // render block
-        SuppPlatformStuff.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
+        if (CompatHandler.SHIMMER) {
+            ShimmerCompat.renderWithBloom(matrixStackIn, (p, b) ->
+                    RenderUtil.renderBlock(0, p, b, state, tile.getLevel(), tile.getBlockPos(), blockRenderer));
+        } else {
+            RenderUtil.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
+        }
 
         matrixStackIn.popPose();
     }

@@ -28,8 +28,4 @@ public class SuppPlatformStuffImpl {
         return null;
     }
 
-    public static void renderBlock(int i, PoseStack matrixStackIn, MultiBufferSource bufferIn, BlockState state, Level level, BlockPos blockPos, BlockRenderDispatcher blockRenderer) {
-    }
-
-
 }

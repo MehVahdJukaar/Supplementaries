@@ -79,71 +79,7 @@ public class SuppPlatformStuffImpl {
         return modified;
     }
 
-    public static void renderBlock(int i, PoseStack poseStack, MultiBufferSource bufferIn, BlockState state, Level level, BlockPos blockPos, BlockRenderDispatcher blockRenderer) {
-        // a MultiBufferSource for entity or BlockEntityRenderer
-        //.renderBlock(i, finalStack, bufferIn, state, level, blockPos, blockRenderer);
-        PoseStack finalStack = RenderUtils.copyPoseStack(poseStack); // we provide a way to copy the poststack
-        PostProcessing.BLOOM_UNITY.postEntity(bufferSource -> {
-            RenderUtil.renderBlock();
-            BakedModel model = blockRenderer.getBlockModel(state);
-            for (var renderType : model.getRenderTypes(state, RandomSource.create(i), ModelData.EMPTY)) {
-                blockRenderer.getModelRenderer().tesselateBlock(level, model, state, blockPos, finalStack, bufferIn.getBuffer(renderType), false, RandomSource.create(), i,
-                        OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-            }
-        });
-        PostProcessing.BLOOM_UNITY.renderEntityPost(new ProfilerFiller() {
-            @Override
-            public void startTick() {
 
-            }
-
-            @Override
-            public void endTick() {
-
-            }
-
-            @Override
-            public void push(String name) {
-
-            }
-
-            @Override
-            public void push(Supplier<String> nameSupplier) {
-
-            }
-
-            @Override
-            public void pop() {
-
-            }
-
-            @Override
-            public void popPush(String name) {
-
-            }
-
-            @Override
-            public void popPush(Supplier<String> nameSupplier) {
-
-            }
-
-            @Override
-            public void markForCharting(MetricCategory category) {
-
-            }
-
-            @Override
-            public void incrementCounter(String counterName, int increment) {
-
-            }
-
-            @Override
-            public void incrementCounter(Supplier<String> counterNameSupplier, int increment) {
-
-            }
-        });
-
-    }
 
 
 }
