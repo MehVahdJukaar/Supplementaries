@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer
 import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

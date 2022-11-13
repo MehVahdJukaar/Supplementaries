@@ -23,11 +23,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
+import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
+import net.mehvahdjukaar.supplementaries.common.misc.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.ModMapMarkersClient;
@@ -393,6 +395,7 @@ public class ClientRegistry {
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
         event.register(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
+        event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }
 

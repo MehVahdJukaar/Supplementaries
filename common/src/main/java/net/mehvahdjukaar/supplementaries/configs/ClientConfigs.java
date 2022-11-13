@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 
 public class ClientConfigs {
 
+
     public static void init() {
     }
 
@@ -97,6 +98,7 @@ public class ClientConfigs {
         public static Supplier<Boolean> CLOCK_CLICK;
         public static Supplier<Boolean> COMPASS_CLICK;
         public static Supplier<Boolean> BOOK_GLINT;
+        public static Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Game tweaks")
@@ -112,6 +114,8 @@ public class ClientConfigs {
                     .define("compass_right_click", false);
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
                     .define("placeable_books_glint", false);
+            BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
+                    .define("banner_pattern_tooltip", true);
             builder.pop();
         }
     }

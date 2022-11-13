@@ -48,6 +48,7 @@ public class ModSetup {
             for (int i = 0; i < MOD_SETUP_WORK.size(); i++) {
                 setupStage = i;
                 MOD_SETUP_WORK.get(i).run();
+                Supplementaries.LOGGER.info(i+" Finished mod setup in: {} ms", watch.elapsed().toMillis());
             }
             hasFinishedSetup = true;
 

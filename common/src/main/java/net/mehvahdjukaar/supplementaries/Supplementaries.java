@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +41,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
+        
         Credits.fetchFromServer();
         RegistryConfigs.superEarlyLoad();
         CommonConfigs.init();

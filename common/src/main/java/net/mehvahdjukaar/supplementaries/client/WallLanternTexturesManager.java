@@ -45,7 +45,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
     }
 
     public static void reloadTextures(ResourceManager manager) {
-        if (initialized) {
+        if (!initialized) {
             initialize();
             initialized = true;
         }

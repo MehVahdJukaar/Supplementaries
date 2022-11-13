@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.world.generation.CaveFilter;
 import net.mehvahdjukaar.supplementaries.common.world.generation.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -67,7 +68,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> WILD_FLAX_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("wild_flax"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            35,//CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(),
+                            CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(),
                             4, 0,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
@@ -80,7 +81,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> CAVE_URNS_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            4,//CommonConfigs.Spawns.URN_PATCH_TRIES.get(),
+                            CommonConfigs.Spawns.URN_PATCH_TRIES.get(),
                             4, 1,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
@@ -100,7 +101,7 @@ public class ModWorldgenRegistry {
                     WILD_FLAX_PATCH,
                     () -> List.of(
                             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                            RarityFilter.onAverageOnceEvery(6), //CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()
+                            RarityFilter.onAverageOnceEvery(CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()),
                             InSquarePlacement.spread(),
                             BiomeFilter.biome()));
 
@@ -109,7 +110,7 @@ public class ModWorldgenRegistry {
                     CAVE_URNS_PATCH,
                     () -> List.of(
                             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
-                            CountPlacement.of(7),//CommonConfigs.Spawns.URN_PER_CHUNK.get()
+                            CountPlacement.of(CommonConfigs.Spawns.URN_PER_CHUNK.get()),
                             InSquarePlacement.spread(),
                             CaveFilter.BELOW_SURFACE,
                             BiomeFilter.biome()));

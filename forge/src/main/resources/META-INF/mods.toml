@@ -1,35 +1,30 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
-issueTrackerURL = "https://github.com/MehVahdJukaar/Supplementaries/issues" #optional
+issueTrackerURL = "https://github.com/MehVahdJukaar/Supplementaries/issues"
 
 license = "ARR"
 
-
 [[mods]]
-modId = "supplementaries"
-version = "${version}"
-displayName = "Supplementaries"
+    modId = "supplementaries"
+    version = "${version}"
+    displayName = "Supplementaries"
+    logoFile = "icon.png"
+    authors = "MehVahdJukaar, Plantkillable"
+    credits = "Put a book named 'credits' inside a notice board"
 
+    updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/forge/update.json"
+    modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries"
 
-credits = "Put a book named 'credits' inside a notice board" #optional
+    description = '''Many functional and useful Vanilla+ blocks'''
 
-updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/forge/update.json"
-modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
+    itemIcon = "supplementaries:globe" #catalogue icon
 
-authors = "MehVahdJukaar, Plantkillable" #optional
-
-description = '''Many functional and useful Vanilla+ blocks'''
-
-itemIcon = "supplementaries:globe" #catalogue icon
-
-configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
-
-logoFile = "icon.png" #optional
+    configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
 
 [[dependencies.supplementaries]]
     modId = "forge"
     mandatory = true
-    versionRange = "[41.0.0,)"
+    versionRange = "[41.1.25,)"
     ordering = "NONE"
     side = "BOTH"
 

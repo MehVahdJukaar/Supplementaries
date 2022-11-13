@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,6 +47,9 @@ public class CandyItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         increaseSweetTooth(world, entity, SUGAR_PER_CANDY);
+       // if(world.isClientSide){
+        //    Minecraft.getInstance().gameRenderer.cycleEffect();
+       // }
         return super.finishUsingItem(stack, world, entity);
     }
 

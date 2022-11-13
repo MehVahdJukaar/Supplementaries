@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -98,7 +99,6 @@ public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
 
             if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
-
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }

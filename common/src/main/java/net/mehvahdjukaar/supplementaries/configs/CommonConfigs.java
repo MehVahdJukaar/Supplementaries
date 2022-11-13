@@ -40,6 +40,7 @@ public class CommonConfigs {
         builder.onChange(CommonConfigs::onRefresh);
 
         SERVER_SPEC = builder.buildAndRegister();
+        SERVER_SPEC.loadFromFile();
     }
 
     private static void onRefresh() {
