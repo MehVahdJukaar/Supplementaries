@@ -133,7 +133,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
         String name = Utils.getID(entity.getType()).toString();
         if (name.contains("alexsmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobHandler.COMMAND_MOBS.contains(name)) {
+        if (CommonConfigs.Blocks.CAGE_ALL_MOBS.get() || CapturedMobHandler.isCommandMob(name)) {
             return true;
         }
         ICatchableMob cap = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
@@ -217,7 +217,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         //TODO fix sound categories
                     }
                     //create new uuid for creative itemStack
-                    if (player.isCreative() && nbt.contains("UUID")){
+                    if (player.isCreative() && nbt.contains("UUID")) {
                         nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
                     }
                 }

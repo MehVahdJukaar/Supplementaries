@@ -42,7 +42,7 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
 
     public static void renderMobStatic(Entity mob, float scale, EntityRenderDispatcher renderer, PoseStack matrixStack, float partialTicks, MultiBufferSource bufferIn, int combinedLightIn, float rot) {
 
-        double y = Mth.lerp(partialTicks, mob.yOld, mob.getY());//0;//mobHolder.getYOffset(partialTicks);
+        double y = Mth.lerp(partialTicks, mob.yOld, mob.getY());
         double x = mob.getX();
         double z = mob.getZ();
 

@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandl
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +40,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-        
+
         Credits.fetchFromServer();
         RegistryConfigs.superEarlyLoad();
         CommonConfigs.init();
@@ -55,7 +54,7 @@ public class Supplementaries {
         //sugar block fall in water
         //soap in water makes soap particles
         //yeet java models in favor or json ones
-        // TODO: re add soap stuff
+        // TODO: improve soap for tiles
         //chains pull down candle holders and lanterns
 
         //fix snowy spirit chest not sincing after reload

@@ -20,6 +20,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.colors.HCLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.moonlight.api.util.math.kmeans.DataSet;
 import net.mehvahdjukaar.moonlight.api.util.math.kmeans.KMeans;
+import net.mehvahdjukaar.moonlight.core.set.BlocksColorInternal;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
@@ -125,19 +126,19 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
 
 
                 try {
-                    dynamicPack.addSimilarJsonResource(hsBlockState, "hanging_sign_oak", id);
+                    addSimilarJsonResource(manager,hsBlockState, "hanging_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Hanging Sign blockstate definition for {} : {}", sign, ex);
                 }
 
                 try {
-                    dynamicPack.addSimilarJsonResource(hsModel, "hanging_sign_oak", id);
+                    addSimilarJsonResource(manager, hsModel, "hanging_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Hanging Sign block model for {} : {}", sign, ex);
                 }
 
                 try {
-                    dynamicPack.addSimilarJsonResource(hsItemModel, "hanging_sign_oak", id);
+                    addSimilarJsonResource(manager, hsItemModel, "hanging_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Hanging Sign item model for {} : {}", sign, ex);
                 }
@@ -172,7 +173,7 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesProvider {
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("sign_post"));
 
                 try {
-                    dynamicPack.addSimilarJsonResource(spItemModel, "sign_post_oak", id);
+                    addSimilarJsonResource(manager,spItemModel, "sign_post_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }

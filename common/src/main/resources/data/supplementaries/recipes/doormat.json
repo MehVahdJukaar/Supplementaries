@@ -1,12 +1,9 @@
 {
   "conditions": [
-    
-     
-      {
-        "type": "supplementaries:flag",
-        "flag": "flax"
-      }
-    
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    },
     {
       "type": "supplementaries:flag",
       "flag": "doormat"

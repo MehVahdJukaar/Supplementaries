@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;

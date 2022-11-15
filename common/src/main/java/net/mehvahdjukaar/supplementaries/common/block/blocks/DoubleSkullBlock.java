@@ -40,11 +40,6 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
         return SHAPE;
     }
 
-     /* @Override
-    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation) {
-        return super.rotate(state, world, pos, rotation);
-    } */
-
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new DoubleSkullBlockTile(pPos, pState);
@@ -111,11 +106,9 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
                 else {
                     if (world instanceof ServerLevel) {
                         world.setBlock(pos, state.setValue(ROTATION, (state.getValue(ROTATION) - inc + 16) % 16), 11);
-                        //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
                     }
                 }
             }
-            //world.notifyBlockUpdate(pos, tile.getBlockState(), tile.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
             tile.setChanged();
             if (world instanceof Level level) {
                 level.sendBlockUpdated(pos, state, state, 3);

@@ -39,7 +39,8 @@ public class SignPostBlockLoader implements CustomModelLoader {
 
         @Override
         public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-            return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, ModMaterials.SIGN_POSTS_MATERIALS.get(WoodTypeRegistry.OAK_TYPE).texture()));
+            return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS,
+                    ModMaterials.SIGN_POSTS_MATERIALS.get().get(WoodTypeRegistry.OAK_TYPE).texture()));
         }
     }
 }

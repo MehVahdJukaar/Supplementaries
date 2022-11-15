@@ -1,0 +1,9 @@
+{
+  "animation": "floating",
+  "height_increment": 0.0,
+  "owners": [
+    "infernalexp:glowsilk_moth"
+  ],
+  "width_increment": 0.125,
+  "light_level": 9
+}

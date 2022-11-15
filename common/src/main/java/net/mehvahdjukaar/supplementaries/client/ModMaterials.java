@@ -33,8 +33,23 @@ public class ModMaterials {
     public static final Material BOOK_TOME_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_AND_QUILL_TEXTURES);
-    public static final Map<BookPileBlockTile.BookColor, Material> BOOK_MATERIALS = new IdentityHashMap<>();
-    public static final Map<WoodType, Material> SIGN_POSTS_MATERIALS = new IdentityHashMap<>();
+
+    public static final Supplier<Map<BookPileBlockTile.BookColor, Material>> BOOK_MATERIALS = Suppliers.memoize(() -> {
+        var map = new IdentityHashMap<BookPileBlockTile.BookColor, Material>();
+        for (var e : ModTextures.BOOK_TEXTURES.entrySet()) {
+            map.put(e.getKey(), new Material(SHULKER_SHEET, e.getValue()));
+        }
+        return map;
+    });
+
+    public static final Supplier<Map<WoodType, Material>> SIGN_POSTS_MATERIALS = Suppliers.memoize(() -> {
+        var map = new IdentityHashMap<WoodType, Material>();
+        ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> map
+                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" +
+                        Utils.getID(item).getPath()))));
+        return map;
+    });
+
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BannerPattern, Material>();
         for (var v : ModTextures.FLAG_TEXTURES.entrySet()) {
@@ -42,20 +57,6 @@ public class ModMaterials {
         }
         return map;
     });
-
-    //needs static initializer as models are loaded before client init
-    static {
-        ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> SIGN_POSTS_MATERIALS
-                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" + Utils.getID(item).getPath()))));
-    }
-
-    //needs to run after textures but can't run too early because of banners
-    public static void setup() {
-
-        for (var e : ModTextures.BOOK_TEXTURES.entrySet()) {
-            BOOK_MATERIALS.put(e.getKey(), new Material(SHULKER_SHEET, e.getValue()));
-        }
-    }
 
     @Nullable
     public static Material getFlagMaterialForPatternItem(BannerPatternItem item) {

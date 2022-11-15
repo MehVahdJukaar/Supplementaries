@@ -101,7 +101,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(tile.woodTypeUp);
+                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(tile.woodTypeUp);
                 //sanity check. can happen when log detection fails across versions
                 if (material != null) {
                     VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
@@ -144,7 +144,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 }
 
                 matrixStackIn.scale(1, -1, -1);
-                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(tile.woodTypeDown);
+                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(tile.woodTypeDown);
                 VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
                 signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

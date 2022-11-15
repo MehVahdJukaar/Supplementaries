@@ -47,9 +47,6 @@ public class CandyItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         increaseSweetTooth(world, entity, SUGAR_PER_CANDY);
-       // if(world.isClientSide){
-        //    Minecraft.getInstance().gameRenderer.cycleEffect();
-       // }
         return super.finishUsingItem(stack, world, entity);
     }
 

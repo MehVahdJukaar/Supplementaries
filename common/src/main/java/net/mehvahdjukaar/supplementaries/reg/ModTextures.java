@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
@@ -83,7 +84,7 @@ public class ModTextures {
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("blocks/bubble_block");
 
-    public static final LinkedHashMap<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = new LinkedHashMap<>();
+    public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = new LinkedHashMap<>();
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
@@ -95,7 +96,7 @@ public class ModTextures {
         //first key and default one too
         SKULL_CANDLES_TEXTURES.put(Blocks.CANDLE, Supplementaries.res("textures/entity/skull_candles/default.png"));
         for (DyeColor color : DyeColor.values()) {
-            Block candle = Registry.BLOCK.get(new ResourceLocation(color.getName() + "_candle"));
+            Block candle = BlocksColorAPI.getColoredBlock("candle",color);
             SKULL_CANDLES_TEXTURES.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
@@ -108,7 +109,7 @@ public class ModTextures {
                 HOURGLASS_GLOWSTONE, HOURGLASS_BLAZE,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
 
-        for (var s : ModMaterials.SIGN_POSTS_MATERIALS.values()) {
+        for (var s : ModMaterials.SIGN_POSTS_MATERIALS.get().values()) {
             blocks.add(s.texture());
         }
         blocks.addAll(WallLanternTexturesManager.SPECIAL_TEXTURES.values());

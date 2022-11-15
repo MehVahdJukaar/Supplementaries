@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.datafix.fixes.BlockEntityIdFix;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ public abstract class ChunkHolderMixin {
 
     @Inject(method = "create(Lnet/minecraft/world/level/block/entity/BlockEntity;)Lnet/minecraft/network/protocol/game/ClientboundLevelChunkPacketData$BlockEntityInfo;",
             at = @At("HEAD"))
-    private static void sendBlockEntityCaps(BlockEntity te, CallbackInfoReturnable cir) {
+    private static void sendBlockEntityCaps(BlockEntity te, CallbackInfoReturnable<?> cir) {
 
         if (te != null && te.getLevel() instanceof ServerLevel serverLevel) {
             var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);

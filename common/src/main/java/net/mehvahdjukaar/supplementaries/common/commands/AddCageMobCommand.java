@@ -28,7 +28,7 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
 
         ResourceLocation id = EntitySummonArgument.getSummonableEntity(context, "entity");
 
-        CapturedMobHandler.COMMAND_MOBS.add(id.toString());
+        CapturedMobHandler.addCommandMob(id.toString());
         return 0;
     }
 }

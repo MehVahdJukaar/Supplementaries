@@ -18,7 +18,7 @@ public class ClientConfigs {
     public static void init() {
     }
 
-    public static ConfigSpec CLIENT_SPEC;
+    public static final ConfigSpec CLIENT_SPEC;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);

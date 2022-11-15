@@ -9,11 +9,11 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallLanternPlacement;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -61,7 +61,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemsOverrideHandler {
 
@@ -457,7 +460,7 @@ public class ItemsOverrideHandler {
             //bell chains
             if (stack.getItem() == Items.STICK) {
                 var tomato = FarmersDelightCompat.getStickTomato();
-                if(tomato != null){
+                if (tomato != null) {
                     return ItemsOverrideHandler.replaceSimilarBlock(tomato,
                             player, stack, pos, level, state, SoundType.WOOD, BlockStateProperties.AGE_3);
                 }
@@ -539,7 +542,7 @@ public class ItemsOverrideHandler {
                         Utils.swapItem(player, hand, returnStack);
 
                         if (!player.isCreative())
-                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random)-3);
+                            player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random) - 3);
 
                         if (world.isClientSide) {
                             Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModParticles.BOTTLING_XP_PARTICLE.get(), 1);
@@ -618,9 +621,9 @@ public class ItemsOverrideHandler {
         public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
             if (player.getAbilities().mayBuild) {
                 BlockPos pos = hit.getBlockPos();
-                if(SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))){
-                    if(player instanceof ServerPlayer serverPlayer) {
-                        if(!player.getAbilities().instabuild) stack.shrink(1);
+                if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        if (!player.getAbilities().instabuild) stack.shrink(1);
 
                         level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
@@ -744,8 +747,11 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item.builtInRegistryHolder().is(ItemTags.CANDLES)
-                    && (Utils.getID(item).getNamespace().equals("minecraft") || item == CompatObjects.SOUL_CANDLE_ITEM.get());
+            if (item.builtInRegistryHolder().is(ItemTags.CANDLES)) {
+                var n = Utils.getID(item).getNamespace();
+                return (n.equals("minecraft") || n.equals("tinted") || item == CompatObjects.SOUL_CANDLE_ITEM.get());
+            }
+            return false;
         }
 
         @Override

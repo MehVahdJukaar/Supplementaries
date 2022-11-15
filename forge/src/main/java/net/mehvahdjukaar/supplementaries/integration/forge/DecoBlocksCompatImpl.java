@@ -148,9 +148,9 @@ public class DecoBlocksCompatImpl {
 
         @Override
         public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
-            double d0 = (double) pos.getX() + 0.5D;
-            double d1 = (double) pos.getY() + 0.7D;
-            double d2 = (double) pos.getZ() + 0.5D;
+            double d0 = pos.getX() + 0.5D;
+            double d1 = pos.getY() + 0.7D;
+            double d2 = pos.getZ() + 0.5D;
             double off1 = 0.1875D;
             double off2 = 0.3125D;
             double off3 = 0.0625D;

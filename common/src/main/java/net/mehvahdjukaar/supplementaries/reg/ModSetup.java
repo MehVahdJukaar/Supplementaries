@@ -48,7 +48,6 @@ public class ModSetup {
             for (int i = 0; i < MOD_SETUP_WORK.size(); i++) {
                 setupStage = i;
                 MOD_SETUP_WORK.get(i).run();
-                Supplementaries.LOGGER.info(i+" Finished mod setup in: {} ms", watch.elapsed().toMillis());
             }
             hasFinishedSetup = true;
 
@@ -62,7 +61,6 @@ public class ModSetup {
 
     private static void terminateWhenSetupFails() {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
-        //Supplementaries.LOGGER.throwing(e);
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");

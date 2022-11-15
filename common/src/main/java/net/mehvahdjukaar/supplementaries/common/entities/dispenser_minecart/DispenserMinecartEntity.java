@@ -150,7 +150,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         if (this.isRemoved()) {
             return false;
         } else {
-            return !(pPlayer.distanceToSqr(this) > 64.0D);
+            return pPlayer.distanceToSqr(this) <= 64.0D;
         }
     }
 
@@ -174,8 +174,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                 return dispenser.getItem(pSlot);
             }
 
-            public boolean set(ItemStack p_150265_) {
-                dispenser.setItem(pSlot, p_150265_);
+            public boolean set(ItemStack carried) {
+                dispenser.setItem(pSlot, carried);
                 return true;
             }
         } : super.getSlot(pSlot);

@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 
 
 public class ClientBoundSyncGlobeDataPacket implements Message {
-    public GlobeData data;
+    public final GlobeData data;
 
     public ClientBoundSyncGlobeDataPacket(FriendlyByteBuf buffer) {
         this.data = new GlobeData(buffer.readNbt());

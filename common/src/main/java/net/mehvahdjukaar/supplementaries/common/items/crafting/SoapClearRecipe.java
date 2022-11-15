@@ -26,6 +26,7 @@ public class SoapClearRecipe extends CustomRecipe {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {
                 Item item = itemstack.getItem();
+                //TODO: use color stuff
                 if (Block.byItem(item) instanceof ShulkerBoxBlock ||
                         IColored.getOptional(item).isPresent() || item instanceof DyeableLeatherItem) {
                     ++i;

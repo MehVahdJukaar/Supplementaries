@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.minecraft.core.BlockPos;

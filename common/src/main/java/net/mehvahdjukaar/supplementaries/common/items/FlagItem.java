@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.FlagItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.animal.SnowGolem;

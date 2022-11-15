@@ -28,7 +28,7 @@ import java.util.*;
 
 public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
-    public static final List<String> COMMAND_MOBS = new ArrayList<>();
+    private static final Set<String> COMMAND_MOBS = new HashSet<>();
 
     private static final Map<EntityType<?>, DataDefinedCatchableMob> CUSTOM_MOB_PROPERTIES = new IdentityHashMap<>();
     private static DataDefinedCatchableMob MODDED_FISH_PROPERTIES;
@@ -40,6 +40,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
     private CapturedMobHandler() {
         super(GSON, "catchable_mobs_properties");
     }
+
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -129,5 +130,13 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         } catch (Exception ignored) {
         }
         return jsonObject;
+    }
+
+    public static boolean isCommandMob(String entity){
+        return COMMAND_MOBS.contains(entity);
+    }
+
+    public static void addCommandMob(String name) {
+        COMMAND_MOBS.add(name);
     }
 }

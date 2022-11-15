@@ -124,13 +124,13 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 }
                 colors.remove(this.color);
 
-                this.material = ModMaterials.BOOK_MATERIALS.get(this.color);
+                this.material = ModMaterials.BOOK_MATERIALS.get().get(this.color);
                 this.isEnchanted = false;
             } else if (Utils.getID(item).getNamespace().equals("inspirations")) {
                 String colName = Utils.getID(item).getPath().replace("_book", "");
                 this.color = BookColor.byName(colName);
 
-                this.material = ModMaterials.BOOK_MATERIALS.get(this.color);
+                this.material = ModMaterials.BOOK_MATERIALS.get().get(this.color);
                 this.isEnchanted = false;
             } else if (BookPileBlock.isWrittenBook(item)) {
                 this.color = null;

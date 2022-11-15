@@ -30,6 +30,7 @@
     {"id":"savageandravage:creepie","required":false},
     {"id":"betteranimalsplus:butterfly","required":false},
     {"id":"whisperwoods:moth","required":false},
+    {"id":"infernalexp:glowsilk_moth","required":false},
     {"id":"fins:river_pebble_snail","required":false},
     {"id":"tconstruct:sky_slime","required":false},
     {"id":"twilightforest:maze_slime","required":false},

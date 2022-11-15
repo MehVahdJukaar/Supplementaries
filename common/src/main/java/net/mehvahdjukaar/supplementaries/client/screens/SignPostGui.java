@@ -171,7 +171,7 @@ public class SignPostGui extends Screen {
                 poseStack.translate(0, 0, -0.3125);
             }
             poseStack.scale(1, -1, -1);
-            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeUp);
+            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(this.tileSign.woodTypeUp);
             VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
 
             this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
@@ -187,7 +187,7 @@ public class SignPostGui extends Screen {
             }
             poseStack.translate(0, -0.5, 0);
             poseStack.scale(1, -1, -1);
-            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get(this.tileSign.woodTypeDown);
+            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(this.tileSign.woodTypeDown);
             VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
 
             this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
