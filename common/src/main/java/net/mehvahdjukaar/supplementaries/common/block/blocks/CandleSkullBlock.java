@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
+import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.Util;
@@ -45,7 +46,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 
-public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable {
+public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, ISoapWashable {
 
     private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
         Int2ObjectMap<List<Vec3>> map = new Int2ObjectOpenHashMap<>();
@@ -204,8 +205,25 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
 
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
-        ((CandleSkullBlock)state.getBlock()).getParticleOffsets(state).forEach((vec3) -> {
+        ((CandleSkullBlock) state.getBlock()).getParticleOffsets(state).forEach((vec3) -> {
             level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
+    }
+
+    @Override
+    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
+            var c = tile.getCandle();
+            if (c != null) {
+                var n = BlocksColorAPI.changeColor(c.getBlock(), null);
+                if (n != null && n != c.getBlock()) {
+                    tile.setCandle(n.withPropertiesOf(c));
+                    tile.setChanged();
+                    level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

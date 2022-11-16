@@ -1,5 +1,5 @@
 {
-  "type": "supplementaries:treasure_map",
+  "type": "supplementaries:weathered_map",
   "conditions": [
     {
       "type": "supplementaries:flag",

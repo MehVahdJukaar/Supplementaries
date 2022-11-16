@@ -281,16 +281,16 @@ public class WeatheredMap {
         );
     }
 
-    public static void setAntique(ServerLevel level, ItemStack stack) {
+    public static void setAntique(ServerLevel level, ItemStack stack, boolean on) {
         MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
             MapItemSavedData newData = data.copy();
             if (newData instanceof ExpandedMapData n) {
-                var aa = n.getCustomData().get(ANTIQUE_ID);
-                if (aa != null) {
-                    CustomDataHolder.Instance<Boolean> antique = (CustomDataHolder.Instance<Boolean>) aa;
-                    antique.set(true);
+                var instance = n.getCustomData().get(ANTIQUE_ID);
+                if (instance != null) {
+                    CustomDataHolder.Instance<Boolean> antique = (CustomDataHolder.Instance<Boolean>) instance;
+                    antique.set(on);
                 }
             }
 

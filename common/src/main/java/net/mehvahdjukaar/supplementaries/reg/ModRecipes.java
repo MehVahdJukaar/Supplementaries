@@ -17,25 +17,25 @@ public class ModRecipes {
     }
 
     //recipes
-    public static final Supplier<RecipeSerializer<BlackboardDuplicateRecipe>> BLACKBOARD_DUPLICATE_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<BlackboardDuplicateRecipe>> BLACKBOARD_DUPLICATE = reg(
             "blackboard_duplicate", BlackboardDuplicateRecipe::new);
-    public static final Supplier<RecipeSerializer<TippedBambooSpikesRecipe>> BAMBOO_SPIKES_TIPPED_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<TippedBambooSpikesRecipe>> BAMBOO_SPIKES_TIPPED = reg(
             "bamboo_spikes_tipped", TippedBambooSpikesRecipe::new);
-    public static final Supplier<RecipeSerializer<RopeArrowCreateRecipe>> ROPE_ARROW_CREATE_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<RopeArrowCreateRecipe>> ROPE_ARROW_CREATE = reg(
             "rope_arrow_create", RopeArrowCreateRecipe::new);
-    public static final Supplier<RecipeSerializer<RopeArrowAddRecipe>> ROPE_ARROW_ADD_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<RopeArrowAddRecipe>> ROPE_ARROW_ADD = reg(
             "rope_arrow_add", RopeArrowAddRecipe::new);
-    public static final Supplier<RecipeSerializer<RepairBubbleBlowerRecipe>> BUBBLE_BLOWER_REPAIR_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<RepairBubbleBlowerRecipe>> BUBBLE_BLOWER_REPAIR = reg(
             "bubble_blower_charge", RepairBubbleBlowerRecipe::new);
-    public static final Supplier<RecipeSerializer<FlagFromBannerRecipe>> FLAG_FROM_BANNER_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<FlagFromBannerRecipe>> FLAG_FROM_BANNER = reg(
             "flag_from_banner", FlagFromBannerRecipe::new);
-    public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> TREASURE_MAP_RECIPE = reg(
-            "treasure_map", WeatheredMapRecipe::new);
-    public static final Supplier<RecipeSerializer<SoapClearRecipe>> SOAP_CLEARING_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> ANTIQUE_MAP = reg(
+            "weathered_map", WeatheredMapRecipe::new);
+    public static final Supplier<RecipeSerializer<SoapClearRecipe>> SOAP_CLEARING = reg(
             "soap_clearing", SoapClearRecipe::new);
-    public static final Supplier<RecipeSerializer<PresentDyeRecipe>> PRESENT_DYE_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<PresentDyeRecipe>> PRESENT_DYE = reg(
             "present_dye", PresentDyeRecipe::new);
-    public static final Supplier<RecipeSerializer<TrappedPresentRecipe>> TRAPPED_PRESENT_RECIPE = reg(
+    public static final Supplier<RecipeSerializer<TrappedPresentRecipe>> TRAPPED_PRESENT = reg(
             "trapped_present", TrappedPresentRecipe::new);
 
     private static <T extends Recipe<?>> Supplier<RecipeSerializer<T>> reg(String name, Function<ResourceLocation, T> factory) {

@@ -29,22 +29,20 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if(stack.isEmpty()){}
-            else if (stack.getItem() == Items.FILLED_MAP) {
+            if (stack.isEmpty()) {
+            } else if (stack.getItem() == Items.FILLED_MAP) {
                 if (itemstack != null) {
                     return false;
                 }
                 itemstack = stack;
-            }
-            else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get()) {
+            } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() || stack.getItem() == ModRegistry.SOAP.get()) {
 
                 if (itemstack1 != null) {
                     return false;
                 }
                 itemstack1 = stack;
 
-            }
-            else return false;
+            } else return false;
         }
         boolean match = itemstack != null && itemstack1 != null;
         if (match) {
@@ -55,13 +53,20 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingContainer inv) {
+        boolean antique = true;
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            if (inv.getItem(i).getItem() == ModRegistry.SOAP) {
+                antique = false;
+                break;
+            }
+        }
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.getItem() instanceof MapItem) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 if (lastWorld instanceof ServerLevel level) {
-                    WeatheredMap.setAntique(level, s);
+                    WeatheredMap.setAntique(level, s, antique);
 
                 }
                 return s;
@@ -83,7 +88,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.TREASURE_MAP_RECIPE.get();
+        return ModRecipes.ANTIQUE_MAP.get();
     }
 
 

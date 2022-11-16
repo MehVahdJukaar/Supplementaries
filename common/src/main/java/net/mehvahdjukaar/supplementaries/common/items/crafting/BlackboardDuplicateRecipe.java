@@ -95,7 +95,7 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.BLACKBOARD_DUPLICATE_RECIPE.get();
+        return ModRecipes.BLACKBOARD_DUPLICATE.get();
     }
 
 

@@ -2,14 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "minecraft:candles"
+      "item": "minecraft:sticky_piston"
     },
     {
       "item": "supplementaries:soap"
     }
+
   ],
   "result": {
-    "item": "minecraft:candle",
+    "item": "minecraft:piston",
     "count": 1
   },
   "conditions": [

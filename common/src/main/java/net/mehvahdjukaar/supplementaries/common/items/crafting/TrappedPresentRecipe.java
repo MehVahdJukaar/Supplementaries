@@ -84,7 +84,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.TRAPPED_PRESENT_RECIPE.get();
+        return ModRecipes.TRAPPED_PRESENT.get();
     }
 }
 

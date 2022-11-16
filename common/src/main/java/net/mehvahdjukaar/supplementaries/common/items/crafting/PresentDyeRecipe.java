@@ -10,7 +10,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 public class PresentDyeRecipe extends CustomRecipe {
@@ -79,7 +78,7 @@ public class PresentDyeRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.PRESENT_DYE_RECIPE.get();
+        return ModRecipes.PRESENT_DYE.get();
     }
 }
 

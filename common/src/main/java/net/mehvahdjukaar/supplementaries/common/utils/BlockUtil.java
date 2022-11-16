@@ -319,7 +319,7 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    private static Direction getConnectedBedDirection(BlockState bedState) {
+    public static Direction getConnectedBedDirection(BlockState bedState) {
         BedPart part = bedState.getValue(BedBlock.PART);
         Direction dir = bedState.getValue(BedBlock.FACING);
         return part == BedPart.FOOT ? dir : dir.getOpposite();

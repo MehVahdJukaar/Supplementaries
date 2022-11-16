@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.common.misc.BannerPatternTooltip;
@@ -37,6 +38,7 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
                 .map(ImmutableList::copyOf).flatMap(l -> l.get(0).unwrapKey()).map(Sheets::getBannerMaterial);
         if (mat.isPresent()) {
             var sprite = mat.get().sprite();
+            RenderSystem.enableBlend();
             RenderUtil.blitSprite(poseStack, x, y, SIZE, SIZE, (16f) / sprite.getWidth(), (16f / sprite.getHeight()) * 12, (int) (20f / 64 * sprite.getWidth()), (int) (20f / 64 * sprite.getHeight()), sprite);
         }
 

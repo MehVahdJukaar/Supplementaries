@@ -68,7 +68,7 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.ROPE_ARROW_CREATE_RECIPE.get();
+        return ModRecipes.ROPE_ARROW_CREATE.get();
     }
 
 

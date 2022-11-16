@@ -8,27 +8,25 @@ import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -48,30 +46,32 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        if(RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) {
+        if (RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
         }
-        if(RegistryConfigs.BLACKBOARD_ENABLED.get()) {
+        if (RegistryConfigs.BLACKBOARD_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createBlackboardDuplicate());
         }
-        if(RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowCreateRecipe());
             registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowAddRecipe());
         }
-        if(RegistryConfigs.FLAG_ENABLED.get()) {
+        if (RegistryConfigs.FLAG_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createFlagFromBanner());
         }
-        if(RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
+        if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapRecipe());
         }
-        if(RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
+        if (RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
         }
-        if(RegistryConfigs.SOAP_ENABLED.get()) {
-            registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanShulkerRecipe());
-            registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanPresentRecipe());
+        if (RegistryConfigs.SOAP_ENABLED.get()) {
+            registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanRecipe());
+            if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
+                registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapSoapRecipe());
+            }
         }
-        if(RegistryConfigs.PRESENT_ENABLED.get()) {
+        if (RegistryConfigs.PRESENT_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
             registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
         }
@@ -103,6 +103,24 @@ public class JEICompat implements IModPlugin {
             return stringBuilder.toString();
         }
     }
+
+    public static List<CraftingRecipe> createAntiqueMapSoapRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.antique_map";
+
+        ItemStack antique = new ItemStack(Items.FILLED_MAP);
+        antique.setHoverName(Component.translatable("filled_map.antique"));
+
+        Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(antique), soap);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_antique_map_clean");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Items.FILLED_MAP), inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
 
     public static List<CraftingRecipe> createAntiqueMapRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
@@ -157,32 +175,25 @@ public class JEICompat implements IModPlugin {
         return recipes;
     }
 
-    public static List<CraftingRecipe> createSoapCleanPresentRecipe() {
+    public static List<CraftingRecipe> createSoapCleanRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.jei.soap";
 
-        ItemStack output = new ItemStack(ModRegistry.PRESENTS.get(null).get());
+        for (String k : BlocksColorAPI.getBlockKeys()) {
+            var n = BlocksColorAPI.getItemHolderSet(k);
+            Item out = BlocksColorAPI.getColoredItem(k, null);
+            if (n == null || out == null) continue;
 
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
-                Ingredient.of(ModTags.PRESENTS), Ingredient.of(ModRegistry.SOAP.get()));
-        ResourceLocation id = Supplementaries.res("jei_soap_clean_present");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
-        recipes.add(recipe);
+            Ingredient ing = n.unwrap().map(Ingredient::of, l ->
+                    Ingredient.of(l.stream().map(Holder::value).map(Item::getDefaultInstance)));
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
+                    ing, Ingredient.of(ModRegistry.SOAP.get()));
 
-        return recipes;
-    }
-
-    public static List<CraftingRecipe> createSoapCleanShulkerRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
-        String group = "supplementaries.jei.soap";
-
-        ItemStack output = new ItemStack(Items.SHULKER_BOX);
-
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
-                Ingredient.of(ModTags.SHULKER_BOXES), Ingredient.of(ModRegistry.SOAP.get()));
-        ResourceLocation id = Supplementaries.res("jei_soap_clean_shulker");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
-        recipes.add(recipe);
+            ItemStack output = out.getDefaultInstance();
+            ResourceLocation id = Supplementaries.res("soap_clean_" + k.replace(":", "_"));
+            ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+            recipes.add(recipe);
+        }
 
         return recipes;
     }
@@ -363,23 +374,6 @@ public class JEICompat implements IModPlugin {
         com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
         blackboard.addTagElement("BlockEntityTag", com);
         return blackboard;
-    }
-
-    public static List<Recipe<?>> createBlackboardClear() {
-        List<Recipe<?>> recipes = new ArrayList<>();
-        String group = "supplementaries.jei.blackboard_clear";
-
-
-        ItemStack blackboard = getSans();
-
-        Ingredient emptyBoard = Ingredient.of(new ItemStack(Items.WATER_BUCKET));
-        Ingredient fullBoard = Ingredient.of(blackboard);
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_blackboard_clear");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()), inputs);
-        recipes.add(recipe);
-        return recipes;
-
     }
 
 

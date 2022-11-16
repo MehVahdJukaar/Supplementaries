@@ -2,20 +2,25 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:concrete"
+      "item": "supplementaries:blackboard"
     },
     {
       "item": "supplementaries:soap"
     }
+
   ],
   "result": {
-    "item": "minecraft:white_concrete",
+    "item": "supplementaries:blackboard",
     "count": 1
   },
   "conditions": [
     {
       "type": "supplementaries:flag",
       "flag": "soap"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackboard"
     }
   ]
 }

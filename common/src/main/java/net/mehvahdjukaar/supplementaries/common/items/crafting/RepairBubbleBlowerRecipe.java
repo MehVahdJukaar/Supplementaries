@@ -66,7 +66,7 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.BUBBLE_BLOWER_REPAIR_RECIPE.get();
+        return ModRecipes.BUBBLE_BLOWER_REPAIR.get();
     }
 
 

@@ -1,17 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.block.IColored;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class SoapClearRecipe extends CustomRecipe {
     public SoapClearRecipe(ResourceLocation resourceLocation) {
@@ -26,15 +25,12 @@ public class SoapClearRecipe extends CustomRecipe {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {
                 Item item = itemstack.getItem();
-                //TODO: use color stuff
-                if (Block.byItem(item) instanceof ShulkerBoxBlock ||
-                        IColored.getOptional(item).isPresent() || item instanceof DyeableLeatherItem) {
+                if (BlocksColorAPI.getColor(item) != null || item instanceof DyeableLeatherItem) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {
                         return false;
                     }
-
                     ++j;
                 }
 
@@ -49,39 +45,36 @@ public class SoapClearRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingContainer craftingContainer) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack toRecolor = ItemStack.EMPTY;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {
             ItemStack stack = craftingContainer.getItem(i);
             if (!stack.isEmpty()) {
                 Item item = stack.getItem();
-                if (IColored.getOptional(item).isPresent() || Block.byItem(item) instanceof ShulkerBoxBlock ||
+                if (BlocksColorAPI.getColor(item) != null ||
                         item instanceof DyeableLeatherItem) {
-                    itemstack = stack;
+                    toRecolor = stack;
                 }
             }
         }
+
         ItemStack result;
-        Item i = itemstack.getItem();
+        Item i = toRecolor.getItem();
         if (i instanceof DyeableLeatherItem leatherItem) {
-            result = itemstack.copy();
+            result = toRecolor.copy();
             leatherItem.clearColor(result);
             return result;
-        }
-        var op = IColored.getOptional(i);
-        if (op.isPresent()) {
-            var colored = op.get();
-            var r = colored.changeItemColor(colored.supportsBlankColor() ? null : DyeColor.WHITE);
-            if (r != null) {
-                result = r.getDefaultInstance();
-            } else {
-                result = itemstack.copy();
-            }
         } else {
-            result = Items.SHULKER_BOX.getDefaultInstance();
+            Item recolored = BlocksColorAPI.changeColor(i, null);
+            if (recolored != null) {
+                result = recolored.getDefaultInstance();
+            } else {
+                result = toRecolor.copy();
+            }
         }
 
-        if (itemstack.hasTag()) {
-            result.setTag(itemstack.getTag().copy());
+        var tag = toRecolor.getTag();
+        if (tag != null) {
+            result.setTag(tag.copy());
         }
 
         return result;
@@ -94,7 +87,7 @@ public class SoapClearRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.SOAP_CLEARING_RECIPE.get();
+        return ModRecipes.SOAP_CLEARING.get();
     }
 }
 

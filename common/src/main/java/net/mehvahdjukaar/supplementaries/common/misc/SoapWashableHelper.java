@@ -6,26 +6,26 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SoapWashableHelper {
 
     //support: waxed, forge waxed, copper, IW stuff
-    @SuppressWarnings("ConstantConditions")
     public static boolean tryWash(Level level, BlockPos pos, BlockState state) {
 
-        if (tryWashWithInterface(level, pos, state)){
+        if (tryWashWithInterface(level, pos, state) ||
+                tryChangingColor(level, pos, state) ||
+                tryUnoxidise(level, pos, state)) {
             if (level instanceof ServerLevel serverLevel) {
                 NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 64,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN));
@@ -33,18 +33,16 @@ public class SoapWashableHelper {
             return true;
         }
 
+        return false;
+    }
+
+    private static boolean tryUnoxidise(Level level, BlockPos pos, BlockState state) {
         Block b = state.getBlock();
-        if(b instanceof EntityBlock || b instanceof BedBlock)return false;
-
         BlockState toPlace = null;
-        var color = BlocksColorAPI.changeColor(state.getBlock(), null);
-
-        if(color != null){
-            toPlace = color.withPropertiesOf(state);
-        }
-
-        if(toPlace == null) {
-             toPlace = SuppPlatformStuff.getUnoxidised(level, pos, state);
+        if (b == Blocks.STICKY_PISTON) {
+            toPlace = Blocks.PISTON.withPropertiesOf(state);
+        } else {
+            SuppPlatformStuff.getUnoxidised(level, pos, state);
         }
         //vanilla
         if (toPlace == null) {
@@ -61,17 +59,12 @@ public class SoapWashableHelper {
         }
 
         if (toPlace != null) {
-            if (level instanceof ServerLevel serverLevel) {
-                level.setBlock(pos, toPlace, 11);
-
-                NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 64,
-                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN));
-            }
+            level.setBlock(pos, toPlace, 11);
             return true;
         }
-
         return false;
     }
+
 
     private static BlockState tryParse(BlockState oldState) {
         ResourceLocation r = Utils.getID(oldState.getBlock());
@@ -116,6 +109,44 @@ public class SoapWashableHelper {
         }
         if (cap != null) {
             return cap.tryWash(level, pos, state);
+        }
+        return false;
+    }
+
+
+    private static boolean tryChangingColor(Level level, BlockPos pos, BlockState state) {
+
+        Block newColor = BlocksColorAPI.changeColor(state.getBlock(), null);
+
+        if (newColor != null) {
+
+            if (state.getBlock() instanceof BedBlock) {
+                BlockPos other = pos.relative(BlockUtil.getConnectedBedDirection(state));
+                BlockState otherBed = level.getBlockState(other);
+                Block otherBedColor = BlocksColorAPI.changeColor(otherBed.getBlock(), null);
+                if (otherBedColor != null) {
+                    level.setBlock(other, otherBedColor.withPropertiesOf(otherBed), 11);
+                }
+            }
+
+            CompoundTag tag = null;
+            if (newColor instanceof EntityBlock) {
+                var be = level.getBlockEntity(pos);
+                if (be != null) {
+                    tag = be.saveWithoutMetadata();
+                }
+            }
+
+            BlockState toPlace = newColor.withPropertiesOf(state);
+
+            level.setBlock(pos, toPlace, 11);
+            if (tag != null) {
+                var be = level.getBlockEntity(pos);
+                if (be != null) {
+                    be.load(tag);
+                }
+            }
+            return true;
         }
         return false;
     }

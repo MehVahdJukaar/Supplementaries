@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "minecraft:carpets"
+      "item": "supplementaries:bamboo_spikes_tipped"
     },
     {
       "item": "supplementaries:soap"
@@ -10,13 +10,17 @@
 
   ],
   "result": {
-    "item": "minecraft:white_carpet",
+    "item": "supplementaries:bamboo_spikes",
     "count": 1
   },
   "conditions": [
     {
       "type": "supplementaries:flag",
       "flag": "soap"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bamboo_spikes_tipped"
     }
   ]
 }

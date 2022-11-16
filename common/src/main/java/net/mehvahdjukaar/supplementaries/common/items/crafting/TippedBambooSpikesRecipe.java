@@ -82,7 +82,7 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.BAMBOO_SPIKES_TIPPED_RECIPE.get();
+        return ModRecipes.BAMBOO_SPIKES_TIPPED.get();
     }
 
 

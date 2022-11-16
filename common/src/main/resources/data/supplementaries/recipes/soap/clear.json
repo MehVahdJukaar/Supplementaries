@@ -1,3 +1,9 @@
 {
-  "type": "supplementaries:soap_clearing"
+  "type": "supplementaries:soap_clearing",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ]
 }

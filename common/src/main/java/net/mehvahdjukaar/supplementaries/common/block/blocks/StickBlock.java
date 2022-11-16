@@ -56,7 +56,8 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
     public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
 
-    protected final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY = Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
+    protected static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
+            Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
 
     private final int fireSpread;
 
@@ -142,7 +143,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (CommonConfigs.Blocks.STICK_POLE.get()) {
-                if (this.material != Material.WOOD) return InteractionResult.PASS;
+                if (this != ModRegistry.STICK_BLOCK.get()) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
