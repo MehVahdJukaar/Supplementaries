@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.ItemLoreRecipe;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -65,6 +66,9 @@ public class JEICompat implements IModPlugin {
         if (RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
         }
+
+        registry.addRecipes(RecipeTypes.CRAFTING, createItemLoreRecipe());
+
         if (RegistryConfigs.SOAP_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanRecipe());
             if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
@@ -236,6 +240,25 @@ public class JEICompat implements IModPlugin {
         }
         return recipes;
     }
+
+    public static List<CraftingRecipe> createItemLoreRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "supplementaries.jei.item_lore";
+
+        ItemStack output = new ItemStack(Items.SLIME_BALL);
+        ItemStack tag = new ItemStack(Items.NAME_TAG);
+        var c = Component.literal("Ew sticky!");
+        tag.setHoverName(c);
+        ItemLoreRecipe.addLore(c, output);
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SLIME_BALL), Ingredient.of(tag));
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "jei_item_lore");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
 
     public static List<CraftingRecipe> createBubbleBlowerChargeRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();

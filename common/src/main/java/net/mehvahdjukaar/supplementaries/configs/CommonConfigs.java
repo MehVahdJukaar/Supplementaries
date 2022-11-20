@@ -25,7 +25,7 @@ public class CommonConfigs {
     }
 
 
-    public static ConfigSpec SERVER_SPEC;
+    public static final ConfigSpec SERVER_SPEC;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
@@ -384,7 +384,7 @@ public class CommonConfigs {
         public static Supplier<Boolean> JAR_ITEM_DRINK;
         public static Supplier<Boolean> JAR_AUTO_DETECT;
         public static Supplier<Boolean> GOBLET_DRINK;
-        public static Supplier<Boolean> CRYSTAL_ENCHANTING;
+        public static Supplier<Integer> CRYSTAL_ENCHANTING;
 
         public static Supplier<Boolean> CAGE_ALL_MOBS;
         public static Supplier<Boolean> CAGE_ALL_BABIES;
@@ -441,7 +441,7 @@ public class CommonConfigs {
 
             builder.push("urn");
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
-                            .define("critter_spawn_chance",0.01f, 0, 1);
+                    .define("critter_spawn_chance", 0.01f, 0, 1);
             builder.pop();
 
             builder.push("bamboo_spikes");
@@ -486,7 +486,7 @@ public class CommonConfigs {
 
             builder.push("pedestal");
             CRYSTAL_ENCHANTING = builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
-                    .define("crystal_enchanting", true);
+                    .define("crystal_enchanting", 3, 0, 100);
             builder.pop();
 
             //globe

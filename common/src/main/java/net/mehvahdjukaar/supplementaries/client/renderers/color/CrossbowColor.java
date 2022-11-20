@@ -18,7 +18,7 @@ public class CrossbowColor implements ItemColor {
         if (tint == 1 && ClientConfigs.Tweaks.COLORED_ARROWS.get()) {
             if (tag != null && tag.contains("ChargedProjectiles", 9)) {
                 ListTag chargedProjectiles = tag.getList("ChargedProjectiles", 10);
-                if (chargedProjectiles.size() > 0) {
+                if (!chargedProjectiles.isEmpty()) {
                     CompoundTag compound = chargedProjectiles.getCompound(0);
                     ItemStack arrow = ItemStack.of(compound);
                     Item i = arrow.getItem();

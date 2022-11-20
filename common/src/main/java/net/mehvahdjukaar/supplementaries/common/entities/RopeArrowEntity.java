@@ -143,7 +143,7 @@ public class RopeArrowEntity extends AbstractArrow {
 
                 //try placing it normally
                 ItemStack ropes = new ItemStack(ropeBlock);
-                BlockPlaceContext context = new BlockPlaceContext(this.level, (Player) entity, InteractionHand.MAIN_HAND, ropes, rayTraceResult);
+                BlockPlaceContext context = new BlockPlaceContext(this.level, player, InteractionHand.MAIN_HAND, ropes, rayTraceResult);
                 if (context.canPlace()) {
                     BlockState state = ItemsUtil.getPlacementState(context, ropeBlock);
                     if (state != null) {

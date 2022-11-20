@@ -120,7 +120,7 @@ public class BombExplosion extends Explosion {
 
     }
 
-    private void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
+    private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
         int i = drops.size();
         for (int j = 0; j < i; ++j) {
             Pair<ItemStack, BlockPos> pair = drops.get(j);
@@ -211,18 +211,18 @@ public class BombExplosion extends Explosion {
                         entity.hurt(this.getDamageSource(),  ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * f2 + 1.0D)));
                         double d11 = d10;
                         boolean isPlayer = entity instanceof Player;
-                        Player playerentity = null;
+                        Player playerEntity = null;
 
                         if (isPlayer) {
-                            playerentity = (Player) entity;
-                            if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.getAbilities().flying)) {
-                                this.hitPlayers.put(playerentity, new Vec3(d5 * d10, d7 * d10, d9 * d10));
+                            playerEntity = (Player) entity;
+                            if (!playerEntity.isSpectator() && (!playerEntity.isCreative() || !playerEntity.getAbilities().flying)) {
+                                this.hitPlayers.put(playerEntity, new Vec3(d5 * d10, d7 * d10, d9 * d10));
                             }
                         }
 
                         if (entity instanceof LivingEntity livingEntity) {
 
-                            if (!isPlayer || (!playerentity.isSpectator() && !playerentity.isCreative())) {
+                            if (!isPlayer || (!playerEntity.isSpectator() && !playerEntity.isCreative())) {
                                 bombType.applyStatusEffects(livingEntity, distSq);
                             }
 
@@ -239,9 +239,9 @@ public class BombExplosion extends Explosion {
         //send knockback packet to players
 
         if (!level.isClientSide) {
-            for (Player player : this.hitPlayers.keySet()) {
-                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
-                        new ClientBoundSendKnockbackPacket(this.hitPlayers.get(player), player.getId()));
+            for (var e : this.hitPlayers.entrySet()) {
+                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) e.getKey(),
+                        new ClientBoundSendKnockbackPacket(e.getValue(), e.getKey().getId()));
             }
         }
 

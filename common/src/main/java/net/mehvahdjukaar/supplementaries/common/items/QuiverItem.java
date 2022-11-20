@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -26,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -121,7 +119,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                QuiverArrowSelectGui.setActive(true);
+                QuiverArrowSelectGui.setUsingItem(true);
             }
             this.playRemoveOneSound(player);
             player.startUsingItem(pUsedHand);
@@ -143,7 +141,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            QuiverArrowSelectGui.setActive(false);
+            QuiverArrowSelectGui.setUsingItem(false);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());

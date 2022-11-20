@@ -26,6 +26,7 @@ public class FallingLiquidParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
+    @Override
     public void tick() {
         this.xo = this.x;
         this.yo = this.y;

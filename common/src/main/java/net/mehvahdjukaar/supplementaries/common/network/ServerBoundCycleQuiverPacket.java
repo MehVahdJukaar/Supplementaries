@@ -2,44 +2,40 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Objects;
 
 public class ServerBoundCycleQuiverPacket implements Message {
     private final int amount;
-    private final boolean mainHand;
+    private final Slot slot;
     private final boolean setSlot;
 
     public ServerBoundCycleQuiverPacket(FriendlyByteBuf buf) {
         this.amount = buf.readInt();
-        this.mainHand = buf.readBoolean();
+        this.slot = Slot.values()[buf.readInt()];
         this.setSlot = buf.readBoolean();
     }
 
-    public ServerBoundCycleQuiverPacket(int amount, boolean mainHand,   boolean setSlot) {
+    public ServerBoundCycleQuiverPacket(int amount, Slot slot, boolean setSlot) {
         this.amount = amount;
-        this.mainHand = mainHand;
+        this.slot = slot;
         this.setSlot = setSlot;
     }
 
-    public ServerBoundCycleQuiverPacket(int amount, boolean mainHand) {
-        this(amount, mainHand, false); //cycle
+    public ServerBoundCycleQuiverPacket(int amount, Slot slot) {
+        this(amount, slot, false); //cycle
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeInt(this.amount);
-        buf.writeBoolean(this.mainHand);
+        buf.writeInt(this.slot.ordinal());
         buf.writeBoolean(this.setSlot);
     }
 
@@ -47,21 +43,27 @@ public class ServerBoundCycleQuiverPacket implements Message {
     public void handle(ChannelHandler.Context context) {
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
-       if(player.getUsedItemHand()== InteractionHand.MAIN_HAND != this.mainHand){
-           int aa = 1; //this should not happen
-       }else{
-           ItemStack stack = player.getUseItem();
-           if(stack.getItem() != ModRegistry.QUIVER_ITEM.get()){
-               int aaa = 1;
-           }else{
-               var data = QuiverItem.getQuiverData(stack);
-               if(setSlot){
-                   data.setSelectedSlot(amount);
-               }else {
-                   data.cycle(amount);
-               }
-           }
-       }
+        ItemStack stack = ItemStack.EMPTY;
+        if (slot == Slot.INVENTORY) {
+            stack = QuiverItem.getQuiver(player);
+        } else if (player.getUsedItemHand() == InteractionHand.MAIN_HAND == (slot == Slot.MAIN_HAND)) {
+            stack = player.getUseItem();
+        }
+        if (stack.getItem() != ModRegistry.QUIVER_ITEM.get()) {
+            int aaa = 1; //should not happen
+        } else {
+            var data = QuiverItem.getQuiverData(stack);
+            if (setSlot) {
+                data.setSelectedSlot(amount);
+            } else {
+                data.cycle(amount);
+            }
+        }
+    }
 
+    public enum Slot {
+        MAIN_HAND,
+        OFF_HAND,
+        INVENTORY
     }
 }

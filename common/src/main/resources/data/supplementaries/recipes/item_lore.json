@@ -1,0 +1,9 @@
+{
+  "type": "supplementaries:item_lore",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "item_lore"
+    }
+  ]
+}

@@ -22,22 +22,23 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
         this.lifetime = 40;
     }
 
+    @Override
     public void tick() {
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;
         this.ageParticle();
         if (!this.removed) {
-            this.yd -= (double) this.gravity;
+            this.yd -=  this.gravity;
             this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
             if (!this.removed) {
-                this.xd *= (double) 0.98F;
-                this.yd *= (double) 0.98F;
-                this.zd *= (double) 0.98F;
+                this.xd *=  0.98F;
+                this.yd *=  0.98F;
+                this.zd *=  0.98F;
                 BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (fluidstate.getType() == this.fluid && this.y < (double) ((float) blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (fluidstate.getType() == this.fluid && this.y <  ( blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
 

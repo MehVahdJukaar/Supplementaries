@@ -29,25 +29,25 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    //modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
-    //    exclude group: 'net.fabricmc.fabric-api'
-    //}
-    modImplementation("curse.maven:yacl-667299:3987709")
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+    }
+    //modImplementation("curse.maven:yacl-667299:3987709")
 
-   // modCompileOnly("curse.maven:modmenu-308702:3920481")
+    //modCompileOnly("curse.maven:modmenu-308702:3920481")
 
     modImplementation("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
     //modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
-   //     exclude module: "fabric-api"
-   // }
+    //     exclude module: "fabric-api"
+    // }
 
     // modImplementation("curse.maven:roughly-enough-items-310111:3900965")
     modImplementation("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:3929455")
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
-    modImplementation("curse.maven:ctm-refabricated-633997:3834086")
+    //modImplementation("curse.maven:ctm-refabricated-633997:3834086")
   //  modImplementation("curse.maven:twigs-496913:3943447")
   //  modImplementation("curse.maven:frame-api-580137:3943404")
 

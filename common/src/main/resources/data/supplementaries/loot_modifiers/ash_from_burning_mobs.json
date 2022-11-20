@@ -2,6 +2,10 @@
   "type": "supplementaries:add_item",
   "conditions": [
     {
+      "type": "supplementaries:flag",
+      "flag": "ash"
+    },
+    {
       "condition": "minecraft:random_chance",
       "chance": 0.2
     },

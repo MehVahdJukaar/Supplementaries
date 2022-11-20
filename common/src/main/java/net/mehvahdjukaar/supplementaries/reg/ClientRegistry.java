@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -94,8 +95,7 @@ public class ClientRegistry {
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
 
-
-    public static KeyMapping QUIVER_KEYBIND;
+    public static KeyMapping QUIVER_KEYBIND = null;
 
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
@@ -258,11 +258,13 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientPlatformHelper.KeyBindEvent event) {
-       /* QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
-                InputConstants.Type.KEYSYM,
-                InputConstants.getKey("key.keyboard.v").getValue(),
-                "supplementaries.gui.controls");
-        event.register(QUIVER_KEYBIND);*/ //TODO: add
+        if(PlatformHelper.getPlatform().isForge()) {
+            QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
+                    InputConstants.Type.KEYSYM,
+                    InputConstants.getKey("key.keyboard.v").getValue(),
+                    "supplementaries.gui.controls");
+            event.register(QUIVER_KEYBIND);
+        }
     }
 
     @EventCalled

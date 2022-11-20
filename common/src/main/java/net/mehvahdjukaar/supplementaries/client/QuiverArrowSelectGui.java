@@ -1,14 +1,17 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket.Slot;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -18,33 +21,46 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public abstract class QuiverArrowSelectGui extends Gui {
-    static final ResourceLocation TEXTURE = Supplementaries.res("textures/gui/quiver_select.png");
+    private static final ResourceLocation TEXTURE = Supplementaries.res("textures/gui/quiver_select.png");
 
-    private static boolean active;
+    //behold states
+    private static boolean usingItem;
     private static double lastCumulativeMouseDx = 0;
+    private static boolean usingKey = false;
+
+    public static boolean isActive() {
+        return usingItem || usingKey;
+    }
+
+    public static void setUsingItem(boolean on) {
+        if (on != usingItem) lastCumulativeMouseDx = 0;
+        usingItem = on;
+    }
+
+    public static boolean isUsingKey() {
+        return usingKey;
+    }
+
+    public static void setUsingKeybind(boolean on) {
+        if (on != usingItem) lastCumulativeMouseDx = 0;
+        usingKey = on;
+    }
 
     protected final ItemRenderer itemRenderer;
     protected final Minecraft minecraft;
 
-    public static boolean isActive() {
-        return active;
-    }
-
-    public QuiverArrowSelectGui(Minecraft minecraft, ItemRenderer itemRenderer) {
+    protected QuiverArrowSelectGui(Minecraft minecraft, ItemRenderer itemRenderer) {
         super(minecraft, itemRenderer);
         this.itemRenderer = itemRenderer;
         this.minecraft = minecraft;
     }
 
-    public static void setActive(boolean on) {
-        if (on != active) lastCumulativeMouseDx = 0;
-        active = on;
-    }
+
 
     public static void ohMouseMoved(double deltaX) {
         double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
@@ -53,9 +69,9 @@ public abstract class QuiverArrowSelectGui extends Gui {
         int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
         if (slotsMoved != 0) {
             Player player = Minecraft.getInstance().player;
-            if(player != null) {
-                NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                        slotsMoved, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+            if (player != null) {
+                Slot s = getQuiverSlot(player);
+                NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(slotsMoved, s));
             }
         }
     }
@@ -63,27 +79,26 @@ public abstract class QuiverArrowSelectGui extends Gui {
     @EventCalled
     public static boolean onMouseScrolled(double scrollDelta) {
         Player player = Minecraft.getInstance().player;
-        //ItemStack quiver = player.getUseItem();
-        //QuiverItem.getQuiverData(quiver).cycle(scrollDelta > 0);
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                scrollDelta > 0 ? -1 : 1, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+                scrollDelta > 0 ? -1 : 1, getQuiverSlot(player)));
         return true;
     }
 
     @EventCalled
     public static boolean onKeyPressed(int key, int action, int modifiers) {
+        //maybe add key thing here
         if (action == 1) {
             Player player = Minecraft.getInstance().player;
 
             switch (key) {
                 case 263 -> { //left arrow;
                     NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                            -1, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+                            -1, getQuiverSlot(player)));
                     return true;
                 }
                 case 262 -> { //right arrow;
                     NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                            1, player.getUsedItemHand() == InteractionHand.MAIN_HAND));
+                            1, getQuiverSlot(player)));
                     return true;
                 }
             }
@@ -91,7 +106,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
             if (number >= 1 && number <= 9) {
                 if (number <= CommonConfigs.Items.QUIVER_SLOTS.get()) {
                     NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                            number-1, player.getUsedItemHand() == InteractionHand.MAIN_HAND, true));
+                            number - 1, getQuiverSlot(player), true));
                 }
                 //cancels all number keys to prevent switching items
                 return true;
@@ -111,7 +126,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
     public void renderQuiverContent(PoseStack poseStack, float partialTicks, int screenWidth, int screenHeight) {
 
         if (minecraft.getCameraEntity() instanceof Player player) {
-            ItemStack quiver = player.getUseItem();
+            ItemStack quiver = getCurrentlyUsedQuiver(player);
             if (quiver.getItem() == ModRegistry.QUIVER_ITEM.get()) {
                 ///gui.setupOverlayRenderState(true, false);
 
@@ -157,18 +172,31 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
 
                 ItemStack selectedArrow = items.get(selected);
-                if(!selectedArrow.isEmpty()) {
+                if (!selectedArrow.isEmpty()) {
                     drawHighlight(poseStack, screenWidth, py, selectedArrow);
                 }
 
                 poseStack.popPose();
 
-                setActive(true);
+                setUsingItem(true);
                 return;
             }
         }
-        setActive(false);
+        setUsingItem(false);
 
+    }
+
+
+    @NotNull
+    private static Slot getQuiverSlot(Player player) {
+        return usingKey ? Slot.INVENTORY : (player.getUsedItemHand() == InteractionHand.MAIN_HAND ? Slot.MAIN_HAND : Slot.OFF_HAND);
+    }
+
+    private static ItemStack getCurrentlyUsedQuiver(Player player) {
+        if (usingKey) {
+            return ((IQuiverEntity) player).getQuiver();
+        }
+        return player.getUseItem();
     }
 
     protected abstract void drawHighlight(PoseStack poseStack, int screenWidth, int py, ItemStack selectedArrow);

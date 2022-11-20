@@ -110,8 +110,7 @@ public class BlackBoardGui extends Screen {
 
 
         matrixstack.pushPose();
-        //float ff = 93.75F/16f;
-        //matrixstack.scale(ff,ff,ff);
+
         int ut = -1;
         int vt = -1;
         for (int xx = 0; xx < 16; xx++) {

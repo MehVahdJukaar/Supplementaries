@@ -66,11 +66,11 @@ public class ClientEventsForge {
             }
         }
         var renderer = event.getRenderer(EntityType.SKELETON);
-        if(renderer != null) {
+        if (renderer != null) {
             renderer.addLayer(new QuiverLayer(renderer, true));
         }
         var renderer2 = event.getRenderer(EntityType.STRAY);
-        if(renderer2 != null) {
+        if (renderer2 != null) {
             renderer2.addLayer(new QuiverLayer(renderer2, true));
         }
     }
@@ -111,27 +111,11 @@ public class ClientEventsForge {
         }
     }
 
-    public static boolean keyDown = false;
-
-    /*
     @SubscribeEvent
-    public static void onKeyPress(ScreenEvent.KeyPressed event) {
-        if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
-            boolean down = ClientRegistry.QUIVER_KEYBIND.isDown();
-            boolean wasDown = keyDown;
-            keyDown = down;
-            if (down && !wasDown) {
-
-            }
+    public static void onKeyPress(InputEvent.Key event) {
+        if (event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+            QuiverArrowSelectGui.setUsingKeybind(event.getAction() == 1);
         }
     }
-
-    @SubscribeEvent
-    public static void onKeyPress(ScreenEvent.KeyReleased event) {
-        if (event.getKeyCode() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
-
-        }
-    }*/
-
 
 }

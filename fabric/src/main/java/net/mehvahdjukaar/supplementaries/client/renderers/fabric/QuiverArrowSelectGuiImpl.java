@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui {
 
-    public static QuiverArrowSelectGuiImpl INSTANCE = new QuiverArrowSelectGuiImpl();
+    public static final QuiverArrowSelectGuiImpl INSTANCE = new QuiverArrowSelectGuiImpl();
 
     public QuiverArrowSelectGuiImpl() {
         super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());

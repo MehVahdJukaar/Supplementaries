@@ -81,7 +81,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
-        blit(matrixStack, this.x - 1, this.y - 1, 16 * WIDTH, 0, WIDTH + 2, WIDTH + 2, 32 * WIDTH, 16 * WIDTH);
+        blit(matrixStack, this.x - 1, this.y - 1, 16f * WIDTH, 0, WIDTH + 2, WIDTH + 2, 32 * WIDTH, 16 * WIDTH);
         this.renderButton(matrixStack);
     }
 

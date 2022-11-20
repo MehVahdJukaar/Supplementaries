@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 
 //hacky registered item that handles placing placeable stuff
 public class BlockPlacerItem extends BlockItem {
-    //TODO: move this out of here
+
     protected static final Map<Block, Pair<Supplier<? extends Item>, Supplier<Boolean>>> PLACEABLE_ITEMS = new IdentityHashMap<>();
 
     public static void registerPlaceableItem(Block block, Supplier<? extends Item> item, Supplier<Boolean> config) {
