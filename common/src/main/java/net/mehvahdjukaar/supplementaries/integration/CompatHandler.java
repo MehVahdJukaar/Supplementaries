@@ -56,6 +56,7 @@ public class CompatHandler {
     public static final boolean FLAN;
     public static final boolean BREEZY;
     public static final boolean SHIMMER;
+    public static final boolean BUMBLEZONE;
 
     static {
         QUARK = isLoaded("quark");
@@ -100,6 +101,7 @@ public class CompatHandler {
         FLAN = isLoaded("flan");
         BREEZY = isLoaded("breezy");
         SHIMMER = isLoaded("shimmer");
+        BUMBLEZONE = isLoaded("the_bumblezone");
     }
 
     private static boolean isLoaded(String name) {

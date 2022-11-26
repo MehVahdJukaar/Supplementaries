@@ -1,11 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-
-import java.util.List;
+import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 
 public class QuarkClientCompatImpl {
 

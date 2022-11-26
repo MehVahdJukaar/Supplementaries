@@ -72,7 +72,7 @@ public class KeyLockableTile extends BlockEntity {
         boolean isKey = stack.is(ModTags.KEY);
         //clear ownership
         if (player.isSecondaryUseActive() && isKey) {
-            if(tryClearingKey(player, stack))return false;
+            if (tryClearingKey(player, stack)) return false;
         }
         //set key
         else if (this.password == null) {
@@ -90,7 +90,7 @@ public class KeyLockableTile extends BlockEntity {
     }
 
     public boolean tryClearingKey(Player player, ItemStack stack) {
-        if((player.isCreative() || this.isCorrectKey(stack))) {
+        if ((player.isCreative() || this.isCorrectKey(stack))) {
             this.clearOwner();
             player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
             this.level.playSound(null, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5,
@@ -103,8 +103,9 @@ public class KeyLockableTile extends BlockEntity {
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if (compound.contains("Password"))
+        if (compound.contains("Password")) {
             this.password = compound.getString("Password");
+        } else this.password = null;
     }
 
     @Override

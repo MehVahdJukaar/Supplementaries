@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.Lazy;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
+import vazkii.quark.base.client.config.screen.widgets.QButton;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;

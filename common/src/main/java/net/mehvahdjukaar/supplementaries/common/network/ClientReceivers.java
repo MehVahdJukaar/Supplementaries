@@ -6,9 +6,9 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.ChatFormatting;
@@ -107,23 +107,31 @@ public class ClientReceivers {
                     ParticleUtil.spawnParticleOnBlockShape(l, new BlockPos(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
+                }case BUBBLE_CLEAN_ENTITY ->{
+                    if(message.entityId != null){
+                        var e =  l.getEntity(message.entityId);
+                        if(e != null){
+                            ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l, BlockPos.ZERO,
+                                    ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
+                        }
+                    }
                 }
                 case DISPENSER_MINECART -> {
                     int j1 = 0;
                     int j2 = 1;
                     int k2 = 0;
-                    double d18 = message.pos.x + (double) j1 * 0.6D;
-                    double d24 = message.pos.y + (double) j2 * 0.6D;
-                    double d28 = message.pos.z + (double) k2 * 0.6D;
+                    double d18 = message.pos.x + j1 * 0.6D;
+                    double d24 = message.pos.y + j2 * 0.6D;
+                    double d28 = message.pos.z + k2 * 0.6D;
 
                     for (int i3 = 0; i3 < 10; ++i3) {
                         double d4 = l.random.nextDouble() * 0.2D + 0.01D;
-                        double d6 = d18 + (double) j1 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) k2 * 0.5D;
-                        double d8 = d24 + (double) j2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) j2 * 0.5D;
-                        double d30 = d28 + (double) k2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) j1 * 0.5D;
-                        double d9 = (double) j1 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d10 = (double) j2 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d11 = (double) k2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d6 = d18 + j1 * 0.01D + (l.random.nextDouble() - 0.5D) * k2 * 0.5D;
+                        double d8 = d24 + j2 * 0.01D + (l.random.nextDouble() - 0.5D) * j2 * 0.5D;
+                        double d30 = d28 + k2 * 0.01D + (l.random.nextDouble() - 0.5D) * j1 * 0.5D;
+                        double d9 = j1 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d10 = j2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d11 = k2 * d4 + l.random.nextGaussian() * 0.01D;
                         l.addParticle(ParticleTypes.SMOKE, d6, d8, d30, d9, d10, d11);
                     }
                 }

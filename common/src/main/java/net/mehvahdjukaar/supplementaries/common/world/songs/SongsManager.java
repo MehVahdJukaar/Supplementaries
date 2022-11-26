@@ -8,7 +8,6 @@ import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapTrade;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
@@ -23,7 +22,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -143,7 +141,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         boolean played = false;
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
-            if (notes.size() > 0 && notes.getInt(0) > 0) {
+            if (!notes.isEmpty() && notes.getInt(0) > 0) {
                 NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
@@ -155,19 +153,19 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     //util to make songs from a map
     private static final Map<Long, List<Integer>> RECORDING = new HashMap<>();
-    private static boolean IS_RECORDING = false;
     private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
 
+    private static boolean isRecording = false;
 
     public static void startRecording(NoteBlockInstrument[] whitelist) {
         RECORDING.clear();
-        IS_RECORDING = true;
+        isRecording = true;
         WHITELIST.clear();
         WHITELIST.addAll(List.of(whitelist));
     }
 
     public static String stopRecording(Level level, String name, int speedup) {
-        IS_RECORDING = false;
+        isRecording = false;
 
         //this could be simplified alot
         long start = Long.MAX_VALUE;
@@ -247,14 +245,14 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void recordNote(LevelAccessor levelAccessor, BlockPos pos) {
-        if (levelAccessor instanceof Level level && IS_RECORDING) {
+        if (levelAccessor instanceof Level level && isRecording) {
             BlockState state = level.getBlockState(pos);
             recordNote(level, state.getValue(NoteBlock.NOTE) + 1, state.getValue(NoteBlock.INSTRUMENT));
         }
     }
 
     public static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
-        if (WHITELIST.size() == 0 || WHITELIST.contains(instrument)) {
+        if (WHITELIST.isEmpty() || WHITELIST.contains(instrument)) {
             List<Integer> notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new ArrayList<>());
             notes.add(note);
         }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
@@ -45,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class GlobeBlock extends WaterBlock implements EntityBlock {
+public class GlobeBlock extends WaterBlock implements EntityBlock, ISoapWashable {
     protected static final VoxelShape SHAPE = Shapes.box(0.125D, 0D, 0.125D, 0.875D, 1D, 0.875D);
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -213,5 +214,16 @@ public class GlobeBlock extends WaterBlock implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return BlockUtil.getTicker(pBlockEntityType, ModRegistry.GLOBE_TILE.get(), GlobeBlockTile::tick);
+    }
+
+    @Override
+    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+            if (tile.isSepia()) {
+                level.setBlockAndUpdate(pos, ModRegistry.GLOBE.get().withPropertiesOf(state));
+                return true;
+            }
+        }
+        return false;
     }
 }

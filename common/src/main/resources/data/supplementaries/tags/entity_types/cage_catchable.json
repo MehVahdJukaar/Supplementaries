@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     {"id":"minecraft:slime","required":false},
+    {"id":"minecraft:vex","required":false},
     {"id":"minecraft:bee","required":false},
     {"id":"minecraft:frog","required":false},
     {"id":"minecraft:allay","required":false},

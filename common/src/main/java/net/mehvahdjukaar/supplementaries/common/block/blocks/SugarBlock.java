@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.integration.BumblezoneCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,11 +63,19 @@ public class SugarBlock extends ConcretePowderBlock {
                 this.spawnDissolveParticles(level, pos);
             }
             if (shouldTurnToWater(level, pos)) {
-                level.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
+                turnIntoWater(level, pos);
             } else level.removeBlock(pos, false);
             return true;
         }
         return super.triggerEvent(state, level, pos, id, param);
+    }
+
+    private static void turnIntoWater(Level level, BlockPos pos) {
+        if (CompatHandler.BUMBLEZONE) {
+            BumblezoneCompat.turnToSugarWater(level, pos);
+        } else {
+            level.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
+        }
     }
 
     private boolean shouldTurnToWater(Level level, BlockPos pos) {
@@ -107,8 +117,6 @@ public class SugarBlock extends ConcretePowderBlock {
 
 
     public void spawnDissolveParticles(Level level, BlockPos pos) {
-
-        double d2 = 0.25;
         int d = 0, e = 0, f = 0;
 
         int amount = 4;
@@ -143,5 +151,6 @@ public class SugarBlock extends ConcretePowderBlock {
         SoundType soundtype = state.getSoundType();
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
+
 
 }

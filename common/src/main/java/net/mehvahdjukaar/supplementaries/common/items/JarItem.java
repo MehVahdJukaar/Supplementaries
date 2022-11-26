@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -178,7 +179,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (RegistryConfigs.JAR_TAB.get() && group == ModRegistry.JAR_TAB) {
+        if (RegistryConfigs.JAR_TAB.get() && group == ModCreativeTabs.JAR_TAB) {
             //lets jar tab populate itself
         } else super.fillItemCategory(group, items);
     }

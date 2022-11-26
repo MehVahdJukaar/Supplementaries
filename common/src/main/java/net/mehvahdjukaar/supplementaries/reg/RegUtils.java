@@ -55,7 +55,7 @@ public class RegUtils {
     @Nullable
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (RegistryConfigs.isEnabled(regName)) {
-            return ModRegistry.MOD_TAB == null ? g : ModRegistry.MOD_TAB;
+            return ModCreativeTabs.MOD_TAB == null ? g : ModCreativeTabs.MOD_TAB;
         }
         return null;
     }

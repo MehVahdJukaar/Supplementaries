@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -31,8 +32,9 @@ public class ColorHelper {
     public static int getRainbowColorPost(float division) {
         float scale = 3600f / division;
         float h = ((int) ((System.currentTimeMillis()) % (int) scale) / scale);
-        HSLColor hsl = prettyfyColor(new HSLColor(h, 0.6f, 0.5f,1));
-        return hsl.asRGB().toInt();
+        return new RGBColor(0xFFAA00).asHCL().withHue(h).asRGB().toInt();
+        //HSLColor hsl = prettyfyColor(new HSLColor(h, 0.6f, 0.5f,1));
+        //return hsl.asRGB().toInt();
     }
 
     public static int getRandomBrightColor(RandomSource random) {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -26,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import java.util.Calendar;
+import java.util.function.Supplier;
 
 public class CommonUtil {
 
@@ -156,11 +158,12 @@ public class CommonUtil {
     }
 
     //this is how you do it :D
-    private static final ShulkerBoxBlockEntity SHULKER_TILE = new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState());
+    private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
+            Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
 
 
     public static boolean isAllowedInShulker(ItemStack stack) {
-        return SHULKER_TILE.canPlaceItemThroughFace(0, stack, null);
+        return SHULKER_TILE.get().canPlaceItemThroughFace(0, stack, null);
     }
 
 

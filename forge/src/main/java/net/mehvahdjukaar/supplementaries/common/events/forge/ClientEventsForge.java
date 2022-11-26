@@ -114,7 +114,10 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         if (event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
-            QuiverArrowSelectGui.setUsingKeybind(event.getAction() == 1);
+            int a = event.getAction();
+            if (a < 2) {
+                QuiverArrowSelectGui.setUsingKeybind(a == 1);
+            }
         }
     }
 

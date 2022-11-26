@@ -296,7 +296,9 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
 
                     BlockState light = hasFirefly ? JAR : LANTERN;
                     if (rand.nextInt(5) == 1) {
-                        light = ModRegistry.CANDLE_HOLDERS.get(null).get().defaultBlockState().setValue(CandleHolderBlock.FACE, AttachFace.CEILING);
+                        light = ModRegistry.CANDLE_HOLDERS.get(null).get().defaultBlockState()
+                                .setValue(CandleHolderBlock.LIT, true)
+                                .setValue(CandleHolderBlock.FACE, AttachFace.CEILING);
                     }
 
                     Direction dir = lampDir.get(rand.nextInt(lampDir.size()));

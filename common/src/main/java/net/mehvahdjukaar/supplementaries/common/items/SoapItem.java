@@ -1,26 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class SoapItem extends Item {
+
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
             .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
                     new MobEffectInstance(MobEffects.POISON, 120, 2), 1).build();
@@ -46,7 +56,6 @@ public class SoapItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
-        //stack.hurtAndBreak(1, entity, (e)-> {stack.grow(1); e.stopUsingItem();});
         if (pLevel.isClientSide) {
             Vec3 v = entity.getViewVector(0).normalize();
             double x = entity.getX() + v.x;
@@ -80,4 +89,18 @@ public class SoapItem extends Item {
         return false;
     }
 
+    @Override
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+        if (interactionTarget instanceof Sheep s) {
+            if (s.getColor() != DyeColor.WHITE) {
+                s.setColor(DyeColor.WHITE);
+                if(!player.level.isClientSide) {
+                    NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(s,
+                                new ClientBoundParticlePacket(s, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN_ENTITY));
+                }
+                return InteractionResult.sidedSuccess(player.level.isClientSide);
+            }
+        }
+        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
+    }
 }

@@ -50,17 +50,12 @@ import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
 import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs.*;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class ModRegistry {
 
-    //creative tab
-    public static CreativeModeTab MOD_TAB = null;
-    public static CreativeModeTab JAR_TAB = null;
-
     public static void init() {
-        MOD_TAB = ModCreativeTabs.MOD_TAB;
-        JAR_TAB = ModCreativeTabs.JAR_TAB;
 
         CompatHandler.initOptionalRegistries();
         RegUtils.initDynamicRegistry();

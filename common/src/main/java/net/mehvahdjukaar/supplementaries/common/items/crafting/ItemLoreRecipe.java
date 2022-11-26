@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -58,15 +58,16 @@ public class ItemLoreRecipe extends CustomRecipe {
 
         Component lore = nameTag.getHoverName();
         ItemStack result = itemstack.copy();
+        result.setCount(1);
         addLore(lore, result);
         return result;
     }
 
     public static void addLore(Component lore, ItemStack result) {
         CompoundTag tag = result.getOrCreateTag();
-        if(tag.contains("display")){
+        if (tag.contains("display")) {
             tag = tag.getCompound("display");
-        }else {
+        } else {
             var t = new CompoundTag();
             tag.put("display", t);
             tag = t;
@@ -80,6 +81,20 @@ public class ItemLoreRecipe extends CustomRecipe {
         list.add(StringTag.valueOf(Component.Serializer.toJson(lore)));
 
         tag.put("Lore", list);
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+        for (int i = 0; i < stacks.size(); ++i) {
+            ItemStack itemstack = inv.getItem(i);
+            if (itemstack.is(Items.NAME_TAG)) {
+                ItemStack copy = itemstack.copy();
+                stacks.set(i, copy);
+                return stacks;
+            }
+        }
+        return stacks;
     }
 
     @Override
