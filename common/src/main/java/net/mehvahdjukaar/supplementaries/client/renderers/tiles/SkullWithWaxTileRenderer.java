@@ -21,15 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractSkullBlockTileRenderer<T extends EnhancedSkullBlockTile> implements BlockEntityRenderer<T> {
-
+public abstract class SkullWithWaxTileRenderer<T extends EnhancedSkullBlockTile> implements BlockEntityRenderer<T> {
 
     private final BlockEntityRenderDispatcher dispatcher;
 
     protected final BlockRenderDispatcher blockRenderer;
     protected final SkullModelBase overlay;
 
-    protected AbstractSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+    protected SkullWithWaxTileRenderer(BlockEntityRendererProvider.Context context) {
         this.blockRenderer = Minecraft.getInstance().getBlockRenderer();
         this.overlay = new SkullModel(context.bakeLayer(ClientRegistry.SKULL_CANDLE_OVERLAY));
         this.dispatcher = context.getBlockEntityRenderDispatcher();

@@ -90,6 +90,7 @@ public class ItemLoreRecipe extends CustomRecipe {
             ItemStack itemstack = inv.getItem(i);
             if (itemstack.is(Items.NAME_TAG)) {
                 ItemStack copy = itemstack.copy();
+                copy.setCount(1);
                 stacks.set(i, copy);
                 return stacks;
             }

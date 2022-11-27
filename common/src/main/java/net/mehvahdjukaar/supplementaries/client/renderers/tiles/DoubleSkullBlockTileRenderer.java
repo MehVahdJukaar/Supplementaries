@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class DoubleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer<DoubleSkullBlockTile> {
+public class DoubleSkullBlockTileRenderer extends SkullWithWaxTileRenderer<DoubleSkullBlockTile> {
 
 
     public DoubleSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {

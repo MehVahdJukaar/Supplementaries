@@ -154,7 +154,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     }
                 } else {
                     if (player.isShiftKeyDown() && stack.is(ModTags.KEY) && (player.isCreative() ||
-                            KeyLockableTile.isCorrectKey(stack, tile.password))) {
+                            KeyLockableTile.isCorrectKey(stack, tile.getPassword()))) {
                         cleared = true;
                     }
                 }
@@ -170,21 +170,21 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                 BlockPos p = pos.relative(state.getValue(FACING));
                 if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
                     if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
-                        UUID owner = tile.owner;
+                        UUID owner = tile.getOwner();
                         if (owner == null) {
                             owner = player.getUUID();
                             tile.setOwner(owner);
                         }
                         if (!owner.equals(player.getUUID())) {
-                            player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", tile.ownerName), true);
+                            player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", tile.getOwnerName()), true);
                             if (!player.isCreative()) return InteractionResult.CONSUME;
                         }
                     } else {
-                        String key = tile.password;
+                        String key = tile.getPassword();
                         if (key == null) {
                             if (stack.is(ModTags.KEY)) {
-                                tile.password = stack.getHoverName().getString();
-                                player.displayClientMessage(Component.translatable("message.supplementaries.safe.assigned_key", tile.password), true);
+                                tile.setPassword(stack.getHoverName().getString());
+                                player.displayClientMessage(Component.translatable("message.supplementaries.safe.assigned_key", tile.getPassword()), true);
                                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                                         SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
                                 return InteractionResult.CONSUME;
@@ -310,7 +310,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                 tile.setCustomName(stack.getHoverName());
             }
             if (placer instanceof Player) {
-                if (tile.owner == null)
+                if (tile.getOwner() == null)
                     tile.setOwner(placer.getUUID());
             }
         }

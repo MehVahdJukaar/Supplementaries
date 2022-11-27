@@ -99,6 +99,7 @@ public class ClientConfigs {
         public static Supplier<Boolean> COMPASS_CLICK;
         public static Supplier<Boolean> BOOK_GLINT;
         public static Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
+        public static Supplier<Boolean> MOB_HEAD_EFFECTS;
 
         private static void init(ConfigBuilder builder) {
             builder.comment("Game tweaks")
@@ -116,6 +117,8 @@ public class ClientConfigs {
                     .define("placeable_books_glint", false);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
+            MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
+                    .define("mob_head_shaders", true);
             builder.pop();
         }
     }
@@ -131,6 +134,7 @@ public class ClientConfigs {
         public static Supplier<Double> TEST3;
 
         private static void init(ConfigBuilder builder) {
+
             builder.comment("General settings")
                     .push("general");
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
@@ -139,9 +143,6 @@ public class ClientConfigs {
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")
                     .define("placeable_tooltips", true);
-            ANTI_REPOST_WARNING = builder.comment("Tries to detect when the mod hasn't been downloaded from Curseforge." +
-                            "Set to false if you have manually changed the mod jar name")
-                    .define("anti_reposting_warning", true);
 
             TEST1 = builder.comment("ignore this").define("test1", 0f, -10, 10);
             TEST2 = builder.comment("ignore this").define("test2", 0f, -10, 10);

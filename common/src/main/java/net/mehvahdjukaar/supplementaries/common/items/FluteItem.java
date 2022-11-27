@@ -21,6 +21,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -90,7 +91,6 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             CompoundTag com = new CompoundTag();
             com.putString("Name", target.getName().getString());
             com.putUUID("UUID", target.getUUID());
-            com.putInt("ID", target.getId());
 
             stack.addTagElement("Pet", com);
             player.setItemInHand(hand, stack);
@@ -101,23 +101,22 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }
 
 
-    //TODO: figure out continuous use
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        super.use(worldIn, playerIn, handIn);
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
+        super.use(level, player, handIn);
+        ItemStack stack = player.getItemInHand(handIn);
+        if (level instanceof ServerLevel serverLevel) {
 
-            double x = playerIn.getX();
-            double y = playerIn.getY();
-            double z = playerIn.getZ();
+            double x = player.getX();
+            double y = player.getY();
+            double z = player.getZ();
             int r = CommonConfigs.Items.FLUTE_RADIUS.get();
             CompoundTag com = stack.getTagElement("Pet");
             if (com != null) {
-                Entity entity = worldIn.getEntity(com.getInt("ID"));
+                Entity entity = serverLevel.getEntity(com.getUUID("UUID"));
                 int maxDist = CommonConfigs.Items.FLUTE_DISTANCE.get() * CommonConfigs.Items.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
-                    if (pet.level == playerIn.level && pet.distanceToSqr(playerIn) < maxDist) {
+                    if (pet.level == player.level && pet.distanceToSqr(player) < maxDist) {
                         if (pet.randomTeleport(x, y, z, false)) {
                             pet.stopSleeping();
                         }
@@ -126,15 +125,15 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
             } else {
                 AABB bb = new AABB(x - r, y - r, z - r, x + r, y + r, z + r);
-                List<Entity> entities = worldIn.getEntities(playerIn, bb, TamableAnimal.class::isInstance);
+                List<Entity> entities = level.getEntities(player, bb, TamableAnimal.class::isInstance);
                 for (Entity e : entities) {
                     TamableAnimal pet = ((TamableAnimal) e);
-                    if (pet.isTame() && !pet.isOrderedToSit() && pet.getOwnerUUID().equals(playerIn.getUUID())) {
+                    if (pet.isTame() && !pet.isOrderedToSit() && pet.getOwnerUUID().equals(player.getUUID())) {
                         pet.randomTeleport(x, y, z, false);
                     }
                 }
             }
-            playerIn.getCooldowns().addCooldown(this, 20);
+            player.getCooldowns().addCooldown(this, 20);
         }
         //consumes on both so doesn't swing hand
         return InteractionResultHolder.consume(stack);

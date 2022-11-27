@@ -708,7 +708,8 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return item instanceof BlockItem bi && bi.getBlock() instanceof SkullBlock skull && skull.getType() != SkullBlock.Types.DRAGON;
+            return item instanceof BlockItem bi && bi.getBlock() instanceof SkullBlock skull &&
+                    skull.getType() != SkullBlock.Types.DRAGON && skull.getType() != EndermanSkullBlock.TYPE;
         }
 
         @Override

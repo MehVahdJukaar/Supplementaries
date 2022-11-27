@@ -92,9 +92,7 @@
   "message.supplementaries.safe.bound": "Locked",
   "message.supplementaries.safe.assigned_key": "Assigned to '%s' key",
   "item.supplementaries.key": "Key",
-  "supplementaries.comment8": "For translation remove the %s and translate as if it was 'tipped bamboo spikes'",
-  "supplementaries.comment9": "You could also leave the %s which will get filled by the translated potion name from tipped arrows",
-  "supplementaries.comment10": "if you do that try it out in game since it might just work fine",
+
   "item.supplementaries.bamboo_spikes_tipped_effect": "Bamboo Spikes of %s",
   "death.attack.supplementaries.bamboo_spikes": "%1$s was impaled on a spike",
   "death.attack.supplementaries.bamboo_spikes.player": "%1$s impaled on a spike whilst fighting %2$s",
@@ -128,9 +126,7 @@
   "item.supplementaries.bomb": "Bomb",
   "item.supplementaries.bomb_projectile": "Bomb",
   "block.supplementaries.flax_block": "Flax Bale",
-  "message.supplementaries.anti_repost": "You seem to have downloaded Supplementaries from a malicious site :( Get the real version %s.",
-  "message.supplementaries.anti_repost_link": "here",
-  "message.supplementaries.anti_repost_2": "Edit configs to disable this warning",
+
   "block.supplementaries.jar_boat": "Boat in a Jar",
   "block.supplementaries.magma_cream_block": "Magma Cream Block",
   "message.supplementaries.magma_cream_block": "Install Quark for full functionality",
@@ -372,6 +368,7 @@
   "block.supplementaries.candle_holder_orange": "Orange Candle Holder",
   "block.supplementaries.candle_holder_gray": "Gray Candle Holder",
   "block.supplementaries.candle_holder_soul": "Soul Candle Holder",
+  "block.supplementaries.enderman_head": "Enderman Head",
 
   "supplementaries.gui.controls": "Supplementaries",
   "supplementaries.keybind.quiver": "Quiver",

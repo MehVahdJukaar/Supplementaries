@@ -142,6 +142,7 @@ public class RegistryConfigs {
     public static Supplier<Boolean> LAPIS_BRICKS_ENABLED;
     public static Supplier<Boolean> RELAYER_ENABLED;
     public static Supplier<Boolean> CANDLE_HOLDER_ENABLED;
+    public static Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
 
     public static Supplier<Boolean> JAR_TAB;
     public static Supplier<Boolean> CREATIVE_TAB;
@@ -249,6 +250,7 @@ public class RegistryConfigs {
         LAPIS_BRICKS_ENABLED = regConfig(builder, RegistryConstants.LAPIS_BRICKS_NAME, true);
         RELAYER_ENABLED = regConfig(builder, RegistryConstants.RELAYER_NAME, true);
         CANDLE_HOLDER_ENABLED = regConfig(builder, RegistryConstants.CANDLE_HOLDER_NAME, true);
+        ENDERMAN_HEAD_ENABLED = regConfig(builder, RegistryConstants.ENDERMAN_HEAD_NAME, true);
 
         SILVER_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_TRAPDOOR_NAME, true);
         SILVER_DOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_DOOR_NAME, true);

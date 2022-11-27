@@ -1,13 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities;
 
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.SimpleBitStorage;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.CarvedPumpkinBlock;
-import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;

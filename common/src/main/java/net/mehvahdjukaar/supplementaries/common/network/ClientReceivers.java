@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
@@ -11,15 +9,11 @@ import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
@@ -51,9 +45,7 @@ public class ClientReceivers {
         } else if (mode == SpeakerBlockTile.Mode.TITLE) {
             Gui gui = Minecraft.getInstance().gui;
             gui.clear();
-            if (true) {
-                gui.resetTitleTimes();
-            }
+            gui.resetTitleTimes();
             gui.setTitle(str);
         } else {
             withPlayerDo((p) -> p.displayClientMessage(str, mode == SpeakerBlockTile.Mode.STATUS_MESSAGE));
@@ -65,33 +57,11 @@ public class ClientReceivers {
             Entity e = l.getEntity(message.id);
             if (e != null) e.setDeltaMovement(e.getDeltaMovement()
                     .add(message.knockbackX, message.knockbackY, message.knockbackZ));
-
         });
     }
 
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
-        withPlayerDo(p -> {
-            PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache;
-            if (ClientConfigs.General.ANTI_REPOST_WARNING.get()) {
-                try {
-                    String fileName = PlatformHelper.getModFilePath(Supplementaries.MOD_ID).getFileName().toString();
-                    if (fileName.contains(".jar")) {
-                        if (fileName.contains("-Mod-1")) {
-                            MutableComponent link = Component.translatable("message.supplementaries.anti_repost_link");
-
-                            String url = "http://www.curseforge.com/minecraft/mc-mods/supplementaries";
-                            ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-                            link.setStyle(link.getStyle().withClickEvent(click).withUnderlined(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE)));
-
-                            p.displayClientMessage(Component.translatable("message.supplementaries.anti_repost", link), false);
-                            p.displayClientMessage(Component.translatable("message.supplementaries.anti_repost_2"), false);
-                            //player.sendMessage(ForgeHooks.newChatWithLinks(, false), Util.DUMMY_UUID);
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-        });
+        withPlayerDo(p -> PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache);
     }
 
     public static void handleSpawnBlockParticlePacket(ClientBoundParticlePacket message) {
@@ -107,10 +77,11 @@ public class ClientReceivers {
                     ParticleUtil.spawnParticleOnBlockShape(l, new BlockPos(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
-                }case BUBBLE_CLEAN_ENTITY ->{
-                    if(message.entityId != null){
-                        var e =  l.getEntity(message.entityId);
-                        if(e != null){
+                }
+                case BUBBLE_CLEAN_ENTITY -> {
+                    if (message.entityId != null) {
+                        var e = l.getEntity(message.entityId);
+                        if (e != null) {
                             ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l, BlockPos.ZERO,
                                     ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
                         }
@@ -167,8 +138,8 @@ public class ClientReceivers {
             if (e instanceof Player p && p.getUseItem().getItem() instanceof InstrumentItem instrumentItem) {
                 for (int note : message.notes) {
                     if (note > 0) {
-                        //always plays a sound for local player. this is becasue this method is calld on client side for other clients aswell
-                        //and playsound only plays if the given player is the local one
+                        //always plays a sound for local player. this is because this method is called on client side for other clients aswell
+                        //and playground only plays if the given player is the local one
                         l.playSound(Minecraft.getInstance().player, p.getX(), p.getY(), p.getZ(),
                                 instrumentItem.getSound(), SoundSource.PLAYERS,
                                 instrumentItem.getVolume(), instrumentItem.getPitch(note));

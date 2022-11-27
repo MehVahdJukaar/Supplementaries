@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -148,5 +150,16 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     @Nullable
     public BlockEntity getSkullTileUp() {
         return this.innerTileUp;
+    }
+
+    public static void ti2ck(Level level, BlockPos pos, BlockState state, DoubleSkullBlockTile e) {
+        e.tick(level, pos, state);
+        var tileUp = e.getSkullTileUp();
+        if (tileUp != null) {
+            var b = tileUp.getBlockState();
+            if (b instanceof EntityBlock eb) {
+                eb.getTicker(level, b, tileUp.getType());
+            }
+        }
     }
 }

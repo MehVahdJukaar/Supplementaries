@@ -139,4 +139,5 @@ public final class RegistryConstants {
     public static final String CANDLE_HOLDER_NAME = "candle_holder";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
+    public static final String ENDERMAN_HEAD_NAME = "enderman_head";
 }

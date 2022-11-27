@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +31,11 @@ public class SuppPlatformStuff {
 
     @ExpectPlatform
     public static BlockState getUnoxidised(Level level, BlockPos pos, BlockState state) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean isEndermanMask(EnderMan enderMan, Player player, ItemStack itemstack) {
         throw new AssertionError();
     }
 }

@@ -27,13 +27,14 @@ import java.util.UUID;
 
 public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwnerProtected {
 
-    public String password = null;
-    public String ownerName = null;
-    public UUID owner = null;
+    private String password = null;
+    private String ownerName = null;
+    private UUID owner = null;
 
     public SafeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SAFE_TILE.get(), pos, state, 27);
     }
+
 
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
@@ -54,6 +55,19 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     @Override
     public boolean canOpen(Player pPlayer) {
         return canPlayerOpen(pPlayer, false);
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Nullable
@@ -123,12 +137,15 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("Owner"))
+        if (tag.contains("Owner")) {
             this.owner = tag.getUUID("Owner");
-        if (tag.contains("OwnerName"))
+        }else this.owner = null;
+        if (tag.contains("OwnerName")) {
             this.ownerName = tag.getString("OwnerName");
-        if (tag.contains("Password"))
+        }else this.owner = null;
+        if (tag.contains("Password")) {
             this.password = tag.getString("Password");
+        }else this.password = null;
     }
 
     @Override
@@ -174,7 +191,5 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         public Container getContainer() {
             return container;
         }
-
-
     }
 }

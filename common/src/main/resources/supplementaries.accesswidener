@@ -48,9 +48,13 @@ accessible method net/minecraft/world/item/context/BlockPlaceContext <init> (Lne
 #luck for urns
 accessible field net/minecraft/world/level/storage/loot/LootContext$Builder luck F
 
-#abstract selection list cf screen
-accessible method net/minecraft/client/gui/components/AbstractSelectionList replaceEntries (Ljava/util/Collection;)V
+#firework recipe for enderman head
+accessible field net/minecraft/world/item/crafting/FireworkStarRecipe SHAPE_BY_ITEM Ljava/util/Map;
 
+#game renderer post process for skuls
+accessible field net/minecraft/client/renderer/GameRenderer postEffect Lnet/minecraft/client/renderer/PostChain;
+
+accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V
 
 #flower pot fabric
 accessible field net/minecraft/world/level/block/FlowerPotBlock POTTED_BY_CONTENT Ljava/util/Map;

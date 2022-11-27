@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CandleSkullBlockTileRenderer extends AbstractSkullBlockTileRenderer<CandleSkullBlockTile> {
+public class CandleSkullBlockTileRenderer extends SkullWithWaxTileRenderer<CandleSkullBlockTile> {
 
     public CandleSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         super(context);

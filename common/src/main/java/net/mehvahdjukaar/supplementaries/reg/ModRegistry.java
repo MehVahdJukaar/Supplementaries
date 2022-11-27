@@ -10,8 +10,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
-import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
-import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
@@ -19,6 +17,8 @@ import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
+import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
+import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
@@ -50,7 +50,6 @@ import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
 import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
-import static net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs.*;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class ModRegistry {
@@ -319,6 +318,7 @@ public class ModRegistry {
                     .strength(2f, 6f)
                     .requiresCorrectToolForDrops()
     ), CreativeModeTab.TAB_DECORATIONS);
+
 
     //pedestal
     public static final Supplier<Block> PEDESTAL = regWithItem(PEDESTAL_NAME, () -> new PedestalBlock(
@@ -1276,6 +1276,21 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = regTile(
             BUBBLE_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
                     BubbleBlockTile::new, BUBBLE_BLOCK.get()));
+
+    //enderman skull
+    public static final Supplier<EndermanSkullBlock> ENDERMAN_SKULL_BLOCK = regBlock(ENDERMAN_HEAD_NAME, () ->
+            new EndermanSkullBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL))
+    );
+    public static final Supplier<EndermanSkullWallBlock> ENDERMAN_SKULL_BLOCK_WALL = regBlock("enderman_wall_head", () ->
+            new EndermanSkullWallBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL))
+    );
+    public static final Supplier<Item> ENDERMAN_SKULL_ITEM = regItem(ENDERMAN_HEAD_NAME, () ->
+            new EndermanHeadItem(ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get(),
+                    new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS).rarity(Rarity.UNCOMMON)));
+
+    public static final Supplier<BlockEntityType<EndermanSkullBlockTile>> ENDERMAN_SKULL_TILE = regTile(
+            ENDERMAN_HEAD_NAME, () -> PlatformHelper.newBlockEntityType(
+                    EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
     //public static final String CRE
     // ATIVE_WAND = "creative_wand";

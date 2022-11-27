@@ -18,6 +18,8 @@ import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +30,7 @@ public class Supplementaries {
     public static final String MOD_ID = "supplementaries";
 
     public static final Logger LOGGER = LogManager.getLogger();
+
 
     public static ResourceLocation res(String n) {
         return new ResourceLocation(MOD_ID, n);
@@ -49,8 +52,8 @@ public class Supplementaries {
         RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
         //TODO relayer on piston retract
+        //TODO: shader for skulls
         //special recipes conditions dont work
-        //quiver keybingd
         //sugar block fall in water
         //soap in water makes soap particles
         //yeet java models in favor or json ones
