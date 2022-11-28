@@ -41,7 +41,11 @@
       "uuid": "eb21318d-471a-4f08-b061-85bb55917e45",
       "has_statue": true
     },
-    "Mia Lemon": {},
+    "Mia Lemon": {}, 
+    "Freshah":{
+       "uuid": "5bd642df-4640-4f84-bc57-50e7dad39a39",
+        "has_statue": "true"
+    },
     "LaughHappy": {},
     "Tea Witch": {},
     "YouMayCallMeVe": {},
