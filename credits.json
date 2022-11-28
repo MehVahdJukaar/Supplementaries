@@ -12,16 +12,15 @@
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
-    "Synthestra":{},
+    "Synthestra": {},
     "Azrod_dovahkiin": {
       "uuid": "171ccd8a-3afe-4788-806d-ee643fe33a9c",
       "has_statue": true
     },
-    "Squishiie":{
-      "uuid":"93b47b5d-37ef-47be-944b-754f1a594a18",
-      "has_statue":true
-      
-      },
+    "Squishiie": {
+      "uuid": "93b47b5d-37ef-47be-944b-754f1a594a18",
+      "has_statue": true
+    },
     "AdaraChristine": {},
     "Houston Millsap": {},
     "MinecraftDadHappyVibes": {},
@@ -41,10 +40,10 @@
       "uuid": "eb21318d-471a-4f08-b061-85bb55917e45",
       "has_statue": true
     },
-    "Mia Lemon": {}, 
-    "Freshah":{
-       "uuid": "5bd642df-4640-4f84-bc57-50e7dad39a39",
-        "has_statue": "true"
+    "Mia Lemon": {},
+    "Freshah": {
+      "uuid": "5bd642df-4640-4f84-bc57-50e7dad39a39",
+      "has_statue": true
     },
     "LaughHappy": {},
     "Tea Witch": {},
