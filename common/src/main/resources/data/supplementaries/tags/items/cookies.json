@@ -41,6 +41,7 @@
     {"id":"ashenwheat:ash_cookie","required":false},
     {"id":"create:honeyed_apple","required":false} ,
     {"id":"create:chocolate_glazed_berries","required":false} ,
+    {"id":"create:chocolate_bar","required":false} ,
     {"id":"bayou_blues:honey_glazed_gooseberries","required":false},
     {"id":"feywild:magical_honey_cookie","required":false},
     {"id":"pamhc2crops:beanitem","required":false},
