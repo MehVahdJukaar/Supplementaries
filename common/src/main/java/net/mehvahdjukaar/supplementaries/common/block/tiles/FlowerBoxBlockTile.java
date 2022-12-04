@@ -97,7 +97,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (this.getItem(index).isEmpty()) {
-            return stack.is(ModTags.FLOWER_BOX_PLANTABLE) || FlowerPotHandler.hasSpecialFlowerModel(stack.getItem());
+            return (stack.getItem() instanceof BlockItem && stack.is(ModTags.FLOWER_BOX_PLANTABLE)) || FlowerPotHandler.hasSpecialFlowerModel(stack.getItem());
         }
         return false;
     }

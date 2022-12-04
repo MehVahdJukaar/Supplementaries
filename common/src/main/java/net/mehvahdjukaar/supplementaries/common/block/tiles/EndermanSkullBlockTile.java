@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +30,8 @@ public class EndermanSkullBlockTile extends BlockEntity {
 
     private float prevMouthAnim;
     private float mouthAnim;
+    //server
+    private int watchTime;
 
     public EndermanSkullBlockTile(BlockPos blockPos, BlockState blockState) {
         super(ModRegistry.ENDERMAN_SKULL_TILE.get(), blockPos, blockState);
@@ -43,8 +48,16 @@ public class EndermanSkullBlockTile extends BlockEntity {
             tile.mouthAnim = Mth.clamp(tile.mouthAnim + (watched ? 0.5f : -0.5f), 0, 1);
         } else {
             boolean watched = isBeingWatched(level, pos, state);
-            if (state.getValue(WATCHED) != watched) {
-                level.setBlockAndUpdate(pos, state.setValue(WATCHED, watched));
+
+            if (!watched) {
+                tile.watchTime = 0;
+            } else {
+                tile.watchTime++;
+            }
+            int wantedPower = Mth.clamp((watched ? 1 + (tile.watchTime / CommonConfigs.Blocks.ENDERMAN_HEAD_INCREMENT.get()) : 0), 0, 15);
+            if (state.getValue(WATCHED) != watched || state.getValue(EndermanSkullBlock.POWER) != wantedPower) {
+                level.setBlockAndUpdate(pos, state.setValue(WATCHED,
+                        watched).setValue(EndermanSkullBlock.POWER, wantedPower));
             }
         }
     }
@@ -70,6 +83,7 @@ public class EndermanSkullBlockTile extends BlockEntity {
 
 
     private static boolean isLookingAtFace(BlockPos pos, BlockState state, Vec3 location, Direction face) {
+        if (CommonConfigs.Blocks.ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE.get()) return true;
         if (face.getAxis() == Direction.Axis.Y) return false;
         if (state.hasProperty(WallSkullBlock.FACING)) {
             var f = state.getValue(WallSkullBlock.FACING);
@@ -84,5 +98,17 @@ public class EndermanSkullBlockTile extends BlockEntity {
             if (relative.z > 0) return false;
         }
         return true;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("WatchTime", watchTime);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        this.watchTime = tag.getInt("WatchTime");
     }
 }

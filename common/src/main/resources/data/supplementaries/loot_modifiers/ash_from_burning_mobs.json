@@ -2,7 +2,7 @@
   "type": "supplementaries:add_item",
   "conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "ash"
     },
     {

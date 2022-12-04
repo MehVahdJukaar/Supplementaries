@@ -184,9 +184,9 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.DECO_BLOCKS) {
             DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
-        if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-            FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
-        }
+        //if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
+            //FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
+        //}
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
     }

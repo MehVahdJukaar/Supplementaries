@@ -8,9 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +29,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +42,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import vazkii.quark.content.tweaks.module.MoreNoteBlockSounds;
 import vectorwing.farmersdelight.common.Configuration;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 import vectorwing.farmersdelight.common.registry.ModBlocks;
@@ -93,6 +91,25 @@ public class FarmersDelightCompatImpl {
         return InteractionResult.PASS;
     }
 
+
+    public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (Configuration.ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES.get()) {
+            BlockState toPlace;
+            if (state.is(ModRegistry.ROPE.get())) {
+                toPlace = ROPE_TOMATO.get().defaultBlockState();
+                toPlace = Block.updateFromNeighbourShapes(toPlace, level, pos);
+                level.setBlock(pos, toPlace, 3);
+                return true;
+            } else if (state.is(ModRegistry.STICK_BLOCK.get())) {
+                toPlace = STICK_TOMATOES.get().defaultBlockState();
+                level.setBlock(pos, toPlace, 3);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor level, BlockPos facingPos, boolean isRope) {
         if (facingState.is(ModBlocks.TOMATO_CROP.get()) && facingState.getValue(TomatoVineBlock.ROPELOGGED)) {
             if (Configuration.ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES.get()) {
@@ -130,13 +147,14 @@ public class FarmersDelightCompatImpl {
         return STICK_TOMATOES.get();
     }
 
+
     public interface ITomatoLoggable {
 
         void doTomatoLog(Level level, BlockPos pos, BlockState state);
 
     }
 
-    private static abstract class TomatoLoggedBlock extends TomatoVineBlock {
+    private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
 
         public TomatoLoggedBlock(Properties properties) {
             super(properties);
@@ -172,7 +190,7 @@ public class FarmersDelightCompatImpl {
         public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
             BlockPos belowPos = pos.below();
             BlockState belowState = level.getBlockState(belowPos);
-            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(ROPELOGGED,false), level, pos)) && this.hasGoodCropConditions(level, pos);
+            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
         }
 
         @Override
@@ -245,7 +263,7 @@ public class FarmersDelightCompatImpl {
             super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 
             if (facing == Direction.DOWN && !world.isClientSide()) {
-                FarmersDelightCompat.tryTomatoLogging(facingState, world, facingPos, true);
+                tryTomatoLogging(facingState, world, facingPos, true);
             }
 
             if (facing.getAxis() == Direction.Axis.Y) {
@@ -296,7 +314,7 @@ public class FarmersDelightCompatImpl {
             super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 
             if (facing == Direction.DOWN && !world.isClientSide()) {
-                FarmersDelightCompat.tryTomatoLogging(facingState, world, facingPos, false);
+                tryTomatoLogging(facingState, world, facingPos, false);
             }
             return state;
         }

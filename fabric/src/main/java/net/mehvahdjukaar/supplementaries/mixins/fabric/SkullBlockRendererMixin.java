@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

@@ -20,7 +20,7 @@ public interface IRotatable {
      * @param pos position
      * @param rotation rotation
      * @param axis rotation axis
-     * @return rotated state. Optional.empty() if block hasn't been rotated. you can return the same blockstate for tile entities that have othe rmeaning of rotation
+     * @return rotated state. Optional.empty() if block hasn't been rotated. you can return the same blockstate for tile entities that have other meaning of rotation
      */
     Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation,
                                Direction axis, @Nullable Vec3 hit);

@@ -41,6 +41,8 @@ import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
+import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
+import vazkii.quark.content.tweaks.module.MoreNoteBlockSounds;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -63,6 +65,9 @@ public class QuarkCompatImpl {
         return null;
     }
 
+    public static boolean isFastSlideModuleEnabled() {
+        return EnhancedLaddersModule.allowSliding;
+    }
 
     public static boolean isDoubleDoorEnabled() {
         return ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class);
@@ -193,6 +198,7 @@ public class QuarkCompatImpl {
 
     }
 
+
     public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
 
     public static final Supplier<Block> TATER_IN_A_JAR;
@@ -207,4 +213,7 @@ public class QuarkCompatImpl {
     }
 
 
+    public static boolean isMoreNoteBlockSoundsOn() {
+        return MoreNoteBlockSounds.enableSkullSounds;
+    }
 }

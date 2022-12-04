@@ -26,6 +26,7 @@ public class LootTablesInjects {
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
+        if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectAntiqueInk);
         if (RegistryConfigs.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectQuiver);
         if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
         if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
@@ -40,6 +41,9 @@ public class LootTablesInjects {
         String nameSpace = name.getNamespace();
         if (nameSpace.equals("minecraft") || nameSpace.equals("repurposed_structures")) {
             TableType type = LootHelper.getType(name.toString());
+            if(name.toString().contains("fishing")){
+                int aaa = 1;
+            }
             if (type != TableType.OTHER) {
                 LOOT_INJECTS.forEach(i -> i.accept(builder, type));
             }
@@ -63,12 +67,13 @@ public class LootTablesInjects {
         BASTION,
         RUIN,
         SHIPWRECK_STORAGE,
-        END_CITY
+        END_CITY,
+        FISHING_TREASURE
     }
 
     private static class LootHelper {
 
-        static boolean RS = CompatHandler.REPURPOSED_STRUCTURES;
+        private static final boolean RS = CompatHandler.REPURPOSED_STRUCTURES;
 
         public static TableType getType(String name) {
             if (isShipwreck(name)) return TableType.SHIPWRECK_TREASURE;
@@ -82,7 +87,12 @@ public class LootTablesInjects {
             if (isFortress(name)) return TableType.FORTRESS;
             if (isEndCity(name)) return TableType.END_CITY;
             if (isMansion(name)) return TableType.MANSION;
+            if (isFishTreasure(name)) return TableType.FISHING_TREASURE;
             return TableType.OTHER;
+        }
+
+        private static boolean isFishTreasure(String name) {
+            return name.equals(BuiltInLootTables.FISHING_TREASURE.toString());
         }
 
         private static boolean isMansion(String name) {
@@ -143,6 +153,13 @@ public class LootTablesInjects {
         LootPool.Builder pool = LootPool.lootPool().add(LootTableReference.lootTableReference(Supplementaries.res("inject/" + id)));
         ForgeHelper.setPoolName(pool, "supp_" + name);
         consumer.accept(pool);
+    }
+
+
+    public static void tryInjectAntiqueInk(Consumer<LootPool.Builder> e, TableType type) {
+        if (type == TableType.FISHING_TREASURE) {
+          //  injectLootPool(e, type, "antique_ink");
+        }
     }
 
     public static void tryInjectGlobe(Consumer<LootPool.Builder> e, TableType type) {

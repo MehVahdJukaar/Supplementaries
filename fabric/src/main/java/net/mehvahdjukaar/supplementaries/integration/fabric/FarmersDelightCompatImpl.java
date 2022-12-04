@@ -4,13 +4,13 @@ import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
@@ -45,11 +45,12 @@ public class FarmersDelightCompatImpl {
         return false;
     }
 
-    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
-        return false;
-    }
-
     public static Block getStickTomato() {
         return null;
+    }
+
+
+    public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
+        return false;
     }
 }

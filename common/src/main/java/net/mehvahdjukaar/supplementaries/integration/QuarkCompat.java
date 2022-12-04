@@ -30,6 +30,12 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
+    public static boolean isFastSlideModuleEnabled() {
+        throw new AssertionError();
+    }
+
+
+    @ExpectPlatform
     public static InteractionResult tryCaptureTater(JarItem jarItem, UseOnContext context) {
         throw new AssertionError();
     }

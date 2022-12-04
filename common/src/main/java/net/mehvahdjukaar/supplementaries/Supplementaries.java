@@ -51,19 +51,8 @@ public class Supplementaries {
 
         RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
 
-        //TODO relayer on piston retract
-        //TODO: shader for skulls
-        //special recipes conditions dont work
-        //sugar block fall in water
-        //soap in water makes soap particles
-        //yeet java models in favor or json ones
-        // TODO: improve soap for tiles
-        //chains pull down candle holders and lanterns
-
-        //fix snowy spirit chest not sincing after reload
-
-
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
+
         ModSounds.init();
         ModRegistry.init();
         ModRecipes.init();
@@ -90,13 +79,20 @@ public class Supplementaries {
         ModSetup.setup();
     }
 
-    //claim mod compat
-    //antique ink fishing
-
     //yes this is where I write crap. deal with it XD
 
-    //  RegistryConfigs.createSpec();
-    //  RegistryConfigs.load();
+    //TODO: fix ash glm not workin
+    //TODO relayer on piston retract
+    //mod to wax anything to prevent interaction
+    //special recipes conditions dont work
+    //sugar block fall in water
+    //soap in water makes soap particles
+    //yeet java models in favor or json ones
+    //chains pull down candle holders and lanterns
+
+    //antique ink fishing
+
+
     //punching swings lanterns
     //ehcnahted books placed vertically. fix placement based off player look dir
     //wind physics for wind vane

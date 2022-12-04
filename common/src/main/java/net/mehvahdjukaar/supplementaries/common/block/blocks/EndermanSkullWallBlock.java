@@ -27,6 +27,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock.POWER;
+
 public class EndermanSkullWallBlock extends WallSkullBlock {
 
     public static final BooleanProperty WATCHED = ModBlockProperties.WATCHED;
@@ -38,13 +40,14 @@ public class EndermanSkullWallBlock extends WallSkullBlock {
 
     public EndermanSkullWallBlock(Properties properties) {
         super(EndermanSkullBlock.TYPE, properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(WATCHED, false));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATCHED, false).setValue(POWER, 0));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(WATCHED);
+        builder.add(POWER);
     }
 
     @Override
@@ -75,7 +78,8 @@ public class EndermanSkullWallBlock extends WallSkullBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if(state.getValue(WATCHED)) {
-            ParticleUtil.spawnParticleOnBlockShape(level, pos, ParticleTypes.PORTAL, UniformInt.of(1, 2),
+            ParticleUtil.spawnParticleOnBlockShape(level, pos, ParticleTypes.PORTAL,
+                    UniformInt.of(1, 1+state.getValue(POWER)/2),
                     0.5f);
         }
     }

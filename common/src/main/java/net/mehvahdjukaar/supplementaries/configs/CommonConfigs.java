@@ -433,6 +433,10 @@ public class CommonConfigs {
 
         public static Supplier<Boolean> PLANTER_BREAKS;
 
+        public static Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
+        public static Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
+
+
 
         private static void init(ConfigBuilder builder) {
 
@@ -442,6 +446,13 @@ public class CommonConfigs {
             builder.push("urn");
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01f, 0, 1);
+            builder.pop();
+
+            builder.push("enderman_head");
+            ENDERMAN_HEAD_INCREMENT = builder.comment("Time to increase 1 power level when being looked at")
+                    .define("ticks_to_increase_power", 15, 0, 10000);
+            ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE = builder.comment("do enderman heads work when looked from any side?")
+                            .define("work_from_any_side",false);
             builder.pop();
 
             builder.push("bamboo_spikes");

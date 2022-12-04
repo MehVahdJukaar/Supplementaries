@@ -13,11 +13,10 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(SafeBlock.class)
 public abstract class SelfSafeMixin extends Block {
-    public SelfSafeMixin(Properties arg) {
+    protected SelfSafeMixin(Properties arg) {
         super(arg);
     }
 
-    // TODO: fabric
     //break protection
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {

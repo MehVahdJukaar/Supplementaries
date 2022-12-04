@@ -49,4 +49,8 @@ public class QuarkCompatImpl {
 
     public static void init() {
     }
+
+    public static boolean isFastSlideModuleEnabled() {
+        return false;
+    }
 }

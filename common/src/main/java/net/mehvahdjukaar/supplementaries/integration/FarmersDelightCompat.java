@@ -12,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,10 +53,6 @@ public class FarmersDelightCompat {
     public static Block getStickTomato() {
         throw new AssertionError();
     }
-    @ExpectPlatform
-    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos, boolean isRope) {
-        throw new AssertionError();
-    }
 
     @Contract
     @ExpectPlatform
@@ -65,14 +60,20 @@ public class FarmersDelightCompat {
         throw new ArrayStoreException();
     }
 
+    @Contract
+    @ExpectPlatform
+    public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
+        throw new AssertionError();
+    }
+
 
     public static class PlanterRichBlock extends PlanterBlock {
 
-        private final Supplier<BlockState> RICH_SOIL_DELEGATE;
+        private final Supplier<BlockState> richSoilDelegate;
 
         public PlanterRichBlock(Properties properties, Supplier<Block> mimic) {
             super(properties);
-            RICH_SOIL_DELEGATE = Suppliers.memoize(() -> mimic.get().defaultBlockState());
+            richSoilDelegate = Suppliers.memoize(() -> mimic.get().defaultBlockState());
 
             this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                     .setValue(EXTENDED, false));
@@ -86,7 +87,7 @@ public class FarmersDelightCompat {
         @Override
         public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
             //hax
-            RICH_SOIL_DELEGATE.get().randomTick(worldIn, pos, rand);
+            richSoilDelegate.get().randomTick(worldIn, pos, rand);
         }
     }
 }

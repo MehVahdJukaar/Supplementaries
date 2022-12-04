@@ -47,6 +47,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;

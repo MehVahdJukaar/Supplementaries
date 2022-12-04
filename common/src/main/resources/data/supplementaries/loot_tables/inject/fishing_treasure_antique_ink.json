@@ -1,0 +1,21 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "random_chance",
+          "chance": 1
+        }
+      ],
+      "entries": [
+        {
+          "type": "item",
+          "weight": 1,
+          "name": "supplementaries:antique_ink",
+          "quality": 1
+        }
+      ]
+    }
+  ]
+}

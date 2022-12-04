@@ -202,14 +202,22 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     @Override
     public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @org.jetbrains.annotations.Nullable Vec3 hit) {
+        if(rotation == Rotation.CLOCKWISE_180)return Optional.empty();
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
-        return Optional.of(switch (axis.getAxis()) {
+        BlockState newState = switch (axis.getAxis()) {
             case Y -> state.setValue(AXIS_X, z).setValue(AXIS_Z, x);
             case X -> state.setValue(AXIS_Y, z).setValue(AXIS_Z, y);
             case Z -> state.setValue(AXIS_X, y).setValue(AXIS_Y, x);
-        });
+        };
+        if(newState != state)return Optional.of(newState);
+        return Optional.empty();
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return getRotatedState(state, null, null, rotation, Direction.UP, null).orElse(state);
     }
 
     @Override
@@ -224,11 +232,12 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (this == ModRegistry.STICK_BLOCK.get()) {
-            if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-                FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,false);
-            }
+          //  if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
+          //     FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,false);
+          //  }
         }
 
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
+
 }

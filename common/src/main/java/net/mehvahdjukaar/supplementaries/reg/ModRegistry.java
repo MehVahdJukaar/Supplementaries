@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHa
 import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.OptionalLootCondition;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
@@ -40,6 +41,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.EnumMap;
@@ -73,6 +76,11 @@ public class ModRegistry {
     }
 
     //misc entries
+
+    //for ash
+    public static final Supplier<LootItemConditionType> OPTIONAL_LOOT_CONDITION = RegHelper.register(Supplementaries.res("flag"),
+            () -> new LootItemConditionType(new OptionalLootCondition.FlagSerializer()), Registry.LOOT_CONDITION_TYPE);
+
     //loot
     public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
             () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);

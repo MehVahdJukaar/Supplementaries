@@ -127,13 +127,6 @@ public class CommonUtil {
         return i == Items.CAKE;
     }
 
-    public static boolean isPot(Item i) {
-        if (i instanceof BlockItem bi) {
-            return (bi.getBlock() instanceof FlowerPotBlock);
-        }
-        return false;
-    }
-
     //bounding box
     public static AABB getDirectionBB(BlockPos pos, Direction facing, int offset) {
         BlockPos endPos = pos.relative(facing, offset);

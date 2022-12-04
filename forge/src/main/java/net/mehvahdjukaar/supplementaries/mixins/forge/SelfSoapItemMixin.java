@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(SoapItem.class)
 public abstract class SelfSoapItemMixin extends Item {
 
-    public SelfSoapItemMixin(Properties arg) {
+    protected SelfSoapItemMixin(Properties arg) {
         super(arg);
     }
 

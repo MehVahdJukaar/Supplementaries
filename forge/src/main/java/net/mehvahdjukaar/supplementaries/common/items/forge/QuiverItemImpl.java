@@ -17,6 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+import vazkii.quark.base.Quark;
 
 import javax.annotation.Nonnull;
 import java.util.List;

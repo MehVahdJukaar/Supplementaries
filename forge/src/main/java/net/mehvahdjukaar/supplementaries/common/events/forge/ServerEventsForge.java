@@ -12,18 +12,21 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
@@ -189,6 +192,26 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
         SongsManager.recordNote(event.getLevel(), event.getPos());
+
+        if (QuarkCompatImpl.isMoreNoteBlockSoundsOn()) {
+            LevelAccessor world = event.getLevel();
+            BlockPos pos = event.getPos();
+            if (world.getBlockState(pos).getBlock() == Blocks.NOTE_BLOCK) {
+                for (Direction dir : Direction.Plane.HORIZONTAL) {
+                    BlockState state = world.getBlockState(pos.relative(dir));
+                    Block block = state.getBlock();
+                    if (block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == dir) {
+                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL) {
+                            SoundEvent sound = SoundEvents.ENDERMAN_STARE;
+                            event.setCanceled(true);
+                            float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
+                            world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1.0F, pitch);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
