@@ -55,7 +55,6 @@ public class SignPostItem extends WoodBasedItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        //if (!context.canPlace()) return ActionResultType.FAIL;
 
         Player player = context.getPlayer();
         if (player == null) return InteractionResult.PASS;
@@ -96,29 +95,18 @@ public class SignPostItem extends WoodBasedItem {
 
                 boolean up = y > 0.5d;
 
-                if (up) {
-                    if (tile.up != up) {
-                        tile.up = true;
-                        tile.woodTypeUp = this.getBlockType();
-                        tile.yawUp = 90 + r * -22.5f;
-                        flag = true;
-                    }
-                } else if (tile.down == up) {
-                    tile.down = true;
-                    tile.woodTypeDown = this.getBlockType();
-                    tile.yawDown = 90 + r * -22.5f;
-                    flag = true;
+                flag = tile.initializeSignAfterConversion(this.getBlockType(), r, up,
+                        attachType == AttachType.STICK, framed);
+
+                if (attachType != SignPostItem.AttachType.SIGN_POST) {
+                    tile.setHeldBlock(targetBlock.defaultBlockState());
                 }
-                if (flag) {
-                    if (attachType != AttachType.SIGN_POST) tile.mimic = targetBlock.defaultBlockState();
-                    tile.framed = framed;
-                    tile.isSlim = attachType == AttachType.STICK;
-                    tile.setChanged();
-                    world.sendBlockUpdated(blockpos, state, state, 3);
-                }
+                tile.setChanged();
 
             }
             if (flag) {
+
+                world.sendBlockUpdated(blockpos, state, state, 3);
 
                 SoundType soundtype = SoundType.WOOD;
                 world.playSound(null, blockpos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
@@ -129,4 +117,6 @@ public class SignPostItem extends WoodBasedItem {
         }
         return InteractionResult.PASS;
     }
+
+
 }

@@ -57,7 +57,6 @@ public class FrameBlockTile extends MimicBlockTile {
                     .setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }
-        //if (this.getLightValue() != oldLight) this.level.getChunkSource().getLightEngine().checkBlock(this.worldPosition);
         return true;
     }
 

@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -193,7 +194,7 @@ public class ServerEventsForge {
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
         SongsManager.recordNote(event.getLevel(), event.getPos());
 
-        if (QuarkCompatImpl.isMoreNoteBlockSoundsOn()) {
+        if (CompatHandler.QUARK && QuarkCompatImpl.isMoreNoteBlockSoundsOn()) {
             LevelAccessor world = event.getLevel();
             BlockPos pos = event.getPos();
             if (world.getBlockState(pos).getBlock() == Blocks.NOTE_BLOCK) {

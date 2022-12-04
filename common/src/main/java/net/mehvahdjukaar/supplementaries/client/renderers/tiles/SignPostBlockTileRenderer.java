@@ -60,7 +60,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     }
 
     @Override
-    public void render(SignPostBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(SignPostBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         BlockPos pos = tile.getBlockPos();
@@ -69,102 +69,77 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         //don't render signs from far away
         LOD lod = new LOD(cameraPos, pos);
 
-        boolean up = tile.up;
-        boolean down = tile.down;
+        var signUp = tile.getSignUp();
+        var signDown = tile.getSignDown();
+
+        boolean up = signUp.active();
+        boolean down = signDown.active();
         //render signs
         if (up || down) {
 
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
-            var textProperties = tile.textHolder.getRenderTextProperties(combinedLightIn, lod::isVeryNear);
+            var textProperties = tile.getTextHolder()
+                    .getRenderTextProperties(combinedLightIn, lod::isVeryNear);
 
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5, 0.5, 0.5);
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
 
             if (up) {
-                matrixStackIn.pushPose();
-
-                boolean left = tile.leftUp;
-                int o = left ? 1 : -1;
-
-                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawUp - 90));
-                //matrixStackIn.rotate(Const.YN90);
-
-                if (tile.isSlim) matrixStackIn.translate(0, 0, -1 / 16f);
-
-                //sign block
-                matrixStackIn.pushPose();
-
-                if (!left) {
-                    matrixStackIn.mulPose(RotHlpr.YN180);
-                    matrixStackIn.translate(0, 0, -0.3125);
-                }
-
-                matrixStackIn.scale(1, -1, -1);
-                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(tile.woodTypeUp);
-                //sanity check. can happen when log detection fails across versions
-                if (material != null) {
-                    VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
-                    signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
-                }
-
-                matrixStackIn.popPose();
-
-                //culling
-                if (lod.isNear() && LOD.isOutOfFocus(relAngle, tile.yawUp + 90, 2)) {
-
-                    //text up
-                    matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
-                    matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-
-                    TextUtil.renderLine(tile.textHolder.getAndPrepareTextForRenderer(font, 0), font,
-                            -4, matrixStackIn, bufferIn, textProperties);
-                }
-
-                matrixStackIn.popPose();
+                poseStack.pushPose();
+                renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
+                        lod, signUp, relAngle, textProperties, 0);
+                poseStack.popPose();
             }
 
             if (down) {
-                matrixStackIn.pushPose();
-
-                boolean left = tile.leftDown;
-                int o = left ? 1 : -1;
-
-                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(tile.yawDown - 90));
-                matrixStackIn.translate(0, -0.5, 0);
-
-                if (tile.isSlim) matrixStackIn.translate(0, 0, -1 / 16f);
-
-                //sign block
-                matrixStackIn.pushPose();
-
-                if (!left) {
-                    matrixStackIn.mulPose(RotHlpr.YN180);
-                    matrixStackIn.translate(0, 0, -0.3125);
-                }
-
-                matrixStackIn.scale(1, -1, -1);
-                Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(tile.woodTypeDown);
-                VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
-                signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
-
-                matrixStackIn.popPose();
-
-                //inverted huh
-                if (lod.isNear() && LOD.isOutOfFocus(relAngle, tile.yawDown + 90, 2)) {
-
-                    //text down
-                    matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
-                    matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
-
-                    TextUtil.renderLine(tile.textHolder.getAndPrepareTextForRenderer(font, 1),
-                            font, -4, matrixStackIn, bufferIn, textProperties);
-                }
-
-                matrixStackIn.popPose();
+                poseStack.pushPose();
+                poseStack.translate(0, -0.5, 0);
+                renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
+                        lod, signDown, relAngle, textProperties, 1);
+                poseStack.popPose();
             }
-            matrixStackIn.popPose();
+            poseStack.popPose();
         }
 
+    }
+
+    private void renderSign(SignPostBlockTile tile,
+                            PoseStack matrixStackIn, MultiBufferSource bufferIn,
+                            int combinedLightIn, int combinedOverlayIn, LOD lod,
+                            SignPostBlockTile.Sign sign, float relAngle,
+                            TextUtil.RenderTextProperties textProperties, int line) {
+
+        boolean left = sign.left();
+        int o = left ? 1 : -1;
+
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(sign.yaw() - 90));
+
+        if (tile.isSlim()) matrixStackIn.translate(0, 0, -1 / 16f);
+
+        //sign block
+        matrixStackIn.pushPose();
+
+        if (!left) {
+            matrixStackIn.mulPose(RotHlpr.YN180);
+            matrixStackIn.translate(0, 0, -0.3125);
+        }
+
+        matrixStackIn.scale(1, -1, -1);
+        Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(sign.woodType());
+        VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
+        signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+
+        matrixStackIn.popPose();
+
+        if (lod.isNear() && LOD.isOutOfFocus(relAngle, sign.yaw() + 90, 2)) {
+
+            matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
+            matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
+
+            TextUtil.renderLine(tile.getTextHolder().getAndPrepareTextForRenderer(font, line), font,
+                    -4, matrixStackIn, bufferIn, textProperties);
+
+        }
     }
 }
