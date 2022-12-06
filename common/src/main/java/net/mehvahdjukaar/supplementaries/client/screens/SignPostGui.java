@@ -37,7 +37,7 @@ public class SignPostGui extends Screen {
     private int editLine;
     //for ticking cursor
     private int updateCounter;
-    private final SignPostBlockTile tileSign;
+    private final SignPostBlockTile tile;
     private static final int MAXLINES = 2;
     private final String[] cachedLines;
 
@@ -45,10 +45,10 @@ public class SignPostGui extends Screen {
 
     private SignPostGui(SignPostBlockTile teSign) {
         super(Component.translatable("sign.edit"));
-        this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.textHolder::getLine).map(Component::getString).toArray(String[]::new);
+        this.tile = teSign;
+        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.getTextHolder()::getLine).map(Component::getString).toArray(String[]::new);
 
-        editLine = !this.tileSign.up ? 1 : 0;
+        editLine = !this.tile.getSignUp().active() ? 1 : 0;
     }
 
     public static void open(SignPostBlockTile teSign) {
@@ -63,11 +63,15 @@ public class SignPostGui extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (this.tileSign.up && this.tileSign.down) {
+        if (hasBothSignsActive()) {
             this.scrollText((int) delta);
             return true;
         }
         return false;
+    }
+
+    private boolean hasBothSignsActive() {
+        return this.tile.getSignUp().active() && this.tile.getSignDown().active();
     }
 
     public void scrollText(int amount) {
@@ -78,7 +82,7 @@ public class SignPostGui extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
-        if (this.tileSign.up && this.tileSign.down) {
+        if (hasBothSignsActive()) {
             // up arrow
             if (keyCode == 265) {
                 this.scrollText(1);
@@ -96,7 +100,7 @@ public class SignPostGui extends Screen {
     @Override
     public void tick() {
         ++this.updateCounter;
-        if (!this.tileSign.getType().isValid(this.tileSign.getBlockState())) {
+        if (!this.tile.getType().isValid(this.tile.getBlockState())) {
             this.close();
         }
     }
@@ -110,12 +114,11 @@ public class SignPostGui extends Screen {
     public void removed() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
-        //this.tileSign.textHolder.setEditable(true);
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(), this.tile.getTextHolder()));
     }
 
     private void close() {
-        this.tileSign.setChanged();
+        this.tile.setChanged();
         this.minecraft.setScreen(null);
     }
 
@@ -123,10 +126,9 @@ public class SignPostGui extends Screen {
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_238847_1_) -> this.close()));
-        //this.tileSign.textHolder.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
             this.cachedLines[this.editLine] = s;
-            this.tileSign.textHolder.setLine(this.editLine, Component.literal(s));
+            this.tile.getTextHolder().setLine(this.editLine, Component.literal(s));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (p_238848_1_) -> this.minecraft.font.width(p_238848_1_) <= 90);
 
         this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);
@@ -151,9 +153,10 @@ public class SignPostGui extends Screen {
         poseStack.pushPose();
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-
-        boolean leftUp = tileSign.leftUp;
-        boolean leftDown = tileSign.leftDown;
+        var signUp = tile.getSignUp();
+        var signDown = tile.getSignDown();
+        boolean leftUp = signUp.left();
+        boolean leftDown = signDown.left();
 
         int[] o = new int[2];
         o[0] = leftUp ? 1 : -1;
@@ -163,41 +166,18 @@ public class SignPostGui extends Screen {
 
         boolean blink = this.updateCounter / 6 % 2 == 0;
 
-        if (this.tileSign.up) {
+        poseStack.pushPose();
+        renderSign(poseStack, bufferSource, signUp, leftUp);
 
-            poseStack.pushPose();
-            if (!leftUp) {
-                poseStack.mulPose(RotHlpr.YN180);
-                poseStack.translate(0, 0, -0.3125);
-            }
-            poseStack.scale(1, -1, -1);
-            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(this.tileSign.woodTypeUp);
-            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
+        poseStack.translate(0, -0.5, 0);
+        renderSign(poseStack, bufferSource, signDown, leftDown);
 
-            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-
-            poseStack.popPose();
-        }
-        if (this.tileSign.down) {
-
-            poseStack.pushPose();
-            if (!leftDown) {
-                poseStack.mulPose(RotHlpr.YN180);
-                poseStack.translate(0, 0, -0.3125);
-            }
-            poseStack.translate(0, -0.5, 0);
-            poseStack.scale(1, -1, -1);
-            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(this.tileSign.woodTypeDown);
-            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
-
-            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-            poseStack.popPose();
-        }
+        poseStack.popPose();
 
         //render fence
         poseStack.translate(-0.5, -0.5, -0.5);
-        BlockState fence = this.tileSign.mimic;
-        if (CompatHandler.FRAMEDBLOCKS && tileSign.framed) fence = FramedBlocksCompat.getFramedFence();
+        BlockState fence = this.tile.mimic;
+        if (CompatHandler.FRAMEDBLOCKS && tile.isFramed()) fence = FramedBlocksCompat.getFramedFence();
         if (fence != null) {
             blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         }
@@ -205,19 +185,19 @@ public class SignPostGui extends Screen {
 
         //renders text
 
-        if (this.tileSign.up || this.tileSign.down) {
+        if (signUp.active() || signDown.active()) {
             poseStack.translate(-3 * 0.010416667F * o[0], 0.21875, 0.1875 + 0.005);
             poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
-            var properties = tileSign.textHolder.getGUIRenderTextProperties();
+            var properties = tile.getTextHolder().getGUIRenderTextProperties();
 
             int cursorPos = this.textInputUtil.getCursorPos();
             int selectionPos = this.textInputUtil.getSelectionPos();
 
-            if (this.tileSign.up) {
+            if (signUp.active()) {
                 TextUtil.renderGuiLine(properties, this.cachedLines[0], font, poseStack, bufferSource,
                         cursorPos, selectionPos, this.editLine == 0, blink, -10);
             }
-            if (this.tileSign.down) {
+            if (signDown.active()) {
                 poseStack.translate(-3 * o[1], 0, 0);
                 TextUtil.renderGuiLine(properties, this.cachedLines[1], font, poseStack, bufferSource,
                         cursorPos, selectionPos, this.editLine == 1, blink, 48 - 10);
@@ -226,5 +206,22 @@ public class SignPostGui extends Screen {
 
         poseStack.popPose();
         Lighting.setupFor3DItems();
+    }
+
+    private void renderSign(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, SignPostBlockTile.Sign active, boolean leftDown) {
+        if (active.active()) {
+
+            poseStack.pushPose();
+            if (!leftDown) {
+                poseStack.mulPose(RotHlpr.YN180);
+                poseStack.translate(0, 0, -0.3125);
+            }
+            poseStack.scale(1, -1, -1);
+            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(active.woodType());
+            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
+
+            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
+        }
     }
 }

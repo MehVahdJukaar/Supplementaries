@@ -789,7 +789,7 @@ public class ItemsOverrideHandler {
 
 
     public static InteractionResult replaceSimilarBlock(Block blockOverride, Player player, ItemStack stack,
-                                                        BlockPos pos, Level world, BlockState replaced,
+                                                        BlockPos pos, Level level, BlockState replaced,
                                                         @Nullable SoundType sound, Property<?>... properties) {
 
         BlockState newState = blockOverride.defaultBlockState();
@@ -797,26 +797,26 @@ public class ItemsOverrideHandler {
             newState = BlockUtil.replaceProperty(replaced, newState, p);
         }
         if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
-            FluidState fluidstate = world.getFluidState(pos);
+            FluidState fluidstate = level.getFluidState(pos);
             newState = newState.setValue(BlockStateProperties.WATERLOGGED, fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8);
         }
-        if (!world.setBlock(pos, newState, 3)) {
+        if (!level.setBlock(pos, newState, 3)) {
             return InteractionResult.FAIL;
         }
         if (player instanceof ServerPlayer serverPlayer) {
             CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, stack);
         }
-        world.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
+        level.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
 
         if (sound == null) sound = newState.getSoundType();
-        world.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+        level.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
         if (player == null || !player.getAbilities().instabuild) {
             stack.shrink(1);
         }
         // if (player instanceof ServerPlayer serverPlayer && !isRanged) {
         //     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
         // }
-        return InteractionResult.sidedSuccess(world.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
 
     }
 

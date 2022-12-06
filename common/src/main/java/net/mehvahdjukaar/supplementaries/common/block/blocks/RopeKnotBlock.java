@@ -344,7 +344,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             tile.setHeldBlock(state);
-            tile.setChanged();
         }
         newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
         return newState;

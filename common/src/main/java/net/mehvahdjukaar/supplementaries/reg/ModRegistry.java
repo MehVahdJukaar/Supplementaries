@@ -1109,21 +1109,21 @@ public class ModRegistry {
                     FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()));
 
     //lapis bricks
-    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
+    public static final Map<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
                             .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F),
                     isDisabled(LAPIS_BRICKS_NAME));
 
     //ashen bricks
-    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
+    public static final Map<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
 
     //stone tile
-    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
+    public static final Map<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(STONE_TILE_NAME), Blocks.STONE_BRICKS, isDisabled(STONE_TILE_NAME));
 
     //blackstone tile
-    public static final EnumMap<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
+    public static final Map<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
             RegHelper.registerFullBlockSet(Supplementaries.res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE, isDisabled(BLACKSTONE_TILE_NAME));
 
     //stone lamp

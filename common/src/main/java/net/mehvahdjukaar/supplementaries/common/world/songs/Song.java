@@ -22,7 +22,7 @@ public class Song {
             Codec.STRING.optionalFieldOf("credits","").forGetter(p->p.credits),
             Codec.intRange(0, 10000).optionalFieldOf("weight", 100).forGetter(p -> p.weight)
     ).apply(instance, Song::new)).comapFlatMap((s) -> {
-        if (s.notes.length <= 0)
+        if (s.notes.length == 0)
             return DataResult.error("Song note list cant be empty");
         return DataResult.success(s);
     }, Function.identity());

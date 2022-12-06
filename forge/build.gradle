@@ -35,8 +35,9 @@ processResources {
     //inputs.property "mod_name": project.getArchivesBaseName()
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version, "required_moonlight_version": rootProject.required_moonlight_version
-        expand "mod_name": project.getArchivesBaseName()
+        expand "version": project.version,
+                "required_moonlight_version": rootProject.required_moonlight_version,
+                "mod_name": project.getArchivesBaseName()
     }
 
     filesMatching('update.json') {

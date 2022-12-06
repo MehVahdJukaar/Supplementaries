@@ -325,6 +325,7 @@ public class VertexUtils {
         return DefaultVertexFormat.BLOCK.getIntegerSize();
     }
 
+    @Deprecated(forRemoval = true)
 
     public static List<BakedQuad> swapSprite(List<BakedQuad> quads, TextureAtlasSprite sprite) {
         List<BakedQuad> newList = new ArrayList<>();
@@ -342,6 +343,7 @@ public class VertexUtils {
         }
         return newList;
     }
+    @Deprecated(forRemoval = true)
 
     public static void transformVertices(int[] v, Matrix3f transform) {
         int formatLength = getFormatLength();
@@ -356,6 +358,7 @@ public class VertexUtils {
             v[i * formatLength + 2] = Float.floatToIntBits(vector3f.z() + 0.5f);
         }
     }
+    @Deprecated(forRemoval = true)
 
     public static void transformVertices(int[] v, PoseStack stack, TextureAtlasSprite sprite) {
         Vector4f vector4f = new Vector4f(0, 0, 0, 1.0F);
@@ -363,6 +366,7 @@ public class VertexUtils {
         moveVertices(v, vector4f.x(), vector4f.y(), vector4f.z());
     }
 
+    @Deprecated(forRemoval = true)
 
     public static void rotateVerticesY(int[] v, TextureAtlasSprite sprite, Rotation rot) {
         var matrix = rot.rotation().transformation();
@@ -372,6 +376,8 @@ public class VertexUtils {
     /**
      * moves baked vertices in a direction by amount
      */
+    @Deprecated(forRemoval = true)
+
     public static void moveVertices(int[] v, Direction dir, float amount) {
 
         int formatLength = getFormatLength();
@@ -388,6 +394,7 @@ public class VertexUtils {
     /**
      * moves baked vertices by amount
      */
+    @Deprecated(forRemoval = true)
     public static void moveVertices(int[] v, float x, float y, float z) {
         int formatLength = getFormatLength();
         for (int i = 0; i < v.length / formatLength; i++) {
@@ -406,6 +413,7 @@ public class VertexUtils {
     /**
      * scale baked vertices by amount
      */
+    @Deprecated(forRemoval = true)
     public static void scaleVertices(int[] v, float scale) {
         int formatLength = getFormatLength();
         for (int i = 0; i < v.length / formatLength; i++) {

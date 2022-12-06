@@ -5,12 +5,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import org.jetbrains.annotations.Nullable;
 
 public class RedstoneIlluminatorBlock extends Block {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -26,20 +29,18 @@ public class RedstoneIlluminatorBlock extends Block {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.updatePower(state, worldIn, pos);
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.updatePower(state, world, pos);
-    }
-
-    private void updatePower(BlockState state, Level world, BlockPos pos) {
-        if (!world.isClientSide) {
-            int pow = world.getBestNeighborSignal(pos);
-            world.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 2);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+        super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
+        if (!level.isClientSide) {
+            int pow = level.getBestNeighborSignal(pos);
+            level.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 2);
         }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context).setValue(POWER,
+                context.getLevel().getBestNeighborSignal(context.getClickedPos()));
     }
 }
