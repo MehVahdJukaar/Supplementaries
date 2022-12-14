@@ -82,7 +82,7 @@ public class ClientEvents {
         }
     }
 
-    public static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {
+    private static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {
         var map = new Object2ObjectOpenHashMap<Item, String>();
         map.put(Items.CREEPER_HEAD, "minecraft:shaders/post/creeper.json");
         map.put(Items.SKELETON_SKULL, "supplementaries:shaders/post/black_and_white.json");

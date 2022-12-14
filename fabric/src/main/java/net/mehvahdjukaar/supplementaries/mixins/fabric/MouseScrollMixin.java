@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MouseHandler.class)
-public class MouseScrollMixin {
+public abstract class MouseScrollMixin {
 
     @Inject(locals = LocalCapture.CAPTURE_FAILHARD,
             method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z",

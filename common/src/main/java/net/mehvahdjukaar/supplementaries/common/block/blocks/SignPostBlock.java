@@ -79,7 +79,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             var sign = tile.getSign(up);
             if (sign.active()) {
                 return sign.getItem();
-            } else return new ItemStack(tile.mimic.getBlock());
+            } else return new ItemStack(tile.getHeldBlock().getBlock());
         }
         return super.getCloneItemStack(world, pos, state);
     }
@@ -88,7 +88,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SignPostBlockTile tile) {
             List<ItemStack> list = new ArrayList<>();
-            list.add(new ItemStack(tile.mimic.getBlock()));
+            list.add(new ItemStack(tile.getHeldBlock().getBlock()));
             var up = tile.getSignUp();
             var down = tile.getSignDown();
             if (up.active()) list.add(up.getItem());

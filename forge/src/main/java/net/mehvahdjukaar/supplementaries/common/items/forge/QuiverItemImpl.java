@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items.forge;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +19,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
-import vazkii.quark.base.Quark;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -26,7 +27,15 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.getQuiver();
+        if (entity instanceof Player player) {
+            if (CompatHandler.CURIOS) {
+                var q = CuriosCompat.getEquippedQuiver(player);
+                if (q != null) return q;
+            }
+        } else if (entity instanceof IQuiverEntity e) {
+            return e.getQuiver();
+        }
+
         var cap = entity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {

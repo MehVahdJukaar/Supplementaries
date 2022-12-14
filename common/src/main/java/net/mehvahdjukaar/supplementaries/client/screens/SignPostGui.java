@@ -176,7 +176,7 @@ public class SignPostGui extends Screen {
 
         //render fence
         poseStack.translate(-0.5, -0.5, -0.5);
-        BlockState fence = this.tile.mimic;
+        BlockState fence = this.tile.getHeldBlock();
         if (CompatHandler.FRAMEDBLOCKS && tile.isFramed()) fence = FramedBlocksCompat.getFramedFence();
         if (fence != null) {
             blockRenderer.renderSingleBlock(fence, poseStack, bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);

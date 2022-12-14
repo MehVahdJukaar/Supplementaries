@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +41,8 @@ public class ModSetup {
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             CauldronRegistry::registerInteractions,
-            PresentRegistry::registerBehaviors,
+            PresentInteractionsRegistry::registerBehaviors,
+            FaucetInteractionsRegistry::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
@@ -78,6 +80,9 @@ public class ModSetup {
                 new ItemStack(ModRegistry.FLAX_BLOCK.get()), new ItemStack(ModRegistry.SUGAR_CUBE.get())));
         horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
         AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
+
+        Parrot.TAME_FOOD.add( ModRegistry.FLAX_SEEDS_ITEM.get());
+
     }
 
     private static void registerCompostables() {
@@ -106,7 +111,7 @@ public class ModSetup {
             Stopwatch watch = Stopwatch.createStarted();
 
             //stuff that needs tags
-            DispenserRegistry.registerBehaviors();
+            DispenserInteractionsRegistry.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
 
             Supplementaries.LOGGER.info("Finished additional setup in {} seconds", watch.elapsed().toSeconds());

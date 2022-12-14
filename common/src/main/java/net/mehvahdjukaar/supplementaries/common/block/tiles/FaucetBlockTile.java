@@ -1,47 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
-import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
-import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.InspirationCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.WorldlyContainerHolder;
-import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FaucetBlockTile extends BlockEntity {
+
+    private static final List<IBlockSourceInteraction> BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<ITileSourceInteraction> TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<IFluidSourceInteraction> FLUID_INTERACTIONS = new ArrayList<>();
+    private static final List<IBlockTargetInteraction> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<ITileTargetInteraction> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+
     private static final int COOLDOWN = 20;
 
     private int transferCooldown = 0;
@@ -105,263 +94,79 @@ public class FaucetBlockTile extends BlockEntity {
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
-        Block backBlock = backState.getBlock();
         this.tempFluidHolder.clear();
-        if (backState.isAir()) {
-            return false;
-        } else if (backBlock instanceof ISoftFluidProvider provider) {
-            var stack = provider.getProvidedFluid(level, backState, behind);
-            this.prepareToTransferBottle(stack.getFirst(), stack.getSecond());
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                provider.consumeProvidedFluid(level, backState, behind, this.tempFluidHolder.getFluid(), this.tempFluidHolder.getNbt(), 1);
-                return true;
-            }
-        }
-        //beehive
-        else if (backState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
-            if (backState.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-                this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
-                if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_HONEY,
-                            backState.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
-                    return true;
-                }
-            }
-            return false;
-        }
-        //TODO: move in compat class
-        //honey pot
-        else if (CompatHandler.BUZZIER_BEES && backState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
-            if (backState.getValue(ModBlockProperties.HONEY_LEVEL_POT) > 0) {
-                this.prepareToTransferBottle(VanillaSoftFluids.HONEY.get());
-                if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    level.setBlock(behind, backState.setValue(ModBlockProperties.HONEY_LEVEL_POT,
-                            backState.getValue(ModBlockProperties.HONEY_LEVEL_POT) - 1), 3);
-                    return true;
-                }
-            }
-            return false;
-        }
-        //sap log
-        else if (CompatHandler.AUTUMNITY && (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get())) {
-            this.prepareToTransferBottle(ModSoftFluids.SAP.get());
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                Optional<Block> log = Registry.BLOCK.getOptional(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
-                log.ifPresent(block -> level.setBlock(behind, block.withPropertiesOf(backState), 3));
-                return true;
-            }
-        }/* else if (CompatHandler.malum && MalumPlugin.isSappyLog(backBlock)) {
-            this.prepareToTransferBottle(MalumPlugin.getSap(backBlock));
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                MalumPlugin.extractSap(level, backState, behind);
-                return true;
-            }
-        }*/
-        //cauldron
-        else if (backBlock == Blocks.WATER_CAULDRON) {
-            int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
-            if (waterLevel > 0) {
-                if (CompatHandler.INSPIRATIONS) {
-                    return InspirationCompat.doCauldronStuff(level.getBlockEntity(behind), this.tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos));
-                }
+        if (backState.isAir()) return false;
 
-                this.prepareToTransferBottle(VanillaSoftFluids.WATER.get());
-                if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    if (waterLevel > 1) {
-                        level.setBlock(behind, backState.setValue(BlockStateProperties.LEVEL_CAULDRON,
-                                waterLevel - 1), 3);
-                    } else level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
-                    return true;
-                }
-            }
-            //TODO: this doesnt seem to work
-        } else if (backBlock == Blocks.LAVA_CAULDRON) {
-            this.prepareToTransferBucket(VanillaSoftFluids.LAVA.get());
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
-                this.transferCooldown += COOLDOWN * 3;
-                return true;
-            }
-        } else if (backBlock == Blocks.POWDER_SNOW_CAULDRON) {
-            int waterLevel = backState.getValue(BlockStateProperties.LEVEL_CAULDRON);
-            if (waterLevel == 3) {
-                this.prepareToTransferBucket(VanillaSoftFluids.POWDERED_SNOW.get());
-                if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    level.setBlock(behind, Blocks.CAULDRON.defaultBlockState(), 3);
-                    this.transferCooldown += COOLDOWN * 3;
-                    return true;
-                }
-            }
+        for (var bi : BLOCK_INTERACTIONS) {
+            var res = bi.tryDrain(level, this.tempFluidHolder, behind,
+                    backState, () -> doTransfer && this.tryFillingBlockBelow());
+            if (res == InteractionResult.PASS) continue;
+            if (res == InteractionResult.SUCCESS) return true;
+            else if (res == InteractionResult.CONSUME) break;
+            else if (res == InteractionResult.FAIL) return false;
         }
-
         //soft fluid holders
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
-            if (tileBack instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
-                SoftFluidTank fluidHolder = holder.getSoftFluidTank();
-                this.tempFluidHolder.copy(fluidHolder);
-                this.tempFluidHolder.setCount(2);
-                if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                    fluidHolder.shrink(1);
-                    tileBack.setChanged();
-                    return true;
-                }
+            for (var bi : TILE_INTERACTIONS) {
+                var res = bi.tryDrain(level, this.tempFluidHolder, behind,
+                        tileBack, dir, () -> doTransfer && this.tryFillingBlockBelow());
+                if (res == InteractionResult.PASS) continue;
+                if (res == InteractionResult.SUCCESS) return true;
+                else if (res == InteractionResult.CONSUME) break;
+                else if (res == InteractionResult.FAIL) return false;
             }
-            //forge tanks
-            else {
-                if (FluidsUtil.tryExtractFromFluidHandler(tileBack, backBlock, dir, tempFluidHolder, doTransfer, () -> this.tryFillingBlockBelow(level, pos))) {
-                    return true;
-                }
-            }
+
             if (!doTransfer) return !this.tempFluidHolder.isEmpty();
             //pull other items from containers
             return this.spillItemsFromInventory(level, pos, dir, tileBack);
-        } else if (level.getFluidState(behind).getType() == Fluids.WATER) {
-            //Unlimited water!!
-            this.prepareToTransferBottle(VanillaSoftFluids.WATER.get());
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                return true;
+        }else {
+            FluidState fluidState = level.getFluidState(behind);
+
+            for (var bi : FLUID_INTERACTIONS) {
+                var res = bi.tryDrain(level, this.tempFluidHolder, behind,
+                        fluidState, () -> doTransfer && this.tryFillingBlockBelow());
+                if (res == InteractionResult.PASS) continue;
+                if (res == InteractionResult.SUCCESS) return true;
+                else if (res == InteractionResult.CONSUME) break;
+                else if (res == InteractionResult.FAIL) return false;
             }
-            return true;
-        }
 
-        if (!doTransfer) return !this.tempFluidHolder.isEmpty();
-
-        if (backBlock instanceof WorldlyContainerHolder wc) {
-            //TODO: add
-            //container = wc.getContainer(backBlock, level, behind);
-            //return this.spillItemsFromInventory(level, pos, dir, tileBack);
-
+            if (!doTransfer) return !this.tempFluidHolder.isEmpty();
         }
         return false;
-    }
-    //TODO: maybe add a registry for block -> interaction like dispenser one
-
-    private void prepareToTransferBottle(SoftFluid softFluid) {
-        this.tempFluidHolder.fill(softFluid);
-        this.tempFluidHolder.setCount(2);
-    }
-
-    private void prepareToTransferBottle(SoftFluid softFluid, CompoundTag tag) {
-        this.tempFluidHolder.fill(softFluid, tag);
-        this.tempFluidHolder.setCount(2);
-    }
-
-    private void prepareToTransferBucket(SoftFluid softFluid) {
-        this.tempFluidHolder.fill(softFluid);
     }
 
     //sf->ff/sf
     @SuppressWarnings("ConstantConditions")
-    private boolean tryFillingBlockBelow(Level level, BlockPos pos) {
+    private boolean tryFillingBlockBelow() {
         SoftFluid softFluid = this.tempFluidHolder.getFluid();
         //can't full below if empty
         if (softFluid.isEmpty()) return false;
 
-        BlockPos below = pos.below();
+        BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);
-        Block belowBlock = belowState.getBlock();
 
-
-        //consumer
-        if (belowBlock instanceof ISoftFluidConsumer consumer) {
-            return consumer.tryAcceptingFluid(level, belowState, below, softFluid, this.tempFluidHolder.getNbt(), 1);
-        }
-        //sponge voiding
-        if (belowBlock == Blocks.SPONGE) {
-            return true;
-        }
-        //beehive
-        else if (softFluid == VanillaSoftFluids.HONEY.get()) {
-
-            //beehives
-            if (belowState.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
-                int h = belowState.getValue(BlockStateProperties.LEVEL_HONEY);
-                if (h == 0) {
-                    level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);
-                    return true;
-                }
-                return false;
-            }
-            //honey pot
-            else if (CompatHandler.BUZZIER_BEES && belowState.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
-                int h = belowState.getValue(ModBlockProperties.HONEY_LEVEL_POT);
-                if (h < 4) {
-                    level.setBlock(below, belowState.setValue(ModBlockProperties.HONEY_LEVEL_POT, h + 1), 3);
-                    return true;
-                }
-                return false;
-            }
-        } else if (softFluid == VanillaSoftFluids.XP.get() && belowState.isAir()) {
-            this.dropXP(level, pos);
-            return true;
-        } else if (belowBlock instanceof AbstractCauldronBlock) {
-            //if any other mod adds a cauldron tile this will crash
-            if (CompatHandler.INSPIRATIONS) {
-                return InspirationCompat.tryAddFluid(level.getBlockEntity(below), this.tempFluidHolder);
-            } else if (softFluid == VanillaSoftFluids.WATER.get()) {
-                //TODO: finish
-                if (belowBlock == Blocks.WATER_CAULDRON) {
-                    int levels = belowState.getValue(BlockStateProperties.LEVEL_CAULDRON);
-                    if (levels < 3) {
-                        level.setBlock(below, belowState.setValue(BlockStateProperties.LEVEL_CAULDRON, levels + 1), 3);
-                        return true;
-                    }
-                    return false;
-                } else if (belowBlock instanceof CauldronBlock) {
-                    level.setBlock(below, Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 1), 3);
-                    return true;
-                }
-            } else if (softFluid == VanillaSoftFluids.LAVA.get()) {
-                if (belowBlock instanceof CauldronBlock && this.tempFluidHolder.getCount() == 5) {
-                    level.setBlock(below, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);
-                    return true;
-                }
-            } else if (softFluid == VanillaSoftFluids.POWDERED_SNOW.get()) {
-                if (belowBlock instanceof CauldronBlock && this.tempFluidHolder.getCount() == 5) {
-                    level.setBlock(below, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
-                            .setValue(PowderSnowCauldronBlock.LEVEL, 3), 3);
-                    return true;
-                }
-            }
-            return false;
+        for (var bi : TARGET_BLOCK_INTERACTIONS) {
+            var res = bi.tryFill(level, this.tempFluidHolder, below, belowState);
+            if (res == InteractionResult.PASS) continue;
+            if (res == InteractionResult.SUCCESS) return true;
+            else if (res == InteractionResult.CONSUME) break;
+            else if (res == InteractionResult.FAIL) return false;
         }
 
-
-        //default behavior
-        boolean result;
-        //soft fluid holders
         BlockEntity tileBelow = level.getBlockEntity(below);
-        if (tileBelow instanceof ISoftFluidTankProvider holder) {
-            SoftFluidTank fluidHolder = holder.getSoftFluidTank();
-            result = this.tempFluidHolder.tryTransferFluid(fluidHolder, this.tempFluidHolder.getCount() - 1);
-            if (result) {
-                tileBelow.setChanged();
-                this.tempFluidHolder.fillCount();
-            }
-            return result;
-        }
         if (tileBelow != null) {
-            //forge tanks
-            return FluidsUtil.tryFillFluidTank(tileBelow, tempFluidHolder);
+            for (var bi : TARGET_TILE_INTERACTIONS) {
+                var res = bi.tryFill(level, this.tempFluidHolder, below, tileBelow);
+                if (res == InteractionResult.PASS) continue;
+                if (res == InteractionResult.SUCCESS) return true;
+                else if (res == InteractionResult.CONSUME) break;
+                else if (res == InteractionResult.FAIL) return false;
+            }
         }
         return false;
     }
-
-
-    private void dropXP(Level level, BlockPos pos) {
-        int i = 3 + level.random.nextInt(5) + level.random.nextInt(5);
-        while (i > 0) {
-            int xp = ExperienceOrb.getExperienceValue(i);
-            i -= xp;
-            ExperienceOrb orb = new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() - 0.125f, pos.getZ() + 0.5, xp);
-            orb.setDeltaMovement(new Vec3(0, 0, 0));
-            level.addFreshEntity(orb);
-        }
-        float f = (level.random.nextFloat() - 0.5f) / 4f;
-        level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-    }
-
 
     //------end-fluids------
 
@@ -385,7 +190,6 @@ public class FaucetBlockTile extends BlockEntity {
         return ItemsUtil.faucetSpillItems(level, pos, dir, tile);
     }
 
-
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
@@ -408,6 +212,73 @@ public class FaucetBlockTile extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
+    }
+
+
+    public interface IFluidSourceInteraction {
+        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
+                                   BlockPos pos, FluidState fluidState, FillAction fillAction);
+
+        default int getTransferCooldown() {
+            return COOLDOWN;
+        }
+    }
+
+    public interface IBlockSourceInteraction {
+        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
+                                   BlockPos pos, BlockState state, FillAction fillAction);
+
+        default int getTransferCooldown() {
+            return COOLDOWN;
+        }
+    }
+
+    public interface ITileSourceInteraction {
+        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
+                                   BlockPos pos, BlockEntity tile, Direction dir, FillAction fillAction);
+
+        default int getTransferCooldown() {
+            return COOLDOWN;
+        }
+    }
+
+    public interface IBlockTargetInteraction {
+        InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state);
+    }
+
+    public interface ITileTargetInteraction {
+        InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile);
+    }
+
+    @FunctionalInterface
+    public interface FillAction {
+        boolean tryExecute();
+    }
+
+    public static void registerInteraction(Object interaction) {
+        boolean success = false;
+        if (interaction instanceof IBlockSourceInteraction bs) {
+            BLOCK_INTERACTIONS.add(bs);
+            success = true;
+        }
+        if (interaction instanceof ITileSourceInteraction ts) {
+            TILE_INTERACTIONS.add(ts);
+            success = true;
+        }
+        if (interaction instanceof IFluidSourceInteraction bs) {
+            FLUID_INTERACTIONS.add(bs);
+            success = true;
+        }
+        if (interaction instanceof IBlockTargetInteraction tb) {
+            TARGET_BLOCK_INTERACTIONS.add(tb);
+            success = true;
+        }
+        if (interaction instanceof ITileTargetInteraction tt) {
+            TARGET_TILE_INTERACTIONS.add(tt);
+            success = true;
+        }
+        if (!success)
+            throw new UnsupportedOperationException("Unsupported faucet interaction class: " + interaction.getClass().getSimpleName());
     }
 
 }

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
@@ -82,7 +83,7 @@ public class ClientReceivers {
                     if (message.entityId != null) {
                         var e = l.getEntity(message.entityId);
                         if (e != null) {
-                            ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l, BlockPos.ZERO,
+                            ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l,
                                     ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
                         }
                     }

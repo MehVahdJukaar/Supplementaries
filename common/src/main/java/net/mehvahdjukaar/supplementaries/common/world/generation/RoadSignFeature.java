@@ -194,7 +194,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
             int dist2;
 
 
-            //only 1 sing found/ 1 sign post. always to closest village. posts that are relatively close to a village will always have two.
+            //only 1 sing found/ 1 tile post. always to closest village. posts that are relatively close to a village will always have two.
             //posts in a village will point away
             if (villages.size() == 1 || (0.3 > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
                 dist1 = villages.get(0).getFirst();
@@ -212,33 +212,36 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
 
 
             level.setBlockAndUpdate(pos, ModRegistry.SIGN_POST.get().defaultBlockState());
-            if (level.getBlockEntity(pos) instanceof SignPostBlockTile sign) {
-                sign.setHeldBlock(Blocks.SPRUCE_FENCE.defaultBlockState());
+            if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
+                tile.setHeldBlock(Blocks.SPRUCE_FENCE.defaultBlockState());
 
 
                 boolean left = rand.nextBoolean();
 
-                sign.up = true;
-                sign.leftUp = left;
-                sign.pointToward(village1, true);
 
+                var up =tile.getSignUp();
+                var down =tile.getSignDown();
+                up.setActive(true);
+                up.setLeft(left);
+                tile.pointToward(village1, true);
 
-                sign.down = twoSigns;
-                sign.leftDown = left;
-                sign.pointToward(village2, false);
-                if (Math.abs(sign.yawUp - sign.yawDown) > 90) {
-                    sign.leftDown = !sign.leftDown;
-                    sign.pointToward(village2, false);
+                down.setActive(twoSigns);
+                down.setLeft(left);
+
+                tile.pointToward(village2, false);
+                if (Math.abs(up.yaw() - down.yaw()) > 90) {
+                    down.toggleDirection();
+                    tile.pointToward(village2, false);
                 }
 
 
                 if (CommonConfigs.Spawns.DISTANCE_TEXT.get()) {
-                    sign.textHolder.setLine(0, getSignText(dist1));
+                    tile.getTextHolder().setLine(0, getSignText(dist1));
                     if (twoSigns)
-                        sign.textHolder.setLine(1, getSignText(dist2));
+                        tile.getTextHolder().setLine(1, getSignText(dist2));
                 }
 
-                float yaw = Mth.wrapDegrees(90 + 360 * MthUtils.averageAngles((180 - sign.yawUp) / 360f, (180 - sign.yawDown) / 360f));
+                float yaw = Mth.wrapDegrees(90 + 360 * MthUtils.averageAngles((180 - up.yaw()) / 360f, (180 - down.yaw()) / 360f));
                 Direction backDir = Direction.fromYRot(yaw);
 
                 float diff = Mth.degreesDifference(yaw, backDir.toYRot());
@@ -264,7 +267,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
 
 
                 //stone
-                if (0.3 > rand.nextFloat() && Mth.degreesDifferenceAbs(sign.getPointingYaw(true) + 180, yaw) > 70) {
+                if (0.3 > rand.nextFloat() && Mth.degreesDifferenceAbs(tile.getPointingYaw(true) + 180, yaw) > 70) {
                     BlockPos stonePos = pos.below().offset(backDir.getNormal());
                     if (rand.nextBoolean()) {
                         level.setBlock(stonePos, STONE_SLAB, 2);

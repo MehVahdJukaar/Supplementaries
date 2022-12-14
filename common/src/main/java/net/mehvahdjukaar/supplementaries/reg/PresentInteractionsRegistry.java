@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 //TODO: add eggs and snowballs
-public class PresentRegistry {
+public class PresentInteractionsRegistry {
 
     public static void registerBehaviors() {
         for (Item i : Registry.ITEM) {

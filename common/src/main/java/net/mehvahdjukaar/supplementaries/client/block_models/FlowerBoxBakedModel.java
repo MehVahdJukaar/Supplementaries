@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
@@ -120,13 +121,13 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
             TextureAtlasSprite texture = this.getParticleIcon();
             if (res == null) {
-                VertexUtils.moveVertices(v, -0.5f, -0.5f, -0.5f);
-                VertexUtils.scaleVertices(v, 0.6249f);
+                VertexUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
+                VertexUtil.scaleVertices(v, 0.6249f);
             } else {
-                VertexUtils.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
+                VertexUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
             }
 
-            VertexUtils.transformVertices(v, matrixStack, texture);
+            VertexUtil.transformVertices(v, matrixStack, texture);
 
             quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }

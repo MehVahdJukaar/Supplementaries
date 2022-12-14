@@ -120,14 +120,18 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        //create new tile
-        if (!state.getValue(HAS_ITEM)) {
-            worldIn.setBlock(pos, state.setValue(HAS_ITEM, true), (1 << 2) | (1 << 1));
+
+        boolean hasItem = state.getValue(HAS_ITEM);
+
+        if ((!hasItem && !canHaveItemAbove(level, pos))) return InteractionResult.PASS;
+        if (!hasItem) {
+            //create new tile
+            level.setBlock(pos, state.setValue(HAS_ITEM, true), (1 << 2) | (1 << 1));
         }
         InteractionResult resultType = InteractionResult.PASS;
-        if (worldIn.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
 
             ItemStack handItem = player.getItemInHand(handIn);
 
@@ -142,15 +146,15 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                 if (!player.isCreative()) {
                     handItem.shrink(1);
                 }
-                if (!worldIn.isClientSide()) {
+                if (!level.isClientSide()) {
                     player.setItemInHand(handIn, removed);
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, worldIn.random.nextFloat() * 0.10F + 0.95F);
+                    level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
                     tile.setChanged();
                 } else {
                     //also refreshTextures visuals on client. will get overwritten by packet tho
                     tile.updateClientVisualsOnLoad();
                 }
-                resultType = InteractionResult.sidedSuccess(worldIn.isClientSide);
+                resultType = InteractionResult.sidedSuccess(level.isClientSide);
             } else {
                 resultType = tile.interact(player, handIn);
             }
@@ -158,12 +162,17 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                 Direction.Axis axis = player.getDirection().getAxis();
                 boolean isEmpty = tile.getDisplayedItem().isEmpty();
                 if (axis != state.getValue(AXIS) || isEmpty) {
-                    worldIn.setBlock(pos, state.setValue(AXIS, axis).setValue(HAS_ITEM, !isEmpty), 2);
-                    if (isEmpty) worldIn.removeBlockEntity(pos);
+                    level.setBlock(pos, state.setValue(AXIS, axis).setValue(HAS_ITEM, !isEmpty), 2);
+                    if (isEmpty) level.removeBlockEntity(pos);
                 }
             }
         }
         return resultType;
+    }
+
+    private boolean canHaveItemAbove(Level level, BlockPos pos) {
+        BlockState above = level.getBlockState(pos.above());
+        return !above.is(this) && !above.isRedstoneConductor(level, pos.above());
     }
 
     @Override

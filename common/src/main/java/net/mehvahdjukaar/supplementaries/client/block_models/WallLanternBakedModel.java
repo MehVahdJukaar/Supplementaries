@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -52,7 +53,7 @@ public class WallLanternBakedModel implements CustomBakedModel {
                 if (mimic != null) {
                     var sprite = WallLanternTexturesManager.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
-                        supportQuads = VertexUtils.swapSprite(supportQuads, sprite);
+                        supportQuads = VertexUtil.swapSprite(supportQuads, sprite);
                     }
                 }
                 quads.addAll(supportQuads);
@@ -79,8 +80,8 @@ public class WallLanternBakedModel implements CustomBakedModel {
 
                     for (BakedQuad q : mimicQuads) {
                         int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                        VertexUtils.moveVertices(v, Direction.UP, 2 / 16f);
-                        VertexUtils.moveVertices(v, dir, -2 / 16f);
+                        VertexUtil.moveVertices(v, Direction.UP, 2 / 16f);
+                        VertexUtil.moveVertices(v, dir, -2 / 16f);
 
                         quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
                     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -92,11 +93,11 @@ public class HangingSignBakedModel implements CustomBakedModel {
                             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
                             Direction dir = q.getDirection();
                             if (flipped) {
-                                VertexUtils.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_90);
+                                VertexUtil.rotateVerticesY(v, q.getSprite(), Rotation.CLOCKWISE_90);
                                 if (dir.getAxis() != Direction.Axis.Y) dir = dir.getClockWise();
                             }
                             if (ceiling) {
-                                VertexUtils.moveVertices(v, 0, 0.125f, 0);
+                                VertexUtil.moveVertices(v, 0, 0.125f, 0);
                             }
                             quads.add(new BakedQuad(v, q.getTintIndex(), dir, q.getSprite(), q.isShade()));
                         }

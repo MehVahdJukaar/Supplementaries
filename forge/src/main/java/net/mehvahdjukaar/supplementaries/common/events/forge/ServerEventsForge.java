@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
@@ -203,8 +204,8 @@ public class ServerEventsForge {
                     BlockState state = world.getBlockState(pos.relative(dir));
                     Block block = state.getBlock();
                     if (block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == dir) {
-                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL) {
-                            SoundEvent sound = SoundEvents.ENDERMAN_STARE;
+                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL.get()) {
+                            SoundEvent sound = SoundEvents.ENDERMAN_TELEPORT;
                             event.setCanceled(true);
                             float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
                             world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1.0F, pitch);

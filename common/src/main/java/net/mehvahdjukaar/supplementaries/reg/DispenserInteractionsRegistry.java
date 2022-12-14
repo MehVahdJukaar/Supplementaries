@@ -52,7 +52,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 
-public class DispenserRegistry {
+public class DispenserInteractionsRegistry {
 
 
     public static void registerBehaviors() {
