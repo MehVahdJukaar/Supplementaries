@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.gui.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.gui.widgets.PlayerSuggestionBoxWidget;
@@ -10,11 +9,12 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ServerConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.accessors.NarratorChatListenerAccessor;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.*;
@@ -46,7 +46,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockPos pos = message.getPos();
             if (l.getBlockEntity(pos) instanceof IScreenProvider tile) {
-                if(tile instanceof BlackboardBlockTile && !ClientConfigs.block.BLACKBOARD_GUI.get())return;
+                if (tile instanceof BlackboardBlockTile && !ClientConfigs.block.BLACKBOARD_GUI.get()) return;
                 withPlayerDo((p) -> tile.openScreen(l, pos, p));
             }
         });
@@ -57,7 +57,7 @@ public class ClientReceivers {
         boolean narrator = message.narrator;
         Component str = message.str;
         if (narrator && !ClientConfigs.cached.SPEAKER_BLOCK_MUTE) {
-            Narrator.getNarrator().say(str.getString(), true);
+            ((NarratorChatListenerAccessor) NarratorChatListener.INSTANCE).getNarrator().say(str.getString(), true);
         } else {
             withPlayerDo((p) -> p.sendMessage(str, Util.NIL_UUID));
         }
@@ -111,22 +111,22 @@ public class ClientReceivers {
                             ModRegistry.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
                 }
-                case DISPENSER_MINECART ->{
+                case DISPENSER_MINECART -> {
                     int j1 = 0;
                     int j2 = 1;
                     int k2 = 0;
-                    double d18 = message.pos.x + (double)j1 * 0.6D;
-                    double d24 = message.pos.y + (double)j2 * 0.6D;
-                    double d28 = message.pos.z + (double)k2 * 0.6D;
+                    double d18 = message.pos.x + (double) j1 * 0.6D;
+                    double d24 = message.pos.y + (double) j2 * 0.6D;
+                    double d28 = message.pos.z + (double) k2 * 0.6D;
 
-                    for(int i3 = 0; i3 < 10; ++i3) {
+                    for (int i3 = 0; i3 < 10; ++i3) {
                         double d4 = l.random.nextDouble() * 0.2D + 0.01D;
-                        double d6 = d18 + (double)j1 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)k2 * 0.5D;
-                        double d8 = d24 + (double)j2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)j2 * 0.5D;
-                        double d30 = d28 + (double)k2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double)j1 * 0.5D;
-                        double d9 = (double)j1 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d10 = (double)j2 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d11 = (double)k2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d6 = d18 + (double) j1 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) k2 * 0.5D;
+                        double d8 = d24 + (double) j2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) j2 * 0.5D;
+                        double d30 = d28 + (double) k2 * 0.01D + (l.random.nextDouble() - 0.5D) * (double) j1 * 0.5D;
+                        double d9 = (double) j1 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d10 = (double) j2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d11 = (double) k2 * d4 + l.random.nextGaussian() * 0.01D;
                         l.addParticle(ParticleTypes.SMOKE, d6, d8, d30, d9, d10, d11);
                     }
                 }

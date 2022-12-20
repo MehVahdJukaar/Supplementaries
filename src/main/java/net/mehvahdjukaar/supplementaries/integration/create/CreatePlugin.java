@@ -16,19 +16,15 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.ponder.PonderTag;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
-import net.mehvahdjukaar.selene.block_set.wood.WoodType;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.selene.fluids.ISoftFluidHolder;
 import net.mehvahdjukaar.selene.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -110,12 +106,9 @@ public class CreatePlugin {
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
 
 
-
-
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("blackboard_display_target"),
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
-
 
 
             //sources

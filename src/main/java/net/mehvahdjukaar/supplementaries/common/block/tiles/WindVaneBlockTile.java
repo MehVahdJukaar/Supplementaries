@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.breezy.BreezyCompat;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -40,18 +42,21 @@ public class WindVaneBlockTile extends BlockEntity {
             }
         } else {
             int power = pState.getValue(WindVaneBlock.WIND_STRENGTH);
-            // TODO:cache some of this maybe?
             float tp = (float) (2f * Math.PI);
-            //float offset = 3f * (MathHelper.sin(0.1f*this.pos.getX()) + 0.1f*MathHelper.sin(this.pos.getZ()) + 0.1f*MathHelper.sin(this.pos.getY()));
             float t = pLevel.getGameTime() % 24000 + tile.offset;
-            float b = (float) Math.max(1, (power * ClientConfigs.cached.WIND_VANE_POWER_SCALING));
-            float max_angle_1 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_1;
-            float max_angle_2 = (float) ClientConfigs.cached.WIND_VANE_ANGLE_2;
-            float period_1 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_1;
-            float period_2 = (float) ClientConfigs.cached.WIND_VANE_PERIOD_2;
-            float newYaw = max_angle_1 * Mth.sin(tp * ((t * b / period_1) % 360))
-                    + max_angle_2 * Mth.sin(tp * ((t * b / period_2) % 360));
+            float b = (float) Math.max(1, (power * ClientConfigs.block.WIND_VANE_POWER_SCALING.get()));
+            double maxAngle1 = ClientConfigs.block.WIND_VANE_ANGLE_1.get();
+            double maxAngle2 = ClientConfigs.block.WIND_VANE_ANGLE_2.get();
+            double period1 = ClientConfigs.block.WIND_VANE_PERIOD_1.get();
+            double period2 = ClientConfigs.block.WIND_VANE_PERIOD_2.get();
+            float newYaw = (float) (maxAngle1 * Mth.sin((float) (tp * ((t * b / period1) % 360)))
+                    + maxAngle2 * Mth.sin((float) (tp * ((t * b / period2) % 360))));
+
+            newYaw += CompatHandler.BREEZY ? BreezyCompat.getWindDirection(pPos, pLevel) : 90;
+
             tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
+
+
         }
     }
 }

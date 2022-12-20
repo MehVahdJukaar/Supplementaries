@@ -167,6 +167,7 @@ dependencies {
     implementation fg.deobf("curse.maven:balm-531761:3685074")
     implementation fg.deobf("curse.maven:archers-paradox-353399:3837815")
     implementation fg.deobf("curse.maven:cofh-core-69162:3838025")
+    implementation fg.deobf("curse.maven:breezy-690628:4057096")
 
     implementation fg.deobf("curse.maven:selene-499980:3842421")
     //implementation fg.deobf("curse.maven:just-enough-effect-descriptions-jeed-532286:3736071")

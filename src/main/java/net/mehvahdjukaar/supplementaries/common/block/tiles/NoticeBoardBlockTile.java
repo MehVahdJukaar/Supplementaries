@@ -103,7 +103,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.needsVisualRefresh = true;
         this.cachedPageLines = Collections.emptyList();
         this.text = null;
-
+        updateText();
     }
 
     public void updateText() {
