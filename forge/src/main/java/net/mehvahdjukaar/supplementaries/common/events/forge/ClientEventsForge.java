@@ -138,19 +138,5 @@ public class ClientEventsForge {
             }
         }
     }
-    public static ShaderInstance blackAndWhite;
-
-    @SubscribeEvent
-    public static void registerShader(RegisterShadersEvent event) {
-        try {
-            var blur = new ShaderInstance(event.getResourceManager(), Supplementaries.res("post/black_and_white"),
-                    DefaultVertexFormat.POSITION_TEX_COLOR);
-
-            event.registerShader(blur, s -> ClientEventsForge.blackAndWhite = s);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed to parse black and white shader");
-        }
-    }
-
 
 }

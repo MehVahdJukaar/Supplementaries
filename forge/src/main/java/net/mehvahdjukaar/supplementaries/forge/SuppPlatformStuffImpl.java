@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.mixins.forge.FriendlyByteBufMixin;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,8 +37,8 @@ public class SuppPlatformStuffImpl {
     @Nullable
     public static <T> T getForgeCap(Object object, Class<T> capClass) {
         var t = CapabilityHandler.getToken(capClass);
-        if (t != null) {
-            return (((ICapabilityProvider) object).getCapability(t).resolve()).orElse(null);
+        if (t != null && object instanceof ICapabilityProvider cp) {
+            return CapabilityHandler.get(cp, t);
         }
         return null;
     }

@@ -131,7 +131,6 @@ public class FaucetBlockTile extends BlockEntity {
                 else if (res == InteractionResult.CONSUME) break;
                 else if (res == InteractionResult.FAIL) return false;
             }
-
             if (!doTransfer) return !this.tempFluidHolder.isEmpty();
         }
         return false;
@@ -141,7 +140,6 @@ public class FaucetBlockTile extends BlockEntity {
     @SuppressWarnings("ConstantConditions")
     private boolean tryFillingBlockBelow() {
         SoftFluid softFluid = this.tempFluidHolder.getFluid();
-        //can't full below if empty
         if (softFluid.isEmpty()) return false;
 
         BlockPos below = this.worldPosition.below();

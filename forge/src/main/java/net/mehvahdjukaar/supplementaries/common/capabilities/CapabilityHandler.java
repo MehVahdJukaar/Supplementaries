@@ -6,12 +6,11 @@ import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.extensions.IForgeItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,5 +44,11 @@ public class CapabilityHandler {
     @Nullable
     public static <T> Capability<T> getToken(Class<T> capClass) {
        return (Capability<T>) TOKENS.get(capClass);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @javax.annotation.Nullable
+    public static <T> T get(ICapabilityProvider provider, Capability<T> cap){
+        return provider.getCapability(cap).orElse(null);
     }
 }

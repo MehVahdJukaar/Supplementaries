@@ -2,6 +2,9 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -27,13 +30,16 @@ public abstract class ProjectileWeaponItemMixin {
             quiverStack = stack;
         }
         if(quiverStack == null){
-            if(shooter instanceof IQuiverEntity quiverEntity){
+            if(shooter instanceof IQuiverEntity quiverEntity){ //client only
                 quiverStack = quiverEntity.getQuiver();
             }
             else {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);
                 if (stack.getItem() instanceof QuiverItem) {
                     quiverStack = stack;
+                }else if(shooter instanceof ServerPlayer sp && CompatHandler.CURIOS){
+                    //server side curio stuff
+                   quiverStack = CuriosCompat.getEquippedQuiver(sp);
                 }
             }
         }

@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
+import com.simibubi.create.content.logistics.block.display.DisplayBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
@@ -91,54 +92,36 @@ public class CreateCompatImpl {
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
-            var textHolderTarget = AllDisplayBehaviours.register(
+            DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
+
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
-            //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
-
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("speaker_block_display_target"),
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
-
-
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
-
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("blackboard_display_target"),
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
 
-
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
-
             //sources
-
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
-
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
 
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_source"),
                     new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
-
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("clock_source"),
                     new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
 
-            //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
-
-            var itemDisplaySource = AllDisplayBehaviours.register(
+            DisplayBehaviour itemDisplaySource = AllDisplayBehaviours.register(
                     Supplementaries.res("item_display_source"),
                     new ItemDisplayDisplaySource());
 
@@ -147,16 +130,30 @@ public class CreateCompatImpl {
             AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
             AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
 
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
-
             AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
-            PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
 
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
         }
+    }
+
+    public static void setupClient(){
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
+        //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
+        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
+        //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
+
+
+
     }
 
     private static void changeState(MovementContext context, BlockState newState) {

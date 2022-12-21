@@ -140,7 +140,6 @@ dependencies {
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:waystones-245755:3835119")
-    modImplementation("com.itayfeder.tinted:Tinted:1.19.2-1.1.0")
     modImplementation("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 

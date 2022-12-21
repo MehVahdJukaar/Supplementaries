@@ -4,11 +4,13 @@ import com.google.common.base.Suppliers;
 import lilypuree.decorative_blocks.blocks.BrazierBlock;
 import lilypuree.decorative_blocks.blocks.ChandelierBlock;
 import lilypuree.decorative_blocks.blocks.PalisadeBlock;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleType;
@@ -103,6 +105,7 @@ public class DecoBlocksCompatImpl {
     public static void init() {
     }
 
+
     public static class RopeChandelierBlock extends ChandelierBlock {
         private final Supplier<Block> mimic;
         private final Supplier<BlockState> defMimic;
@@ -165,4 +168,19 @@ public class DecoBlocksCompatImpl {
 
     }
 
+
+    public static void setupClient() {
+        if (DecoBlocksCompatImpl.CHANDELIER_ROPE != null)
+            ClientPlatformHelper.registerRenderType(DecoBlocksCompatImpl.CHANDELIER_ROPE.get(), RenderType.cutout());
+        if (DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE != null)
+            ClientPlatformHelper.registerRenderType(DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE.get(), RenderType.cutout());
+        if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
+            if (DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE != null)
+                ClientPlatformHelper.registerRenderType(DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE.get(), RenderType.cutout());
+        }
+        if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
+            if (DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE != null)
+                ClientPlatformHelper.registerRenderType(DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE.get(), RenderType.cutout());
+        }
+    }
 }

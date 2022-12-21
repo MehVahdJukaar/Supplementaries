@@ -6,12 +6,10 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 
 public class NetworkHandler {
 
-    public static ChannelHandler CHANNEL;
-
+    public static final ChannelHandler CHANNEL = ChannelHandler.createChannel(Supplementaries.res("network"));
 
     public static void registerMessages() {
 
-        CHANNEL = ChannelHandler.createChannel(Supplementaries.res("network"));
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::new);
@@ -84,7 +82,6 @@ public class NetworkHandler {
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 RequestConfigReloadPacket.class, RequestConfigReloadPacket::new);
-
 
 
     }

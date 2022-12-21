@@ -15,6 +15,7 @@ accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMeth
 accessible method net/minecraft/client/model/ParrotModel prepare (Lnet/minecraft/client/model/ParrotModel$State;)V
 accessible method net/minecraft/client/model/ParrotModel setupAnim (Lnet/minecraft/client/model/ParrotModel$State;IFFFFF)V
 
+accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2speech/Narrator;
 
 #relayer diode block reading
 accessible method net/minecraft/world/level/block/DiodeBlock getOutputSignal (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I

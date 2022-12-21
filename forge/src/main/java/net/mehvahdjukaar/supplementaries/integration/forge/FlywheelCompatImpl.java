@@ -22,7 +22,7 @@ import net.minecraft.util.Mth;
 
 public class FlywheelCompatImpl {
 
-    public static void initialize() {
+    public static void setupClient() {
         InstancedRenderRegistry.configure(ModRegistry.BELLOWS_TILE.get()).alwaysSkipRender().factory(BellowsInstance::new).apply();
     }
 

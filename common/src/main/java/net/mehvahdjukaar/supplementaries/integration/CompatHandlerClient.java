@@ -7,10 +7,11 @@ public class CompatHandlerClient {
 
     @ExpectPlatform
     public static void setup() {
+        throw new AssertionError();
     }
 
     @ExpectPlatform
     public static void init() {
-        if(CompatHandler.FLYWHEEL) FlywheelCompat.initialize();
+        throw new AssertionError();
     }
 }

@@ -12,7 +12,7 @@ out vec4 fragColor;
 
 #define T texture(DiffuseSampler,.5+(p.xy*=.992)).rgb
 
-#define radialLength 0.85     //0.5 - 1.0
+#define radialLength 0.8     //0.5 - 1.0
 #define imageBrightness 10.0   //0 - 10
 #define flareBrightness 3.5   // 0 - 10
 

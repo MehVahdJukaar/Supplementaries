@@ -27,7 +27,6 @@ import net.minecraftforge.common.util.Lazy;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
-import vazkii.quark.base.client.config.screen.widgets.QButton;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
@@ -38,13 +37,13 @@ import java.util.List;
 
 public class QuarkClientCompatImpl {
 
-    public static void init() {
+    public static void initClient() {
         ClientPlatformHelper.addBlockEntityRenderersRegistration(e -> e.register(
                 QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new));
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
     }
 
-    public static void registerRenderLayers() {
+    public static void setupClient() {
         ClientPlatformHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
     }
 

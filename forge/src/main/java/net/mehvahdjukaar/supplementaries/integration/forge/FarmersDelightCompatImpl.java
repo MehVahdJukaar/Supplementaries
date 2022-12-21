@@ -129,13 +129,6 @@ public class FarmersDelightCompatImpl {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
-    public static void registerRenderLayers() {
-        ClientPlatformHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
-        ClientPlatformHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
-    }
-
-
     public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
         if (blockstate.getBlock() == STICK_TOMATOES.get()) {
             return !blockstate.getValue(axis);
@@ -146,6 +139,7 @@ public class FarmersDelightCompatImpl {
     public static Block getStickTomato() {
         return STICK_TOMATOES.get();
     }
+
 
 
     public interface ITomatoLoggable {
@@ -330,6 +324,12 @@ public class FarmersDelightCompatImpl {
             }
             return super.canBeReplaced(state, context);
         }
+    }
+
+
+    public static void setupClient() {
+        ClientPlatformHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
     }
 
 }

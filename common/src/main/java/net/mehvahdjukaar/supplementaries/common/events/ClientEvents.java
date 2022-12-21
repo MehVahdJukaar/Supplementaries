@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -85,10 +86,10 @@ public class ClientEvents {
     private static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {
         var map = new Object2ObjectOpenHashMap<Item, String>();
         map.put(Items.CREEPER_HEAD, "minecraft:shaders/post/creeper.json");
-        map.put(Items.SKELETON_SKULL, "supplementaries:shaders/post/black_and_white.json");
-        map.put(Items.WITHER_SKELETON_SKULL, "supplementaries:shaders/post/black_and_white.json");
+        map.put(Items.SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
+        map.put(Items.WITHER_SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
         map.put(Items.ZOMBIE_HEAD, "minecraft:shaders/post/desaturate.json");
-        map.put(Items.DRAGON_HEAD, "supplementaries:shaders/post/flare.json");
+        map.put(Items.DRAGON_HEAD, ClientRegistry.FLARE_SHADER.toString());
         map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
 
         return map;

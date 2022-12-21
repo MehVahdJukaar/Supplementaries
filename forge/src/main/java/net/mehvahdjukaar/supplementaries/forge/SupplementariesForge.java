@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -66,16 +67,4 @@ public class SupplementariesForge {
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
 
-
-    public static class b extends Block{
-
-        public b(Properties arg) {
-            super(arg);
-        }
-        //TODO: use
-        @Override
-        public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState, @Nullable BlockPos queryPos) {
-            return super.getAppearance(state, level, pos, side, queryState, queryPos);
-        }
-    }
 }

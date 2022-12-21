@@ -53,4 +53,7 @@ public class FarmersDelightCompatImpl {
     public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
         return false;
     }
+
+    public static void setupClient() {
+    }
 }

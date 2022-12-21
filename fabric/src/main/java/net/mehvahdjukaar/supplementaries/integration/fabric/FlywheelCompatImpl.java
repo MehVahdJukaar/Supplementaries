@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
 public class FlywheelCompatImpl {
-    public static void initialize() {
+
+    public static void initClient() {
+    }
+
+    public static void setupClient() {
     }
 }

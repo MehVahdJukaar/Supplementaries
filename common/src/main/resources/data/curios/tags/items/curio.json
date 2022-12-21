@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:key"
+	"supplementaries:key",	"supplementaries:quiver"
+
   ]
 }

@@ -90,4 +90,9 @@ public class FarmersDelightCompat {
             richSoilDelegate.get().randomTick(worldIn, pos, rand);
         }
     }
+
+    @ExpectPlatform
+    public static void setupClient() {
+        throw new AssertionError();
+    }
 }

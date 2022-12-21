@@ -69,6 +69,8 @@ public class ClientRegistry {
     private static final ResourceLocation SHULKER_SHEET = new ResourceLocation("textures/atlas/shulker_boxes.png");
     public static final ResourceLocation BANNER_SHEET = new ResourceLocation("textures/atlas/banner_patterns.png");
 
+    public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
+    public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
 
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");

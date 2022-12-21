@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,7 @@ public class ClientReceivers {
         var mode = message.mode;
         Component str = message.str;
         if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
-            Narrator.getNarrator().say(str.getString(), true);
+          Minecraft.getInstance().getNarrator().narrator.say(str.getString(), true);
         } else if (mode == SpeakerBlockTile.Mode.TITLE) {
             Gui gui = Minecraft.getInstance().gui;
             gui.clear();

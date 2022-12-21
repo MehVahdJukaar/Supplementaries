@@ -95,6 +95,8 @@ public class ModSetup {
     //events on setup. fire on world load
     public static void tagDependantSetup() {
         if (!firstTagLoad) {
+            //using this as a post setup event that can access tags
+            Stopwatch watch = Stopwatch.createStarted();
             firstTagLoad = true;
             if (!hasFinishedSetup) {
                 //if mod setup fails (without throwing errors) we try to replicate what caused it to crash and printing that error
@@ -107,14 +109,12 @@ public class ModSetup {
                 }
                 terminateWhenSetupFails();
             }
-            //using this as a post setup event that can access tags
-            Stopwatch watch = Stopwatch.createStarted();
 
             //stuff that needs tags
             DispenserInteractionsRegistry.registerBehaviors();
             ItemsOverrideHandler.registerOverrides();
 
-            Supplementaries.LOGGER.info("Finished additional setup in {} seconds", watch.elapsed().toSeconds());
+            Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }
     }
 
