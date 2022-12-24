@@ -111,7 +111,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
             String res = null;
             if (stack.hasCustomHoverName()) {
-                String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT).replace(" ", "_");
+                String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT);
                 for (var v : SONGS.keySet()) {
                     if (v.equals(name)) {
                         res = v;
