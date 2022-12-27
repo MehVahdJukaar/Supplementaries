@@ -4,7 +4,7 @@
       "type": "forge:not",
       "value": {
         "type": "forge:tag_empty",
-        "tag": "c:silver_ingot"
+        "tag": "c:silver_ingots"
       }
     },
     {
@@ -20,7 +20,7 @@
   ],
   "key": {
     "1": {
-      "tag": "c:silver_ingot"
+      "tag": "c:silver_ingots"
     },
     "2": {
       "item": "minecraft:blaze_powder"

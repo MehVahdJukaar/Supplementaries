@@ -28,7 +28,7 @@ public class ModSetup {
     //damn I hate this. If setup fails forge doesn't do anything, and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
-    public static boolean firstTagLoad = false;
+    private static boolean firstTagLoad = false;
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CurseLootFunction::setup,

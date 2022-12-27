@@ -4,7 +4,7 @@
       "type": "forge:not",
       "value": {
         "type": "forge:tag_empty",
-        "tag": "c:lead_ingot"
+        "tag": "c:lead_ingots"
       }
     },
     {
@@ -20,7 +20,7 @@
   ],
   "key": {
     "1": {
-      "tag": "c:lead_ingot"
+      "tag": "c:lead_ingots"
     },
     "2": {
       "item": "minecraft:blaze_powder"

@@ -4,7 +4,7 @@
       "type": "forge:not",
       "value": {
         "type": "forge:tag_empty",
-        "tag": "c:silver_silver"
+        "tag": "c:silver_silvers"
       }
     },
     {
@@ -21,7 +21,7 @@
   ],
   "key": {
     "1": {
-      "tag": "c:silver_ingot"
+      "tag": "c:silver_ingots"
     }
   },
   "result": {
