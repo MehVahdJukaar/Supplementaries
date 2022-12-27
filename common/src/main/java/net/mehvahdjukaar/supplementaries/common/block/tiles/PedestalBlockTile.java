@@ -36,10 +36,14 @@ public class PedestalBlockTile extends ItemDisplayTile {
 
         BlockState state = this.getBlockState();
         boolean hasItem = !this.isEmpty();
-        BlockState newState = state.setValue(PedestalBlock.HAS_ITEM, hasItem)
-                .setValue(PedestalBlock.UP, PedestalBlock.canConnect(level.getBlockState(worldPosition.above()), worldPosition, level, Direction.UP, hasItem));
+        BlockState newState = state
+                .setValue(PedestalBlock.ITEM_STATUS, PedestalBlock.getStatus(this.level, this.worldPosition, hasItem))
+                .setValue(PedestalBlock.UP, PedestalBlock.canConnectTo(level.getBlockState(worldPosition.above()), worldPosition, level, Direction.UP, hasItem));
         if (state != newState) {
             this.level.setBlock(this.worldPosition, newState, 3);
+            if(!state.getValue(PedestalBlock.ITEM_STATUS).hasTile()){
+                this.level.removeBlockEntity(this.worldPosition);
+            }
         }
 
         //doing this here since I need crystal on server too
@@ -47,7 +51,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
         Item it = stack.getItem();
         //TODO: maybe add tag
 
-       if (CommonUtil.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
+        if (CommonUtil.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
             this.type = DisplayType.SWORD;
         } else if (it instanceof TridentItem || stack.is(ModTags.PEDESTAL_UPRIGHT)) {
             this.type = DisplayType.TRIDENT;
@@ -56,13 +60,14 @@ public class PedestalBlockTile extends ItemDisplayTile {
         } else if (it == ModRegistry.GLOBE_ITEM.get()) {
             this.type = DisplayType.GLOBE;
         } else if (it == ModRegistry.GLOBE_SEPIA_ITEM.get()) {
-           this.type = DisplayType.SEPIA_GLOBE;
-       } else if (it instanceof BlockItem) {
-               this.type = DisplayType.BLOCK;
+            this.type = DisplayType.SEPIA_GLOBE;
+        } else if (it instanceof BlockItem) {
+            this.type = DisplayType.BLOCK;
         } else {
             this.type = DisplayType.ITEM;
         }
     }
+
 
     @Override
     public void load(CompoundTag compound) {
@@ -96,7 +101,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
         GLOBE,
         SEPIA_GLOBE;
 
-        public boolean isGlobe(){
+        public boolean isGlobe() {
             return this == GLOBE || this == SEPIA_GLOBE;
         }
     }

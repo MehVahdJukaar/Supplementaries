@@ -39,7 +39,7 @@ public class ModBlockProperties {
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
-    public static final BooleanProperty HAS_ITEM = BooleanProperty.create("has_item");
+    public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
@@ -150,7 +150,7 @@ public class ModBlockProperties {
     }
 
     //for wall lanterns
-        public enum BlockAttachment implements StringRepresentable {
+    public enum BlockAttachment implements StringRepresentable {
         BLOCK("block"),
         BEAM("beam"),
         WALL("wall"),
@@ -418,5 +418,27 @@ public class ModBlockProperties {
 
     }
 
+
+    public enum DisplayStatus implements StringRepresentable {
+        NONE, EMPTY, FULL;
+
+        @Override
+        public String toString() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.toString();
+        }
+
+        public boolean hasTile() {
+            return this != NONE;
+        }
+
+        public boolean hasItem() {
+            return this == FULL;
+        }
+    }
 
 }

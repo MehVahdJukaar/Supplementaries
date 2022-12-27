@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.IForgeShearable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(FrameBlock.class)

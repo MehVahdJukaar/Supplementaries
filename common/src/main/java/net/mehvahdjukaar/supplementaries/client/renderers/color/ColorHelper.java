@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 public class ColorHelper {
     private static final float[][] SOAP_COLORS;
 
+    //TODO: save to strip
     static {
         int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
         float[][] temp = new float[c.length][];

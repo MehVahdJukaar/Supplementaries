@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +50,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
             //ignore offhand as it has priority over quiver
             if (!quiver.isEmpty() && this.getItemInHand(InteractionHand.OFF_HAND).getItem() != arrow.getItem()) {
                 var data = QuiverItem.getQuiverData(quiver);
-                if(data != null) data.consumeArrow();
+                if (data != null) data.consumeArrow();
             }
         }
     }

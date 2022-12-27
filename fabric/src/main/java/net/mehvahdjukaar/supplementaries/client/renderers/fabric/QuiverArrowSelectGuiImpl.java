@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import me.shedaniel.clothconfig2.ClothConfigDemo;
+import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -22,7 +24,6 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui {
     @Override
     protected void drawHighlight(PoseStack poseStack, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
-
         MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().color);
         if (selectedArrow.hasCustomHoverName()) {
             mutablecomponent.withStyle(ChatFormatting.ITALIC);

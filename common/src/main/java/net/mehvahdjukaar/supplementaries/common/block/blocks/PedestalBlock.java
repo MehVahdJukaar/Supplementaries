@@ -4,10 +4,12 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.DisplayStatus;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -36,6 +38,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyContainerHolder {
@@ -50,13 +53,13 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
 
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final BooleanProperty HAS_ITEM = ModBlockProperties.HAS_ITEM;
+    public static final EnumProperty<DisplayStatus> ITEM_STATUS = ModBlockProperties.ITEM_STATUS;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public PedestalBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(UP, false).setValue(AXIS, Direction.Axis.X)
-                .setValue(DOWN, false).setValue(WATERLOGGED, false).setValue(HAS_ITEM, false));
+                .setValue(DOWN, false).setValue(WATERLOGGED, false).setValue(ITEM_STATUS, DisplayStatus.EMPTY));
     }
 
     @PlatformOnly(PlatformOnly.FORGE)
@@ -70,23 +73,24 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(UP, DOWN, WATERLOGGED, HAS_ITEM, AXIS);
+        builder.add(UP, DOWN, WATERLOGGED, ITEM_STATUS, AXIS);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        boolean flag = world.getFluidState(pos).getType() == Fluids.WATER;
+        boolean flag = level.getFluidState(pos).getType() == Fluids.WATER;
         return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(AXIS, context.getHorizontalDirection().getAxis())
-                .setValue(UP, canConnect(world.getBlockState(pos.above()), pos, world, Direction.UP, false))
-                .setValue(DOWN, canConnect(world.getBlockState(pos.below()), pos, world, Direction.DOWN, false));
+                .setValue(ITEM_STATUS, getStatus(level, pos, false))
+                .setValue(UP, canConnectTo(level.getBlockState(pos.above()), pos, level, Direction.UP, false))
+                .setValue(DOWN, canConnectTo(level.getBlockState(pos.below()), pos, level, Direction.DOWN, false));
     }
 
-    public static boolean canConnect(BlockState state, BlockPos pos, LevelAccessor world, Direction dir, boolean hasItem) {
+    public static boolean canConnectTo(BlockState state, BlockPos pos, LevelAccessor world, Direction dir, boolean hasItem) {
         if (state.getBlock() instanceof PedestalBlock) {
             if (dir == Direction.DOWN) {
-                return !state.getValue(HAS_ITEM);
+                return !state.getValue(ITEM_STATUS).hasTile();
             } else if (dir == Direction.UP) {
                 return !hasItem;
             }
@@ -96,13 +100,15 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
 
     //called when a neighbor is placed
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+        super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
         if (facing == Direction.UP) {
-            return stateIn.setValue(UP, canConnect(facingState, currentPos, worldIn, facing, stateIn.getValue(HAS_ITEM)));
+            boolean hasItem = stateIn.getValue(ITEM_STATUS).hasItem();
+
+            return stateIn.setValue(ITEM_STATUS, getStatus(level, currentPos, hasItem))
+                    .setValue(UP, canConnectTo(facingState, currentPos, level, facing, hasItem));
         } else if (facing == Direction.DOWN) {
-            return stateIn.setValue(DOWN, canConnect(facingState, currentPos, worldIn, facing, stateIn.getValue(HAS_ITEM)));
+            return stateIn.setValue(DOWN, canConnectTo(facingState, currentPos, level, facing, stateIn.getValue(ITEM_STATUS).hasItem()));
         }
         return stateIn;
     }
@@ -123,15 +129,10 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
 
-        boolean hasItem = state.getValue(HAS_ITEM);
 
-        if ((!hasItem && !canHaveItemAbove(level, pos))) return InteractionResult.PASS;
-        if (!hasItem) {
-            //create new tile
-            level.setBlock(pos, state.setValue(HAS_ITEM, true), (1 << 2) | (1 << 1));
-        }
         InteractionResult resultType = InteractionResult.PASS;
-        if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
+        if (state.getValue(ITEM_STATUS).hasTile() &&
+                level.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
 
             ItemStack handItem = player.getItemInHand(handIn);
 
@@ -158,21 +159,18 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
             } else {
                 resultType = tile.interact(player, handIn);
             }
-            if (resultType.consumesAction()) {
-                Direction.Axis axis = player.getDirection().getAxis();
-                boolean isEmpty = tile.getDisplayedItem().isEmpty();
-                if (axis != state.getValue(AXIS) || isEmpty) {
-                    level.setBlock(pos, state.setValue(AXIS, axis).setValue(HAS_ITEM, !isEmpty), 2);
-                    if (isEmpty) level.removeBlockEntity(pos);
-                }
-            }
         }
         return resultType;
     }
 
-    private boolean canHaveItemAbove(Level level, BlockPos pos) {
+    public static boolean canHaveItemAbove(LevelAccessor level, BlockPos pos) {
         BlockState above = level.getBlockState(pos.above());
-        return !above.is(this) && !above.isRedstoneConductor(level, pos.above());
+        return !above.is(ModRegistry.PEDESTAL.get()) && !above.isRedstoneConductor(level, pos.above());
+    }
+
+    public static DisplayStatus getStatus(LevelAccessor level, BlockPos pos, boolean hasItem) {
+        if(hasItem)return  DisplayStatus.FULL;
+        return canHaveItemAbove(level, pos) ? DisplayStatus.EMPTY : DisplayStatus.NONE;
     }
 
     @Override
@@ -197,7 +195,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        if (pState.getValue(HAS_ITEM)) {
+        if (pState.getValue(ITEM_STATUS).hasTile()) {
             return new PedestalBlockTile(pPos, pState);
         }
         return null;
@@ -247,12 +245,13 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
 
     @Override
     public WorldlyContainer getContainer(BlockState state, LevelAccessor level, BlockPos pos) {
-        if (state.getValue(HAS_ITEM)) {
+        if (state.getValue(ITEM_STATUS).hasTile()) {
             return (PedestalBlockTile) level.getBlockEntity(pos);
         }
         return new TileLessContainer(state, level, pos);
     }
 
+    @Deprecated(forRemoval = true)
     static class TileLessContainer extends SimpleContainer implements WorldlyContainer {
         private final BlockState state;
         private final LevelAccessor level;
@@ -335,10 +334,12 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         @Override
         public void setChanged() {
             if (!this.isEmpty()) {
-                level.setBlock(pos, state.setValue(PedestalBlock.HAS_ITEM, true), 3);
+                var item = this.getItem(0);
+                if(!item.isEmpty()) {
+                    level.setBlock(pos, state.setValue(PedestalBlock.ITEM_STATUS, DisplayStatus.EMPTY), 3);
+                }
                 if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile) {
 
-                    var item = this.getItem(0);
                     this.tileReference = tile;
                     tile.setDisplayedItem(item);
                 }

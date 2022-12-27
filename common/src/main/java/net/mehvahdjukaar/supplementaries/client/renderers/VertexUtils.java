@@ -1,30 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 //TODO: move to lib
 public class VertexUtils {
@@ -54,9 +43,9 @@ public class VertexUtils {
         float maxV = minV + atlasScaleV * h;
         float maxV2 = minV + atlasScaleV * w;
 
-        float r = (float) ((color >> 16 & 255)) / 255.0F;
-        float g = (float) ((color >> 8 & 255)) / 255.0F;
-        float b = (float) ((color & 255)) / 255.0F;
+        float r = (color >> 16 & 255) / 255.0F;
+        float g = (color >> 8 & 255) / 255.0F;
+        float b = (color & 255) / 255.0F;
 
 
         // float a = 1f;// ((color >> 24) & 0xFF) / 255f;
@@ -138,7 +127,7 @@ public class VertexUtils {
         float maxV2 = minV + atlasScaleV * w;
 
         long t = level == null ? System.currentTimeMillis() / 50 : level.getGameTime();
-        float time = ((float) Math.floorMod((long) (pos.getX() * 7 + pos.getY() * 9 + pos.getZ() * 13) + t, 100L) + partialTicks) / 100.0F;
+        float time = (Math.floorMod((pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L) + t, 100L) + partialTicks) / 100.0F;
 
         // w = (1-Mth.sin((float) (time*Math.PI*2)));
 

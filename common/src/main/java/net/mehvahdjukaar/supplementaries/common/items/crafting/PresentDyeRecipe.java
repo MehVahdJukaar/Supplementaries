@@ -17,7 +17,6 @@ public class PresentDyeRecipe extends CustomRecipe {
         super(resourceLocation);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public boolean matches(CraftingContainer craftingContainer, Level level) {
         int i = 0;
         int j = 0;

@@ -30,7 +30,7 @@ public abstract class PlayerProjectileMixin extends LivingEntity {
                                Predicate<ItemStack> supporterArrows, ItemStack heldArrow, int slotIndex, ItemStack itemStack) {
         if (itemStack.getItem() instanceof QuiverItem) {
             ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(supporterArrows);
-            if (arrow != ItemStack.EMPTY) cir.setReturnValue(arrow);
+            if (!arrow.isEmpty()) cir.setReturnValue(arrow);
         }
     }
 }

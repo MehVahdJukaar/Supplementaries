@@ -22,6 +22,7 @@ public abstract class ProjectileWeaponItemMixin {
     @Inject(method = "getHeldProjectile",
             at = @At("HEAD"),
             cancellable = true)
+    //checks everything except inventory. High priority ones. Other ones are done in PlayerProjectileMixin
     private static void getProjectileInQuiver(LivingEntity shooter, Predicate<ItemStack> isAmmo, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack stack = shooter.getItemInHand(InteractionHand.OFF_HAND);
         if (isAmmo.test(stack)) return; //off-hand always has priority
@@ -47,7 +48,7 @@ public abstract class ProjectileWeaponItemMixin {
             QuiverItem.IQuiverData data = QuiverItem.getQuiverData(quiverStack);
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
-                if (arrow.isEmpty()) cir.setReturnValue(arrow);
+                if (!arrow.isEmpty()) cir.setReturnValue(arrow);
             }
         }
     }

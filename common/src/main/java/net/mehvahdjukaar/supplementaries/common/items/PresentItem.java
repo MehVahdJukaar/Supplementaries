@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.nbt.CompoundTag;
@@ -53,13 +54,13 @@ public class PresentItem extends BlockItem implements IColored {
 
     @Override
     public DyeColor getColor() {
-        return ((PresentBlock) this.getBlock()).getColor();
+        return ((AbstractPresentBlock) this.getBlock()).getColor();
     }
 
     @Nullable
     @Override
     public Item changeItemColor(@Nullable DyeColor color) {
-        return ((PresentBlock) this.getBlock()).changeItemColor(color);
+        return ((AbstractPresentBlock) this.getBlock()).changeItemColor(color);
     }
 
     @Override
