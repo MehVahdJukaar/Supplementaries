@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -35,11 +36,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     }
 
     public ThrowableBrickEntity(Level worldIn, LivingEntity throwerIn) {
-        super(ModRegistry.THROWABLE_BRICK.get(), throwerIn, worldIn);
+        super(ModEntities.THROWABLE_BRICK.get(), throwerIn, worldIn);
     }
 
     public ThrowableBrickEntity(Level worldIn, double x, double y, double z) {
-        super(ModRegistry.THROWABLE_BRICK.get(), x, y, z, worldIn);
+        super(ModEntities.THROWABLE_BRICK.get(), x, y, z, worldIn);
     }
 
     @Override

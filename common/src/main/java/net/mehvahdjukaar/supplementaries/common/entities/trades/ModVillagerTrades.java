@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -23,15 +24,22 @@ import net.minecraft.world.level.ItemLike;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
-public class VillagerTradesHandler {
+public class ModVillagerTrades {
 
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
 
-    private static VillagerTrades.ItemListing[] RED_MERCHANT_TRADES = null;
+    //don't call too early. Lazily initialized
+    private static final Supplier<VillagerTrades.ItemListing[]> RED_MERCHANT_TRADES =
+            Suppliers.memoize(ModVillagerTrades::makeRedMerchantTrades);
 
-    private static void makeRedMerchantTrades() {
+    private static final Supplier<VillagerTrades.ItemListing[]> CHRISTMAS_SALES = Suppliers.memoize(() ->
+            Arrays.stream(RED_MERCHANT_TRADES.get()).map(WrappedListing::new)
+                    .toList().toArray(new VillagerTrades.ItemListing[0]));
+
+    private static VillagerTrades.ItemListing[] makeRedMerchantTrades() {
         List<VillagerTrades.ItemListing> trades = new ArrayList<>();
 
         if (RegistryConfigs.ROPE_ENABLED.get()) {
@@ -61,28 +69,19 @@ public class VillagerTradesHandler {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
 
         }
-        RED_MERCHANT_TRADES = trades.toArray(new VillagerTrades.ItemListing[0]);
+        return trades.toArray(new VillagerTrades.ItemListing[0]);
     }
 
-    private static VillagerTrades.ItemListing[] CHRISTMAS_SALES = null;
 
     public static VillagerTrades.ItemListing[] getRedMerchantTrades() {
-        if (RED_MERCHANT_TRADES == null) {
-            makeRedMerchantTrades();
-        }
-
         if (CommonUtil.FESTIVITY.isChristmas()) {
-            if (CHRISTMAS_SALES == null) {
-                CHRISTMAS_SALES = Arrays.stream(RED_MERCHANT_TRADES).map(WrappedListing::new)
-                        .toList().toArray(new VillagerTrades.ItemListing[0]);
-            }
-            return CHRISTMAS_SALES;
+            return CHRISTMAS_SALES.get();
         }
-        return RED_MERCHANT_TRADES;
+        return RED_MERCHANT_TRADES.get();
     }
 
-    private record WrappedListing(
-            VillagerTrades.ItemListing original) implements VillagerTrades.ItemListing {
+    private record WrappedListing(VillagerTrades.ItemListing original) implements VillagerTrades.ItemListing {
+
         private static final PresentBlockTile DUMMY = new PresentBlockTile(BlockPos.ZERO,
                 ModRegistry.PRESENTS.get(null).get().defaultBlockState());
 
@@ -102,21 +101,21 @@ public class VillagerTradesHandler {
     }
 
 
-    static ModItemListing itemForEmeraldTrade(ItemLike item, int quantity, int price, int maxTrades) {
+    private static ModItemListing itemForEmeraldTrade(ItemLike item, int quantity, int price, int maxTrades) {
         return itemForEmeraldTrade(new ItemStack(item, quantity), price, maxTrades);
     }
 
-    static ModItemListing itemForEmeraldTrade(ItemStack itemStack, int price, int maxTrades) {
+    private static ModItemListing itemForEmeraldTrade(ItemStack itemStack, int price, int maxTrades) {
         return new ModItemListing(new ItemStack(Items.EMERALD, price), itemStack, maxTrades, 1, BUY);
     }
 
-    static ModItemListing itemForEmeraldTrade(ItemLike item, int quantity, ItemLike additional, int addQuantity, int price, int maxTrades) {
+    private static ModItemListing itemForEmeraldTrade(ItemLike item, int quantity, ItemLike additional, int addQuantity, int price, int maxTrades) {
         return new ModItemListing(new ItemStack(Items.EMERALD, price), new ItemStack(additional, addQuantity), new ItemStack(item, quantity), maxTrades, 1, BUY);
     }
 
 
-    record RocketForEmeraldTrade(int price, int paper, int rockets,
-                                 int maxTrades) implements VillagerTrades.ItemListing {
+    private record RocketForEmeraldTrade(int price, int paper, int rockets,
+                                         int maxTrades) implements VillagerTrades.ItemListing {
 
         @Override
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
@@ -140,7 +139,7 @@ public class VillagerTradesHandler {
         }
     }
 
-    record StarForEmeraldTrade(int price, int maxTrades) implements VillagerTrades.ItemListing {
+    private record StarForEmeraldTrade(int price, int maxTrades) implements VillagerTrades.ItemListing {
 
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
 
@@ -189,7 +188,7 @@ public class VillagerTradesHandler {
 
 
     //runs on init since we need to be early enough to register stuff to forge busses
-    public static void addTradesRegistration() {
+    public static void init() {
         RegHelper.registerWanderingTraderTrades(2, listings -> {
             if (RegistryConfigs.GLOBE_ENABLED.get()) {
                 //adding twice because it's showing up too rarely

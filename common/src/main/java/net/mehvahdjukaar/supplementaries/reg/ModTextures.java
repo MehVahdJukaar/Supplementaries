@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -62,6 +63,7 @@ public class ModTextures {
     public static final ResourceLocation JAR_MAN = Supplementaries.res("textures/entity/misc/jar_man.png");
     public static final ResourceLocation SLIME_ENTITY_OVERLAY = Supplementaries.res("textures/entity/slime_overlay.png");
 
+    public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     //gui
     public static final ResourceLocation SLIME_GUI_OVERLAY = Supplementaries.res("textures/gui/slime_overlay.png");
@@ -76,7 +78,6 @@ public class ModTextures {
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new IdentityHashMap<>();
-    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = new EnumMap<>(BookPileBlockTile.BookColor.class);
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
     public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
@@ -84,24 +85,26 @@ public class ModTextures {
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("blocks/bubble_block");
 
-    public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = new LinkedHashMap<>();
-
-    public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
-
-    static{
-        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
-            BOOK_TEXTURES.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
-        }
-
+    public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = Util.make(() -> {
+        Map<Block, ResourceLocation> map = new LinkedHashMap<>();
         //first key and default one too
-        SKULL_CANDLES_TEXTURES.put(Blocks.CANDLE, Supplementaries.res("textures/entity/skull_candles/default.png"));
+        map.put(Blocks.CANDLE, Supplementaries.res("textures/entity/skull_candles/default.png"));
         for (DyeColor color : DyeColor.values()) {
-            Block candle = BlocksColorAPI.getColoredBlock("candle",color);
-            SKULL_CANDLES_TEXTURES.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
+            Block candle = BlocksColorAPI.getColoredBlock("candle", color);
+            map.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
-        SKULL_CANDLES_TEXTURES.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
-    }
+        map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
+        return map;
+    });
+
+    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = Util.make(() -> {
+        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
+        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
+            map.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
+        }
+        return map;
+    });
 
     public static List<ResourceLocation> getTexturesForBlockAtlas() {
         List<ResourceLocation> blocks = new ArrayList<>(List.of(
@@ -122,7 +125,7 @@ public class ModTextures {
             for (BannerPattern pattern : Registry.BANNER_PATTERN) {
 
                 FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
-                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":","/").replace(".","/")));
+                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
             }
         }
         try {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,7 +15,7 @@ public class TrappedPresentContainerMenu extends PresentContainerMenu {
     }
 
     public TrappedPresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
-        super(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), id, playerInventory, inventory, pos);
+        super(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), id, playerInventory, inventory, pos);
     }
 
     @Override

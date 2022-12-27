@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,7 +34,7 @@ public class RedMerchantContainerMenu extends AbstractContainerMenu {
     }
 
     public RedMerchantContainerMenu(int i1, Inventory inventory, Merchant merchant) {
-        super(ModRegistry.RED_MERCHANT_CONTAINER.get(), i1);
+        super(ModMenuTypes.RED_MERCHANT.get(), i1);
         this.trader = merchant;
         this.tradeContainer = new MerchantContainer(merchant);
         this.addSlot(new Slot(this.tradeContainer, 0, 136, 37));

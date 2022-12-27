@@ -142,12 +142,12 @@ public class ClientRegistry {
         //overlay
         //SlimedGuiOverlay.register();
 
-        MenuScreens.register(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), PulleyBlockGui::new);
-        MenuScreens.register(ModRegistry.SACK_CONTAINER.get(), SackGui::new);
-        MenuScreens.register(ModRegistry.RED_MERCHANT_CONTAINER.get(), RedMerchantGui::new);
-        MenuScreens.register(ModRegistry.PRESENT_BLOCK_CONTAINER.get(), PresentBlockScreen.GUI_FACTORY);
-        MenuScreens.register(ModRegistry.TRAPPED_PRESENT_BLOCK_CONTAINER.get(), TrappedPresentBlockGui.GUI_FACTORY);
-        MenuScreens.register(ModRegistry.NOTICE_BOARD_CONTAINER.get(), NoticeBoardGui::new);
+        MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyBlockGui::new);
+        MenuScreens.register(ModMenuTypes.SACK.get(), SackGui::new);
+        MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantGui::new);
+        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentBlockScreen.GUI_FACTORY);
+        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentBlockGui.GUI_FACTORY);
+        MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardGui::new);
 
         ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientPlatformHelper.registerRenderType(s, RenderType.cutout()));
 
@@ -309,17 +309,17 @@ public class ClientRegistry {
     @EventCalled
     private static void registerEntityRenderers(ClientPlatformHelper.EntityRendererEvent event) {
         //entities
-        event.register(ModRegistry.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.register(ModRegistry.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.register(ModRegistry.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
-        event.register(ModRegistry.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
-        event.register(ModRegistry.RED_MERCHANT.get(), RedMerchantRenderer::new);
-        event.register(ModRegistry.ROPE_ARROW.get(), RopeArrowRenderer::new);
-        event.register(ModRegistry.FALLING_URN.get(), FallingBlockRenderer::new);
-        event.register(ModRegistry.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
-        event.register(ModRegistry.FALLING_LANTERN.get(), FallingBlockRenderer::new);
-        event.register(ModRegistry.FALLING_SACK.get(), FallingBlockRenderer::new);
-        event.register(ModRegistry.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+        event.register(ModEntities.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
+        event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
+        event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);
+        event.register(ModEntities.ROPE_ARROW.get(), RopeArrowRenderer::new);
+        event.register(ModEntities.FALLING_URN.get(), FallingBlockRenderer::new);
+        event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
+        event.register(ModEntities.FALLING_LANTERN.get(), FallingBlockRenderer::new);
+        event.register(ModEntities.FALLING_SACK.get(), FallingBlockRenderer::new);
+        event.register(ModEntities.PEARL_MARKER.get(), PearlMarkerRenderer::new);
     }
 
     @EventCalled
@@ -439,8 +439,6 @@ public class ClientRegistry {
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
     }
-
-
 
 
     /*

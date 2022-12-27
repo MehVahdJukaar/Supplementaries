@@ -6,6 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -15,16 +17,10 @@ import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesHandler;
-import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesHandler;
-import net.mehvahdjukaar.supplementaries.mixins.RedMerchantSpawnerMixin;
+import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
+import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,18 +56,23 @@ public class Supplementaries {
         ModSounds.init();
         ModRegistry.init();
         ModRecipes.init();
+        ModMenuTypes.init();
+        ModEntities.init();
         ModParticles.init();
+        ModCommands.init();
+        ModVillagerTrades.init();
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
 
-        ServerDynamicResourcesHandler.INSTANCE.register();
+
+        ServerDynamicResourcesGenerator.INSTANCE.register();
 
         PlatformHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
         PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
         PlatformHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
 
         if (PlatformHelper.getEnv().isClient()) {
-            ClientDynamicResourcesHandler.INSTANCE.register();
+            ClientDynamicResourcesGenerator.INSTANCE.register();
 
             ClientPlatformHelper.addClientReloadListener(WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
         }

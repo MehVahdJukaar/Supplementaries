@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,11 +20,11 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
     }
 
     public FallingLanternEntity(Level level) {
-        super(ModRegistry.FALLING_LANTERN.get(), level);
+        super(ModEntities.FALLING_LANTERN.get(), level);
     }
 
     public FallingLanternEntity(Level level, BlockPos pos, BlockState blockState, double yOffset) {
-        super(ModRegistry.FALLING_LANTERN.get(), level, pos, blockState, false);
+        super(ModEntities.FALLING_LANTERN.get(), level, pos, blockState, false);
         this.yo = pos.getY() + yOffset;
     }
 

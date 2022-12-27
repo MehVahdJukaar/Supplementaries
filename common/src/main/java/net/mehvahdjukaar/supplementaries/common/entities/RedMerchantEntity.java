@@ -3,10 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncTradesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +55,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     public RedMerchantEntity(Level world) {
-        this(ModRegistry.RED_MERCHANT.get(), world);
+        this(ModEntities.RED_MERCHANT.get(), world);
     }
 
     @Override
@@ -128,7 +129,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     @Override
     public void updateTrades() {
         MerchantOffers merchantoffers = this.getOffers();
-        this.addOffersFromItemListings(merchantoffers, VillagerTradesHandler.getRedMerchantTrades(), 7);
+        this.addOffersFromItemListings(merchantoffers, ModVillagerTrades.getRedMerchantTrades(), 7);
     }
 
     @Override

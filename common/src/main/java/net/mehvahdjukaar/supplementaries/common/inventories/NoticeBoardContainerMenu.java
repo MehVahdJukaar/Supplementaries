@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -31,18 +32,13 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
 
     public NoticeBoardContainerMenu(int id, Inventory playerInventory, Container inventory) {
 
-        super(ModRegistry.NOTICE_BOARD_CONTAINER.get(), id);
+        super(ModMenuTypes.NOTICE_BOARD.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 1);
         inventory.startOpen(playerInventory.player);
 
         this.addSlot(new Slot(inventory, 0, 79, 39) {
-            @Override
-            public void setChanged() {
-                super.setChanged();
-                //NoticeBoardContainer.this.slotChanged(0, 0, 0);
-            }
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return(CommonConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));

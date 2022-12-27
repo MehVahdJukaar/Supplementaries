@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,7 +35,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         this(id, playerInventory, null, packetBuffer.readBlockPos());
     }
     public PresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
-        this(ModRegistry.PRESENT_BLOCK_CONTAINER.get(),id, playerInventory, inventory,pos);
+        this(ModMenuTypes.PRESENT_BLOCK.get(),id, playerInventory, inventory,pos);
     }
 
     public <T extends PresentContainerMenu>PresentContainerMenu(MenuType<T> type, int id, Inventory playerInventory, Container inventory, BlockPos pos) {

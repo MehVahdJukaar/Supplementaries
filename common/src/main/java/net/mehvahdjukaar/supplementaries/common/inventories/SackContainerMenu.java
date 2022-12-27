@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -29,8 +30,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, Container inventory) {
-
-        super(ModRegistry.SACK_CONTAINER.get(), id);
+        super(ModMenuTypes.SACK.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 27);

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -50,8 +51,7 @@ public class PearlMarker extends Entity {
 
 
     public PearlMarker(Level worldIn) {
-        super(ModRegistry.PEARL_MARKER.get(), worldIn);
-        //this.setInvisible(true);
+        super(ModEntities.PEARL_MARKER.get(), worldIn);
         this.setNoGravity(true);
         this.setInvulnerable(true);
     }

@@ -131,17 +131,7 @@ public class RegUtils {
     }
 
 
-    public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, Supplier<EntityType.Builder<T>> builder) {
-        return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.get().build(name));
-    }
 
-    public static <T extends Entity> Supplier<EntityType<T>> regEntity(
-            String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height,
-            int clientTrackingRange, boolean velocityUpdates, int updateInterval) {
-        return RegHelper.registerEntityType(Supplementaries.res(name), () ->
-                PlatformHelper.newEntityType(name, factory, category, width, height,
-                        clientTrackingRange, velocityUpdates, updateInterval));
-    }
 
     //candle holders
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(String baseName) {

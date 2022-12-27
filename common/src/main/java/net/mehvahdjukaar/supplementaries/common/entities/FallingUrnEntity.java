@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +25,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
     }
 
     public FallingUrnEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(ModRegistry.FALLING_URN.get(),level, pos, blockState, false);
+        super(ModEntities.FALLING_URN.get(),level, pos, blockState, false);
         this.setHurtsEntities(1f, 20);
     }
 

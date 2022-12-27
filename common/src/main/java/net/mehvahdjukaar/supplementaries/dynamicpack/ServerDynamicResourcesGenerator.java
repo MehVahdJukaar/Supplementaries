@@ -18,7 +18,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -28,11 +27,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.Logger;
 
-public class ServerDynamicResourcesHandler extends DynServerResourcesProvider {
+public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider {
 
-    public static final ServerDynamicResourcesHandler INSTANCE = new ServerDynamicResourcesHandler();
+    public static final ServerDynamicResourcesGenerator INSTANCE = new ServerDynamicResourcesGenerator();
 
-    public ServerDynamicResourcesHandler() {
+    public ServerDynamicResourcesGenerator() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
         this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
     }

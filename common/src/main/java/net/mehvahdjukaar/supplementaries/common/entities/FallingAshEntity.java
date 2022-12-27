@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,11 +37,11 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
     }
 
     public FallingAshEntity(Level level) {
-        super(ModRegistry.FALLING_ASH.get(), level);
+        super(ModEntities.FALLING_ASH.get(), level);
     }
 
     public FallingAshEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(ModRegistry.FALLING_ASH.get(), level, pos, blockState, false);
+        super(ModEntities.FALLING_ASH.get(), level, pos, blockState, false);
     }
 
     public static FallingAshEntity fall(Level level, BlockPos pos, BlockState state) {

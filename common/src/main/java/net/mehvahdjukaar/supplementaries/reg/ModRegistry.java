@@ -1,19 +1,13 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.VerticalSlabBlock;
-import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
-import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
-import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.VillagerTradesHandler;
-import net.mehvahdjukaar.supplementaries.common.inventories.*;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.OptionalLootCondition;
@@ -28,11 +22,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.decoration.PaintingVariant;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
@@ -42,10 +32,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import java.util.EnumMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,21 +46,12 @@ import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
 public class ModRegistry {
 
     public static void init() {
-
         CompatHandler.initOptionalRegistries();
         RegUtils.initDynamicRegistry();
-        RegHelper.addAttributeRegistration(ModRegistry::registerEntityAttributes);
-        RegHelper.addCommandRegistration(ModCommands::register);
-        VillagerTradesHandler.addTradesRegistration();
     }
 
     private static boolean isDisabled(String name) {
         return !RegistryConfigs.isEnabled(name);
-    }
-
-    @EventCalled
-    public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
-        event.register(ModRegistry.RED_MERCHANT.get(), Mob.createMobAttributes());
     }
 
     //misc entries
@@ -100,79 +79,16 @@ public class ModRegistry {
             Supplementaries.res("overencumbered"), OverencumberedEffect::new);
 
 
-    //entities
-    public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
-            PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
+    //red merchant
+    public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
+            PlatformHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0,
+                    new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
+
 
     //dispenser minecart
-    public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
-            EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.7F).clientTrackingRange(8));
-
     public static final Supplier<Item> DISPENSER_MINECART_ITEM = regItem(DISPENSER_MINECART_NAME, () -> new DispenserMinecartItem(new Item.Properties()
             .stacksTo(1).tab(getTab(CreativeModeTab.TAB_TRANSPORTATION, DISPENSER_MINECART_NAME))));
 
-    //red trader
-    public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
-            RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);
-
-    public static final Supplier<MenuType<RedMerchantContainerMenu>> RED_MERCHANT_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(RED_MERCHANT_NAME), RedMerchantContainerMenu::new);
-
-    public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
-            PlatformHelper.newSpawnEgg(RED_MERCHANT, 0x7A090F, 0xF4f1e0,
-                    new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
-
-    //urn
-    public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME, () ->
-            EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //ash
-    public static final Supplier<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME, () ->
-            EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //ash
-    public static final Supplier<EntityType<FallingLanternEntity>> FALLING_LANTERN = regEntity(FALLING_LANTERN_NAME, () ->
-            EntityType.Builder.<FallingLanternEntity>of(FallingLanternEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    public static final Supplier<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME, () ->
-            EntityType.Builder.<ImprovedFallingBlockEntity>of(ImprovedFallingBlockEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //firefly
-
-//    public static final String FIREFLY_NAME = "firefly";
-//    private static final EntityType<FireflyEntity> FIREFLY_TYPE_RAW = (EntityType.Builder.of(FireflyEntity::new, MobCategory.AMBIENT)
-//            .setShouldReceiveVelocityUpdates(true).setTrackingRange(12).setUpdateInterval(3)
-//            .sized(0.3125f, 1f))
-//            .build(FIREFLY_NAME);
-//
-//    public static final Supplier<EntityType<FireflyEntity>> FIREFLY_TYPE = ENTITIES.register(FIREFLY_NAME, () -> FIREFLY_TYPE_RAW);
-//
-//    public static final Supplier<Item> FIREFLY_SPAWN_EGG_ITEM = regItem(FIREFLY_NAME + "_spawn_egg", () ->
-//            new ForgeSpawnEggItem(FIREFLY_TYPE, -5048018, -14409439, //-4784384, -16777216,
-//                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
-
-    //brick
-    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
-            EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
-
-    //bomb
-    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
-            EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
     public static final Supplier<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()
             .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME))));
@@ -191,21 +107,8 @@ public class ModRegistry {
             .tab(null), BombEntity.BombType.SPIKY, false));
 
     //rope arrow
-    public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
-            EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20));
-
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(32)));
-
-    //slingshot projectile
-    public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
-            EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20));
 
 
     //soap bubbler
@@ -302,9 +205,6 @@ public class ModRegistry {
                     PresentBlockTile::new, PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
 
-    public static final Supplier<MenuType<PresentContainerMenu>> PRESENT_BLOCK_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(PRESENT_NAME), PresentContainerMenu::new);
-
     //trapped presents
 
     public static final Map<DyeColor, Supplier<Block>> TRAPPED_PRESENTS = RegUtils.registerPresents(TRAPPED_PRESENT_NAME, TrappedPresentBlock::new);
@@ -312,10 +212,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<TrappedPresentBlockTile>> TRAPPED_PRESENT_TILE = regTile(
             TRAPPED_PRESENT_NAME, () -> PlatformHelper.newBlockEntityType(
                     TrappedPresentBlockTile::new, TRAPPED_PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
-
-
-    public static final Supplier<MenuType<TrappedPresentContainerMenu>> TRAPPED_PRESENT_BLOCK_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(TRAPPED_PRESENT_NAME), TrappedPresentContainerMenu::new);
 
 
     //decoration blocks
@@ -346,9 +242,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatformHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
-
-    public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(NOTICE_BOARD_NAME), NoticeBoardContainerMenu::new);
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
@@ -402,9 +295,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<SackBlockTile>> SACK_TILE = regTile(
             SACK_NAME, () -> PlatformHelper.newBlockEntityType(
                     SackBlockTile::new, SACK.get()));
-
-    public static final Supplier<MenuType<SackContainerMenu>> SACK_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(SACK_NAME), SackContainerMenu::new);
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, SACK_NAME)).stacksTo(1)));
@@ -740,9 +630,6 @@ public class ModRegistry {
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
             BlockBehaviour.Properties.copy(Blocks.BARREL)
     ), CreativeModeTab.TAB_DECORATIONS, 300);
-
-    public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK_CONTAINER = RegHelper.registerMenuType(
-            Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
             PULLEY_BLOCK_NAME, () -> PlatformHelper.newBlockEntityType(
@@ -1314,6 +1201,4 @@ public class ModRegistry {
 
 
     */
-
-
 }

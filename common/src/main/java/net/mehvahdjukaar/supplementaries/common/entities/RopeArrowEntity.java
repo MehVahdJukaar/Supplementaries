@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -38,17 +39,17 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     public RopeArrowEntity(Level worldIn, LivingEntity throwerIn, int charges) {
-        super(ModRegistry.ROPE_ARROW.get(), throwerIn, worldIn);
+        super(ModEntities.ROPE_ARROW.get(), throwerIn, worldIn);
         this.charges = charges;
     }
 
     public RopeArrowEntity(Level worldIn, double x, double y, double z, int charges) {
-        super(ModRegistry.ROPE_ARROW.get(), x, y, z, worldIn);
+        super(ModEntities.ROPE_ARROW.get(), x, y, z, worldIn);
         this.charges = charges;
     }
 
     public RopeArrowEntity(Level worldIn, double x, double y, double z) {
-        super(ModRegistry.ROPE_ARROW.get(), x, y, z, worldIn);
+        super(ModEntities.ROPE_ARROW.get(), x, y, z, worldIn);
     }
 
     @Override

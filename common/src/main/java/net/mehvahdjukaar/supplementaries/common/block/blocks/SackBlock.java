@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -114,7 +115,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
             tile.recheckOpen();
             if (canFall(pos, level)) {
-                ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModRegistry.FALLING_SACK.get(),
+                ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModEntities.FALLING_SACK.get(),
                         level, pos, state, true);
                 entity.blockData = tile.saveWithoutMetadata();
                 entity.setHurtsEntities(1, 20);

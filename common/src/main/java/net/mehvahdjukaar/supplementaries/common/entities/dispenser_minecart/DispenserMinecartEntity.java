@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +44,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     private boolean powered = false;
 
     public DispenserMinecartEntity(Level level, double x, double y, double z) {
-        this(ModRegistry.DISPENSER_MINECART.get(), level);
+        this(ModEntities.DISPENSER_MINECART.get(), level);
         this.setPos(x, y, z);
         this.xo = x;
         this.yo = y;

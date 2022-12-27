@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -30,19 +31,13 @@ public class PulleyBlockContainerMenu extends AbstractContainerMenu implements I
     }
 
     public PulleyBlockContainerMenu(int id, Inventory playerInventory, Container inventory) {
-
-        super(ModRegistry.PULLEY_BLOCK_CONTAINER.get(), id);
+        super(ModMenuTypes.PULLEY_BLOCK.get(), id);
         //tile inventory
         this.inventory = inventory;
         checkContainerSize(inventory, 1);
         inventory.startOpen(playerInventory.player);
 
         this.addSlot(new Slot(inventory, 0, 79, 39) {
-            @Override
-            public void setChanged() {
-                super.setChanged();
-                //NoticeBoardContainer.this.slotChanged(0, 0, 0);
-            }
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return PulleyBlockTile.getContentType(stack.getItem())!= ModBlockProperties.Winding.NONE;

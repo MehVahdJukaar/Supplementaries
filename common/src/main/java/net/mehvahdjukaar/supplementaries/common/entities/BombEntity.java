@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -57,13 +58,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
-        super(ModRegistry.BOMB.get(), throwerIn, worldIn);
+        super(ModEntities.BOMB.get(), throwerIn, worldIn);
         this.type = type;
         this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
-        super(ModRegistry.BOMB.get(), x, y, z, worldIn);
+        super(ModEntities.BOMB.get(), x, y, z, worldIn);
         this.type = type;
         this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
     }
