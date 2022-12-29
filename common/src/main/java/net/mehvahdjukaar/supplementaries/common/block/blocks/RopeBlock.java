@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
-import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -25,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,7 +44,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -52,6 +51,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -61,6 +61,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -69,7 +70,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     //TODO: make solid when player is not colliding
     public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
-    private final Map<BlockState, VoxelShape> SHAPES_MAP;
+    private static Map<BlockState, VoxelShape> SHAPES_MAP;
 
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
@@ -167,7 +168,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }
 
-
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -185,7 +185,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
         //if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-            //FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
+        //FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
         //}
 
         return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
@@ -228,38 +228,14 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return !((up && down && !north && !south && !east && !west)
                 || (!up && !down && north && south && !east && !west)
                 || (!up && !down && !north && !south && east && west));
-
     }
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         return (this.getDistance(worldIn, pos) < 7);
-        //return!(!state.get(UP)&&state.get(NORTH).isNone()&&state.get(SOUTH).isNone()&&state.get(EAST).isNone()&&state.get(WEST).isNone());
     }
 
-    public static boolean isSupportingCeiling(BlockState upState, BlockPos pos, LevelReader world) {
-        if(upState.getBlock() instanceof  IRopeConnection ropeConnection){
-            return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
-        }
-        return canSupportCenter(world, pos, Direction.DOWN) || upState.is(ModTags.ROPE_SUPPORT_TAG);
-    }
-
-    public static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
-        return isSupportingCeiling(world.getBlockState(pos), pos, world);
-    }
-
-    public static boolean canConnectDown(BlockState downState) {
-        Block b = downState.getBlock();
-        if(b instanceof IRopeConnection ropeConnection){
-            return ropeConnection.canSideAcceptConnection(downState, Direction.UP);
-        }
-        return (downState.is(ModTags.ROPE_HANG_TAG)
-                || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
-                || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
-                || (downState.hasProperty(BlockStateProperties.HANGING) && downState.getValue(BlockStateProperties.HANGING)));
-    }
-
-    public int getDistance(LevelReader world, BlockPos pos) {
+    protected int getDistance(LevelReader world, BlockPos pos) {
         BlockPos.MutableBlockPos mutable = pos.mutable().move(Direction.UP);
         BlockState blockstate = world.getBlockState(mutable);
         int i = 7;
@@ -267,7 +243,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             if (blockstate.getValue(DOWN) || !blockstate.getValue(UP)) {
                 i = blockstate.getValue(DISTANCE);
             }
-        } else if (isSupportingCeiling(mutable, world)) {
+        } else if (IRopeConnection.isSupportingCeiling(mutable, world)) {
             return 0;
         }
 
@@ -287,24 +263,45 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
-        int i = this.getDistance(worldIn, pos);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
+        int i = this.getDistance(level, pos);
         BlockState blockstate = state.setValue(DISTANCE, i);
         if (i == 7) {
-            worldIn.destroyBlock(pos, true);
+            level.destroyBlock(pos, true);
+            return;
         } else if (state != blockstate) {
-            worldIn.setBlock(pos, blockstate, 3);
+            level.setBlock(pos, blockstate, 3);
         }
+        //fire up around me
+        for (var dir : Direction.values()) {
+            if (dir == Direction.UP) continue;
+            if (level.getBlockState(pos.relative(dir)).is(BlockTags.FIRE)) {
+                level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2+ level.random.nextInt(1));
+                for (var d2 : Direction.Plane.HORIZONTAL) {
+                    BlockPos fp = pos.relative(d2);
+                    if (BaseFireBlock.canBePlacedAt(level, fp, d2.getOpposite())) {
+                        level.setBlockAndUpdate(fp, BaseFireBlock.getState(level, fp).setValue(FireBlock.AGE, 14));
+                        level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2+ level.random.nextInt(1));
+                    }
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        return super.getDrops(state, builder);
     }
 
     @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 10;
     }
 
     @PlatformOnly(PlatformOnly.FORGE)
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 100; //chance to get consumed
     }
 
     public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
@@ -314,11 +311,9 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         Block b = state.getBlock();
         if (predicate.test(state)) {
             return findAndRingBell(world, pos.above(), player, it + 1, predicate);
-        } else if (b instanceof BellBlock bellBlock  && it != 0) {
-            //boolean success = CommonUtil.tryRingBell(Block b, world, pos, state.getValue(BellBlock.FACING).getClockWise());
+        } else if (b instanceof BellBlock bellBlock && it != 0) {
             BlockHitResult hit = new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
                     state.getValue(BellBlock.FACING).getClockWise(), pos, true);
-            //if (success && player != null) {//player.awardStat(Stats.BELL_RING);}
             return bellBlock.onHit(world, state, hit, player, true);
         }
         return false;
@@ -346,7 +341,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand
+            handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item i = stack.getItem();
 
@@ -420,7 +416,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
 
-    public static boolean addRope(BlockPos pos, Level world, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
+    public static boolean addRope(BlockPos pos, Level world, @Nullable Player player, InteractionHand hand, Block
+            ropeBlock) {
         BlockState state = world.getBlockState(pos);
         if (ropeBlock == state.getBlock()) {
             return addRope(pos.below(), world, player, hand, ropeBlock);
@@ -429,7 +426,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         }
     }
 
-    public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos pos, Block ropeBlock) {
+    public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos
+            pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
 
         BlockPlaceContext context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
@@ -461,7 +459,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return false;
     }
 
-    public static boolean isBlockMovable(BlockState state, Level level, BlockPos pos) {
+    private static boolean isBlockMovable(BlockState state, Level level, BlockPos pos) {
         return (!state.isAir() && !state.is(Blocks.OBSIDIAN) &&
                 !state.is(Blocks.CRYING_OBSIDIAN) && !state.is(Blocks.RESPAWN_ANCHOR))
                 && state.getDestroySpeed(level, pos) != -1;
@@ -549,31 +547,24 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
-        switch (rotation) {
-            case CLOCKWISE_180 -> {
-                return state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
-            }
-            case COUNTERCLOCKWISE_90 -> {
-                return state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
-            }
-            case CLOCKWISE_90 -> {
-                return state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
-            }
-        }
-        return state;
+        return switch (rotation) {
+            case CLOCKWISE_180 ->
+                    state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
+            default -> state;
+        };
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
-        switch (mirror) {
-            case LEFT_RIGHT -> {
-                return state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
-            }
-            case FRONT_BACK -> {
-                return state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
-            }
-        }
-        return super.mirror(state, mirror);
+        return switch (mirror) {
+            case LEFT_RIGHT -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
+            case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
+            default -> super.mirror(state, mirror);
+        };
     }
 
     @Override
@@ -592,7 +583,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         }
         return false;
     }
-
 
 
 }

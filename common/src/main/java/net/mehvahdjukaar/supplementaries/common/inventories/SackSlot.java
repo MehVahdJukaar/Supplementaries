@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +12,6 @@ public class SackSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return CommonUtil.isAllowedInShulker(stack);
+        return MiscUtils.isAllowedInShulker(stack);
     }
 }

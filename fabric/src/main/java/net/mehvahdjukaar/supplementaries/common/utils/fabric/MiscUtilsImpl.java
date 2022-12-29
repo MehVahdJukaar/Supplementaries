@@ -1,15 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
-import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.client.ClientAccess;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.structures.MineshaftPieces;
 
-import java.util.UUID;
-
-public class CommonUtilImpl {
+public class MiscUtilsImpl {
 
     public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
         if(copyRotFrom instanceof Player p)return p;

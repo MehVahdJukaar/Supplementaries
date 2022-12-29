@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.world.generation.CaveFilter;
+import net.mehvahdjukaar.supplementaries.common.world.generation.MineshaftElevatorPiece;
 import net.mehvahdjukaar.supplementaries.common.world.generation.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.world.generation.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.List;
@@ -36,10 +38,15 @@ public class ModWorldgenRegistry {
     public static void init() {
     }
 
+    //structure pieces
+
+    public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR = RegHelper.register(
+            Supplementaries.res("mineshaft_elevator"), () -> MineshaftElevatorPiece::new, Registry.STRUCTURE_PIECE);
+
     //structure types
 
-    public static final Supplier<StructureType<WaySignStructure>> WAY_SIGN = RegHelper.registerAsync(
-            Supplementaries.res("way_sign"), WaySignStructure.Type::new, Registry.STRUCTURE_TYPES);
+    public static final Supplier<StructureType<WaySignStructure>> WAY_SIGN = RegHelper.registerStructure(
+            Supplementaries.res("way_sign"), WaySignStructure.Type::new);
 
 
     //feature types
@@ -119,8 +126,8 @@ public class ModWorldgenRegistry {
             RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
 
     //TODO: is this needed?
-    public static <FC extends FeatureConfiguration, F extends Feature<FC>> RegSupplier<PlacedFeature> registerPlacedFeature(
-            ResourceLocation name, RegSupplier<ConfiguredFeature<FC, F>> feature, Supplier<List<PlacementModifier>> modifiers) {
+    public static <C extends FeatureConfiguration, F extends Feature<C>> RegSupplier<PlacedFeature> registerPlacedFeature(
+            ResourceLocation name, RegSupplier<ConfiguredFeature<C, F>> feature, Supplier<List<PlacementModifier>> modifiers) {
         return registerPlacedFeature(name, () -> new PlacedFeature(Holder.hackyErase(feature.getHolder()), modifiers.get()));
     }
 
@@ -132,7 +139,6 @@ public class ModWorldgenRegistry {
     private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier placementRule) {
         return new RandomPatchConfiguration(tries, xzSpread, ySpread, PlacementUtils.inlinePlaced(Holder.direct(feature), placementRule));
     }
-
 
 }
 

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -51,7 +51,7 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
     }
 
     public static boolean isAcceptableItem(ItemStack stack) {
-        return CommonUtil.isAllowedInShulker(stack) && !(stack.getItem() instanceof PresentItem);
+        return MiscUtils.isAllowedInShulker(stack) && !(stack.getItem() instanceof PresentItem);
     }
 
 

@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
@@ -196,7 +197,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         if (state.getValue(FACE) == AttachFace.FLOOR) {
             return canSupportCenter(worldIn, pos.below(), Direction.UP);
         } else if (state.getValue(FACE) == AttachFace.CEILING) {
-            return RopeBlock.isSupportingCeiling(pos.above(), worldIn);
+            return IRopeConnection.isSupportingCeiling(pos.above(), worldIn);
         }
         return isSideSolidForDirection(worldIn, pos, state.getValue(FACING).getOpposite());
     }

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,7 +28,7 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
 
     @Override
     public void render(FaucetBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int ov) {
-        if (tile.hasWater() && tile.isOpen() && !tile.isConnectedBelow() && !CommonUtil.FESTIVITY.isEarthDay()) {
+        if (tile.hasWater() && tile.isOpen() && !tile.isConnectedBelow() && !MiscUtils.FESTIVITY.isEarthDay()) {
             ResourceLocation texture = tile.tempFluidHolder.getFluid().getFlowingTexture();
             TextureAtlasSprite sprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
             VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());

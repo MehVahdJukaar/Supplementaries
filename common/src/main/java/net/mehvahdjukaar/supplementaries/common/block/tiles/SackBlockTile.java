@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -26,6 +25,11 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     public SackBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SACK_TILE.get(), pos, state, 27);
+    }
+
+    @Override
+    public int getContainerSize() {
+        return getUnlockedSlots();
     }
 
     @Override
@@ -79,17 +83,17 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
         return new SackContainerMenu(id, player, this);
     }
 
-    public int getUnlockedSlots() {
+    public static int getUnlockedSlots() {
         return CommonConfigs.Blocks.SACK_SLOTS.get();
     }
 
     public boolean isSlotUnlocked(int ind) {
-        return ind < this.getUnlockedSlots();
+        return ind < getUnlockedSlots();
     }
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return isSlotUnlocked(index) && CommonUtil.isAllowedInShulker(stack);
+        return isSlotUnlocked(index) && MiscUtils.isAllowedInShulker(stack);
     }
 
     @Override

@@ -47,8 +47,8 @@ import java.util.Map;
 
 public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection {
 
-    private final Map<BlockState, VoxelShape> SHAPES_MAP;
-    private final Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP;
+    private static Map<BlockState, VoxelShape> SHAPES_MAP;
+    private static Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP;
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -242,7 +242,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             }
 
             //manually refreshTextures facing states
-            //world.setBlock(currentPos,newHeld,2);
             if(!(facingState.getBlock() instanceof IRopeConnection)) {
                 BlockState newFacing = facingState.updateShape(facing.getOpposite(), newHeld, world, facingPos, currentPos);
 
@@ -255,9 +254,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
                     }
                 }
             }
-
-            //BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
-            // world.setBlockAndUpdate(toPos, newState);
 
             PostType type = PostType.get(newHeld);
 

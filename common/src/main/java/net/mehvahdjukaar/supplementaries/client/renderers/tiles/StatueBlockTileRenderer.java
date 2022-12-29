@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.Statue
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -130,7 +130,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         StatueBlockTile.StatuePose pose = tile.getPose();
         ItemStack stack = tile.getDisplayedItem();
 
-        if (CommonUtil.FESTIVITY.isHalloween()) {
+        if (MiscUtils.FESTIVITY.isHalloween()) {
             this.model.head.visible = false;
             this.model.hat.visible = false;
             if (pose == StatueBlockTile.StatuePose.STANDING) {

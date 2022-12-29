@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -55,7 +55,7 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
             }
 
             ItemStack stack = tile.getDisplayedItem();
-            if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.SALMON);
+            if (MiscUtils.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.SALMON);
             BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
             if (model.isGui3d() && ClientConfigs.Blocks.SHELF_TRANSLATE.get()) matrixStackIn.translate(0, -0.25, 0);
 

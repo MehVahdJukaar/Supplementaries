@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ClientEventsFabric;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ServerEventsFabric;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.world.level.block.Block;
 
 public class SupplementariesFabric implements ModInitializer {
@@ -23,8 +26,7 @@ public class SupplementariesFabric implements ModInitializer {
             FabricSetupCallbacks.CLIENT_SETUP.add(SupplementariesFabricClient::clientSetup);
             throwIfFabricRenderingAPIHasBeenNuked();
         }
-
-        FabricSetupCallbacks.finishModInit(Supplementaries.MOD_ID);
+        RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(),60,100);
     }
 
     //I hate this. I've got to do what I've got to do. Cant stand random reports anymore

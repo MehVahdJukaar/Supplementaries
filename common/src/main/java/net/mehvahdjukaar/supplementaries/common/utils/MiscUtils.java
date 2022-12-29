@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -10,18 +9,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.CheckForNull;
@@ -29,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.function.Supplier;
 
-public class CommonUtil {
+public class MiscUtils {
 
 
     public enum Festivity {
@@ -83,7 +78,7 @@ public class CommonUtil {
             if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
             if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
             if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
-            if (month == Calendar.DECEMBER && date >= 23 && date <= 27) return CHRISTMAS;
+            if (month == Calendar.DECEMBER && date >= 23) return CHRISTMAS;
             if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
             if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
             return NONE;
@@ -117,14 +112,6 @@ public class CommonUtil {
 
     public static boolean isCookie(Item i) {
         return (i.builtInRegistryHolder().is(ModTags.COOKIES));
-    }
-
-    public static boolean isBrick(Item i) {
-        return (i.builtInRegistryHolder().is(ModTags.BRICKS));
-    }
-
-    public static boolean isCake(Item i) {
-        return i == Items.CAKE;
     }
 
     //bounding box
@@ -168,20 +155,6 @@ public class CommonUtil {
         double myDistW = (dx * dx + dz * dz);
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
-
-
-    public static HitResult rayTrace(LivingEntity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
-        return rayTrace(entity, world, blockMode, fluidMode, ForgeHelper.getReachDistance(entity));
-    }
-
-    public static HitResult rayTrace(Entity entity, Level world, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
-        Vec3 startPos = entity.getEyePosition();
-        Vec3 ray = entity.getViewVector(1).scale(range);
-        Vec3 endPos = startPos.add(ray);
-        ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);
-        return world.clip(context);
-    }
-
 
     public static Player getEntityStand(Entity copyFrom) {
         return getEntityStand(copyFrom, copyFrom);

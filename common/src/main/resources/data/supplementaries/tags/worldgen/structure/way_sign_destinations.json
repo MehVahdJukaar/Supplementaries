@@ -58,6 +58,9 @@
     {"id":"idas:wizardtower","required":false},
     {"id":"idas:farmhouse","required":false},
     {"id":"idas:fishermans_lodge","required":false},
-    {"id":"idas:beekeepers_house","required":false}
+    {"id":"idas:beekeepers_house","required":false},
+    {"id":"idas:desert_market/desert_market","required":false},
+    {"id":"idas:desert_market/desert_market_red","required":false},
+    {"id":"idas:desert_market/desert_market_orange","required":false}
   ]
 }

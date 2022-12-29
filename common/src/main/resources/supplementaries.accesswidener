@@ -53,6 +53,15 @@ accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity name L
 #place context
 accessible method net/minecraft/world/item/context/BlockPlaceContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
 
+#wololoo red merchants
+accessible class net/minecraft/world/entity/monster/SpellcasterIllager$SpellcasterUseSpellGoal
+accessible class net/minecraft/world/entity/monster/SpellcasterIllager$IllagerSpell
+accessible method net/minecraft/world/entity/monster/Evoker getCastingSoundEvent ()Lnet/minecraft/sounds/SoundEvent;
+
+#mineshaft stuff
+accessible class net/minecraft/world/level/levelgen/structure/structures/MineshaftPieces$MineShaftPiece
+accessible method net/minecraft/world/level/levelgen/structure/structures/MineshaftPieces generateAndAddPiece (Lnet/minecraft/world/level/levelgen/structure/StructurePiece;Lnet/minecraft/world/level/levelgen/structure/StructurePieceAccessor;Lnet/minecraft/util/RandomSource;IIILnet/minecraft/core/Direction;I)Lnet/minecraft/world/level/levelgen/structure/structures/MineshaftPieces$MineShaftPiece;
+
 #luck for urns
 accessible field net/minecraft/world/level/storage/loot/LootContext$Builder luck F
 

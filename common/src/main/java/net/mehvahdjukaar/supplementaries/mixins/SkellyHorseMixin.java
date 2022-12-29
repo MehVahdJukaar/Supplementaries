@@ -43,8 +43,8 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     @Unique
     private int conversionTime = -1;
 
-    protected SkellyHorseMixin(EntityType<? extends AbstractHorse> p_i48563_1_, Level p_i48563_2_) {
-        super(p_i48563_1_, p_i48563_2_);
+    protected SkellyHorseMixin(EntityType<? extends AbstractHorse> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -71,13 +71,11 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
     }
 
-
     @Override
     @Nullable
     protected SoundEvent getEatingSound() {
         return SoundEvents.HORSE_EAT;
     }
-
 
     public void feedRottenFlesh(Player player, InteractionHand hand, ItemStack stack) {
         float heal = 0.5f;

@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StatueBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -144,8 +144,8 @@ public class StatueBlockTile extends ItemDisplayTile {
         public static StatuePose getPose(ItemStack stack) {
             if (stack.isEmpty()) return StatuePose.STANDING;
             Item i = stack.getItem();
-            if (CommonUtil.isSword(i)) return SWORD;
-            if (CommonUtil.isTool(i)) return TOOL;
+            if (MiscUtils.isSword(i)) return SWORD;
+            if (MiscUtils.isTool(i)) return TOOL;
             if (i == ModRegistry.GLOBE_ITEM.get()) return GLOBE;
             if (i == ModRegistry.GLOBE_SEPIA_ITEM.get()) return SEPIA_GLOBE;
             return (stack.is(ItemTags.CANDLES)) ? StatuePose.CANDLE : StatuePose.HOLDING;

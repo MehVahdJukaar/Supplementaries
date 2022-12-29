@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -160,7 +160,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return CommonUtil.isAllowedInShulker(stack);
+        return MiscUtils.isAllowedInShulker(stack);
     }
 
     @Override

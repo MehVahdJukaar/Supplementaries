@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities;
 
+import net.mehvahdjukaar.moonlight.forge.MoonlightForge;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

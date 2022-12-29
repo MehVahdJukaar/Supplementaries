@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
         Item it = stack.getItem();
         //TODO: maybe add tag
 
-        if (CommonUtil.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
+        if (MiscUtils.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
             this.type = DisplayType.SWORD;
         } else if (it instanceof TridentItem || stack.is(ModTags.PEDESTAL_UPRIGHT)) {
             this.type = DisplayType.TRIDENT;

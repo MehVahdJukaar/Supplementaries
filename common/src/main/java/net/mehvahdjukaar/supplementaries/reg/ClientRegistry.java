@@ -11,7 +11,6 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -31,7 +30,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockT
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.misc.BannerPatternTooltip;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.map.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -47,7 +46,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SnowflakeParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -235,7 +233,7 @@ public class ClientRegistry {
                 (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
         ClientPlatformHelper.registerItemProperty(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
-                (stack, world, entity, s) -> CommonUtil.FESTIVITY.getCandyWrappingIndex());
+                (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
 
         ClientPlatformHelper.registerItemProperty(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
                 (stack, world, entity, s) -> ((DyeableLeatherItem)stack.getItem()).hasCustomColor(stack) ? 1 : 0);

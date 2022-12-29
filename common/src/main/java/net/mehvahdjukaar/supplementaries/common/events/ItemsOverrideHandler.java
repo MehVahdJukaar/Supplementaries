@@ -16,7 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.items.additional_behaviors.WallL
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -26,6 +26,7 @@ import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
@@ -121,7 +122,7 @@ public class ItemsOverrideHandler {
         for (Item i : Registry.ITEM) {
 
             if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                if (i instanceof BlockItem bi && CommonUtil.isLanternBlock(bi.getBlock())) {
+                if (i instanceof BlockItem bi && MiscUtils.isLanternBlock(bi.getBlock())) {
                     ((IExtendedItem) i).addAdditionalBehavior(new WallLanternPlacement());
                     continue;
                 }
@@ -350,7 +351,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return CommonUtil.isBrick(item);
+            return item.builtInRegistryHolder().is(ModTags.BRICKS);
         }
 
         @Override
@@ -572,7 +573,7 @@ public class ItemsOverrideHandler {
 
         @Override
         public boolean appliesToItem(Item item) {
-            return CommonUtil.isCake(item);
+            return item == Items.CAKE;
         }
 
         private InteractionResult placeDoubleCake(Player player, ItemStack stack, BlockPos pos, Level world, BlockState state, boolean isRanged) {

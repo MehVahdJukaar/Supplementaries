@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -27,7 +27,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ComplexItem;
@@ -131,7 +130,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 }
 
 
-                if (CommonUtil.FESTIVITY.isAprilsFool()) {
+                if (MiscUtils.FESTIVITY.isAprilsFool()) {
                     TextUtils.renderBeeMovie(matrixStackIn, bufferIn, frontLight, font, d0);
                     matrixStackIn.popPose();
                     matrixStackIn.popPose();

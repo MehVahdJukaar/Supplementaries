@@ -220,7 +220,7 @@ public class RegistryConfigs {
         NETHERITE_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.NETHERITE_TRAPDOOR_NAME, true);
         LOCK_BLOCK_ENABLED = regConfig(builder, RegistryConstants.LOCK_BLOCK_NAME, true);
         FLAX_ENABLED = regConfig(builder, RegistryConstants.FLAX_NAME, true);
-        ROPE_ENABLED = regConfig(builder, RegistryConstants.ROPE_NAME, true);
+        ROPE_ENABLED = () -> true;//cope cope cope regConfig(builder, RegistryConstants.ROPE_NAME, true);
         PULLEY_ENABLED = regConfig(builder, RegistryConstants.PULLEY_BLOCK_NAME, true);
         FODDER_ENABLED = regConfig(builder, RegistryConstants.FODDER_NAME, true);
 

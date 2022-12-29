@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.entities.RedMerchantEntity;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -123,7 +122,7 @@ public abstract class RedMerchantSpawnerMixin {
         diff *= dragon;
 
         //ho ho ho
-        if(CommonUtil.FESTIVITY.isChristmas()) diff *= 15;
+        if(MiscUtils.FESTIVITY.isChristmas()) diff *= 15;
 
         return diff;
     }

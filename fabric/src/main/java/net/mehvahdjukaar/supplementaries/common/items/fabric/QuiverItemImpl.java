@@ -13,6 +13,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class QuiverItemImpl {
         return ItemStack.EMPTY;
     }
 
-    public static QuiverItem.@Nullable IQuiverData getQuiverData(ItemStack stack) {
+    public static QuiverItem.IQuiverData getQuiverData(ItemStack stack) {
         return new QuiverNBTData(stack.getOrCreateTag());
     }
 

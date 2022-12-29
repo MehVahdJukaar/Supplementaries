@@ -48,6 +48,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     /**
      * simplified rotate method that only rotates pulley on its axis
      * if direction is null assumes default orientation
+     *
      * @return true if rotation was successful
      */
     public boolean windPulley(BlockState state, BlockPos pos, LevelAccessor world, Rotation rot, @Nullable Direction dir) {
@@ -66,8 +67,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
             return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.Z : Direction.Axis.Y));
         } else if (myAxis == Direction.Axis.Z) {
             return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
-        }
-        else if(myAxis == Direction.Axis.Y){
+        } else if (myAxis == Direction.Axis.Y) {
             return Optional.of(state.setValue(AXIS, targetAxis == Direction.Axis.Z ? Direction.Axis.X : Direction.Axis.Z));
         }
         return Optional.of(state);
@@ -79,6 +79,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (axis.getAxis().isHorizontal() && axis.getAxis() == oldState.getValue(AXIS)) {
 
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
+                if (axis.getAxisDirection() == Direction.AxisDirection.NEGATIVE) rot = rot.getRotated(Rotation.CLOCKWISE_180);
                 pulley.handleRotation(rot, pos);
             }
             //try turning connected

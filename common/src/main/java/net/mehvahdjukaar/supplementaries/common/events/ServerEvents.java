@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -15,6 +17,8 @@ import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -25,9 +29,14 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,8 +49,16 @@ import java.util.function.Consumer;
 public class ServerEvents {
 
     @EventCalled
-    public static void onFireConsume(IFireConsumeBlockEvent event){
-        AshLayerBlock.tryConvertToAsh(event);
+    public static void onFireConsume(IFireConsumeBlockEvent event) {
+        if (event.getState().getBlock() instanceof IRopeConnection) {
+            LevelAccessor level = event.getLevel();
+            BlockPos pos = event.getPos();
+            level.removeBlock(pos,false);
+            if (BaseFireBlock.canBePlacedAt((Level) level, pos, Direction.DOWN)) {
+                event.setFinalState(BaseFireBlock.getState(level, pos).setValue(FireBlock.AGE, 8));
+                level.scheduleTick(pos, Blocks.FIRE, 2+((Level) level).random.nextInt(1));
+            }//TODO: make faster
+        } else AshLayerBlock.tryConvertToAsh(event);
     }
 
     //block placement should stay low in priority to allow other more important mod interaction that use the event
@@ -118,7 +135,12 @@ public class ServerEvents {
                     ((MobAccessor) animal).getGoalSelector().addGoal(3,
                             new EatFodderGoal(animal, 1, 8, 2, 30));
                 }
+                return;
             }
+        }
+        if (entity.getType() == EntityType.EVOKER) {
+            ((MobAccessor) entity).getGoalSelector().addGoal(6,
+                    new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
         }
     }
 

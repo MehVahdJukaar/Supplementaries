@@ -5,8 +5,8 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -67,8 +67,8 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     //bubble block
     @SuppressWarnings("UnsafePlatformOnlyCall")
     private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        HitResult result = player.getAbilities().instabuild ? CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
-                CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
+        HitResult result = player.getAbilities().instabuild ? Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
+                Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
 
         if (result instanceof BlockHitResult hitResult) {
             BlockPos pos = hitResult.getBlockPos();

@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -168,7 +168,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
-                if (CommonUtil.isCookie(i)) {
+                if (MiscUtils.isCookie(i)) {
                     return this.isEmpty() || i == this.getDisplayedItem().getItem();
                 }
             }
@@ -212,7 +212,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
         if (!CommonConfigs.Blocks.JAR_COOKIES.get()) return false;
-        return CommonUtil.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
+        return MiscUtils.isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
     @Override

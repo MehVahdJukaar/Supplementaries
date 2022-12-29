@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
-import net.mehvahdjukaar.supplementaries.mixins.forge.FriendlyByteBufMixin;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +44,7 @@ public class SuppPlatformStuffImpl {
 
     @Nullable
     public static BlockState getUnoxidised(Level level, BlockPos pos, BlockState state) {
-        Player fp = CommonUtil.getFakePlayer(level);
+        Player fp = MiscUtils.getFakePlayer(level);
         fp.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_AXE.getDefaultInstance());
         Block b = state.getBlock();
         var context = new UseOnContext(fp, InteractionHand.MAIN_HAND,

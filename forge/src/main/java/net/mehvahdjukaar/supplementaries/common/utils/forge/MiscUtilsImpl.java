@@ -8,10 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-import javax.annotation.CheckForNull;
 import java.util.UUID;
 
-public class CommonUtilImpl {
+public class MiscUtilsImpl {
 
     public static final GameProfile DUMMY_PROFILE = new GameProfile(
             UUID.fromString("9bf808b4-d64a-47f0-9220-e3849f80f35b"), "[player_stando]");

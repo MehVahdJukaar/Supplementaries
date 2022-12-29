@@ -6,10 +6,10 @@ import com.mojang.math.Quaternion;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 
 
 public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlassBlockTile> {
@@ -37,7 +36,7 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucent());
 
         int color = 0xffffff;
-        if (CommonUtil.FESTIVITY.isAprilsFool()) {
+        if (MiscUtils.FESTIVITY.isAprilsFool()) {
             color = ColorHelper.getRainbowColor(1);
             sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.WHITE_CONCRETE_TEXTURE);
         }

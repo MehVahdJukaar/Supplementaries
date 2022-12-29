@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -71,7 +71,7 @@ public class EndermanSkullBlockTile extends BlockEntity {
         for (Player player : players) {
             ItemStack itemstack = player.getInventory().armor.get(3);
             if (!SuppPlatformStuff.isEndermanMask(null, player, itemstack)) {
-                HitResult result = CommonUtil.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, 64.0);
+                HitResult result = Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, 64.0);
                 if (result instanceof BlockHitResult hit && hit.getBlockPos().equals(pos) &&
                         isLookingAtFace(pos, state, result.getLocation(), hit.getDirection())) {
                     return true;

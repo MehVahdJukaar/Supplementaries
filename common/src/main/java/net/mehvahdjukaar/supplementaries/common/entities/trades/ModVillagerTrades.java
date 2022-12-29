@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -74,7 +74,7 @@ public class ModVillagerTrades {
 
 
     public static VillagerTrades.ItemListing[] getRedMerchantTrades() {
-        if (CommonUtil.FESTIVITY.isChristmas()) {
+        if (MiscUtils.FESTIVITY.isChristmas()) {
             return CHRISTMAS_SALES.get();
         }
         return RED_MERCHANT_TRADES.get();

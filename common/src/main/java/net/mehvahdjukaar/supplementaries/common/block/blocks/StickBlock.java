@@ -56,7 +56,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
     public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
 
-    protected static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
+    public static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
             Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
 
     private final int fireSpread;

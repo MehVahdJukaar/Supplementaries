@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -151,7 +151,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             }
 
 
-            if (CommonUtil.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
+            if (MiscUtils.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
             this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 0);
 
             matrixStackIn.popPose();

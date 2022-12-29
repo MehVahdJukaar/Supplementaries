@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingFlowerPotBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -171,6 +172,6 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        return RopeBlock.isSupportingCeiling(pos.relative(Direction.UP), worldIn);
+        return IRopeConnection.isSupportingCeiling(pos.relative(Direction.UP), worldIn);
     }
 }

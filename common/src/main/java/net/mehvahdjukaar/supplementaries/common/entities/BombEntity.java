@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.world.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -128,7 +128,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             }
             case 10 -> {
                 spawnBreakParticles();
-                if (CommonUtil.FESTIVITY.isBirthday()) {
+                if (MiscUtils.FESTIVITY.isBirthday()) {
                     this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 } else {
                     level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),

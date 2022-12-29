@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -40,7 +40,7 @@ public class TeleportWand extends Item {
                 return InteractionResultHolder.pass(stack);
             }
             else{
-                var trace = CommonUtil.rayTrace(player, level,  ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 128);
+                var trace = Utils.rayTrace(player, level,  ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 128);
                 var v = trace.getLocation();
                 boolean success = player.randomTeleport(v.x, v.y, v.z, true);
                 if(success) return InteractionResultHolder.consume(stack);

@@ -17,7 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -160,7 +160,7 @@ public class DispenserInteractionsRegistry {
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos pos = source.getPos().relative(dir);
 
-            Player fp = CommonUtil.getFakePlayer(level);
+            Player fp = MiscUtils.getFakePlayer(level);
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
             UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND,
                     new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));

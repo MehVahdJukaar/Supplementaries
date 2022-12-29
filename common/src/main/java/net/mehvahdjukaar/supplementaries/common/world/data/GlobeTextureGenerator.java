@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.data;
 
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.util.Mth;
 
 import java.util.Random;
@@ -351,9 +351,9 @@ public class GlobeTextureGenerator {
         generateMushrooms();
         generateIcebergs2();
 
-        if (CommonUtil.FESTIVITY.isChristmas()) {
+        if (MiscUtils.FESTIVITY.isChristmas()) {
             christmas();
-        } else if (CommonUtil.FESTIVITY.isEarthDay()) {
+        } else if (MiscUtils.FESTIVITY.isEarthDay()) {
             meltice();
         }
     }

@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -161,7 +161,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 //TODO: remove this hack when we test it and see if sounds still does not play
                 //null player so sound always plays
                 //hackeries because for some god damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player fakePlayer = CommonUtil.getEntityStand(this, player);
+                Player fakePlayer = MiscUtils.getEntityStand(this, player);
 
                 success = ItemsUtil.place(item,
                         new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();

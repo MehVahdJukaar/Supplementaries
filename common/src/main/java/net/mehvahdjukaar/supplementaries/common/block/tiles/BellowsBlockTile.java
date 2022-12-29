@@ -4,7 +4,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -123,7 +123,7 @@ public class BellowsBlockTile extends BlockEntity {
         double velocity = CommonConfigs.Blocks.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
         double maxVelocity = CommonConfigs.Blocks.BELLOWS_MAX_VEL.get(); // Affects max speed
 
-        AABB facingBox = CommonUtil.getDirectionBB(this.worldPosition, facing, (int) range);
+        AABB facingBox = MiscUtils.getDirectionBB(this.worldPosition, facing, (int) range);
         List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
 
         for (Entity entity : list) {

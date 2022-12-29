@@ -10,14 +10,13 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +39,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,7 +80,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     
     public static DamageSource getDamageSource(Level level) {
         if ( CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
-            return new ModDamageSources.SpikePlayer("spike", CommonUtil.getFakePlayer(level)).setProjectile();
+            return new ModDamageSources.SpikePlayer("spike", MiscUtils.getFakePlayer(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
     }

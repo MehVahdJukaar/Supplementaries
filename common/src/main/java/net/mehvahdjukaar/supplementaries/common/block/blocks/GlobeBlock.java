@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
@@ -125,7 +125,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, ISoapWashable
 
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
-        if (CommonUtil.FESTIVITY.isEarthDay() && worldIn.isClientSide) {
+        if (MiscUtils.FESTIVITY.isEarthDay() && worldIn.isClientSide) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();

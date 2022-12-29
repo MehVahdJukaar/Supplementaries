@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingLanternEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -118,7 +119,7 @@ public class LightableLanternBlock extends LanternBlock {
     //TODO: hitting sounds
     //called by mixin
     public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader worldIn) {
-        if (!RopeBlock.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
+        if (!IRopeConnection.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
             if (CommonConfigs.Tweaks.FALLING_LANTERNS.get().isOn() && l.getBlockState(pos).is(state.getBlock())) {
                 return createFallingLantern(state, pos, l);
             }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -101,12 +102,9 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
-    //@Override
-    //protected void onStartFalling(FallingBlockEntity fallingEntity) { fallingEntity.setHurtEntities(true); }
-
     public static boolean canFall(BlockPos pos, LevelAccessor world) {
         return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
-                pos.getY() >= world.getMinBuildHeight() && !RopeBlock.isSupportingCeiling(pos.above(), world);
+                pos.getY() >= world.getMinBuildHeight() && !IRopeConnection.isSupportingCeiling(pos.above(), world);
     }
 
     //schedule block tick

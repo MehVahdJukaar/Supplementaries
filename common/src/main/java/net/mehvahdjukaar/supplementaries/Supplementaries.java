@@ -5,8 +5,10 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
@@ -21,6 +23,8 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Evoker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +67,6 @@ public class Supplementaries {
         ModVillagerTrades.init();
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
-
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 

@@ -4,10 +4,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.utils.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -111,7 +110,7 @@ public class BucketHelper {
     private static ItemStack tryGettingFishBucketHackery(Entity entity, Level level) {
 
         ItemStack bucket = ItemStack.EMPTY;
-        Player player = CommonUtil.getFakePlayer(level);
+        Player player = MiscUtils.getFakePlayer(level);
         if (player != null) {
             //hax incoming
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));

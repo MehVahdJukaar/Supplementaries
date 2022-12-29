@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -33,7 +35,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         super(ModMenuTypes.SACK.get(), id);
         //tile inventory
         this.inventory = inventory;
-        checkContainerSize(inventory, 27);
+        checkContainerSize(inventory, SackBlockTile.getUnlockedSlots());
         inventory.startOpen(playerInventory.player);
 
         int size = CommonConfigs.Blocks.SACK_SLOTS.get();

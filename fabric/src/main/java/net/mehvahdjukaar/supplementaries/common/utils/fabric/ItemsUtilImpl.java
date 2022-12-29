@@ -23,12 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemsUtilImpl {
-    @javax.annotation.Nullable
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
         return false;
     }
 
-    @javax.annotation.Nullable
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
         return false;
     }
