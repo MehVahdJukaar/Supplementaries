@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -133,6 +134,7 @@ public class AshLayerBlock extends FallingBlock {
                 pos = pos.above();
                 state1 = serverLevel.getBlockState(pos);
             }
+            updateBasaltBelow(currentPos, serverLevel);
         }
         return super.updateShape(state, direction, facingState, world, currentPos, otherPos);
     }
@@ -285,6 +287,26 @@ public class AshLayerBlock extends FallingBlock {
         }
 
         return false;
+    }
+
+    public static boolean updateBasaltBelow(BlockPos selfPos, Level level){
+        if(level.getBlockState(selfPos.below()) == Blocks.BASALT.defaultBlockState()){
+            level.setBlock(selfPos.below(), ModRegistry.ASHEN_BASALT.get().defaultBlockState(),2);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        updateBasaltBelow(pos, level);
+    }
+
+    @Override
+    public void onLand(Level level, BlockPos pos, BlockState state, BlockState replaceableState, FallingBlockEntity fallingBlock) {
+        super.onLand(level, pos, state, replaceableState, fallingBlock);
+        updateBasaltBelow(pos, level);
     }
 
     //TODO: ash pahtfinding

@@ -26,7 +26,6 @@ public class LootTablesInjects {
     //initialize so I don't have to constantly check configs for each loot table entry
     public static void init() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
-        if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectAntiqueInk);
         if (RegistryConfigs.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectQuiver);
         if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
         if (RegistryConfigs.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
@@ -155,12 +154,6 @@ public class LootTablesInjects {
         consumer.accept(pool);
     }
 
-
-    public static void tryInjectAntiqueInk(Consumer<LootPool.Builder> e, TableType type) {
-        if (type == TableType.FISHING_TREASURE) {
-          //  injectLootPool(e, type, "antique_ink");
-        }
-    }
 
     public static void tryInjectGlobe(Consumer<LootPool.Builder> e, TableType type) {
         if (type == TableType.SHIPWRECK_TREASURE) {

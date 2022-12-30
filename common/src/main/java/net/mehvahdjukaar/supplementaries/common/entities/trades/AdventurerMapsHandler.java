@@ -164,7 +164,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.COMPASS), itemstack, 12, 5, 0.2F);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.COMPASS), itemstack, 12, 10, 0.2F);
         }
 
         private ItemStack createMap(Level level, BlockPos pos) {

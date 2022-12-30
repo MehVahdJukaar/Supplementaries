@@ -8,5 +8,11 @@
   "result": {
     "item": "supplementaries:sign_post_crimson",
     "count": 2
-  }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sign_post"
+    }
+  ]
 }

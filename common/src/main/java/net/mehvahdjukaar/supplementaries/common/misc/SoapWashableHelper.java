@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.world.generation.MineshaftElevatorPiece;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -119,13 +121,18 @@ public class SoapWashableHelper {
         Block newColor = BlocksColorAPI.changeColor(state.getBlock(), null);
 
         if (newColor != null) {
+            if (CommonConfigs.Items.SOAP_DYE_CLEAN_BLACKLIST.get()
+                    .contains(BlocksColorAPI.getKey(state.getBlock()))) return false;
 
+            //TODO: add back
             if (state.getBlock() instanceof BedBlock) {
+                if(true)return false;
                 BlockPos other = pos.relative(BlockUtil.getConnectedBedDirection(state));
                 BlockState otherBed = level.getBlockState(other);
                 Block otherBedColor = BlocksColorAPI.changeColor(otherBed.getBlock(), null);
                 if (otherBedColor != null) {
-                    level.setBlock(other, otherBedColor.withPropertiesOf(otherBed), 11);
+                    //level.removeBlock(other,false);
+                    level.setBlock(other, otherBedColor.withPropertiesOf(otherBed), 2);
                 }
             }
 
@@ -139,7 +146,7 @@ public class SoapWashableHelper {
 
             BlockState toPlace = newColor.withPropertiesOf(state);
 
-            level.setBlock(pos, toPlace, 11);
+            level.setBlock(pos, toPlace, 2);
             if (tag != null) {
                 var be = level.getBlockEntity(pos);
                 if (be != null) {

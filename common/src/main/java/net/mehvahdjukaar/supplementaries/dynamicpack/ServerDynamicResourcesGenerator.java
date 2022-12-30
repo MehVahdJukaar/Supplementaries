@@ -25,6 +25,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 
 public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider {
@@ -85,7 +86,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-            if (CommonConfigs.Spawns.URN_PILE_ENABLED.get()) {
+            if (CommonConfigs.Spawns.URN_PILE_ENABLED.get() && RegistryConfigs.URN_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
@@ -98,6 +99,17 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
 
             if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
+            }
+            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+        }
+
+        //ash
+
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+
+            if (CommonConfigs.Spawns.BASALT_ASH_ENABLED.get()) {
+                builder.add(Biomes.BASALT_DELTAS.location());
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
         }

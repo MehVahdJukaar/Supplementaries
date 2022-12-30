@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.world.generation;
 
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
@@ -15,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureManager;
@@ -99,8 +101,8 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         int genDepth1 = this.getGenDepth();
 
         for (int i = 0; i < 3; i++) {
-            int y = this.boundingBox.minY() + i * 4;
-            int c = 1 + Mth.abs(i - floor);
+            int y = this.boundingBox.minY() + (i * 4);
+            int c = 2 + Mth.abs(i - floor);
             if (random.nextInt(c) != 0) {
                 if (i != floor || direction != Direction.SOUTH) {
                     MineshaftPieces.generateAndAddPiece(piece, pieces, random,
@@ -201,8 +203,6 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         }
     }
 
-
-
     private void maybePlaceCobWeb(WorldGenLevel level, BoundingBox box, RandomSource random, float chance, int x, int y, int z) {
         if (this.isInterior(level, x, y, z, box) && random.nextFloat() < chance
                 && this.hasSturdyNeighbours(level, box, x, y, z, 2)) {
@@ -285,11 +285,8 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     private boolean hasSturdyNeighbours(WorldGenLevel level, BoundingBox box, int x, int y, int z, int required) {
         BlockPos.MutableBlockPos mutableBlockPos = this.getWorldPos(x, y, z);
         int i = 0;
-        Direction[] var9 = Direction.values();
-        int var10 = var9.length;
 
-        for (int var11 = 0; var11 < var10; ++var11) {
-            Direction direction = var9[var11];
+        for (Direction direction : Direction.values()) {
             mutableBlockPos.move(direction);
             if (box.isInside(mutableBlockPos) && level.getBlockState(mutableBlockPos).isFaceSturdy(level, mutableBlockPos, direction.getOpposite())) {
                 ++i;
@@ -330,6 +327,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         BlockPos.MutableBlockPos contraptionPos = new BlockPos.MutableBlockPos(minX + 2, maxY + 1, minZ + 2);
 
         this.placeBlock(level, ModRegistry.PULLEY_BLOCK.get().defaultBlockState()
+                .setValue(PulleyBlock.TYPE, ropeItem == Items.CHAIN ? ModBlockProperties.Winding.CHAIN : ModBlockProperties.Winding.ROPE)
                 .setValue(PulleyBlock.AXIS, d.getAxis()), contraptionPos.getX(), contraptionPos.getY(), contraptionPos.getZ(), box);
 
         if (level.getBlockEntity(contraptionPos) instanceof PulleyBlockTile tile) {
@@ -372,7 +370,4 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
             tile.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, random.nextLong());
         }
     }
-
-    private static Map<BlockPos,Object> map=new HashMap<>();
-
 }

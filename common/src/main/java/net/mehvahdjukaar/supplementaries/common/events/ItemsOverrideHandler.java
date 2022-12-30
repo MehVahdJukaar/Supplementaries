@@ -630,7 +630,7 @@ public class ItemsOverrideHandler {
 
                         level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) serverPlayer, pos, stack);
+                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }

@@ -5,14 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -34,12 +33,15 @@ public class ModLootModifiers {
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> ADD_ITEM_GLM =
             LOOT_MODIFIERS.register("add_item", AddItemModifier.CODEC);
 
+    public static final RegistryObject<Codec<? extends IGlobalLootModifier>> REPLACE_ITEM_GLM =
+            LOOT_MODIFIERS.register("replace_item", ReplaceItemModifier.CODEC);
+
 
     public static class AddItemModifier extends LootModifier {
 
         public static final Supplier<Codec<AddItemModifier>> CODEC = Suppliers.memoize(() ->
                 RecordCodecBuilder.create(inst -> codecStart(inst).and(
-                                ItemStack.CODEC.fieldOf("item").forGetter(AddItemModifier::getAddedItemStack)
+                                ItemStack.CODEC.fieldOf("item").forGetter(m -> m.addedItemStack)
                         )
                         .apply(inst, AddItemModifier::new)));
 
@@ -49,10 +51,6 @@ public class ModLootModifiers {
         protected AddItemModifier(LootItemCondition[] conditionsIn, ItemStack addedItemStack) {
             super(conditionsIn);
             this.addedItemStack = addedItemStack;
-        }
-
-        public ItemStack getAddedItemStack() {
-            return addedItemStack;
         }
 
         @Nonnull
@@ -75,6 +73,35 @@ public class ModLootModifiers {
             return generatedLoot;
         }
 
+
+        @Override
+        public Codec<? extends IGlobalLootModifier> codec() {
+            return CODEC.get();
+        }
+    }
+
+    public static class ReplaceItemModifier extends LootModifier {
+
+        public static final Supplier<Codec<ReplaceItemModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst).and(
+                        ItemStack.CODEC.fieldOf("item").forGetter(m -> m.itemStack)
+                ).apply(inst, ReplaceItemModifier::new)
+        ));
+
+        private final ItemStack itemStack;
+
+        protected ReplaceItemModifier(LootItemCondition[] conditionsIn, ItemStack addedItemStack) {
+            super(conditionsIn);
+            this.itemStack = addedItemStack;
+        }
+
+        @Nonnull
+        @Override
+        protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+            if (!generatedLoot.isEmpty()) {
+                generatedLoot.set(0, itemStack.copy());
+            }
+            return generatedLoot;
+        }
 
         @Override
         public Codec<? extends IGlobalLootModifier> codec() {

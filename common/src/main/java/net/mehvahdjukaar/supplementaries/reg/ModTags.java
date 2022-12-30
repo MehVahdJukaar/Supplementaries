@@ -52,7 +52,7 @@ public class ModTags {
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
-    public static final TagKey<Item> SHULKER_BOXES = TagKey.create(Registry.ITEM_REGISTRY,new ResourceLocation("forge", "shulker_boxes"));
+
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");
@@ -79,6 +79,7 @@ public class ModTags {
     public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
     public static final TagKey<Biome> HAS_CAVE_URNS = biomeTag("has_cave_urns");
     public static final TagKey<Biome> HAS_WILD_FLAX = biomeTag("has_wild_flax");
+    public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));

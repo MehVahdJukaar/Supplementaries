@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.mehvahdjukaar.moonlight.api.client.TextureCache;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
@@ -60,9 +58,11 @@ public class ClientEvents {
 
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
+        if (minecraft.isPaused()) return;
         CapturedMobCache.tickCrystal();
         Player p = minecraft.player;
         if (p != null) {
+            //TODO: TURN INTO SOUND INSTANCE
             BlockState state = p.getFeetBlockState();
             isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.is(ModRegistry.ROPE.get()) && !state.getValue(RopeBlock.UP) &&
                     (p.getY() + 500) % 1 >= RopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
@@ -73,7 +73,7 @@ public class ClientEvents {
                 String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
                 var item = p.getItemBySlot(EquipmentSlot.HEAD).getItem();
-                String newShader =  EFFECTS_PER_ITEM.get(item);
+                String newShader = EFFECTS_PER_ITEM.get(item);
                 if (newShader != null && !newShader.equals(current)) {
                     renderer.loadEffect(new ResourceLocation(newShader));
                 } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {

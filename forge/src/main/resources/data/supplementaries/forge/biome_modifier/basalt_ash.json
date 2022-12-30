@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#supplementaries:has_basalt_ash",
+  "features": "supplementaries:basalt_ash",
+  "step": "underground_decoration"
+}

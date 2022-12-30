@@ -5,17 +5,12 @@ import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
-import net.mehvahdjukaar.supplementaries.common.world.generation.CaveFilter;
-import net.mehvahdjukaar.supplementaries.common.world.generation.MineshaftElevatorPiece;
-import net.mehvahdjukaar.supplementaries.common.world.generation.RoadSignFeature;
-import net.mehvahdjukaar.supplementaries.common.world.generation.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.common.world.generation.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -54,6 +49,10 @@ public class ModWorldgenRegistry {
     //feature spawned by the structure
     public static final Supplier<Feature<NoneFeatureConfiguration>> ROAD_SIGN_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("road_sign_feature"), () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
+
+    public static final Supplier<Feature<BasaltAshFeature.Config>> BASALT_ASH_FEATURE = RegHelper.registerFeature(
+            Supplementaries.res("layered_blocks"), () -> new BasaltAshFeature(BasaltAshFeature.Config.CODEC));
+
 
     //modifiers
 
@@ -97,9 +96,15 @@ public class ModWorldgenRegistry {
                                     BlockPredicate.ONLY_IN_AIR_PREDICATE,
                                     BlockPredicate.solid(BlockPos.ZERO.below())))));
 
+    public static final RegSupplier<ConfiguredFeature<BasaltAshFeature.Config, Feature<BasaltAshFeature.Config>>> BASALT_ASH_PATCH =
+            RegHelper.registerConfiguredFeature(Supplementaries.res("basalt_ash"),
+                    () -> new ConfiguredFeature<>(BASALT_ASH_FEATURE.get(),
+                            new BasaltAshFeature.Config(6, 6, CommonConfigs.Spawns.BASALT_ASH_TRIES.get())));
+
     public static final RegSupplier<ConfiguredFeature<NoneFeatureConfiguration, Feature<NoneFeatureConfiguration>>> ROAD_SIGN =
             RegHelper.registerConfiguredFeature(Supplementaries.res("road_sign"),
                     ROAD_SIGN_FEATURE, () -> FeatureConfiguration.NONE);
+
 
     //placed features
 
@@ -122,23 +127,24 @@ public class ModWorldgenRegistry {
                             CaveFilter.BELOW_SURFACE,
                             BiomeFilter.biome()));
 
+    public static final RegSupplier<PlacedFeature> PLACED_BASALT_ASH =
+            RegHelper.registerPlacedFeature(Supplementaries.res("basalt_ash"),
+                    BASALT_ASH_PATCH,
+                    () -> List.of(
+                            HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(29), VerticalAnchor.aboveBottom(102)),
+                            CountPlacement.of(CommonConfigs.Spawns.BASALT_ASH_PER_CHUNK.get()),
+                            InSquarePlacement.spread(),
+                            BiomeFilter.biome()));
+
     public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
             RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
 
-    //TODO: is this needed?
-    public static <C extends FeatureConfiguration, F extends Feature<C>> RegSupplier<PlacedFeature> registerPlacedFeature(
-            ResourceLocation name, RegSupplier<ConfiguredFeature<C, F>> feature, Supplier<List<PlacementModifier>> modifiers) {
-        return registerPlacedFeature(name, () -> new PlacedFeature(Holder.hackyErase(feature.getHolder()), modifiers.get()));
-    }
-
-    public static RegSupplier<PlacedFeature> registerPlacedFeature(ResourceLocation name, Supplier<PlacedFeature> featureSupplier) {
-        return RegHelper.registerAsync(name, featureSupplier, BuiltinRegistries.PLACED_FEATURE);
-    }
 
     //helper
-    private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier placementRule) {
+    private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier... placementRule) {
         return new RandomPatchConfiguration(tries, xzSpread, ySpread, PlacementUtils.inlinePlaced(Holder.direct(feature), placementRule));
     }
+
 
 }
 

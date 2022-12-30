@@ -1187,6 +1187,11 @@ public class ModRegistry {
             ENDERMAN_HEAD_NAME, () -> PlatformHelper.newBlockEntityType(
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
+    //ash basalt
+    public static final Supplier<Block> ASHEN_BASALT = regBlock("ashen_basalt", () ->
+            new AshenBasaltBlock(BlockBehaviour.Properties.copy(Blocks.BASALT))
+    );
+
     //public static final String CRE
     // ATIVE_WAND = "creative_wand";
     //public static final Supplier<Item> TELEPORT_WAND = regItem(CREATIVE_WAND, () ->

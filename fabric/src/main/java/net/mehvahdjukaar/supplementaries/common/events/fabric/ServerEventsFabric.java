@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
@@ -44,15 +45,20 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
-        if (CommonConfigs.Spawns.URN_PILE_ENABLED.get()) {
+        if (CommonConfigs.Spawns.URN_PILE_ENABLED.get() && RegistryConfigs.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
                     ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_CAVE_URNS.getId()));
         }
-        if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
+        if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get() && RegistryConfigs.FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
                     GenerationStep.Decoration.VEGETAL_DECORATION,
                     ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getId()));
+        }
+        if (CommonConfigs.Spawns.BASALT_ASH_ENABLED.get() && RegistryConfigs.ASH_ENABLED.get()) {
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BASALT_ASH),
+                    GenerationStep.Decoration.UNDERGROUND_DECORATION,
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_BASALT_ASH.getId()));
         }
     }
 

@@ -40,6 +40,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return false;
     }
 
+    @Override
     public void updateTileOnInventoryChanged() {
         Winding type = getContentType(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();

@@ -4,7 +4,10 @@ import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
+import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -37,10 +40,15 @@ public class CapturedMobCache {
     public static final Supplier<EndCrystal> PEDESTAL_CRYSTAL = Suppliers.memoize(() -> {
         EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
         entity.setShowBottom(false);
+        entity.setUUID(UUID.randomUUID());
         return entity;
     });
 
-    private static final Supplier<Entity> DEFAULT_PIG = Suppliers.memoize(() -> new Pig(EntityType.PIG, Minecraft.getInstance().level));
+    private static final Supplier<Entity> DEFAULT_PIG = Suppliers.memoize(() -> {
+        Pig entity = new Pig(EntityType.PIG, Minecraft.getInstance().level);
+        entity.setUUID(UUID.randomUUID());
+        return entity;
+    });
 
     @Nullable
     public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {

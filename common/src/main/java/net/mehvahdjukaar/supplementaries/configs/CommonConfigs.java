@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlo
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.features.NetherFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -76,6 +77,7 @@ public class CommonConfigs {
         public static Supplier<Integer> QUIVER_SLOTS;
         public static Supplier<Double> QUIVER_SKELETON_SPAWN;
         public static Supplier<Integer> BUBBLE_BLOWER_COST;
+        public static Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
 
         private static void init(ConfigBuilder builder) {
             builder.push("items");
@@ -92,6 +94,11 @@ public class CommonConfigs {
             builder.push("bubble_blower");
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
                     .define("stasis_cost", 5, 1, 25);
+            builder.pop();
+
+            builder.push("soap");
+            SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
+                            .define("clean_blacklist",List.of("minecraft:glazed_terracotta"));
             builder.pop();
 
             builder.push("wrench");
@@ -683,6 +690,10 @@ public class CommonConfigs {
         public static Supplier<Integer> URN_PATCH_TRIES;
         public static Supplier<Integer> URN_PER_CHUNK;
 
+        public static Supplier<Boolean> BASALT_ASH_ENABLED;
+        public static Supplier<Integer> BASALT_ASH_TRIES;
+        public static Supplier<Integer> BASALT_ASH_PER_CHUNK;
+
         public static Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
 
 
@@ -712,6 +723,14 @@ public class CommonConfigs {
                     .define("attempts_per_patch", 4, 1, 100);
             URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
                     .define("spawn_attempts", 7, 0, 100);
+            builder.pop();
+
+            builder.push("basalt_ash");
+            BASALT_ASH_ENABLED = builder.define("enabled", true);
+            BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
+                    .define("attempts_per_patch", 36, 1, 1000);
+            BASALT_ASH_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
+                    .define("spawn_attempts", 15, 0, 100);
             builder.pop();
 
             builder.push("misc");

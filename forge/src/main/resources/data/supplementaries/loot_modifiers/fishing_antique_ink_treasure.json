@@ -1,0 +1,21 @@
+{
+  "type": "supplementaries:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:gameplay/fishing/treasure"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "antique_ink"
+    },
+    {
+      "condition": "minecraft:random_chance",
+      "chance": 0.02
+    }
+  ],
+  "item": {
+    "id": "supplementaries:antique_ink",
+    "Count": 1
+  }
+}
