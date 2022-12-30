@@ -52,19 +52,31 @@ public class BasaltAshFeature extends Feature<Config> {
         boolean success = false;
         int dy = 0;
         BlockState state = worldGenLevel.getBlockState(pos.setY(inY + dy++));
-
+        boolean up = false;
         while (state == Blocks.BASALT.defaultBlockState() && dy < ySpread) {
+            up = true;
             state = worldGenLevel.getBlockState(pos.setY(inY + dy++));
             if (state.isAir()) {
                 success = true;
+                dy-=1;
                 break;
+            }
+        }
+        if(!up) {
+            while (state.isAir() && dy > -ySpread) {
+                state = worldGenLevel.getBlockState(pos.setY(inY + dy--));
+                if (state == Blocks.BASALT.defaultBlockState()) {
+                    success = true;
+                    dy+=2;
+                    break;
+                }
             }
         }
 
         if (success) {
-            pos.setY(inY + dy - 2);
-            worldGenLevel.setBlock(pos, ModRegistry.ASHEN_BASALT.get().defaultBlockState(), 2);
             pos.setY(inY + dy - 1);
+            worldGenLevel.setBlock(pos, ModRegistry.ASHEN_BASALT.get().defaultBlockState(), 2);
+            pos.setY(inY + dy);
             worldGenLevel.setBlock(pos, ModRegistry.ASH_BLOCK.get().defaultBlockState(), 2);
         }
         return success;

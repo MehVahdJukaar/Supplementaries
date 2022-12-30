@@ -99,7 +99,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<BasaltAshFeature.Config, Feature<BasaltAshFeature.Config>>> BASALT_ASH_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("basalt_ash"),
                     () -> new ConfiguredFeature<>(BASALT_ASH_FEATURE.get(),
-                            new BasaltAshFeature.Config(6, 6, CommonConfigs.Spawns.BASALT_ASH_TRIES.get())));
+                            new BasaltAshFeature.Config(CommonConfigs.Spawns.BASALT_ASH_TRIES.get(),6, 6)));
 
     public static final RegSupplier<ConfiguredFeature<NoneFeatureConfiguration, Feature<NoneFeatureConfiguration>>> ROAD_SIGN =
             RegHelper.registerConfiguredFeature(Supplementaries.res("road_sign"),
