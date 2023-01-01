@@ -120,7 +120,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
         }
     }
 
-    public static class RabbitAnim<M extends Rabbit> extends BuiltinAnimation<M> {
+    private static class RabbitAnim<M extends Rabbit> extends BuiltinAnimation<M> {
 
         public RabbitAnim(Rabbit rabbit) {
             super();
@@ -157,7 +157,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
         }
     }
 
-    public static class ParrotAnim<M extends Parrot> extends BuiltinAnimation<M> {
+    private static class ParrotAnim<M extends Parrot> extends BuiltinAnimation<M> {
 
         public ParrotAnim(Parrot parrot) {
             super();
@@ -176,7 +176,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
         }
     }
 
-    public static class EndermiteAnim<M extends Endermite> extends BuiltinAnimation<M> {
+    private static class EndermiteAnim<M extends Endermite> extends BuiltinAnimation<M> {
 
         public EndermiteAnim(Endermite endermite) {
             super();

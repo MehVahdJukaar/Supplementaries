@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.forge;
 
 
+import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
