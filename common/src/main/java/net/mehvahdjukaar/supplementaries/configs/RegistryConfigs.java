@@ -9,154 +9,120 @@ import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 //loaded before registry
 public class RegistryConfigs {
 
-    public static ConfigSpec REGISTRY_SPEC;
-
-    public static void superEarlyLoad() {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
-        init(builder);
-
-        REGISTRY_SPEC = builder.build();
-
-        //load early
-        REGISTRY_SPEC.loadFromFile();
-
-        HAS_MINESHAFT_LANTERN = COPPER_LANTERN_ENABLED.get();
-        HAS_STRONGHOLD_SCONCE = SCONCE_ENABLED.get();
+    public static void init() {
     }
 
+    public static final ConfigSpec REGISTRY_SPEC;
 
-    public static boolean isEnabled(String key) {
-        if (key.contains("daub")) return DAUB_ENABLED.get();
-        return switch (key) {
-            case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
-            case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
-                    RegistryConfigs.FLAX_ENABLED.get();
-            case RegistryConstants.SOAP_BLOCK_NAME -> RegistryConfigs.SOAP_ENABLED.get();
-            case RegistryConstants.CHECKER_SLAB_NAME, RegistryConstants.CHECKER_VERTICAL_SLAB_NAME ->
-                    CHECKERBOARD_ENABLED.get();
-            case "planter_rich", "planter_rich_soul" -> PLANTER_ENABLED.get();
-            case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
-            case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
-            case RegistryConstants.KEY_NAME ->
-                    NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
-            default -> CONFIGS_BY_NAME.getOrDefault(key, () -> true).get();
-        };
-    }
-
-    private static Supplier<Boolean> regConfig(ConfigBuilder builder, String name, Boolean value) {
-        var config = builder.define(name, value);
-        CONFIGS_BY_NAME.put(name, config);
-        return config;
-    }
 
     private static final Map<String, Supplier<Boolean>> CONFIGS_BY_NAME = new HashMap<>();
+    private static final Map<String, BooleanSupplier> MIXIN_VALUES = new HashMap<>();
 
-    public static Supplier<Boolean> ASH_ENABLED;
-    public static Supplier<Boolean> ASH_BRICKS_ENABLED;
-    public static Supplier<Boolean> PLANTER_ENABLED;
-    public static Supplier<Boolean> CLOCK_ENABLED;
-    public static Supplier<Boolean> PEDESTAL_ENABLED;
-    public static Supplier<Boolean> WIND_VANE_ENABLED;
-    public static Supplier<Boolean> ILLUMINATOR_ENABLED;
-    public static Supplier<Boolean> NOTICE_BOARD_ENABLED;
-    public static Supplier<Boolean> CRANK_ENABLED;
-    public static Supplier<Boolean> JAR_ENABLED;
-    public static Supplier<Boolean> FAUCET_ENABLED;
-    public static Supplier<Boolean> TURN_TABLE_ENABLED;
-    public static Supplier<Boolean> PISTON_LAUNCHER_ENABLED;
-    public static Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
-    public static Supplier<Boolean> SIGN_POST_ENABLED;
-    public static Supplier<Boolean> HANGING_SIGN_ENABLED;
-    public static Supplier<Boolean> BELLOWS_ENABLED;
-    public static Supplier<Boolean> SCONCE_ENABLED;
-    public static Supplier<Boolean> SCONCE_GREEN_ENABLED;
-    public static Supplier<Boolean> CAGE_ENABLED;
-    public static Supplier<Boolean> ITEM_SHELF_ENABLED;
-    public static Supplier<Boolean> SCONCE_LEVER_ENABLED;
-    public static Supplier<Boolean> COG_BLOCK_ENABLED;
-    public static Supplier<Boolean> STONE_LAMP_ENABLED;
-    public static Supplier<Boolean> END_STONE_LAMP_ENABLED;
-    public static Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
-    public static Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
-    public static Supplier<Boolean> GLOBE_ENABLED;
-    public static Supplier<Boolean> HOURGLASS_ENABLED;
-    public static Supplier<Boolean> FLAG_ENABLED;
-    public static Supplier<Boolean> SACK_ENABLED;
-    public static Supplier<Boolean> BLACKBOARD_ENABLED;
-    public static Supplier<Boolean> SAFE_ENABLED;
-    public static Supplier<Boolean> COPPER_LANTERN_ENABLED;
-    public static Supplier<Boolean> FLUTE_ENABLED;
-    public static Supplier<Boolean> GOLD_TRAPDOOR_ENABLED;
-    public static Supplier<Boolean> GOLD_DOOR_ENABLED;
-    public static Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
-    public static Supplier<Boolean> TIPPED_SPIKES_ENABLED;
-    public static Supplier<Boolean> CHECKERBOARD_ENABLED;
-    public static Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
-    public static Supplier<Boolean> NETHERITE_DOOR_ENABLED;
-    public static Supplier<Boolean> PANCAKES_ENABLED;
-    public static Supplier<Boolean> LOCK_BLOCK_ENABLED;
-    public static Supplier<Boolean> FLAX_ENABLED;
-    public static Supplier<Boolean> ROPE_ENABLED;
-    public static Supplier<Boolean> ROPE_ARROW_ENABLED;
-    public static Supplier<Boolean> PULLEY_ENABLED;
-    public static Supplier<Boolean> FODDER_ENABLED;
-    public static Supplier<Boolean> BOMB_ENABLED;
-    public static Supplier<Boolean> CRIMSON_LANTERN_ENABLED;
-    public static Supplier<Boolean> DAUB_ENABLED;
-    public static Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
-    public static Supplier<Boolean> TIMBER_FRAME_ENABLED;
-    public static Supplier<Boolean> TILE_ENABLED;
-    public static Supplier<Boolean> GOBLET_ENABLED;
-    public static Supplier<Boolean> RAKED_GRAVEL_ENABLED;
-    public static Supplier<Boolean> STATUE_ENABLED;
-    public static Supplier<Boolean> IRON_GATE_ENABLED;
-    public static Supplier<Boolean> FEATHER_BLOCK_ENABLED;
-    public static Supplier<Boolean> FLINT_BLOCK_ENABLED;
-    public static Supplier<Boolean> SLINGSHOT_ENABLED;
-    public static Supplier<Boolean> SHULKER_HELMET_ENABLED;
-    public static Supplier<Boolean> CANDY_ENABLED;
-    public static Supplier<Boolean> WRENCH_ENABLED;
-    public static Supplier<Boolean> QUIVER_ENABLED;
-    public static Supplier<Boolean> URN_ENABLED;
-    public static Supplier<Boolean> ANTIQUE_INK_ENABLED;
-    public static Supplier<Boolean> DOORMAT_ENABLED;
-    public static Supplier<Boolean> FLOWER_BOX_ENABLED;
-    public static Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
-    public static Supplier<Boolean> SOAP_ENABLED;
-    public static Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
-    public static Supplier<Boolean> GLOBE_SEPIA;
-    public static Supplier<Boolean> PRESENT_ENABLED;
-    public static Supplier<Boolean> STASIS_ENABLED;
-    public static Supplier<Boolean> SILVER_TRAPDOOR_ENABLED;
-    public static Supplier<Boolean> SILVER_DOOR_ENABLED;
-    public static Supplier<Boolean> LEAD_TRAPDOOR_ENABLED;
-    public static Supplier<Boolean> LEAD_DOOR_ENABLED;
-    public static Supplier<Boolean> DISPENSER_MINECART_ENABLED;
-    public static Supplier<Boolean> SUGAR_CUBE_ENABLED;
-    public static Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
-    public static Supplier<Boolean> LAPIS_BRICKS_ENABLED;
-    public static Supplier<Boolean> RELAYER_ENABLED;
-    public static Supplier<Boolean> CANDLE_HOLDER_ENABLED;
-    public static Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
 
-    public static Supplier<Boolean> JAR_TAB;
-    public static Supplier<Boolean> CREATIVE_TAB;
-    public static Supplier<Boolean> DISPENSERS;
-    public static Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
-    public static Supplier<Boolean> DEBUG_RESOURCES;
-    public static Supplier<Boolean> PACK_DEPENDANT_ASSETS;
+    public static final Supplier<Boolean> ASH_ENABLED;
+    public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
+    public static final Supplier<Boolean> PLANTER_ENABLED;
+    public static final Supplier<Boolean> CLOCK_ENABLED;
+    public static final Supplier<Boolean> PEDESTAL_ENABLED;
+    public static final Supplier<Boolean> WIND_VANE_ENABLED;
+    public static final Supplier<Boolean> ILLUMINATOR_ENABLED;
+    public static final Supplier<Boolean> NOTICE_BOARD_ENABLED;
+    public static final Supplier<Boolean> CRANK_ENABLED;
+    public static final Supplier<Boolean> JAR_ENABLED;
+    public static final Supplier<Boolean> FAUCET_ENABLED;
+    public static final Supplier<Boolean> TURN_TABLE_ENABLED;
+    public static final Supplier<Boolean> PISTON_LAUNCHER_ENABLED;
+    public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
+    public static final Supplier<Boolean> SIGN_POST_ENABLED;
+    public static final Supplier<Boolean> HANGING_SIGN_ENABLED;
+    public static final Supplier<Boolean> BELLOWS_ENABLED;
+    public static final Supplier<Boolean> SCONCE_ENABLED;
+    public static final Supplier<Boolean> SCONCE_GREEN_ENABLED;
+    public static final Supplier<Boolean> CAGE_ENABLED;
+    public static final Supplier<Boolean> ITEM_SHELF_ENABLED;
+    public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
+    public static final Supplier<Boolean> COG_BLOCK_ENABLED;
+    public static final Supplier<Boolean> STONE_LAMP_ENABLED;
+    public static final Supplier<Boolean> END_STONE_LAMP_ENABLED;
+    public static final Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
+    public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
+    public static final Supplier<Boolean> GLOBE_ENABLED;
+    public static final Supplier<Boolean> HOURGLASS_ENABLED;
+    public static final Supplier<Boolean> FLAG_ENABLED;
+    public static final Supplier<Boolean> SACK_ENABLED;
+    public static final Supplier<Boolean> BLACKBOARD_ENABLED;
+    public static final Supplier<Boolean> SAFE_ENABLED;
+    public static final Supplier<Boolean> COPPER_LANTERN_ENABLED;
+    public static final Supplier<Boolean> FLUTE_ENABLED;
+    public static final Supplier<Boolean> GOLD_TRAPDOOR_ENABLED;
+    public static final Supplier<Boolean> GOLD_DOOR_ENABLED;
+    public static final Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
+    public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
+    public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
+    public static final Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
+    public static final Supplier<Boolean> NETHERITE_DOOR_ENABLED;
+    public static final Supplier<Boolean> PANCAKES_ENABLED;
+    public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
+    public static final Supplier<Boolean> FLAX_ENABLED;
+    public static final Supplier<Boolean> ROPE_ENABLED;
+    public static final Supplier<Boolean> ROPE_ARROW_ENABLED;
+    public static final Supplier<Boolean> PULLEY_ENABLED;
+    public static final Supplier<Boolean> FODDER_ENABLED;
+    public static final Supplier<Boolean> BOMB_ENABLED;
+    public static final Supplier<Boolean> CRIMSON_LANTERN_ENABLED;
+    public static final Supplier<Boolean> DAUB_ENABLED;
+    public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
+    public static final Supplier<Boolean> TIMBER_FRAME_ENABLED;
+    public static final Supplier<Boolean> TILE_ENABLED;
+    public static final Supplier<Boolean> GOBLET_ENABLED;
+    public static final Supplier<Boolean> RAKED_GRAVEL_ENABLED;
+    public static final Supplier<Boolean> STATUE_ENABLED;
+    public static final Supplier<Boolean> IRON_GATE_ENABLED;
+    public static final Supplier<Boolean> FEATHER_BLOCK_ENABLED;
+    public static final Supplier<Boolean> FLINT_BLOCK_ENABLED;
+    public static final Supplier<Boolean> SLINGSHOT_ENABLED;
+    public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
+    public static final Supplier<Boolean> CANDY_ENABLED;
+    public static final Supplier<Boolean> WRENCH_ENABLED;
+    public static final Supplier<Boolean> QUIVER_ENABLED;
+    public static final Supplier<Boolean> URN_ENABLED;
+    public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
+    public static final Supplier<Boolean> DOORMAT_ENABLED;
+    public static final Supplier<Boolean> FLOWER_BOX_ENABLED;
+    public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
+    public static final Supplier<Boolean> SOAP_ENABLED;
+    public static final Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
+    public static final Supplier<Boolean> GLOBE_SEPIA;
+    public static final Supplier<Boolean> PRESENT_ENABLED;
+    public static final Supplier<Boolean> STASIS_ENABLED;
+    public static final Supplier<Boolean> SILVER_TRAPDOOR_ENABLED;
+    public static final Supplier<Boolean> SILVER_DOOR_ENABLED;
+    public static final Supplier<Boolean> LEAD_TRAPDOOR_ENABLED;
+    public static final Supplier<Boolean> LEAD_DOOR_ENABLED;
+    public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
+    public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
+    public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
+    public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
+    public static final Supplier<Boolean> RELAYER_ENABLED;
+    public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
+    public static final Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
 
-    public static boolean HAS_MINESHAFT_LANTERN = false;
-    public static boolean HAS_STRONGHOLD_SCONCE = false;
+    public static final Supplier<Boolean> JAR_TAB;
+    public static final Supplier<Boolean> CREATIVE_TAB;
+    public static final Supplier<Boolean> DISPENSERS;
+    public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+    public static final Supplier<Boolean> DEBUG_RESOURCES;
+    public static final Supplier<Boolean> PACK_DEPENDANT_ASSETS;
 
-    public static final Map<String, Supplier<Boolean>> MIXIN_VALUES = new HashMap<>();
+    static {
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("registry"), ConfigType.COMMON);
 
-    private static void init(ConfigBuilder builder) {
 
         builder.comment("Here are configs that need reloading to take effect");
 
@@ -244,7 +210,6 @@ public class RegistryConfigs {
         BLACKSTONE_TILE_ENABLED = regConfig(builder, RegistryConstants.BLACKSTONE_TILE_NAME, true);
         GLOBE_SEPIA = regConfig(builder, RegistryConstants.GLOBE_SEPIA_NAME, true);
         PRESENT_ENABLED = regConfig(builder, RegistryConstants.PRESENT_NAME, true);
-        STATUE_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
         SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_CUBE_NAME, true);
         CRYSTAL_DISPLAY_ENABLED = regConfig(builder, RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
         LAPIS_BRICKS_ENABLED = regConfig(builder, RegistryConstants.LAPIS_BRICKS_NAME, true);
@@ -276,7 +241,6 @@ public class RegistryConfigs {
         PANCAKES_ENABLED = regConfig(builder, RegistryConstants.PANCAKE_NAME, true);
         builder.pop();
 
-
         /*
         builder.comment("Here you can disable mixins if they clash with other mods ones")
                 .push("mixins");
@@ -286,7 +250,40 @@ public class RegistryConfigs {
         }
         builder.pop();
         */
+
+
+        REGISTRY_SPEC = builder.build();
+        //load early
+        REGISTRY_SPEC.loadFromFile();
     }
 
+    public static boolean isMixinEnabled(String className){
+        BooleanSupplier config = RegistryConfigs.MIXIN_VALUES.get(className);
+        return config == null || config.getAsBoolean();
+    }
+
+    private static Supplier<Boolean> regConfig(ConfigBuilder builder, String name, Boolean value) {
+        var config = builder.define(name, value);
+        CONFIGS_BY_NAME.put(name, config);
+        return config;
+    }
+
+    public static boolean isEnabled(String key) {
+        if (key.contains("daub")) return DAUB_ENABLED.get();
+        return switch (key) {
+            case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
+            case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
+                    RegistryConfigs.FLAX_ENABLED.get();
+            case RegistryConstants.SOAP_BLOCK_NAME -> RegistryConfigs.SOAP_ENABLED.get();
+            case RegistryConstants.CHECKER_SLAB_NAME, RegistryConstants.CHECKER_VERTICAL_SLAB_NAME ->
+                    CHECKERBOARD_ENABLED.get();
+            case "planter_rich", "planter_rich_soul" -> PLANTER_ENABLED.get();
+            case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
+            case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
+            case RegistryConstants.KEY_NAME ->
+                    NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
+            default -> CONFIGS_BY_NAME.getOrDefault(key, () -> true).get();
+        };
+    }
 
 }

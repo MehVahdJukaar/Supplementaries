@@ -26,7 +26,7 @@ public class SupplementariesFabric implements ModInitializer {
             FabricSetupCallbacks.CLIENT_SETUP.add(SupplementariesFabricClient::clientSetup);
             throwIfFabricRenderingAPIHasBeenNuked();
         }
-        RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(),60,100);
+
     }
 
     //I hate this. I've got to do what I've got to do. Cant stand random reports anymore

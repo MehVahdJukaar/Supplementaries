@@ -1,0 +1,8 @@
+{
+  "animation": "land",
+  "height_increment": -0.25,
+  "owners": [
+    "twilightforest:kobold"
+  ],
+  "width_increment": 0.05
+}

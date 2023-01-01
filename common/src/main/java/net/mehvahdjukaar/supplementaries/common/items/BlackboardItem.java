@@ -50,27 +50,5 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
         return BlackboardItemRenderer::new;
     }
 
-    public record BlackboardTooltip(long[] packed) implements TooltipComponent {
 
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (BlackboardTooltip) obj;
-            return Arrays.equals(this.packed, that.packed);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(List.of(packed));
-        }
-
-        @Override
-        public String toString() {
-            return "BlackboardTooltip[" +
-                    "packed=" + Arrays.toString(packed) + ']';
-        }
-
-
-    }
 }

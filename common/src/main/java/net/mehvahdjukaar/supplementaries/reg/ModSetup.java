@@ -2,13 +2,14 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 
 import com.google.common.base.Stopwatch;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.Parrot;
@@ -40,6 +41,7 @@ public class ModSetup {
             LootTablesInjects::init,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
+            ModSetup::registerFabricFlammable,
             CauldronRegistry::registerInteractions,
             PresentInteractionsRegistry::registerBehaviors,
             FaucetInteractionsRegistry::registerBehaviors,
@@ -69,6 +71,10 @@ public class ModSetup {
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
+    }
+
+    private static void registerFabricFlammable(){
+        RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(),60,100);
     }
 
     private static void registerMobFoods() {

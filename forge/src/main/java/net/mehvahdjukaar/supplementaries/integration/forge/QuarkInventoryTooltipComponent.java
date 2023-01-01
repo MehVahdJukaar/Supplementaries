@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -34,7 +35,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
     private final int size;
     private final boolean locked;
 
-    public QuarkInventoryTooltipComponent(ItemsUtil.InventoryTooltip tooltip) {
+    public QuarkInventoryTooltipComponent(InventoryTooltip tooltip) {
         this.tag = tooltip.tag();
         this.item = tooltip.item();
         this.dimensions = SackContainerMenu.getRatio(tooltip.size());

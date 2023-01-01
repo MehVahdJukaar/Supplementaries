@@ -29,10 +29,11 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
-import net.mehvahdjukaar.supplementaries.common.misc.BannerPatternTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.map.client.ModMapMarkersClient;
+import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
@@ -396,7 +397,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
         event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
-        event.register(QuiverItem.QuiverTooltip.class, QuiverTooltipComponent::new);
+        event.register(QuiverTooltip.class, QuiverTooltipComponent::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }

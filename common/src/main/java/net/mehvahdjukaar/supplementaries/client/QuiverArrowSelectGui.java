@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.network.ClientReceivers;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket.Slot;
@@ -17,12 +18,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.List;
 
 public abstract class QuiverArrowSelectGui extends Gui {
@@ -47,6 +50,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
     public static void setUsingKeybind(boolean on) {
+        if(on)  Minecraft.getInstance().player.displayClientMessage(Component.literal("Keybind mode!"),true);
+
         if (on != usingItem) lastCumulativeMouseDx = 0;
         usingKey = on;
     }
@@ -63,6 +68,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
 
     public static void ohMouseMoved(double deltaX) {
+        if(!usingKey) Minecraft.getInstance().player.displayClientMessage(Component.literal("Move your mouse to select!"),true);
         double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
         int oldI = (int) (lastCumulativeMouseDx * scale);
         lastCumulativeMouseDx += deltaX;
@@ -78,6 +84,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     @EventCalled
     public static boolean onMouseScrolled(double scrollDelta) {
+        if(!usingKey) Minecraft.getInstance().player.displayClientMessage(Component.literal("...or scroll"),true);
+
         Player player = Minecraft.getInstance().player;
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                 scrollDelta > 0 ? -1 : 1, getQuiverSlot(player)));
@@ -86,6 +94,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     @EventCalled
     public static boolean onKeyPressed(int key, int action, int modifiers) {
+        if(!usingKey) Minecraft.getInstance().player.displayClientMessage(Component.literal("or use a number key"),true);
+
         //maybe add key thing here
         if (action == 1) {
             Player player = Minecraft.getInstance().player;

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -243,9 +244,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
-
-    public record QuiverTooltip(List<ItemStack> stacks, int selected) implements TooltipComponent {
-    }
 
     //this is cap, cap provider
     public interface IQuiverData {

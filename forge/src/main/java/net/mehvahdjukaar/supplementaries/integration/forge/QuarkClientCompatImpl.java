@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
@@ -61,7 +62,7 @@ public class QuarkClientCompatImpl {
     }
 
     public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
-        event.register(ItemsUtil.InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
+        event.register(InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
     }
 
 

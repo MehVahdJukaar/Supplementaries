@@ -1,5 +1,5 @@
 {
-  "type": "farmersdelight:add_item",
+  "type": "supplementaries:add_item",
   "conditions": [
     {
       "modid": "farmersdelight",

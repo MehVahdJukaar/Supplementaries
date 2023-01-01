@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -27,7 +28,7 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
     private final List<ItemStack> items;
     private final int selectedSlot;
 
-    public QuiverTooltipComponent(QuiverItem.QuiverTooltip tooltip) {
+    public QuiverTooltipComponent(QuiverTooltip tooltip) {
         this.items = tooltip.stacks();
         this.selectedSlot = tooltip.selected();
     }

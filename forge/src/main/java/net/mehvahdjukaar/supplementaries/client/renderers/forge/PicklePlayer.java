@@ -14,9 +14,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import vazkii.quark.content.world.module.GlimmeringWealdModule;
 
 import java.util.UUID;
 
@@ -34,7 +36,6 @@ public class PicklePlayer {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         PickleData.onPlayerLogin(event.getEntity());
-
     }
 
     //event doesn't fire for "/" anymore....

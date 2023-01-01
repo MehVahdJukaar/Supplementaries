@@ -192,7 +192,28 @@
     {"id":"ecologics:coconut_crab","required":false},
     {"id":"biomemakeover:scuttler","required":false},
     {"id":"ars_nouveau:starbuncle","required":false},
-    {"id":"ars_nouveau:whirlisprig","required":false}
+    {"id":"ars_nouveau:whirlisprig","required":false},
+		{"id":"the_bumblezone:honey_slime","required":false},
+	{"id":"rottencreatures:scarab","required":false},
+	{"id":"rottencreatures:flying_scarab","required":false},
+	{"id":"bewitchment:owl","required":false},
+	{"id":"bewitchment:raven","required":false},
+	{"id":"bewitchment:toad","required":false},
+	{"id":"biomemakeover:helmit_crab","required":false},
+	{"id":"graveyard:reaper","required":false},
+	{"id":"deeperdarker:sculk_leech","required":false},
+	{"id":"twilightforest:dwarf_rabbit","required":false},
+	{"id":"minecells:rancid_rat","required":false},
+	{"id":"minecells:mutated_bat","required":false},
+	{"id":"naturalist:snail","required":false},
+	{"id":"naturalist:firefly","required":false},
+	{"id":"naturalist:caterpillar","required":false},
+	{"id":"naturalist:butterfly","required":false},
+	{"id":"friendsandfoes:mauler","required":false},
+	{"id":"friendsandfoes:glare","required":false},
+	{"id":"ants:ant","required":false},
+	{"id":"cave_enhancements:goop","required":false},
+	{"id":"cave_enhancements:cruncher","required":false}
   ]
 }
 

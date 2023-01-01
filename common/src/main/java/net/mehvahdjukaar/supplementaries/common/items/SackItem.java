@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -125,7 +126,7 @@ public class SackItem extends BlockItem {
         if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new ItemsUtil.InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));
+                return Optional.of(new InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();

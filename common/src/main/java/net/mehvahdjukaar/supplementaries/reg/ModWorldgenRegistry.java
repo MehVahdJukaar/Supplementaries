@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
-import net.mehvahdjukaar.supplementaries.common.world.generation.*;
+import net.mehvahdjukaar.supplementaries.common.worldgen.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -84,8 +84,6 @@ public class ItemsUtil {
     public static void addToInventory(Level world, BlockPos below, ObjectArrayList<ItemStack> randomItems) {
     }
 
-    public record InventoryTooltip(CompoundTag tag, Item item, int size) implements TooltipComponent {
-    }
 
     public static boolean tryInteractingWithContainerItem(ItemStack containerStack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot) {
         if (action != ClickAction.PRIMARY) {

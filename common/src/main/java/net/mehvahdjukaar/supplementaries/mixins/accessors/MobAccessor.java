@@ -5,6 +5,7 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+@Deprecated(forRemoval = true)
 @Mixin(Mob.class)
 public interface MobAccessor {
 

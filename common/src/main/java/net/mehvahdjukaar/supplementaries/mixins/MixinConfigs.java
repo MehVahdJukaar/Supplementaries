@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -158,8 +159,7 @@ public class MixinConfigs implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         String truncatedName = mixinClassName.substring(this.getClass().getPackage().getName().length() + 1);
-        Supplier<Boolean> config = RegistryConfigs.MIXIN_VALUES.get(truncatedName);
-        return config == null || config.get();
+        return RegistryConfigs.isMixinEnabled(truncatedName);
     }
 
     @Override

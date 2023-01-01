@@ -10,8 +10,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchant
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
-import net.mehvahdjukaar.supplementaries.common.world.data.GlobeData;
-import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
+import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
@@ -132,6 +132,7 @@ public class ServerEvents {
             if (entity instanceof Animal animal) {
                 EntityType<?> type = entity.getType();
                 if (type.is(ModTags.EATS_FODDER)) {
+                    //TODO: use AW
                     ((MobAccessor) animal).getGoalSelector().addGoal(3,
                             new EatFodderGoal(animal, 1, 8, 2, 30));
                 }

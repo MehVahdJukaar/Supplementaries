@@ -11,11 +11,11 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlo
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.features.NetherFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,14 +28,18 @@ public class CommonConfigs {
 
     public static final ConfigSpec SERVER_SPEC;
 
+    private static WeakReference<ConfigBuilder> builderReference;
+
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
 
-        Blocks.init(builder);
-        Spawns.init(builder);
-        Tweaks.init(builder);
-        Items.init(builder);
-        General.init(builder);
+        builderReference = new WeakReference<>(builder);
+
+        Blocks.init();
+        Spawns.init();
+        Tweaks.init();
+        Items.init();
+        General.init();
 
         builder.setSynced();
         builder.onChange(CommonConfigs::onRefresh);
@@ -55,31 +59,35 @@ public class CommonConfigs {
 
     public static class Items {
 
+        private static void init() {
+        }
 
         public static Supplier<Holder.Reference<Block>> ROPE_ARROW_OVERRIDE = null;
 
-        public static Supplier<Integer> ROPE_ARROW_CAPACITY;
-        public static Supplier<Boolean> ROPE_ARROW_CROSSBOW;
-        public static Supplier<String> ROPE_ARROW_ROPE;
-        public static Supplier<Integer> FLUTE_RADIUS;
-        public static Supplier<Integer> FLUTE_DISTANCE;
-        public static Supplier<Double> BOMB_RADIUS;
-        public static Supplier<Integer> BOMB_FUSE;
-        public static Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
-        public static Supplier<Double> BOMB_BLUE_RADIUS;
-        public static Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
-        public static Supplier<Double> SLINGSHOT_RANGE;
-        public static Supplier<Integer> SLINGSHOT_CHARGE;
-        public static Supplier<Double> SLINGSHOT_DECELERATION;
-        public static Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
-        public static Supplier<Hands> WRENCH_BYPASS;
-        public static Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
-        public static Supplier<Integer> QUIVER_SLOTS;
-        public static Supplier<Double> QUIVER_SKELETON_SPAWN;
-        public static Supplier<Integer> BUBBLE_BLOWER_COST;
-        public static Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
+        public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
+        public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
+        public static final Supplier<String> ROPE_ARROW_ROPE;
+        public static final Supplier<Integer> FLUTE_RADIUS;
+        public static final Supplier<Integer> FLUTE_DISTANCE;
+        public static final Supplier<Double> BOMB_RADIUS;
+        public static final Supplier<Integer> BOMB_FUSE;
+        public static final Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
+        public static final Supplier<Double> BOMB_BLUE_RADIUS;
+        public static final Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
+        public static final Supplier<Double> SLINGSHOT_RANGE;
+        public static final Supplier<Integer> SLINGSHOT_CHARGE;
+        public static final Supplier<Double> SLINGSHOT_DECELERATION;
+        public static final Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
+        public static final Supplier<Hands> WRENCH_BYPASS;
+        public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
+        public static final Supplier<Integer> QUIVER_SLOTS;
+        public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Integer> BUBBLE_BLOWER_COST;
+        public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
 
-        private static void init(ConfigBuilder builder) {
+        static {
+            ConfigBuilder builder = builderReference.get();
+
             builder.push("items");
 
             builder.push("quiver");
@@ -98,7 +106,7 @@ public class CommonConfigs {
 
             builder.push("soap");
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
-                            .define("clean_blacklist",List.of("minecraft:glazed_terracotta"));
+                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta"));
             builder.pop();
 
             builder.push("wrench");
@@ -155,7 +163,6 @@ public class CommonConfigs {
 
             builder.pop();
         }
-
     }
 
     public enum Hands {
@@ -163,43 +170,49 @@ public class CommonConfigs {
     }
 
     public static class Tweaks {
-        public static Supplier<Boolean> ENDER_PEAR_DISPENSERS;
-        public static Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
-        public static Supplier<Boolean> DIRECTIONAL_CAKE;
-        public static Supplier<Boolean> DOUBLE_CAKE_PLACEMENT;
-        public static Supplier<Boolean> HANGING_POT_PLACEMENT;
-        public static Supplier<Boolean> WALL_LANTERN_PLACEMENT;
-        public static Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
-        public static Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
-        public static Supplier<List<String>> WALL_LANTERN_BLACKLIST;
-        public static Supplier<LightableLanternBlock.FallMode> FALLING_LANTERNS;
-        public static Supplier<Boolean> BELL_CHAIN;
-        public static Supplier<Integer> BELL_CHAIN_LENGTH;
-        public static Supplier<Boolean> PLACEABLE_STICKS;
-        public static Supplier<Boolean> PLACEABLE_RODS;
-        public static Supplier<Boolean> RAKED_GRAVEL;
-        public static Supplier<Boolean> BOTTLE_XP;
-        public static Supplier<Integer> BOTTLING_COST;
-        public static Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
-        public static Supplier<Boolean> MAP_MARKERS;
-        public static Supplier<Boolean> CEILING_BANNERS;
-        public static Supplier<Boolean> PLACEABLE_BOOKS;
-        public static Supplier<Boolean> WRITTEN_BOOKS;
-        public static Supplier<Double> BOOK_POWER;
-        public static Supplier<Double> ENCHANTED_BOOK_POWER;
-        public static Supplier<Boolean> ZOMBIE_HORSE;
-        public static Supplier<Integer> ZOMBIE_HORSE_COST;
-        public static Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
-        public static Supplier<Boolean> PLACEABLE_GUNPOWDER;
-        public static Supplier<Integer> GUNPOWDER_BURN_SPEED;
-        public static Supplier<Integer> GUNPOWDER_SPREAD_AGE;
-        public static Supplier<Boolean> MIXED_BOOKS;
-        public static Supplier<Boolean> SKULL_PILES;
-        public static Supplier<Boolean> SKULL_CANDLES;
-        public static Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
-        public static Supplier<Boolean> WANDERING_TRADER_DOORS;
 
-        private static void init(ConfigBuilder builder) {
+        private static void init() {
+        }
+
+        public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
+        public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
+        public static final Supplier<Boolean> DIRECTIONAL_CAKE;
+        public static final Supplier<Boolean> DOUBLE_CAKE_PLACEMENT;
+        public static final Supplier<Boolean> HANGING_POT_PLACEMENT;
+        public static final Supplier<Boolean> WALL_LANTERN_PLACEMENT;
+        public static final Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
+        public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
+        public static final Supplier<List<String>> WALL_LANTERN_BLACKLIST;
+        public static final Supplier<LightableLanternBlock.FallMode> FALLING_LANTERNS;
+        public static final Supplier<Boolean> BELL_CHAIN;
+        public static final Supplier<Integer> BELL_CHAIN_LENGTH;
+        public static final Supplier<Boolean> PLACEABLE_STICKS;
+        public static final Supplier<Boolean> PLACEABLE_RODS;
+        public static final Supplier<Boolean> RAKED_GRAVEL;
+        public static final Supplier<Boolean> BOTTLE_XP;
+        public static final Supplier<Integer> BOTTLING_COST;
+        public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
+        public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<Boolean> CEILING_BANNERS;
+        public static final Supplier<Boolean> PLACEABLE_BOOKS;
+        public static final Supplier<Boolean> WRITTEN_BOOKS;
+        public static final Supplier<Double> BOOK_POWER;
+        public static final Supplier<Double> ENCHANTED_BOOK_POWER;
+        public static final Supplier<Boolean> ZOMBIE_HORSE;
+        public static final Supplier<Integer> ZOMBIE_HORSE_COST;
+        public static final Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
+        public static final Supplier<Boolean> PLACEABLE_GUNPOWDER;
+        public static final Supplier<Integer> GUNPOWDER_BURN_SPEED;
+        public static final Supplier<Integer> GUNPOWDER_SPREAD_AGE;
+        public static final Supplier<Boolean> MIXED_BOOKS;
+        public static final Supplier<Boolean> SKULL_PILES;
+        public static final Supplier<Boolean> SKULL_CANDLES;
+        public static final Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
+        public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
+
+        static {
+            ConfigBuilder builder = builderReference.get();
+
             builder.comment("Vanilla tweaks")
                     .push("tweaks");
             builder.push("traders_open_doors");
@@ -339,9 +352,15 @@ public class CommonConfigs {
     }
 
     public static class General {
-        public static Supplier<Boolean> SERVER_PROTECTION;
 
-        private static void init(ConfigBuilder builder) {
+        private static void init() {
+        }
+
+        public static final Supplier<Boolean> SERVER_PROTECTION;
+
+        static {
+            ConfigBuilder builder = builderReference.get();
+
             builder.comment("General settings")
                     .push("general");
             SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
@@ -354,98 +373,101 @@ public class CommonConfigs {
 
     public static class Blocks {
 
+        private static void init() {
+        }
 
-        public static Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
+        public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
 
-        public static Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
-        public static Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
+        public static final Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
+        public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 
-        public static Supplier<Integer> BUBBLE_LIFETIME;
-        public static Supplier<Boolean> BUBBLE_BREAK;
-        public static Supplier<Boolean> BUBBLE_FEATHER_FALLING;
+        public static final Supplier<Integer> BUBBLE_LIFETIME;
+        public static final Supplier<Boolean> BUBBLE_BREAK;
+        public static final Supplier<Boolean> BUBBLE_FEATHER_FALLING;
 
-        public static Supplier<Boolean> ROPE_UNRESTRICTED;
-        public static Supplier<Boolean> ROPE_SLIDE;
-        public static Supplier<Integer> GLOBE_TRADES;
+        public static final Supplier<Boolean> ROPE_UNRESTRICTED;
+        public static final Supplier<Boolean> ROPE_SLIDE;
+        public static final Supplier<Integer> GLOBE_TRADES;
 
-        public static Supplier<Integer> SPEAKER_RANGE;
-        public static Supplier<Boolean> SPEAKER_NARRATOR;
+        public static final Supplier<Integer> SPEAKER_RANGE;
+        public static final Supplier<Boolean> SPEAKER_NARRATOR;
 
-        public static Supplier<Integer> BELLOWS_PERIOD;
-        public static Supplier<Integer> BELLOWS_POWER_SCALING;
-        public static Supplier<Double> BELLOWS_MAX_VEL;
-        public static Supplier<Double> BELLOWS_BASE_VEL_SCALING;
-        public static Supplier<Boolean> BELLOWS_FLAG;
-        public static Supplier<Integer> BELLOWS_RANGE;
+        public static final Supplier<Integer> BELLOWS_PERIOD;
+        public static final Supplier<Integer> BELLOWS_POWER_SCALING;
+        public static final Supplier<Double> BELLOWS_MAX_VEL;
+        public static final Supplier<Double> BELLOWS_BASE_VEL_SCALING;
+        public static final Supplier<Boolean> BELLOWS_FLAG;
+        public static final Supplier<Integer> BELLOWS_RANGE;
 
-        public static Supplier<Double> LAUNCHER_VEL;
-        public static Supplier<Integer> LAUNCHER_HEIGHT;
+        public static final Supplier<Double> LAUNCHER_VEL;
+        public static final Supplier<Integer> LAUNCHER_HEIGHT;
 
-        public static Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
+        public static final Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
 
-        public static Supplier<Integer> JAR_CAPACITY;
-        public static Supplier<Boolean> JAR_EAT;
-        public static Supplier<Boolean> JAR_CAPTURE;
-        public static Supplier<Boolean> JAR_COOKIES;
-        public static Supplier<Boolean> JAR_LIQUIDS;
-        public static Supplier<Boolean> JAR_ITEM_DRINK;
-        public static Supplier<Boolean> JAR_AUTO_DETECT;
-        public static Supplier<Boolean> GOBLET_DRINK;
-        public static Supplier<Integer> CRYSTAL_ENCHANTING;
+        public static final Supplier<Integer> JAR_CAPACITY;
+        public static final Supplier<Boolean> JAR_EAT;
+        public static final Supplier<Boolean> JAR_CAPTURE;
+        public static final Supplier<Boolean> JAR_COOKIES;
+        public static final Supplier<Boolean> JAR_LIQUIDS;
+        public static final Supplier<Boolean> JAR_ITEM_DRINK;
+        public static final Supplier<Boolean> JAR_AUTO_DETECT;
+        public static final Supplier<Boolean> GOBLET_DRINK;
+        public static final Supplier<Integer> CRYSTAL_ENCHANTING;
 
-        public static Supplier<Boolean> CAGE_ALL_MOBS;
-        public static Supplier<Boolean> CAGE_ALL_BABIES;
-        public static Supplier<Boolean> CAGE_AUTO_DETECT;
-        public static Supplier<Boolean> CAGE_PERSISTENT_MOBS;
-        public static Supplier<Integer> CAGE_HEALTH_THRESHOLD;
+        public static final Supplier<Boolean> CAGE_ALL_MOBS;
+        public static final Supplier<Boolean> CAGE_ALL_BABIES;
+        public static final Supplier<Boolean> CAGE_AUTO_DETECT;
+        public static final Supplier<Boolean> CAGE_PERSISTENT_MOBS;
+        public static final Supplier<Integer> CAGE_HEALTH_THRESHOLD;
 
-        public static Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
+        public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
 
-        public static Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
+        public static final Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
 
-        public static Supplier<Boolean> SACK_PENALTY;
-        public static Supplier<Integer> SACK_INCREMENT;
-        public static Supplier<Integer> SACK_SLOTS;
+        public static final Supplier<Boolean> SACK_PENALTY;
+        public static final Supplier<Integer> SACK_INCREMENT;
+        public static final Supplier<Integer> SACK_SLOTS;
 
-        public static Supplier<Boolean> SAFE_UNBREAKABLE;
-        public static Supplier<Boolean> SAFE_SIMPLE;
+        public static final Supplier<Boolean> SAFE_UNBREAKABLE;
+        public static final Supplier<Boolean> SAFE_SIMPLE;
 
-        public static Supplier<Boolean> BLACKBOARD_COLOR;
-        public static Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
+        public static final Supplier<Boolean> BLACKBOARD_COLOR;
+        public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
 
-        public static Supplier<Boolean> REPLACE_DAUB;
-        public static Supplier<Boolean> SWAP_TIMBER_FRAME;
-        public static Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
+        public static final Supplier<Boolean> REPLACE_DAUB;
+        public static final Supplier<Boolean> SWAP_TIMBER_FRAME;
+        public static final Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
 
-        public static Supplier<Integer> HOURGLASS_DUST;
-        public static Supplier<Integer> HOURGLASS_SAND;
-        public static Supplier<Integer> HOURGLASS_CONCRETE;
-        public static Supplier<Integer> HOURGLASS_BLAZE_POWDER;
-        public static Supplier<Integer> HOURGLASS_GLOWSTONE;
-        public static Supplier<Integer> HOURGLASS_REDSTONE;
-        public static Supplier<Integer> HOURGLASS_SUGAR;
-        public static Supplier<Integer> HOURGLASS_SLIME;
-        public static Supplier<Integer> HOURGLASS_HONEY;
+        public static final Supplier<Integer> HOURGLASS_DUST;
+        public static final Supplier<Integer> HOURGLASS_SAND;
+        public static final Supplier<Integer> HOURGLASS_CONCRETE;
+        public static final Supplier<Integer> HOURGLASS_BLAZE_POWDER;
+        public static final Supplier<Integer> HOURGLASS_GLOWSTONE;
+        public static final Supplier<Integer> HOURGLASS_REDSTONE;
+        public static final Supplier<Integer> HOURGLASS_SUGAR;
+        public static final Supplier<Integer> HOURGLASS_SLIME;
+        public static final Supplier<Integer> HOURGLASS_HONEY;
 
-        public static Supplier<Boolean> ITEM_SHELF_LADDER;
+        public static final Supplier<Boolean> ITEM_SHELF_LADDER;
 
-        public static Supplier<Boolean> DOUBLE_IRON_GATE;
-        public static Supplier<Boolean> CONSISTENT_GATE;
+        public static final Supplier<Boolean> DOUBLE_IRON_GATE;
+        public static final Supplier<Boolean> CONSISTENT_GATE;
 
-        public static Supplier<Boolean> STICK_POLE;
-        public static Supplier<Integer> STICK_POLE_LENGTH;
+        public static final Supplier<Boolean> STICK_POLE;
+        public static final Supplier<Integer> STICK_POLE_LENGTH;
 
-        public static Supplier<Boolean> ASH_BURN;
-        public static Supplier<Boolean> ASH_RAIN;
+        public static final Supplier<Boolean> ASH_BURN;
+        public static final Supplier<Boolean> ASH_RAIN;
 
-        public static Supplier<Boolean> PLANTER_BREAKS;
+        public static final Supplier<Boolean> PLANTER_BREAKS;
 
-        public static Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
-        public static Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
+        public static final Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
 
 
+        static {
+            ConfigBuilder builder = builderReference.get();
 
-        private static void init(ConfigBuilder builder) {
 
             builder.comment("Server side blocks configs")
                     .push("blocks");
@@ -459,7 +481,7 @@ public class CommonConfigs {
             ENDERMAN_HEAD_INCREMENT = builder.comment("Time to increase 1 power level when being looked at")
                     .define("ticks_to_increase_power", 15, 0, 10000);
             ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE = builder.comment("do enderman heads work when looked from any side?")
-                            .define("work_from_any_side",false);
+                    .define("work_from_any_side", false);
             builder.pop();
 
             builder.push("bamboo_spikes");
@@ -679,25 +701,31 @@ public class CommonConfigs {
     }
 
     public static class Spawns {
-        public static Supplier<Boolean> DISTANCE_TEXT;
-        public static Supplier<Boolean> WAY_SIGN_ENABLED;
 
-        public static Supplier<Boolean> WILD_FLAX_ENABLED;
-        public static Supplier<Integer> FLAX_PATCH_TRIES;
-        public static Supplier<Integer> FLAX_AVERAGE_EVERY;
+        private static void init() {
+        }
 
-        public static Supplier<Boolean> URN_PILE_ENABLED;
-        public static Supplier<Integer> URN_PATCH_TRIES;
-        public static Supplier<Integer> URN_PER_CHUNK;
+        public static final Supplier<Boolean> DISTANCE_TEXT;
+        public static final Supplier<Boolean> WAY_SIGN_ENABLED;
 
-        public static Supplier<Boolean> BASALT_ASH_ENABLED;
-        public static Supplier<Integer> BASALT_ASH_TRIES;
-        public static Supplier<Integer> BASALT_ASH_PER_CHUNK;
+        public static final Supplier<Boolean> WILD_FLAX_ENABLED;
+        public static final Supplier<Integer> FLAX_PATCH_TRIES;
+        public static final Supplier<Integer> FLAX_AVERAGE_EVERY;
 
-        public static Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
+        public static final Supplier<Boolean> URN_PILE_ENABLED;
+        public static final Supplier<Integer> URN_PATCH_TRIES;
+        public static final Supplier<Integer> URN_PER_CHUNK;
+
+        public static final Supplier<Boolean> BASALT_ASH_ENABLED;
+        public static final Supplier<Integer> BASALT_ASH_TRIES;
+        public static final Supplier<Integer> BASALT_ASH_PER_CHUNK;
+
+        public static final Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
 
 
-        private static void init(ConfigBuilder builder) {
+        static {
+            ConfigBuilder builder = builderReference.get();
+
             builder.comment("Configure spawning conditions")
                     .push("spawns");
 

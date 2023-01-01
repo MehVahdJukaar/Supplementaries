@@ -3,9 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.supplementaries.common.world.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -14,40 +15,47 @@ import java.util.function.Supplier;
 
 public class ClientConfigs {
 
-
     public static void init() {
     }
 
     public static final ConfigSpec CLIENT_SPEC;
 
+    static WeakReference<ConfigBuilder> builderReference;
+
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
+        builderReference = new WeakReference<>(builder);
 
-        Blocks.init(builder);
-        Particles.init(builder);
-        Entity.init(builder);
-        General.init(builder);
-        Tweaks.init(builder);
-        Items.init(builder);
+        Blocks.init();
+        Particles.init();
+        General.init();
+        Tweaks.init();
+        Items.init();
         CLIENT_SPEC = builder.buildAndRegister();
     }
 
     public static class Items {
-        public static Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
-        public static Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
-        public static Supplier<Double> QUIVER_ARMOR_OFFSET;
-        public static Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
-        public static Supplier<Boolean> QUIVER_OVERLAY;
-        public static Supplier<Integer> QUIVER_GUI_X;
-        public static Supplier<Integer> QUIVER_GUI_Y;
-        public static Supplier<Boolean> SLINGSHOT_OVERLAY;
-        public static Supplier<Boolean> SLINGSHOT_OUTLINE;
-        public static Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
-        public static Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
-        public static Supplier<Boolean> WRENCH_PARTICLES;
-        public static Supplier<Boolean> FLUTE_PARTICLES;
 
-        private static void init(ConfigBuilder builder) {
+        private static void init() {
+        }
+
+        public static final Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
+        public static final Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
+        public static final Supplier<Double> QUIVER_ARMOR_OFFSET;
+        public static final Supplier<Boolean> QUIVER_MOUSE_MOVEMENT;
+        public static final Supplier<Boolean> QUIVER_OVERLAY;
+        public static final Supplier<Integer> QUIVER_GUI_X;
+        public static final Supplier<Integer> QUIVER_GUI_Y;
+        public static final Supplier<Boolean> SLINGSHOT_OVERLAY;
+        public static final Supplier<Boolean> SLINGSHOT_OUTLINE;
+        public static final Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
+        public static final Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
+        public static final Supplier<Boolean> WRENCH_PARTICLES;
+        public static final Supplier<Boolean> FLUTE_PARTICLES;
+
+        static {
+            ConfigBuilder builder = builderReference.get();
+
             builder.push("items");
 
             builder.push("slingshot");
@@ -93,15 +101,21 @@ public class ClientConfigs {
     }
 
     public static class Tweaks {
-        public static Supplier<Boolean> COLORED_ARROWS;
-        public static Supplier<Boolean> COLORED_BREWING_STAND;
-        public static Supplier<Boolean> CLOCK_CLICK;
-        public static Supplier<Boolean> COMPASS_CLICK;
-        public static Supplier<Boolean> BOOK_GLINT;
-        public static Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
-        public static Supplier<Boolean> MOB_HEAD_EFFECTS;
 
-        private static void init(ConfigBuilder builder) {
+        private static void init() {
+        }
+
+        public static final Supplier<Boolean> COLORED_ARROWS;
+        public static final Supplier<Boolean> COLORED_BREWING_STAND;
+        public static final Supplier<Boolean> CLOCK_CLICK;
+        public static final Supplier<Boolean> COMPASS_CLICK;
+        public static final Supplier<Boolean> BOOK_GLINT;
+        public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
+        public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
+
+        static{
+            ConfigBuilder builder = builderReference.get();
+
             builder.comment("Game tweaks")
                     .push("tweaks");
             COLORED_BREWING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n" +
@@ -124,16 +138,20 @@ public class ClientConfigs {
     }
 
     public static class General {
-        public static Supplier<Boolean> CONFIG_BUTTON;
-        public static Supplier<Boolean> TOOLTIP_HINTS;
-        public static Supplier<Boolean> PLACEABLE_TOOLTIP;
-        public static Supplier<Boolean> ANTI_REPOST_WARNING;
 
-        public static Supplier<Double> TEST1;
-        public static Supplier<Double> TEST2;
-        public static Supplier<Double> TEST3;
+        private static void init() {
+        }
 
-        private static void init(ConfigBuilder builder) {
+        public static final Supplier<Boolean> CONFIG_BUTTON;
+        public static final Supplier<Boolean> TOOLTIP_HINTS;
+        public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
+
+        public static final Supplier<Double> TEST1;
+        public static final Supplier<Double> TEST2;
+        public static final Supplier<Double> TEST3;
+
+        static{
+            ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
                     .push("general");
@@ -159,37 +177,42 @@ public class ClientConfigs {
 
     public static class Blocks {
 
-        public static Supplier<Double> BUBBLE_BLOCK_WOBBLE;
-        public static Supplier<Double> BUBBLE_BLOCK_GROW_SPEED;
-        public static Supplier<Boolean> PEDESTAL_SPIN;
-        public static Supplier<Boolean> PEDESTAL_SPECIAL;
-        public static Supplier<Double> PEDESTAL_SPEED;
-        public static Supplier<Boolean> SHELF_TRANSLATE;
-        public static Supplier<Double> WIND_VANE_POWER_SCALING;
-        public static Supplier<Double> WIND_VANE_ANGLE_1;
-        public static Supplier<Double> WIND_VANE_ANGLE_2;
-        public static Supplier<Double> WIND_VANE_PERIOD_1;
-        public static Supplier<Double> WIND_VANE_PERIOD_2;
-        public static Supplier<Boolean> CLOCK_24H;
-        public static Supplier<Boolean> GLOBE_RANDOM;
-        public static Supplier<Boolean> TIPPED_BAMBOO_SPIKES_TAB;
+        private static void init() {
+        }
 
-        public static Supplier<GraphicsFanciness> FLAG_FANCINESS;
-        public static Supplier<Boolean> FLAG_BANNER;
-        public static Supplier<Integer> FLAG_PERIOD;
-        public static Supplier<Double> FLAG_WAVELENGTH;
-        public static Supplier<Double> FLAG_AMPLITUDE;
-        public static Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
-        public static Supplier<List<String>> TICKABLE_MOBS;
+        public static final Supplier<Double> BUBBLE_BLOCK_WOBBLE;
+        public static final Supplier<Double> BUBBLE_BLOCK_GROW_SPEED;
+        public static final Supplier<Boolean> PEDESTAL_SPIN;
+        public static final Supplier<Boolean> PEDESTAL_SPECIAL;
+        public static final Supplier<Double> PEDESTAL_SPEED;
+        public static final Supplier<Boolean> SHELF_TRANSLATE;
+        public static final Supplier<Double> WIND_VANE_POWER_SCALING;
+        public static final Supplier<Double> WIND_VANE_ANGLE_1;
+        public static final Supplier<Double> WIND_VANE_ANGLE_2;
+        public static final Supplier<Double> WIND_VANE_PERIOD_1;
+        public static final Supplier<Double> WIND_VANE_PERIOD_2;
+        public static final Supplier<Boolean> CLOCK_24H;
+        public static final Supplier<Boolean> GLOBE_RANDOM;
+        public static final Supplier<Boolean> TIPPED_BAMBOO_SPIKES_TAB;
 
-        public static Supplier<Boolean> FAST_SIGNS;
-        public static Supplier<Boolean> FAST_LANTERNS;
-        public static Supplier<Boolean> TURN_TABLE_PARTICLES;
-        public static Supplier<Boolean> SPEAKER_BLOCK_MUTE;
-        public static Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
-        public static Supplier<Double> ROPE_WOBBLE_PERIOD;
+        public static final Supplier<GraphicsFanciness> FLAG_FANCINESS;
+        public static final Supplier<Boolean> FLAG_BANNER;
+        public static final Supplier<Integer> FLAG_PERIOD;
+        public static final Supplier<Double> FLAG_WAVELENGTH;
+        public static final Supplier<Double> FLAG_AMPLITUDE;
+        public static final Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
+        public static final Supplier<List<String>> TICKABLE_MOBS;
 
-        private static void init(ConfigBuilder builder) {
+        public static final Supplier<Boolean> FAST_SIGNS;
+        public static final Supplier<Boolean> FAST_LANTERNS;
+        public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
+        public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
+        public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
+        public static final Supplier<Double> ROPE_WOBBLE_PERIOD;
+
+        static {
+
+            ConfigBuilder builder = builderReference.get();
 
             builder.comment("""
                             Tweak and change the various block animations.
@@ -311,11 +334,16 @@ public class ClientConfigs {
 
 
     public static class Particles {
-        public static Supplier<Integer> TURN_INITIAL_COLOR;
-        public static Supplier<Integer> TURN_FADE_COLOR;
 
+        private static void init() {
+        }
 
-        private static void init(ConfigBuilder builder) {
+        public static final Supplier<Integer> TURN_INITIAL_COLOR;
+        public static final Supplier<Integer> TURN_FADE_COLOR;
+
+        static{
+
+            ConfigBuilder builder = builderReference.get();
             builder.comment("Particle parameters")
                     .push("particles");
 
@@ -329,18 +357,6 @@ public class ClientConfigs {
                     .defineColor("fade_color", 0x32befa);
 
             builder.pop();
-
-            builder.pop();
-        }
-    }
-
-    public static class Entity {
-
-
-        private static void init(ConfigBuilder builder) {
-            builder.comment("Entities parameters")
-                    .push("entities");
-
 
             builder.pop();
         }
