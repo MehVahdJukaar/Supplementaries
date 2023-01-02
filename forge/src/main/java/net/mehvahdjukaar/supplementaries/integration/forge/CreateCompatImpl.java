@@ -540,7 +540,7 @@ public class CreateCompatImpl {
                 int x = Integer.parseInt(m.group(1));
                 int y = Integer.parseInt(m.group(2));
                 DyeColor dye = DyeColor.byName(m.group(3), null);
-                if (x >= 0 && x < 15 && y >= 0 && y < 15 && dye != null) {
+                if (x >= 0 && x <= 15 && y >= 0 && y <= 15 && dye != null) {
                     if (dye != DyeColor.WHITE && dye != DyeColor.BLACK && !CommonConfigs.Blocks.BLACKBOARD_COLOR.get())
                         return false;
                     tile.setPixel(x, y, BlackboardBlock.colorToByte(dye));
