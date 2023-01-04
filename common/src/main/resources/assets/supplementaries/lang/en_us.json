@@ -373,6 +373,25 @@
   "block.supplementaries.skull_candle": "Skull Candle",
   "block.supplementaries.structure_temp": "0",
 
+  "block.supplementaries.ceiling_banner_black": "Black Banner",
+  "block.supplementaries.ceiling_banner_blue": "Blue Banner",
+  "block.supplementaries.ceiling_banner_brown": "Brown Banner",
+  "block.supplementaries.ceiling_banner_cyan": "Cyan Banner",
+  "block.supplementaries.ceiling_banner_gray": "Gray Banner",
+  "block.supplementaries.ceiling_banner_green": "Green Banner",
+  "block.supplementaries.ceiling_banner_light_blue": "Light Blue Banner",
+  "block.supplementaries.ceiling_banner_light_gray": "Light Gray Banner",
+  "block.supplementaries.ceiling_banner_lime": "Lime Banner",
+  "block.supplementaries.ceiling_banner_magenta": "Magenta Banner",
+  "block.supplementaries.ceiling_banner_orange": "Orange Banner",
+  "block.supplementaries.ceiling_banner_pink": "Pink Banner",
+  "block.supplementaries.ceiling_banner_purple": "Purple Banner",
+  "block.supplementaries.ceiling_banner_red": "Red Banner",
+  "block.supplementaries.ceiling_banner_white": "White Banner",
+  "block.supplementaries.ceiling_banner_yellow": "Yellow Banner",
+
+  "item.supplementaries.pancake_disc": "Pancake",
+
   "supplementaries.gui.controls": "Supplementaries",
   "supplementaries.keybind.quiver": "Quiver",
 
