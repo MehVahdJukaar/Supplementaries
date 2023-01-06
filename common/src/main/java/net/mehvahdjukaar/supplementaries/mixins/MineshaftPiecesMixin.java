@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MineshaftPieces.class)
-public class MineshaftPiecesMixin {
+public abstract class MineshaftPiecesMixin {
 
     @Inject(method = "createRandomShaftPiece", at = @At("HEAD"), cancellable = true)
     private static void addElevator(StructurePieceAccessor pieces, RandomSource random, int x, int y, int z, Direction direction, int genDepth, MineshaftStructure.Type type, CallbackInfoReturnable<MineshaftPieces.MineShaftPiece> cir) {

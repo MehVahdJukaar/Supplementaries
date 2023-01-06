@@ -31,5 +31,11 @@
     [
       "wrench"
     ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "wrench"
+    }
   ]
 }

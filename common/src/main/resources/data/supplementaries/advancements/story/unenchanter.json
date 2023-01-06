@@ -17,7 +17,7 @@
   },
   "criteria": {
     "apple": {
-      "trigger": "minecraft:grind_item",
+      "trigger": "moonlight:grind_item",
       "conditions": {
         "item": {
           "items": [
@@ -27,7 +27,7 @@
       }
     },
     "bomb": {
-      "trigger": "minecraft:grind_item",
+      "trigger": "moonlight:grind_item",
       "conditions": {
         "item": {
           "items": [
@@ -42,5 +42,11 @@
       "apple",
       "bomb"
     ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
   ]
 }

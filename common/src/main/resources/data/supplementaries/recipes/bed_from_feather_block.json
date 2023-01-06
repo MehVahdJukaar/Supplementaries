@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "111"
+  ],
+  "key": {
+    "0": {
+      "item": "supplementaries:feather_block"
+    },
+    "1": {
+      "tag": "#minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "minecraft:white_bed",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "feather_block"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -276,12 +278,12 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         for (var dir : Direction.values()) {
             if (dir == Direction.UP) continue;
             if (level.getBlockState(pos.relative(dir)).is(BlockTags.FIRE)) {
-                level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2+ level.random.nextInt(1));
+                level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2 + level.random.nextInt(1));
                 for (var d2 : Direction.Plane.HORIZONTAL) {
                     BlockPos fp = pos.relative(d2);
                     if (BaseFireBlock.canBePlacedAt(level, fp, d2.getOpposite())) {
                         level.setBlockAndUpdate(fp, BaseFireBlock.getState(level, fp).setValue(FireBlock.AGE, 14));
-                        level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2+ level.random.nextInt(1));
+                        level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2 + level.random.nextInt(1));
                     }
                 }
                 return;
@@ -312,8 +314,14 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         if (predicate.test(state)) {
             return findAndRingBell(world, pos.above(), player, it + 1, predicate);
         } else if (b instanceof BellBlock bellBlock && it != 0) {
+            Direction d = state.getValue(BellBlock.FACING);
+            var att = state.getValue(BellBlock.ATTACHMENT);
+            if (att == BellAttachType.SINGLE_WALL || att == BellAttachType.DOUBLE_WALL ||
+                    !Utils.getID(b).getNamespace().equals("create")) {
+                d = d.getClockWise();
+            }
             BlockHitResult hit = new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
-                    state.getValue(BellBlock.FACING).getClockWise(), pos, true);
+                    d, pos, true);
             return bellBlock.onHit(world, state, hit, player, true);
         }
         return false;

@@ -271,6 +271,7 @@ public class RegistryConfigs {
     public static boolean isEnabled(String key) {
         if (key.contains("daub")) return DAUB_ENABLED.get();
         return switch (key) {
+            case "way_sign"->CommonConfigs.Spawns.WAY_SIGN_ENABLED.get();
             case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
             case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
                     RegistryConfigs.FLAX_ENABLED.get();

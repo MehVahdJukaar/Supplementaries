@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/orange","required":false},
+  {"id":"#c:orange_dyes","required":false},
+  {"id":"chalk:orange_chalk","required":false},
+  {"id":"minecraft:orange_dye","required":false}
+  ]
+}

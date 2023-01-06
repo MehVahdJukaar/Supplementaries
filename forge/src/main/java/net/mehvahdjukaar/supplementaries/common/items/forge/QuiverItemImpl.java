@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -32,6 +32,7 @@ public class QuiverItemImpl {
             if (CompatHandler.CURIOS) {
                 var q = CuriosCompat.getEquippedQuiver(player);
                 if (q != null) return q;
+                if (CommonConfigs.Items.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
             }
         } else if (entity instanceof IQuiverEntity e) {
             return e.getQuiver();
@@ -55,11 +56,15 @@ public class QuiverItemImpl {
     public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.IQuiverData {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);
+        private final LazyOptional<QuiverCapability> lazyOptional2 = LazyOptional.of(() -> this);
 
         //Provider
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
-            return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, lazyOptional);
+            var v = ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, lazyOptional);
+            if (v.isPresent()) return v;
+            v = CapabilityHandler.QUIVER_ITEM_HANDLER.orEmpty(cap, lazyOptional2);
+            return v;
         }
 
         @Override

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/cyan","required":false},
+  {"id":"#c:cyan_dyes","required":false},
+  {"id":"chalk:cyan_chalk","required":false},
+  {"id":"minecraft:cyan_dye","required":false}
+  ]
+}

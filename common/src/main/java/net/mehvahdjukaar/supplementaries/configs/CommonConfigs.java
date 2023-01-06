@@ -9,15 +9,20 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.mixins.MineshaftCorridorMixin;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
@@ -28,7 +33,7 @@ public class CommonConfigs {
 
     public static final ConfigSpec SERVER_SPEC;
 
-    private static WeakReference<ConfigBuilder> builderReference;
+    private static final WeakReference<ConfigBuilder> builderReference;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
@@ -50,11 +55,27 @@ public class CommonConfigs {
 
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
-        Items.ROPE_ARROW_OVERRIDE = Suppliers.memoize(() -> {
-            var opt = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(),
-                    new ResourceLocation(Items.ROPE_ARROW_ROPE.get())));
-            return (Holder.Reference<Block>) opt.orElse(Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Supplementaries.res("rope"))).get());
+        Blocks.ropeOverride = Suppliers.memoize(() -> {
+            var o = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(),
+                    new ResourceLocation(Blocks.ROPE_OVERRIDE.get())));
+            if (o.isPresent() && o.get() instanceof Holder.Reference<Block> hr && hr.value() != ModRegistry.ROPE.get()) {
+                return hr;
+            }
+            return null;
         });
+    }
+
+    @Nullable
+    public static Block getSelectedRope() {
+        var override = getRopeOverride();
+        if (override != null) return override.value();
+        else if (RegistryConfigs.ROPE_ENABLED.get()) return ModRegistry.ROPE.get();
+        return null;
+    }
+
+    @Nullable
+    public static Holder.Reference<Block> getRopeOverride() {
+        return Blocks.ropeOverride.get();
     }
 
     public static class Items {
@@ -62,11 +83,9 @@ public class CommonConfigs {
         private static void init() {
         }
 
-        public static Supplier<Holder.Reference<Block>> ROPE_ARROW_OVERRIDE = null;
-
         public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
-        public static final Supplier<String> ROPE_ARROW_ROPE;
+
         public static final Supplier<Integer> FLUTE_RADIUS;
         public static final Supplier<Integer> FLUTE_DISTANCE;
         public static final Supplier<Double> BOMB_RADIUS;
@@ -82,6 +101,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Integer> BUBBLE_BLOWER_COST;
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
 
@@ -97,6 +117,8 @@ public class CommonConfigs {
                     .define("slots", 6, 1, 9);
             QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
                     .define("quiver_skeleton_chance", 0.2d, 0, 1);
+            QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio slot")
+                            .define("only_works_in_curio",false);
             builder.pop();
 
             builder.push("bubble_blower");
@@ -116,8 +138,6 @@ public class CommonConfigs {
 
             //rope arrow
             builder.push("rope_arrow");
-            ROPE_ARROW_ROPE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows instead")
-                    .define("rope_override", "supplementaries:rope");
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
                     .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
@@ -376,6 +396,9 @@ public class CommonConfigs {
         private static void init() {
         }
 
+        private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
+        public static final Supplier<String> ROPE_OVERRIDE;
+
         public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
 
         public static final Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
@@ -522,6 +545,8 @@ public class CommonConfigs {
                     .define("block_side_attachment", true);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
+            ROPE_OVERRIDE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
+                    .define("rope_override", "supplementaries:rope");
             builder.pop();
 
             builder.push("pedestal");

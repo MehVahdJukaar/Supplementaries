@@ -6,15 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +16,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Author: MehVahdJukaar
@@ -32,20 +25,19 @@ public class SupplementariesForge {
 
 
     public SupplementariesForge() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-
         Supplementaries.commonInit();
 
-        bus.addListener(SupplementariesForge::setup);
+
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(SupplementariesForge::registerOverrides);
 
         ServerEventsForge.init();
         ModLootModifiers.init();
 
-        if (PlatformHelper.getEnv().isClient()) {
+        PlatformHelper.getEnv().ifClient(() -> {
             ClientRegistry.init();
             ClientEventsForge.init();
-        }
+        });
     }
 
     public static void registerOverrides(RegisterEvent event) {
@@ -60,10 +52,6 @@ public class SupplementariesForge {
         }
     }
 
-
-    public static void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(Supplementaries::commonSetup);
-    }
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
 

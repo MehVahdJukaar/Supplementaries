@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;

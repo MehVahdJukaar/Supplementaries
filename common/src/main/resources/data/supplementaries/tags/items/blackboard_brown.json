@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/brown","required":false},
+  {"id":"#c:brown_dyes","required":false},
+  {"id":"chalk:brown_chalk","required":false},
+  {"id":"minecraft:brown_dye","required":false}
+  ]
+}

@@ -91,7 +91,8 @@ public class RopeArrowEntity extends AbstractArrow {
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
 
-        Block ropeBlock = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
+        Block ropeBlock = CommonConfigs.getSelectedRope();
+        if(ropeBlock==null)return;
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {
@@ -163,7 +164,8 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     private void continueUnwindingRope() {
-        Block ropeBlock = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
+        Block ropeBlock = CommonConfigs.getSelectedRope();
+        if(ropeBlock==null)return;
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();

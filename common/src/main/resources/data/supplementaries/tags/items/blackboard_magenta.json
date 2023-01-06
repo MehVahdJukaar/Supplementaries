@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/magenta","required":false},
+  {"id":"#c:magenta_dyes","required":false},
+  {"id":"chalk:magenta_chalk","required":false},
+  {"id":"minecraft:magenta_dye","required":false}
+  ]
+}

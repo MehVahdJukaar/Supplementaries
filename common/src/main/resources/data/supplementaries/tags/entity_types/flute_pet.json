@@ -10,7 +10,7 @@
     {"id":"minecraft:fox","required":false},
     {"id":"horse_colors:horse_felinoid","required":false},
     {"id":"ecologics:camel","required":false},
-		{"id":"naturalist:zebra","required":false},
+    {"id":"naturalist:zebra","required":false},
 	{"id":"lovely_snails:snail","required":false}
   ]
 }

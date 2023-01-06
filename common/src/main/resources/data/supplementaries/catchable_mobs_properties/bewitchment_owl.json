@@ -1,5 +1,5 @@
 {
-  "animation": "land",
+  "animation": "builtin",
   "height_increment": 0.25,
   "owners": [
     "bewitchment:owl"

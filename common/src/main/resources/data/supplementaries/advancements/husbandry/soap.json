@@ -31,5 +31,11 @@
     [
       "stew"
     ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
   ]
 }

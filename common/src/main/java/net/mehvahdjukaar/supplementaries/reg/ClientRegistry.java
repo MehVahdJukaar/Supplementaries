@@ -104,6 +104,8 @@ public class ClientRegistry {
     }
 
     public static void init() {
+        ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
+
         CompatHandlerClient.init();
 
         ClientPlatformHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);

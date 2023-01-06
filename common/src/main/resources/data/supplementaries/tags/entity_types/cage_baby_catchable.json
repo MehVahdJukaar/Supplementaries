@@ -20,12 +20,14 @@
     {"id":"eanimod:enhanced_mooshroom","required":false},
     {"id":"alexsmobs:bald_eagle","required":false},
     {"id":"alexsmobs:gelada_monkey","required":false},
-		{"id":"adventurez:iguana","required":false},
+    {"id":"adventurez:iguana","required":false},
 	{"id":"twilightforest:boar","required":false},
 	{"id":"twilightforest:bighorn_sheep","required":false},
 	{"id":"ecologics:squirrel","required":false},
 	{"id":"lovely_snails:snail","required":false},
-	{"id":"cave_enhancements:dripstone_tortoise","required":false}
+	{"id":"cave_enhancements:dripstone_tortoise","required":false},
+    {"id":"creatures_from_the_snow:snow_trover","required":false}
+
   ]
 }
 

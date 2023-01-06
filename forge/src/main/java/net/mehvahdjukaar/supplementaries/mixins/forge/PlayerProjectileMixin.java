@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,7 @@ public abstract class PlayerProjectileMixin extends LivingEntity {
     )
     private void getProjectile(ItemStack weaponStack, CallbackInfoReturnable<ItemStack> cir,
                                Predicate<ItemStack> supporterArrows, ItemStack heldArrow, int slotIndex, ItemStack itemStack) {
-        if (itemStack.getItem() instanceof QuiverItem) {
+        if (itemStack.getItem() instanceof QuiverItem && !CommonConfigs.Items.QUIVER_CURIO_ONLY.get()) {
             ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(supporterArrows);
             if (!arrow.isEmpty()) cir.setReturnValue(arrow);
         }

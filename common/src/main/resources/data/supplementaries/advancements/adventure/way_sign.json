@@ -37,5 +37,11 @@
     [
       "bastion"
     ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "way_sign"
+    }
   ]
 }

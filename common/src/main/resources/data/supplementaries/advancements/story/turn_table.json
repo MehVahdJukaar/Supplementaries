@@ -24,5 +24,11 @@
     [
       "unlock"
     ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "turn_table"
+    }
   ]
 }

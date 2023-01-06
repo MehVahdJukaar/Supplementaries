@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
@@ -28,7 +26,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -125,19 +126,15 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
     @Nullable
     public static DyeColor getStackChalkColor(ItemStack stack) {
-        DyeColor color = null;
-        if (CommonConfigs.Blocks.BLACKBOARD_COLOR.get()) {
-            color = ForgeHelper.getColor(stack);
-        }
-        if (color == null) {
+        boolean hasColor = CommonConfigs.Blocks.BLACKBOARD_COLOR.get();
 
-            if (stack.is(ModTags.BLACKBOARD_WHITE)) {
-                color = DyeColor.WHITE;
-            } else if (stack.is(ModTags.BLACKBOARD_BLACK)) {
-                color = DyeColor.BLACK;
+        for (DyeColor dyeColor : DyeColor.values()) {
+            if (!hasColor && (dyeColor != DyeColor.WHITE && dyeColor != DyeColor.BLACK)) continue;
+            if (stack.is(ModTags.BLACKBOARD_TAGS.get(dyeColor))) {
+                return dyeColor;
             }
         }
-        return color;
+        return null;
     }
 
     @Override

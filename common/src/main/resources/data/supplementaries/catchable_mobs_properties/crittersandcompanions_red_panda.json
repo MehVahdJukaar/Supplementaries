@@ -1,0 +1,8 @@
+{
+  "animation": "land",
+  "height_increment": 0.5,
+  "owners": [
+    "crittersandcompanions:red_panda"
+  ],
+  "width_increment": 0.5
+}

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(QuiverItem.class)
 public abstract class SelfQuiverItem extends Item {
 
-    public SelfQuiverItem(Properties arg) {
+    protected SelfQuiverItem(Properties arg) {
         super(arg);
     }
 

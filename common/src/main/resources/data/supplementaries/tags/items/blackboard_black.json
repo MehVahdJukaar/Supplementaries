@@ -14,6 +14,14 @@
       "required": false
     },
     {
+      "id": "#c:black_dyes",
+      "required": false
+    },
+    {
+      "id": "minecraft:black_dye",
+      "required": false
+    },
+    {
       "id": "chalk:black_chalk",
       "required": false
     }

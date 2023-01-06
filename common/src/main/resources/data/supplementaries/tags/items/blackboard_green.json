@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/green","required":false},
+  {"id":"#c:green_dyes","required":false},
+  {"id":"chalk:green_chalk","required":false},
+  {"id":"minecraft:green_dye","required":false}
+  ]
+}

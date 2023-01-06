@@ -44,6 +44,8 @@ public class Supplementaries {
     //called on mod creation
     public static void commonInit() {
 
+        PlatformHelper.addCommonSetup(Supplementaries::commonSetup);
+
         Credits.fetchFromServer();
         RegistryConfigs.init();
         CommonConfigs.init();
@@ -84,7 +86,11 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
-    //TODO: fix ash glm not workin
+    //goat rammer block
+    //goat helmet
+    //goat meat
+    //goat milk
+
     //TODO relayer on piston retract
     //mod to wax anything to prevent interaction
     //special recipes conditions dont work

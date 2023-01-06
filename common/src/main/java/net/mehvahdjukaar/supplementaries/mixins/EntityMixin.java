@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.common.commands.IUsedToRollTheDice;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;

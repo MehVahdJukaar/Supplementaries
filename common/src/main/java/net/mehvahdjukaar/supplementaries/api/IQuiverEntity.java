@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.entities;
+package net.mehvahdjukaar.supplementaries.api;
 
 import net.minecraft.world.item.ItemStack;
 

@@ -24,6 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -92,7 +93,12 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        CapabilityHandler.attachCapabilities(event);
+        CapabilityHandler.attachBlockEntityCapabilities(event);
+    }
+
+    @SubscribeEvent
+    public static void onAttachPlayerCapabilities(AttachCapabilitiesEvent<Player> event) {
+        CapabilityHandler.attachPlayerCapabilities(event);
     }
 
     //TODO: soap tool event

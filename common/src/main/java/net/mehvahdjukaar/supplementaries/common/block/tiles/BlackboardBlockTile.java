@@ -26,7 +26,7 @@ import java.util.UUID;
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         IScreenProvider, IExtraModelDataProvider {
 
-    public static final ModelDataKey<Key> BLACKBOARD = ModBlockProperties.BLACKBOARD;
+    public static final ModelDataKey<Key> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
     private UUID owner = null;
     private boolean waxed = false;
@@ -43,7 +43,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(BLACKBOARD, getTextureKey())
+                .with(BLACKBOARD_KEY, getTextureKey())
                 .build();
     }
 

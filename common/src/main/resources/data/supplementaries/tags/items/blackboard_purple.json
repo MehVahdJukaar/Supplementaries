@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/purple","required":false},
+  {"id":"#c:purple_dyes","required":false},
+  {"id":"chalk:purple_chalk","required":false},
+  {"id":"minecraft:purple_dye","required":false}
+  ]
+}

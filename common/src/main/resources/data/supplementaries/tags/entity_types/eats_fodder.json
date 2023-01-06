@@ -10,8 +10,10 @@
     {"id":"autumnity:snail","required":false},
     {"id":"alexsmobs:raccoon","required":false},
     {"id":"alexsmobs:elephant","required":false},
-		{"id":"naturalist:zebra","required":false},
-	{"id":"lovely_snails:snail","required":false}
+    {"id":"naturalist:zebra","required":false},
+	{"id":"lovely_snails:snail","required":false},
+    {"id":"creatures_from_the_snow:reindeer","required":false},
+    {"id":"creatures_from_the_snow:giraffe","required":false}
   ]
 }
 

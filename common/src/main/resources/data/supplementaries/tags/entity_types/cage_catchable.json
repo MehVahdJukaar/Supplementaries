@@ -213,7 +213,14 @@
 	{"id":"friendsandfoes:glare","required":false},
 	{"id":"ants:ant","required":false},
 	{"id":"cave_enhancements:goop","required":false},
-	{"id":"cave_enhancements:cruncher","required":false}
+	{"id":"cave_enhancements:cruncher","required":false},
+    {"id":"creatures_from_the_snow:penguin","required":false},
+    {"id":"crittersandcompanions:leaf_insect","required":false},
+    {"id":"crittersandcompanions:dragonfly","required":false},
+    {"id":"crittersandcompanions:ferret","required":false},
+    {"id":"crittersandcompanions:otter","required":false},
+    {"id":"crittersandcompanions:red_panda","required":false},
+    {"id":"enderscape:rubblemite","required":false}
   ]
 }
 

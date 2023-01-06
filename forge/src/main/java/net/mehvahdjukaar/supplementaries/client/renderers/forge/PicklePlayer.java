@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleD
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleRenderer;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;

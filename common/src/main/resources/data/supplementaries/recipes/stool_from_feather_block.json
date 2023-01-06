@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "111"
+  ],
+  "key": {
+    "0": {
+      "item": "supplementaries:feather_block"
+    },
+    "1": {
+      "tag": "#minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "quark:white_stool",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "feather_block"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "quark"
+    }
+  ]
+}

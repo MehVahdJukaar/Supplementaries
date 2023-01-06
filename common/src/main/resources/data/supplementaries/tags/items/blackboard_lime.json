@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/lime","required":false},
+  {"id":"#c:lime_dyes","required":false},
+  {"id":"chalk:lime_chalk","required":false},
+  {"id":"minecraft:lime_dye","required":false}
+  ]
+}

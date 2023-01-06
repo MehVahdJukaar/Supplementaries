@@ -1,8 +1,8 @@
 {
-  "animation": "builtin",
-  "height_increment": 0.0,
+  "animation": "land",
+  "height_increment": 0.1,
   "owners": [
     "duckling:duck"
   ],
-  "width_increment": 0.0
+  "width_increment": 0.1
 }

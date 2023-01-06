@@ -1,0 +1,8 @@
+{
+  "animation": "land",
+  "height_increment": 0.5,
+  "owners": [
+    "crittersandcompanions:leaf_insect"
+  ],
+  "width_increment": 0.5
+}

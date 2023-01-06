@@ -1,0 +1,8 @@
+{
+  "animation": "land",
+  "height_increment": 0.2,
+  "owners": [
+    "crittersandcompanions:ferret"
+  ],
+  "width_increment": 0.2
+}

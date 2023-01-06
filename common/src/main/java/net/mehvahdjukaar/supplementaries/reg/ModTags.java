@@ -2,16 +2,18 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.ProcessorLists;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ModTags {
 
@@ -42,8 +44,8 @@ public class ModTags {
     public static final TagKey<Item> CHOCOLATE_BARS = itemTag("chocolate_bars");
     public static final TagKey<Item> FLINT_AND_STEELS = ILightable.FLINT_AND_STEELS;
     public static final TagKey<Item> FLOWER_BOX_PLANTABLE = itemTag("flower_box_plantable");
-    public static final TagKey<Item> BLACKBOARD_WHITE = itemTag("blackboard_white");
-    public static final TagKey<Item> BLACKBOARD_BLACK = itemTag("blackboard_black");
+    public static final Map<DyeColor, TagKey<Item>> BLACKBOARD_TAGS = Arrays.stream(DyeColor.values())
+            .collect(Collectors.toUnmodifiableMap(d -> d, d -> itemTag("blackboard_" + d.getName())));
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");
     public static final TagKey<Item> DUSTS = itemTag("hourglass_dusts");
     public static final TagKey<Item> SANDS = itemTag("hourglass_sands");

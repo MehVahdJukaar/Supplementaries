@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/gray","required":false},
+  {"id":"#c:gray_dyes","required":false},
+  {"id":"chalk:gray_chalk","required":false},
+  {"id":"minecraft:gray_dye","required":false}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+  {"id":"#forge:dyes/light_blue","required":false},
+  {"id":"#c:light_blue_dyes","required":false},
+  {"id":"chalk:light_blue_chalk","required":false},
+  {"id":"minecraft:light_blue_dye","required":false}
+  ]
+}

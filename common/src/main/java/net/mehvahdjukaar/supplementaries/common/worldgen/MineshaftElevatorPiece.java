@@ -302,29 +302,33 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         return 22;
     }
 
+    @Nullable
+    public static BlockState getMineshaftRope() {
+        Block rope = CommonConfigs.getSelectedRope();
+        if (rope == null) return null;
+        BlockState ropeState = rope.defaultBlockState();
+        if (rope instanceof RopeBlock) {
+            ropeState = ropeState.setValue(RopeBlock.UP, true)
+                    .setValue(RopeBlock.DISTANCE, 0).setValue(RopeBlock.DOWN, true);
+        }
+        return ropeState;
+    }
+
 
     private void addPulley(WorldGenLevel level, RandomSource random, BoundingBox box,
                            int minZ, int minX, int maxY) {
         BlockState wood = this.type.getWoodState();
         BlockState plank = this.type.getPlanksState();
         Direction d = direction;
-        Block ropeOverride = CommonConfigs.Items.ROPE_ARROW_OVERRIDE.get().value();
-        BlockState ropeBlock;
-        boolean hasRope = !hasChain && (RegistryConfigs.ROPE_ENABLED.get() ||
-                ropeOverride != ModRegistry.ROPE.get());
-
-        if (hasRope) {
-            if (ropeOverride instanceof RopeBlock) {
-                ropeBlock = ropeOverride.defaultBlockState().setValue(RopeBlock.UP, true)
-                        .setValue(RopeBlock.DOWN, true).setValue(RopeBlock.DISTANCE, 0);
-            } else ropeBlock = ropeOverride.defaultBlockState();
-        } else ropeBlock = Blocks.CHAIN.defaultBlockState();
-
+        BlockState ropeBlock = getMineshaftRope();
+        boolean hasRope = !hasChain && ropeBlock != null;
+        if(!hasRope) ropeBlock = Blocks.CHAIN.defaultBlockState();
         Item ropeItem = ropeBlock.getBlock().asItem();
+
         BlockPos.MutableBlockPos contraptionPos = new BlockPos.MutableBlockPos(minX + 2, maxY + 1, minZ + 2);
 
         this.placeBlock(level, ModRegistry.PULLEY_BLOCK.get().defaultBlockState()
-                .setValue(PulleyBlock.TYPE, ropeItem == Items.CHAIN ? ModBlockProperties.Winding.CHAIN : ModBlockProperties.Winding.ROPE)
+                .setValue(PulleyBlock.TYPE, hasRope ? ModBlockProperties.Winding.ROPE : ModBlockProperties.Winding.CHAIN)
                 .setValue(PulleyBlock.AXIS, d.getAxis()), contraptionPos.getX(), contraptionPos.getY(), contraptionPos.getZ(), box);
 
         if (level.getBlockEntity(contraptionPos) instanceof PulleyBlockTile tile) {

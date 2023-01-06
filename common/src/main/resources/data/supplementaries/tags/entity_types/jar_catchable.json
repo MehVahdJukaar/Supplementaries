@@ -49,7 +49,7 @@
     {"id":"sprout:bounce_bug","required":false},
     {"id":"unusualend:ender_firefly","required":false},
     {"id":"naturalist:caterpillar","required":false},
-	    {"id":"cave_enhancements:goop","required":false},
+    {"id":"cave_enhancements:goop","required":false},
 	{"id":"the_bumblezone:honey_slime","required":false},
 	{"id":"rottencreatures:scarab","required":false},
 	{"id":"rottencreatures:flying_scarab","required":false},
@@ -58,7 +58,11 @@
 	{"id":"twilightforest:tiny_bird","required":false},
 	{"id":"twilightforest:dwarf_rabbit","required":false},
 	{"id":"naturalist:snail","required":false},
-	{"id":"deeperdarker:sculk_leech","required":false}
+	{"id":"deeperdarker:sculk_leech","required":false},
+    {"id":"biomemakeover:lightning_bug","required":false},
+    {"id":"biomemakeover:lightning_bug_alternate","required":false},
+    {"id":"crittersandcompanions:leaf_insect","required":false},
+    {"id":"crittersandcompanions:dragonfly","required":false}
   ]
 }
 
