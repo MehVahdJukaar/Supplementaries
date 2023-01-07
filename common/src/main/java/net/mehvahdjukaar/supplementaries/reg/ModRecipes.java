@@ -1,22 +1,12 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.core.misc.ModCriteriaTriggers;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

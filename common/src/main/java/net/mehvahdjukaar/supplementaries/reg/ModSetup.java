@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 //Merge with supplementaries main class
 public class ModSetup {
@@ -49,16 +50,20 @@ public class ModSetup {
     );
 
     public static void setup() {
+        var list =new ArrayList<Long>();
         try {
             Stopwatch watch = Stopwatch.createStarted();
 
             for (int i = 0; i < MOD_SETUP_WORK.size(); i++) {
                 setupStage = i;
                 MOD_SETUP_WORK.get(i).run();
+                list.add(watch.elapsed().toMillis());
+                watch.reset();
+                watch.start();
             }
             hasFinishedSetup = true;
 
-            Supplementaries.LOGGER.info("Finished mod setup in: {} ms", watch.elapsed().toMillis());
+            Supplementaries.LOGGER.info("Finished mod setup in: {} ms", list);
 
         } catch (Exception e) {
             Supplementaries.LOGGER.error(e);

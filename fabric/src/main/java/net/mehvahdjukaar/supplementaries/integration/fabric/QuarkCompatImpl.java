@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.integration.fabric;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -52,5 +54,9 @@ public class QuarkCompatImpl {
 
     public static boolean isFastSlideModuleEnabled() {
         return false;
+    }
+
+    public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
+        return null;
     }
 }

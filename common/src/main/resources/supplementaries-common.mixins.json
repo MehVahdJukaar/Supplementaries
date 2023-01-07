@@ -49,7 +49,6 @@
     "LoomMenuMixin",
     "MineshaftCorridorMixin",
     "MineshaftPiecesMixin",
-    "PistonBlockEntityMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",
     "ServerLevelMixin",
@@ -61,8 +60,7 @@
     "StrongholdRoomSconceMixin",
     "VineMixin",
     "WanderingTraderMixin",
-    "ZombieHorseMixin",
-    "accessors.MobAccessor"
+    "ZombieHorseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

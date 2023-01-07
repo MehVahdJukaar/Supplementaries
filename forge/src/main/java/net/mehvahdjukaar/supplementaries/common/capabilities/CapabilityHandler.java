@@ -25,10 +25,8 @@ public class CapabilityHandler {
     public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<IAntiqueTextProvider> ANTIQUE_TEXT_CAP = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<ISoapWashable> SOAP_WASHABLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static final Capability<QuiverItemImpl.QuiverCapability> QUIVER_ITEM_HANDLER =
-            CapabilityManager.get(new CapabilityToken<>() {});
-    public static final Capability<IQuiverEntity> QUIVER_PLAYER =
-            CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<QuiverItemImpl.QuiverCapability> QUIVER_ITEM_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<IQuiverEntity> QUIVER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {});
 
 
     public static void register(RegisterCapabilitiesEvent event) {

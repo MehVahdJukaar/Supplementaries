@@ -136,7 +136,9 @@ dependencies {
     modCompileOnly("curse.maven:cc-tweaked-282001:3904454")
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:3857246")
-    modImplementation("curse.maven:quark-243121:4100692")
+    modImplementation("curse.maven:quark-oddities-301051:3575623")
+    //modImplementation("curse.maven:quark-243121:4100692")
+    modImplementation("vazkii.quark:quark-beta")
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:waystones-245755:3835119")

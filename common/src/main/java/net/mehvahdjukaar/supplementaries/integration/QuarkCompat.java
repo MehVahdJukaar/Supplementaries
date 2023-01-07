@@ -4,10 +4,12 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -20,7 +22,7 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static void tickPiston(Level level, BlockPos pos, AABB aabb, boolean sameDir, BlockEntity pistonBlockEntityMixin) {
+    public static void tickPiston(Level level, BlockPos pos, AABB aabb, boolean sameDir, BlockEntity tile) {
         throw new AssertionError();
     }
 
@@ -71,6 +73,11 @@ public class QuarkCompat {
     @Contract
     @ExpectPlatform
     public static boolean isJukeboxModuleOn() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
         throw new AssertionError();
     }
 }

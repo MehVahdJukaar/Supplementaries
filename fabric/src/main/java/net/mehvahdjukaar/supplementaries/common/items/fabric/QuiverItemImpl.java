@@ -27,14 +27,14 @@ public class QuiverItemImpl {
         return ItemStack.EMPTY;
     }
 
-    public static QuiverItem.IQuiverData getQuiverData(ItemStack stack) {
+    public static QuiverItem.Data getQuiverData(ItemStack stack) {
         return new QuiverNBTData(stack.getOrCreateTag());
     }
 
     public static void sendForgeCapToServer(ItemStack quiver) {
     }
 
-    public static class QuiverNBTData implements QuiverItem.IQuiverData {
+    public static class QuiverNBTData implements QuiverItem.Data {
 
         public static final String TAG_ITEMS = "Items";
         private final List<ItemStack> stackView = new ArrayList<>(

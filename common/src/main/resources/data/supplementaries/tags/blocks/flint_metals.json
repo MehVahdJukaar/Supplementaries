@@ -1,0 +1,35 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:iron_block","required":false},
+    {"id":"minecraft:iron_door","required":false},
+    {"id":"minecraft:iron_trapdoor","required":false},
+    {"id":"minecraft:raw_iron_block","required":false},
+    {"id":"minecraft:ancient_debris","required":false},
+    {"id":"minecraft:netherite_block","required":false},
+    {"id":"supplementaries:netherite_door","required":false},
+    {"id":"supplementaries:netherite_trapdoor","required":false},
+
+    {"id":"quark:iron_plate","required":false},
+    {"id":"quark:iron_plate_stairs","required":false},
+    {"id":"quark:iron_plate_slab","required":false},
+    {"id":"quark:iron_plate_vertical_slab","required":false},
+
+    {"id":"quark:rusty_iron_plate","required":false},
+    {"id":"quark:rusty_iron_plate_stairs","required":false},
+    {"id":"quark:rusty_iron_plate_slab","required":false},
+    {"id":"quark:rusty_iron_plate_vertical_slab","required":false},
+
+    {"id":"quark:raw_iron_bricks","required":false},
+    {"id":"quark:raw_iron_bricks_stairs","required":false},
+    {"id":"quark:raw_iron_bricks_slab","required":false},
+    {"id":"quark:raw_iron_bricks_vertical_slab","required":false},
+
+    {"id":"quark:iron_pillar","required":false},
+
+    {"id":"#immersive_weathering:rusted_iron","required":false},
+    {"id":"#immersive_weathering:exposed_iron","required":false},
+    {"id":"#immersive_weathering:weathered_iron","required":false},
+    {"id":"#immersive_weathering:clean_iron","required":false}
+  ]
+}

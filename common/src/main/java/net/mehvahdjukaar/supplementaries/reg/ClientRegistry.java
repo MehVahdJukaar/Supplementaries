@@ -104,7 +104,6 @@ public class ClientRegistry {
     }
 
     public static void init() {
-        ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
 
         CompatHandlerClient.init();
 
@@ -422,7 +421,8 @@ public class ClientRegistry {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
-        event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack), ModRegistry.QUIVER_ITEM.get());
+        event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack),
+                ModRegistry.QUIVER_ITEM.get());
 
 
     }

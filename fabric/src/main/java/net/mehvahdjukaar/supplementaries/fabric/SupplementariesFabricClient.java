@@ -16,9 +16,11 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
 
-    public static void clientInit() {
-        ClientRegistry.init();
+    public static void clientInitAndSetup() {
+        ClientPlatformHelper.addClientSetup(ClientRegistry::init);
         ClientPlatformHelper.addClientSetup(SupplementariesFabricClient::fabricSetup);
+        ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
+
     }
 
     private static void fabricSetup() {

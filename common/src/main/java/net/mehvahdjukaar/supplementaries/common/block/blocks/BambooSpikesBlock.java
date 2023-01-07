@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
@@ -13,6 +14,8 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTil
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -41,6 +44,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -49,6 +53,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -60,7 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, ISoapWashable {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, ISoapWashable, IPistonMotionReact {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -77,9 +82,9 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
     }
-    
+
     public static DamageSource getDamageSource(Level level) {
-        if ( CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
+        if (CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
             return new ModDamageSources.SpikePlayer("spike", MiscUtils.getFakePlayer(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
@@ -270,5 +275,16 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean ticksWhileMoved() {
+        return true;
+    }
+
+    @Override
+    public void moveTick(BlockState movedState, Level level, BlockPos pos, Direction dir, AABB aabb, PistonMovingBlockEntity tile) {
+        boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(dir));
+        if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, aabb, sameDir, tile);
     }
 }

@@ -45,7 +45,7 @@ public abstract class ProjectileWeaponItemMixin {
             }
         }
         if(quiverStack != null){
-            QuiverItem.IQuiverData data = QuiverItem.getQuiverData(quiverStack);
+            QuiverItem.Data data = QuiverItem.getQuiverData(quiverStack);
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
                 if (!arrow.isEmpty()) cir.setReturnValue(arrow);

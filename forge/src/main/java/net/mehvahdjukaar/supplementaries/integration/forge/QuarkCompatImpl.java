@@ -2,12 +2,13 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,9 +16,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -28,13 +31,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
+import vazkii.quark.api.event.UsageTickerEvent;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
@@ -42,7 +48,7 @@ import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
-import vazkii.quark.content.tweaks.module.MoreNoteBlockSounds;
+import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -119,7 +125,7 @@ public class QuarkCompatImpl {
                         if (getMovingBlockEntity(pos, level) instanceof BambooSpikesBlockTile tile) {
                             //apply effects
                             if (tile.interactWithEntity(livingEntity, level)) {
-                                //change blockstate if empty
+                                //change block state if empty
                                 if (movingTile instanceof IBlockHolder te) {
                                     //remove last charge and set new blockState
                                     BlockState state = te.getHeldBlock();
@@ -138,16 +144,12 @@ public class QuarkCompatImpl {
         }
     }
 
-    private static Field MOVEMENTS = null;
+    private static final Field MOVEMENTS = ObfuscationReflectionHelper.findField(PistonsMoveTileEntitiesModule.class, "movements");
 
     private static void updateMovingTile(BlockPos pos, Level world, BlockEntity tile) {
         //not very nice of me to change its private fields :/
         try {
             //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
-            if (MOVEMENTS == null) {
-                MOVEMENTS = ObfuscationReflectionHelper.findField(PistonsMoveTileEntitiesModule.class, "movements");
-            }
-
             Object o = MOVEMENTS.get(null);
             if (o instanceof WeakHashMap) {
                 WeakHashMap<Level, Map<BlockPos, CompoundTag>> movements = (WeakHashMap<Level, Map<BlockPos, CompoundTag>>) o;
@@ -195,7 +197,32 @@ public class QuarkCompatImpl {
     }
 
     public static void init() {
+        MinecraftForge.EVENT_BUS.addListener(QuarkCompatImpl::quiverUsageTicker);
+    }
 
+    public static void quiverUsageTicker(UsageTickerEvent.GetCount event) {
+        if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
+            //adds missing ones from quiver
+            if (event.player instanceof IQuiverEntity qe) {
+                QuiverItem.Data data = QuiverItem.getQuiverData(qe.getQuiver());
+                //sanity check
+                ItemStack selected = data.getSelected();
+
+                if (event.currentStack.is(selected.getItem())) {
+                    //just recomputes everything
+                    int count = data.getSelectedArrowCount();
+                    Inventory inventory = event.player.getInventory();
+
+                    for (int i = 0; i < inventory.getContainerSize(); ++i) {
+                        ItemStack stackAt = inventory.getItem(i);
+                        if (selected.is(stackAt.getItem())) {
+                            count += stackAt.getCount();
+                        }
+                    }
+                    event.setResultCount(count);
+                }
+            }
+        }
     }
 
 
@@ -214,6 +241,14 @@ public class QuarkCompatImpl {
 
 
     public static boolean isMoreNoteBlockSoundsOn() {
-        return MoreNoteBlockSounds.enableSkullSounds;
+        return MoreNoteBlockSoundsModule.enableSkullSounds;
     }
+
+    public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
+        if (be instanceof MagnetizedBlockBlockEntity magnet && dir == magnet.getFacing()) {
+            return magnet.getMagnetState();
+        }
+        return null;
+    }
+
 }

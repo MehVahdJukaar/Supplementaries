@@ -42,7 +42,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import vazkii.quark.content.tweaks.module.MoreNoteBlockSounds;
 import vectorwing.farmersdelight.common.Configuration;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 import vectorwing.farmersdelight.common.registry.ModBlocks;

@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import com.mojang.text2speech.Narrator;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.minecraft.client.GameNarrator;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +24,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Consumer;
 
@@ -43,7 +44,7 @@ public class ClientReceivers {
         var mode = message.mode;
         Component str = message.str;
         if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
-          Minecraft.getInstance().getNarrator().narrator.say(str.getString(), true);
+            Minecraft.getInstance().getNarrator().narrator.say(str.getString(), true);
         } else if (mode == SpeakerBlockTile.Mode.TITLE) {
             Gui gui = Minecraft.getInstance().gui;
             gui.clear();
@@ -81,8 +82,8 @@ public class ClientReceivers {
                             UniformInt.of(2, 4), 0.01f);
                 }
                 case BUBBLE_CLEAN_ENTITY -> {
-                    if (message.entityId != null) {
-                        var e = l.getEntity(message.entityId);
+                    if (message.extraData != null) {
+                        var e = l.getEntity(message.extraData);
                         if (e != null) {
                             ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l,
                                     ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
@@ -106,6 +107,26 @@ public class ClientReceivers {
                         double d10 = j2 * d4 + l.random.nextGaussian() * 0.01D;
                         double d11 = k2 * d4 + l.random.nextGaussian() * 0.01D;
                         l.addParticle(ParticleTypes.SMOKE, d6, d8, d30, d9, d10, d11);
+                    }
+                }
+                case FLINT_BLOCK_IGNITE -> {
+                    if (message.extraData != null && message.pos != null) {
+                        boolean isIronMoving = message.extraData == 1;
+                        BlockPos pos = new BlockPos(message.pos);
+
+                        for (var ironDir : Direction.values()) {
+                            BlockPos facingPos = pos.relative(ironDir);
+                            BlockState facingState = l.getBlockState(facingPos);
+
+                            if (isIronMoving ? facingState.is(ModRegistry.FLINT_BLOCK.get()) :
+                                    FlintBlock.canBlockCreateSpark(facingState, l, facingPos, ironDir.getOpposite())) {
+                                for (int i = 0; i < 6; i++) {
+                                    ParticleUtil.spawnParticleOnFace(l, facingPos,
+                                            ironDir.getOpposite(),
+                                            ParticleTypes.CRIT, -0.5f, 0.5f, false);
+                                }
+                            }
+                        }
                     }
                 }
             }

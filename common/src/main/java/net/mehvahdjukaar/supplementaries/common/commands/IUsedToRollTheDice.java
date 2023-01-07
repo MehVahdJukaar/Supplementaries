@@ -9,8 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 public class IUsedToRollTheDice implements Command<CommandSourceStack> {
 
@@ -25,13 +24,12 @@ public class IUsedToRollTheDice implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        Random r = new Random();
+        RandomSource r = context.getSource().getLevel().random;
         int dice = IntegerArgumentType.getInteger(context, "dice");
 
         int roll = r.nextInt(dice);
         context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.dice", dice, roll), false);
 
-
-        return 1;
+        return roll;
     }
 }

@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHa
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.mixins.accessors.MobAccessor;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -132,15 +131,14 @@ public class ServerEvents {
             if (entity instanceof Animal animal) {
                 EntityType<?> type = entity.getType();
                 if (type.is(ModTags.EATS_FODDER)) {
-                    //TODO: use AW
-                    ((MobAccessor) animal).getGoalSelector().addGoal(3,
+                    animal.goalSelector.addGoal(3,
                             new EatFodderGoal(animal, 1, 8, 2, 30));
                 }
                 return;
             }
         }
         if (entity.getType() == EntityType.EVOKER) {
-            ((MobAccessor) entity).getGoalSelector().addGoal(6,
+            ((Evoker) entity).goalSelector.addGoal(6,
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
         }
     }

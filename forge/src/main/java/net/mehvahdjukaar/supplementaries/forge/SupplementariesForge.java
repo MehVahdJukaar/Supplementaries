@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
@@ -37,6 +38,7 @@ public class SupplementariesForge {
         PlatformHelper.getEnv().ifClient(() -> {
             ClientRegistry.init();
             ClientEventsForge.init();
+            ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
         });
     }
 

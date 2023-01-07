@@ -8,6 +8,10 @@
     {
       "id": "minecraft:armor_stand",
       "required": true
+    },
+	{
+      "id": "xercapaint:easel",
+      "required": false
     }
   ]
 }

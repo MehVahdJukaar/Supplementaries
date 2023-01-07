@@ -54,7 +54,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             //place into slot
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
-                IQuiverData data = getQuiverData(quiver);
+                Data data = getQuiverData(quiver);
                 if (data != null) {
                     data.removeOneStack().ifPresent((stack) -> {
                         this.playRemoveOneSound(pPlayer);
@@ -65,7 +65,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                IQuiverData data = getQuiverData(quiver);
+                Data data = getQuiverData(quiver);
                 if (data != null) {
                     var taken = pSlot.safeTake(itemstack.getCount(), 64, pPlayer);
                     ItemStack remaining = data.tryAdding(taken);
@@ -83,7 +83,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
-            IQuiverData data = getQuiverData(quiver);
+            Data data = getQuiverData(quiver);
             if (data != null) {
                 AtomicBoolean didStuff = new AtomicBoolean(false);
                 if (pOther.isEmpty()) {
@@ -111,7 +111,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
         if (player.isSecondaryUseActive()) {
-            IQuiverData data = getQuiverData(stack);
+            Data data = getQuiverData(stack);
             if (data != null) {
                 if (data.cycle()) {
                     this.playInsertSound(player);
@@ -151,7 +151,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        IQuiverData data = getQuiverData(pStack);
+        Data data = getQuiverData(pStack);
         if (data != null) {
             return data.getSelected().getCount() > 0;
         }
@@ -160,7 +160,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        IQuiverData data = getQuiverData(pStack);
+        Data data = getQuiverData(pStack);
         if (data != null) {
             return Math.min(1 + 12 * data.getSelectedArrowCount() /
                     (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
@@ -176,7 +176,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        IQuiverData data = getQuiverData(pStack);
+        Data data = getQuiverData(pStack);
         if (data != null) {
             NonNullList<ItemStack> list = NonNullList.create();
             boolean isEmpty = true;
@@ -194,7 +194,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        IQuiverData data = getQuiverData(pStack);
+        Data data = getQuiverData(pStack);
         if (data != null) {
             int c = data.getSelectedArrowCount();
             if (c != 0) {
@@ -207,7 +207,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
-        IQuiverData data = getQuiverData(pItemEntity.getItem());
+        Data data = getQuiverData(pItemEntity.getItem());
         if (data != null) {
             ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
         }
@@ -227,7 +227,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
     @Nullable
     @ExpectPlatform
-    public static IQuiverData getQuiverData(ItemStack stack) {
+    public static QuiverItem.Data getQuiverData(ItemStack stack) {
         throw new AssertionError();
     }
 
@@ -239,14 +239,14 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     //used to reset the selected arrow. I wish I didn't have to do this but I dont have control over when the itemstack is decremented
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        IQuiverData data = getQuiverData(stack);
+        Data data = getQuiverData(stack);
         if (data != null) data.updateSelectedIfNeeded();
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
 
     //this is cap, cap provider
-    public interface IQuiverData {
+    public interface Data {
 
         int getSelectedSlot();
 
