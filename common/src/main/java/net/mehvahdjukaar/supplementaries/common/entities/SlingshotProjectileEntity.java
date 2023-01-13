@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -134,7 +135,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
-
     @Override
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
@@ -147,7 +147,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             if (CompatHandler.FLAN && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())) {
                 return;
             }
-
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
 
@@ -158,14 +157,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 success = true;
             }
             if (!success) {
-                //TODO: remove this hack when we test it and see if sounds still does not play
                 //null player so sound always plays
-                //hackeries because for some god damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player fakePlayer = MiscUtils.getEntityStand(this, player);
+                //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
+                Player fakePlayer = FakePlayerManager.get(this, player);
 
                 success = ItemsUtil.place(item,
                         new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
-
             }
             if (success) {
                 this.remove(RemovalReason.DISCARDED);

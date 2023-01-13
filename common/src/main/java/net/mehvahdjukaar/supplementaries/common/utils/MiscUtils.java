@@ -141,11 +141,9 @@ public class MiscUtils {
     private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
             Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
 
-
     public static boolean isAllowedInShulker(ItemStack stack) {
         return SHULKER_TILE.get().canPlaceItemThroughFace(0, stack, null);
     }
-
 
     //cylinder distance
     public static boolean withinDistanceDown(BlockPos pos, Vec3 vector, double distW, double distDown) {
@@ -155,21 +153,4 @@ public class MiscUtils {
         double myDistW = (dx * dx + dz * dz);
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
-
-    public static Player getEntityStand(Entity copyFrom) {
-        return getEntityStand(copyFrom, copyFrom);
-    }
-
-    @ExpectPlatform
-    public static Player getEntityStand(Entity copyPosFrom, Entity copyRotFrom) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    @CheckForNull
-    @Nullable
-    public static Player getFakePlayer(Level level) {
-        throw new AssertionError();
-    }
-
 }

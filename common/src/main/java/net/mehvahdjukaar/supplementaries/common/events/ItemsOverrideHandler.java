@@ -109,12 +109,14 @@ public class ItemsOverrideHandler {
         //maybe move in mixin system (can't for cakes as block interaction has priority)
         itemActionOnBlock.add(new SkullPileBehavior());
 
-        itemActionOnBlock.add(new EnhancedCakeBehavior());
+        itemActionOnBlock.add(new DoubleCakeBehavior());
 
         itemActionOnBlock.add(new MapMarkerBehavior());
         itemActionOnBlock.add(new XpBottlingBehavior());
 
+
         if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
+            itemActionOnBlock.add(new WrittenBookHackBehavior());
             ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
             ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
         }
@@ -293,6 +295,29 @@ public class ItemsOverrideHandler {
         }
     }
 
+
+    private static class WrittenBookHackBehavior extends ItemUseOnBlockOverride {
+
+        @Override
+        public boolean isEnabled() {
+            return CommonConfigs.Tweaks.WRITTEN_BOOKS.get();
+        }
+
+        @Override
+        public boolean appliesToItem(Item item) {
+            return item == Items.WRITTEN_BOOK || item == Items.WRITABLE_BOOK;
+        }
+
+        @Override
+        public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand, ItemStack stack, BlockHitResult hit, boolean isRanged) {
+            if (player.isSecondaryUseActive()) {
+                var r = ((IExtendedItem) stack.getItem()).getAdditionalBehavior()
+                        .overrideUseOn(new UseOnContext(player, hand, hit), null);
+                if (r.consumesAction()) return r;
+            }
+            return InteractionResult.PASS;
+        }
+    }
 
     private static class ClockItemBehavior extends ItemUseOverride {
 
@@ -558,7 +583,7 @@ public class ItemsOverrideHandler {
         }
     }
 
-    private static class EnhancedCakeBehavior extends ItemUseOnBlockOverride {
+    private static class DoubleCakeBehavior extends ItemUseOnBlockOverride {
 
         @Nullable
         @Override

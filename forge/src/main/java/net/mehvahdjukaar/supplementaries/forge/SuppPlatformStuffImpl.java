@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
@@ -44,7 +45,7 @@ public class SuppPlatformStuffImpl {
 
     @Nullable
     public static BlockState getUnoxidised(Level level, BlockPos pos, BlockState state) {
-        Player fp = MiscUtils.getFakePlayer(level);
+        Player fp = FakePlayerManager.getDefault(level);
         fp.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_AXE.getDefaultInstance());
         Block b = state.getBlock();
         var context = new UseOnContext(fp, InteractionHand.MAIN_HAND,

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AdditionalDispenserBehavior;
+import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
@@ -160,7 +161,7 @@ public class DispenserInteractionsRegistry {
             Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos pos = source.getPos().relative(dir);
 
-            Player fp = MiscUtils.getFakePlayer(level);
+            Player fp = FakePlayerManager.getDefault(level);
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
             UseOnContext context = new UseOnContext(fp, InteractionHand.MAIN_HAND,
                     new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false));

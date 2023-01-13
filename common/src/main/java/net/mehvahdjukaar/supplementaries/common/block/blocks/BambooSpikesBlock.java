@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
@@ -85,7 +86,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
-            return new ModDamageSources.SpikePlayer("spike", MiscUtils.getFakePlayer(level)).setProjectile();
+            return new ModDamageSources.SpikePlayer("spike", FakePlayerManager.getDefault(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
     }
@@ -283,8 +284,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public void moveTick(BlockState movedState, Level level, BlockPos pos, Direction dir, AABB aabb, PistonMovingBlockEntity tile) {
-        boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(dir));
+    public void moveTick(BlockState movedState, Level level, BlockPos pos, AABB aabb, PistonMovingBlockEntity tile) {
+        boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(tile.getDirection()));
         if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, aabb, sameDir, tile);
     }
 }

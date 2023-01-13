@@ -25,20 +25,13 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         super(properties);
     }
 
-
-    //TODO: figure out piston fire interaction
-
-    public void onMagnetMoved(Level world, BlockPos blockPos, Direction direction, BlockState blockState, BlockEntity tileEntity) {
-        int a = 1;
-    }
-
     @Override
     public void onMoved(BlockState movedState, Level level, BlockPos pos, Direction moveDirection, boolean extending) {
         if (!extending && !level.isClientSide) {
             BlockPos firePos = pos.relative(moveDirection);
             if (level.getBlockState(firePos).isAir()) {
                 for (Direction ironDir : Direction.values()) {
-                    if (ironDir == moveDirection.getOpposite()) continue;
+                    if (ironDir.getAxis() == moveDirection.getAxis()) continue;
                     BlockPos ironPos = firePos.relative(ironDir);
                     BlockState facingState = level.getBlockState(ironPos);
                     if (canBlockCreateSpark(facingState, level, ironPos, ironDir.getOpposite())) {
@@ -85,6 +78,8 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         if (!newState.isAir() || !oldBlock.builtInRegistryHolder().is(ModTags.FLINT_METALS)) return;
         Direction dir = Direction.fromNormal(pos.subtract(targetPos));
         for (Direction pistonDir : Direction.values()) {
+            if (dir.getAxis() == pistonDir.getAxis()) continue;
+
             BlockPos tilePos = targetPos.relative(pistonDir);
             BlockEntity be = level.getBlockEntity(tilePos);
             if (be instanceof PistonMovingBlockEntity piston) {

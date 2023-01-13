@@ -24,10 +24,6 @@ import java.util.List;
  */
 public record SimplePlacement(@Nullable Block placeable) implements AdditionalPlacement {
 
-    public SimplePlacement(@Nullable Block placeable) {
-        this.placeable = placeable;
-    }
-
     BlockPlacerItem getMimic() {
         return ModRegistry.BLOCK_PLACER.get();
     }

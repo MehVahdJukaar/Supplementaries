@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
@@ -122,8 +123,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
         if (!(world instanceof Level)) return false;
         ItemStack stack = this.getDisplayedItem();
-        if (stack.getCount() < rot || !(stack.getItem() instanceof BlockItem)) return false;
-        Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
+        if (stack.getCount() < rot || !(stack.getItem() instanceof BlockItem bi)) return false;
+        Block ropeBlock = bi.getBlock();
         boolean success = RopeBlock.addRope(pos.below(), (Level) world, null, InteractionHand.MAIN_HAND, ropeBlock);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();

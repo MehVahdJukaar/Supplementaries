@@ -10,6 +10,10 @@
     {"id":"supplementaries:netherite_door","required":false},
     {"id":"supplementaries:netherite_trapdoor","required":false},
 
+    {"id":"forge:storage_blocks/steel","required":false},
+    {"id":"forge:storage_blocks/iron","required":false},
+
+
     {"id":"quark:iron_plate","required":false},
     {"id":"quark:iron_plate_stairs","required":false},
     {"id":"quark:iron_plate_slab","required":false},

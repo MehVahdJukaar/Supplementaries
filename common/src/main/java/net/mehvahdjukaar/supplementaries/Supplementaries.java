@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
@@ -91,6 +92,7 @@ public class Supplementaries {
     //goat meat
     //goat milk
 
+    //pulley flint
     //TODO relayer on piston retract
     //mod to wax anything to prevent interaction
     //special recipes conditions dont work
@@ -98,8 +100,6 @@ public class Supplementaries {
     //soap in water makes soap particles
     //yeet java models in favor or json ones
     //chains pull down candle holders and lanterns
-
-    //antique ink fishing
 
 
     //punching swings lanterns

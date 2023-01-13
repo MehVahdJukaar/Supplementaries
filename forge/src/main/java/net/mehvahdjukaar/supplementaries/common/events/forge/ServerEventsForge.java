@@ -7,10 +7,9 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
+import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
-import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
@@ -148,13 +147,6 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onTagUpdate(TagsUpdatedEvent event) {
         ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatformHelper.getEnv().isClient());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onDimensionUnload(net.minecraftforge.event.level.LevelEvent.Unload event) {
-        if (event.getLevel() instanceof ServerLevel serverLevel) {
-            MovableFakePlayer.unloadLevel(serverLevel);
-        }
     }
 
     //for flute and cage. fabric calls directly

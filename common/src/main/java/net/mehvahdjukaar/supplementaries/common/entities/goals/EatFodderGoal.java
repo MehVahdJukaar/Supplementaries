@@ -114,8 +114,8 @@ public class EatFodderGoal extends MoveToBlockGoal {
                 if (!world.isClientSide && ticksSinceReachedGoal % 2 == 0) {
 
                     ((ServerLevel) world).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FODDER_STATE),
-                            (double) targetPos.getX() + 0.5D, (double) targetPos.getY() + 0.7D, (double) targetPos.getZ() + 0.5D, 3,
-                            ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, 0.15F);
+                            targetPos.getX() + 0.5D, targetPos.getY() + 0.7D, targetPos.getZ() + 0.5D, 3,
+                            (random.nextFloat() - 0.5D) * 0.08D, (random.nextFloat() - 0.5D) * 0.08D, ( random.nextFloat() - 0.5D) * 0.08D, 0.15F);
                 }
             }
             if (this.ticksSinceReachedGoal == 1 && this.animal instanceof Sheep) {

@@ -87,7 +87,7 @@ public class ClockBlockTile extends BlockEntity {
             int hour = Mth.clamp(time / 1000, 0, 24);
 
             //server
-            if (!level.isClientSide) {
+            if (!level.isClientSide && level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
 
                 if (hour != state.getValue(ClockBlock.HOUR)) {
                     //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
