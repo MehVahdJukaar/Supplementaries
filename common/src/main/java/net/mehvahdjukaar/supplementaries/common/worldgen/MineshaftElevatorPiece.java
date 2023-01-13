@@ -16,7 +16,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureManager;
@@ -62,6 +61,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     public static MineshaftPieces.MineShaftPiece getElevator(
             StructurePieceAccessor pieces, RandomSource random, int x, int y, int z,
             Direction direction, int genDepth, MineshaftStructure.Type type) {
+        if (y > 60) return null;
         if (random.nextInt(100) < 2 && RegistryConfigs.PULLEY_ENABLED.get() && RegistryConfigs.TURN_TABLE_ENABLED.get()) {
             byte height = 12;
 
@@ -322,7 +322,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         Direction d = direction;
         BlockState ropeBlock = getMineshaftRope();
         boolean hasRope = !hasChain && ropeBlock != null;
-        if(!hasRope) ropeBlock = Blocks.CHAIN.defaultBlockState();
+        if (!hasRope) ropeBlock = Blocks.CHAIN.defaultBlockState();
         Item ropeItem = ropeBlock.getBlock().asItem();
 
         BlockPos.MutableBlockPos contraptionPos = new BlockPos.MutableBlockPos(minX + 2, maxY + 1, minZ + 2);

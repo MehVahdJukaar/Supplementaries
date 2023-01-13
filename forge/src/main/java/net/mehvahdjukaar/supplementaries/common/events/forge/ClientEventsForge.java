@@ -1,31 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.SupplementariesClient;
-import net.mehvahdjukaar.supplementaries.client.FakeLocalPlayer;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
-import net.mehvahdjukaar.supplementaries.common.utils.forge.MovableFakePlayer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,7 +34,7 @@ public class ClientEventsForge {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onRegisterSkullModels);
     }
 
-    public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event){
+    public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {
         event.registerSkullModel(EndermanSkullBlock.TYPE,
                 new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
@@ -98,7 +92,6 @@ public class ClientEventsForge {
             SupplementariesClient.onRenderTick(event.renderTickTime);
         }
     }
-
 
 
     @SubscribeEvent
