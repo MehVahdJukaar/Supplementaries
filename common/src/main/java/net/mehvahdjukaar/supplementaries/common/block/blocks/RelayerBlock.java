@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.client.particles.SugarParticle;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -58,28 +57,31 @@ public class RelayerBlock extends DirectionalBlock {
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (!worldIn.isClientSide) this.updatePower(state, worldIn, pos);
+        if (!worldIn.isClientSide) this.updatePowerNextTick(state, worldIn, pos);
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        if (moving || pos.relative(state.getValue(FACING)).equals(fromPos)) this.updatePower(state, world, pos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+        if (state.getValue(FACING) == direction && level instanceof Level l)
+            this.updatePowerNextTick(state, l, currentPos);
+        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
     }
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!level.isClientSide() && isMoving) {
-            this.updatePower(state, level, pos);
+            this.updatePowerNextTick(state, level, pos);
         }
     }
 
-    private void updatePower(BlockState state, Level level, BlockPos pos) {
-        var dir = state.getValue(FACING);
-        int pow = getSignalInFront(level, pos, dir);
-
-        if (pow != state.getValue(POWER) && !level.getBlockTicks().hasScheduledTick(pos, this)) {
+    private void updatePowerNextTick(BlockState state, Level level, BlockPos pos) {
+        // does it regardless if power changed. Used for repeaters as they dont give redstone updates
+        if (!level.getBlockTicks().hasScheduledTick(pos, this)) {
+            //var dir = state.getValue(FACING);
+            ////  int pow = getSignalInFront(level, pos, dir);
+            //  if (pow != state.getValue(POWER)) {
             level.scheduleTick(pos, this, 1);
+            // }
         }
     }
 
@@ -89,9 +91,9 @@ public class RelayerBlock extends DirectionalBlock {
         BlockState b = level.getBlockState(behind);
         if (b.getBlock() instanceof RedStoneWireBlock) {
             pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
-        }else if(b.getBlock() instanceof DiodeBlock repeaterBlock){
-            pow = Math.max(repeaterBlock.getOutputSignal(level, behind, b), pow);
-        }else if(b.is(this)){
+        } else if (b.getBlock() instanceof DiodeBlock repeaterBlock) {
+            pow = Math.max(repeaterBlock.getSignal(b, level, behind, b.getValue(DiodeBlock.FACING)), pow);
+        } else if (b.is(this)) {
             pow = Math.max(b.getValue(POWER), pow);
         }
         return pow;

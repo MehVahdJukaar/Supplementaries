@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:story/wrench",
+  "parent": "supplementaries:husbandry/root",
   "display": {
     "icon": {
       "item": "supplementaries:turn_table"

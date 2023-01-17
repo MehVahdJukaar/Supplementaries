@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -17,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
-//seems like this still makes the internal server freeze
-//idk why this is here
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockBehaviourPlanterMixin {
 

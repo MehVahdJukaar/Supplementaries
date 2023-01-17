@@ -139,7 +139,7 @@ public class CreateCompatImpl {
         }
     }
 
-    public static void setupClient(){
+    public static void setupClient() {
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
@@ -151,7 +151,6 @@ public class CreateCompatImpl {
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
-
 
 
     }
@@ -246,6 +245,7 @@ public class CreateCompatImpl {
 
         private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
             CompoundTag com = context.tileData;
+            if (com == null) return;
             long lastTicked = com.getLong("LastTicked");
             if (!this.isOnCooldown(world, lastTicked)) {
                 DUMMY.load(com);
@@ -742,7 +742,7 @@ public class CreateCompatImpl {
         }
     }
 
-    public static class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
+    private static class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.supplementaries.client.screens.TrappedPresentBlockGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -20,11 +21,6 @@ public class PresentItem extends BlockItem implements IColored {
 
     public PresentItem(Block block, Properties properties) {
         super(block, properties);
-    }
-
-    @Override
-    public boolean canFitInsideContainerItems() {
-        return false;
     }
 
     @Override

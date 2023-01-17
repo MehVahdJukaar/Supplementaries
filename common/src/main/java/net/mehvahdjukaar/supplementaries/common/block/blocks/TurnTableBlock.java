@@ -26,10 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -195,7 +192,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
                         int catTimer = tile.getCatTimer();
                         if (catTimer == 0) {
                             tile.setCat();
-                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, ModSounds.TOM.get(), SoundSource.BLOCKS, 0.85f, 1);
+                            world.playSound(null, pos.getX() + 0.5, pos.getY() + 1f, pos.getZ() + 0.5, ModSounds.TOM.get(), SoundSource.BLOCKS, 0.85f, 1);
                         }
                     }
                 }

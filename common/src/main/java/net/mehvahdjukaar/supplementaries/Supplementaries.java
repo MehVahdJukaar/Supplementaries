@@ -7,14 +7,13 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
-import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -87,10 +86,8 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
-    //goat rammer block
-    //goat helmet
-    //goat meat
-    //goat milk
+    //sheep animations and textyres
+    //3d particle mod
 
     //pulley flint
     //TODO relayer on piston retract

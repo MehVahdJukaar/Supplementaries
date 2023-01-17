@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
@@ -56,7 +57,6 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-
         this.packButton = this.addRenderableWidget(new PackButton(i + 60+33, j + 33));
 
         this.primed = tile.isPrimed();

@@ -1,0 +1,34 @@
+{
+  "containers": [
+    {
+      "fill_sound": "minecraft:block.honey_block.place",
+      "empty_sound": "minecraft:block.honey_block.break",
+      "filled": [
+        "the_bumblezone:royal_jelly_block"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 4
+    },
+    {
+      "fill_sound": "minecraft:block.honey_block.place",
+      "empty_sound": "minecraft:block.honey_block.break",
+      "filled": [
+        "the_bumblezone:royal_jelly_bottle"
+      ],
+      "empty": "minecraft:bottle",
+      "capacity": 1
+    }
+  ],
+  "food": {
+    "divider": 1,
+    "item": "the_bumblezone:royal_jelly_bottle"
+  },
+  "tint_method": "no_tint",
+  "equivalent_fluids": [
+    "the_bumblezone:royal_jelly_fluid_still"
+  ],
+  "use_texture_from": "the_bumblezone:royal_jelly_fluid_still",
+  "still_texture": "the_bumblezone:block/royal_jelly",
+  "flowing_texture": "the_bumblezone:block/flowing_royal_jelly",
+  "from_mod": "the_bumblezone"
+}

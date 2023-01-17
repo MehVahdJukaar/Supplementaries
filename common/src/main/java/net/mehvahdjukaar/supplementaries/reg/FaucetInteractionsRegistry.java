@@ -201,8 +201,7 @@ public class FaucetInteractionsRegistry {
                 if (state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
                     prepareToTransferBottle(faucetTank, VanillaSoftFluids.HONEY.get());
                     if (fillAction.tryExecute()) {
-                        level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY,
-                                state.getValue(BlockStateProperties.LEVEL_HONEY) - 1), 3);
+                        level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY,0), 3);
                         return InteractionResult.SUCCESS;
                     }
                 }

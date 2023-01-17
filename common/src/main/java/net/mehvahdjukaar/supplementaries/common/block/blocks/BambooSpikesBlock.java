@@ -85,7 +85,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     public static DamageSource getDamageSource(Level level) {
-        if (CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get() && PlatformHelper.getPlatform().isForge()) {
+        if (CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get()) {
             return new ModDamageSources.SpikePlayer("spike", FakePlayerManager.getDefault(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
