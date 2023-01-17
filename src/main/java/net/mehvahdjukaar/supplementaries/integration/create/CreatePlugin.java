@@ -238,6 +238,7 @@ public class CreatePlugin {
 
         private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
             CompoundTag com = context.tileData;
+            if (com == null) return;
             long lastTicked = com.getLong("LastTicked");
             if (!this.isOnCooldown(world, lastTicked)) {
                 DUMMY.load(com);
