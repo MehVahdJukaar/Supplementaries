@@ -49,7 +49,7 @@ public class PicklePlayer {
     public static boolean onChatEvent(String m) {
         // String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
-        if (m.startsWith("/jarvis")) {
+        if (m.startsWith("/jarman")) {
             jarvis = !jarvis;
             // event.setCanceled(true);
             if (jarvis) {
