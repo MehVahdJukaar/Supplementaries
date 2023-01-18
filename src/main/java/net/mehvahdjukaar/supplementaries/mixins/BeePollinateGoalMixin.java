@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(targets = {"net.minecraft.entity.passive.BeeEntity$FindPollinationTargetGoal"})
 public abstract class BeePollinateGoalMixin {
 
-    @Redirect(method = "tick",
+    @Redirect(method = "Lnet/minecraft/entity/passive/BeeEntity$FindPollinationTargetGoal;func_75246_d()V",
             at = @At(value = "INVOKE",
                     target = "net/minecraft/world/World.setBlockAndUpdate(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z",
-                    ordinal = 0))
+                    ordinal = 0),require = 0)
     public boolean tick(World level, BlockPos pos, BlockState state) {
         Block b = state.getBlock();
         if (b instanceof IBeeGrowable) {

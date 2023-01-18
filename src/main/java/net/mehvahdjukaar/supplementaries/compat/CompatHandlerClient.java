@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.compat;
 
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.compat.botania.client.BotaniaCompatClient;
-import net.mehvahdjukaar.supplementaries.compat.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.compat.decorativeblocks.DecoBlocksCompatClient;
 import net.mehvahdjukaar.supplementaries.compat.flywheel.FlywheelPlugin;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
@@ -19,9 +17,9 @@ public class CompatHandlerClient {
         if (CompatHandler.configured && RegistryConfigs.reg.CUSTOM_CONFIGURED_SCREEN.get()) {
             try {
 
-                CustomConfigSelectScreen.registerScreen();
+               // CustomConfigSelectScreen.registerScreen();
             } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to register custom configured screen: " + e);
+               // Supplementaries.LOGGER.warn("Failed to register custom configured screen: " + e);
             }
         }
 

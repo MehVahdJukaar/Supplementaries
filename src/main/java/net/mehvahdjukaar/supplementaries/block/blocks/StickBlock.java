@@ -131,20 +131,16 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
     public boolean canBeReplaced(BlockState state, BlockItemUseContext context) {
         Item item = context.getItemInHand().getItem();
         //TODO: fix as item not working
-        if (item == this.getItemOverride()) {
+        if (item == this.getStickItem()) {
             BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
             if (!state.getValue(axis)) return true;
         }
         return super.canBeReplaced(state, context);
     }
 
-    public Item getItemOverride() {
-        return Item.byBlock(this);
-    }
-
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        return new ItemStack(this.getItemOverride());
+        return new ItemStack(this.getStickItem());
     }
 
     @Override
@@ -157,7 +153,7 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
 
         if (player.getItemInHand(hand).isEmpty() && hand == Hand.MAIN_HAND) {
             if (ServerConfigs.cached.STICK_POLE) {
-                if (this.getItemOverride() != Items.STICK) return ActionResultType.PASS;
+                if (this.getStickItem() != Items.STICK) return ActionResultType.PASS;
                 if (world.isClientSide) return ActionResultType.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
@@ -244,5 +240,11 @@ public class StickBlock extends WaterBlock implements IRotationLockable, IRotata
         List<ItemStack> l = new ArrayList<>();
         l.add(new ItemStack(this.item.get(), i));
         return l;
+    }
+
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return getRotatedState(state, null, null, rotation, Direction.UP, null).orElse(state);
     }
 }

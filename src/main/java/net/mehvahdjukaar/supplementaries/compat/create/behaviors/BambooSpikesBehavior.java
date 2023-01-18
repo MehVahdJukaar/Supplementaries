@@ -98,6 +98,7 @@ public class BambooSpikesBehavior extends MovementBehaviour {
 
     private void doTileStuff(MovementContext context, @Nonnull World world, LivingEntity le) {
         CompoundNBT com = context.tileData;
+        if (com == null) return;
         int charges = com.getInt("Charges");
         long lastTicked = com.getLong("LastTicked");
         Potion potion = PotionUtils.getPotion(com);

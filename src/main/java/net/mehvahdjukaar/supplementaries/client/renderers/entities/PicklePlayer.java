@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.common.Textures;
 import net.mehvahdjukaar.supplementaries.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.network.PicklePacket;
@@ -714,7 +714,7 @@ public class PicklePlayer {
         public static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
 
         static {
-            for (UUID id : SpecialPlayers.DEVS) PICKLE_PLAYERS.put(id, new PickleValues());
+            for (UUID id : Credits.INSTANCE.getDevs()) PICKLE_PLAYERS.put(id, new PickleValues());
         }
 
         //reset
@@ -736,7 +736,7 @@ public class PicklePlayer {
         }
 
         public static boolean isDev(UUID id) {
-            return SpecialPlayers.DEVS.contains(id);
+            return Credits.INSTANCE.getDevs().contains(id);
         }
 
         public static void set(UUID id, boolean on) {

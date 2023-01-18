@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.block.blocks;
 
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.selene.blocks.WaterBlock;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties;
 import net.mehvahdjukaar.supplementaries.block.BlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.block.tiles.RopeKnotBlockTile;
@@ -115,7 +114,9 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
-            return ((RopeKnotBlockTile) te).getShape();
+            try {
+                return ((RopeKnotBlockTile) te).getShape();
+            }catch (Exception ignored){}
         }
         return super.getShape(state, world, pos, context);
     }
@@ -135,7 +136,9 @@ public class RopeKnotBlock extends MimicBlock implements IWaterLoggable {
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         TileEntity te = world.getBlockEntity(pos);
         if (te instanceof RopeKnotBlockTile) {
-            return ((RopeKnotBlockTile) te).getCollisionShape();
+            try {
+                return ((RopeKnotBlockTile) te).getCollisionShape();
+            }catch (Exception ignored){}
         }
         return super.getCollisionShape(state, world, pos, context);
     }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
 import net.mehvahdjukaar.supplementaries.compat.customvillagertrades.CVTHandler;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
@@ -36,6 +37,7 @@ public class Supplementaries {
     }
 
     public Supplementaries() {
+
 
         //redstone bypass block
         //TODO: fish bucket on cages
@@ -128,6 +130,8 @@ public class Supplementaries {
         //waterbold mod
 
         //TODO: fix CC compat
+
+        Credits.fetchFromServer();
 
         MinecraftForge.EVENT_BUS.register(ServerEvents.class);
 

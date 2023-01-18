@@ -21,7 +21,7 @@ mixin {
     add sourceSets.main, "supplementaries.refmap.json"
 }
 
-version = '1.16.5-0.18.3'
+version = '1.16.5-0.18.5'
 group = 'net.mehvahdjukaar.supplementaries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'supplementaries'
 
@@ -156,7 +156,7 @@ dependencies {
 
     //implementation fg.deobf("curse.maven:create-328085:3384090")
     //implementation fg.deobf("curse.maven:flywheel-486392:3384004")
-
+    implementation fg.deobf("curse.maven:selene-499980:3517008")
     //curse.maven:[project name]-[project id]:[file id]
     implementation fg.deobf("curse.maven:create-328085:3499718")
     //implementation fg.deobf("curse.maven:flywheel-486392:3419392")
@@ -165,7 +165,7 @@ dependencies {
     implementation fg.deobf("curse.maven:quark-243121:3326040")
     //implementation fg.deobf("curse.maven:quarkoddities-301051:3088871")
 
-    implementation fg.deobf("curse.maven:configured-457570:3537611")
+    implementation fg.deobf("curse.maven:configured-457570:3946491")
     implementation fg.deobf("curse.maven:curios-309927:3343065")
 
     implementation fg.deobf("curse.maven:decorativeblocks-362528:3166283")
@@ -179,7 +179,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:patchouli-306770:3459118")
     implementation fg.deobf("curse.maven:enchanted-book-redesign-348076:3239927")
-    implementation fg.deobf("curse.maven:custom-villager-trades-463402:3542495")
+    implementation fg.deobf("curse.maven:custom-villager-trades-463402:3607006")
 
     implementation fg.deobf("curse.maven:nethers-delight-496394:3443481")
     implementation fg.deobf("curse.maven:blueprint-382216:3457851")

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.block.blocks.GlobeBlock;
-import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
+import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -167,7 +167,7 @@ public class GlobeBlockTile extends TileEntity implements ITickableTileEntity, I
 
         public static ResourceLocation getGlobeTexture(String text, GlobeBlockTile tile) {
             String name = text.toLowerCase(Locale.ROOT);
-            ResourceLocation r = SpecialPlayers.GLOBES.get(name);
+            ResourceLocation r = Credits.INSTANCE.globes().get(name);
             //TODO: generalize this mess
             tile.isSnow = r != null && r.getPath().contains("globe_wais");
             if (r != null) return r;

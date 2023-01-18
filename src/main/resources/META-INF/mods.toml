@@ -74,6 +74,14 @@ modId="flywheel"
 
 [[dependencies.supplementaries]]
 
+    modId="custom-villager-trades"
+    mandatory=false
+    versionRange="[1.0.0,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.supplementaries]]
+
     modId="selene"
     mandatory=true
     versionRange="[1.16.5-1.0,]"

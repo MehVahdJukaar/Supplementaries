@@ -27,12 +27,12 @@ public class RopeKnotBlockTile extends MimicBlockTile {
 
     public VoxelShape getCollisionShape() {
         if (collisionShape == null) this.recalculateShapes(this.getBlockState());
-        return collisionShape;
+        return collisionShape == null ? VoxelShapes.block() : collisionShape;
     }
 
     public VoxelShape getShape() {
         if (shape == null) this.recalculateShapes(this.getBlockState());
-        return shape;
+        return shape == null ? VoxelShapes.block() : shape;
     }
 
     private static final VoxelShape DOWN_SHAPE = Block.box(6, 0, 6, 10, 6, 10);

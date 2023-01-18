@@ -4,12 +4,13 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.blocks.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.block.blocks.StatueBlock;
 import net.mehvahdjukaar.supplementaries.common.CommonUtil;
+import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.common.ModTags;
-import net.mehvahdjukaar.supplementaries.common.SpecialPlayers;
 import net.mehvahdjukaar.supplementaries.setup.ModRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -62,9 +63,9 @@ public class StatueBlockTile extends ItemDisplayTile {
         if (this.hasCustomName()) {
 
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
-            UUID id = SpecialPlayers.STATUES.get(name);
-            if (id != null) {
-                this.playerProfile = this.updateGameProfile(new GameProfile(id, name));
+            Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
+            if (profile != null) {
+                this.playerProfile = this.updateGameProfile(new GameProfile(profile.getFirst(), profile.getSecond()));
             }
             //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
             //if(connection!=null)
