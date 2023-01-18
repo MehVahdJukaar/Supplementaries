@@ -15,8 +15,10 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 
 import java.util.Optional;
 
+//Data defined fluid interaction
 public record DataSourceInteraction(RuleTest target, ResourceLocation softFluid, int amount,
                                     Optional<BlockState> output) implements IFaucetBlockSource {
+
     public static final Codec<DataSourceInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RuleTest.CODEC.fieldOf("target").forGetter(DataSourceInteraction::target),
             ResourceLocation.CODEC.fieldOf("fluid").forGetter(DataSourceInteraction::softFluid),

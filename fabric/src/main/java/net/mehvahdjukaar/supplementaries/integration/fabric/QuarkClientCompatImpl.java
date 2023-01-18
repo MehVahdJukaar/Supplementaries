@@ -21,4 +21,7 @@ public class QuarkClientCompatImpl {
     public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
 
     }
+
+    public static void init() {
+    }
 }

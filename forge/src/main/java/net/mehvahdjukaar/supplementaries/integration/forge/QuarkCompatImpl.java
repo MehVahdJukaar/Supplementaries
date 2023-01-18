@@ -197,33 +197,8 @@ public class QuarkCompatImpl {
     }
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.addListener(QuarkCompatImpl::quiverUsageTicker);
     }
 
-    public static void quiverUsageTicker(UsageTickerEvent.GetCount event) {
-        if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
-            //adds missing ones from quiver
-            if (event.player instanceof IQuiverEntity qe) {
-                QuiverItem.Data data = QuiverItem.getQuiverData(qe.getQuiver());
-                //sanity check
-                ItemStack selected = data.getSelected();
-
-                if (event.currentStack.is(selected.getItem())) {
-                    //just recomputes everything
-                    int count = data.getSelectedArrowCount();
-                    Inventory inventory = event.player.getInventory();
-
-                    for (int i = 0; i < inventory.getContainerSize(); ++i) {
-                        ItemStack stackAt = inventory.getItem(i);
-                        if (selected.is(stackAt.getItem())) {
-                            count += stackAt.getCount();
-                        }
-                    }
-                    event.setResultCount(count);
-                }
-            }
-        }
-    }
 
 
     public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";

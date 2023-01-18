@@ -121,7 +121,6 @@ public class CompatHandler {
     public static void initOptionalRegistries() {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
-        if (QUARK) QuarkCompat.init();
 
         //if (inspirations) CauldronRecipes.registerStuff();
     }
