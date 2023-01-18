@@ -9,7 +9,7 @@ import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
-import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -181,7 +181,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             //no buckets
             return !(i instanceof DispensibleContainerItem) && i instanceof BlockItem ||
                     ((IExtendedItem) i).hasPlacementBehavior() ||
-                    ItemsOverrideHandler.hasBlockPlacementAssociated(i);
+                    InteractEventOverrideHandler.hasBlockPlacementAssociated(i);
         };
     }
 

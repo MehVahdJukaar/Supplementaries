@@ -4,8 +4,11 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -90,9 +93,8 @@ public class RopeArrowEntity extends AbstractArrow {
     @Override
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
-
         Block ropeBlock = CommonConfigs.getSelectedRope();
-        if(ropeBlock==null)return;
+        if (ropeBlock == null) return;
 
         if (this.charges <= 0) return;
         if (!this.level.isClientSide) {
@@ -100,13 +102,18 @@ public class RopeArrowEntity extends AbstractArrow {
             Entity entity = this.getOwner();
             Player player = null;
             if (!(entity instanceof Mob) || PlatformHelper.isMobGriefingOn(this.level, this)) {
-                if (entity instanceof Player pl && pl.mayBuild()) {
+                BlockPos hitPos = rayTraceResult.getBlockPos();
+
+                if (entity instanceof Player pl) {
                     //TODO: i might just give null here since player isn't actually placing these blocks
                     player = pl;
+
+                    if(CompatHandler.FLAN && !FlanCompat.canPlace(pl, hitPos, ropeBlock.defaultBlockState())){
+                        return;
+                    }
                 }
                 //Ugly but works
                 //try finding existing ropes
-                BlockPos hitPos = rayTraceResult.getBlockPos();
                 BlockState hitState = this.level.getBlockState(hitPos);
                 Block hitBlock = hitState.getBlock();
 
@@ -165,7 +172,7 @@ public class RopeArrowEntity extends AbstractArrow {
 
     private void continueUnwindingRope() {
         Block ropeBlock = CommonConfigs.getSelectedRope();
-        if(ropeBlock==null)return;
+        if (ropeBlock == null) return;
         //no need to do other checks since this only happens after a onBlockCollision()
         Player player = null;
         Entity entity = this.getOwner();

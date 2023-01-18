@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 //Merge with supplementaries main class
 public class ModSetup {
@@ -123,7 +122,7 @@ public class ModSetup {
 
             //stuff that needs tags
             DispenserInteractionsRegistry.registerBehaviors();
-            ItemsOverrideHandler.registerOverrides();
+            InteractEventOverrideHandler.registerOverrides();
 
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }

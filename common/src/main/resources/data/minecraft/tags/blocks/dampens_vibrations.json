@@ -1,9 +1,6 @@
 {
-"replace":false,
-"values":[
-
-"supplementaries:feather_block"
-
-]
-
+  "replace": false,
+  "values": [
+    "supplementaries:feather_block"
+  ]
 }

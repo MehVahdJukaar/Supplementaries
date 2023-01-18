@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -203,16 +203,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
-    public static boolean canBreakBlock(BlockState state, BombType type) {
-        return switch (type.breakMode()) {
-            default -> false;
-            case ALL -> true;
-            case WEAK -> state.canBeReplaced(Fluids.WATER) ||
-                    state.is(ModTags.BOMB_BREAKABLE) ||
-                    state.getBlock() instanceof TntBlock;
-        };
-    }
-
 
     @Override
     protected void onHitEntity(EntityHitResult hit) {
@@ -235,15 +225,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void playerTouch(Player entityIn) {
         if (!this.level.isClientSide) {
-            if (!this.active && entityIn.getInventory().add(this.getItemStack())) {
+            if (!this.active && entityIn.getInventory().add(this.getItem())) {
                 entityIn.take(this, 1);
                 this.remove(RemovalReason.DISCARDED);
             }
         }
-    }
-
-    private ItemStack getItemStack() {
-        return new ItemStack(ModRegistry.BOMB_ITEM.get());
     }
 
     @Override
@@ -309,7 +295,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         boolean breaks = this.getOwner() instanceof Player ||
                 PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
 
-        if(CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))){
+        if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))) {
             breaks = false;
         }
 
@@ -318,19 +304,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
         }
 
-        BombExplosion explosion = new BombExplosion(this.level, this, null, new ExplosionDamageCalculator() {
-            @Override
-            public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
-                return canBreakBlock(state, type);
-            }
-        },
+        BombExplosion explosion = new BombExplosion(this.level, this, null,
+                new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
                 this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
 
         explosion.explode();
         explosion.doFinalizeExplosion();
-
-
     }
 
     public enum BreakingMode {
@@ -375,29 +355,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                     entity.setSecondsOnFire(10);
                 }
                 case SPIKY -> {
-
                     //we are using the explosion method since it has a bigger radius
-                    /*
-                    boolean shouldPoison = false;
-                    float random = entity.getRandom().nextInt(100);
-                    if (distSq <= 4 * 4) {
-                        shouldPoison = true;
-                    } else if (distSq <= 8 * 8) {
-                        if (random < 60) shouldPoison = true;
-                    } else if (distSq <= 15 * 15) {
-                        if (random < 30) shouldPoison = true;
-                    } else if (distSq <= 30 * 30) {
-                        if (random < 5) shouldPoison = true;
-                    }
-                    if (shouldPoison) {
-                        entity.hurt(DamageSource.MAGIC, 2);
-                        entity.addEffect(new MobEffectInstance(MobEffects.POISON, 260));
-                        var effect = CompatObjects.STUNNED_EFFECT.get();
-                        if (effect != null) {
-                            entity.addEffect(new MobEffectInstance(effect, 40 * 20));
-                        }
-                    }
-                    */
                 }
             }
         }
@@ -461,5 +419,24 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
+
+    private static class BombExplosionDamageCalculator extends ExplosionDamageCalculator {
+        private final BombType type;
+
+        public BombExplosionDamageCalculator(BombType type) {
+            this.type = type;
+        }
+
+        @Override
+        public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
+            return switch (type.breakMode()) {
+                default -> false;
+                case ALL -> true;
+                case WEAK -> state.canBeReplaced(Fluids.WATER) ||
+                        state.is(ModTags.BOMB_BREAKABLE) ||
+                        state.getBlock() instanceof TntBlock;
+            };
+        }
+    }
 
 }

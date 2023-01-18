@@ -1,8 +1,8 @@
-package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
+package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
 
 import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -51,7 +51,7 @@ public class SkullCandlesPlacement implements AdditionalPlacement {
                     ItemStack stack = pContext.getItemInHand();
                     ItemStack copy = stack.copy();
 
-                    InteractionResult result = ItemsOverrideHandler.replaceSimilarBlock(ModRegistry.SKULL_CANDLE.get(),
+                    InteractionResult result = InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.SKULL_CANDLE.get(),
                             player, stack, pos, level, state, SoundType.CANDLE, SkullBlock.ROTATION);
 
                     if (result.consumesAction()) {

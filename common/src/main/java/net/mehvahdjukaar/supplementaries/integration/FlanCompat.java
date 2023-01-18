@@ -30,6 +30,7 @@ public class FlanCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean canAttack(@Nonnull Player player, @Nonnull Entity victim) {
         throw new AssertionError();

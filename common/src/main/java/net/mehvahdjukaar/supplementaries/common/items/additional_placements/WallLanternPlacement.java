@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.additional_behaviors;
+package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
 
 import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;

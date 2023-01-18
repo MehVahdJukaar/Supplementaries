@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -36,7 +37,7 @@ public class ClientEvents {
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
         if (ClientConfigs.General.TOOLTIP_HINTS.get() && tooltipFlag.isAdvanced()) {
-            ItemsOverrideHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
+            InteractEventOverrideHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
         }
 
         Item item = itemStack.getItem();

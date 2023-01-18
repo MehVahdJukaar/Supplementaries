@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -437,7 +438,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos
             pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
-
+        
+        //TODO: maybe pass fake player here
         BlockPlaceContext context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
             //checks if block below this is hollow

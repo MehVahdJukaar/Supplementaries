@@ -7,10 +7,11 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
-import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
@@ -52,10 +53,10 @@ public class ServerEvents {
         if (event.getState().getBlock() instanceof IRopeConnection) {
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();
-            level.removeBlock(pos,false);
+            level.removeBlock(pos, false);
             if (BaseFireBlock.canBePlacedAt((Level) level, pos, Direction.DOWN)) {
                 event.setFinalState(BaseFireBlock.getState(level, pos).setValue(FireBlock.AGE, 8));
-                level.scheduleTick(pos, Blocks.FIRE, 2+((Level) level).random.nextInt(1));
+                level.scheduleTick(pos, Blocks.FIRE, 2 + ((Level) level).random.nextInt(1));
             }//TODO: make faster
         } else AshLayerBlock.tryConvertToAsh(event);
     }
@@ -64,7 +65,8 @@ public class ServerEvents {
     @EventCalled
     public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.isSpectator()) { //is this check even needed?
-            return ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, hand, hitResult, false);
+            return InteractEventOverrideHandler.onItemUsedOnBlock(player, level,
+                    player.getItemInHand(hand), hand, hitResult);
         }
         return InteractionResult.PASS;
     }
@@ -72,7 +74,8 @@ public class ServerEvents {
     @EventCalled
     public static InteractionResult onRightClickBlockHP(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.isSpectator()) {
-            return ItemsOverrideHandler.tryHighPriorityClickedBlockOverride(player, level, hand, hitResult);
+            return InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level,
+                    player.getItemInHand(hand), hand, hitResult);
         }
         return InteractionResult.PASS;
     }
@@ -81,7 +84,7 @@ public class ServerEvents {
     public static InteractionResultHolder<ItemStack> onUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.isSpectator()) {
-            return ItemsOverrideHandler.tryPerformClickedItemOverride(player, level, hand, stack);
+            return InteractEventOverrideHandler.onItemUse(player, level, hand, stack);
         }
         return InteractionResultHolder.pass(stack);
     }

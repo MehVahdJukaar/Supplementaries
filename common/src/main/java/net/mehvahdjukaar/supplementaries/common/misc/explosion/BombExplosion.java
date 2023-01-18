@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
@@ -141,6 +144,8 @@ public class BombExplosion extends Explosion {
         this.level.gameEvent(this.source, GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
 
+        Player owner = this.source instanceof Projectile pr && pr.getOwner() instanceof Player pl ? pl : null;
+
         if (mode != BlockInteraction.NONE) {
             for (int j = 0; j < 16; ++j) {
                 for (int k = 0; k < 16; ++k) {
@@ -168,7 +173,9 @@ public class BombExplosion extends Explosion {
                                 }
 
                                 if (f > 0.0F && this.damageCalculator.shouldBlockExplode(this, this.level, blockpos, blockstate, f)) {
-                                    set.add(blockpos);
+                                    if (owner == null || !CompatHandler.FLAN || FlanCompat.canBreak(owner, blockpos)) {
+                                        set.add(blockpos);
+                                    }
                                 }
 
                                 d4 += d0 * 0.3F;
@@ -182,33 +189,38 @@ public class BombExplosion extends Explosion {
         }
 
         this.toBlow.addAll(set);
-        float f2 = this.radius * 2.0F;
-        int k1 = Mth.floor(this.x - f2 - 1.0D);
-        int l1 = Mth.floor(this.x + f2 + 1.0D);
-        int i2 = Mth.floor(this.y - f2 - 1.0D);
-        int i1 = Mth.floor(this.y + f2 + 1.0D);
-        int j2 = Mth.floor(this.z - f2 - 1.0D);
-        int j1 = Mth.floor(this.z + f2 + 1.0D);
+        float diameter = this.radius * 2.0F;
+        int k1 = Mth.floor(this.x - diameter - 1.0D);
+        int l1 = Mth.floor(this.x + diameter + 1.0D);
+        int i2 = Mth.floor(this.y - diameter - 1.0D);
+        int i1 = Mth.floor(this.y + diameter + 1.0D);
+        int j2 = Mth.floor(this.z - diameter - 1.0D);
+        int j1 = Mth.floor(this.z + diameter + 1.0D);
         List<Entity> list = this.level.getEntities(this.getSourceMob(), new AABB(k1, i2, j2, l1, i1, j1));
-        ForgeHelper.onExplosionDetonate(this.level, this, list, f2);
+        ForgeHelper.onExplosionDetonate(this.level, this, list, diameter);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 
         for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
+
+                if (owner != null && CompatHandler.FLAN && !FlanCompat.canAttack(owner, entity)) {
+                    continue;
+                }
+
                 double distSq = entity.distanceToSqr(vector3d);
-                double d12 = Mth.sqrt((float) distSq) / f2;
-                if (d12 <= 1.0D) {
-                    double d5 = entity.getX() - this.x;
-                    double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
-                    double d9 = entity.getZ() - this.z;
-                    double d13 = Mth.sqrt((float) (d5 * d5 + d7 * d7 + d9 * d9));
-                    if (d13 != 0.0D) {
-                        d5 = d5 / d13;
-                        d7 = d7 / d13;
-                        d9 = d9 / d13;
+                double normalizedDist = Mth.sqrt((float) distSq) / diameter;
+                if (normalizedDist <= 1.0D) {
+                    double dx = entity.getX() - this.x;
+                    double dy = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
+                    double dz = entity.getZ() - this.z;
+                    double distFromCenterSqr = Mth.sqrt((float) (dx * dx + dy * dy + dz * dz));
+                    if (distFromCenterSqr != 0.0D) {
+                        dx = dx / distFromCenterSqr;
+                        dy = dy / distFromCenterSqr;
+                        dz = dz / distFromCenterSqr;
                         double d14 = getSeenPercent(vector3d, entity);
-                        double d10 = (1.0D - d12) * d14;
-                        entity.hurt(this.getDamageSource(),  ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * f2 + 1.0D)));
+                        double d10 = (1.0D - normalizedDist) * d14;
+                        entity.hurt(this.getDamageSource(), ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * diameter + 1.0D)));
                         double d11 = d10;
                         boolean isPlayer = entity instanceof Player;
                         Player playerEntity = null;
@@ -216,7 +228,7 @@ public class BombExplosion extends Explosion {
                         if (isPlayer) {
                             playerEntity = (Player) entity;
                             if (!playerEntity.isSpectator() && (!playerEntity.isCreative() || !playerEntity.getAbilities().flying)) {
-                                this.hitPlayers.put(playerEntity, new Vec3(d5 * d10, d7 * d10, d9 * d10));
+                                this.hitPlayers.put(playerEntity, new Vec3(dx * d10, dy * d10, dz * d10));
                             }
                         }
 
@@ -229,7 +241,7 @@ public class BombExplosion extends Explosion {
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
                         }
 
-                        entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
+                        entity.setDeltaMovement(entity.getDeltaMovement().add(dx * d11, dy * d11, dz * d11));
 
                     }
                 }

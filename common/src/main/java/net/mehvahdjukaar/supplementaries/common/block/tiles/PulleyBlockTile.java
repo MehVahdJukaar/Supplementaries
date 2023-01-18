@@ -120,11 +120,12 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     public boolean pullDown(BlockPos pos, LevelAccessor world, int rot) {
 
-        if (!(world instanceof Level)) return false;
+        if (!(world instanceof Level l)) return false;
         ItemStack stack = this.getDisplayedItem();
         if (stack.getCount() < rot || !(stack.getItem() instanceof BlockItem bi)) return false;
         Block ropeBlock = bi.getBlock();
-        boolean success = RopeBlock.addRope(pos.below(), (Level) world, null, InteractionHand.MAIN_HAND, ropeBlock);
+
+        boolean success = RopeBlock.addRope(pos.below(), l, null, InteractionHand.MAIN_HAND, ropeBlock);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             world.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);

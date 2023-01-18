@@ -6,8 +6,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.events.ItemsOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -150,12 +149,15 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
 
-            //block override. mimic forge event
-            InteractionResult overrideResult = ItemsOverrideHandler.tryPerformClickedBlockOverride(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
-
+            //block override. mimic forge event that would have called these
+            InteractionResult overrideResult = InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
             if (overrideResult.consumesAction()) {
                 success = true;
+            } else {
+                overrideResult = InteractEventOverrideHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
+                if (overrideResult.consumesAction()) success = true;
             }
+
             if (!success) {
                 //null player so sound always plays
                 //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times

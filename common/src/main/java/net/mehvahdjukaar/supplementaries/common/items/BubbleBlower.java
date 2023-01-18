@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -55,7 +57,9 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         if (charges > 0) {
 
             int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
-            if (ench > 0) return this.deployBubbleBlock(itemstack, level, player, hand);
+            if (ench > 0){
+                return this.deployBubbleBlock(itemstack, level, player, hand);
+            }
 
             player.startUsingItem(hand);
 
@@ -80,6 +84,10 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
             if (first.getMaterial().isReplaceable()) {
                 BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
 
+                if(CompatHandler.FLAN && !FlanCompat.canPlace(player, pos, bubble)){
+                    return InteractionResultHolder.fail(stack);
+                }
+
                 SoundType soundtype = bubble.getSoundType();
                 level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
@@ -91,11 +99,10 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
                     this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Items.BUBBLE_BLOWER_COST.get()));
                 }
 
-                //player.getCooldowns().addCooldown(this, 10);
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+                return InteractionResultHolder.success(stack);
             }
         }
-        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
