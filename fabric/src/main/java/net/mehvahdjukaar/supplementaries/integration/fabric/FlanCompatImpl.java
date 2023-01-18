@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 public final class FlanCompatImpl {
 
     public static boolean canBreak(@Nonnull Player player, @Nonnull BlockPos pos) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
+        if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
@@ -29,32 +29,32 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
+    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos) {
+        if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
             return claim.canInteract((ServerPlayer) player, PermissionRegistry.PLACE, pos);
         } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed call place block event: [Player: {}, Pos: {}, Block State: {}]", player, pos, blockState, e);
+            Supplementaries.LOGGER.error("Failed call place block event: [Player: {}, Pos: {}]", player, pos, e);
             return true;
         }
     }
 
-    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
+    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos) {
+        if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(pos);
             return claim.canInteract((ServerPlayer) player, PermissionRegistry.PLACE, pos);
         } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed call replace block event: [Player: {}, Pos: {}, Block State: {}]", player, pos, blockState, e);
+            Supplementaries.LOGGER.error("Failed call replace block event: [Player: {}, Pos: {}]", player, pos, e);
             return true;
         }
     }
 
     public static boolean canAttack(@Nonnull Player player, @Nonnull Entity victim) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
+        if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(victim.blockPosition());
@@ -65,26 +65,14 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
+    public static boolean canInteract(@Nonnull Player player, @Nonnull BlockPos targetPos) {
+        if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
             IPermissionContainer claim = storage.getForPermissionCheck(targetPos);
             return claim.canInteract((ServerPlayer) player, PermissionRegistry.INTERACTBLOCK, targetPos);
         } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed call interact event: [Player: {}, Hand: {}, Pos: {}, Side: {}]", player, hand, targetPos, targetSide, e);
-            return true;
-        }
-    }
-
-    public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos interactionPos, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
-        if(player.level.isClientSide)return true; //should only be used from server but client can call too
-        try {
-            ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
-            IPermissionContainer claim = storage.getForPermissionCheck(targetPos);
-            return claim.canInteract((ServerPlayer) player, PermissionRegistry.INTERACTBLOCK, targetPos);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed call interact event: [Player: {}, Hand: {}, Pos: {}, Side: {}]", player, hand, targetPos, targetSide, e);
+            Supplementaries.LOGGER.error("Failed call interact event: [Player: {}, Pos: {}]", player, targetPos, e);
             return true;
         }
     }

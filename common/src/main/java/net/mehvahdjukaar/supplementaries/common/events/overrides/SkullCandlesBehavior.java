@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -25,6 +26,11 @@ class SkullCandlesBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean altersWorld() {
+        return true;
+    }
+
+    @Override
+    public boolean placesBlock() {
         return true;
     }
 

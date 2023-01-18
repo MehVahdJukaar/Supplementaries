@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -81,15 +83,17 @@ public class WrenchItem extends Item {
         return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
+    //called both from here and from event just to be sure
     //rotate stuff
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
 
-
         if (player != null) { // player.mayUseItemAt()
             Level level = context.getLevel();
             BlockPos pos = context.getClickedPos();
+            if (CompatHandler.FLAN && !FlanCompat.canPlace(player, pos)) return InteractionResult.FAIL;
+
             ItemStack itemstack = context.getItemInHand();
             Direction dir = context.getClickedFace();
 

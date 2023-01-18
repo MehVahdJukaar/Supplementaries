@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 
 public class BannerPatternTooltipComponent implements ClientTooltipComponent {
@@ -35,7 +35,7 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
         poseStack.pushPose();
 
         var mat = Registry.BANNER_PATTERN.getTag(tooltip.pattern())
-                .map(ImmutableList::copyOf).flatMap(l -> l.get(0).unwrapKey()).map(Sheets::getBannerMaterial);
+                .flatMap(n -> n.stream().findAny()).flatMap(Holder::unwrapKey).map(Sheets::getBannerMaterial);
         if (mat.isPresent()) {
             var sprite = mat.get().sprite();
             RenderSystem.enableBlend();

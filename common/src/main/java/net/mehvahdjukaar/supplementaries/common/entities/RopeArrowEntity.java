@@ -108,7 +108,7 @@ public class RopeArrowEntity extends AbstractArrow {
                     //TODO: i might just give null here since player isn't actually placing these blocks
                     player = pl;
 
-                    if(CompatHandler.FLAN && !FlanCompat.canPlace(pl, hitPos, ropeBlock.defaultBlockState())){
+                    if(CompatHandler.FLAN && !FlanCompat.canPlace(pl, hitPos)){
                         return;
                     }
                 }

@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.items.additional_placements.Wall
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -50,7 +52,8 @@ public class InteractEventOverrideHandler {
     private static final Map<Block, BlockUseOverride> BLOCK_USE = new IdentityHashMap<>();
 
     public static boolean hasBlockPlacementAssociated(Item item) {
-        return ITEM_USE_ON_BLOCK.containsKey(item) || ITEM_USE_ON_BLOCK_HP.containsKey(item);
+        var v = ITEM_USE_ON_BLOCK.getOrDefault(item,ITEM_USE_ON_BLOCK_HP.get(item));
+        return v != null && v.placesBlock();
     }
 
     public static void registerOverrides() {
@@ -146,7 +149,9 @@ public class InteractEventOverrideHandler {
 
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK_HP.get(item);
         if (override != null && override.isEnabled()) {
-
+            if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+                return InteractionResult.PASS;
+            }
             return override.tryPerformingAction(level, player, hand, stack, hit);
         }
         return InteractionResult.PASS;
@@ -160,7 +165,9 @@ public class InteractEventOverrideHandler {
 
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
         if (override != null && override.isEnabled()) {
-
+            if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+                return InteractionResult.PASS;
+            }
             InteractionResult result = override.tryPerformingAction(level, player, hand, stack, hit);
             if (result != InteractionResult.PASS) {
                 return result;
@@ -173,7 +180,9 @@ public class InteractEventOverrideHandler {
 
             BlockUseOverride o = BLOCK_USE.get(state.getBlock());
             if (o != null && o.isEnabled()) {
-
+                if(CompatHandler.FLAN && o.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+                    return InteractionResult.PASS;
+                }
                 return o.tryPerformingAction(state, pos, level, player, hand, stack, hit);
             }
         }

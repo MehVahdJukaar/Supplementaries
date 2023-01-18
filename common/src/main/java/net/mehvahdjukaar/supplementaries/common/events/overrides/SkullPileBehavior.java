@@ -28,6 +28,11 @@ class SkullPileBehavior implements ItemUseOnBlockOverride {
         return true;
     }
 
+    @Override
+    public boolean placesBlock() {
+        return true;
+    }
+
     @Nullable
     @Override
     public MutableComponent getTooltip() {

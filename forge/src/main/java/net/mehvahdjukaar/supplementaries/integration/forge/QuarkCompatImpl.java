@@ -88,11 +88,11 @@ public class QuarkCompatImpl {
         if (stack.getItem() instanceof BackpackItem) {
             LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
             if (handlerOpt.isPresent()) {
-                IItemHandler handler = handlerOpt.orElse(null);
+                IItemHandler handler = handlerOpt.resolve().get();
                 for (int i = 0; i < handler.getSlots(); ++i) {
                     ItemStack slotItem = handler.getStackInSlot(i);
                     if (slotItem.getItem() instanceof SackItem) {
-                        CompoundTag tag = stack.getTag();
+                        CompoundTag tag = slotItem.getTag();
                         if (tag != null && tag.contains("BlockEntityTag")) {
                             j++;
                         }

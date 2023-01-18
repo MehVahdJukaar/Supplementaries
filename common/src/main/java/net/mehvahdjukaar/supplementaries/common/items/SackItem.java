@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComponent;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

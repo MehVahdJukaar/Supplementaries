@@ -9,8 +9,6 @@ import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -45,10 +43,13 @@ import java.util.List;
 public class QuarkClientCompatImpl {
 
     public static void initClient() {
-        ClientPlatformHelper.addBlockEntityRenderersRegistration(e -> e.register(
-                QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new));
+        ClientPlatformHelper.addBlockEntityRenderersRegistration(QuarkClientCompatImpl::registerEntityRenderers);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::quiverUsageTicker);
+    }
+
+    private static void registerEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
+        event.register(QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
     }
 
     public static void setupClient() {

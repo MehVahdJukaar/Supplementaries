@@ -17,4 +17,8 @@ interface ItemUseOnBlockOverride extends ItemUseOverride {
     default MutableComponent getTooltip() {
         return null;
     }
+
+    default boolean placesBlock(){
+        return false;
+    }
 }

@@ -143,8 +143,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         boolean success = false;
         if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
-            if (CompatHandler.FLAN && !FlanCompat.canPlace(player, hit.getBlockPos(), Blocks.DIRT.defaultBlockState())) {
-                return;
+            if (CompatHandler.FLAN){
+                if(level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
+                    return; //hack since we need client interaction aswell
+                }
             }
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
@@ -161,7 +163,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             if (!success) {
                 //null player so sound always plays
                 //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player fakePlayer = FakePlayerManager.get(this, player);
+                Player fakePlayer = FakePlayerManager.getDefault(this, player);
 
                 success = ItemsUtil.place(item,
                         new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();

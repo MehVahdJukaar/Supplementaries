@@ -21,12 +21,12 @@ public class FlanCompat {
 
     @Contract
     @ExpectPlatform
-    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
+    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos, @Nonnull BlockState blockState) {
+    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos) {
         throw new AssertionError();
     }
 
@@ -38,12 +38,8 @@ public class FlanCompat {
 
     @Contract
     @ExpectPlatform
-    public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
+    public static boolean canInteract(@Nonnull Player player, @Nonnull BlockPos targetPos) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    public static boolean canInteract(@Nonnull Player player, @Nonnull HumanoidArm hand, @Nonnull BlockPos interactionPos, @Nonnull BlockPos targetPos, @Nonnull Direction targetSide) {
-        throw new AssertionError();
-    }
 }

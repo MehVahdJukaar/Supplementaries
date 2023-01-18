@@ -19,5 +19,8 @@
       }
     }
   ],
-  "item": "farmersdelight:straw"
+  "item": {
+    "id": "farmersdelight:straw",
+    "Count": 1
+  }
 }
