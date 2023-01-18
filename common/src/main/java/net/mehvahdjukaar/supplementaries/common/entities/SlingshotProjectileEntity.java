@@ -150,11 +150,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Item item = stack.getItem();
 
             //block override. mimic forge event that would have called these
-            InteractionResult overrideResult = InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
+            InteractionResult overrideResult = InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
             if (overrideResult.consumesAction()) {
                 success = true;
             } else {
-                overrideResult = InteractEventOverrideHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit, true);
+                overrideResult = InteractEventOverrideHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit);
                 if (overrideResult.consumesAction()) success = true;
             }
 

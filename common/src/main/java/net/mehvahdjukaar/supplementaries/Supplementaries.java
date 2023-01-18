@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
@@ -69,6 +70,7 @@ public class Supplementaries {
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
         PlatformHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
+        PlatformHelper.addServerReloadListener(FaucetBehaviorsManager.RELOAD_INSTANCE, res("faucet_interactions"));
         PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
         PlatformHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
 

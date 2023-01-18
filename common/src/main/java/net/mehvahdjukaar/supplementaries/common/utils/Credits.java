@@ -3,17 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.stream.JsonReader;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapTrade;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.ResourceLocation;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -27,17 +23,18 @@ import java.util.function.Function;
 public class Credits implements Serializable {
 
     private static final Codec<Credits> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                    Codec.unboundedMap(Codec.STRING, Supporter.CODEC).fieldOf("supporters").forGetter(p->p.supporters),
-                    Codec.STRING.listOf().fieldOf("additional_artists").forGetter(p->p.otherArtists),
-                    Codec.STRING.listOf().fieldOf("translators").forGetter(p->p.translators),
-                    Codec.STRING.listOf().fieldOf("mod_compatibility").forGetter(p->p.modCompatibility),
-                    Codec.STRING.listOf().fieldOf("music_and_sounds").forGetter(p->p.soundArtists),
-                    Codec.STRING.listOf().fieldOf("others").forGetter(p->p.others))
+                    Codec.unboundedMap(Codec.STRING, Supporter.CODEC).fieldOf("supporters").forGetter(p -> p.supporters),
+                    Codec.STRING.listOf().fieldOf("additional_artists").forGetter(p -> p.otherArtists),
+                    Codec.STRING.listOf().fieldOf("translators").forGetter(p -> p.translators),
+                    Codec.STRING.listOf().fieldOf("mod_compatibility").forGetter(p -> p.modCompatibility),
+                    Codec.STRING.listOf().fieldOf("music_and_sounds").forGetter(p -> p.soundArtists),
+                    Codec.STRING.listOf().fieldOf("others").forGetter(p -> p.others))
             .apply(i, Credits::new));
 
-   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
             .registerTypeAdapter(Credits.class, (JsonDeserializer<Credits>)
-                    (json, typeOfT, context) -> CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, e -> {})).create();
+                    (json, typeOfT, context) -> CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, e -> {
+                    })).create();
 
     //empty default one
     public static Credits INSTANCE = new Credits(Map.of(), List.of(), List.of(), List.of(), List.of(), List.of());
@@ -203,7 +200,7 @@ public class Credits implements Serializable {
             try {
                 INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
             } catch (Exception e) {
-                Moonlight.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
+                Supplementaries.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
             }
         });
         creditsFetcher.start();

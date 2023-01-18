@@ -4,6 +4,8 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -44,7 +46,7 @@ public class ModSetup {
             ModSetup::registerFabricFlammable,
             CauldronRegistry::registerInteractions,
             PresentInteractionsRegistry::registerBehaviors,
-            FaucetInteractionsRegistry::registerBehaviors,
+            FaucetBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
@@ -121,7 +123,7 @@ public class ModSetup {
             }
 
             //stuff that needs tags
-            DispenserInteractionsRegistry.registerBehaviors();
+            DispenserBehaviorsManager.registerBehaviors();
             InteractEventOverrideHandler.registerOverrides();
 
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());

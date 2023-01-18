@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.PicklePlayer;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

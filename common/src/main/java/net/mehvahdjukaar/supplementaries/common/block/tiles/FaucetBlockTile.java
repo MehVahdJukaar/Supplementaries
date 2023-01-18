@@ -5,10 +5,13 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.*;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
@@ -21,17 +24,18 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FaucetBlockTile extends BlockEntity {
 
-    private static final List<IBlockSourceInteraction> BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<ITileSourceInteraction> TILE_INTERACTIONS = new ArrayList<>();
-    private static final List<IFluidSourceInteraction> FLUID_INTERACTIONS = new ArrayList<>();
-    private static final List<IBlockTargetInteraction> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<ITileTargetInteraction> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<IFaucetBlockSource> BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<IFaucetTileSource> TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<IFaucetFluidSource> FLUID_INTERACTIONS = new ArrayList<>();
+    private static final List<IFaucetBlockTarget> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<IFaucetTileTarget> TARGET_TILE_INTERACTIONS = new ArrayList<>();
 
-    private static final int COOLDOWN = 20;
+    public static final int COOLDOWN = 20;
 
     private int transferCooldown = 0;
     public final SoftFluidTank tempFluidHolder = SoftFluidTank.create(5);
@@ -212,42 +216,6 @@ public class FaucetBlockTile extends BlockEntity {
         return this.saveWithoutMetadata();
     }
 
-
-    public interface IFluidSourceInteraction {
-        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                   BlockPos pos, FluidState fluidState, FillAction fillAction);
-
-        default int getTransferCooldown() {
-            return COOLDOWN;
-        }
-    }
-
-    public interface IBlockSourceInteraction {
-        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                   BlockPos pos, BlockState state, FillAction fillAction);
-
-        default int getTransferCooldown() {
-            return COOLDOWN;
-        }
-    }
-
-    public interface ITileSourceInteraction {
-        InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                   BlockPos pos, BlockEntity tile, Direction dir, FillAction fillAction);
-
-        default int getTransferCooldown() {
-            return COOLDOWN;
-        }
-    }
-
-    public interface IBlockTargetInteraction {
-        InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state);
-    }
-
-    public interface ITileTargetInteraction {
-        InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile);
-    }
-
     @FunctionalInterface
     public interface FillAction {
         boolean tryExecute();
@@ -255,28 +223,32 @@ public class FaucetBlockTile extends BlockEntity {
 
     public static void registerInteraction(Object interaction) {
         boolean success = false;
-        if (interaction instanceof IBlockSourceInteraction bs) {
+        if (interaction instanceof IFaucetBlockSource bs) {
             BLOCK_INTERACTIONS.add(bs);
             success = true;
         }
-        if (interaction instanceof ITileSourceInteraction ts) {
+        if (interaction instanceof IFaucetTileSource ts) {
             TILE_INTERACTIONS.add(ts);
             success = true;
         }
-        if (interaction instanceof IFluidSourceInteraction bs) {
+        if (interaction instanceof IFaucetFluidSource bs) {
             FLUID_INTERACTIONS.add(bs);
             success = true;
         }
-        if (interaction instanceof IBlockTargetInteraction tb) {
+        if (interaction instanceof IFaucetBlockTarget tb) {
             TARGET_BLOCK_INTERACTIONS.add(tb);
             success = true;
         }
-        if (interaction instanceof ITileTargetInteraction tt) {
+        if (interaction instanceof IFaucetTileTarget tt) {
             TARGET_TILE_INTERACTIONS.add(tt);
             success = true;
         }
         if (!success)
             throw new UnsupportedOperationException("Unsupported faucet interaction class: " + interaction.getClass().getSimpleName());
+    }
+
+    public static void removeDataInteractions(Collection<DataSourceInteraction> interactions){
+        BLOCK_INTERACTIONS.removeAll(interactions);
     }
 
 }
