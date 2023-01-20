@@ -76,10 +76,10 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             return InteractionResult.PASS;
         } else if (player.canEat(false)) {
             player.getFoodData().eat(1, 0.1F);
+            player.playSound(SoundEvents.GENERIC_EAT, 1, 1);
             if (!worldIn.isClientSide) {
 
                 this.removeLayer(state, pos, worldIn, player);
-                player.playSound(SoundEvents.GENERIC_EAT, 1, 1);
                 return InteractionResult.CONSUME;
             } else {
                 Minecraft.getInstance().particleEngine.destroy(player.blockPosition().above(1), state);

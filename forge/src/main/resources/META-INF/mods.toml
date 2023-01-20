@@ -17,8 +17,8 @@ license = "ARR"
 
     description = '''Many functional and useful Vanilla+ blocks'''
 
-    itemIcon = "supplementaries:globe" #catalogue icon
-
+[modproperties.supplementaries]
+    catalogueItemIcon = "supplementaries:globe" #catalogue icon
     configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
 
 [[dependencies.supplementaries]]

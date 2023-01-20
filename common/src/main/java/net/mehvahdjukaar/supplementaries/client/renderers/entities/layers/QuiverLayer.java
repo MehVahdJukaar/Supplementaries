@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,22 +24,30 @@ import java.util.function.Supplier;
 public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
     private final ItemRenderer itemRenderer;
     private final Supplier<QuiverMode> quiverMode;
+    private final boolean skeleton;
 
     public QuiverLayer(RenderLayerParent<T, M> parent, boolean isSkeleton) {
         super(parent);
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
+        this.skeleton = isSkeleton;
         this.quiverMode = isSkeleton ? ClientConfigs.Items.QUIVER_SKELETON_RENDER_MODE : ClientConfigs.Items.QUIVER_RENDER_MODE;
     }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T livingEntity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(!(livingEntity instanceof IQuiverEntity))return; //failsafe for mods that change the renderer for some reason
+        if (!(livingEntity instanceof IQuiverEntity))
+            return; //failsafe for mods that change the renderer for some reason
         QuiverMode mode = quiverMode.get();
         if (mode == QuiverMode.HIDDEN) return;
 
-        ItemStack quiver = livingEntity.getQuiver();
-        if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
-            return;
+        ItemStack quiver;
+        if (!skeleton) {
+            quiver = livingEntity.getQuiver();
+            if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
+                return;
+            }
+        } else {
+            quiver = ModRegistry.QUIVER_ITEM.get().getDefaultInstance();
         }
 
         if (!quiver.isEmpty()) {
@@ -56,8 +65,8 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
                 boolean sneaking = livingEntity.isCrouching();
 
 
-                if(sneaking){
-                    poseStack.translate(0,-0.125, -0.275);
+                if (sneaking) {
+                    poseStack.translate(0, -0.125, -0.275);
                 }
                 float old;
                 o += (offset == -1 ? 3.5 / 16f : 3 / 16f + offset);

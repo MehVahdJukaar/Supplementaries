@@ -18,7 +18,7 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        if(!(entity instanceof Player) && entity instanceof IQuiverEntity e)return e.getQuiver();
+        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.getQuiver();
         if (entity instanceof Player p) {
             for (var s : p.getInventory().items) {
                 if (s.getItem() == ModRegistry.QUIVER_ITEM.get()) return s;
@@ -29,9 +29,6 @@ public class QuiverItemImpl {
 
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
         return new QuiverNBTData(stack.getOrCreateTag());
-    }
-
-    public static void sendForgeCapToServer(ItemStack quiver) {
     }
 
     public static class QuiverNBTData implements QuiverItem.Data {
@@ -124,15 +121,17 @@ public class QuiverItemImpl {
                 ListTag listTag = tag.getList(TAG_ITEMS, 10);
                 if (!listTag.isEmpty()) {
                     int selected = this.getSelectedSlot();
-                    if (listTag.size() < selected) this.setSelectedSlot(listTag.size());
-                    selected = this.getSelectedSlot();
-                    var arrow = ItemStack.of((CompoundTag) listTag.get(selected));
+                    if (selected >= listTag.size()){
+                        selected = listTag.size() - 1;
+                        this.setSelectedSlot(selected);
+                    }
+                    ItemStack arrow = ItemStack.of((CompoundTag) listTag.get(selected));
                     if (!arrow.isEmpty()) arrow.shrink(1);
-                    if (arrow.isEmpty()){
+                    if (arrow.isEmpty()) {
                         arrow = ItemStack.EMPTY;
                         listTag.set(selected, arrow.save(new CompoundTag()));
                         this.updateSelectedIfNeeded();
-                    }else{
+                    } else {
                         listTag.set(selected, arrow.save(new CompoundTag()));
                     }
                 }

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -121,7 +120,7 @@ public class CompatHandler {
     public static void initOptionalRegistries() {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
-
+        if (QUARK) QuarkCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

@@ -57,7 +57,7 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
             ItemStack stack = tile.getDisplayedItem();
             if (MiscUtils.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.SALMON);
             BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
-            if (model.isGui3d() && ClientConfigs.Blocks.SHELF_TRANSLATE.get()) matrixStackIn.translate(0, -0.25, 0);
+            if (model.usesBlockLight() && ClientConfigs.Blocks.SHELF_TRANSLATE.get()) matrixStackIn.translate(0, -0.25, 0);
 
 
             itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn,
