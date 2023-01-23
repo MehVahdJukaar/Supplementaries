@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesProvider;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostGui;
@@ -18,12 +19,14 @@ import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -104,23 +107,10 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public void load(CompoundTag compound) {
         super.load(compound);
         this.framed = compound.getBoolean("Framed");
-
         this.textHolder.load(compound);
+        this.signUp.load(compound.getCompound("SignUp"));
+        this.signDown.load(compound.getCompound("SignDown"));
 
-        //TODO: remove. backward compat
-        if (compound.contains("YawUp")) {
-            this.signUp.yaw = compound.getFloat("YawUp");
-            this.signDown.yaw = compound.getFloat("YawDown");
-            this.signUp.left = compound.getBoolean("LeftUp");
-            this.signDown.left = compound.getBoolean("LeftDown");
-            this.signUp.active = compound.getBoolean("Up");
-            this.signDown.active = compound.getBoolean("Down");
-            this.signUp.woodType = WoodTypeRegistry.fromNBT(compound.getString("TypeUp"));
-            this.signDown.woodType = WoodTypeRegistry.fromNBT(compound.getString("TypeDown"));
-        } else {
-            this.signUp.load(compound.getCompound("SignUp"));
-            this.signUp.load(compound.getCompound("SignDown"));
-        }
         this.loadOwner(compound);
         this.isSlim = this.mimic.getBlock() instanceof StickBlock;
     }
@@ -131,7 +121,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         compound.putBoolean("Framed", this.framed);
         this.textHolder.save(compound);
         compound.put("SignUp", this.signUp.save());
-        compound.put("SignDown", this.signUp.save());
+        compound.put("SignDown", this.signDown.save());
         this.saveOwner(compound);
     }
 

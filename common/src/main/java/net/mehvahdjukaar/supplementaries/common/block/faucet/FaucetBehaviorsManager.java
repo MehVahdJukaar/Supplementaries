@@ -3,13 +3,14 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile.*;
-import net.mehvahdjukaar.supplementaries.common.misc.songs.Song;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile.FillAction;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
@@ -30,11 +33,13 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    private final Set<DataSourceInteraction> dataInteractions = new HashSet<>();
+    private final Set<Object> dataInteractions = new HashSet<>();
 
     public FaucetBehaviorsManager() {
         super(GSON, "faucet_interactions");
     }
+
+    private static final Codec<Either<DataItemInteraction, DataSourceInteraction>> CODEC = Codec.either(DataItemInteraction.CODEC, DataSourceInteraction.CODEC);
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -42,15 +47,20 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         dataInteractions.clear();
         jsons.forEach((key, json) -> {
             try {
-                var result = DataSourceInteraction.CODEC.parse(JsonOps.INSTANCE, json);
+                var result = CODEC.parse(JsonOps.INSTANCE, json);
                 var d = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to fluid interaction: {}", e));
-                dataInteractions.add(d);
+                Object o;
+                var l = d.left();
+                if (l.isPresent()) o = l.get();
+                else o = d.right().get();
+                dataInteractions.add(o);
                 FaucetBlockTile.registerInteraction(d);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction " + key);
             }
         });
-        if (dataInteractions.size() != 0) Supplementaries.LOGGER.info("Loaded  " + dataInteractions.size() + " custom faucet interactions");
+        if (!dataInteractions.isEmpty())
+            Supplementaries.LOGGER.info("Loaded  " + dataInteractions.size() + " custom faucet interactions");
     }
 
 
@@ -70,8 +80,6 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     }
 
 
-
-
     private static class MalumInteraction implements IFaucetBlockSource {
 
         @Override
@@ -87,7 +95,6 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             return InteractionResult.PASS;
         }
     }
-
 
 
     static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid) {

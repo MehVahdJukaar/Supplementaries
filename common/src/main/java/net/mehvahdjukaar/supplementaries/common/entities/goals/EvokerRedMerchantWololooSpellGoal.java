@@ -125,7 +125,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
         --this.attackWarmupDelay;
         if (this.attackWarmupDelay == 0) {
             this.performSpellCasting();
-            evoker.playSound(evoker.getCastingSoundEvent(), 1.0F, 1.0F);
+            evoker.playSound(SoundEvents.EVOKER_CAST_SPELL, 1.0F, 1.0F);
         }
 
     }

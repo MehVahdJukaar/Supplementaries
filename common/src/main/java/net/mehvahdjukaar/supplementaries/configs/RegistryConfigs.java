@@ -139,9 +139,10 @@ public class RegistryConfigs {
         DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
                 .define("debug_save_dynamic_pack", false);
 
-        PACK_DEPENDANT_ASSETS = builder.comment("Allows generated assets to depend on installed resource and data packs. " +
-                "This means that if for example you have a texture pack that changes the planks texture all generated signs textures will be based off that one insted" +
-                "Disable to have it only use vanilla assets").define("pack_dependant_assets", true);
+        PACK_DEPENDANT_ASSETS = () -> true;
+        //PACK_DEPENDANT_ASSETS = builder.comment("Allows generated assets to depend on installed resource and data packs. " +
+        //        "This means that if for example you have a texture pack that changes the planks texture all generated signs textures will be based off that one insted" +
+        //       "Disable to have it only use vanilla assets").define("pack_dependant_assets", true);
         builder.pop();
 
 
@@ -255,9 +256,23 @@ public class RegistryConfigs {
         REGISTRY_SPEC = builder.build();
         //load early
         REGISTRY_SPEC.loadFromFile();
+
+        warnIfTooManyOff();
+        builder.onChange(RegistryConfigs::warnIfTooManyOff);
     }
 
-    public static boolean isMixinEnabled(String className){
+    private static void warnIfTooManyOff() {
+        int size = CONFIGS_BY_NAME.size();
+        int on = 0;
+        for (var v : CONFIGS_BY_NAME.values()) {
+            if (v.get()) on++;
+        }
+        if (on / (float) size < 0.2) {
+            Supplementaries.LOGGER.warn("You seem to have disabled more than 80% of the mod. You should probably remove it");
+        }
+    }
+
+    public static boolean isMixinEnabled(String className) {
         BooleanSupplier config = RegistryConfigs.MIXIN_VALUES.get(className);
         return config == null || config.getAsBoolean();
     }
@@ -271,7 +286,7 @@ public class RegistryConfigs {
     public static boolean isEnabled(String key) {
         if (key.contains("daub")) return DAUB_ENABLED.get();
         return switch (key) {
-            case "way_sign"->CommonConfigs.Spawns.WAY_SIGN_ENABLED.get();
+            case "way_sign" -> CommonConfigs.Spawns.WAY_SIGN_ENABLED.get();
             case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
             case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
                     RegistryConfigs.FLAX_ENABLED.get();

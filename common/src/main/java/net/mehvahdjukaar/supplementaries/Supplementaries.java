@@ -88,6 +88,9 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
+    //heartstone highlight and pulse when nearby
+    //hammock mod with swivel
+
     //sheep animations and textyres
     //3d particle mod
 

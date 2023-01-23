@@ -44,6 +44,9 @@ public class QuiverItemImpl {
 
         @Override
         public int getSelectedSlot() {
+            if (!tag.contains("SelectedSlot")) {
+                setSelectedSlot(0);
+            }
             return tag.getInt("SelectedSlot");
         }
 
@@ -121,7 +124,7 @@ public class QuiverItemImpl {
                 ListTag listTag = tag.getList(TAG_ITEMS, 10);
                 if (!listTag.isEmpty()) {
                     int selected = this.getSelectedSlot();
-                    if (selected >= listTag.size()){
+                    if (selected >= listTag.size()) {
                         selected = listTag.size() - 1;
                         this.setSelectedSlot(selected);
                     }

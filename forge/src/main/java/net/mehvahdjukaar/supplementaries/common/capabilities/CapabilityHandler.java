@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -60,5 +61,11 @@ public class CapabilityHandler {
     @javax.annotation.Nullable
     public static <T> T get(ICapabilityProvider provider, Capability<T> cap){
         return provider.getCapability(cap).orElse(null);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @javax.annotation.Nullable
+    public static <T> T get(ICapabilityProvider provider, Capability<T> cap, Direction dir){
+        return provider.getCapability(cap, dir).orElse(null);
     }
 }

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.utils.forge;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -160,8 +161,8 @@ public class ItemsUtilImpl {
         return found;
     }
 
-    public static boolean faucetSpillItems(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
-        IItemHandler itemHandler = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, dir).orElse(null);
+    public static ItemStack removeFirstStackFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+        IItemHandler itemHandler = CapabilityHandler.get(tile, ForgeCapabilities.ITEM_HANDLER, dir);
         if (itemHandler != null) {
             for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
                 ItemStack itemstack = itemHandler.getStackInSlot(slot);
@@ -170,17 +171,12 @@ public class ItemsUtilImpl {
                     //empty stack means it can't extract from inventory
                     if (!extracted.isEmpty()) {
                         tile.setChanged();
-                        ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
-                        drop.setDeltaMovement(new Vec3(0, 0, 0));
-                        level.addFreshEntity(drop);
-                        float f = (level.random.nextFloat() - 0.5f) / 4f;
-                        level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-                        return true;
+                        return extracted.copy();
                     }
                 }
             }
-            return false;
         }
-        return false;
+        return ItemStack.EMPTY;
     }
+
 }

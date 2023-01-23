@@ -29,7 +29,7 @@ class LavaCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget 
 
     @Override
     public int getTransferCooldown() {
-        return IFaucetBlockSource.super.getTransferCooldown() * 3;
+        return IFaucetBlockSource.super.getTransferCooldown() * 4;
     }
 
 

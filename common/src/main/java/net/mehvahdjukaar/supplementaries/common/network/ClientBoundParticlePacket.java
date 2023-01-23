@@ -57,7 +57,7 @@ public class ClientBoundParticlePacket implements Message {
             buffer.writeBoolean(true);
             buffer.writeInt(extraData);
         } else {
-            buffer.writeBoolean(true);
+            buffer.writeBoolean(false);
         }
         if (pos != null) {
             buffer.writeBoolean(true);
@@ -65,7 +65,7 @@ public class ClientBoundParticlePacket implements Message {
             buffer.writeDouble(this.pos.y);
             buffer.writeDouble(this.pos.z);
         } else {
-            buffer.writeBoolean(true);
+            buffer.writeBoolean(false);
         }
     }
 

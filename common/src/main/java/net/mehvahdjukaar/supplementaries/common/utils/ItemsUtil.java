@@ -131,7 +131,7 @@ public class ItemsUtil {
 
 
     @ExpectPlatform
-    public static boolean faucetSpillItems(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+    public static ItemStack removeFirstStackFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         throw new AssertionError();
     }
 

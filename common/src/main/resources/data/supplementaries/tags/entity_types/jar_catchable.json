@@ -4,6 +4,7 @@
     {"id":"minecraft:slime","required":false},
     {"id":"minecraft:bee","required":false},
     {"id":"minecraft:magma_cube","required":false},
+    {"id":"minecraft:allay","required":false},
     {"id":"feywild:spring_pixie","required":false},
     {"id":"feywild:autumn_pixie","required":false},
     {"id":"feywild:summer_pixie","required":false},

@@ -87,6 +87,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
             data.tryAdding(arrow);
             tries++;
         }
+        data.setSelectedSlot(0);
         return quiver;
     }
 

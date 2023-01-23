@@ -3,6 +3,7 @@
   "values": [
     {"id":"#forge:ingots/nether_brick","required":false},
     {"id":"#forge:ingots/brick","required":false},
+    {"id":"supplementaries:ash_brick","required":false},
     {"id":"minecraft:brick","required":false},
     {"id":"minecraft:nether_brick","required":false},
     {"id":"immersive_weathering:stone_brick","required":false},

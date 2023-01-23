@@ -34,7 +34,7 @@ class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockT
 
     @Override
     public int getTransferCooldown() {
-        return IFaucetBlockSource.super.getTransferCooldown() * 3;
+        return IFaucetBlockSource.super.getTransferCooldown() * 4;
     }
 
     @Override

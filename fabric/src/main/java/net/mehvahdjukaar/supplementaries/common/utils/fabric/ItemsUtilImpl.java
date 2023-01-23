@@ -69,7 +69,7 @@ public class ItemsUtilImpl {
         return found;
     }
 
-    public static boolean faucetSpillItems(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+    public static ItemStack removeFirstStackFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         if (tile instanceof Container container) {
             for (int slot = 0; slot < container.getContainerSize(); slot++) {
                 ItemStack itemstack = container.getItem(slot);
@@ -78,16 +78,11 @@ public class ItemsUtilImpl {
                     //empty stack means it can't extract from inventory
                     if (!extracted.isEmpty()) {
                         tile.setChanged();
-                        ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
-                        drop.setDeltaMovement(new Vec3(0, 0, 0));
-                        level.addFreshEntity(drop);
-                        float f = (level.random.nextFloat() - 0.5f) / 4f;
-                        level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
-                        return true;
+                        return extracted.copy();
                     }
                 }
             }
         }
-        return false;
+        return ItemStack.EMPTY;
     }
 }
