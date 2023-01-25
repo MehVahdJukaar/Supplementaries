@@ -6,10 +6,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
+import org.jetbrains.annotations.Nullable;
 
 public interface IFaucetFluidSource {
     InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                               BlockPos pos, FluidState fluidState, FaucetBlockTile.FillAction fillAction);
+                               BlockPos pos, FluidState fluidState, @Nullable FaucetBlockTile.FillAction fillAction);
 
     default int getTransferCooldown() {
         return FaucetBlockTile.COOLDOWN;

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Contract;
 
 public class FluidsUtil {
 
+    @Contract
     @ExpectPlatform
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
                                                      SoftFluidTank tempFluidHolder, FaucetBlockTile.FillAction transferFunction) {

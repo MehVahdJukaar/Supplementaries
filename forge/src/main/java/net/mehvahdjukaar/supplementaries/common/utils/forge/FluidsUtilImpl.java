@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 public class FluidsUtilImpl {
 
     public static boolean tryExtractFromFluidHandler(BlockEntity tileBack, Block backBlock, Direction dir,
-                                                     SoftFluidTank tempFluidHolder, FaucetBlockTile.FillAction transferFunction) {
+                                                     SoftFluidTank tempFluidHolder, FaucetBlockTile.FillAction fillAction) {
         IFluidHandler handlerBack = tileBack.getCapability(ForgeCapabilities.FLUID_HANDLER, dir).orElse(null);
         //TODO: fix create fluid int bug
         if (handlerBack != null && !Utils.getID(backBlock).getPath().equals("fluid_interface")) {
@@ -25,7 +25,8 @@ public class FluidsUtilImpl {
             if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
             ((SoftFluidTankImpl) tempFluidHolder).copy(handlerBack);
             tempFluidHolder.setCount(2);
-            if (transferFunction.tryExecute()) {
+            if (fillAction == null) return true;
+            if (fillAction.tryExecute()) {
                 handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
                 tileBack.setChanged();
                 return true;

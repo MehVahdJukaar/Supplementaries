@@ -35,6 +35,7 @@ public record DataSourceInteraction(RuleTest target, ResourceLocation softFluid,
             if (fluid.isPresent()) {
                 faucetTank.fill(fluid.get());
                 faucetTank.setCount(amount);
+                if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     output.ifPresent(s -> level.setBlock(pos, s, 3));
                     return InteractionResult.SUCCESS;

@@ -22,6 +22,7 @@ class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockT
             int waterLevel = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (waterLevel == 3) {
                 prepareToTransferBucket(faucetTank, VanillaSoftFluids.POWDERED_SNOW.get());
+                if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
                     return InteractionResult.SUCCESS;

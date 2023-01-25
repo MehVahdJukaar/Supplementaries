@@ -22,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.TeamCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,7 +53,7 @@ public class Supplementaries {
         CommonConfigs.init();
         ClientConfigs.init();
 
-        RegHelper.registerSimpleRecipeCondition(Supplementaries.res("flag"), RegistryConfigs::isEnabled);
+        RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
 
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 

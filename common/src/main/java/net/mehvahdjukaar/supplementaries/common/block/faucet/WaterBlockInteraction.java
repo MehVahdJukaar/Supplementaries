@@ -20,7 +20,7 @@ class WaterBlockInteraction implements IFaucetFluidSource {
         if (fluidState.getType() == Fluids.WATER) {
             //Unlimited water!!
             prepareToTransferBottle(faucetTank, VanillaSoftFluids.WATER.get());
-            if (fillAction.tryExecute()) {
+            if (fillAction == null || fillAction.tryExecute()) {
                 return InteractionResult.SUCCESS;
             }
         }

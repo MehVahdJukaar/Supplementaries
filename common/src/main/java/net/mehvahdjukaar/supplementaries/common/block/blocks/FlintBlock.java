@@ -26,12 +26,12 @@ public class FlintBlock extends Block implements IPistonMotionReact {
     }
 
     @Override
-    public void onMoved(BlockState movedState, Level level, BlockPos pos, Direction moveDirection, boolean extending) {
+    public void onMoved(BlockState movedState, Level level, BlockPos pos, Direction direction, boolean extending, PistonMovingBlockEntity tile) {
         if (!extending && !level.isClientSide) {
-            BlockPos firePos = pos.relative(moveDirection);
+            BlockPos firePos = pos.relative(direction);
             if (level.getBlockState(firePos).isAir()) {
                 for (Direction ironDir : Direction.values()) {
-                    if (ironDir.getAxis() == moveDirection.getAxis()) continue;
+                    if (ironDir.getAxis() == direction.getAxis()) continue;
                     BlockPos ironPos = firePos.relative(ironDir);
                     BlockState facingState = level.getBlockState(ironPos);
                     if (canBlockCreateSpark(facingState, level, ironPos, ironDir.getOpposite())) {

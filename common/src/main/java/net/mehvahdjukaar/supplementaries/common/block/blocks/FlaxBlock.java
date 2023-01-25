@@ -191,6 +191,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     }
 
     public void growCropBy(Level level, BlockPos pos, BlockState state, int increment) {
+        if (increment > 1 && this.isSingle(state) && !canGrowUp(level, pos)) increment = 1;
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             //as if it was called on lower
             pos = pos.below();

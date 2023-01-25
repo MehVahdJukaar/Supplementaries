@@ -20,6 +20,7 @@ class HoneyPotInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
         if (state.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
             if (state.getValue(ModBlockProperties.HONEY_LEVEL_POT) > 0) {
                 prepareToTransferBottle(faucetTank, VanillaSoftFluids.HONEY.get());
+                if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, state.setValue(ModBlockProperties.HONEY_LEVEL_POT,
                             state.getValue(ModBlockProperties.HONEY_LEVEL_POT) - 1), 3);

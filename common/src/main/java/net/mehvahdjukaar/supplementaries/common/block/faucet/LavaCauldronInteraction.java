@@ -18,6 +18,7 @@ class LavaCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget 
                                       BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
         if (state.is(Blocks.LAVA_CAULDRON)) {
             prepareToTransferBucket(faucetTank, VanillaSoftFluids.LAVA.get());
+            if (fillAction == null) return InteractionResult.SUCCESS;
             if (fillAction.tryExecute()) {
                 level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
                 return InteractionResult.SUCCESS;

@@ -29,9 +29,9 @@ import java.util.Set;
 
 public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
-    public static final SongsManager RELOAD_INSTANCE = new SongsManager();
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
+    public static final FaucetBehaviorsManager RELOAD_INSTANCE = new FaucetBehaviorsManager();
 
     private final Set<Object> dataInteractions = new HashSet<>();
 
@@ -54,7 +54,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
                 if (l.isPresent()) o = l.get();
                 else o = d.right().get();
                 dataInteractions.add(o);
-                FaucetBlockTile.registerInteraction(d);
+                FaucetBlockTile.registerInteraction(o);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction " + key);
             }

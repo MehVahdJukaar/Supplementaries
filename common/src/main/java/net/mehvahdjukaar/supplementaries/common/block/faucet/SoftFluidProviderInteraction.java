@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
 
@@ -23,19 +24,25 @@ class SoftFluidProviderInteraction implements
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
+                                      BlockPos pos, BlockState state,
+                                      @Nullable FaucetBlockTile.FillAction fillAction) {
         return drainGeneric(level, faucetTank, pos, state, fillAction, state.getBlock());
     }
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile, Direction dir, FaucetBlockTile.FillAction fillAction) {
+    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
+                                      BlockPos pos, BlockEntity tile, Direction dir,
+                                      @Nullable FaucetBlockTile.FillAction fillAction) {
         return drainGeneric(level, faucetTank, pos, tile.getBlockState(), fillAction, tile);
     }
 
-    private static InteractionResult drainGeneric(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction, Object backBlock) {
+    private static InteractionResult drainGeneric(Level level, SoftFluidTank faucetTank, BlockPos pos,
+                                                  BlockState state,
+                                                  @Nullable FaucetBlockTile.FillAction fillAction, Object backBlock) {
         if (backBlock instanceof ISoftFluidProvider provider) {
             var stack = provider.getProvidedFluid(level, state, pos);
             prepareToTransferBottle(faucetTank, stack.getFirst(), stack.getSecond());
+            if (fillAction == null) return InteractionResult.SUCCESS;
             if (fillAction.tryExecute()) {
                 provider.consumeProvidedFluid(level, state, pos, faucetTank.getFluid(), faucetTank.getNbt(), 1);
                 return InteractionResult.SUCCESS;

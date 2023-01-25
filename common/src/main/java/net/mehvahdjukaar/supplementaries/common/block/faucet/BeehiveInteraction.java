@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Nullable;
 
 import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
 
@@ -16,13 +17,15 @@ class BeehiveInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
+                                      BlockPos pos, BlockState state,
+                                      @Nullable FaucetBlockTile.FillAction fillAction) {
 
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             if (state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
                 prepareToTransferBottle(faucetTank, VanillaSoftFluids.HONEY.get());
+                if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
-                    level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY,0), 3);
+                    level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 0), 3);
                     return InteractionResult.SUCCESS;
                 }
             }

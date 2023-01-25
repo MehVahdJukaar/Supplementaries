@@ -92,7 +92,7 @@ public class FaucetBlockTile extends BlockEntity {
         }
         boolean r = this.tryExtract(level, pos, state, false) != 0;
         this.updateLight();
-        return r;
+        return r;         //returns if it has a fluid
     }
 
     /**
@@ -105,9 +105,10 @@ public class FaucetBlockTile extends BlockEntity {
         this.tempFluidHolder.clear();
         if (backState.isAir()) return 0;
 
+        FillAction fillAction = doTransfer ? this::tryFillingBlockBelow : null;
         for (var bi : BLOCK_INTERACTIONS) {
             var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                    backState, () -> doTransfer && this.tryFillingBlockBelow());
+                    backState, fillAction);
             if (res == InteractionResult.PASS) continue;
             if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
             else if (res == InteractionResult.CONSUME) break;
@@ -116,7 +117,7 @@ public class FaucetBlockTile extends BlockEntity {
         if (!this.isConnectedBelow()) {
             for (var bi : ITEM_INTERACTIONS) {
                 ItemStack removed = bi.tryExtractItem(level, behind, backState);
-                if (removed != null) {
+                if (!removed.isEmpty()) {
                     drop(level, pos, removed);
                     return COOLDOWN;
                 }
@@ -128,7 +129,7 @@ public class FaucetBlockTile extends BlockEntity {
         if (tileBack != null) {
             for (var bi : TILE_INTERACTIONS) {
                 var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                        tileBack, dir, () -> doTransfer && this.tryFillingBlockBelow());
+                        tileBack, dir, fillAction);
                 if (res == InteractionResult.PASS) continue;
                 if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
                 else if (res == InteractionResult.CONSUME) break;
@@ -145,7 +146,7 @@ public class FaucetBlockTile extends BlockEntity {
 
             for (var bi : FLUID_INTERACTIONS) {
                 var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                        fluidState, () -> doTransfer && this.tryFillingBlockBelow());
+                        fluidState, fillAction);
                 if (res == InteractionResult.PASS) continue;
                 if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
                 else if (res == InteractionResult.CONSUME) break;
@@ -206,7 +207,7 @@ public class FaucetBlockTile extends BlockEntity {
 
     public int spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         //TODO: maybe add here insertion in containers below
-        if (this.isConnectedBelow()) {
+        if (!this.isConnectedBelow()) {
             ItemStack removed = ItemsUtil.removeFirstStackFromInventory(level, pos, dir, tile);
             if (removed != null) {
                 drop(level, pos, removed);

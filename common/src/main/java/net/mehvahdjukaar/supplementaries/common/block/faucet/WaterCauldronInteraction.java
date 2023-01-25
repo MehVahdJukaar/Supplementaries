@@ -29,6 +29,7 @@ class WaterCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget
                 }
 
                 prepareToTransferBottle(faucetTank, VanillaSoftFluids.WATER.get());
+                if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     if (waterLevel > 1) {
                         level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_CAULDRON,

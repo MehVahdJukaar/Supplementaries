@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 //consume to finish current group
 class SoftFluidTankInteraction implements
@@ -15,11 +16,13 @@ class SoftFluidTankInteraction implements
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockEntity tile, Direction dir, FaucetBlockTile.FillAction fillAction) {
+                                      BlockPos pos, BlockEntity tile, Direction dir,
+                                      @Nullable FaucetBlockTile.FillAction fillAction) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
             SoftFluidTank fluidHolder = holder.getSoftFluidTank();
             faucetTank.copy(fluidHolder);
             faucetTank.setCount(2);
+            if (fillAction == null) return InteractionResult.SUCCESS;
             if (fillAction.tryExecute()) {
                 fluidHolder.shrink(1);
                 tile.setChanged();
