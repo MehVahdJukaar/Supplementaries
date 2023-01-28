@@ -102,8 +102,10 @@ public class CommonConfigs {
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
+        public static final Supplier<Boolean> QUIVER_PICKUP;
         public static final Supplier<Integer> BUBBLE_BLOWER_COST;
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
+
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -119,6 +121,8 @@ public class CommonConfigs {
                     .define("quiver_skeleton_chance", 0.2d, 0, 1);
             QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio slot")
                             .define("only_works_in_curio",false);
+            QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same type")
+                            .define("quiver_pickup", true);
             builder.pop();
 
             builder.push("bubble_blower");

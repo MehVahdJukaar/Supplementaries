@@ -65,7 +65,7 @@ public class QuiverItemImpl {
         }
 
         @Override
-        public ItemStack tryAdding(ItemStack toInsert) {
+        public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (toInsert.isEmpty() || !toInsert.getItem().canFitInsideContainerItems()) {
                 return toInsert;
             }

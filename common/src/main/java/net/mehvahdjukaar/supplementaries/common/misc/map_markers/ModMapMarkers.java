@@ -55,6 +55,7 @@ public class ModMapMarkers {
     public static final ResourceLocation MINESHAFT_TYPE = Supplementaries.res("mineshaft");
     public static final ResourceLocation SWAMP_HUT_TYPE = Supplementaries.res("swamp_hut");
     public static final ResourceLocation OCEAN_RUIN_TYPE = Supplementaries.res("ocean_ruin");
+    public static final ResourceLocation ANCIENT_CITY_TYPE = Supplementaries.res("ancient_city");
 
     public static void init() {
         reg(SIGN_POST_DECORATION_TYPE);

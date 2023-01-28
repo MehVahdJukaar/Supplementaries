@@ -88,6 +88,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
     static {
         associateStructureMarker(StructureTags.SHIPWRECK, ModMapMarkers.SHIPWRECK_TYPE, 0x34200f);
+        associateStructureMarker(ModTags.ANCIENT_CITY, ModMapMarkers.ANCIENT_CITY_TYPE, 0x063970);
         associateStructureMarker(ModTags.IGLOO, ModMapMarkers.IGLOO_TYPE, 0x99bdc2);
         associateStructureMarker(StructureTags.RUINED_PORTAL, ModMapMarkers.RUINED_PORTAL_TYPE, 0x5f30b5);
         associateStructureMarker(StructureTags.VILLAGE, ModMapMarkers.VILLAGE_TYPE, 0xba8755);

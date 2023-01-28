@@ -1,0 +1,6 @@
+{
+  "target_block": {
+    "block": "minecraft:campfire",
+    "predicate_type": "minecraft:block_match"
+  }
+}

@@ -22,6 +22,7 @@
     "UndeadHorseRenderMixin"
   ],
   "mixins": [
+    "AbstractArrowMixin",
     "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "AbstractSkullBlockMixin",

@@ -46,8 +46,10 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
             if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
                 return;
             }
-        } else {
-            quiver = ModRegistry.QUIVER_ITEM.get().getDefaultInstance();
+        }else {
+            if(livingEntity.hasQuiver()){
+                quiver = ModRegistry.QUIVER_ITEM.get().getDefaultInstance();
+            }else return;
         }
 
         if (!quiver.isEmpty()) {

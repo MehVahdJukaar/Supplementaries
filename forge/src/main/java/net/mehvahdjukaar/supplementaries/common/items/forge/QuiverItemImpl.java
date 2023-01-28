@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -121,9 +121,25 @@ public class QuiverItemImpl {
             return originalSlot != selectedSlot;
         }
 
-        public ItemStack tryAdding(ItemStack toInsert) {
+        public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
-                return ItemHandlerHelper.insertItem(this, toInsert, false);
+                if (onlyOnExisting) {
+                    int countToAdd = toInsert.getCount();
+                    for (int i = 0; i < this.getSlots() && countToAdd > 0; i++) {
+                        ItemStack s = this.getStackInSlot(i);
+                        if (ItemStack.isSameItemSameTags(s, toInsert)) {
+                            int newCount = Math.min(s.getMaxStackSize(), s.getCount() + countToAdd);
+                            int increment = newCount - s.getCount();
+                            countToAdd -= increment;
+                            s.grow(increment);
+                            this.onContentsChanged(i);
+                        }
+                    }
+                    toInsert.setCount(countToAdd);
+                    return toInsert;
+                } else {
+                    return ItemHandlerHelper.insertItem(this, toInsert, false);
+                }
             }
             return toInsert;
         }

@@ -308,7 +308,12 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         /**
          * Adds one item. returns the item that is remaining and has not been added. Same item if no change was made
          */
-        ItemStack tryAdding(ItemStack pInsertedStack);
+        ItemStack tryAdding(ItemStack pInsertedStack, boolean onlyOnExisting);
+
+        default ItemStack tryAdding(ItemStack pInsertedStack) {
+            return tryAdding(pInsertedStack, false);
+        }
+
 
         Optional<ItemStack> removeOneStack();
 
@@ -329,6 +334,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
 
         //fabric and skeleton shoot goal. forge for player doesn't need this as stack decrement already affects the one in quiver
         void consumeArrow();
+
     }
 
 

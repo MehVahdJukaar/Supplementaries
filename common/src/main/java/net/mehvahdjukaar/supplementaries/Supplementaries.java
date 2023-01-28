@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.commands.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
@@ -23,6 +24,8 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.TeamCommand;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +34,7 @@ public class Supplementaries {
 
     public static final String MOD_ID = "supplementaries";
 
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 
     public static ResourceLocation res(String n) {
@@ -79,7 +82,11 @@ public class Supplementaries {
             ClientDynamicResourcesGenerator.INSTANCE.register();
 
             ClientPlatformHelper.addClientReloadListener(WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
+try {
+    ClientPlatformHelper.registerOptionalTexturePack(res("darker_ropes"));
+}catch (Exception e){};
         }
+
     }
 
     //mod init
@@ -115,20 +122,16 @@ public class Supplementaries {
     //camera mod with screenshots
 
     //clicking on cage with lead will put the leashed animal inside
-    //TODO: flint block and steel
     //wrench rotation overlay
-    //TODO: dynamic soap undye recipe
     //create moving dynamic blocks like rope knot
     //jei villagers addon
     //corona mod
-    //lilypad mod
     //trollium interaction mod
     //animated lantern textures
     //ash jei plugin
     //bubble sound for bellows
     //bundle sound for sacks
 
-    //FIx spikes piston movements
     //TODO: shift click to pickup placed book
 
     //todo: fix projectile hitbox being a single point on y = 0
@@ -165,13 +168,10 @@ public class Supplementaries {
     //add shift middle click to swap to correct tool
 
     //mod idea: blackboard banners and flags with villager
-    //weed mod
 
     //throwable slimeballs
 
     //simple mode for doors and trapdoors
-
-    //label
 
     //animated pulley texture
 
@@ -180,9 +180,6 @@ public class Supplementaries {
     // randomium item particle when drop
 
     //TODO: xp bottling whose cost depends on player total xp
-    //TODO: randomium that can spawn in other dimensions via whitelist
-
-    //TODO: wiki for custom map markers icons. add simple icon datapacks
 
     //randomium can give onl stuff already obtained by a player in survival
 
@@ -209,16 +206,9 @@ public class Supplementaries {
     //better fodder pathfinding
     //TODO fix randomium recipe jei extensin
 
-    //TODO: add dispenser like interaction registry for faucet
-    //TODO: flax upper stage grows depending on lower
-
-    //jeed mod loaded recipe condition
     //blackboard otline gui+
 
     //soap signs & finish notice board dye (add dye interface)
     //snow real magic compat
     //bugs: spring launcher broken on servers
-
-    //bellows particles
-
 }

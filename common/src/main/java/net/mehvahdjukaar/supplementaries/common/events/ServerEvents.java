@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
@@ -10,9 +13,11 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchant
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
@@ -23,14 +28,18 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -44,6 +53,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class ServerEvents {
@@ -151,5 +161,56 @@ public class ServerEvents {
         LootTablesInjects.injectLootTables(name, builder);
     }
 
+
+    //TODO: fabric
+    @EventCalled
+    public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
+        ItemStack stack = itemEntity.getItem();
+        if (!itemEntity.hasPickUpDelay() && CommonConfigs.Items.QUIVER_PICKUP.get() &&
+                stack.getItem() instanceof ArrowItem &&
+                (itemEntity.getOwner() == null ||
+                        SuppPlatformStuff.getItemLifeSpawn(itemEntity) - itemEntity.getAge() <= 200 ||
+                        itemEntity.getOwner().equals(player.getUUID()))
+        ) {
+            ItemStack old = stack.copy();
+            if (takeArrow(itemEntity, player, stack)){
+                SuppPlatformStuff.onItemPickup(player, itemEntity, old);
+                player.onItemPickup(itemEntity);
+                player.awardStat(Stats.ITEM_PICKED_UP.get(stack.getItem()), old.getCount() - stack.getCount());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @EventCalled
+    public static boolean onArrowPickup(AbstractArrow arrow, Player player, Supplier<ItemStack> pickup) {
+        if (CommonConfigs.Items.QUIVER_PICKUP.get()){
+            ItemStack stack = pickup.get();
+            return takeArrow(arrow, player, stack);
+        }
+        return false;
+    }
+
+    private static boolean takeArrow(Entity itemEntity, Player player, ItemStack stack) {
+        ItemStack quiverItem = QuiverItem.getQuiver(player);
+        if (quiverItem != null) {
+            var data = QuiverItem.getQuiverData(quiverItem);
+            if (data != null) {
+                ItemStack copy = stack.copy();
+                int count = copy.getCount();
+                int newCount = data.tryAdding(copy, true).getCount();
+                if (count != newCount) {
+                    player.take(itemEntity, count);
+                    stack.setCount(newCount);
+                    if (stack.isEmpty()) {
+                        itemEntity.discard();
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

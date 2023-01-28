@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +37,17 @@ public class SuppPlatformStuff {
 
     @ExpectPlatform
     public static boolean isEndermanMask(EnderMan enderMan, Player player, ItemStack itemstack) {
+        throw new AssertionError();
+    }
+
+    @Contract
+    @ExpectPlatform
+    public static int getItemLifeSpawn(ItemEntity itemEntity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void onItemPickup(Player player, ItemEntity itemEntity, ItemStack copy) {
         throw new AssertionError();
     }
 }

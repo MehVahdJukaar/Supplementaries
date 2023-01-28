@@ -128,22 +128,27 @@ public class QuarkClientCompatImpl {
             //adds missing ones from quiver
 
             if (event.player instanceof IQuiverEntity qe) {
-                QuiverItem.Data data = QuiverItem.getQuiverData(qe.getQuiver());
-                //sanity check
-                ItemStack selected = data.getSelected();
+                var q = qe.getQuiver();
+                if (!q.isEmpty()) {
+                    QuiverItem.Data data = QuiverItem.getQuiverData(q);
+                    if (data != null) {
+                        //sanity check
+                        ItemStack selected = data.getSelected();
 
-                if (event.currentStack.is(selected.getItem())) {
-                    //just recomputes everything
-                    int count = data.getSelectedArrowCount();
-                    Inventory inventory = event.player.getInventory();
+                        if (event.currentStack.is(selected.getItem())) {
+                            //just recomputes everything
+                            int count = data.getSelectedArrowCount();
+                            Inventory inventory = event.player.getInventory();
 
-                    for (int i = 0; i < inventory.getContainerSize(); ++i) {
-                        ItemStack stackAt = inventory.getItem(i);
-                        if (selected.is(stackAt.getItem())) {
-                            count += stackAt.getCount();
+                            for (int i = 0; i < inventory.getContainerSize(); ++i) {
+                                ItemStack stackAt = inventory.getItem(i);
+                                if (selected.is(stackAt.getItem())) {
+                                    count += stackAt.getCount();
+                                }
+                            }
+                            event.setResultCount(count);
                         }
                     }
-                    event.setResultCount(count);
                 }
             }
         }

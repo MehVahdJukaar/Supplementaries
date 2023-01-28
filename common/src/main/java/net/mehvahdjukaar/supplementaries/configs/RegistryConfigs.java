@@ -187,7 +187,19 @@ public class RegistryConfigs {
         NETHERITE_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.NETHERITE_TRAPDOOR_NAME, true);
         LOCK_BLOCK_ENABLED = regConfig(builder, RegistryConstants.LOCK_BLOCK_NAME, true);
         FLAX_ENABLED = regConfig(builder, RegistryConstants.FLAX_NAME, true);
-        ROPE_ENABLED = () -> true;//cope cope cope regConfig(builder, RegistryConstants.ROPE_NAME, true);
+        ROPE_ENABLED = regConfig(builder.comment("""
+                Before disabling because other mods dont have such easy configs let me remind you that my ropes can:
+                - be pulled up and down
+                - be placed horizontally and walked upon
+                - be tied to fences, walls and posts, horizontals too
+                - be found in new mineshaft structures and chests
+                - have custom break slide and step sound
+                - negate all fall damage while not slowing your fall
+                - rope arrows and pulleys
+                - you can ring attached bells
+                - mod integration (FD tomatoes)
+                - can pull the last block attached to them
+                - walking on one will wobble your screen"""), RegistryConstants.ROPE_NAME, true);
         PULLEY_ENABLED = regConfig(builder, RegistryConstants.PULLEY_BLOCK_NAME, true);
         FODDER_ENABLED = regConfig(builder, RegistryConstants.FODDER_NAME, true);
 

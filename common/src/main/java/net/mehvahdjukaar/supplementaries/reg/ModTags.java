@@ -68,14 +68,15 @@ public class ModTags {
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
-    public static final TagKey<Structure> BASTION_REMNANT = structureTag("bastion_remnant");
-    public static final TagKey<Structure> DESERT_PYRAMID = structureTag("desert_pyramid");
-    public static final TagKey<Structure> END_CITY = structureTag("end_city");
-    public static final TagKey<Structure> NETHER_FORTRESS = structureTag("fortress");
-    public static final TagKey<Structure> IGLOO = structureTag("igloo");
-    public static final TagKey<Structure> JUNGLE_TEMPLE = structureTag("jungle_pyramid");
-    public static final TagKey<Structure> PILLAGER_OUTPOST = structureTag("pillager_outpost");
-    public static final TagKey<Structure> SWAMP_HUT = structureTag("swamp_hut");
+    public static final TagKey<Structure> BASTION_REMNANT = MCstructureTag("bastion_remnant");
+    public static final TagKey<Structure> DESERT_PYRAMID = MCstructureTag("desert_pyramid");
+    public static final TagKey<Structure> END_CITY = MCstructureTag("end_city");
+    public static final TagKey<Structure> NETHER_FORTRESS = MCstructureTag("fortress");
+    public static final TagKey<Structure> IGLOO = MCstructureTag("igloo");
+    public static final TagKey<Structure> ANCIENT_CITY = MCstructureTag("ancient_city");
+    public static final TagKey<Structure> JUNGLE_TEMPLE = MCstructureTag("jungle_pyramid");
+    public static final TagKey<Structure> PILLAGER_OUTPOST = MCstructureTag("pillager_outpost");
+    public static final TagKey<Structure> SWAMP_HUT = MCstructureTag("swamp_hut");
 
 
     //biomes
@@ -84,6 +85,9 @@ public class ModTags {
     public static final TagKey<Biome> HAS_WILD_FLAX = biomeTag("has_wild_flax");
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
+    private static TagKey<Structure> MCstructureTag(String name) {
+        return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));
+    }
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));
     }

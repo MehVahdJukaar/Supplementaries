@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -236,6 +237,9 @@ public class BombExplosion extends Explosion {
 
                             if (!isPlayer || (!playerEntity.isSpectator() && !playerEntity.isCreative())) {
                                 bombType.applyStatusEffects(livingEntity, distSq);
+                            }
+                            if(entity instanceof Creeper creeper){
+                                creeper.ignite();
                             }
 
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
