@@ -18,7 +18,8 @@ public abstract class CompatFarmersDelightMixin extends Block {
     }
 
     //break protection
-    @Inject(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z",
+    @Inject(method = "attemptRopeClimb", at = @At(value = "INVOKE",
+            ordinal = 14,
             shift = At.Shift.BEFORE), cancellable = true, require = 0, remap = false)
     public void suppRopeCompat(ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         if (FarmersDelightCompat.tryTomatoLogging(level, pos.above())) ci.cancel();

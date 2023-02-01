@@ -42,7 +42,7 @@ class SoftFluidProviderInteraction implements
         if (backBlock instanceof ISoftFluidProvider provider) {
             var stack = provider.getProvidedFluid(level, state, pos);
             prepareToTransferBottle(faucetTank, stack.getFirst(), stack.getSecond());
-            if (fillAction == null) return InteractionResult.SUCCESS;
+            if (fillAction == null) return InteractionResult.CONSUME;
             if (fillAction.tryExecute()) {
                 provider.consumeProvidedFluid(level, state, pos, faucetTank.getFluid(), faucetTank.getNbt(), 1);
                 return InteractionResult.SUCCESS;

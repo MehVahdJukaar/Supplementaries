@@ -36,6 +36,7 @@ public class ModTags {
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
+    public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");
     public static final TagKey<Item> COOKIES = itemTag("cookies");
     public static final TagKey<Item> BRICKS = itemTag("throwable_bricks");
     public static final TagKey<Item> ROPES = itemTag("ropes");

@@ -18,6 +18,7 @@ class ForgeFluidTankInteraction implements
                                       BlockPos pos, BlockEntity tile, Direction dir,
                                       @Nullable FaucetBlockTile.FillAction fillAction) {
         if (FluidsUtil.tryExtractFromFluidHandler(tile, tile.getBlockState().getBlock(), dir, faucetTank, fillAction)) {
+            if (fillAction == null) return InteractionResult.CONSUME;
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

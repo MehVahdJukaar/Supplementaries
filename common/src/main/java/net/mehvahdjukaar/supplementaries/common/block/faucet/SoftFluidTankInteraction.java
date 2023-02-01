@@ -22,7 +22,7 @@ class SoftFluidTankInteraction implements
             SoftFluidTank fluidHolder = holder.getSoftFluidTank();
             faucetTank.copy(fluidHolder);
             faucetTank.setCount(2);
-            if (fillAction == null) return InteractionResult.SUCCESS;
+            if (fillAction == null) return InteractionResult.CONSUME;
             if (fillAction.tryExecute()) {
                 fluidHolder.shrink(1);
                 tile.setChanged();

@@ -222,6 +222,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> WRITTEN_BOOKS;
         public static final Supplier<Double> BOOK_POWER;
         public static final Supplier<Double> ENCHANTED_BOOK_POWER;
+        public static final Supplier<Boolean> ZOMBIE_HORSE_CONVERSION;
         public static final Supplier<Boolean> ZOMBIE_HORSE;
         public static final Supplier<Integer> ZOMBIE_HORSE_COST;
         public static final Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
@@ -367,6 +368,8 @@ public class CommonConfigs {
                     .define("rotten_flesh", 64, 1, 1000);
             ZOMBIE_HORSE_UNDERWATER = builder.comment("Allows zombie horses to be ridden underwater")
                     .define("rideable_underwater", true);
+            ZOMBIE_HORSE_CONVERSION = builder.comment("Convert a zombie horse back by feeding it a golden carrot")
+                    .define("zombie_horse_inverse_conversion", true);
             builder.pop();
 
 

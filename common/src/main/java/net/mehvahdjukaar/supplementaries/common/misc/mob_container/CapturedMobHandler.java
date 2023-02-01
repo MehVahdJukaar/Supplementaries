@@ -48,7 +48,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         var list = new ArrayList<DataDefinedCatchableMob>();
         jsons.forEach((key, json) -> {
             var v = DataDefinedCatchableMob.CODEC.parse(JsonOps.INSTANCE, json);
-            var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse structure map trade: {}", e));
+            var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse captured mob properties: {}", e));
             if (key.getPath().equals("generic_fish")) {
                 MODDED_FISH_PROPERTIES = data;
             } else {

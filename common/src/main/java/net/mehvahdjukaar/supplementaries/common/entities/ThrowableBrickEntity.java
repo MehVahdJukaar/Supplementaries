@@ -3,8 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -76,10 +77,14 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super.onHitBlock(rayTraceResult);
         if (!this.level.isClientSide) {
             Entity entity = this.getOwner();
-            if (entity instanceof Player player && !player.mayBuild()) return;
+            BlockPos pos = rayTraceResult.getBlockPos();
+
+            if (entity instanceof Player player) {
+                if (CompatHandler.FLAN && !FlanCompat.canBreak(player, pos)) return;
+                if (!player.mayBuild()) return;
+            }
             if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatformHelper.isMobGriefingOn(this.level, this)) {
 
-                BlockPos pos = rayTraceResult.getBlockPos();
                 if (level.getBlockState(pos).getBlock() instanceof JarBlock) {
                     level.destroyBlock(pos, true);
                 } else {

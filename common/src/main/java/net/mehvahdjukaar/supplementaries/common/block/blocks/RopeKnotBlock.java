@@ -47,8 +47,6 @@ import java.util.Map;
 
 public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection {
 
-    private static Map<BlockState, VoxelShape> SHAPES_MAP;
-    private static Map<BlockState, VoxelShape> COLLISION_SHAPES_MAP;
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -61,6 +59,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
 
+    private static Map<BlockState, VoxelShape> shapeMap;
+    private static Map<BlockState, VoxelShape> collisionShapesMap;
 
     protected static final Map<Direction, BooleanProperty> FENCE_PROPERTY = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((d) -> d.getKey().getAxis().isHorizontal()).collect(Util.toMap());
     protected static final Map<Direction, EnumProperty<WallSide>> WALL_PROPERTY = Map.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
@@ -68,8 +68,8 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     public RopeKnotBlock(Properties properties) {
         super(properties);
         var s = this.makeShapes();
-        SHAPES_MAP = s.getFirst();
-        COLLISION_SHAPES_MAP = s.getSecond();
+        shapeMap = s.getFirst();
+        collisionShapesMap = s.getSecond();
 
         this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.Y)
                 .setValue(WATERLOGGED, false).setValue(POST_TYPE, PostType.POST)
@@ -128,12 +128,12 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
-        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
+        return shapeMap.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
     @Override
     public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
-        return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
+        return shapeMap.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
     @Override
@@ -340,6 +340,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             tile.setHeldBlock(state);
+            tile.setChanged();
         }
         newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
         return newState;

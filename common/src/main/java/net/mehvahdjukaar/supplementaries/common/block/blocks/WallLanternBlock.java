@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
@@ -68,7 +69,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
                 var opt = LightableLanternBlock.toggleLight(lantern, pLevel, pPos, pPlayer, pHand);
                 if (opt.isPresent()) {
                     te.setHeldBlock(opt.get());
-                    int light = opt.get().getLightEmission();
+                    int light = SuppPlatformStuff.getLightEmission(opt.get(), pLevel, pPos);
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL, light));
                     pLevel.sendBlockUpdated(pPos, pState, pState, Block.UPDATE_CLIENTS);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);

@@ -34,6 +34,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -266,12 +267,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (entity instanceof NeutralMob && entity instanceof Mob) {
             getEntitiesInRange((Mob) entity).stream()
                     .filter((mob) -> mob != entity).map(
-                            (mob) -> (NeutralMob) mob).forEach((mob) -> {
+                            NeutralMob.class::cast).forEach((mob) -> {
                         mob.forgetCurrentTargetAndRefreshUniversalAnger();
                         mob.setPersistentAngerTarget(player.getUUID());
                         mob.setLastHurtByMob(player);
                     });
         }
+
         //piglin workaround. don't know why they are IAngerable
         if (entity instanceof Piglin) {
             entity.hurt(DamageSource.playerAttack(player), 0);

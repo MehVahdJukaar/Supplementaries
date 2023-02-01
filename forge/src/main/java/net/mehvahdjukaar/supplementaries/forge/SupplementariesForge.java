@@ -33,7 +33,6 @@ public class SupplementariesForge {
         bus.addListener(SupplementariesForge::registerOverrides);
 
         ServerEventsForge.init();
-        ModLootModifiers.init();
 
         PlatformHelper.getEnv().ifClient(() -> {
             ClientRegistry.init();

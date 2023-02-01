@@ -50,4 +50,9 @@ public class SuppPlatformStuff {
     public static void onItemPickup(Player player, ItemEntity itemEntity, ItemStack copy) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
+        throw new ArrayStoreException();
+    }
 }

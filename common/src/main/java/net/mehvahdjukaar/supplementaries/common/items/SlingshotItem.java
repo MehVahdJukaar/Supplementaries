@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOv
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.sounds.SoundEvent;
@@ -106,12 +107,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     }
 
-    @Override
-    public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
-
-    }
-
     //shoot pitches for multi shot
     private static float[] getShotPitches(RandomSource random) {
         boolean flag = random.nextBoolean();
@@ -179,7 +174,9 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         return s -> {
             Item i = s.getItem();
             //no buckets
-            return !(i instanceof DispensibleContainerItem) && i instanceof BlockItem ||
+
+            return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
+                    i instanceof BlockItem ||
                     ((IExtendedItem) i).hasPlacementBehavior() ||
                     InteractEventOverrideHandler.hasBlockPlacementAssociated(i);
         };

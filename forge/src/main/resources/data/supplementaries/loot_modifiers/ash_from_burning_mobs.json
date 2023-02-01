@@ -1,5 +1,5 @@
 {
-  "type": "supplementaries:add_item",
+  "type": "moonlight:add_item",
   "conditions": [
     {
       "condition": "supplementaries:flag",
