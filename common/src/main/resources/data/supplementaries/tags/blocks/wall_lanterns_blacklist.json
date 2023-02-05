@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"spelunkery:salt_lamp","required":false}
+  ]
+}

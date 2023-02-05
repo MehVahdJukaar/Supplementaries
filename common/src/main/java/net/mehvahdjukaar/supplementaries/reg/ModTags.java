@@ -34,6 +34,8 @@ public class ModTags {
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
     public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable");
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
+    public static final TagKey<Block> WALL_LANTERNS_BLACKLIST = blockTag("wall_lanterns_blacklist");
+    public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");

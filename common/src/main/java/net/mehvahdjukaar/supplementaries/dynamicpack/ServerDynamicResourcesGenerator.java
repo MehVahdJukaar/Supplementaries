@@ -16,10 +16,8 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.font.FontManager;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -173,7 +171,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
                     .pattern(" 1 ")
                     .define('1', Items.STICK)
                     .define('2', oak.planks)
-                    .group(RegistryConstants.SIGN_POST_NAME)
+                    .group(ModConstants.SIGN_POST_NAME)
                     .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(oak.planks))
                     .save(s -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
         }

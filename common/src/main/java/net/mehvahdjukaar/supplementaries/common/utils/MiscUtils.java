@@ -1,17 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
@@ -19,13 +18,10 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.function.Supplier;
 
 public class MiscUtils {
-
 
     public enum Festivity {
         NONE,
@@ -87,17 +83,6 @@ public class MiscUtils {
 
     public static final Festivity FESTIVITY = Festivity.get();
 
-    public static boolean isLanternBlock(Block b) {
-        ResourceLocation id = Utils.getID(b);
-        String namespace = id.getNamespace();
-        if (namespace.equals("skinnedlanterns") || (namespace.equals("twigs") && id.getPath().contains("paper_lantern")))
-            return true;
-        if (b instanceof LanternBlock) { //!CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)
-            return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
-        }
-        return false;
-    }
-
     public static boolean isSword(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
         //if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
@@ -108,10 +93,6 @@ public class MiscUtils {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
         //if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
         return i instanceof DiggerItem || i instanceof TridentItem;
-    }
-
-    public static boolean isCookie(Item i) {
-        return (i.builtInRegistryHolder().is(ModTags.COOKIES));
     }
 
     //bounding box

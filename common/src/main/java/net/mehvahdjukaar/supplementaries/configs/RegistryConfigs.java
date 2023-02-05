@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.reg.RegistryConstants;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -131,7 +131,7 @@ public class RegistryConfigs {
 
         DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble").define("dispensers", true);
 
-        JAR_TAB = builder.comment("Creates a creative tab full of filled jars")
+        JAR_TAB = builder.gameRestart().comment("Creates a creative tab full of filled jars")
                 .define("jar_tab", false);
         CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                 .define("custom_configured_screen", true);
@@ -147,46 +147,46 @@ public class RegistryConfigs {
 
 
         builder.push("blocks");
-        PLANTER_ENABLED = regConfig(builder, RegistryConstants.PLANTER_NAME, true);
-        CLOCK_ENABLED = regConfig(builder, RegistryConstants.CLOCK_BLOCK_NAME, true);
-        PEDESTAL_ENABLED = regConfig(builder, RegistryConstants.PEDESTAL_NAME, true);
-        WIND_VANE_ENABLED = regConfig(builder, RegistryConstants.WIND_VANE_NAME, true);
-        ILLUMINATOR_ENABLED = regConfig(builder, RegistryConstants.REDSTONE_ILLUMINATOR_NAME, true);
-        NOTICE_BOARD_ENABLED = regConfig(builder, RegistryConstants.NOTICE_BOARD_NAME, true);
-        CRANK_ENABLED = regConfig(builder, RegistryConstants.CRANK_NAME, true);
-        JAR_ENABLED = regConfig(builder, RegistryConstants.JAR_NAME, true);
-        FAUCET_ENABLED = regConfig(builder, RegistryConstants.FAUCET_NAME, true);
-        TURN_TABLE_ENABLED = regConfig(builder, RegistryConstants.TURN_TABLE_NAME, true);
-        PISTON_LAUNCHER_ENABLED = regConfig(builder, RegistryConstants.SPRING_LAUNCHER_NAME, true);
-        SPEAKER_BLOCK_ENABLED = regConfig(builder, RegistryConstants.SPEAKER_BLOCK_NAME, true);
-        SIGN_POST_ENABLED = regConfig(builder, RegistryConstants.SIGN_POST_NAME, true);
-        HANGING_SIGN_ENABLED = regConfig(builder, RegistryConstants.HANGING_SIGN_NAME, true);
-        BELLOWS_ENABLED = regConfig(builder, RegistryConstants.BELLOWS_NAME, true);
-        SCONCE_ENABLED = regConfig(builder, RegistryConstants.SCONCE_NAME, true);
-        SCONCE_GREEN_ENABLED = regConfig(builder, RegistryConstants.SCONCE_NAME_GREEN, false);
-        CAGE_ENABLED = regConfig(builder, RegistryConstants.CAGE_NAME, true);
-        ITEM_SHELF_ENABLED = regConfig(builder, RegistryConstants.ITEM_SHELF_NAME, true);
-        SCONCE_LEVER_ENABLED = regConfig(builder, RegistryConstants.SCONCE_LEVER_NAME, true);
-        COG_BLOCK_ENABLED = regConfig(builder, RegistryConstants.COG_BLOCK_NAME, true);
-        GLOBE_ENABLED = regConfig(builder, RegistryConstants.GLOBE_NAME, true);
-        HOURGLASS_ENABLED = regConfig(builder, RegistryConstants.HOURGLASS_NAME, true);
-        SACK_ENABLED = regConfig(builder, RegistryConstants.SACK_NAME, true);
-        BLACKBOARD_ENABLED = regConfig(builder, RegistryConstants.BLACKBOARD_NAME, true);
-        SAFE_ENABLED = regConfig(builder, RegistryConstants.SAFE_NAME, true);
-        COPPER_LANTERN_ENABLED = regConfig(builder, RegistryConstants.COPPER_LANTERN_NAME, true);
-        GOLD_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.GOLD_TRAPDOOR_NAME, true);
-        GOLD_DOOR_ENABLED = regConfig(builder, RegistryConstants.GOLD_DOOR_NAME, true);
-        BAMBOO_SPIKES_ENABLED = regConfig(builder, RegistryConstants.BAMBOO_SPIKES_NAME, true);
-        TIPPED_SPIKES_ENABLED = regConfig(builder, RegistryConstants.TIPPED_SPIKES_NAME, true);
-        STONE_LAMP_ENABLED = regConfig(builder, RegistryConstants.STONE_LAMP_NAME, true);
-        END_STONE_LAMP_ENABLED = regConfig(builder, RegistryConstants.END_STONE_LAMP_NAME, true);
-        BLACKSTONE_LAMP_ENABLED = regConfig(builder, RegistryConstants.BLACKSTONE_LAMP_NAME, true);
-        DEEPSLATE_LAMP_ENABLED = regConfig(builder, RegistryConstants.DEEPSLATE_LAMP_NAME, true);
-        CHECKERBOARD_ENABLED = regConfig(builder, RegistryConstants.CHECKER_BLOCK_NAME, true);
-        NETHERITE_DOOR_ENABLED = regConfig(builder, RegistryConstants.NETHERITE_DOOR_NAME, true);
-        NETHERITE_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.NETHERITE_TRAPDOOR_NAME, true);
-        LOCK_BLOCK_ENABLED = regConfig(builder, RegistryConstants.LOCK_BLOCK_NAME, true);
-        FLAX_ENABLED = regConfig(builder, RegistryConstants.FLAX_NAME, true);
+        PLANTER_ENABLED = regConfig(builder, ModConstants.PLANTER_NAME, true);
+        CLOCK_ENABLED = regConfig(builder, ModConstants.CLOCK_BLOCK_NAME, true);
+        PEDESTAL_ENABLED = regConfig(builder, ModConstants.PEDESTAL_NAME, true);
+        WIND_VANE_ENABLED = regConfig(builder, ModConstants.WIND_VANE_NAME, true);
+        ILLUMINATOR_ENABLED = regConfig(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME, true);
+        NOTICE_BOARD_ENABLED = regConfig(builder, ModConstants.NOTICE_BOARD_NAME, true);
+        CRANK_ENABLED = regConfig(builder, ModConstants.CRANK_NAME, true);
+        JAR_ENABLED = regConfig(builder, ModConstants.JAR_NAME, true);
+        FAUCET_ENABLED = regConfig(builder, ModConstants.FAUCET_NAME, true);
+        TURN_TABLE_ENABLED = regConfig(builder, ModConstants.TURN_TABLE_NAME, true);
+        PISTON_LAUNCHER_ENABLED = regConfig(builder, ModConstants.SPRING_LAUNCHER_NAME, true);
+        SPEAKER_BLOCK_ENABLED = regConfig(builder, ModConstants.SPEAKER_BLOCK_NAME, true);
+        SIGN_POST_ENABLED = regConfig(builder, ModConstants.SIGN_POST_NAME, true);
+        HANGING_SIGN_ENABLED = regConfig(builder, ModConstants.HANGING_SIGN_NAME, true);
+        BELLOWS_ENABLED = regConfig(builder, ModConstants.BELLOWS_NAME, true);
+        SCONCE_ENABLED = regConfig(builder, ModConstants.SCONCE_NAME, true);
+        SCONCE_GREEN_ENABLED = regConfig(builder, ModConstants.SCONCE_NAME_GREEN, false);
+        CAGE_ENABLED = regConfig(builder, ModConstants.CAGE_NAME, true);
+        ITEM_SHELF_ENABLED = regConfig(builder, ModConstants.ITEM_SHELF_NAME, true);
+        SCONCE_LEVER_ENABLED = regConfig(builder, ModConstants.SCONCE_LEVER_NAME, true);
+        COG_BLOCK_ENABLED = regConfig(builder, ModConstants.COG_BLOCK_NAME, true);
+        GLOBE_ENABLED = regConfig(builder, ModConstants.GLOBE_NAME, true);
+        HOURGLASS_ENABLED = regConfig(builder, ModConstants.HOURGLASS_NAME, true);
+        SACK_ENABLED = regConfig(builder, ModConstants.SACK_NAME, true);
+        BLACKBOARD_ENABLED = regConfig(builder, ModConstants.BLACKBOARD_NAME, true);
+        SAFE_ENABLED = regConfig(builder, ModConstants.SAFE_NAME, true);
+        COPPER_LANTERN_ENABLED = regConfig(builder, ModConstants.COPPER_LANTERN_NAME, true);
+        GOLD_TRAPDOOR_ENABLED = regConfig(builder, ModConstants.GOLD_TRAPDOOR_NAME, true);
+        GOLD_DOOR_ENABLED = regConfig(builder, ModConstants.GOLD_DOOR_NAME, true);
+        BAMBOO_SPIKES_ENABLED = regConfig(builder, ModConstants.BAMBOO_SPIKES_NAME, true);
+        TIPPED_SPIKES_ENABLED = regConfig(builder, ModConstants.TIPPED_SPIKES_NAME, true);
+        STONE_LAMP_ENABLED = regConfig(builder, ModConstants.STONE_LAMP_NAME, true);
+        END_STONE_LAMP_ENABLED = regConfig(builder, ModConstants.END_STONE_LAMP_NAME, true);
+        BLACKSTONE_LAMP_ENABLED = regConfig(builder, ModConstants.BLACKSTONE_LAMP_NAME, true);
+        DEEPSLATE_LAMP_ENABLED = regConfig(builder, ModConstants.DEEPSLATE_LAMP_NAME, true);
+        CHECKERBOARD_ENABLED = regConfig(builder, ModConstants.CHECKER_BLOCK_NAME, true);
+        NETHERITE_DOOR_ENABLED = regConfig(builder, ModConstants.NETHERITE_DOOR_NAME, true);
+        NETHERITE_TRAPDOOR_ENABLED = regConfig(builder, ModConstants.NETHERITE_TRAPDOOR_NAME, true);
+        LOCK_BLOCK_ENABLED = regConfig(builder, ModConstants.LOCK_BLOCK_NAME, true);
+        FLAX_ENABLED = regConfig(builder, ModConstants.FLAX_NAME, true);
         ROPE_ENABLED = regConfig(builder.comment("""
                 Before disabling because other mods dont have such easy configs let me remind you that my ropes can:
                 - be pulled up and down
@@ -199,59 +199,59 @@ public class RegistryConfigs {
                 - you can ring attached bells
                 - mod integration (FD tomatoes)
                 - can pull the last block attached to them
-                - walking on one will wobble your screen"""), RegistryConstants.ROPE_NAME, true);
-        PULLEY_ENABLED = regConfig(builder, RegistryConstants.PULLEY_BLOCK_NAME, true);
-        FODDER_ENABLED = regConfig(builder, RegistryConstants.FODDER_NAME, true);
+                - walking on one will wobble your screen"""), ModConstants.ROPE_NAME, true);
+        PULLEY_ENABLED = regConfig(builder, ModConstants.PULLEY_BLOCK_NAME, true);
+        FODDER_ENABLED = regConfig(builder, ModConstants.FODDER_NAME, true);
 
-        CRIMSON_LANTERN_ENABLED = regConfig(builder, RegistryConstants.CRIMSON_LANTERN_NAME, true);
-        DAUB_ENABLED = regConfig(builder, RegistryConstants.DAUB_NAME, true);
+        CRIMSON_LANTERN_ENABLED = regConfig(builder, ModConstants.CRIMSON_LANTERN_NAME, true);
+        DAUB_ENABLED = regConfig(builder, ModConstants.DAUB_NAME, true);
         WATTLE_AND_DAUB_ENABLED = regConfig(builder, "wattle_and_daub", true);
-        TIMBER_FRAME_ENABLED = regConfig(builder, RegistryConstants.TIMBER_FRAME_NAME, true);
-        FLAG_ENABLED = regConfig(builder, RegistryConstants.FLAG_NAME, true);
-        TILE_ENABLED = regConfig(builder, RegistryConstants.STONE_TILE_NAME, true);
-        GOBLET_ENABLED = regConfig(builder, RegistryConstants.GOBLET_NAME, true);
-        RAKED_GRAVEL_ENABLED = regConfig(builder, RegistryConstants.RAKED_GRAVEL_NAME, true);
-        STATUE_ENABLED = regConfig(builder, RegistryConstants.STATUE_NAME, true);
-        IRON_GATE_ENABLED = regConfig(builder, RegistryConstants.IRON_GATE_NAME, true);
-        FEATHER_BLOCK_ENABLED = regConfig(builder, RegistryConstants.FEATHER_BLOCK_NAME, true);
-        FLINT_BLOCK_ENABLED = regConfig(builder, RegistryConstants.FLINT_BLOCK_NAME, true);
-        URN_ENABLED = regConfig(builder, RegistryConstants.URN_NAME, true);
-        ASH_ENABLED = regConfig(builder, RegistryConstants.ASH_NAME, true);
-        ASH_BRICKS_ENABLED = regConfig(builder, RegistryConstants.ASH_BRICKS_NAME, true);
-        DOORMAT_ENABLED = regConfig(builder, RegistryConstants.DOORMAT_NAME, true);
-        FLOWER_BOX_ENABLED = regConfig(builder, RegistryConstants.FLOWER_BOX_NAME, true);
-        BLACKSTONE_TILE_ENABLED = regConfig(builder, RegistryConstants.BLACKSTONE_TILE_NAME, true);
-        GLOBE_SEPIA = regConfig(builder, RegistryConstants.GLOBE_SEPIA_NAME, true);
-        PRESENT_ENABLED = regConfig(builder, RegistryConstants.PRESENT_NAME, true);
-        SUGAR_CUBE_ENABLED = regConfig(builder, RegistryConstants.SUGAR_CUBE_NAME, true);
-        CRYSTAL_DISPLAY_ENABLED = regConfig(builder, RegistryConstants.CRYSTAL_DISPLAY_NAME, true);
-        LAPIS_BRICKS_ENABLED = regConfig(builder, RegistryConstants.LAPIS_BRICKS_NAME, true);
-        RELAYER_ENABLED = regConfig(builder, RegistryConstants.RELAYER_NAME, true);
-        CANDLE_HOLDER_ENABLED = regConfig(builder, RegistryConstants.CANDLE_HOLDER_NAME, true);
-        ENDERMAN_HEAD_ENABLED = regConfig(builder, RegistryConstants.ENDERMAN_HEAD_NAME, true);
+        TIMBER_FRAME_ENABLED = regConfig(builder, ModConstants.TIMBER_FRAME_NAME, true);
+        FLAG_ENABLED = regConfig(builder, ModConstants.FLAG_NAME, true);
+        TILE_ENABLED = regConfig(builder, ModConstants.STONE_TILE_NAME, true);
+        GOBLET_ENABLED = regConfig(builder, ModConstants.GOBLET_NAME, true);
+        RAKED_GRAVEL_ENABLED = regConfig(builder, ModConstants.RAKED_GRAVEL_NAME, true);
+        STATUE_ENABLED = regConfig(builder, ModConstants.STATUE_NAME, true);
+        IRON_GATE_ENABLED = regConfig(builder, ModConstants.IRON_GATE_NAME, true);
+        FEATHER_BLOCK_ENABLED = regConfig(builder, ModConstants.FEATHER_BLOCK_NAME, true);
+        FLINT_BLOCK_ENABLED = regConfig(builder, ModConstants.FLINT_BLOCK_NAME, true);
+        URN_ENABLED = regConfig(builder, ModConstants.URN_NAME, true);
+        ASH_ENABLED = regConfig(builder, ModConstants.ASH_NAME, true);
+        ASH_BRICKS_ENABLED = regConfig(builder, ModConstants.ASH_BRICKS_NAME, true);
+        DOORMAT_ENABLED = regConfig(builder, ModConstants.DOORMAT_NAME, true);
+        FLOWER_BOX_ENABLED = regConfig(builder, ModConstants.FLOWER_BOX_NAME, true);
+        BLACKSTONE_TILE_ENABLED = regConfig(builder, ModConstants.BLACKSTONE_TILE_NAME, true);
+        GLOBE_SEPIA = regConfig(builder, ModConstants.GLOBE_SEPIA_NAME, true);
+        PRESENT_ENABLED = regConfig(builder, ModConstants.PRESENT_NAME, true);
+        SUGAR_CUBE_ENABLED = regConfig(builder, ModConstants.SUGAR_CUBE_NAME, true);
+        CRYSTAL_DISPLAY_ENABLED = regConfig(builder, ModConstants.CRYSTAL_DISPLAY_NAME, true);
+        LAPIS_BRICKS_ENABLED = regConfig(builder, ModConstants.LAPIS_BRICKS_NAME, true);
+        RELAYER_ENABLED = regConfig(builder, ModConstants.RELAYER_NAME, true);
+        CANDLE_HOLDER_ENABLED = regConfig(builder, ModConstants.CANDLE_HOLDER_NAME, true);
+        ENDERMAN_HEAD_ENABLED = regConfig(builder, ModConstants.ENDERMAN_HEAD_NAME, true);
 
-        SILVER_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_TRAPDOOR_NAME, true);
-        SILVER_DOOR_ENABLED = regConfig(builder, RegistryConstants.SILVER_DOOR_NAME, true);
-        LEAD_TRAPDOOR_ENABLED = regConfig(builder, RegistryConstants.LEAD_TRAPDOOR_NAME, true);
-        LEAD_DOOR_ENABLED = regConfig(builder, RegistryConstants.LEAD_DOOR_NAME, true);
+        SILVER_TRAPDOOR_ENABLED = regConfig(builder, ModConstants.SILVER_TRAPDOOR_NAME, true);
+        SILVER_DOOR_ENABLED = regConfig(builder, ModConstants.SILVER_DOOR_NAME, true);
+        LEAD_TRAPDOOR_ENABLED = regConfig(builder, ModConstants.LEAD_TRAPDOOR_NAME, true);
+        LEAD_DOOR_ENABLED = regConfig(builder, ModConstants.LEAD_DOOR_NAME, true);
 
         builder.pop();
 
         builder.push("items");
-        FLUTE_ENABLED = regConfig(builder, RegistryConstants.FLUTE_NAME, true);
-        STASIS_ENABLED = regConfig(builder, RegistryConstants.STASIS_NAME, true);
-        DISPENSER_MINECART_ENABLED = regConfig(builder, RegistryConstants.DISPENSER_MINECART_NAME, true);
-        SOAP_ENABLED = regConfig(builder, RegistryConstants.SOAP_NAME, true);
-        BUBBLE_BLOWER_ENABLED = regConfig(builder, RegistryConstants.BUBBLE_BLOWER_NAME, true);
-        ANTIQUE_INK_ENABLED = regConfig(builder, RegistryConstants.ANTIQUE_INK_NAME, true);
+        FLUTE_ENABLED = regConfig(builder, ModConstants.FLUTE_NAME, true);
+        STASIS_ENABLED = regConfig(builder, ModConstants.STASIS_NAME, true);
+        DISPENSER_MINECART_ENABLED = regConfig(builder, ModConstants.DISPENSER_MINECART_NAME, true);
+        SOAP_ENABLED = regConfig(builder, ModConstants.SOAP_NAME, true);
+        BUBBLE_BLOWER_ENABLED = regConfig(builder, ModConstants.BUBBLE_BLOWER_NAME, true);
+        ANTIQUE_INK_ENABLED = regConfig(builder, ModConstants.ANTIQUE_INK_NAME, true);
         SHULKER_HELMET_ENABLED = regConfig(builder, "shulker_shell", true);
-        CANDY_ENABLED = regConfig(builder, RegistryConstants.CANDY_NAME, true);
-        WRENCH_ENABLED = regConfig(builder, RegistryConstants.WRENCH_NAME, true);
-        QUIVER_ENABLED = regConfig(builder, RegistryConstants.QUIVER_NAME, true);
-        SLINGSHOT_ENABLED = regConfig(builder, RegistryConstants.SLINGSHOT_NAME, true);
-        ROPE_ARROW_ENABLED = regConfig(builder, RegistryConstants.ROPE_ARROW_NAME, true);
-        BOMB_ENABLED = regConfig(builder, RegistryConstants.BOMB_NAME, true);
-        PANCAKES_ENABLED = regConfig(builder, RegistryConstants.PANCAKE_NAME, true);
+        CANDY_ENABLED = regConfig(builder, ModConstants.CANDY_NAME, true);
+        WRENCH_ENABLED = regConfig(builder, ModConstants.WRENCH_NAME, true);
+        QUIVER_ENABLED = regConfig(builder, ModConstants.QUIVER_NAME, true);
+        SLINGSHOT_ENABLED = regConfig(builder, ModConstants.SLINGSHOT_NAME, true);
+        ROPE_ARROW_ENABLED = regConfig(builder, ModConstants.ROPE_ARROW_NAME, true);
+        BOMB_ENABLED = regConfig(builder, ModConstants.BOMB_NAME, true);
+        PANCAKES_ENABLED = regConfig(builder, ModConstants.PANCAKE_NAME, true);
         builder.pop();
 
         /*
@@ -299,16 +299,16 @@ public class RegistryConfigs {
         if (key.contains("daub")) return DAUB_ENABLED.get();
         return switch (key) {
             case "way_sign" -> CommonConfigs.Spawns.WAY_SIGN_ENABLED.get();
-            case RegistryConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
-            case RegistryConstants.FLAX_BLOCK_NAME, RegistryConstants.FLAX_WILD_NAME ->
+            case ModConstants.TRAPPED_PRESENT_NAME -> PRESENT_ENABLED.get();
+            case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME ->
                     RegistryConfigs.FLAX_ENABLED.get();
-            case RegistryConstants.SOAP_BLOCK_NAME -> RegistryConfigs.SOAP_ENABLED.get();
-            case RegistryConstants.CHECKER_SLAB_NAME, RegistryConstants.CHECKER_VERTICAL_SLAB_NAME ->
+            case ModConstants.SOAP_BLOCK_NAME -> RegistryConfigs.SOAP_ENABLED.get();
+            case ModConstants.CHECKER_SLAB_NAME, ModConstants.CHECKER_VERTICAL_SLAB_NAME ->
                     CHECKERBOARD_ENABLED.get();
             case "planter_rich", "planter_rich_soul" -> PLANTER_ENABLED.get();
             case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
-            case RegistryConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
-            case RegistryConstants.KEY_NAME ->
+            case ModConstants.GLOBE_SEPIA_NAME -> GLOBE_SEPIA.get() && ANTIQUE_INK_ENABLED.get();
+            case ModConstants.KEY_NAME ->
                     NETHERITE_DOOR_ENABLED.get() || NETHERITE_TRAPDOOR_ENABLED.get() || SAFE_ENABLED.get();
             default -> CONFIGS_BY_NAME.getOrDefault(key, () -> true).get();
         };

@@ -2,8 +2,13 @@
   "type": "moonlight:add_item",
   "conditions": [
     {
-      "condition": "supplementaries:flag",
-      "flag": "ash"
+      "condition": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
     },
     {
       "condition": "minecraft:random_chance",

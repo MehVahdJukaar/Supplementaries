@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -28,7 +27,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 public class BlackboardManager {
 
@@ -166,8 +165,8 @@ public class BlackboardManager {
         }
 
         @Nonnull
-        public List<BakedQuad> getOrCreateModel(Direction dir, Supplier<List<BakedQuad>> modelFactory) {
-            return quadsCache.computeIfAbsent(dir, p-> modelFactory.get());
+        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<Blackboard, Direction, List<BakedQuad>> modelFactory) {
+            return quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
         }
 
         @Nonnull

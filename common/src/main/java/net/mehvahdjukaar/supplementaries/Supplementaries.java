@@ -6,8 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.reg.ModCommands;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -18,9 +18,12 @@ import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.TestConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,6 +53,9 @@ public class Supplementaries {
         Credits.fetchFromServer();
         RegistryConfigs.init();
         CommonConfigs.init();
+
+        TestConfigs.init();
+
         ClientConfigs.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
@@ -78,9 +84,10 @@ public class Supplementaries {
             ClientDynamicResourcesGenerator.INSTANCE.register();
 
             ClientPlatformHelper.addClientReloadListener(WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
-try {
-    ClientPlatformHelper.registerOptionalTexturePack(res("darker_ropes"));
-}catch (Exception e){};
+            try {
+                ClientPlatformHelper.registerOptionalTexturePack(res("darker_ropes"));
+            } catch (Exception e) {
+            }
         }
 
     }
@@ -95,6 +102,7 @@ try {
     //heartstone highlight and pulse when nearby
     //hammock mod with swivel
 
+    //enchantable horse armor
     //sheep animations and textyres
     //3d particle mod
 

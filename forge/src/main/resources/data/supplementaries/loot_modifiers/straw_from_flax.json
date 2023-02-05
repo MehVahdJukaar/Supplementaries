@@ -2,10 +2,6 @@
   "type": "moonlight:add_item",
   "conditions": [
     {
-      "modid": "farmersdelight",
-      "type": "forge:mod_loaded"
-    },
-    {
       "condition": "minecraft:match_tool",
       "predicate": {
         "tag": "farmersdelight:straw_harvesters"
@@ -17,6 +13,19 @@
       "properties": {
         "age": "7"
       }
+    },
+    {
+      "condition": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        },
+        {
+          "modid": "farmersdelight",
+          "type": "forge:mod_loaded"
+        }
+      ]
     }
   ],
   "item": {

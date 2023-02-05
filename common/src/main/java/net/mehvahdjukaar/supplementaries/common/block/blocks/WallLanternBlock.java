@@ -8,9 +8,12 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -259,6 +262,20 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
         if (world.getBlockEntity(newPos) instanceof IBlockHolder tile) {
             tile.setHeldBlock(lantern);
         }
+    }
+
+    public static boolean isValidBlock(Block b) {
+        if (b.builtInRegistryHolder().is(ModTags.WALL_LANTERNS_BLACKLIST)) return false;
+        if (b.builtInRegistryHolder().is(ModTags.WALL_LANTERNS_WHITELIST)) return true;
+        ResourceLocation id = Utils.getID(b);
+        String namespace = id.getNamespace();
+        if (CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)) return false;
+        if (namespace.equals("skinnedlanterns") || (namespace.equals("twigs") && id.getPath().contains("paper_lantern")))
+            return true;
+        if (b instanceof LanternBlock) { //!CommonConfigs.Tweaks.WALL_LANTERN_BLACKLIST.get().contains(namespace)
+            return !b.defaultBlockState().hasBlockEntity() || b instanceof LightableLanternBlock;
+        }
+        return false;
     }
 
 }

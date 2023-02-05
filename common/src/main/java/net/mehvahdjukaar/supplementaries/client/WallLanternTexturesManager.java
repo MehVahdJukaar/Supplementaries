@@ -7,8 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.core.mixins.LanguageManagerMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -22,7 +24,10 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener {
 
@@ -87,7 +92,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
     private static void initialize() {
         ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
         for (Block i : Registry.BLOCK) {
-            if (MiscUtils.isLanternBlock(i)) builder.add(i);
+            if (WallLanternBlock.isValidBlock(i)) builder.add(i);
         }
         POSSIBLE_LANTERNS.clear();
         POSSIBLE_LANTERNS.addAll(builder.build());

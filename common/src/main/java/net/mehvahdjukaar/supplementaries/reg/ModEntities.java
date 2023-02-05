@@ -14,7 +14,7 @@ import net.minecraft.world.entity.MobCategory;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 
 public class ModEntities {
 

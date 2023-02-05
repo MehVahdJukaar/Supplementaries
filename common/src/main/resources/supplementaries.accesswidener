@@ -20,15 +20,6 @@ accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2spe
 #relayer diode block reading
 accessible method net/minecraft/world/level/block/DiodeBlock getOutputSignal (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I
 
-#food items todo: remove as they are in ml
-mutable field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
-accessible field net/minecraft/world/entity/animal/Chicken FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
-
-accessible field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
-mutable field net/minecraft/world/entity/animal/horse/AbstractHorse FOOD_ITEMS Lnet/minecraft/world/item/crafting/Ingredient;
-
-accessible field net/minecraft/world/entity/animal/Parrot TAME_FOOD Ljava/util/Set;
-
 #explosions
 accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
 

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.mixins.MineshaftCorridorMixin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
@@ -770,18 +771,18 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("wild_flax");
-            WILD_FLAX_ENABLED = builder.define("enabled", true);
-            FLAX_AVERAGE_EVERY = builder.comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
+            WILD_FLAX_ENABLED = builder.worldReload().define("enabled", true);
+            FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
                     .define("rarity", 6, 1, 100);
-            FLAX_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
+            FLAX_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .define("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             builder.push("cave_urns");
-            URN_PILE_ENABLED = builder.define("enabled", true);
-            URN_PATCH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
+            URN_PILE_ENABLED = builder.worldReload().define("enabled", true);
+            URN_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .define("attempts_per_patch", 4, 1, 100);
-            URN_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
+            URN_PER_CHUNK = builder.worldReload().comment("Spawn attempts per chunk. Increases spawn frequency")
                     .define("spawn_attempts", 7, 0, 100);
             builder.pop();
 

@@ -10,17 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 
 public class ItemsUtilImpl {
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
@@ -36,11 +32,8 @@ public class ItemsUtilImpl {
 
         for (int idx = 0; idx < inventory.getContainerSize(); idx++) {
             ItemStack slotItem = inventory.getItem(idx);
-            if (slotItem.getItem() instanceof SackItem) {
-                CompoundTag tag = slotItem.getTag();
-                if (tag != null && tag.contains("BlockEntityTag")) {
-                    amount++;
-                }
+            if(SackItem.isNotEmpty(slotItem)){
+                amount++;
             }
         }
         if (CompatHandler.QUARK) {
@@ -49,6 +42,7 @@ public class ItemsUtilImpl {
         }
         return amount;
     }
+
 
     public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;

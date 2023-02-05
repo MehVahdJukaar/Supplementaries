@@ -7,8 +7,8 @@ import net.minecraft.world.inventory.MenuType;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.*;
-import static net.mehvahdjukaar.supplementaries.reg.RegistryConstants.PULLEY_BLOCK_NAME;
+import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModConstants.PULLEY_BLOCK_NAME;
 
 public class ModMenuTypes {
 

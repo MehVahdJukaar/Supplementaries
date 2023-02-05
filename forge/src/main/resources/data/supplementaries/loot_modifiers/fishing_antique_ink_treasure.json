@@ -6,8 +6,13 @@
       "loot_table_id": "minecraft:gameplay/fishing/treasure"
     },
     {
-      "condition": "supplementaries:flag",
-      "flag": "antique_ink"
+      "condition": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "antique_ink"
+        }
+      ]
     },
     {
       "condition": "minecraft:random_chance",

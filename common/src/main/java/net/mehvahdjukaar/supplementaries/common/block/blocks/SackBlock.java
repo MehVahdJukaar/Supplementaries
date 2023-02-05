@@ -155,7 +155,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
+            if (!worldIn.isClientSide && player.isCreative()) {
                 CompoundTag compoundTag = tile.saveWithoutMetadata();
                 ItemStack itemstack = new ItemStack(this);
                 if (!compoundTag.isEmpty()) {

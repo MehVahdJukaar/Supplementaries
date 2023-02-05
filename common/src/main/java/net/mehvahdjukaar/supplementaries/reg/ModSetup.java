@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.block_models.BlackboardBakedModel;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
@@ -84,6 +85,8 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
+        //todo USE HELPER
+        
         List<ItemStack> chickenFood = new ArrayList<>(List.of(Chicken.FOOD_ITEMS.getItems()));
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
         Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());

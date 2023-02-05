@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.TestConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -19,7 +20,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
                 "\u00A76Supplementaries Configured", ModTextures.CONFIG_BACKGROUND,
-                parent, ModConfigScreen::new, ClientConfigs.CLIENT_SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
+                parent, ModConfigScreen::new, ClientConfigs.CLIENT_SPEC, TestConfigs.SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
     }
 
 

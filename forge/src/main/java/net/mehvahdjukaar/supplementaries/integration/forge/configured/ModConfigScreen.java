@@ -4,13 +4,9 @@ package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 import com.mrcrayfish.configured.api.IModConfig;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
-import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.*;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -19,9 +15,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //credits to MrCrayfish's Configured Mod
@@ -78,7 +74,13 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("conditional sign registration", Items.BARRIER);
         addIcon("dispenser minecart", ModRegistry.DISPENSER_MINECART_ITEM.get());
         addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
+        addIcon("basalt ash", ModRegistry.ASH_BLOCK.get());
         addIcon("stasis", Items.ENCHANTED_BOOK);
+
+        addIcon("redstone", Items.REDSTONE);
+        addIcon("building", Items.OXIDIZED_COPPER);
+        addIcon("utility", Items.BUNDLE);
+        addIcon("tools", Items.GOLDEN_PICKAXE);
     }
 
 
@@ -93,15 +95,22 @@ public class ModConfigScreen extends CustomConfigScreen {
         this.icons.putAll(ICONS);
     }
 
+    @Override
+    public boolean hasFancyBooleans() {
+        return false;
+    }
+
+    private final List<ConfigSpec> customSpecs = List.of(CommonConfigs.SERVER_SPEC, TestConfigs.SPEC, RegistryConfigs.REGISTRY_SPEC);
+
+    @Override
+    public List<ConfigSpec> getCustomSpecs() {
+        return customSpecs;
+    }
 
     private static void addIcon(String s, ItemLike i) {
         ICONS.put(s, i.asItem().getDefaultInstance());
     }
 
-    @Override
-    public boolean hasFancyBooleans() {
-        return  this.config.getFileName().contains("registry");
-    }
 
     @Override
     public void onSave() {

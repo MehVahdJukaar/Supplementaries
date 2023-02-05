@@ -87,15 +87,16 @@ public class BlackboardBakedModel implements CustomBakedModel {
             Key key = data.get(BlackboardBlockTile.BLACKBOARD_KEY);
             if (key != null) {
                 var blackboard = BlackboardManager.getInstance(key);
-                quads.addAll(blackboard.getOrCreateModel(dir, () ->
-                        generateQuads(blackboard.getPixels(), this.modelTransform, blackboard.isGlow(), dir)));
+                quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
         }
 
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(byte[][] pixels, ModelState modelTransform, boolean emissive, Direction dir) {
+    private List<BakedQuad> generateQuads(BlackboardManager.Blackboard blackboard, Direction dir) {
+        byte[][] pixels = blackboard.getPixels();
+        boolean emissive = blackboard.isGlow();
         List<BakedQuad> quads;
         try (TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
              TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {

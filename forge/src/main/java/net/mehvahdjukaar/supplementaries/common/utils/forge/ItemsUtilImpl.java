@@ -123,11 +123,8 @@ public class ItemsUtilImpl {
         if (reference.get() != null) {
             for (int idx = 0; idx < reference.get().getSlots(); idx++) {
                 ItemStack slotItem = reference.get().getStackInSlot(idx);
-                if (slotItem.getItem() instanceof SackItem) {
-                    CompoundTag tag = stack.getTag();
-                    if (tag != null && tag.contains("BlockEntityTag")) {
-                        amount++;
-                    }
+                if(SackItem.isNotEmpty(slotItem)){
+                    amount++;
                 }
             }
 

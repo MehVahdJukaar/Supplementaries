@@ -62,23 +62,6 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(tag) && tag.contains("Items", 9)) {
-            ContainerHelper.loadAllItems(tag, this.items);
-        }
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.items, false);
-        }
-    }
-
-    @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new SackContainerMenu(id, player, this);
     }

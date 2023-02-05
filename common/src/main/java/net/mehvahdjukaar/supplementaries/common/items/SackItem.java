@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -39,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SackItem extends BlockItem {
+
     public SackItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
@@ -144,5 +142,18 @@ public class SackItem extends BlockItem {
         entity.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
+    public static boolean isNotEmpty(ItemStack slotItem) {
+        if (slotItem.getItem() instanceof SackItem) {
+            CompoundTag tag = slotItem.getTag();
+            if (tag != null) {
+                var bet = tag.get("BlockEntityTag");
+                if (bet != null) {
+                    var l = tag.getList("Items", 9);
+                    return !l.isEmpty();
+                }
+            }
+        }
+        return false;
+    }
 
 }

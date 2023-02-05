@@ -18,9 +18,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -223,7 +220,7 @@ public class RegUtils {
     //hanging signs
     private static void registerHangingSignBlocks(Registrator<Block> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
-            String name = wood.getVariantId(RegistryConstants.HANGING_SIGN_NAME);
+            String name = wood.getVariantId(ModConstants.HANGING_SIGN_NAME);
             HangingSignBlock block = new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
                             .strength(2f, 3f)
@@ -245,7 +242,7 @@ public class RegUtils {
             Block block = entry.getValue();
             Item item = new WoodBasedBlockItem(block,
                     new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.HANGING_SIGN_NAME)),
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModConstants.HANGING_SIGN_NAME)),
                     wood, 200
             );
             event.register(Utils.getID(block), item);
@@ -255,10 +252,10 @@ public class RegUtils {
     //sign posts
     public static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
-            String name = wood.getVariantId(RegistryConstants.SIGN_POST_NAME);
+            String name = wood.getVariantId(ModConstants.SIGN_POST_NAME);
             SignPostItem item = new SignPostItem(
                     new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, RegistryConstants.SIGN_POST_NAME)),
+                            getTab(CreativeModeTab.TAB_DECORATIONS, ModConstants.SIGN_POST_NAME)),
                     wood
             );
             wood.addChild("supplementaries:sign_post", (Object) item);

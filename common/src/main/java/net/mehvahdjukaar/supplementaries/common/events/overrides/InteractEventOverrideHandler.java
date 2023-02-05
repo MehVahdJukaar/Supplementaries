@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -92,7 +93,7 @@ public class InteractEventOverrideHandler {
         for (Item i : Registry.ITEM) {
 
             if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                if (i instanceof BlockItem bi && MiscUtils.isLanternBlock(bi.getBlock())) {
+                if (i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock())) {
                     ((IExtendedItem) i).addAdditionalBehavior(new WallLanternPlacement());
                     continue;
                 }

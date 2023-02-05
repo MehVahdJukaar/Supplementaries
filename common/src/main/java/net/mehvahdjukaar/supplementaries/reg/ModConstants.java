@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-public final class RegistryConstants {
+public final class ModConstants {
     public static final String STASIS_NAME = "stasis";
 
     public static final String DISPENSER_MINECART_NAME = "dispenser_minecart";
