@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;

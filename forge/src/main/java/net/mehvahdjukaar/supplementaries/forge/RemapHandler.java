@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.moonlight.core.misc.forge.ModLootConditions;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;

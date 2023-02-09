@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.DoormatGui;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

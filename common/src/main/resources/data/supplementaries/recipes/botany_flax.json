@@ -1,0 +1,47 @@
+{
+    "conditions": [
+        {
+            "type": "forge:mod_loaded",
+            "modid": "botanypots"
+        }
+    ],
+    "type": "botanypots:crop",
+    "seed": {
+        "item": "supplementaries:flax_seeds"
+    },
+    "categories": [
+        "dirt",
+        "farmland"
+    ],
+    "growthTicks": 1200,
+    "display": [
+        {
+            "block": "supplementaries:flax",
+            "properties": {
+                "age": 7,
+                "half": "lower"
+            }
+        },
+        {
+            "block": "supplementaries:flax",
+            "properties": {
+                "age": 7,
+                "half": "upper"
+            }
+        }
+    ],
+    "drops": [
+        {
+            "chance": 1.00,
+            "output": {
+                "item": "supplementaries:flax"
+            }
+        },
+        {
+            "chance": 0.05,
+            "output": {
+                "item": "supplementaries:flax_seeds"
+            }
+        }
+    ]
+}

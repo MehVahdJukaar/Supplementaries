@@ -37,8 +37,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
 import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
+import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
 
 @SuppressWarnings({"unused", "ConstantConditions"})
 public class ModRegistry {

@@ -3,6 +3,7 @@
   "values": [
     {"id":"minecraft:end_portal_frame","required":false},
     {"id":"create:belt","required":false},
+    {"id":"create:belt_connector","required":false},
     {"id":"create:track","required":false}
   ]
 }

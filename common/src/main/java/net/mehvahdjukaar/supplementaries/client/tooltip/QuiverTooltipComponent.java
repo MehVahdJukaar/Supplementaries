@@ -1,24 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;

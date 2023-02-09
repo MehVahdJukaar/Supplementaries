@@ -17,7 +17,6 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,8 +25,6 @@ import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
 
@@ -129,7 +126,7 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     @Nullable
     @Override
     public DyeColor getColor() {
-        return null;
+        return this.baseColor;
     }
 
     @Nullable

@@ -11,13 +11,23 @@
       ]
     },
     {
+      "condition": "damage_source_properties",
+      "predicate": {
+        "is_fire": true
+      }
+    },
+    {
       "condition": "minecraft:random_chance",
       "chance": 0.2
     },
     {
-      "condition": "damage_source_properties",
-      "predicate": {
-        "is_fire": true
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+          "type": "#supplementaries:ash_blacklist"
+        }
       }
     },
     {

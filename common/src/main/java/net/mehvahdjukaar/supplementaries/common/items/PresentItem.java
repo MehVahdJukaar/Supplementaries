@@ -1,21 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
-import net.mehvahdjukaar.supplementaries.client.screens.TrappedPresentBlockGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class PresentItem extends BlockItem implements IColored {
 

@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.SoundType;
 
 import java.util.function.Supplier;
 

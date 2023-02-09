@@ -8,8 +8,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.block.Block;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -643,7 +641,7 @@ public class TestConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("utilities");
+            builder.push("tools");
 
             builder.push("quiver");
             QUIVER_ENABLED = feature(builder);

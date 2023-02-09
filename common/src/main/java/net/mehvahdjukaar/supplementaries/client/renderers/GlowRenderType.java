@@ -1,13 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.OptionalDouble;
-import java.util.function.BiFunction;
 
 public class GlowRenderType extends RenderType {
     public GlowRenderType(String string, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean bl, boolean bl2, Runnable runnable, Runnable runnable2) {

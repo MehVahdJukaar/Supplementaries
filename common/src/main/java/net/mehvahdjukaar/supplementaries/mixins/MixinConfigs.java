@@ -10,8 +10,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class MixinConfigs implements IMixinConfigPlugin {

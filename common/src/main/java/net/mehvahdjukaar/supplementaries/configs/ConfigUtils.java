@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;

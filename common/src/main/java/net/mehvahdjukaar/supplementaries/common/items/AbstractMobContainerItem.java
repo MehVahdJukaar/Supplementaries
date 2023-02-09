@@ -34,7 +34,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 

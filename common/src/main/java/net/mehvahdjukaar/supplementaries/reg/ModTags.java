@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -58,7 +59,7 @@ public class ModTags {
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
-
+EntityTypePredicate
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");
@@ -68,6 +69,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     public static final TagKey<EntityType<?>> ROTATABLE = entityTag("rotatable");
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
+    public static final TagKey<EntityType<?>> ASH_BLACKLIST = entityTag("ash_blacklist");
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");

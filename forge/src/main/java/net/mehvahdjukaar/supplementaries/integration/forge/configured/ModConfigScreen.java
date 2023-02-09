@@ -15,6 +15,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,11 +94,6 @@ public class ModConfigScreen extends CustomConfigScreen {
                            Screen parent, IModConfig config) {
         super(modId, mainIcon, background, title, parent, config);
         this.icons.putAll(ICONS);
-    }
-
-    @Override
-    public boolean hasFancyBooleans() {
-        return false;
     }
 
     private final List<ConfigSpec> customSpecs = List.of(CommonConfigs.SERVER_SPEC, TestConfigs.SPEC, RegistryConfigs.REGISTRY_SPEC);

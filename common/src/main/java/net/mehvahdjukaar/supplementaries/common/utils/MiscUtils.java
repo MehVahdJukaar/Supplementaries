@@ -1,19 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;

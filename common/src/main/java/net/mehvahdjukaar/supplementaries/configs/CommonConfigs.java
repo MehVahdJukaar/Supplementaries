@@ -9,9 +9,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.mixins.MineshaftCorridorMixin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -23,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class CommonConfigs {

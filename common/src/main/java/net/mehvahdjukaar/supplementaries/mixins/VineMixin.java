@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.VineBlock;
 import org.spongepowered.asm.mixin.Mixin;

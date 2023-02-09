@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;

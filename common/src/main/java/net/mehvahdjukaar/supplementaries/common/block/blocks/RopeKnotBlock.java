@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -44,9 +46,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection {
-
+public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock, IRopeConnection, IRotatable {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
@@ -119,7 +121,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             try {
                 return tile.getShape();
-            }catch (Exception e){
+            } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to get block shape for rope knot block at {}", pos);
             }
         }
@@ -141,7 +143,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             try {
                 return tile.getCollisionShape();
-            }catch (Exception e){
+            } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to get collision shape for rope knot block at {}", pos);
             }
         }
@@ -242,7 +244,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             }
 
             //manually refreshTextures facing states
-            if(!(facingState.getBlock() instanceof IRopeConnection)) {
+            if (!(facingState.getBlock() instanceof IRopeConnection)) {
                 BlockState newFacing = facingState.updateShape(facing.getOpposite(), newHeld, world, facingPos, currentPos);
 
                 if (newFacing != facingState) {
@@ -272,7 +274,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return newState;
     }
 
-    //TODO: fix this not updating mimic block
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         state = switch (rotation) {
@@ -302,6 +303,26 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
             case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
             default -> super.mirror(state, mirror);
         };
+    }
+
+    @Override
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
+        if(axis.getAxis() == Direction.Axis.Y){
+            return Optional.ofNullable(this.rotate(state, rotation));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void onRotated(BlockState newState, BlockState oldState, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
+        if (axis.getAxis() == Direction.Axis.Y && world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            BlockState mimic = tile.getHeldBlock();
+            BlockState newMimic = tile.getHeldBlock().rotate(rotation);
+            if (newMimic != mimic) {
+                tile.setHeldBlock(newMimic);
+                tile.setChanged();
+            }
+        }
     }
 
     @Override
@@ -366,9 +387,9 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
 
     @Override
     public boolean canSideAcceptConnection(BlockState state, Direction direction) {
-        if(state.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y){
+        if (state.getValue(RopeKnotBlock.AXIS) == Direction.Axis.Y) {
             return direction.getAxis() != Direction.Axis.Y;
-        }else{
+        } else {
             return direction.getAxis() == Direction.Axis.Y;
         }
     }

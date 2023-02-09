@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.BubbleBlockItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.EndermanHeadItemRenderer;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;

@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
