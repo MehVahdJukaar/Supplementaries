@@ -143,7 +143,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
+        return Utils.getTicker(pBlockEntityType, QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
     }
 
 

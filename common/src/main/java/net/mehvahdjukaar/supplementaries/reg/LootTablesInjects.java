@@ -24,7 +24,7 @@ public class LootTablesInjects {
     private static final List<BiConsumer<Consumer<LootPool.Builder>, TableType>> LOOT_INJECTS = new ArrayList<>();
 
     //initialize so I don't have to constantly check configs for each loot table entry
-    public static void init() {
+    public static void setup() {
         if (RegistryConfigs.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
         if (RegistryConfigs.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectQuiver);
         if (RegistryConfigs.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
@@ -40,13 +40,9 @@ public class LootTablesInjects {
         String nameSpace = name.getNamespace();
         if (nameSpace.equals("minecraft") || nameSpace.equals("repurposed_structures")) {
             TableType type = LootHelper.getType(name.toString());
-            if(name.toString().contains("fishing")){
-                int aaa = 1;
-            }
             if (type != TableType.OTHER) {
                 LOOT_INJECTS.forEach(i -> i.accept(builder, type));
             }
-            //TODO: data stuff isnt synced...
         }
     }
 

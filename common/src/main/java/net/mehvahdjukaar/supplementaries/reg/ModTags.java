@@ -59,7 +59,7 @@ public class ModTags {
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
-EntityTypePredicate
+
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");

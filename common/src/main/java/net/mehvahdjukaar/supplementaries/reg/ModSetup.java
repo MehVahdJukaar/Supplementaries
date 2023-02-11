@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOv
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.entity.animal.Chicken;
@@ -35,23 +34,25 @@ public class ModSetup {
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CurseLootFunction::setup,
-            RandomArrowFunction::setup,
             CompatHandler::setup,
             FlowerPotHandler::setup,
             WeatheredMap::setup,
-            NetworkHandler::registerMessages,
-            LootTablesInjects::init,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             CauldronRegistry::registerInteractions,
-            PresentInteractionsRegistry::registerBehaviors,
-            FaucetBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
+    public static void asyncSetup() {
+        PresentInteractionsRegistry.registerBehaviors();
+        FaucetBehaviorsManager.registerBehaviors();
+        RandomArrowFunction.setup();
+        LootTablesInjects.setup();
+    }
+
     public static void setup() {
-        var list =new ArrayList<Long>();
+        var list = new ArrayList<Long>();
         try {
             Stopwatch watch = Stopwatch.createStarted();
 
@@ -79,13 +80,13 @@ public class ModSetup {
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
     }
 
-    private static void registerFabricFlammable(){
-        RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(),60,100);
+    private static void registerFabricFlammable() {
+        RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(), 60, 100);
     }
 
     private static void registerMobFoods() {
         //todo USE HELPER
-        
+
         List<ItemStack> chickenFood = new ArrayList<>(List.of(Chicken.FOOD_ITEMS.getItems()));
         chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
         Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());
@@ -95,7 +96,7 @@ public class ModSetup {
         horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
         AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
 
-        Parrot.TAME_FOOD.add( ModRegistry.FLAX_SEEDS_ITEM.get());
+        Parrot.TAME_FOOD.add(ModRegistry.FLAX_SEEDS_ITEM.get());
 
     }
 

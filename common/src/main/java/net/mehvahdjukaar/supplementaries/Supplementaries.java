@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -21,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.configs.TestConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,15 +47,16 @@ public class Supplementaries {
     //called on mod creation
     public static void commonInit() {
 
-        PlatformHelper.addCommonSetup(Supplementaries::commonSetup);
-
         Credits.fetchFromServer();
+
         RegistryConfigs.init();
         CommonConfigs.init();
 
         TestConfigs.init();
 
         ClientConfigs.init();
+
+        NetworkHandler.registerMessages();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
 
@@ -84,8 +87,10 @@ public class Supplementaries {
             try {
                 ClientPlatformHelper.registerOptionalTexturePack(res("darker_ropes"));
             } catch (Exception e) {
+                Supplementaries.LOGGER.error(e);
             }
         }
+
 
     }
 
@@ -96,6 +101,7 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
+//quark gui sack open
     //heartstone highlight and pulse when nearby
     //hammock mod with swivel
 

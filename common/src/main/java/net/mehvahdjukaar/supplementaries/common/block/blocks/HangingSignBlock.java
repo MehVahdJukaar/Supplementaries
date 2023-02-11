@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.SignAttachment;
@@ -178,24 +179,31 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
         BlockState s = super.getStateForPlacement(context);
         if (s == null) return null;
         Direction clickedFace = context.getClickedFace();
-        Direction.Axis axis = clickedFace.getAxis();
         if (clickedFace.getAxis() == Direction.Axis.Y) {
-            axis = context.getHorizontalDirection().getCounterClockWise().getAxis();
+           var axis = context.getHorizontalDirection().getCounterClockWise().getAxis();
             s = s.setValue(AXIS, axis);
             if (clickedFace == Direction.DOWN) {
                 s = s.setValue(ATTACHMENT, SignAttachment.CEILING);
                 return s;
             }
-        } else s = s.setValue(AXIS, axis);
+        }
 
         BlockPos blockpos = context.getClickedPos();
         Level world = context.getLevel();
 
-        for (Direction dir : Direction.Plane.HORIZONTAL) {
-            if (dir.getAxis() == axis) {
-                BlockPos relative = blockpos.relative(dir.getOpposite());
+        for (Direction dir : context.getNearestLookingDirections()) {
+            if (dir.getAxis().isHorizontal()) {
+                s = s.setValue(AXIS, dir.getAxis());
+                BlockPos relative = blockpos.relative(dir);
                 BlockState facingState = world.getBlockState(relative);
-                s = getConnectedState(s, facingState, world, relative, dir);
+                s = getConnectedState(s, facingState, world, relative, dir.getOpposite());
+                if (s.canSurvive(world, blockpos)) {
+                    //connects opposite
+                    dir = dir.getOpposite();
+                    relative = blockpos.relative(dir);
+                    facingState = world.getBlockState(relative);
+                   return getConnectedState(s, facingState, world, relative, dir.getOpposite());
+                }
             }
         }
         return s;
@@ -230,7 +238,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ? HangingSignBlockTile::clientTick : null);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.HANGING_SIGN_TILE.get(), pLevel.isClientSide ? HangingSignBlockTile::clientTick : null);
     }
 
     @Override

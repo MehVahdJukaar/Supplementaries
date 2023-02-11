@@ -94,7 +94,12 @@ public class ModTextures {
             map.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
-        map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
+        if(CompatObjects.SOUL_CANDLE.get() != null) {
+            map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
+        }
+        if(CompatObjects.SPECTACLE_CANDLE.get() != null) {
+            map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/spectacle.png"));
+        }
         return map;
     });
 

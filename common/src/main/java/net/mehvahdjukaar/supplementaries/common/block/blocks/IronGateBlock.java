@@ -52,10 +52,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        if(!PlatformHelper.isModLoaded("fixed_waterlogging")) {
-            builder.add(WATERLOGGED);
-        }
+        builder.add(FACING, OPEN, POWERED, IN_WALL, WATERLOGGED);
     }
 
     @Override

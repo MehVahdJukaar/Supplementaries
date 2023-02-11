@@ -43,6 +43,10 @@ public class CompatObjects {
 
     public static final Supplier<Block> SOUL_CANDLE = makeCompatObject("buzzier_bees:soul_candle", Registry.BLOCK);
 
+    public static final Supplier<Item> SPECTACLE_CANDLE_ITEM = makeCompatObject("cave_enhancements:spectacle_candle", Registry.ITEM);
+
+    public static final Supplier<Block> SPECTACLE_CANDLE = makeCompatObject("cave_enhancements:spectacle_candle", Registry.BLOCK);
+
     public static final Supplier<Block> SUGAR_WATER = makeCompatObject("the_bumblezone:sugar_water_block", Registry.BLOCK);
 
     public static final Supplier<Item> TOME = makeCompatObject("quark:ancient_tome", Registry.ITEM);

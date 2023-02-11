@@ -42,7 +42,9 @@ class SkullCandlesBehavior implements ItemUseOnBlockOverride {
     public boolean appliesToItem(Item item) {
         if (item.builtInRegistryHolder().is(ItemTags.CANDLES)) {
             var n = Utils.getID(item).getNamespace();
-            return (n.equals("minecraft") || n.equals("tinted") || item == CompatObjects.SOUL_CANDLE_ITEM.get());
+            return (n.equals("minecraft") || n.equals("tinted") ||
+                    item == CompatObjects.SOUL_CANDLE_ITEM.get() ||
+                    item == CompatObjects.SPECTACLE_CANDLE_ITEM.get());
         }
         return false;
     }

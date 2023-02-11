@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "1",
+    "2"
+  ],
+  "key": {
+    "1": {
+      "item": "cave_enhancements:spectacle_candle"
+    },
+    "2": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "supplementaries:candle_holder_spectacle",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "candle_holder"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "cave_enhancements"
+    }
+  ]
+}

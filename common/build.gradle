@@ -11,6 +11,7 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
+    modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
     modImplementation("com.lowdragmc.shimmer:Shimmer-common:1.19.2-0.1.14")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")

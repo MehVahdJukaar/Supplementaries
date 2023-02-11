@@ -6,8 +6,24 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 public class CompatHandlerClient {
 
     @ExpectPlatform
-    public static void setup() {
+    public static void doSetup() {
         throw new AssertionError();
+    }
+
+    public static void setup() {
+        doSetup();
+        if (CompatHandler.DECO_BLOCKS) {
+            DecoBlocksCompat.setupClient();
+        }
+        if (CompatHandler.FARMERS_DELIGHT) {
+            FarmersDelightCompat.setupClient();
+        }
+        if (CompatHandler.CAVE_ENHANCEMENTS) {
+            CaveEnhancementsCompat.setupClient();
+        }
+        if (CompatHandler.BUZZIER_BEES) {
+            BuzzierBeesCompat.setupClient();
+        }
     }
 
     @ExpectPlatform

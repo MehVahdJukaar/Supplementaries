@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StructureTempBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -34,6 +35,6 @@ public class StructureTempBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.STRUCTURE_TEMP_TILE.get(), !pLevel.isClientSide ? StructureTempBlockTile::tick : null);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.STRUCTURE_TEMP_TILE.get(), !pLevel.isClientSide ? StructureTempBlockTile::tick : null);
     }
 }

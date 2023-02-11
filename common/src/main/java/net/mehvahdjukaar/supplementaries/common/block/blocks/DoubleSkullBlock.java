@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.api.IRotatable;
+import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -134,6 +135,6 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return BlockUtil.getTicker(type, ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTile::ti2ck);
+        return Utils.getTicker(type, ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTile::ti2ck);
     }
 }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlockGeneratorBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -34,7 +35,7 @@ public class BlockGeneratorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(),(pLevel instanceof ServerLevel) ?
+        return Utils.getTicker(pBlockEntityType, ModRegistry.BLOCK_GENERATOR_TILE.get(),(pLevel instanceof ServerLevel) ?
                 BlockGeneratorBlockTile::tick : null);
     }
 }

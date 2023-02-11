@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -85,6 +86,6 @@ public class SpringLauncherArmBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTile::tick);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTile::tick);
     }
 }

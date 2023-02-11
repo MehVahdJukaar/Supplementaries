@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -234,7 +235,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
-        return BlockUtil.getTicker(type, ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTile::tick);
+        return Utils.getTicker(type, ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTile::tick);
     }
 
 }

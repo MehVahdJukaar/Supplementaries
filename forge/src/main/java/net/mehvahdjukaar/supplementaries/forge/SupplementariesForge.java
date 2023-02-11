@@ -8,12 +8,15 @@ import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
@@ -30,7 +33,7 @@ public class SupplementariesForge {
 
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(SupplementariesForge::registerOverrides);
+        bus.register(this);
 
         ServerEventsForge.init();
 
@@ -41,7 +44,14 @@ public class SupplementariesForge {
         });
     }
 
-    public static void registerOverrides(RegisterEvent event) {
+    @SubscribeEvent
+    public void setup(FMLCommonSetupEvent event) {
+        event.enqueueWork(ModSetup::setup);
+        ModSetup.asyncSetup();
+    }
+
+    @SubscribeEvent
+    public void registerOverrides(RegisterEvent event) {
         if (event.getRegistryKey() == ForgeRegistries.ITEMS.getRegistryKey()) {
             if (RegistryConfigs.SHULKER_HELMET_ENABLED.get()) {
 

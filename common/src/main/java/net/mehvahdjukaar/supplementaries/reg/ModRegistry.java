@@ -395,11 +395,7 @@ public class ModRegistry {
 
     //candle holder
     public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(CANDLE_HOLDER_NAME);
-    //soul candle holder
-    public static final Supplier<Block> SOUL_CANDLE_HOLDER = regWithItem(CANDLE_HOLDER_NAME + "_soul", () -> new CandleHolderBlock(null,
-                    BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()),
-                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME),
-            getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME), "buzzier_bees");
+
 
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
@@ -1142,6 +1138,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new CandleSkullBlock(p);
     });
 
+    //needed for tag so it can repel piglins
     public static final Supplier<Block> SKULL_CANDLE_SOUL = regBlock(SKULL_CANDLE_SOUL_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(SKULL_CANDLE.get());
         return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new SoulCandleSkullBlock(p);

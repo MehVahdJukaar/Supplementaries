@@ -111,6 +111,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         }
     }
 
+    @Nullable
     private final DyeColor color;
     private final Supplier<ParticleType<? extends ParticleOptions>> particle;
 

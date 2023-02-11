@@ -203,6 +203,8 @@ public class ClientConfigs {
         public static final Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
         public static final Supplier<List<String>> TICKABLE_MOBS;
 
+        public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
+
         public static final Supplier<Boolean> FAST_SIGNS;
         public static final Supplier<Boolean> FAST_LANTERNS;
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
@@ -222,6 +224,11 @@ public class ClientConfigs {
 
             builder.push("globe");
             GLOBE_RANDOM = builder.comment("Enable a random globe texture for each world").define("random_world", true);
+            builder.pop();
+
+            builder.push("notice_board");
+            NOTICE_BOARD_CENTERED_TEXT = builder.comment("Allows notice board displayed text to be centered instead of being left aligned")
+                            .define("centered_text", true);
             builder.pop();
 
             builder.push("clock_block");

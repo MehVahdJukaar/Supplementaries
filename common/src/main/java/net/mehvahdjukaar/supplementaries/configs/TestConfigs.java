@@ -27,7 +27,7 @@ public class TestConfigs {
     private static final WeakReference<ConfigBuilder> builderReference;
 
     static {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("test"), ConfigType.COMMON);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("give_feedback"), ConfigType.COMMON);
 
         builderReference = new WeakReference<>(builder);
 

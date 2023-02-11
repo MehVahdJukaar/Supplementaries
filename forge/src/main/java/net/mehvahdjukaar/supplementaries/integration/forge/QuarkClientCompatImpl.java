@@ -10,8 +10,11 @@ import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -21,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +37,7 @@ import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
 import vazkii.quark.api.event.UsageTickerEvent;
 import vazkii.quark.base.handler.GeneralConfig;
+import vazkii.quark.base.handler.SimilarBlockTypeHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
@@ -153,6 +158,8 @@ public class QuarkClientCompatImpl {
             }
         }
     }
+
+
 
 
 }

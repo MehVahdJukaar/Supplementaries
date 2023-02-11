@@ -83,7 +83,6 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 RequestConfigReloadPacket.class, RequestConfigReloadPacket::new);
 
-
     }
 
 }

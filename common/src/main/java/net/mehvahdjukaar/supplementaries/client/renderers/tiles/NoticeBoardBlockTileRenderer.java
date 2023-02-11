@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -45,6 +46,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
     private final MapRenderer mapRenderer;
     private final Font font;
     private final Camera camera;
+    private static final float PAPER_X_MARGIN = 0.1875f;
+    private static final float PAPER_Y_MARGIN = 0.125f;
 
     public NoticeBoardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -151,8 +154,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 int i1 = NativeImage.combine(0, b, g, r);
 
                 if (tile.needsVisualUpdate()) {
-                    float paperWidth = 1 - (2 * 0.1875f);
-                    float paperHeight = 1 - (2 * 0.125f);
+                    float paperWidth = 1 - (2 * PAPER_X_MARGIN);
+                    float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
                     var p = TextUtil.fitLinesToBox(font,
                             TextUtil.parseText(page), paperWidth, paperHeight);
                     tile.setFontScale(p.getSecond());
@@ -163,14 +166,15 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 float scale = tile.getFontScale();
                 matrixStackIn.scale(scale, -scale, scale);
                 int numberOfLines = tempPageLines.size();
+                boolean centered = ClientConfigs.Blocks.NOTICE_BOARD_CENTERED_TEXT.get();
 
                 for (int lin = 0; lin < numberOfLines; ++lin) {
                     FormattedCharSequence str = tempPageLines.get(lin);
 
                     //border offsets. always add 0.5 to center properly
-                    float dx = (float) (-font.width(str) / 2) + 0.5f;
+                    float dx = centered ? (-font.width(str) / 2f) + 0.5f : -(0.5f - PAPER_X_MARGIN) / scale;
 
-                    float dy = (((1f/scale) - (8 * numberOfLines)) / 2f) + 0.5f;
+                    float dy = (((1f / scale) - (8 * numberOfLines)) / 2f) + 0.5f;
                     if (!bookName.equals("missingno")) {
                         font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
                     } else {

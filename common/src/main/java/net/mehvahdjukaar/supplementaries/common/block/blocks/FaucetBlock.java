@@ -248,7 +248,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return BlockUtil.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::tick);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::tick);
     }
 }
 
