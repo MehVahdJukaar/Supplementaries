@@ -58,6 +58,7 @@ public class CompatHandler {
     public static final boolean SHIMMER = isLoaded("shimmer");
     public static final boolean BUMBLEZONE = isLoaded("the_bumblezone");
     public static final boolean CAVE_ENHANCEMENTS = isLoaded("cave_enhancements");
+    public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
 
 
     private static boolean isLoaded(String name) {

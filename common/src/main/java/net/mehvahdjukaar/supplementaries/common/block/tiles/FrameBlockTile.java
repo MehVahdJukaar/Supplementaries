@@ -65,7 +65,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public BlockState acceptBlock(BlockState state) {
         Block b = state.getBlock();
 
-        if (b == ModRegistry.DAUB.get() && CommonConfigs.Blocks.REPLACE_DAUB.get()) {
+        if (b == ModRegistry.DAUB.get() && CommonConfigs.Building.REPLACE_DAUB.get()) {
             if (level != null && !this.level.isClientSide) {
                 state = daub.get().defaultBlockState();
                 if (this.getBlockState().hasProperty(ModBlockProperties.FLIPPED)) {
@@ -102,7 +102,7 @@ public class FrameBlockTile extends MimicBlockTile {
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-            } else if (item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Blocks.AXE_TIMBER_FRAME_STRIP.get()) {
+            } else if (item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Building.AXE_TIMBER_FRAME_STRIP.get()) {
                 BlockState held = this.getHeldBlock();
                 if (!level.isClientSide) {
                     Block.popResourceFromFace(level, pos, trace.getDirection(), new ItemStack(this.getBlockState().getBlock()));

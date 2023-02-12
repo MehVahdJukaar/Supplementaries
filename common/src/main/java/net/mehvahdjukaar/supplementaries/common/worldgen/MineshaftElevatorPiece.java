@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
@@ -62,7 +61,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
             StructurePieceAccessor pieces, RandomSource random, int x, int y, int z,
             Direction direction, int genDepth, MineshaftStructure.Type type) {
         if (y > 60) return null;
-        if (random.nextInt(100) < 2 && RegistryConfigs.PULLEY_ENABLED.get() && RegistryConfigs.TURN_TABLE_ENABLED.get()) {
+        if (random.nextInt(100) < 2 && CommonConfigs.Redstone.PULLEY_ENABLED.get() && CommonConfigs.Redstone.TURN_TABLE_ENABLED.get()) {
             byte height = 12;
 
             int floor = random.nextInt(3);
@@ -254,7 +253,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     level.setBlock(mutableBlockPos.setY(maxY + 1), this.type.getFenceState(), 2);
 
                     BlockState chain;
-                    if (maxY + 2 < MineshaftElevatorPiece.getRopeCutout() && RegistryConfigs.ROPE_ENABLED.get()) {
+                    if (maxY + 2 < MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Utilities.ROPE_ENABLED.get()) {
                         chain = ModRegistry.ROPE.get().defaultBlockState().setValue(RopeBlock.DISTANCE, 0)
                                 .setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
                     } else chain = Blocks.CHAIN.defaultBlockState();

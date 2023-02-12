@@ -13,7 +13,6 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -34,7 +33,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
 
     public ServerDynamicResourcesGenerator() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return RegistryConfigs.PACK_DEPENDANT_ASSETS.get();
+        return true;
     }
 
     @Override
@@ -65,17 +64,17 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
 
 
         //recipes
-        if (RegistryConfigs.SIGN_POST_ENABLED.get()) {
+        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
             addSignPostRecipes(manager);
         }
-        if (RegistryConfigs.HANGING_SIGN_ENABLED.get()) {
+        if (CommonConfigs.Building.HANGING_SIGN_ENABLED.get()) {
             addHangingSignRecipes(manager);
         }
 
         //way signs tag
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-            if (CommonConfigs.Spawns.WAY_SIGN_ENABLED.get()) {
+            if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
@@ -86,7 +85,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-            if (CommonConfigs.Spawns.URN_PILE_ENABLED.get() && RegistryConfigs.URN_ENABLED.get()) {
+            if (CommonConfigs.Utilities.URN_PILE_ENABLED.get() && CommonConfigs.Utilities.URN_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
@@ -97,7 +96,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
-            if (CommonConfigs.Spawns.WILD_FLAX_ENABLED.get()) {
+            if (CommonConfigs.Utilities.WILD_FLAX_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
@@ -108,7 +107,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
 
-            if (CommonConfigs.Spawns.BASALT_ASH_ENABLED.get()) {
+            if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
                 builder.add(Biomes.BASALT_DELTAS.location());
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);

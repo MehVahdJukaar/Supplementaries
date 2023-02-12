@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -22,11 +21,11 @@ import java.util.List;
 
 public class ModCreativeTabs {
 
-    public static final CreativeModeTab MOD_TAB = !RegistryConfigs.CREATIVE_TAB.get() ? null :
+    public static final CreativeModeTab MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             PlatformHelper.createModTab(Supplementaries.res("supplementaries"),
                     () -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance(), false);
 
-    public static final CreativeModeTab JAR_TAB = !RegistryConfigs.JAR_TAB.get() ? null :
+    public static final CreativeModeTab JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
             PlatformHelper.createModTab(Supplementaries.res("jars"),
                     () -> new ItemStack(ModRegistry.JAR_ITEM.get()), true, ModCreativeTabs::populateTab);
 
@@ -47,7 +46,7 @@ public class ModCreativeTabs {
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
 
-        if (CommonConfigs.Blocks.JAR_COOKIES.get()) {
+        if (CommonConfigs.Utilities.JAR_COOKIES.get()) {
             for (var i : Registry.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
                 ItemStack regItem = new ItemStack(i);
                 CompoundTag com = new CompoundTag();
@@ -58,7 +57,7 @@ public class ModCreativeTabs {
                 }
             }
         }
-        if (CommonConfigs.Blocks.JAR_LIQUIDS.get()) {
+        if (CommonConfigs.Utilities.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
                 if (s == VanillaSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();

@@ -68,7 +68,7 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (CommonConfigs.Blocks.BUBBLE_BREAK.get() && level instanceof ServerLevel serverLevel) {
+        if (CommonConfigs.Tools.BUBBLE_BREAK.get() && level instanceof ServerLevel serverLevel) {
             breakBubble(serverLevel, pos,state);
         }
     }
@@ -106,15 +106,15 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (CommonConfigs.Blocks.BUBBLE_BREAK.get()) level.scheduleTick(pos, this, 5);
+        if (CommonConfigs.Tools.BUBBLE_BREAK.get()) level.scheduleTick(pos, this, 5);
         super.stepOn(level, pos, state, entity);
     }
 
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float v) {
         super.fallOn(level, state, pos, entity, v);
-        if (!level.isClientSide && CommonConfigs.Blocks.BUBBLE_BREAK.get()) {
-            if(entity instanceof LivingEntity le && CommonConfigs.Blocks.BUBBLE_FEATHER_FALLING.get() &&
+        if (!level.isClientSide && CommonConfigs.Tools.BUBBLE_BREAK.get()) {
+            if(entity instanceof LivingEntity le && CommonConfigs.Tools.BUBBLE_FEATHER_FALLING.get() &&
                     EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION,le)!=0){
                 return;
             }

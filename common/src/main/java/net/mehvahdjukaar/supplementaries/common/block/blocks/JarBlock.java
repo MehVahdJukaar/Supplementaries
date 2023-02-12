@@ -88,7 +88,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
                 }
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-            if(CommonConfigs.Blocks.JAR_CAPTURE.get()) {
+            if(CommonConfigs.Utilities.JAR_CAPTURE.get()) {
                 return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
             }
         }

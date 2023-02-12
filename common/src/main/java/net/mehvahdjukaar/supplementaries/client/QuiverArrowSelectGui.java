@@ -103,7 +103,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
             }
             int number = key - 48;
             if (number >= 1 && number <= 9) {
-                if (number <= CommonConfigs.Items.QUIVER_SLOTS.get()) {
+                if (number <= CommonConfigs.Tools.QUIVER_SLOTS.get()) {
                     NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                             number - 1, getQuiverSlot(player), true));
                 }

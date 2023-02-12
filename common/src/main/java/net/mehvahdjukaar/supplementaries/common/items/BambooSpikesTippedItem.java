@@ -53,11 +53,11 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !CommonConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get();
+        return !CommonConfigs.Utilities.BAMBOO_SPIKES_ALTERNATIVE.get();
     }
 
     public static boolean areEffectsValid(List<MobEffectInstance> effects){
-        if(CommonConfigs.Blocks.BAMBOO_SPIKES_ALTERNATIVE.get()){
+        if(CommonConfigs.Utilities.BAMBOO_SPIKES_ALTERNATIVE.get()){
             for(var e: effects){
                 if(e.getEffect().isBeneficial()) return false;
             }
@@ -83,7 +83,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         //freaking bookshelf mod is calling this method before configs are loaded...
-        if(!ClientConfigs.CLIENT_SPEC.isLoaded() ||  ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+        if(!ClientConfigs.SPEC.isLoaded() ||  ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
             if (this.allowedIn(group)) {
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));

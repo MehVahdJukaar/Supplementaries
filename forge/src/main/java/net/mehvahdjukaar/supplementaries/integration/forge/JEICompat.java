@@ -13,7 +13,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.ItemLoreRecipe;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
@@ -47,35 +47,35 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        if (RegistryConfigs.TIPPED_SPIKES_ENABLED.get()) {
+        if (CommonConfigs.Utilities.TIPPED_SPIKES_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
         }
-        if (RegistryConfigs.BLACKBOARD_ENABLED.get()) {
+        if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createBlackboardDuplicate());
         }
-        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowCreateRecipe());
             registry.addRecipes(RecipeTypes.CRAFTING, createRopeArrowAddRecipe());
         }
-        if (RegistryConfigs.FLAG_ENABLED.get()) {
+        if (CommonConfigs.Building.FLAG_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createFlagFromBanner());
         }
-        if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
+        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapRecipe());
         }
-        if (RegistryConfigs.BUBBLE_BLOWER_ENABLED.get()) {
+        if (CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createBubbleBlowerChargeRecipe());
         }
 
         registry.addRecipes(RecipeTypes.CRAFTING, createItemLoreRecipe());
 
-        if (RegistryConfigs.SOAP_ENABLED.get()) {
+        if (CommonConfigs.Utilities.SOAP_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanRecipe());
-            if (RegistryConfigs.ANTIQUE_INK_ENABLED.get()) {
+            if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapSoapRecipe());
             }
         }
-        if (RegistryConfigs.PRESENT_ENABLED.get()) {
+        if (CommonConfigs.Utilities.PRESENT_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
             registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
         }

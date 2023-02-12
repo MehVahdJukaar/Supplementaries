@@ -36,7 +36,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         checkContainerSize(inventory, SackBlockTile.getUnlockedSlots());
         inventory.startOpen(playerInventory.player);
 
-        int size = CommonConfigs.Blocks.SACK_SLOTS.get();
+        int size = CommonConfigs.Utilities.SACK_SLOTS.get();
 
         int[] dims = SackContainerMenu.getRatio(size);
         if (dims[0] > 9) {
@@ -83,7 +83,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
             itemstack = item.copy();
-            int activeSlots = CommonConfigs.Blocks.SACK_SLOTS.get();
+            int activeSlots = CommonConfigs.Utilities.SACK_SLOTS.get();
             if (index < activeSlots) {
                 if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

@@ -235,7 +235,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
                 }
 
 
-                if (CommonConfigs.Spawns.DISTANCE_TEXT.get()) {
+                if (CommonConfigs.Building.WAY_SIGN_DISTANCE_TEXT.get()) {
                     tile.getTextHolder().setLine(0, getSignText(dist1));
                     if (twoSigns)
                         tile.getTextHolder().setLine(1, getSignText(dist2));

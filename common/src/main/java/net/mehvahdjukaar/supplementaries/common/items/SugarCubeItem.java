@@ -22,7 +22,7 @@ public class SugarCubeItem extends BlockItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var v = player.getVehicle();
-        if (v instanceof Horse horse && CommonConfigs.Blocks.SUGAR_BLOCK_HORSE_SPEED_DURATION.get() != 0) {
+        if (v instanceof Horse horse && CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get() != 0) {
             var stack = player.getItemInHand(usedHand);
             horse.fedFood(player, stack);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
@@ -33,7 +33,7 @@ public class SugarCubeItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         var v = context.getPlayer().getVehicle();
-        if (v instanceof Horse && CommonConfigs.Blocks.SUGAR_BLOCK_HORSE_SPEED_DURATION.get() != 0) {
+        if (v instanceof Horse && CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get() != 0) {
             return InteractionResult.PASS;
         }
         return super.useOn(context);

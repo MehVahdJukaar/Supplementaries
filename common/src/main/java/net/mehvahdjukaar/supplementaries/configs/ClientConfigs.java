@@ -18,7 +18,7 @@ public class ClientConfigs {
     public static void init() {
     }
 
-    public static final ConfigSpec CLIENT_SPEC;
+    public static final ConfigSpec SPEC;
 
     static WeakReference<ConfigBuilder> builderReference;
 
@@ -31,7 +31,9 @@ public class ClientConfigs {
         General.init();
         Tweaks.init();
         Items.init();
-        CLIENT_SPEC = builder.buildAndRegister();
+        SPEC = builder.buildAndRegister();
+
+        SPEC.loadFromFile();
     }
 
     public static class Items {
@@ -145,6 +147,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CONFIG_BUTTON;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
+        public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
 
         public static final Supplier<Double> TEST1;
         public static final Supplier<Double> TEST2;
@@ -161,7 +164,8 @@ public class ClientConfigs {
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")
                     .define("placeable_tooltips", true);
-
+            CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
+                    .define("custom_configured_screen", true);
             TEST1 = builder.comment("ignore this").define("test1", 0f, -10, 10);
             TEST2 = builder.comment("ignore this").define("test2", 0f, -10, 10);
             TEST3 = builder.comment("ignore this").define("test3", 0f, -10, 10);

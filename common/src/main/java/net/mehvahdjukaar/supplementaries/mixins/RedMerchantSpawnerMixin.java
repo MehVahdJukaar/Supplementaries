@@ -60,7 +60,7 @@ public abstract class RedMerchantSpawnerMixin {
                 BlockPos blockpos = player.blockPosition();
 
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
-                if (this.calculateNormalizeDifficulty(world, blockpos) * CommonConfigs.Spawns.RED_MERCHANT_SPAWN_MULTIPLIER.get()
+                if (this.calculateNormalizeDifficulty(world, blockpos) * CommonConfigs.General.RED_MERCHANT_SPAWN_MULTIPLIER.get()
                         > random.nextFloat() * 90) {
 
                     PoiManager poiManager = world.getPoiManager();

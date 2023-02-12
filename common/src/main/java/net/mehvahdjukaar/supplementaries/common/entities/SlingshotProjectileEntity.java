@@ -123,7 +123,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Item item = this.getItem().getItem();
             if (item instanceof BlockItem bi) {
                 Block block = bi.getBlock();
-                if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || CommonConfigs.Items.UNRESTRICTED_SLINGSHOT.get()) {
+                if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || CommonConfigs.Tools.UNRESTRICTED_SLINGSHOT.get()) {
                     if (enderman.getCarriedBlock() == null) {
                         enderman.setCarriedBlock(block.defaultBlockState());
                         this.remove(RemovalReason.DISCARDED);
@@ -285,7 +285,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     protected float getDeceleration() {
-        return this.isNoGravity() ? (float) (double) CommonConfigs.Items.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
+        return this.isNoGravity() ? (float) (double) CommonConfigs.Tools.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
     }
 
     @Override

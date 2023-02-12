@@ -59,7 +59,7 @@ public class SpeakerBlockGui extends Screen {
 
     private void toggleMode() {
         this.mode = SpeakerBlockTile.Mode.values()[(this.mode.ordinal() + 1) % SpeakerBlockTile.Mode.values().length];
-        if (!CommonConfigs.Blocks.SPEAKER_NARRATOR.get() && mode == SpeakerBlockTile.Mode.NARRATOR) {
+        if (!CommonConfigs.Redstone.SPEAKER_NARRATOR.get() && mode == SpeakerBlockTile.Mode.NARRATOR) {
             this.mode = SpeakerBlockTile.Mode.CHAT;
         }
     }
@@ -69,7 +69,7 @@ public class SpeakerBlockGui extends Screen {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
-        int range = CommonConfigs.Blocks.SPEAKER_RANGE.get();
+        int range = CommonConfigs.Redstone.SPEAKER_RANGE.get();
 
         this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
                 VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
@@ -82,7 +82,7 @@ public class SpeakerBlockGui extends Screen {
             this.toggleMode();
             this.updateMode();
         }));
-        if (!CommonConfigs.Blocks.SPEAKER_NARRATOR.get()) {
+        if (!CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) {
             this.modeBtn.active = false;
         }
 

@@ -44,7 +44,7 @@ public class SackItem extends BlockItem {
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!CommonConfigs.Blocks.SACK_PENALTY.get()) return;
+        if (!CommonConfigs.Utilities.SACK_PENALTY.get()) return;
         if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player &&
                 !player.isCreative() && !entityIn.isSpectator() && stack.getTagElement("BlockEntityTag") != null) {
             //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
@@ -52,7 +52,7 @@ public class SackItem extends BlockItem {
             //keep refreshing for better accuracy
             int amount = 0;
             amount = ItemsUtil.getAllSacksInInventory(stack, player, amount);
-            int inc = CommonConfigs.Blocks.SACK_INCREMENT.get();
+            int inc = CommonConfigs.Utilities.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
                         20 * 10, ((amount - 1) / inc) - 1, false, false, true));
@@ -127,7 +127,7 @@ public class SackItem extends BlockItem {
         if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new InventoryTooltip(cmp, this, CommonConfigs.Blocks.SACK_SLOTS.get()));
+                return Optional.of(new InventoryTooltip(cmp, this, CommonConfigs.Utilities.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();

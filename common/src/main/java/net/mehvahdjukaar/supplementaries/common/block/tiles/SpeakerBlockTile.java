@@ -29,7 +29,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     private String message = "";
     private Mode mode = Mode.CHAT;
     //distance in blocks
-    private double volume = CommonConfigs.Blocks.SPEAKER_RANGE.get();
+    private double volume = CommonConfigs.Redstone.SPEAKER_RANGE.get();
     private Component customName;
 
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
@@ -87,7 +87,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
         this.message = compound.getString("Message");
         var m = Mode.values()[compound.getInt("Mode")];
-        if (m == Mode.NARRATOR && !CommonConfigs.Blocks.SPEAKER_NARRATOR.get()) m = Mode.CHAT;
+        if (m == Mode.NARRATOR && !CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) m = Mode.CHAT;
         this.mode = m;
         this.volume = compound.getDouble("Volume");
         this.loadOwner(compound);

@@ -35,7 +35,7 @@ import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
 
-    private final int capacity = CommonConfigs.Blocks.JAR_CAPACITY.get();
+    private final int capacity = CommonConfigs.Utilities.JAR_CAPACITY.get();
 
     public final MobContainer mobContainer;
     public final SoftFluidTank fluidHolder;
@@ -80,7 +80,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (CommonConfigs.Blocks.JAR_EAT.get()) {
+            if (CommonConfigs.Utilities.JAR_EAT.get()) {
                 if (this.fluidHolder.tryDrinkUpFluid(player, level)) return true;
                 //cookies
                 if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
@@ -164,7 +164,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     //can this item be added?
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        if (CommonConfigs.Blocks.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
+        if (CommonConfigs.Utilities.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
             Item i = stack.getItem();
             if (!this.isFull()) {
                 //might add other accepted items here
@@ -211,7 +211,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         //can only insert cookies
-        if (!CommonConfigs.Blocks.JAR_COOKIES.get()) return false;
+        if (!CommonConfigs.Utilities.JAR_COOKIES.get()) return false;
         return isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
     }
 
@@ -240,7 +240,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public boolean canInteractWithSoftFluidTank() {
-        return CommonConfigs.Blocks.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
+        return CommonConfigs.Utilities.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
     }
 
     private static boolean isCookie(Item i) {

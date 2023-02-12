@@ -44,7 +44,7 @@ public class SackGui extends AbstractContainerScreen<SackContainerMenu> {
         int k = -1 + (this.width - this.imageWidth) / 2;
         int l = -1 + (this.height - this.imageHeight) / 2;
 
-        int size = CommonConfigs.Blocks.SACK_SLOTS.get();
+        int size = CommonConfigs.Utilities.SACK_SLOTS.get();
 
 
         int[] dims = SackContainerMenu.getRatio(size);

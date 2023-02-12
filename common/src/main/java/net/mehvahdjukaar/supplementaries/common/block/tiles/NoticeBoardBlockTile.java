@@ -168,7 +168,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && (CommonConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
+        return this.isEmpty() && (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,7 +21,7 @@ class WrenchBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean isEnabled() {
-        return RegistryConfigs.WRENCH_ENABLED.get();
+        return CommonConfigs.Tools.WRENCH_ENABLED.get();
     }
 
     @Override
@@ -34,7 +33,7 @@ class WrenchBehavior implements ItemUseOnBlockOverride {
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
         if (player.getAbilities().mayBuild) {
-            var h = CommonConfigs.Items.WRENCH_BYPASS.get();
+            var h = CommonConfigs.Tools.WRENCH_BYPASS.get();
             if ((h == CommonConfigs.Hands.MAIN_HAND && hand == InteractionHand.MAIN_HAND) ||
                     (h == CommonConfigs.Hands.OFF_HAND && hand == InteractionHand.OFF_HAND) || h == CommonConfigs.Hands.BOTH) {
 

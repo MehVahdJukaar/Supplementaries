@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
@@ -83,7 +82,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     public static DamageSource getDamageSource(Level level) {
-        if (CommonConfigs.Blocks.BAMBOO_SPIKES_DROP_LOOT.get()) {
+        if (CommonConfigs.Utilities.BAMBOO_SPIKES_DROP_LOOT.get()) {
             return new ModDamageSources.SpikePlayer("spike", FakePlayerManager.getDefault(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
@@ -246,7 +245,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(RegistryConfigs.TIPPED_SPIKES_ENABLED::get);
+    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(CommonConfigs.Utilities.TIPPED_SPIKES_ENABLED::get);
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {

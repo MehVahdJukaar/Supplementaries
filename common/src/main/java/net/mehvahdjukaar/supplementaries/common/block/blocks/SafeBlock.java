@@ -147,7 +147,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 //clear ownership with tripwire
                 boolean cleared = false;
-                if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
+                if (CommonConfigs.Utilities.SAFE_SIMPLE.get()) {
                     if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
                             (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
                         cleared = true;
@@ -169,7 +169,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
                 BlockPos p = pos.relative(state.getValue(FACING));
                 if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
-                    if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
+                    if (CommonConfigs.Utilities.SAFE_SIMPLE.get()) {
                         UUID owner = tile.getOwner();
                         if (owner == null) {
                             owner = player.getUUID();
@@ -209,7 +209,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag != null) {
-            if (CommonConfigs.Blocks.SAFE_SIMPLE.get()) {
+            if (CommonConfigs.Utilities.SAFE_SIMPLE.get()) {
                 if (compoundTag.contains("Owner")) {
                     UUID id = compoundTag.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {

@@ -120,7 +120,7 @@ public class SoapWashableHelper {
         Block newColor = BlocksColorAPI.changeColor(state.getBlock(), null);
 
         if (newColor != null) {
-            if (CommonConfigs.Items.SOAP_DYE_CLEAN_BLACKLIST.get()
+            if (CommonConfigs.Utilities.SOAP_DYE_CLEAN_BLACKLIST.get()
                     .contains(BlocksColorAPI.getKey(state.getBlock()))) return false;
 
             //TODO: add back

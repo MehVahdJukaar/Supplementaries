@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +23,7 @@ public abstract class EndermanMixin extends Mob {
     @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer, CallbackInfo ci) {
         Entity entity = damageSource.getEntity();
-        if (RegistryConfigs.ENDERMAN_HEAD_ENABLED.get() && entity instanceof Creeper creeper) {
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() && entity instanceof Creeper creeper) {
             if (creeper.canDropMobsSkull()) {
                 creeper.increaseDroppedSkulls();
                 this.spawnAtLocation(ModRegistry.ENDERMAN_SKULL_ITEM.get());

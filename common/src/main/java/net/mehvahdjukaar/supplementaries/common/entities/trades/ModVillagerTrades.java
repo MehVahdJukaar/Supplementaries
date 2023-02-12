@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,14 +41,14 @@ public class ModVillagerTrades {
     private static VillagerTrades.ItemListing[] makeRedMerchantTrades() {
         List<VillagerTrades.ItemListing> trades = new ArrayList<>();
 
-        if (RegistryConfigs.ROPE_ENABLED.get()) {
+        if (CommonConfigs.Utilities.ROPE_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.ROPE.get(), 4, 1, 10));
         }
         trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
-        if (RegistryConfigs.COPPER_LANTERN_ENABLED.get()) {
+        if (CommonConfigs.Building.COPPER_LANTERN_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12));
         }
-        if (RegistryConfigs.BOMB_ENABLED.get()) {
+        if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
             if (CompatHandler.OREGANIZED) {
                 trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
@@ -59,13 +58,13 @@ public class ModVillagerTrades {
         trades.add(new RocketForEmeraldTrade(3, 1, 3, 8));
         trades.add(itemForEmeraldTrade(Items.TNT, 1, 4, 8));
 
-        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             Item i = ModRegistry.ROPE_ARROW_ITEM.get();
             ItemStack stack = new ItemStack(i);
             stack.setDamageValue(Math.max(0, stack.getMaxDamage() - 16));
             trades.add(itemForEmeraldTrade(stack, 4, 6));
         }
-        if (RegistryConfigs.BOMB_ENABLED.get()) {
+        if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
 
         }
@@ -190,27 +189,27 @@ public class ModVillagerTrades {
     //runs on init since we need to be early enough to register stuff to forge busses
     public static void init() {
         RegHelper.registerWanderingTraderTrades(2, listings -> {
-            if (RegistryConfigs.GLOBE_ENABLED.get()) {
+            if (CommonConfigs.Building.GLOBE_ENABLED.get()) {
                 //adding twice because it's showing up too rarely
-                for (int i = 0; i < CommonConfigs.Blocks.GLOBE_TRADES.get(); i++) {
+                for (int i = 0; i < CommonConfigs.Building.GLOBE_TRADES.get(); i++) {
                     listings.add(itemForEmeraldTrade(ModRegistry.GLOBE_ITEM.get(), 1, 10, 3));
                 }
             }
         });
         RegHelper.registerWanderingTraderTrades(1, listings -> {
-            if (RegistryConfigs.FLAX_ENABLED.get()) {
+            if (CommonConfigs.Utilities.FLAX_ENABLED.get()) {
                 for (int i = 0; i < 2; i++) {
                     listings.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
                 }
             }
         });
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
-            if (RegistryConfigs.FLAX_ENABLED.get())
+            if (CommonConfigs.Utilities.FLAX_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 5, itemListings -> {
-            if (RegistryConfigs.ANTIQUE_INK_ENABLED.get())
+            if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD , 8),
                         new ItemStack(ModRegistry.ANTIQUE_INK.get()), 16, 30, 0.05f));
         });

@@ -46,7 +46,7 @@ import java.util.function.Supplier;
 
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
 
-    private final boolean hasFuse = CommonConfigs.Items.BOMB_FUSE.get() != 0;
+    private final boolean hasFuse = CommonConfigs.Tools.BOMB_FUSE.get() != 0;
     private BombType type = BombType.NORMAL;
     private boolean active = true;
     private int changeTimer = -1;
@@ -54,19 +54,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
-        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
         super(ModEntities.BOMB.get(), throwerIn, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 200);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModEntities.BOMB.get(), x, y, z, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? CommonConfigs.Items.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 200);
     }
 
     //data to be saved when the entity gets unloaded
@@ -337,11 +337,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         public double getRadius() {
-            return this == BLUE ? CommonConfigs.Items.BOMB_BLUE_RADIUS.get() : CommonConfigs.Items.BOMB_RADIUS.get();
+            return this == BLUE ? CommonConfigs.Tools.BOMB_BLUE_RADIUS.get() : CommonConfigs.Tools.BOMB_RADIUS.get();
         }
 
         public BreakingMode breakMode() {
-            return this == BLUE ? CommonConfigs.Items.BOMB_BLUE_BREAKS.get() : CommonConfigs.Items.BOMB_BREAKS.get();
+            return this == BLUE ? CommonConfigs.Tools.BOMB_BLUE_BREAKS.get() : CommonConfigs.Tools.BOMB_BREAKS.get();
         }
 
         public float volume() {

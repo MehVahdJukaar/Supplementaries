@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -79,7 +80,7 @@ public class PlanterBlock extends WaterBlock {
     //override
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean onTreeGrow(BlockState state, LevelReader level, BiConsumer<BlockPos, BlockState> placeFunction, RandomSource randomSource, BlockPos pos, TreeConfiguration config) {
-        if (CommonConfigs.Blocks.PLANTER_BREAKS.get()) {
+        if (CommonConfigs.Building.PLANTER_BREAKS.get()) {
             placeFunction.accept(pos, Blocks.ROOTED_DIRT.defaultBlockState());
 
             if (level instanceof Level l) {

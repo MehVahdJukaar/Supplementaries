@@ -110,11 +110,11 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
             double x = player.getX();
             double y = player.getY();
             double z = player.getZ();
-            int r = CommonConfigs.Items.FLUTE_RADIUS.get();
+            int r = CommonConfigs.Tools.FLUTE_RADIUS.get();
             CompoundTag com = stack.getTagElement("Pet");
             if (com != null) {
                 Entity entity = serverLevel.getEntity(com.getUUID("UUID"));
-                int maxDist = CommonConfigs.Items.FLUTE_DISTANCE.get() * CommonConfigs.Items.FLUTE_DISTANCE.get();
+                int maxDist = CommonConfigs.Tools.FLUTE_DISTANCE.get() * CommonConfigs.Tools.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
                     if (pet.level == player.level && pet.distanceToSqr(player) < maxDist) {
                         if (pet.randomTeleport(x, y, z, false)) {

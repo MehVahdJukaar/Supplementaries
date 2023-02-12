@@ -17,12 +17,9 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
-import net.mehvahdjukaar.supplementaries.configs.TestConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,16 +46,12 @@ public class Supplementaries {
 
         Credits.fetchFromServer();
 
-        RegistryConfigs.init();
         CommonConfigs.init();
-
-        TestConfigs.init();
-
         ClientConfigs.init();
 
         NetworkHandler.registerMessages();
 
-        RegHelper.registerSimpleRecipeCondition(res("flag"), RegistryConfigs::isEnabled);
+        RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 
@@ -90,13 +83,6 @@ public class Supplementaries {
                 Supplementaries.LOGGER.error(e);
             }
         }
-
-
-    }
-
-    //mod init
-    public static void commonSetup() {
-        ModSetup.setup();
     }
 
     //yes this is where I write crap. deal with it XD
@@ -108,7 +94,7 @@ public class Supplementaries {
     //enchantable horse armor
     //sheep animations and textyres
     //3d particle mod
-
+    //quiver not rendering in curio
     //pulley flint
     //TODO relayer on piston retract
     //mod to wax anything to prevent interaction

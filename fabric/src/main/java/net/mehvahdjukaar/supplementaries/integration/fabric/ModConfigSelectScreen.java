@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigListS
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.components.Button;
@@ -19,7 +18,7 @@ public class ModConfigSelectScreen extends FabricConfigListScreen {
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
                 Component.literal("\u00A76Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
-                parent, ClientConfigs.CLIENT_SPEC, CommonConfigs.SERVER_SPEC, RegistryConfigs.REGISTRY_SPEC);
+                parent, ClientConfigs.SPEC, CommonConfigs.SPEC);
     }
 
     @Override

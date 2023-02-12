@@ -139,7 +139,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);
             } else if (itemstack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
-                if (CommonConfigs.Blocks.STICK_POLE.get()) {
+                if (CommonConfigs.Building.FLAG_POLE.get()) {
                     if (world.isClientSide) return InteractionResult.SUCCESS;
                     else {
                         Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;

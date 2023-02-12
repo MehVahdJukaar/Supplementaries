@@ -40,7 +40,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
         this.addSlot(new Slot(inventory, 0, 79, 39) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return(CommonConfigs.Blocks.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
+                return(CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 

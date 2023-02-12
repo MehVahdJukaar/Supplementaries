@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ class SoapBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean isEnabled() {
-        return RegistryConfigs.SOAP_ENABLED.get();
+        return CommonConfigs.Utilities.SOAP_ENABLED.get();
     }
 
     @Override

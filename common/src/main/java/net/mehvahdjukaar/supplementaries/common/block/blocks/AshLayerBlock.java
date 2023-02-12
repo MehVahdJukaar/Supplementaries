@@ -178,7 +178,7 @@ public class AshLayerBlock extends FallingBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel level, BlockPos pPos, RandomSource pRandom) {
-        if (CommonConfigs.Blocks.ASH_RAIN.get()) {
+        if (CommonConfigs.Building.ASH_RAIN.get()) {
             if (level.isRainingAt(pPos.above()) && level.random.nextInt(4) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -188,7 +188,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void handlePrecipitation(BlockState pState, Level level, BlockPos pPos, Biome.Precipitation pPrecipitation) {
         super.handlePrecipitation(pState, level, pPos, pPrecipitation);
-        if (CommonConfigs.Blocks.ASH_RAIN.get()) {
+        if (CommonConfigs.Building.ASH_RAIN.get()) {
             if (level.random.nextInt(2) == 0) {
                 this.removeOneLayer(pState, pPos, level);
             }
@@ -213,7 +213,7 @@ public class AshLayerBlock extends FallingBlock {
 
     @EventCalled
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
-        if (CommonConfigs.Blocks.ASH_BURN.get()) {
+        if (CommonConfigs.Building.ASH_BURN.get()) {
             BlockState state = event.getState();
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();

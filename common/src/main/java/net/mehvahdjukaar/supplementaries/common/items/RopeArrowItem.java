@@ -31,7 +31,7 @@ public class RopeArrowItem extends ArrowItem {
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public int getMaxDamage(ItemStack stack) {
-        return CommonConfigs.Items.ROPE_ARROW_CAPACITY.get();
+        return CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get();
     }
 
     //@Override
@@ -55,7 +55,7 @@ public class RopeArrowItem extends ArrowItem {
     @Override
     @PlatformOnly(PlatformOnly.FORGE)
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13.0F - (float)stack.getDamageValue() * 13.0F / (float)this.getMaxDamage(stack));
+        return Math.round(13.0F - stack.getDamageValue() * 13.0F / this.getMaxDamage(stack));
     }
 
     @Override

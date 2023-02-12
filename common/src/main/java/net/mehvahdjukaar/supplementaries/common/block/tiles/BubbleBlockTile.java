@@ -27,7 +27,7 @@ public class BubbleBlockTile extends BlockEntity {
             tile.prevScale = tile.scale;
             tile.scale = (float) Math.min(1, tile.scale + 0.001f + (1 - tile.scale) * ClientConfigs.Blocks.BUBBLE_BLOCK_GROW_SPEED.get());
         } else {
-            int lifetime = CommonConfigs.Blocks.BUBBLE_LIFETIME.get();
+            int lifetime = CommonConfigs.Tools.BUBBLE_LIFETIME.get();
             if (lifetime == 10000) return;
             tile.age++;
             if ((tile.age + 5) % 20 == 0) {

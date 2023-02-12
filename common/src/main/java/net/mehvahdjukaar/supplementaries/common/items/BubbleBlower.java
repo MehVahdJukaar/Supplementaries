@@ -95,7 +95,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
                 }
                 if (!(player.getAbilities().instabuild)) {
                     int max = this.getMaxDamage(stack);
-                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Items.BUBBLE_BLOWER_COST.get()));
+                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Tools.BUBBLE_BLOWER_COST.get()));
                 }
 
                 return InteractionResultHolder.success(stack);

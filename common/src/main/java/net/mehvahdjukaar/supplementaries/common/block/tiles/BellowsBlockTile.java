@@ -120,8 +120,8 @@ public class BellowsBlockTile extends BlockEntity {
 
     private void pushEntities(Direction facing, float period, float range, Level level) {
 
-        double velocity = CommonConfigs.Blocks.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
-        double maxVelocity = CommonConfigs.Blocks.BELLOWS_MAX_VEL.get(); // Affects max speed
+        double velocity = CommonConfigs.Redstone.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
+        double maxVelocity = CommonConfigs.Redstone.BELLOWS_MAX_VEL.get(); // Affects max speed
 
         AABB facingBox = MiscUtils.getDirectionBB(this.worldPosition, facing, (int) range);
         List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
@@ -170,7 +170,7 @@ public class BellowsBlockTile extends BlockEntity {
 
             if (Math.abs(entity.getDeltaMovement().get(facing.getAxis())) < maxVelocity) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity));
-                if (CommonConfigs.Blocks.BELLOWS_FLAG.get()) entity.hurtMarked = true;
+                if (CommonConfigs.Redstone.BELLOWS_FLAG.get()) entity.hurtMarked = true;
             }
         }
     }
@@ -250,7 +250,7 @@ public class BellowsBlockTile extends BlockEntity {
     }
 
     private float getPeriodForPower(int power) {
-        return ((float) CommonConfigs.Blocks.BELLOWS_PERIOD.get()) - (power - 1) * ((float) CommonConfigs.Blocks.BELLOWS_POWER_SCALING.get());
+        return ((float) CommonConfigs.Redstone.BELLOWS_PERIOD.get()) - (power - 1) * ((float) CommonConfigs.Redstone.BELLOWS_POWER_SCALING.get());
     }
 
     //TODO: optimize this (also for flywheel)
@@ -330,7 +330,7 @@ public class BellowsBlockTile extends BlockEntity {
         }
         //server
         else if (fluid.isEmpty()) {
-            float range = CommonConfigs.Blocks.BELLOWS_RANGE.get();
+            float range = CommonConfigs.Redstone.BELLOWS_RANGE.get();
             //push entities (only if pushing air)
             if (airIntensity > 0) {
                 this.pushEntities(facing, period, range, level);

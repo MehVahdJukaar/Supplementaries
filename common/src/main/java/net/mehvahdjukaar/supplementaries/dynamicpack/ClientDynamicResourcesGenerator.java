@@ -17,7 +17,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +37,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     public ClientDynamicResourcesGenerator() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || RegistryConfigs.DEBUG_RESOURCES.get();
+        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get();
     }
 
     @Override
@@ -47,12 +47,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     @Override
     public boolean dependsOnLoadedPacks() {
-        return RegistryConfigs.PACK_DEPENDANT_ASSETS.get();
+        return true;
     }
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
-        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             this.dynamicPack.addNamespaces("minecraft");
         }
 
@@ -115,7 +115,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
 
                 try {
-                    addSimilarJsonResource(manager,hsBlockState, "hanging_sign_oak", id);
+                    addSimilarJsonResource(manager, hsBlockState, "hanging_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Hanging Sign blockstate definition for {} : {}", sign, ex);
                 }
@@ -162,7 +162,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("sign_post"));
 
                 try {
-                    addSimilarJsonResource(manager,spItemModel, "sign_post_oak", id);
+                    addSimilarJsonResource(manager, spItemModel, "sign_post_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }

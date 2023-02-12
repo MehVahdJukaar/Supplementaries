@@ -15,7 +15,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -51,7 +50,7 @@ public class RegUtils {
     //gets the tab given or null if the item is disabled
     @Nullable
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (RegistryConfigs.isEnabled(regName)) {
+        if (CommonConfigs.isEnabled(regName)) {
             return ModCreativeTabs.MOD_TAB == null ? g : ModCreativeTabs.MOD_TAB;
         }
         return null;

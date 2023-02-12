@@ -49,7 +49,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     @Override
     public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        if (!CommonConfigs.Blocks.BLACKBOARD_MODE.get().canManualDraw()) return;
+        if (!CommonConfigs.Building.BLACKBOARD_MODE.get().canManualDraw()) return;
 
         Direction dir = tile.getDirection();
         float yaw = -dir.toYRot();

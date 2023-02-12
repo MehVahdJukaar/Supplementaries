@@ -6,7 +6,9 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -15,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +48,22 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     public boolean setHeldBlock(BlockState state, int index) {
         if (index >= 0 && index < 3) {
             this.flowerStates[index] = state;
+
         }
         return false;
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+        if (this.level instanceof ServerLevel) {
+            this.setBlockFromitem(slot, stack.getItem());
+            int newLight = Math.max(Math.max(SuppPlatformStuff.getLightEmission(this.getHeldBlock(), level, worldPosition),
+                            SuppPlatformStuff.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
+                    SuppPlatformStuff.getLightEmission(this.getHeldBlock(2), level, worldPosition));
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
+            //this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override
@@ -69,16 +86,20 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
 
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
-            Block b = null;
-            if (item instanceof BlockItem bi) {
-                b = bi.getBlock();
-            } else if (CompatHandler.DYNAMICTREES) {
-                b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
-            }
-            if (b == null) b = Blocks.AIR;
-            this.flowerStates[n] = b.defaultBlockState();
+            setBlockFromitem(n, item);
         }
         this.requestModelReload();
+    }
+
+    private void setBlockFromitem(int n, Item item) {
+        Block b = null;
+        if (item instanceof BlockItem bi) {
+            b = bi.getBlock();
+        } else if (CompatHandler.DYNAMICTREES) {
+            b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
+        }
+        if (b == null) b = Blocks.AIR;
+        this.flowerStates[n] = b.defaultBlockState();
     }
 
     @Override

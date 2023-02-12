@@ -54,7 +54,7 @@ public class EndermanSkullBlockTile extends BlockEntity {
             } else {
                 tile.watchTime++;
             }
-            int wantedPower = Mth.clamp((watched ? 1 + (tile.watchTime / CommonConfigs.Blocks.ENDERMAN_HEAD_INCREMENT.get()) : 0), 0, 15);
+            int wantedPower = Mth.clamp((watched ? 1 + (tile.watchTime / CommonConfigs.Redstone.ENDERMAN_HEAD_INCREMENT.get()) : 0), 0, 15);
             if (state.getValue(WATCHED) != watched || state.getValue(EndermanSkullBlock.POWER) != wantedPower) {
                 level.setBlockAndUpdate(pos, state.setValue(WATCHED,
                         watched).setValue(EndermanSkullBlock.POWER, wantedPower));
@@ -83,7 +83,7 @@ public class EndermanSkullBlockTile extends BlockEntity {
 
 
     private static boolean isLookingAtFace(BlockPos pos, BlockState state, Vec3 location, Direction face) {
-        if (CommonConfigs.Blocks.ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE.get()) return true;
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE.get()) return true;
         if (face.getAxis() == Direction.Axis.Y) return false;
         if (state.hasProperty(WallSkullBlock.FACING)) {
             var f = state.getValue(WallSkullBlock.FACING);

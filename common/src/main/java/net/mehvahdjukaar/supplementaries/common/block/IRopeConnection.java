@@ -25,7 +25,7 @@ public interface IRopeConnection {
                 return isSupportingCeiling(facingPos.above(2), world) || canConnectDown(facingState);
             }
             default -> {
-                if (CommonConfigs.Blocks.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
+                if (CommonConfigs.Utilities.ROPE_UNRESTRICTED.get() && facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
                     return true;
                 }
                 if (facingState.getBlock() instanceof IRopeConnection otherRope) {

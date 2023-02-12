@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.misc;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.items.BubbleBlower;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class StasisEnchantment extends Enchantment {
 
-    public static final boolean ENABLED = RegistryConfigs.STASIS_ENABLED.get() &&
-            (RegistryConfigs.SLINGSHOT_ENABLED.get() || RegistryConfigs.BUBBLE_BLOWER_ENABLED.get());
+    public static final boolean ENABLED = CommonConfigs.Tools.STASIS_ENABLED.get() &&
+            (CommonConfigs.Tools.SLINGSHOT_ENABLED.get() || CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get());
 
     public StasisEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW,

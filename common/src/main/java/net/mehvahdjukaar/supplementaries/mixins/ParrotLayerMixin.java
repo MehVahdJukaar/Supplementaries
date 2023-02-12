@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ParrotRenderer;
@@ -21,15 +22,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ParrotOnShoulderLayer.class)
 public abstract class ParrotLayerMixin<T extends Player> {
 
-    @Shadow @Final private ParrotModel model;
+    @Shadow
+    @Final
+    private ParrotModel model;
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getString(Ljava/lang/String;)Ljava/lang/String;",
-            shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+                    shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void renderParty(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T livingEntity,
                              float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch,
                              boolean leftShoulder, CallbackInfo ci, CompoundTag compoundTag) {
-        if(compoundTag.getBoolean("record_playing")) {
+        if (compoundTag.getBoolean("record_playing")) {
             EntityType.byString(compoundTag.getString("id")).filter((entityType) ->
                     entityType == EntityType.PARROT).ifPresent((entityType) -> {
                 matrixStack.pushPose();
@@ -40,6 +43,7 @@ public abstract class ParrotLayerMixin<T extends Player> {
                         livingEntity.tickCount, 0);
                 matrixStack.popPose();
             });
+            if (CompatHandler.CUSTOM_PLAYER_MODELS) matrixStack.popPose(); //I Hate this
             ci.cancel();
         }
     }

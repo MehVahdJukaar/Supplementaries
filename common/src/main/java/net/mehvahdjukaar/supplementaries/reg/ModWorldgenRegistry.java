@@ -74,7 +74,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> WILD_FLAX_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("wild_flax"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            CommonConfigs.Spawns.FLAX_PATCH_TRIES.get(),
+                            CommonConfigs.Utilities.FLAX_PATCH_TRIES.get(),
                             4, 0,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.FLAX_WILD.get()))),
@@ -87,7 +87,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> CAVE_URNS_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
-                            CommonConfigs.Spawns.URN_PATCH_TRIES.get(),
+                            CommonConfigs.Utilities.URN_PATCH_TRIES.get(),
                             4, 1,
                             new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(
                                     BlockStateProvider.simple(ModRegistry.URN.get().defaultBlockState().setValue(UrnBlock.TREASURE, true)))),
@@ -99,7 +99,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<ConfiguredFeature<BasaltAshFeature.Config, Feature<BasaltAshFeature.Config>>> BASALT_ASH_PATCH =
             RegHelper.registerConfiguredFeature(Supplementaries.res("basalt_ash"),
                     () -> new ConfiguredFeature<>(BASALT_ASH_FEATURE.get(),
-                            new BasaltAshFeature.Config(CommonConfigs.Spawns.BASALT_ASH_TRIES.get(),6, 6)));
+                            new BasaltAshFeature.Config(CommonConfigs.Building.BASALT_ASH_TRIES.get(),6, 6)));
 
     public static final RegSupplier<ConfiguredFeature<NoneFeatureConfiguration, Feature<NoneFeatureConfiguration>>> ROAD_SIGN =
             RegHelper.registerConfiguredFeature(Supplementaries.res("road_sign"),
@@ -113,7 +113,7 @@ public class ModWorldgenRegistry {
                     WILD_FLAX_PATCH,
                     () -> List.of(
                             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                            RarityFilter.onAverageOnceEvery(CommonConfigs.Spawns.FLAX_AVERAGE_EVERY.get()),
+                            RarityFilter.onAverageOnceEvery(CommonConfigs.Utilities.FLAX_AVERAGE_EVERY.get()),
                             InSquarePlacement.spread(),
                             BiomeFilter.biome()));
 
@@ -122,7 +122,7 @@ public class ModWorldgenRegistry {
                     CAVE_URNS_PATCH,
                     () -> List.of(
                             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
-                            CountPlacement.of(CommonConfigs.Spawns.URN_PER_CHUNK.get()),
+                            CountPlacement.of(CommonConfigs.Utilities.URN_PER_CHUNK.get()),
                             InSquarePlacement.spread(),
                             CaveFilter.BELOW_SURFACE,
                             BiomeFilter.biome()));
@@ -132,7 +132,7 @@ public class ModWorldgenRegistry {
                     BASALT_ASH_PATCH,
                     () -> List.of(
                             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(29), VerticalAnchor.aboveBottom(102)),
-                            CountPlacement.of(CommonConfigs.Spawns.BASALT_ASH_PER_CHUNK.get()),
+                            CountPlacement.of(CommonConfigs.Building.BASALT_ASH_PER_CHUNK.get()),
                             InSquarePlacement.spread(),
                             BiomeFilter.biome()));
 

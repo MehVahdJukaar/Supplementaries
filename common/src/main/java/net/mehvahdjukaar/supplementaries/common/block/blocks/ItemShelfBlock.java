@@ -53,7 +53,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
 
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
-        return CommonConfigs.Blocks.ITEM_SHELF_LADDER.get();
+        return CommonConfigs.Building.ITEM_SHELF_LADDER.get();
     }
 
     @Override

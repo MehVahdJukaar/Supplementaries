@@ -32,7 +32,7 @@ public class QuiverItemImpl {
             if (CompatHandler.CURIOS) {
                 var q = CuriosCompat.getEquippedQuiver(player);
                 if (q != null) return q;
-                if (CommonConfigs.Items.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
+                if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
             }
         } else if (entity instanceof IQuiverEntity e) {
             return e.getQuiver();
@@ -85,7 +85,7 @@ public class QuiverItemImpl {
         private int selectedSlot = 0;
 
         public QuiverCapability() {
-            super(CommonConfigs.Items.QUIVER_SLOTS.get());
+            super(CommonConfigs.Tools.QUIVER_SLOTS.get());
         }
 
         @Override

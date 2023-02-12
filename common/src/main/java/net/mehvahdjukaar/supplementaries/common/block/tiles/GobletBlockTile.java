@@ -77,7 +77,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         //empty hand: eat food
         if (!player.isShiftKeyDown()) {
             //from drink
-            if (CommonConfigs.Blocks.GOBLET_DRINK.get()) {
+            if (CommonConfigs.Building.GOBLET_DRINK.get()) {
                 boolean b = this.fluidTank.tryDrinkUpFluid(player, this.level);
                 if (b && player instanceof ServerPlayer serverPlayer) {
                     Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));

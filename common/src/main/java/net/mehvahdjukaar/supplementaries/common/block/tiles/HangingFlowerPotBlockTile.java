@@ -3,9 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +22,18 @@ public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerP
 
     public HangingFlowerPotBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.HANGING_FLOWER_POT_TILE.get(), pos, state);
+    }
+
+    @Override
+    public boolean setHeldBlock(BlockState state) {
+        super.setHeldBlock(state);
+        if (this.level instanceof ServerLevel) {
+            //this.setChanged();
+            int newLight = SuppPlatformStuff.getLightEmission(this.getHeldBlock(), level, worldPosition);
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
+            //this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
+        return true;
     }
 
     @Nullable

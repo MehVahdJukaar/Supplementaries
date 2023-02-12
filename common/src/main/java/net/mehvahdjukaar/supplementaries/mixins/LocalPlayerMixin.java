@@ -62,7 +62,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     @Inject(method = "isUsingItem",
             at = @At("HEAD"), cancellable = true)
     private void isUsingItem(CallbackInfoReturnable<Boolean> cir) {
-        if (cancelUsingQuiver && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Items.QUIVER_PREVENTS_SLOWS.get()) {
+        if (cancelUsingQuiver && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
             cir.setReturnValue(false);
         }
     }

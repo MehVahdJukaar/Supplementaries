@@ -15,7 +15,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +59,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("placeable books", Items.ENCHANTED_BOOK);
         addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE.get());
-        addIcon("shulker shell", Items.SHULKER_SHELL);
+        addIcon("shulker helmet", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
@@ -75,12 +74,15 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("conditional sign registration", Items.BARRIER);
         addIcon("dispenser minecart", ModRegistry.DISPENSER_MINECART_ITEM.get());
         addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
-        addIcon("basalt ash", ModRegistry.ASH_BLOCK.get());
+        addIcon("basalt ash", Items.BASALT);
+        addIcon("cave urns", Items.BONE);
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(new ResourceLocation("spruce"))));
         addIcon("stasis", Items.ENCHANTED_BOOK);
 
         addIcon("redstone", Items.REDSTONE);
         addIcon("building", Items.OXIDIZED_COPPER);
-        addIcon("utility", Items.BUNDLE);
+        addIcon("utilities", Items.ENCHANTING_TABLE);
+        //addIcon("tweaks", Items.AMETHYST_SHARD);
         addIcon("tools", Items.GOLDEN_PICKAXE);
     }
 
@@ -94,13 +96,6 @@ public class ModConfigScreen extends CustomConfigScreen {
                            Screen parent, IModConfig config) {
         super(modId, mainIcon, background, title, parent, config);
         this.icons.putAll(ICONS);
-    }
-
-    private final List<ConfigSpec> customSpecs = List.of(CommonConfigs.SERVER_SPEC, TestConfigs.SPEC, RegistryConfigs.REGISTRY_SPEC);
-
-    @Override
-    public List<ConfigSpec> getCustomSpecs() {
-        return customSpecs;
     }
 
     private static void addIcon(String s, ItemLike i) {

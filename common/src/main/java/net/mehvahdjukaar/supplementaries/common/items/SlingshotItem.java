@@ -78,7 +78,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
                             boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
                             InteractionHand hand = player.getUsedItemHand();
-                            power *= (CommonConfigs.Items.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1;
+                            power *= (CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1;
                             shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
                         }
                     }
@@ -139,7 +139,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     //actual use duration
     public static int getChargeDuration(ItemStack stack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
-        int maxCharge = CommonConfigs.Items.SLINGSHOT_CHARGE.get();
+        int maxCharge = CommonConfigs.Tools.SLINGSHOT_CHARGE.get();
         return i == 0 ? maxCharge : maxCharge - (maxCharge / 4) * i;
     }
 

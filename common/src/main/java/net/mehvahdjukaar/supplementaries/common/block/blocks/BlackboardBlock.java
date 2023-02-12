@@ -126,7 +126,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
 
     @Nullable
     public static DyeColor getStackChalkColor(ItemStack stack) {
-        boolean hasColor = CommonConfigs.Blocks.BLACKBOARD_COLOR.get();
+        boolean hasColor = CommonConfigs.Building.BLACKBOARD_COLOR.get();
 
         for (DyeColor dyeColor : DyeColor.values()) {
             if (!hasColor && (dyeColor != DyeColor.WHITE && dyeColor != DyeColor.BLACK)) continue;
@@ -180,7 +180,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, ISoapWas
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
 
-            UseMode mode = CommonConfigs.Blocks.BLACKBOARD_MODE.get();
+            UseMode mode = CommonConfigs.Building.BLACKBOARD_MODE.get();
 
             if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 

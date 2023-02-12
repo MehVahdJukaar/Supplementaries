@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -45,20 +46,20 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
 
     protected static final VoxelShape SHAPE_WEST_FLOOR = Block.box(5.0D, 0.0D, 0.0D, 11.0D, 6.0D, 16.0D);
 
-
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
     public static final BooleanProperty FLOOR = ModBlockProperties.FLOOR;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public FlowerBoxBlock(Properties properties) {
-        super(properties);
+        super(properties.lightLevel((s) -> s.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false).setValue(FLOOR, false));
+                .setValue(WATERLOGGED, false).setValue(FLOOR, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, FLOOR);
+        builder.add(FACING, FLOOR, LIGHT_LEVEL);
     }
 
     @Override

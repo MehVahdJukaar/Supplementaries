@@ -141,7 +141,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
-            if (CommonConfigs.Blocks.STICK_POLE.get()) {
+            if (CommonConfigs.Building.FLAG_POLE.get()) {
                 if (this != ModRegistry.STICK_BLOCK.get()) return InteractionResult.PASS;
                 if (world.isClientSide) return InteractionResult.SUCCESS;
                 else {
@@ -160,7 +160,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     public static boolean findConnectedFlag(Level world, BlockPos pos, Direction searchDir, Direction moveDir, int it) {
-        if (it > CommonConfigs.Blocks.STICK_POLE_LENGTH.get()) return false;
+        if (it > CommonConfigs.Building.FLAG_POLE_LENGTH.get()) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (b == ModRegistry.STICK_BLOCK.get() && isVertical(state)) {

@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -21,7 +21,7 @@ public class AntiqueInkHelper {
     }
 
     public static boolean isEnabled() {
-        return PlatformHelper.getPlatform().isForge() && RegistryConfigs.ANTIQUE_INK_ENABLED.get();
+        return PlatformHelper.getPlatform().isForge() && CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get();
     }
 
     public static boolean toggleAntiqueInkOnSigns(Level world, Player player, ItemStack stack,
@@ -29,12 +29,12 @@ public class AntiqueInkHelper {
         var cap = SuppPlatformStuff.getForgeCap(tile, IAntiqueTextProvider.class);
 
         boolean success = false;
-        if(cap != null){
+        if (cap != null) {
             if (cap.hasAntiqueInk() != newState) {
                 cap.setAntiqueInk(newState);
                 tile.setChanged();
                 if (world instanceof ServerLevel serverLevel) {
-                    NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos,256,
+                    NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 256,
                             new ClientBoundSyncAntiqueInk(pos, newState));
                 }
                 success = true;

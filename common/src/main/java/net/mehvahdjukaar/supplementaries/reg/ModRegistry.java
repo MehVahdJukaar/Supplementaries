@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -49,7 +48,7 @@ public class ModRegistry {
     }
 
     private static boolean isDisabled(String name) {
-        return !RegistryConfigs.isEnabled(name);
+        return !CommonConfigs.isEnabled(name);
     }
 
     //misc entries

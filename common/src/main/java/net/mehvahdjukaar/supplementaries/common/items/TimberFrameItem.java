@@ -31,7 +31,7 @@ public class TimberFrameItem extends WoodBasedBlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (CommonConfigs.Blocks.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
+        if (CommonConfigs.Building.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);

@@ -16,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -134,7 +133,7 @@ public class ServerEvents {
         ModSetup.tagDependantSetup();
     }
 
-    private static final boolean FODDER_ENABLED = RegistryConfigs.FODDER_ENABLED.get();
+    private static final boolean FODDER_ENABLED = CommonConfigs.Utilities.FODDER_ENABLED.get();
 
     @EventCalled
     public static void onEntityLoad(Entity entity, ServerLevel serverLevel) {
@@ -164,7 +163,7 @@ public class ServerEvents {
     @EventCalled
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
         ItemStack stack = itemEntity.getItem();
-        if (!itemEntity.hasPickUpDelay() && CommonConfigs.Items.QUIVER_PICKUP.get() &&
+        if (!itemEntity.hasPickUpDelay() && CommonConfigs.Tools.QUIVER_PICKUP.get() &&
                 stack.getItem() instanceof ArrowItem &&
                 (itemEntity.getOwner() == null ||
                         SuppPlatformStuff.getItemLifeSpawn(itemEntity) - itemEntity.getAge() <= 200 ||
@@ -183,7 +182,7 @@ public class ServerEvents {
 
     @EventCalled
     public static boolean onArrowPickup(AbstractArrow arrow, Player player, Supplier<ItemStack> pickup) {
-        if (CommonConfigs.Items.QUIVER_PICKUP.get()){
+        if (CommonConfigs.Tools.QUIVER_PICKUP.get()){
             ItemStack stack = pickup.get();
             return takeArrow(arrow, player, stack);
         }

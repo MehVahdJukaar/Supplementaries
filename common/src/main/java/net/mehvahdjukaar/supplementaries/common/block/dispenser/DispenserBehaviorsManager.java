@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -32,9 +31,9 @@ public class DispenserBehaviorsManager {
     public static void registerBehaviors() {
         boolean isForge = PlatformHelper.getPlatform().isForge();
 
-        if (!RegistryConfigs.DISPENSERS.get()) return;
+        if (!CommonConfigs.General.DISPENSERS.get()) return;
 
-        if (RegistryConfigs.PANCAKES_ENABLED.get() && CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
+        if (CommonConfigs.Building.PANCAKES_ENABLED.get() && CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
             DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
@@ -71,7 +70,7 @@ public class DispenserBehaviorsManager {
             );
         }
         //bomb
-        if (RegistryConfigs.BOMB_ENABLED.get()) {
+        if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             //default behaviors for modded items
             var bombBehavior = new BombsBehavior();
             DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), bombBehavior);
@@ -85,7 +84,7 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
             DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
         }
-        if (RegistryConfigs.ROPE_ARROW_ENABLED.get()) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
 
             DispenserBlock.registerBehavior(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
                 protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
@@ -104,7 +103,7 @@ public class DispenserBehaviorsManager {
         }
 
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
-        boolean jar = RegistryConfigs.JAR_ENABLED.get();
+        boolean jar = CommonConfigs.Utilities.JAR_ENABLED.get();
 
         if (axe || jar) {
             for (Item i : Registry.ITEM) {

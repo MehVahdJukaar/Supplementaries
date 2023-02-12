@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -33,8 +32,8 @@ public abstract class AbstractSkeletonMixin extends Monster {
 
     @Inject(method = "finalizeSpawn", at = @At("TAIL"))
     public void finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
-        if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && RegistryConfigs.QUIVER_ENABLED.get()) {
-            if (random.nextFloat() < CommonConfigs.Items.QUIVER_SKELETON_SPAWN.get() * difficulty.getSpecialMultiplier()) {
+        if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && CommonConfigs.Tools.QUIVER_ENABLED.get()) {
+            if (random.nextFloat() < CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get() * difficulty.getSpecialMultiplier()) {
                 ((IQuiverEntity) this).setQuiver(
                         RandomArrowFunction.createRandomQuiver(level.getRandom(), difficulty.getSpecialMultiplier()));
             }

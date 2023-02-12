@@ -63,7 +63,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
 
     @PlatformOnly(PlatformOnly.FORGE)
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
-        var power = CommonConfigs.Blocks.CRYSTAL_ENCHANTING.get();
+        var power = CommonConfigs.Building.CRYSTAL_ENCHANTING.get();
         if (power != 0 && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
             if (te.getDisplayType() == PedestalBlockTile.DisplayType.CRYSTAL) return power;
         }

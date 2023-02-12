@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,9 +46,9 @@ public class CapabilityHandler {
     }
 
     public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Player> event) {
-        if (RegistryConfigs.QUIVER_ENABLED.get() && event.getObject() instanceof Player) {
+        //if (CommonConfigs.Tools.QUIVER_ENABLED.get() && event.getObject() instanceof Player) {
          //   event.addCapability(Supplementaries.res("quiver_entity"), new QuiverEntityProvider(event.getObject()));
-        }
+        //}
     }
 
     @Nullable

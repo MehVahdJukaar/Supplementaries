@@ -93,7 +93,7 @@ public class JarItemRenderer extends CageItemRenderer {
     }
 
     private static float getHeight(float count, float maxHeight) {
-        return maxHeight * count / (float) CommonConfigs.Blocks.JAR_CAPACITY.get();
+        return maxHeight * count / (float) CommonConfigs.Utilities.JAR_CAPACITY.get();
     }
 }
 

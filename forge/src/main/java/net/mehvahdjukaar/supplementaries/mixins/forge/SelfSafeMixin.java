@@ -20,7 +20,7 @@ public abstract class SelfSafeMixin extends Block {
     //break protection
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (CommonConfigs.Blocks.SAFE_UNBREAKABLE.get()) {
+        if (CommonConfigs.Utilities.SAFE_UNBREAKABLE.get()) {
             if (world.getBlockEntity(pos) instanceof SafeBlockTile tile) {
                 if (!tile.canPlayerOpen(player, true)) return false;
             }

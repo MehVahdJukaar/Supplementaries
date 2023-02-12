@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
@@ -57,7 +56,8 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
-        if (CommonConfigs.Blocks.JAR_AUTO_DETECT.get() && this.canFitEntity(e) && !(e instanceof Monster)) return true;
+        if (CommonConfigs.Utilities.JAR_AUTO_DETECT.get() && this.canFitEntity(e) && !(e instanceof Monster))
+            return true;
         return type.is(ModTags.JAR_CATCHABLE) ||
                 (type.is(ModTags.JAR_BABY_CATCHABLE) && e instanceof LivingEntity le && le.isBaby()) ||
                 this.isBoat(e) || BucketHelper.isModdedFish(e);
@@ -94,7 +94,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     private Boolean captureEnabled() {
-        return CommonConfigs.Blocks.JAR_CAPTURE.get();
+        return CommonConfigs.Utilities.JAR_CAPTURE.get();
     }
 
     @Override
@@ -179,7 +179,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (RegistryConfigs.JAR_TAB.get() && group == ModCreativeTabs.JAR_TAB) {
+        if (CommonConfigs.General.JAR_TAB.get() && group == ModCreativeTabs.JAR_TAB) {
             //lets jar tab populate itself
         } else super.fillItemCategory(group, items);
     }
@@ -230,7 +230,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (CommonConfigs.Blocks.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Utilities.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (DUMMY_TILE == null)
@@ -247,7 +247,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        if (CommonConfigs.Blocks.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Utilities.JAR_ITEM_DRINK.get()) {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;

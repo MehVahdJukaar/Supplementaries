@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -41,13 +40,15 @@ public abstract class AbstractHorseMixin extends Animal {
     @Shadow
     protected abstract void eating();
 
-    @Shadow protected int temper;
+    @Shadow
+    protected int temper;
 
-    @Shadow public abstract boolean isTamed();
+    @Shadow
+    public abstract boolean isTamed();
 
     @Inject(method = "addBehaviourGoals", at = @At("HEAD"))
     public void addSugarCube(CallbackInfo ci) {
-        if (RegistryConfigs.SUGAR_CUBE_ENABLED.get()) {
+        if (CommonConfigs.Building.SUGAR_CUBE_ENABLED.get()) {
             this.goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(ModRegistry.SUGAR_CUBE.get()), false));
         }
     }
@@ -55,7 +56,7 @@ public abstract class AbstractHorseMixin extends Animal {
     @Inject(method = "handleEating", at = @At("HEAD"), cancellable = true)
     public void eatSugarCube(Player player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.is(ModRegistry.SUGAR_CUBE.get().asItem())) {
-            int duration = CommonConfigs.Blocks.SUGAR_BLOCK_HORSE_SPEED_DURATION.get();
+            int duration = CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get();
             boolean eat = false;
             float healing = 1.0F;
             int ageIncrement = 30;

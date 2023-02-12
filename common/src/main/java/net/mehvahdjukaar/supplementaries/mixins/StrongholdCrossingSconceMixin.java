@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.configs.RegistryConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +34,7 @@ public abstract class StrongholdCrossingSconceMixin extends StructurePiece {
 
     @Inject(method = "postProcess", at = @At("TAIL"))
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
-        if (RegistryConfigs.SCONCE_ENABLED.get())
+        if (CommonConfigs.Building.SCONCE_ENABLED.get())
             this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
     }
 }

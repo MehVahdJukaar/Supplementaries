@@ -413,6 +413,7 @@
     {"id":"minecraft:dead_bush","required":false},
     {"id":"minecraft:twisting_vines","required":false},
     {"id":"minecraft:cactus","required":false},
+    {"id":"quark:glow_shroom","required":false},
     {"id":"supplementaries:flax_seeds","required":false}
   ]
 }
