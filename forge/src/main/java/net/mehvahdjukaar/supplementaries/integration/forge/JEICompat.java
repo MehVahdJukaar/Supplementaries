@@ -189,7 +189,9 @@ public class JEICompat implements IModPlugin {
             if (n == null || out == null) continue;
 
             Ingredient ing = n.unwrap().map(Ingredient::of, l ->
-                    Ingredient.of(l.stream().map(Holder::value).map(Item::getDefaultInstance)));
+                    Ingredient.of(l.stream().map(Holder::value)
+                            .filter(i -> !CommonConfigs.Utilities.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(i)))
+                            .map(Item::getDefaultInstance)));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
                     ing, Ingredient.of(ModRegistry.SOAP.get()));
 

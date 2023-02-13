@@ -50,7 +50,7 @@ public class QuiverItemImpl {
 
     @Nullable
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
-        return (QuiverCapability) CapabilityHandler.get(stack, ForgeCapabilities.ITEM_HANDLER);
+        return CapabilityHandler.get(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
     }
 
     public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.Data {

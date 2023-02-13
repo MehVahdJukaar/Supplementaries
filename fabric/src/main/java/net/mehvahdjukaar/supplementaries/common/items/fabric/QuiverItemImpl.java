@@ -28,14 +28,17 @@ public class QuiverItemImpl {
     }
 
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
-        return new QuiverNBTData(stack.getOrCreateTag());
+        if (stack.getItem() instanceof QuiverItem) {
+            return new QuiverNBTData(stack.getOrCreateTag());
+        }
+        return null;
     }
 
     public static class QuiverNBTData implements QuiverItem.Data {
 
         public static final String TAG_ITEMS = "Items";
         private final List<ItemStack> stackView = new ArrayList<>(
-                Collections.nCopies(CommonConfigs.Items.QUIVER_SLOTS.get(), ItemStack.EMPTY));
+                Collections.nCopies(CommonConfigs.Tools.QUIVER_SLOTS.get(), ItemStack.EMPTY));
         private final CompoundTag tag;
 
         public QuiverNBTData(CompoundTag tag) {

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.fabric.PlatformHelperImpl;
 import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ClientEventsFabric;
