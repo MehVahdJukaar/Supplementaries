@@ -1,0 +1,27 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:saddle"
+    }
+  ],
+  "tool": {
+    "tag": "c:shears"
+  },
+  "result": [
+    {
+      "item": "minecraft:leather",
+      "count": 2
+    }
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "quiver"
+    },
+    {
+      "modid": "farmers_delight",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

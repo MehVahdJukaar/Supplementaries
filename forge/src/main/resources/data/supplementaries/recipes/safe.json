@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing",
   "base": {
-    "tag": "forge:shulker_boxes"
+    "tag": "minecraft:shulker_boxes"
   },
   "addition": {
     "item": "minecraft:netherite_ingot"

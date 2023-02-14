@@ -48,16 +48,12 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ServerEventsForge {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        CapabilityHandler.register(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

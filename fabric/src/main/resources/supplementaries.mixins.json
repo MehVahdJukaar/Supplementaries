@@ -4,6 +4,7 @@
   "package": "net.mehvahdjukaar.supplementaries.mixins.fabric",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "net.mehvahdjukaar.supplementaries.mixins.GameRendererMixin",
     "MouseScrollMixin",
     "SkullBlockRendererMixin"
   ],

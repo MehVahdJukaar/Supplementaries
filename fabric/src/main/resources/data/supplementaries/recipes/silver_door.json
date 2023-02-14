@@ -4,7 +4,7 @@
       "type": "forge:not",
       "value": {
         "type": "forge:tag_empty",
-        "tag": "c:silver_silvers"
+        "tag": "c:silver_ingots"
       }
     },
     {

@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,12 +50,9 @@ public class SupplementariesForge {
         });
     }
 
-    public static void aa(ConfigSpec.CorrectionAction a, List<String> b, Object c, Object d) {
-        int aa = 1;
-    }
-
-    public static void bb(CommentedFileConfig o) {
-        int aa = 1;
+    @SubscribeEvent
+    public void registerCapabilities(RegisterCapabilitiesEvent event) {
+        CapabilityHandler.register(event);
     }
 
     @SubscribeEvent

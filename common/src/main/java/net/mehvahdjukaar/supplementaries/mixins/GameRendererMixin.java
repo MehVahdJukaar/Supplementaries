@@ -18,6 +18,7 @@ public abstract class GameRendererMixin {
 
     @Shadow public abstract void loadEffect(ResourceLocation resourceLocation);
 
+    //forge has an event for this but doing it this way is better as we can use instance check
     @Inject(method = "checkEntityPostEffect", at = @At("TAIL"))
     protected void checkEntityPostEffect(Entity entity, CallbackInfo ci) {
         if(entity != null && entity.getType() == EntityType.ENDER_DRAGON){

@@ -61,7 +61,6 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE.get());
         addIcon("shulker helmet", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
-        addIcon("custom configured screen", ModRegistry.WRENCH.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("hanging sign", ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
@@ -78,6 +77,12 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("cave urns", Items.BONE);
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(new ResourceLocation("spruce"))));
         addIcon("stasis", Items.ENCHANTED_BOOK);
+        addIcon("banner pattern tooltip", Items.CREEPER_BANNER_PATTERN);
+        addIcon("clock right click", Items.CLOCK);
+        addIcon("compass right click", Items.COMPASS);
+        addIcon("crossbow colors", Items.CROSSBOW);
+        addIcon("mob head shaders", Items.DRAGON_HEAD);
+        addIcon("placeable books glint", Items.BOOK);
 
         addIcon("redstone", Items.REDSTONE);
         addIcon("building", Items.OXIDIZED_COPPER);
