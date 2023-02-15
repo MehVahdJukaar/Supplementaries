@@ -20,9 +20,11 @@ public abstract class AbstractArrowMixin {
 
     @Shadow public int shakeTime;
 
+    @Shadow public AbstractArrow.Pickup pickup;
+
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     public void onPlayerTouch(Player player, CallbackInfo ci){
-        if((this.inGround || this.isNoPhysics()) && this.shakeTime <= 0 &&
+        if((this.inGround || this.isNoPhysics()) && this.pickup == AbstractArrow.Pickup.ALLOWED && this.shakeTime <= 0 &&
                 ServerEvents.onArrowPickup((AbstractArrow)(Object)this, player, this::getPickupItem)){
             ci.cancel();
         }

@@ -8,6 +8,7 @@
     {"id":"minecraft:blast_furnace","required":false},
     {"id":"minecraft:smoker","required":false},
     {"id":"charm:kiln","required":false},
+    {"id":"clayworks:kiln","required":false},
     {"id":"quark:blackstone_furnace","required":false},
     {"id":"quark:deepslate_furnace","required":false},
     {"id":"environmental:kiln","required":false},

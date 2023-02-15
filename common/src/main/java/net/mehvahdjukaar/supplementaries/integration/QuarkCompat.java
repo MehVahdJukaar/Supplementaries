@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -76,6 +78,11 @@ public class QuarkCompat {
 
     @ExpectPlatform
     public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack getSlimeBucket(Entity entity) {
         throw new AssertionError();
     }
 }

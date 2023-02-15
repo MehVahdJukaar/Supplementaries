@@ -5,6 +5,8 @@ import com.google.common.collect.HashBiMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -90,7 +93,7 @@ public class BucketHelper {
         }
     }
 
-    @Nullable
+    @NotNull
     public static ItemStack getBucketFromEntity(Entity entity) {
         if (entity instanceof Bucketable bucketable) {
             return bucketable.getBucketItemStack();
@@ -98,8 +101,11 @@ public class BucketHelper {
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {
             return tryGettingFishBucketHackery(entity, entity.level);
+        } else if (CompatHandler.QUARK) {
+            ItemStack b = QuarkCompat.getSlimeBucket(entity);
+            if (!b.isEmpty()) return b;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     /**

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -14,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
@@ -110,6 +112,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int combinedLightIn) {
+        matrixStackIn.translate(-1,0,-1);
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0);

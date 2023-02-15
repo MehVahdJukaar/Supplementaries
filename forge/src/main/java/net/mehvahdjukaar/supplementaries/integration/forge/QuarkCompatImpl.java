@@ -15,7 +15,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -37,6 +39,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
@@ -46,6 +49,8 @@ import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
+import vazkii.quark.content.tools.item.SlimeInABucketItem;
+import vazkii.quark.content.tools.module.SlimeInABucketModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
@@ -224,6 +229,18 @@ public class QuarkCompatImpl {
             return magnet.getMagnetState();
         }
         return null;
+    }
+
+    public static ItemStack getSlimeBucket(Entity entity) {
+        if(ModuleLoader.INSTANCE.isModuleEnabled(SlimeInABucketModule.class)){
+            if(entity.getType() == EntityType.SLIME  && ((Slime) entity).getSize() == 1 && entity.isAlive()){
+                ItemStack outStack = new ItemStack(SlimeInABucketModule.slime_in_a_bucket);
+                CompoundTag cmp = entity.serializeNBT();
+                ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
+                return outStack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
 }

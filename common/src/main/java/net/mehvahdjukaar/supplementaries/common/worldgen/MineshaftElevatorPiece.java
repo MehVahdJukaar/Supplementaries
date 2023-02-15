@@ -60,7 +60,9 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     public static MineshaftPieces.MineShaftPiece getElevator(
             StructurePieceAccessor pieces, RandomSource random, int x, int y, int z,
             Direction direction, int genDepth, MineshaftStructure.Type type) {
-        if (y > 60) return null;
+        if (y > 40) {
+            return null;
+        }
         if (random.nextInt(100) < 2 && CommonConfigs.Redstone.PULLEY_ENABLED.get() && CommonConfigs.Redstone.TURN_TABLE_ENABLED.get()) {
             byte height = 12;
 
@@ -180,10 +182,10 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
             if (!b1 && !b2 && !b3 && !b4) wood = plank;
 
-            this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
-            this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
-            this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
-            this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
+            boolean p1 = this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
+            boolean p2 = this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
+            boolean p3 = this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
+            boolean p4 = this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
 
             for (int j = minX; j <= maxX; ++j) {
                 for (int k = minZ; k <= maxZ; ++k) {
@@ -191,38 +193,47 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     if (j == minX || j == maxX || k == minZ || k == maxZ) {
                         this.setPlanksBlock(level, box, plank, j, i + 4, k);
                         this.setPlanksBlock(level, box, plank, j, i + 8, k);
-                        this.forcePlanks(level, box, plank, j, i + 12, k);
+                        placeBlockSafe(level, plank, j, i + 12, k, box);
                     }
                 }
             }
-            addPulley(level, random, box, minZ, minX, maxY);
+            if (p1 && p2 && p3 && p4) addPulley(level, random, box, minZ, minX, maxY);
         }
     }
 
     private void maybePlaceCobWeb(WorldGenLevel level, BoundingBox box, RandomSource random, float chance, int x, int y, int z) {
         if (this.isInterior(level, x, y, z, box) && random.nextFloat() < chance
                 && this.hasSturdyNeighbours(level, box, x, y, z, 2)) {
-            this.placeBlock(level, Blocks.COBWEB.defaultBlockState(), x, y, z, box);
+            placeBlockSafe(level, Blocks.COBWEB.defaultBlockState(), x, y, z, box);
         }
     }
 
-    protected void forcePlanks(WorldGenLevel level, BoundingBox box, BlockState plankState, int x, int y, int z) {
+    protected void placeBlockSafe(WorldGenLevel level, BlockState plankState, int x, int y, int z, BoundingBox box) {
         if (this.isInterior(level, x, y, z, box)) {
             BlockPos blockPos = this.getWorldPos(x, y, z);
             level.setBlock(blockPos, plankState, 2);
         }
     }
 
-    private void placeSidePillar(WorldGenLevel level, BoundingBox box, int x, int y, int z, int maxY, BlockState state) {
-        var hack = this.getOrientation();
-        this.setOrientation(hack);
-        this.generateBox(level, box, x, y, z, x, maxY, z, state,
-                CAVE_AIR, false);
+    private boolean placeSidePillar(WorldGenLevel level, BoundingBox box, int x, int y, int z, int maxY, BlockState state) {
+        if (this.isInterior(level, x, y, z, box)) {
+            var hack = this.getOrientation();
+            this.setOrientation(hack);
+            this.generateBox(level, box, x, y, z, x, maxY, z, state,
+                    CAVE_AIR, false);
+            return true;
+        }
+        return false;
     }
 
     protected boolean fillPillarDownOrChainUp(WorldGenLevel level, BlockState state, int x, int z, BoundingBox box) {
+
         int minY = this.boundingBox.minY();
         int maxY = this.boundingBox.maxY() - 1;
+
+        if (!this.isInterior(level, x, minY, z, box)) {
+            return false;
+        }
 
         BlockPos.MutableBlockPos mutableBlockPos = this.getWorldPos(x, minY, z);
         int j = 1;
@@ -268,6 +279,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         return false;
     }
 
+    //TODSO:FIX pillar gen
     private boolean canHangChainBelow(LevelReader level, BlockPos pos, BlockState state) {
         return Block.canSupportCenter(level, pos, Direction.DOWN) && !(state.getBlock() instanceof FallingBlock);
     }

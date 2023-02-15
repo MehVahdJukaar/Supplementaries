@@ -187,9 +187,11 @@ public class MobContainer {
                 Entity temp = mobInstance.getEntityForRenderer();
                 if(temp != null){
                     ItemStack bucket = BucketHelper.getBucketFromEntity(temp);
-                    world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    returnStack = bucket.copy();
-                    this.setData(null);
+                    if(!bucket.isEmpty()) {
+                        world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        returnStack = bucket.copy();
+                        this.setData(null);
+                    }
                 }
             }
         }
