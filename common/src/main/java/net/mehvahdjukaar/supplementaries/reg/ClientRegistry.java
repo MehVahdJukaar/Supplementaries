@@ -28,10 +28,12 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
+import net.mehvahdjukaar.supplementaries.client.tooltip.PaintingTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -170,6 +172,8 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_WALL_NETHER_BRASS.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_NETHER_BRASS.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.CAGE.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
@@ -401,6 +405,7 @@ public class ClientRegistry {
         event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
         event.register(QuiverTooltip.class, QuiverTooltipComponent::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
+        event.register(PaintingTooltip.class, PaintingTooltipComponent::new);
         if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }
 

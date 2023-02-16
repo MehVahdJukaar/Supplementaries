@@ -59,7 +59,7 @@ public class ClientEvents {
 
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
-        if (minecraft.isPaused()) return;
+        if (minecraft.isPaused() || minecraft.level == null) return;
         CapturedMobCache.tickCrystal();
         Player p = minecraft.player;
         if (p != null) {

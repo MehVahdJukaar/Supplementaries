@@ -6,6 +6,7 @@
     {"id":"supplementaries:sconce_green","required":false},
     {"id":"supplementaries:sconce_ender","required":false},
     {"id":"supplementaries:sconce_soul","required":false},
+    {"id":"supplementaries:sconce_nether_brass","required":false},
     {"id":"supplementaries:sconce_glow","required":false}
   ]
 }

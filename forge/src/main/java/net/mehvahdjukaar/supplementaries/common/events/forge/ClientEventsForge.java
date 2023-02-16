@@ -81,7 +81,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance().level != null) {
+        if (event.phase == TickEvent.Phase.END) {
             ClientEvents.onClientTick(Minecraft.getInstance());
         }
     }

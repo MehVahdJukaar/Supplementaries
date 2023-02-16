@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
-import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -9,19 +8,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 public class CapturedMobCache {
 
     private static final LoadingCache<UUID, Entity> MOB_CACHE = CacheBuilder.newBuilder()
-            .expireAfterAccess(5, TimeUnit.MINUTES)
+            .expireAfterAccess(1, TimeUnit.MINUTES)
             .build(new CacheLoader<>() {
                 @Override
                 public Entity load(UUID key) {
@@ -30,22 +27,10 @@ public class CapturedMobCache {
             });
 
     public static void addMob(Entity e) {
-        if (e == null) e = DEFAULT_PIG.get();
-        MOB_CACHE.put(e.getUUID(), e);
+        if (e != null) MOB_CACHE.put(e.getUUID(), e);
     }
 
-    public static final Supplier<EndCrystal> PEDESTAL_CRYSTAL = Suppliers.memoize(() -> {
-        EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, Minecraft.getInstance().level);
-        entity.setShowBottom(false);
-        entity.setUUID(UUID.randomUUID());
-        return entity;
-    });
-
-    private static final Supplier<Entity> DEFAULT_PIG = Suppliers.memoize(() -> {
-        Pig entity = new Pig(EntityType.PIG, Minecraft.getInstance().level);
-        entity.setUUID(UUID.randomUUID());
-        return entity;
-    });
+    private static UUID crystalID = UUID.randomUUID();
 
     @Nullable
     public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {
@@ -63,6 +48,23 @@ public class CapturedMobCache {
     }
 
     public static void tickCrystal() {
-        PEDESTAL_CRYSTAL.get().time++;
+        var e = MOB_CACHE.getIfPresent(crystalID);
+        if (e instanceof EndCrystal c){
+            c.time++;
+            if(e.level != Minecraft.getInstance().level){
+                //invalid. make new one
+                crystalID = UUID.randomUUID();
+            }
+        }
+    }
+
+    public static EndCrystal getEndCrystal(Level level) {
+        var e = MOB_CACHE.getIfPresent(crystalID);
+        if (e instanceof EndCrystal c) return c;
+        EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, level);
+        entity.setShowBottom(false);
+        entity.setUUID(crystalID);
+        addMob(entity);
+        return entity;
     }
 }

@@ -113,6 +113,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
+        public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
 
         static{
@@ -133,6 +134,8 @@ public class ClientConfigs {
                     .define("placeable_books_glint", false);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
+            PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")
+                    .define("paintings_tooltip", true);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
             builder.pop();

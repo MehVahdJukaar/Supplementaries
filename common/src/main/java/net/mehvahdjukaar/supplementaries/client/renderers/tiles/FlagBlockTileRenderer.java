@@ -112,7 +112,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int combinedLightIn) {
-        matrixStackIn.translate(-1,0,-1);
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
         renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0);

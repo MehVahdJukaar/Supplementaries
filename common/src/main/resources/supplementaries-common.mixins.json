@@ -51,6 +51,7 @@
     "LoomMenuMixin",
     "MineshaftCorridorMixin",
     "MineshaftPiecesMixin",
+    "PaintingItemMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",
     "ServerLevelMixin",

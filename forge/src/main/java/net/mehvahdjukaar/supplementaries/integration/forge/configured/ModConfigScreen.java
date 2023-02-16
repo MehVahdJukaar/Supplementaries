@@ -78,9 +78,10 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(new ResourceLocation("spruce"))));
         addIcon("stasis", Items.ENCHANTED_BOOK);
         addIcon("banner pattern tooltip", Items.CREEPER_BANNER_PATTERN);
+        addIcon("paintings tooltip", Items.PAINTING);
         addIcon("clock right click", Items.CLOCK);
         addIcon("compass right click", Items.COMPASS);
-        addIcon("crossbow colors", Items.CROSSBOW);
+        addIcon("crossbows colors", Items.CROSSBOW);
         addIcon("mob head shaders", Items.DRAGON_HEAD);
         addIcon("placeable books glint", Items.BOOK);
 

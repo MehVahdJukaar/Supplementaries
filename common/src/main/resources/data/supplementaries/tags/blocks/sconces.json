@@ -11,6 +11,8 @@
     {"id":"supplementaries:sconce_ender_wall","required":false},
     {"id":"supplementaries:sconce_soul","required":false},
     {"id":"supplementaries:sconce_soul_wall","required":false},
+    {"id":"supplementaries:sconce_nether_brass","required":false},
+    {"id":"supplementaries:sconce_nether_brass_wall","required":false},
     {"id":"supplementaries:sconce_glow_wall","required":false},
     {"id":"supplementaries:sconce_glow","required":false}
   ]
