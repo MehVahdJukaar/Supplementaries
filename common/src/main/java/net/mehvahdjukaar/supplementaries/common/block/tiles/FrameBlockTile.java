@@ -124,6 +124,10 @@ public class FrameBlockTile extends MimicBlockTile {
         if (b == Blocks.BEDROCK) return false;
         if (b == ModRegistry.DAUB_FRAME.get() || b == ModRegistry.DAUB_BRACE.get() || b == ModRegistry.DAUB_CROSS_BRACE.get())
             return false;
+
+        if (b.builtInRegistryHolder().is(ModTags.FRAME_BLOCK_BLACKLIST))
+            return false;
+
         //if (BLOCK_BLACKLIST.contains(block)) { return false; }
         if (b instanceof EntityBlock) {
             return false;
