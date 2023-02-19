@@ -87,6 +87,7 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
+    //tinted glass makes everman not mad
 //quark gui sack open
     //heartstone highlight and pulse when nearby
     //hammock mod with swivel
