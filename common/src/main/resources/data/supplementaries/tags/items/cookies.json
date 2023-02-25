@@ -91,6 +91,8 @@
 
     {"id":"honeyexpansion:honey_cookie_sausage","required":false},
 
-    {"id":"abnormals_delight:mulberry_cookie","required":false}
+    {"id":"abnormals_delight:mulberry_cookie","required":false},
+    
+    {"id":"botania:mana_cookie","required":false}
   ]
 }
