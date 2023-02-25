@@ -264,7 +264,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     level.setBlock(mutableBlockPos.setY(maxY + 1), this.type.getFenceState(), 2);
 
                     BlockState chain;
-                    if (maxY + 2 < MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Utilities.ROPE_ENABLED.get()) {
+                    if (maxY + 2 < MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Functional.ROPE_ENABLED.get()) {
                         chain = ModRegistry.ROPE.get().defaultBlockState().setValue(RopeBlock.DISTANCE, 0)
                                 .setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
                     } else chain = Blocks.CHAIN.defaultBlockState();

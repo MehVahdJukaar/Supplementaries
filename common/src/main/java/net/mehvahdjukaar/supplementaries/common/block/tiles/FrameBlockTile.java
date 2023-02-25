@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -19,10 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -121,18 +119,11 @@ public class FrameBlockTile extends MimicBlockTile {
     public static boolean isValidBlock(@Nullable BlockState state, BlockPos pos, Level world) {
         if (state == null) return false;
         Block b = state.getBlock();
-        if (b == Blocks.BEDROCK) return false;
-        if (b == ModRegistry.DAUB_FRAME.get() || b == ModRegistry.DAUB_BRACE.get() || b == ModRegistry.DAUB_CROSS_BRACE.get())
-            return false;
 
-        if (b.builtInRegistryHolder().is(ModTags.FRAME_BLOCK_BLACKLIST))
-            return false;
-
-        //if (BLOCK_BLACKLIST.contains(block)) { return false; }
-        if (b instanceof EntityBlock) {
+        if (b.builtInRegistryHolder().is(ModTags.FRAME_BLOCK_BLACKLIST) || b instanceof EntityBlock) {
             return false;
         }
-        if (b instanceof FeatherBlock) return true;
+        if (b instanceof FeatherBlock || b instanceof SoulSandBlock) return true;
         return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world, pos));
     }
 }

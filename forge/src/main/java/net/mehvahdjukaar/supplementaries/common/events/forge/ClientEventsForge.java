@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.SupplementariesClient;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
@@ -85,14 +84,6 @@ public class ClientEventsForge {
             ClientEvents.onClientTick(Minecraft.getInstance());
         }
     }
-
-    @SubscribeEvent
-    public static void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            SupplementariesClient.onRenderTick(event.renderTickTime);
-        }
-    }
-
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {

@@ -48,7 +48,7 @@ public abstract class LivingEntityMixin extends Entity {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "handleOnClimbable", at = @At("HEAD"), cancellable = true)
     private void handleOnClimbable(Vec3 motion, CallbackInfoReturnable<Vec3> info) {
-        if (this.onClimbable() && CommonConfigs.Utilities.ROPE_SLIDE.get()) {
+        if (this.onClimbable() && CommonConfigs.Functional.ROPE_SLIDE.get()) {
             BlockState b = this.getFeetBlockState();
             if (b.is(ModRegistry.ROPE.get())) {
                 this.fallDistance = 0;

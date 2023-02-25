@@ -36,7 +36,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -134,7 +133,7 @@ public class ServerEvents {
         ModSetup.tagDependantSetup();
     }
 
-    private static final boolean FODDER_ENABLED = CommonConfigs.Utilities.FODDER_ENABLED.get();
+    private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();
 
     @EventCalled
     public static void onEntityLoad(Entity entity, ServerLevel serverLevel) {

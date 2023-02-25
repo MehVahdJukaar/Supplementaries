@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -149,7 +152,7 @@ public class ServerEventsForge {
     }
 
     //for flute and cage. fabric calls directly
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         var res = ServerEvents.onRightClickEntity(event.getEntity(), event.getLevel(),
                 event.getHand(), event.getTarget(), null);

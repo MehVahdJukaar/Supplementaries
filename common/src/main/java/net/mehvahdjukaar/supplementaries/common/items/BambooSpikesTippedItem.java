@@ -53,11 +53,11 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !CommonConfigs.Utilities.BAMBOO_SPIKES_ALTERNATIVE.get();
+        return !CommonConfigs.Functional.BAMBOO_SPIKES_ALTERNATIVE.get();
     }
 
     public static boolean areEffectsValid(List<MobEffectInstance> effects){
-        if(CommonConfigs.Utilities.BAMBOO_SPIKES_ALTERNATIVE.get()){
+        if(CommonConfigs.Functional.BAMBOO_SPIKES_ALTERNATIVE.get()){
             for(var e: effects){
                 if(e.getEffect().isBeneficial()) return false;
             }

@@ -85,7 +85,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-            if (CommonConfigs.Utilities.URN_PILE_ENABLED.get() && CommonConfigs.Utilities.URN_ENABLED.get()) {
+            if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
@@ -96,7 +96,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
-            if (CommonConfigs.Utilities.WILD_FLAX_ENABLED.get()) {
+            if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
             dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);

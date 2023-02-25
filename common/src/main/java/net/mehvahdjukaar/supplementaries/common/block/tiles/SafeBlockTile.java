@@ -38,7 +38,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
-        if (CommonConfigs.Utilities.SAFE_SIMPLE.get()) {
+        if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             if (this.isNotOwnedBy(player)) {
                 if (feedbackMessage)
                     player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", this.ownerName), true);
@@ -96,7 +96,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public Component getDisplayName() {
-        if (CommonConfigs.Utilities.SAFE_SIMPLE.get()) {
+        if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             if (this.ownerName != null) {
                 return (Component.translatable("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
             }

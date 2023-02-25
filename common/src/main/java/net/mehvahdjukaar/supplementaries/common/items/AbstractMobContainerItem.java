@@ -126,14 +126,14 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 return false;
             }
 
-            int p = CommonConfigs.Utilities.CAGE_HEALTH_THRESHOLD.get();
+            int p = CommonConfigs.Functional.CAGE_HEALTH_THRESHOLD.get();
             if (p != 100 && (living.getHealth() > living.getMaxHealth() * (p / 100f))) {
                 return false;
             }
         }
         String name = Utils.getID(entity.getType()).toString();
         if (name.contains("alexsmobs") && name.contains("centipede")) return false; //hardcodig this one
-        if (CommonConfigs.Utilities.CAGE_ALL_MOBS.get() || CapturedMobHandler.isCommandMob(name)) {
+        if (CommonConfigs.Functional.CAGE_ALL_MOBS.get() || CapturedMobHandler.isCommandMob(name)) {
             return true;
         }
         ICatchableMob cap = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
@@ -199,7 +199,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
                         entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
-                        if (CommonConfigs.Utilities.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+                        if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                             mob.setPersistenceRequired();
                         }
 
@@ -314,7 +314,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             this.playCatchSound(player);
             this.angerNearbyEntities(entity, player);
 
-            if (CommonConfigs.Utilities.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+            if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
                 mob.setPersistenceRequired();
             }
 

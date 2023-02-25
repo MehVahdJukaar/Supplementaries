@@ -1,0 +1,9 @@
+{
+  "values": [
+    "supplementaries:daub_frame",
+    "supplementaries:daub_cross_brace",
+    "supplementaries:daub_brace",
+    "minecraft:bedrock",
+    {"id":"timber_frames:timber_frame","required":false}
+  ]
+}

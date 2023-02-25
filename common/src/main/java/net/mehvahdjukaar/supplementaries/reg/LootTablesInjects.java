@@ -27,13 +27,13 @@ public class LootTablesInjects {
     public static void setup() {
         if (CommonConfigs.Building.GLOBE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectGlobe);
         if (CommonConfigs.Tools.QUIVER_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectQuiver);
-        if (CommonConfigs.Utilities.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
-        if (CommonConfigs.Utilities.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
+        if (CommonConfigs.Functional.ROPE_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectRope);
+        if (CommonConfigs.Functional.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBlueBomb);
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBomb);
         if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTablesInjects::tryInjectStasis);
-        if (CommonConfigs.Utilities.BAMBOO_SPIKES_ENABLED.get() &&
-                CommonConfigs.Utilities.TIPPED_SPIKES_ENABLED.get())
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get() &&
+                CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())
             LOOT_INJECTS.add(LootTablesInjects::tryInjectSpikes);
     }
 

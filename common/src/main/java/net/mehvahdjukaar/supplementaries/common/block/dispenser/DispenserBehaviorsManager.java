@@ -103,7 +103,7 @@ public class DispenserBehaviorsManager {
         }
 
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
-        boolean jar = CommonConfigs.Utilities.JAR_ENABLED.get();
+        boolean jar = CommonConfigs.Functional.JAR_ENABLED.get();
 
         if (axe || jar) {
             for (Item i : Registry.ITEM) {

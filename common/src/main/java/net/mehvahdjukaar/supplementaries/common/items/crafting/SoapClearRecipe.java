@@ -27,7 +27,7 @@ public class SoapClearRecipe extends CustomRecipe {
             if (!itemstack.isEmpty()) {
                 Item item = itemstack.getItem();
                 boolean d = (BlocksColorAPI.getColor(item) != null &&
-                        !CommonConfigs.Utilities.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
+                        !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
                 if (d || item instanceof DyeableLeatherItem) {
                     ++i;
                 } else {

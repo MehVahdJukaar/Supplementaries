@@ -46,7 +46,7 @@ public class ModCreativeTabs {
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
 
-        if (CommonConfigs.Utilities.JAR_COOKIES.get()) {
+        if (CommonConfigs.Functional.JAR_COOKIES.get()) {
             for (var i : Registry.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
                 ItemStack regItem = new ItemStack(i);
                 CompoundTag com = new CompoundTag();
@@ -57,7 +57,7 @@ public class ModCreativeTabs {
                 }
             }
         }
-        if (CommonConfigs.Utilities.JAR_LIQUIDS.get()) {
+        if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
                 if (s == VanillaSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();

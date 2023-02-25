@@ -41,12 +41,12 @@ public class CageItem extends AbstractMobContainerItem implements ICustomItemRen
 
     @Override
     public boolean canItemCatch(Entity e) {
-        if (CommonConfigs.Utilities.CAGE_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
+        if (CommonConfigs.Functional.CAGE_AUTO_DETECT.get() && this.canFitEntity(e)) return true;
 
         EntityType<?> type = e.getType();
 
         boolean isBaby = e instanceof LivingEntity le && le.isBaby();
-        return ((CommonConfigs.Utilities.CAGE_ALL_BABIES.get() && isBaby) ||
+        return ((CommonConfigs.Functional.CAGE_ALL_BABIES.get() && isBaby) ||
                 type.is(ModTags.CAGE_CATCHABLE) ||
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
     }

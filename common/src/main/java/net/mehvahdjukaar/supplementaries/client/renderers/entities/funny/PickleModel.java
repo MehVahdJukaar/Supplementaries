@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.SupplementariesClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -94,7 +94,7 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         } else {
             float f1 = player.getFallFlyingTicks();
             if (f1 > 0.01) {
-                f1 += SupplementariesClient.getPartialTicks();
+                f1 += Minecraft.getInstance().getFrameTime();
                 float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
                 leftArm.xRot = inclination * (float) Math.PI;
                 rightArm.xRot = inclination * (float) Math.PI;

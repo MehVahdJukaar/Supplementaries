@@ -16,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
-import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -45,12 +44,12 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
-        if (CommonConfigs.Utilities.URN_PILE_ENABLED.get() && CommonConfigs.Utilities.URN_ENABLED.get()) {
+        if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
                     ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_CAVE_URNS.getId()));
         }
-        if (CommonConfigs.Utilities.WILD_FLAX_ENABLED.get() && CommonConfigs.Utilities.FLAX_ENABLED.get()) {
+        if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get() && CommonConfigs.Functional.FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
                     GenerationStep.Decoration.VEGETAL_DECORATION,
                     ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getId()));

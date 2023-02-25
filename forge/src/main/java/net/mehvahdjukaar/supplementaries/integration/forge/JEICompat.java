@@ -47,7 +47,7 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        if (CommonConfigs.Utilities.TIPPED_SPIKES_ENABLED.get()) {
+        if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createTippedBambooSpikesRecipes());
         }
         if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {
@@ -69,13 +69,13 @@ public class JEICompat implements IModPlugin {
 
         registry.addRecipes(RecipeTypes.CRAFTING, createItemLoreRecipe());
 
-        if (CommonConfigs.Utilities.SOAP_ENABLED.get()) {
+        if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, createSoapCleanRecipe());
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.addRecipes(RecipeTypes.CRAFTING, createAntiqueMapSoapRecipe());
             }
         }
-        if (CommonConfigs.Utilities.PRESENT_ENABLED.get()) {
+        if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
             registry.addRecipes(RecipeTypes.CRAFTING, makePresentCloringRecipes());
             registry.addRecipes(RecipeTypes.CRAFTING, makeTrappedPresentRecipes());
         }
@@ -190,7 +190,7 @@ public class JEICompat implements IModPlugin {
 
             Ingredient ing = n.unwrap().map(Ingredient::of, l ->
                     Ingredient.of(l.stream().map(Holder::value)
-                            .filter(i -> !CommonConfigs.Utilities.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(i)))
+                            .filter(i -> !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(i)))
                             .map(Item::getDefaultInstance)));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
                     ing, Ingredient.of(ModRegistry.SOAP.get()));

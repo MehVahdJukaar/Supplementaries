@@ -82,7 +82,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     public static DamageSource getDamageSource(Level level) {
-        if (CommonConfigs.Utilities.BAMBOO_SPIKES_DROP_LOOT.get()) {
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
             return new ModDamageSources.SpikePlayer("spike", FakePlayerManager.getDefault(level)).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
@@ -195,23 +195,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return BlockPathTypes.DAMAGE_OTHER;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(PotionUtils.getPotion(stack))) {
-            world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
-            world.setBlock(pos, state.setValue(TIPPED, true), 3);
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!TIPPED_ENABLED.get()) return InteractionResult.PASS;
+        if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(handIn);
 
         if (stack.getItem() instanceof LingeringPotionItem) {
-            if (tryAddingPotion(state, worldIn, pos, stack)) {
+            if (tryAddingPotion(state, worldIn, pos, PotionUtils.getPotion(stack))) {
                 if (!player.isCreative())
                     player.setItemInHand(handIn, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
             }
@@ -245,20 +236,27 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(CommonConfigs.Utilities.TIPPED_SPIKES_ENABLED::get);
+    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(CommonConfigs.Functional.TIPPED_SPIKES_ENABLED::get);
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
-        if (!TIPPED_ENABLED.get()) return false;
-        if (f == VanillaSoftFluids.POTION.get() && nbt != null && !state.getValue(TIPPED) && nbt.getString("PotionType").equals("Lingering")) {
-            if (world.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
-                if (te.tryApplyPotion(PotionUtils.getPotion(nbt))) {
-                    world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
-                    world.setBlock(pos, state.setValue(TIPPED, true), 3);
-                    return true;
-                }
-            }
+        if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
+        if (f == VanillaSoftFluids.POTION.get() && nbt != null && nbt.getString("PotionType").equals("Lingering")) {
+            return tryAddingPotion(state, world, pos, PotionUtils.getPotion(nbt));
         }
+        return false;
+    }
+
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Potion potion) {
+        world.setBlock(pos, state.setValue(TIPPED, true), 0);
+        BlockEntity te = world.getBlockEntity(pos);
+        if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {
+            world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
+            world.setBlock(pos, state.setValue(TIPPED, true), 3);
+            return true;
+        }
+        if (te != null) te.setRemoved();
+        world.setBlock(pos, state.setValue(TIPPED, false), 0);
         return false;
     }
 

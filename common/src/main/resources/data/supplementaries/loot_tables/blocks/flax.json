@@ -14,14 +14,9 @@
                   "condition": "minecraft:block_state_property",
                   "block": "supplementaries:flax",
                   "properties": {
-                    "age": "7"
-                  }
-                },
-                {
-                  "condition": "minecraft:block_state_property",
-                  "block": "supplementaries:flax",
-                  "properties": {
+                    "age": "7",
                     "half": "lower"
+
                   }
                 }
               ],
@@ -77,13 +72,7 @@
           "condition": "minecraft:block_state_property",
           "block": "supplementaries:flax",
           "properties": {
-            "age": "7"
-          }
-        },
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "supplementaries:flax",
-          "properties": {
+            "age": "7",
             "half": "lower"
           }
         }

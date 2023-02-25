@@ -42,12 +42,12 @@ public class CommonConfigs {
 
         builderReference = new WeakReference<>(builder);
 
-        CommonConfigs.Redstone.init();
-        CommonConfigs.Utilities.init();
-        CommonConfigs.Building.init();
-        CommonConfigs.Tools.init();
-        CommonConfigs.General.init();
-        CommonConfigs.Tweaks.init();
+        Redstone.init();
+        Functional.init();
+        Building.init();
+        Tools.init();
+        General.init();
+        Tweaks.init();
 
         builder.setSynced();
         builder.onChange(CommonConfigs::onRefresh);
@@ -62,8 +62,7 @@ public class CommonConfigs {
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
         ropeOverride = Suppliers.memoize(() -> {
-            var o = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(),
-                    new ResourceLocation(Utilities.ROPE_OVERRIDE.get())));
+            var o = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Functional.ROPE_OVERRIDE.get()));
             if (o.isPresent() && o.get() instanceof Holder.Reference<Block> hr && hr.value() != ModRegistry.ROPE.get()) {
                 return hr;
             }
@@ -75,7 +74,7 @@ public class CommonConfigs {
     public static Block getSelectedRope() {
         var override = getRopeOverride();
         if (override != null) return override.value();
-        else if (Utilities.ROPE_ENABLED.get()) return ModRegistry.ROPE.get();
+        else if (Functional.ROPE_ENABLED.get()) return ModRegistry.ROPE.get();
         return null;
     }
 
@@ -344,7 +343,7 @@ public class CommonConfigs {
             BLACKSTONE_TILE_ENABLED = feature(builder, ModConstants.BLACKSTONE_TILE_NAME);
             SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
-            SCONCE_GREEN_ENABLED = feature(builder, ModConstants.SCONCE_NAME_GREEN, ModConstants.SCONCE_NAME_GREEN,false);
+            SCONCE_GREEN_ENABLED = feature(builder, ModConstants.SCONCE_NAME_GREEN, ModConstants.SCONCE_NAME_GREEN, false);
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
             NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
             NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
@@ -482,14 +481,14 @@ public class CommonConfigs {
     }
 
 
-    public static class Utilities {
+    public static class Functional {
         public static void init() {
         }
 
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("utilities");
+            builder.push("functional");
 
             builder.push("rope");
             ROPE_ENABLED = feature(builder);
@@ -498,7 +497,7 @@ public class CommonConfigs {
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
             ROPE_OVERRIDE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
-                    .define("rope_override", "supplementaries:rope");
+                    .define("rope_override", Supplementaries.res("rope"));
             builder.pop();
 
             builder.push("jar");
@@ -666,7 +665,7 @@ public class CommonConfigs {
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
 
         public static final Supplier<Boolean> ROPE_ENABLED;
-        public static final Supplier<String> ROPE_OVERRIDE;
+        public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
         public static final Supplier<Boolean> ROPE_UNRESTRICTED;
         public static final Supplier<Boolean> ROPE_SLIDE;
 
@@ -1049,6 +1048,7 @@ public class CommonConfigs {
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
         }
+
         public static final Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
 
         public static final Supplier<Boolean> JAR_TAB;
@@ -1063,7 +1063,7 @@ public class CommonConfigs {
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name) {
-        return feature(builder, name,name, true);
+        return feature(builder, name, name, true);
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
@@ -1076,16 +1076,16 @@ public class CommonConfigs {
     public static boolean isEnabled(String key) {
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
-            case ModConstants.TRAPPED_PRESENT_NAME -> Utilities.PRESENT_ENABLED.get();
-            case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Utilities.FLAX_ENABLED.get();
-            case ModConstants.SOAP_BLOCK_NAME -> Utilities.SOAP_ENABLED.get();
+            case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get();
+            case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
+            case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
             case ModConstants.CHECKER_SLAB_NAME, ModConstants.CHECKER_VERTICAL_SLAB_NAME ->
                     Building.CHECKERBOARD_ENABLED.get();
             case "planter_rich", "planter_rich_soul" -> Building.PLANTER_ENABLED.get();
             case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
             case ModConstants.KEY_NAME ->
-                    Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Utilities.SAFE_ENABLED.get();
+                    Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
         };
     }

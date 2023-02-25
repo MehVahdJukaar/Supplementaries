@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrade
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCatchableMob;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;

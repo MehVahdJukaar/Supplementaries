@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected {
@@ -31,6 +32,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     //distance in blocks
     private double volume = CommonConfigs.Redstone.SPEAKER_RANGE.get();
     private Component customName;
+
+    public Object ccHack = null;
 
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPEAKER_BLOCK_TILE.get(), pos, state);

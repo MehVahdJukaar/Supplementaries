@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
@@ -37,7 +38,7 @@ public class ModTags {
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
     public static final TagKey<Block> WALL_LANTERNS_BLACKLIST = blockTag("wall_lanterns_blacklist");
     public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");
-    public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist")
+    public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

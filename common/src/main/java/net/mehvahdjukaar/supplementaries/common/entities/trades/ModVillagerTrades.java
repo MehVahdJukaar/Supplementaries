@@ -41,7 +41,7 @@ public class ModVillagerTrades {
     private static VillagerTrades.ItemListing[] makeRedMerchantTrades() {
         List<VillagerTrades.ItemListing> trades = new ArrayList<>();
 
-        if (CommonConfigs.Utilities.ROPE_ENABLED.get()) {
+        if (CommonConfigs.Functional.ROPE_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.ROPE.get(), 4, 1, 10));
         }
         trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
@@ -197,14 +197,14 @@ public class ModVillagerTrades {
             }
         });
         RegHelper.registerWanderingTraderTrades(1, listings -> {
-            if (CommonConfigs.Utilities.FLAX_ENABLED.get()) {
+            if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
                 for (int i = 0; i < 2; i++) {
                     listings.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
                 }
             }
         });
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
-            if (CommonConfigs.Utilities.FLAX_ENABLED.get())
+            if (CommonConfigs.Functional.FLAX_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
 

@@ -52,7 +52,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //true if it has run out of charges
     public boolean consumeCharge(Level world) {
-        if (CommonConfigs.Utilities.BAMBOO_SPIKES_ALTERNATIVE.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_ALTERNATIVE.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
         this.lastTicked = world.getGameTime();
         this.charges -= 1;
         this.setChanged();

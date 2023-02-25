@@ -61,6 +61,7 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
 
+
     private static Map<BlockState, VoxelShape> shapeMap;
     private static Map<BlockState, VoxelShape> collisionShapesMap;
 

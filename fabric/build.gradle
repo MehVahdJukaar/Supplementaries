@@ -48,6 +48,7 @@ dependencies {
     modImplementation("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:3929455")
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
+    modImplementation("curse.maven:cc-restitched-462672:3908334")
     //modImplementation("curse.maven:ctm-refabricated-633997:3834086")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")

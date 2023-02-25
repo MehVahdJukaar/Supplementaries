@@ -154,17 +154,17 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     public enum HourGlassSandType {
         DEFAULT(null, null, 0),
-        SAND(SAND_TEXTURE, null, CommonConfigs.Utilities.HOURGLASS_SAND.get()),
-        CONCRETE(WHITE_CONCRETE_TEXTURE, null, CommonConfigs.Utilities.HOURGLASS_CONCRETE.get()),
-        GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, CommonConfigs.Utilities.HOURGLASS_DUST.get()),
-        SUGAR(ModTextures.SUGAR, Items.SUGAR, CommonConfigs.Utilities.HOURGLASS_SUGAR.get()),
-        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, CommonConfigs.Utilities.HOURGLASS_GLOWSTONE.get()),
-        REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, CommonConfigs.Utilities.HOURGLASS_REDSTONE.get()),
-        BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, CommonConfigs.Utilities.HOURGLASS_BLAZE_POWDER.get()),
-        FORGE_DUST(HOURGLASS_GUNPOWDER, null, CommonConfigs.Utilities.HOURGLASS_DUST.get()),
-        HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, CommonConfigs.Utilities.HOURGLASS_HONEY.get()),
-        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, CommonConfigs.Utilities.HOURGLASS_SLIME.get()),
-        ASH(ModTextures.ASH, ModRegistry.ASH_BLOCK.get().asItem(), CommonConfigs.Utilities.HOURGLASS_DUST.get());
+        SAND(SAND_TEXTURE, null, CommonConfigs.Functional.HOURGLASS_SAND.get()),
+        CONCRETE(WHITE_CONCRETE_TEXTURE, null, CommonConfigs.Functional.HOURGLASS_CONCRETE.get()),
+        GUNPOWDER(HOURGLASS_GUNPOWDER, Items.GUNPOWDER, CommonConfigs.Functional.HOURGLASS_DUST.get()),
+        SUGAR(ModTextures.SUGAR, Items.SUGAR, CommonConfigs.Functional.HOURGLASS_SUGAR.get()),
+        GLOWSTONE_DUST(HOURGLASS_GLOWSTONE, Items.GLOWSTONE_DUST, CommonConfigs.Functional.HOURGLASS_GLOWSTONE.get()),
+        REDSTONE_DUST(HOURGLASS_REDSTONE, Items.REDSTONE, CommonConfigs.Functional.HOURGLASS_REDSTONE.get()),
+        BLAZE_POWDER(HOURGLASS_BLAZE, Items.BLAZE_POWDER, CommonConfigs.Functional.HOURGLASS_BLAZE_POWDER.get()),
+        FORGE_DUST(HOURGLASS_GUNPOWDER, null, CommonConfigs.Functional.HOURGLASS_DUST.get()),
+        HONEY(HONEY_TEXTURE, Items.HONEY_BOTTLE, CommonConfigs.Functional.HOURGLASS_HONEY.get()),
+        SLIME(SLIME_TEXTURE, Items.SLIME_BALL, CommonConfigs.Functional.HOURGLASS_SLIME.get()),
+        ASH(ModTextures.ASH, ModRegistry.ASH_BLOCK.get().asItem(), CommonConfigs.Functional.HOURGLASS_DUST.get());
 
         @Nullable
         public final ResourceLocation texture;

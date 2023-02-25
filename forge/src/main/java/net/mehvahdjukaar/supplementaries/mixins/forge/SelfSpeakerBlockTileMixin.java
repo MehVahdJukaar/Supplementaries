@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(SpeakerBlockTile.class)
 public abstract class SelfSpeakerBlockTileMixin extends BlockEntity {
 
-    public SelfSpeakerBlockTileMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
+    private SelfSpeakerBlockTileMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
         super(arg, arg2, arg3);
     }
 

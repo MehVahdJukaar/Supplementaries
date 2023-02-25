@@ -56,7 +56,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public boolean canItemCatch(Entity e) {
         EntityType<?> type = e.getType();
-        if (CommonConfigs.Utilities.JAR_AUTO_DETECT.get() && this.canFitEntity(e) && !(e instanceof Monster))
+        if (CommonConfigs.Functional.JAR_AUTO_DETECT.get() && this.canFitEntity(e) && !(e instanceof Monster))
             return true;
         return type.is(ModTags.JAR_CATCHABLE) ||
                 (type.is(ModTags.JAR_BABY_CATCHABLE) && e instanceof LivingEntity le && le.isBaby()) ||
@@ -94,7 +94,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     private Boolean captureEnabled() {
-        return CommonConfigs.Utilities.JAR_CAPTURE.get();
+        return CommonConfigs.Functional.JAR_CAPTURE.get();
     }
 
     @Override
@@ -230,7 +230,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (CommonConfigs.Utilities.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 if (DUMMY_TILE == null)
@@ -247,7 +247,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        if (CommonConfigs.Utilities.JAR_ITEM_DRINK.get()) {
+        if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
             return UseAnim.DRINK;
         }
         return UseAnim.NONE;
