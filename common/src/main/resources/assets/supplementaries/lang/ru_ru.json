@@ -58,7 +58,7 @@
   "message.supplementaries.wall_lantern": "Можно повесить на стену",
   "message.supplementaries.command.configs_reloaded": "Конфиги перезагружены",
   "block.supplementaries.copper_lantern": "Медный фонарь",
-
+  "item.supplementaries.quiver": = "Колчан",
   "message.supplementaries.hourglass": "Использует любую пыль, песок или порох",
   "message.supplementaries.cage": "Удерживайте [Shift], чтобы поставить",
   "gui.supplementaries.safe.name": "%2$s игрока %1$s",
