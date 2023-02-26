@@ -25,6 +25,15 @@
       "uuid": "93b47b5d-37ef-47be-944b-754f1a594a18",
       "has_statue": true
     },
+    "CakeTaco": {
+      "has_statue": true,
+      "has_globe": true,
+      "uuid": "cf722cd7-c93e-4de9-811b-77d146f146c8"
+    },
+    "Wofrion": {
+      "has_statue": true,
+      "uuid": "c0c1d728-cc21-4ee7-a65f-8d6c26899944"
+    },
     "AdaraChristine": {},
     "Houston Millsap": {},
     "MinecraftDadHappyVibes": {},
