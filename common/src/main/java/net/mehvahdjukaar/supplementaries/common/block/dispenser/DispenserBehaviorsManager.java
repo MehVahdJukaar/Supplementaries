@@ -1,5 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
+
+import net.mehvahdjukaar.moonlight.api.fluids.FluidContainerList;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
@@ -15,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -25,13 +30,23 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public class DispenserBehaviorsManager {
 
 
-    public static void registerBehaviors() {
+    //hacky. uses default tags to register stuff like bricks and fluids. wont properly work with reloads
+    //TODO: make a reload safe dispenser map for these
+    public static void registerBehaviors(RegistryAccess registryAccess) {
         boolean isForge = PlatformHelper.getPlatform().isForge();
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
+
+        for(SoftFluid f : registryAccess.registryOrThrow(SoftFluidRegistry.getRegistryKey())){
+            registerFluidBehavior(f);
+        }
 
         if (CommonConfigs.Building.PANCAKES_ENABLED.get() && CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
             DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
@@ -121,6 +136,24 @@ public class DispenserBehaviorsManager {
         }
     }
 
-    //TODO: generalize for fluid consumer & put into library
+    //TODO: addback
+    public static void registerFluidBehavior(SoftFluid f) {
+        Set<Item> itemSet = new HashSet<>();
+        Collection<FluidContainerList.Category> categories = f.getContainerList().getCategories();
+        for (FluidContainerList.Category c : categories) {
+            Item empty = c.getEmptyContainer();
+            //prevents registering stuff twice
+            if (empty != Items.AIR && !itemSet.contains(empty)) {
+                DispenserHelper. registerCustomBehavior(new FillFluidHolderBehavior(empty));
+                itemSet.add(empty);
+            }
+            for (Item full : c.getFilledItems()) {
+                if (full != Items.AIR && !itemSet.contains(full)) {
+                    DispenserHelper. registerCustomBehavior(new FillFluidHolderBehavior(full));
+                    itemSet.add(full);
+                }
+            }
+        }
+    }
 
 }

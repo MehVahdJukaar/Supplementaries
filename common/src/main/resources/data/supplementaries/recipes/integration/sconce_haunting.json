@@ -1,0 +1,27 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "supplementaries:sconce"
+    }
+  ],
+  "results": [
+    {
+      "item": "supplementaries:sconce_soul"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "create",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce_soul"
+    }
+  ]
+}

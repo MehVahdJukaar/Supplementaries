@@ -70,18 +70,18 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded  " + temp.size() + " flute songs");
     }
 
+    private static void addSong(Song song) {
+        SONGS.put(song.getName(), song);
+        SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), song.getWeight()));
+    }
+
     public static void acceptClientSongs(List<Song> songs) {
         SONGS.clear();
         SONG_WEIGHTED_LIST.clear();
         songs.forEach(SongsManager::addSong);
     }
 
-    private static void addSong(Song song) {
-        SONGS.put(song.getName(), song);
-        SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), song.getWeight()));
-    }
-
-    public static void sendSongsToClient(ServerPlayer player) {
+    public static void sendDataToClient(ServerPlayer player) {
         NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
     }
 

@@ -1,0 +1,23 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "supplementaries:bamboo_spikes_tipped"
+    }
+  ],
+  "results": [
+    {
+      "item": "supplementaries:bamboo_spikes"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "create",
+      "type": "forge:mod_loaded"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bamboo_spikes_tipped"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "items": ["minecraft:gunpowder"],
+  "duration": 150,
+  "texture":  "supplementaries:blocks/hourglass_gunpowder"
+}

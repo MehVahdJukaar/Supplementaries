@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:trapped_present","required":false},
+    {"id":"supplementaries:trapped_present_white","required":false},
+    {"id":"supplementaries:trapped_present_orange","required":false},
+    {"id":"supplementaries:trapped_present_yellow","required":false},
+    {"id":"supplementaries:trapped_present_red","required":false},
+    {"id":"supplementaries:trapped_present_blue","required":false},
+    {"id":"supplementaries:trapped_present_cyan","required":false},
+    {"id":"supplementaries:trapped_present_light_blu\e","required":false},
+    {"id":"supplementaries:trapped_present_lime","required":false},
+    {"id":"supplementaries:trapped_present_green","required":false},
+    {"id":"supplementaries:trapped_present_magenta","required":false},
+    {"id":"supplementaries:trapped_present_pink","required":false},
+    {"id":"supplementaries:trapped_present_purple","required":false},
+    {"id":"supplementaries:trapped_present_black","required":false},
+    {"id":"supplementaries:trapped_present_gray","required":false},
+    {"id":"supplementaries:trapped_present_light_gray","required":false},
+    {"id":"supplementaries:trapped_present_brown","required":false}
+  ]
+}

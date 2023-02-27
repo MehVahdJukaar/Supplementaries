@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,6 +45,13 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+        }
+        if (CommonConfigs.Building.DOUBLE_IRON_GATE.get() && facing.getAxis().isVertical() &&
+                facingState.is(this) && !stateIn.getValue(POWERED)) {
+            boolean open = facingState.getValue(OPEN);
+            if (open != stateIn.getValue(OPEN) && stateIn.getValue(FACING) == facingState.getValue(FACING)) {
+                stateIn = stateIn.setValue(OPEN, open);
+            }
         }
         return stateIn;
     }

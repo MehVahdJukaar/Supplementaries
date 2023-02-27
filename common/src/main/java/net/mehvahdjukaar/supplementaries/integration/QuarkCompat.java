@@ -54,7 +54,7 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static int getSacksInBackpack(ItemStack backpack) {
+    public static float getEncumbermentFromBackpack(ItemStack backpack) {
         throw new AssertionError();
     }
 

@@ -35,6 +35,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
+import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -267,6 +269,12 @@ public class CreateCompatImpl {
 
     private static class HourglassBehavior implements MovementBehaviour {
 
+        private HourglassTimeData sandData;
+        private float progress;
+        private float prevProgress;
+
+        private TextureAtlasSprite cachedTexture;
+
         @Override
         public void tick(MovementContext context) {
             UnaryOperator<Vec3> rot = context.rotation;
@@ -276,18 +284,24 @@ public class CreateCompatImpl {
 
             CompoundTag com = context.tileData;
 
-            HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
-            float progress = com.getFloat("Progress");
-            float prevProgress = com.getFloat("PrevProgress");
+            var prevSandData = this.sandData;
+            NonNullList<ItemStack> l = NonNullList.create();
+            ContainerHelper.loadAllItems(com, l);
+            this.sandData = HourglassTimesManager.getData(l.get(0).getItem());
+            if(prevSandData != sandData && context.world.isClientSide){
+                this.cachedTexture = sandData.computeSprite(l.get(0),context.world);
+            }
+            this.progress = com.getFloat("Progress");
+            this.prevProgress = com.getFloat("PrevProgress");
 
 
-            if (!sandType.isEmpty()) {
+            if (!sandData.isEmpty()) {
                 prevProgress = progress;
 
                 if (rotation == Rotation.CLOCKWISE_90 && progress != 1) {
-                    progress = Math.min(progress + sandType.increment, 1f);
+                    progress = Math.min(progress + sandData.getIncrement(), 1f);
                 } else if (rotation == Rotation.COUNTERCLOCKWISE_90 && progress != 0) {
-                    progress = Math.max(progress - sandType.increment, 0f);
+                    progress = Math.max(progress - sandData.getIncrement(), 0f);
                 }
 
             }
@@ -301,15 +315,8 @@ public class CreateCompatImpl {
         @OnlyIn(Dist.CLIENT)
         @Override
         public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
-
-            CompoundTag com = context.tileData;
-            HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
-            float progress = com.getFloat("Progress");
-            float prevProgress = com.getFloat("PrevProgress");
-            NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(com, stacks);
             float partialTicks = 1;
-            if (sandType.isEmpty()) return;
+            if (sandData.isEmpty()) return;
 
             Vec3 v = context.position;
             if (v == null) {
@@ -319,11 +326,9 @@ public class CreateCompatImpl {
 
             int light = LevelRenderer.getLightColor(context.world, pos);
 
-            TextureAtlasSprite sprite = sandType.getSprite(stacks.get(0), renderWorld);
-
             float h = Mth.lerp(partialTicks, prevProgress, progress);
             Direction dir = context.state.getValue(HourGlassBlock.FACING);
-            HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light, 0, sprite, h, dir);
+            HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light, 0, cachedTexture, h, dir);
         }
 
     }

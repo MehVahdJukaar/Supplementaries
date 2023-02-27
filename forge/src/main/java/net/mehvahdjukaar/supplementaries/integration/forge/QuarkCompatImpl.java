@@ -2,11 +2,9 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
@@ -18,11 +16,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -33,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
@@ -43,7 +38,6 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
-import vazkii.quark.api.event.UsageTickerEvent;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
@@ -88,20 +82,15 @@ public class QuarkCompatImpl {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 
-    public static int getSacksInBackpack(ItemStack stack) {
-        int j = 0;
+    public static float getEncumbermentFromBackpack(ItemStack stack) {
+        float j = 0;
         if (stack.getItem() instanceof BackpackItem) {
             LazyOptional<IItemHandler> handlerOpt = stack.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
             if (handlerOpt.isPresent()) {
                 IItemHandler handler = handlerOpt.resolve().get();
                 for (int i = 0; i < handler.getSlots(); ++i) {
                     ItemStack slotItem = handler.getStackInSlot(i);
-                    if (slotItem.getItem() instanceof SackItem) {
-                        CompoundTag tag = slotItem.getTag();
-                        if (tag != null && tag.contains("BlockEntityTag")) {
-                            j++;
-                        }
-                    }
+                    j += SackItem.getEncumber(slotItem);
                 }
             }
         }

@@ -31,7 +31,6 @@ public class ModTags {
     public static final TagKey<Block> POURING_TANK = blockTag("pouring_tank");
     public static final TagKey<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final TagKey<Block> PANE_CONNECTION = blockTag("pane_connection");
-    public static final TagKey<Block> CONCRETE_POWDERS = blockTag("concrete_powders");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
     public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable");
@@ -41,6 +40,7 @@ public class ModTags {
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
 
     //item tags
+    public static final TagKey<Item> CONCRETE_POWDERS = itemTag("concrete_powders");
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");
     public static final TagKey<Item> COOKIES = itemTag("cookies");
@@ -62,6 +62,7 @@ public class ModTags {
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
+    public static final TagKey<Item> OVERENCUMBERING = itemTag("overencumbering");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");

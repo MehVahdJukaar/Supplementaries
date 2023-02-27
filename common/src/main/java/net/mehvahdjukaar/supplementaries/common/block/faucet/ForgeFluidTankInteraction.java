@@ -26,7 +26,7 @@ class ForgeFluidTankInteraction implements
 
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile) {
-        return FluidsUtil.tryFillFluidTank(tile, faucetTank) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+        return FluidsUtil.tryFillFluidTank(tile, faucetTank) ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 }
 

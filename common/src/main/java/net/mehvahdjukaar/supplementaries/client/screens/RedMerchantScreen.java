@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
-public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainerMenu> {
+public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantContainerMenu> {
     private static final ResourceLocation TEXTURE = ModTextures.RED_MERCHANT_GUI_TEXTURE;
     private static final MutableComponent TRADES_LABEL = Component.translatable("merchant.trades");
     private static final MutableComponent DEPRECATED_TOOLTIP = Component.translatable("merchant.deprecated");
@@ -34,7 +34,7 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
     private int scrollOff;
     private boolean isDragging;
 
-    public RedMerchantGui(RedMerchantContainerMenu p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
+    public RedMerchantScreen(RedMerchantContainerMenu p_i51080_1_, Inventory p_i51080_2_, Component p_i51080_3_) {
         super(p_i51080_1_, p_i51080_2_, p_i51080_3_);
         this.imageWidth = 276;
         this.inventoryLabelX = 107;
@@ -296,19 +296,19 @@ public class RedMerchantGui extends AbstractContainerScreen<RedMerchantContainer
         }
 
         public void renderToolTip(PoseStack poseStack, int x, int y) {
-            if (this.isHovered && RedMerchantGui.this.menu.getOffers().size() > this.index + RedMerchantGui.this.scrollOff) {
+            if (this.isHovered && RedMerchantScreen.this.menu.getOffers().size() > this.index + RedMerchantScreen.this.scrollOff) {
                 ItemStack $$5;
                 if (x < this.x + 20) {
-                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getCostA();
-                    RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
+                    $$5 = (RedMerchantScreen.this.menu).getOffers().get(this.index + RedMerchantScreen.this.scrollOff).getCostA();
+                    RedMerchantScreen.this.renderTooltip(poseStack, $$5, x, y);
                 } else if (x < this.x + 50 && x > this.x + 30) {
-                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getCostB();
+                    $$5 = (RedMerchantScreen.this.menu).getOffers().get(this.index + RedMerchantScreen.this.scrollOff).getCostB();
                     if (!$$5.isEmpty()) {
-                        RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
+                        RedMerchantScreen.this.renderTooltip(poseStack, $$5, x, y);
                     }
                 } else if (x > this.x + 65) {
-                    $$5 = (RedMerchantGui.this.menu).getOffers().get(this.index + RedMerchantGui.this.scrollOff).getResult();
-                    RedMerchantGui.this.renderTooltip(poseStack, $$5, x, y);
+                    $$5 = (RedMerchantScreen.this.menu).getOffers().get(this.index + RedMerchantScreen.this.scrollOff).getResult();
+                    RedMerchantScreen.this.renderTooltip(poseStack, $$5, x, y);
                 }
             }
 

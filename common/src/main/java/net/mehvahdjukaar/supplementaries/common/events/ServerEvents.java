@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
@@ -123,14 +124,15 @@ public class ServerEvents {
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-        SongsManager.sendSongsToClient(player);
+        SongsManager.sendDataToClient(player);
         CapturedMobHandler.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
+        HourglassTimesManager.sendDataToClient(player);
     }
 
     @EventCalled
     public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
-        ModSetup.tagDependantSetup();
+        ModSetup.tagDependantSetup(registryAccess);
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

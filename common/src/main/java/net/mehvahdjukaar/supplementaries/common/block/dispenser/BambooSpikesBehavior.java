@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -25,7 +26,7 @@ class BambooSpikesBehavior extends DispenserHelper.AdditionalDispenserBehavior {
         BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof BambooSpikesBlock) {
-            if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, stack)) {
+            if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, PotionUtils.getPotion(stack))) {
                 return InteractionResultHolder.success(new ItemStack(Items.GLASS_BOTTLE));
             }
             return InteractionResultHolder.fail(stack);

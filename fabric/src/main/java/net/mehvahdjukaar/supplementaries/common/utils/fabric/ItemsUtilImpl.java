@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,18 +26,17 @@ public class ItemsUtilImpl {
         return false;
     }
 
-    public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
+    public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
+        float amount = 0;
         var inventory = player.getInventory();
 
         for (int idx = 0; idx < inventory.getContainerSize(); idx++) {
             ItemStack slotItem = inventory.getItem(idx);
-            if(SackItem.isNotEmpty(slotItem)){
-                amount++;
-            }
+            amount += SackItem.getEncumber(slotItem);
         }
         if (CompatHandler.QUARK) {
             ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
-            amount += QuarkCompat.getSacksInBackpack(backpack);
+            amount += QuarkCompat.getEncumbermentFromBackpack(backpack);
         }
         return amount;
     }

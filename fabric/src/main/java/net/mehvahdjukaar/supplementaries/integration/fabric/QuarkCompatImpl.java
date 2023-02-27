@@ -62,4 +62,8 @@ public class QuarkCompatImpl {
     public static ItemStack getSlimeBucket(Entity entity) {
         return ItemStack.EMPTY;
     }
+
+    public static float getEncumbermentFromBackpack(ItemStack backpack) {
+        return 0;
+    }
 }

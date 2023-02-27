@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardGui;
+import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
@@ -261,7 +261,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        BlackBoardGui.open(this);
+        BlackBoardScreen.open(this);
     }
 
 

@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.stream.IntStream;
 
-public class SignPostGui extends Screen {
+public class SignPostScreen extends Screen {
     private TextFieldHelper textInputUtil;
     /**
      * The index of the line that is being edited.
@@ -43,7 +43,7 @@ public class SignPostGui extends Screen {
 
     private ModelPart signModel;
 
-    private SignPostGui(SignPostBlockTile teSign) {
+    private SignPostScreen(SignPostBlockTile teSign) {
         super(Component.translatable("sign.edit"));
         this.tile = teSign;
         this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.getTextHolder()::getLine).map(Component::getString).toArray(String[]::new);
@@ -52,7 +52,7 @@ public class SignPostGui extends Screen {
     }
 
     public static void open(SignPostBlockTile teSign) {
-        Minecraft.getInstance().setScreen(new SignPostGui(teSign));
+        Minecraft.getInstance().setScreen(new SignPostScreen(teSign));
     }
 
     @Override

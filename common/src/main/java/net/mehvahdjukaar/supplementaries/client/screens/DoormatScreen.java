@@ -3,14 +3,13 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -18,29 +17,32 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.stream.IntStream;
 
-public class HangingSignGui extends Screen {
+public class DoormatScreen extends Screen {
     private TextFieldHelper textInputUtil;
     // The index of the line that is being edited.
     private int editLine = 0;
     //for ticking cursor
     private int updateCounter;
-    private final HangingSignBlockTile tileSign;
+    private final DoormatBlockTile tileSign;
     private final String[] cachedLines;
 
-    private HangingSignGui(HangingSignBlockTile teSign) {
-        super(Component.translatable("sign.edit"));
+    private DoormatScreen(DoormatBlockTile teSign) {
+        super(Component.translatable("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
-        this.cachedLines = IntStream.range(0, HangingSignBlockTile.MAX_LINES).mapToObj(teSign.getTextHolder()::getLine).map(Component::getString).toArray(String[]::new);
-
+        this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES)
+                .mapToObj(teSign.textHolder::getLine)
+                .map(Component::getString).toArray(String[]::new);
     }
 
-    public static void open(HangingSignBlockTile teSign) {
-        Minecraft.getInstance().setScreen(new HangingSignGui(teSign));
+    public static void open(DoormatBlockTile teSign) {
+        Minecraft.getInstance().setScreen(new DoormatScreen(teSign));
     }
 
     @Override
@@ -57,7 +59,7 @@ public class HangingSignGui extends Screen {
     }
 
     public void scrollText(int amount) {
-        this.editLine = Math.floorMod(this.editLine - amount, HangingSignBlockTile.MAX_LINES);
+        this.editLine = Math.floorMod(this.editLine - amount, DoormatBlockTile.MAX_LINES);
         this.textInputUtil.setCursorToEnd();
     }
 
@@ -110,21 +112,18 @@ public class HangingSignGui extends Screen {
     protected void init() {
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_169820_) -> {
-            this.close();
-        }));
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (button) -> this.close()));
         //this.tileSign.setEditable(false);
-        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (t) -> {
-            this.cachedLines[this.editLine] = t;
-            this.tileSign.getTextHolder().setLine(this.editLine, Component.literal(t));
+        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (h) -> {
+            this.cachedLines[this.editLine] = h;
+            this.tileSign.textHolder.setLine(this.editLine, Component.literal(h));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
-                (s) -> this.minecraft.font.width(s) <= tileSign.getTextHolder().getMaxLineVisualWidth());
+                (s) -> this.minecraft.font.width(s) <= tileSign.textHolder.getMaxLineVisualWidth());
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
 
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         this.renderBackground(poseStack);
 
@@ -132,32 +131,39 @@ public class HangingSignGui extends Screen {
 
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
+
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
+
         poseStack.pushPose();
 
         poseStack.translate((this.width / 2d), 0.0D, 50.0D);
         poseStack.scale(93.75F, -93.75F, 93.75F);
-        poseStack.translate(0.0D, -1.3125D, 0.0D);
+        poseStack.translate(0.0D, -1.25D, 0.0D);
+
         // renders sign
         poseStack.pushPose();
 
         poseStack.mulPose(RotHlpr.Y90);
-        poseStack.translate(0, -0.5 + 0.1875, -0.5);
+        poseStack.translate(0, -0.5, -0.5);
+        poseStack.mulPose(RotHlpr.Z90);
+
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        RenderUtil.renderBlockModel(ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(this.tileSign.woodType), poseStack, bufferSource, blockRenderer,
-                15728880, OverlayTexture.NO_OVERLAY, true);
+        BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
+        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
+
 
         //renders text
         boolean blink = this.updateCounter / 6 % 2 == 0;
 
-        poseStack.translate(0, -0.010416667F, 0.0625 + 0.005);
+        poseStack.translate(0, 0.0625 - 2 * 0.010416667F, 0.0625 + 0.005);
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-        TextUtil.renderGuiText(this.tileSign.getTextHolder().getGUIRenderTextProperties(),
-                this.cachedLines, this.font, poseStack, bufferSource, this.textInputUtil.getCursorPos(),
-                this.textInputUtil.getSelectionPos(), this.editLine, blink, HangingSignBlockTileRenderer.LINE_SEPARATION);
+        TextUtil.renderGuiText(this.tileSign.textHolder.getGUIRenderTextProperties(),
+                this.cachedLines, this.font, poseStack, bufferSource,
+                this.textInputUtil.getCursorPos(), this.textInputUtil.getSelectionPos(),
+                this.editLine, blink, DoormatBlockTileRenderer.LINE_SEPARATION);
 
         poseStack.popPose();
         Lighting.setupFor3DItems();

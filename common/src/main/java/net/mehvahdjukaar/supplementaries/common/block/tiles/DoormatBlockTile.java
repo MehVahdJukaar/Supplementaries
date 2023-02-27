@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.client.screens.DoormatGui;
+import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
@@ -50,6 +50,6 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        DoormatGui.open(this);
+        DoormatScreen.open(this);
     }
 }

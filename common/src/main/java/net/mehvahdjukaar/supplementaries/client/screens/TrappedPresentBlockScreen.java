@@ -22,13 +22,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
+public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
 
-    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentBlockGui> GUI_FACTORY =
+    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentBlockScreen> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof TrappedPresentBlockTile presentBlockTile) {
-                    return new TrappedPresentBlockGui(container, inventory, title, presentBlockTile);
+                    return new TrappedPresentBlockScreen(container, inventory, title, presentBlockTile);
                 }
                 return null;
             };
@@ -41,7 +41,7 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
     private boolean needsInitialization = true;
 
 
-    public TrappedPresentBlockGui(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
+    public TrappedPresentBlockScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -195,13 +195,13 @@ public class TrappedPresentBlockGui extends AbstractContainerScreen<TrappedPrese
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
             if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                TrappedPresentBlockGui.this.renderTooltip(matrixStack, Component.translatable("gui.supplementaries.present.trapped"), x, y);
+                TrappedPresentBlockScreen.this.renderTooltip(matrixStack, Component.translatable("gui.supplementaries.present.trapped"), x, y);
             }
         }
 
         @Override
         public void onPress() {
-            TrappedPresentBlockGui.this.pack();
+            TrappedPresentBlockScreen.this.pack();
         }
 
         @Override

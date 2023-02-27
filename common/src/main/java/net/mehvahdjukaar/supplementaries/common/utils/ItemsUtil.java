@@ -120,7 +120,7 @@ public class ItemsUtil {
     }
 
     @ExpectPlatform
-    public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
+    public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
         throw new AssertionError();
     }
 

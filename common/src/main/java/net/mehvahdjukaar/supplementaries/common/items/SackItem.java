@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -50,12 +51,12 @@ public class SackItem extends BlockItem {
             //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
 
             //keep refreshing for better accuracy
-            int amount = 0;
-            amount = ItemsUtil.getAllSacksInInventory(stack, player, amount);
+            float amount;
+            amount = ItemsUtil.getEncumbermentFromInventory(stack, player);
             int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
-                        20 * 10, ((amount - 1) / inc) - 1, false, false, true));
+                        20 * 10, (((((int)amount) - 1) / inc) - 1), false, false, true));
             }
         }
     }
@@ -142,18 +143,22 @@ public class SackItem extends BlockItem {
         entity.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + entity.getLevel().getRandom().nextFloat() * 0.4F);
     }
 
-    public static boolean isNotEmpty(ItemStack slotItem) {
+    //0 nothing, 1 non empty sack. In between for custom non full stacks
+    public static float getEncumber(ItemStack slotItem) {
         if (slotItem.getItem() instanceof SackItem) {
             CompoundTag tag = slotItem.getTag();
             if (tag != null) {
-                var bet = tag.get("BlockEntityTag");
+                var bet = tag.getCompound("BlockEntityTag");
                 if (bet != null) {
-                    var l = tag.getList("Items", 9);
-                    return !l.isEmpty();
+                    var l = bet.getList("Items", 10);
+                    if (!l.isEmpty()) return 1;
                 }
             }
+            return 0;
+        } else if (slotItem.is(ModTags.OVERENCUMBERING)) {
+            return slotItem.getCount() / (float)slotItem.getMaxStackSize();
         }
-        return false;
+        return 0;
     }
 
 }

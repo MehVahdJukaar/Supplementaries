@@ -14,16 +14,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -117,20 +113,19 @@ public class ItemsUtilImpl {
         return null;
     }
 
-    public static int getAllSacksInInventory(ItemStack stack, ServerPlayer player, int amount) {
+    public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
+        float amount = 0;
         AtomicReference<IItemHandler> reference = new AtomicReference<>();
         player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(reference::set);
         if (reference.get() != null) {
             for (int idx = 0; idx < reference.get().getSlots(); idx++) {
                 ItemStack slotItem = reference.get().getStackInSlot(idx);
-                if(SackItem.isNotEmpty(slotItem)){
-                    amount++;
-                }
+                amount += SackItem.getEncumber(slotItem);
             }
 
             if (CompatHandler.QUARK) {
                 ItemStack backpack = player.getItemBySlot(EquipmentSlot.CHEST);
-                amount += QuarkCompat.getSacksInBackpack(backpack);
+                amount += QuarkCompat.getEncumbermentFromBackpack(backpack);
             }
         }
         return amount;

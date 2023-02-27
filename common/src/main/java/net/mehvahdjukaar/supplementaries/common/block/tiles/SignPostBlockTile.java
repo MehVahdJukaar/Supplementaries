@@ -9,7 +9,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.supplementaries.client.screens.SignPostGui;
+import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -156,7 +156,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        SignPostGui.open(this);
+        SignPostScreen.open(this);
     }
 
     public boolean isSlim() {

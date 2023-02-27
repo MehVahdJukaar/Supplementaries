@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.supplementaries.client.screens.HangingSignGui;
+import net.mehvahdjukaar.supplementaries.client.screens.HangingSignScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -91,7 +91,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
-        HangingSignGui.open(this);
+        HangingSignScreen.open(this);
     }
 
     @Override

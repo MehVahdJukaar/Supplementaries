@@ -14,7 +14,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class SpeakerBlockGui extends Screen {
+public class SpeakerBlockScreen extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
     private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
     private static final Component ACTION_BAR_TEXT = Component.translatable("gui.supplementaries.speaker_block.action_bar_message");
@@ -31,7 +31,7 @@ public class SpeakerBlockGui extends Screen {
     private ForgeSlider volumeSlider;
     private final double initialVolume;
 
-    public SpeakerBlockGui(SpeakerBlockTile te) {
+    public SpeakerBlockScreen(SpeakerBlockTile te) {
         super(EDIT);
         this.tileSpeaker = te;
         this.mode = tileSpeaker.getMode();
@@ -40,7 +40,7 @@ public class SpeakerBlockGui extends Screen {
     }
 
     public static void open(SpeakerBlockTile te) {
-        Minecraft.getInstance().setScreen(new SpeakerBlockGui(te));
+        Minecraft.getInstance().setScreen(new SpeakerBlockScreen(te));
     }
 
     @Override

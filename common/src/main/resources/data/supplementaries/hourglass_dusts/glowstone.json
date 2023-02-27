@@ -1,0 +1,5 @@
+{
+  "items": ["minecraft:glowstone"],
+  "duration": 190,
+  "texture":  "supplementaries:blocks/hourglass_glowstone"
+}

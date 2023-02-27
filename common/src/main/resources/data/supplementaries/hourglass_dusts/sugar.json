@@ -1,0 +1,5 @@
+{
+  "items": ["minecraft:sugar","supplementaries:sugar_block"],
+  "duration": 40,
+  "texture":  "supplementaries:blocks/sugar_block"
+}

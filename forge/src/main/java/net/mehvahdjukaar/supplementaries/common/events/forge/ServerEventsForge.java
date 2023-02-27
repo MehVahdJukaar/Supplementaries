@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
@@ -130,9 +131,12 @@ public class ServerEventsForge {
         }
     }
 
+    @Deprecated(forRemoval = true)
     @SubscribeEvent
-    public static void onTagUpdate(OnDatapackSyncEvent event) {
+    public static void onTagUpdated(TagsUpdatedEvent event) {
+        RegistryAccessJsonReloadListener.runReloads(event.getRegistryAccess());
     }
+
 
     @SubscribeEvent
     public static void onDataSync(OnDatapackSyncEvent event) {

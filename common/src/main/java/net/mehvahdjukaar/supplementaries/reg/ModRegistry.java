@@ -282,7 +282,7 @@ public class ModRegistry {
     //sack
     public static final Supplier<Block> SACK = regBlock(SACK_NAME, () -> new SackBlock(
             BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
-                    .strength(1F)
+                    .strength(0.8f)
                     .sound(ModSounds.SACK)
     ));
     public static final Supplier<BlockEntityType<SackBlockTile>> SACK_TILE = regTile(

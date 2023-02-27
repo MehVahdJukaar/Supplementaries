@@ -70,7 +70,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private void updateRenderData() {
         if (this.sheared) {
-            this.renderData = Pair.of(GlobeModel.SHEARED, GLOBE_SHEARED_TEXTURE);
+            this.renderData = Pair.of(GlobeModel.SHEARED,
+                    sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
+                    GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
             this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
         } else this.renderData = Pair.of(GlobeModel.GLOBE, null);

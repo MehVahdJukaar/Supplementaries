@@ -115,7 +115,8 @@ public class SackBlock extends FallingBlock implements EntityBlock {
                 ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModEntities.FALLING_SACK.get(),
                         level, pos, state, true);
                 entity.blockData = tile.saveWithoutMetadata();
-                entity.setHurtsEntities(1, 20);
+                float power = this.getAnalogOutputSignal(state, level, pos) / 15f;
+                entity.setHurtsEntities(1 + power * 5, 40);
             }
         }
     }
@@ -238,7 +239,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
             int i = 0;
             float f = 0.0F;
-            int slots = tile.getUnlockedSlots();
+            int slots = SackBlockTile.getUnlockedSlots();
             for (int j = 0; j < slots; ++j) {
                 ItemStack itemstack = tile.getItem(j);
                 if (!itemstack.isEmpty()) {

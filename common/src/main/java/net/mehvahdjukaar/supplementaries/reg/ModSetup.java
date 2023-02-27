@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -108,7 +109,7 @@ public class ModSetup {
     }
 
     //events on setup. fire on world load
-    public static void tagDependantSetup() {
+    public static void tagDependantSetup(RegistryAccess registryAccess) {
         if (!firstTagLoad) {
             //using this as a post setup event that can access tags
             Stopwatch watch = Stopwatch.createStarted();
@@ -126,7 +127,7 @@ public class ModSetup {
             }
 
             //stuff that needs tags
-            DispenserBehaviorsManager.registerBehaviors();
+            DispenserBehaviorsManager.registerBehaviors(registryAccess);
             InteractEventOverrideHandler.registerOverrides();
 
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());

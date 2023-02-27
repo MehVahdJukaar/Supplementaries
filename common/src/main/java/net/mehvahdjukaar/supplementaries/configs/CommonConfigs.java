@@ -12,10 +12,13 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -252,7 +255,7 @@ public class CommonConfigs {
             IRON_GATE_ENABLED = feature(builder);
             DOUBLE_IRON_GATE = builder.comment("Allows two iron gates to be opened simultaneously when on top of the other")
                     .define("double_opening", true);
-            CONSISTENT_GATE = builder.comment("Makes iron (ang gold) gates behave like their door counterpart so for example iron gates will only be openeable by redstone")
+            CONSISTENT_GATE = builder.comment("Makes iron (ang gold) gates behave like their door counterpart so for example iron gates will only be openable by redstone")
                     .define("door-like_gates", false);
             builder.pop();
 
@@ -519,28 +522,6 @@ public class CommonConfigs {
                     .define("jar_liquids", true);
             builder.pop();
 
-            builder.push("hourglass");
-            HOURGLASS_ENABLED = feature(builder);
-            HOURGLASS_SUGAR = builder.comment("Time in ticks for sugar")
-                    .define("sugar_time", 40, 0, 10000);
-            HOURGLASS_SAND = builder.comment("Time in ticks for sand blocks")
-                    .define("sand_time", 70, 0, 10000);
-            HOURGLASS_CONCRETE = builder.comment("Time in ticks for concrete blocks")
-                    .define("concrete_time", 105, 0, 10000);
-            HOURGLASS_DUST = builder.comment("Time in ticks for generic dust")
-                    .define("dust_time", 150, 0, 10000);
-            HOURGLASS_GLOWSTONE = builder.comment("Time in ticks for glowstone dust")
-                    .define("glowstone_time", 190, 0, 10000);
-            HOURGLASS_BLAZE_POWDER = builder.comment("Time in ticks for blaze powder")
-                    .define("blaze_powder_time", 277, 0, 10000);
-            HOURGLASS_REDSTONE = builder.comment("Time in ticks for redstone dust")
-                    .define("redstone_time", 400, 0, 10000);
-            HOURGLASS_SLIME = builder.comment("Time in ticks for slime balls")
-                    .define("slime_time", 1750, 0, 10000);
-            HOURGLASS_HONEY = builder.comment("Time in ticks for honey")
-                    .define("honey_time", 2000, 0, 10000);
-            builder.pop();
-
             builder.push("cage");
             CAGE_ENABLED = feature(builder);
             CAGE_ALL_MOBS = builder.comment("Allows all entities to be captured by cages and jars. Not meant for survival")
@@ -633,17 +614,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SACK_PENALTY;
         public static final Supplier<Integer> SACK_INCREMENT;
         public static final Supplier<Integer> SACK_SLOTS;
-
-        public static final Supplier<Boolean> HOURGLASS_ENABLED;
-        public static final Supplier<Integer> HOURGLASS_DUST;
-        public static final Supplier<Integer> HOURGLASS_SAND;
-        public static final Supplier<Integer> HOURGLASS_CONCRETE;
-        public static final Supplier<Integer> HOURGLASS_BLAZE_POWDER;
-        public static final Supplier<Integer> HOURGLASS_GLOWSTONE;
-        public static final Supplier<Integer> HOURGLASS_REDSTONE;
-        public static final Supplier<Integer> HOURGLASS_SUGAR;
-        public static final Supplier<Integer> HOURGLASS_SLIME;
-        public static final Supplier<Integer> HOURGLASS_HONEY;
 
         public static final Supplier<Boolean> JAR_ENABLED;
         public static final Supplier<Integer> JAR_CAPACITY;

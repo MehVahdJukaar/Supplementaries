@@ -1,8 +1,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"minecraft:wooden_sword","required":false},
-    {"id":"create:wrench","required":false}
+    {"id":"minecraft:wooden_sword","required":false}
   ]
 }
 

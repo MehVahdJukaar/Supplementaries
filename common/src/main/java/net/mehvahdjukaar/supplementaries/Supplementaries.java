@@ -6,7 +6,10 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -70,6 +73,7 @@ public class Supplementaries {
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
         PlatformHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
+        PlatformHelper.addServerReloadListener(HourglassTimesManager.RELOAD_INSTANCE, res("hourglass_data"));
         PlatformHelper.addServerReloadListener(FaucetBehaviorsManager.RELOAD_INSTANCE, res("faucet_interactions"));
         PlatformHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
         PlatformHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
@@ -88,12 +92,16 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
-    //tinted glass makes everman not mad
+    //blaze head ghast
+    //spring launcher sand auto launch
+
+    //bellows push hanging signs and globe
+    //create sprout support
 //quark gui sack open
     //heartstone highlight and pulse when nearby
-    //hammock mod with swivel
 
     //enchantable horse armor
+    //cow remodel
     //sheep animations and textyres
     //3d particle mod
     //quiver not rendering in curio

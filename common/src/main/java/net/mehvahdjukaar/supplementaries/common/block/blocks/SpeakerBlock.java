@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockGui;
+import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -120,7 +120,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
             }
             // client
             if (level.isClientSide) {
-                SpeakerBlockGui.open(tile);
+                SpeakerBlockScreen.open(tile);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;

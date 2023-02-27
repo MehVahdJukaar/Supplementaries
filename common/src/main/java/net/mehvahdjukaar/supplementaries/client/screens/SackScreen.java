@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -11,9 +12,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
-public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainerMenu> {
+public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
 
-    public NoticeBoardGui(NoticeBoardContainerMenu container, Inventory inventory, Component text) {
+    public SackScreen(SackContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -21,17 +22,56 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    }
+
+    private void renderBack(PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.NOTICE_BOARD_GUI_TEXTURE);
+        RenderSystem.setShaderTexture(0, ModTextures.SACK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
+
+    private void renderSlots(PoseStack matrixStack) {
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, ModTextures.SLOT_TEXTURE);
+        //Minecraft.getInstance().getTextureManager().bind(Textures.SLOT_TEXTURE);
+
+        int k = -1 + (this.width - this.imageWidth) / 2;
+        int l = -1 + (this.height - this.imageHeight) / 2;
+
+        int size = CommonConfigs.Functional.SACK_SLOTS.get();
+
+
+        int[] dims = SackContainerMenu.getRatio(size);
+        if (dims[0] > 9) {
+            dims[0] = 9;
+            dims[1] = (int) Math.ceil(size / 9f);
+        }
+
+        int yp = 17 + (18 * 3) / 2 - (9) * dims[1];
+
+        int dimx;
+        int xp;
+        for (int h = 0; h < dims[1]; ++h) {
+            dimx = Math.min(dims[0], size);
+            xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
+            for (int j = 0; j < dimx; ++j) {
+                blit(matrixStack, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
+            }
+            size -= dims[0];
+        }
+    }
+
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
+        this.renderBack(matrixStack, partialTicks, mouseX, mouseY);
+        this.renderSlots(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }
@@ -58,3 +98,4 @@ public class NoticeBoardGui extends AbstractContainerScreen<NoticeBoardContainer
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 }
+

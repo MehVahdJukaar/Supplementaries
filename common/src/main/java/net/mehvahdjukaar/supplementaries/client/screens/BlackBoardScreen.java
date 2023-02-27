@@ -14,7 +14,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class BlackBoardGui extends Screen {
+public class BlackBoardScreen extends Screen {
 
     private static final MutableComponent CLEAR = Component.translatable("gui.supplementaries.blackboard.clear");
     private static final MutableComponent EDIT = Component.translatable("gui.supplementaries.blackboard.edit");
@@ -23,13 +23,13 @@ public class BlackBoardGui extends Screen {
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
-    private BlackBoardGui(BlackboardBlockTile teBoard) {
+    private BlackBoardScreen(BlackboardBlockTile teBoard) {
         super(EDIT);
         this.tileBoard = teBoard;
     }
 
     public static void open(BlackboardBlockTile sign) {
-        Minecraft.getInstance().setScreen(new BlackBoardGui(sign));
+        Minecraft.getInstance().setScreen(new BlackBoardScreen(sign));
     }
 
     @Override
