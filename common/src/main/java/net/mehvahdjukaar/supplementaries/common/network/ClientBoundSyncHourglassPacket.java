@@ -1,15 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import com.mojang.serialization.DataResult;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.RegistryOps;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
         for (int i = 0; i < size; i++) {
             CompoundTag tag = buf.readNbt();
             if (tag != null) {
-                var r = HourglassTimeData.CODEC.parse(RegistryOps.create(NbtOps.INSTANCE, Utils.hackyGetRegistryAccess()), tag);
+                DataResult<HourglassTimeData> r = HourglassTimeData.CODEC.parse(NbtOps.INSTANCE, tag);
                 r.result().ifPresent(hourglass::add);
             }
         }
@@ -39,7 +39,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeInt(this.hourglass.size());
         for (var entry : this.hourglass) {
-            var r = HourglassTimeData.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE,Utils.hackyGetRegistryAccess()), entry);
+            DataResult<Tag> r = HourglassTimeData.CODEC.encodeStart(NbtOps.INSTANCE, entry);
             if (r.result().isPresent()) {
                 buf.writeNbt((CompoundTag) r.result().get());
             }

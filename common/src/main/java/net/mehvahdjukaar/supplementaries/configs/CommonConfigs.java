@@ -155,6 +155,14 @@ public class CommonConfigs {
                     .define("rotate_entities", true);
             builder.pop();
 
+            builder.push("pulley_block");
+
+            PULLEY_ENABLED = feature(builder);
+            MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
+                            .define("mineshaft_elevator", 0.02, 0,1);
+            builder.pop();
+
+
             WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
             ILLUMINATOR_ENABLED = feature(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME);
@@ -167,7 +175,6 @@ public class CommonConfigs {
             DISPENSER_MINECART_ENABLED = feature(builder, ModConstants.DISPENSER_MINECART_NAME);
             CRYSTAL_DISPLAY_ENABLED = feature(builder, ModConstants.CRYSTAL_DISPLAY_NAME);
             RELAYER_ENABLED = feature(builder, ModConstants.RELAYER_NAME);
-            PULLEY_ENABLED = feature(builder, ModConstants.PULLEY_BLOCK_NAME);
 
             builder.pop();
         }
@@ -220,6 +227,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
 
         public static final Supplier<Boolean> PULLEY_ENABLED;
+        public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
     }
 

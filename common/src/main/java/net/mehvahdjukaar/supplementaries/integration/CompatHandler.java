@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.Block;
 public class CompatHandler {
 
     public static final boolean QUARK = isLoaded("quark");
+    public static final boolean JEI = isLoaded("jei");
+    public static final boolean REI = isLoaded("roughlyenoughitems");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean OREGANIZED = isLoaded("oreganized");

@@ -155,6 +155,8 @@ dependencies {
     modImplementation("curse.maven:create-328085:4011414")
     //modCompileOnly("curse.maven:biomes-o-plenty-220318:4128419")
     modImplementation("curse.maven:terrablender-563928:4013816")
+    modImplementation("curse.maven:tetra-289712:4414851")
+    modImplementation("curse.maven:mutil-351914:3941314")
     modImplementation("curse.maven:breezy-690628:4055467")
     modImplementation("curse.maven:geckolib-388172:4064451")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")

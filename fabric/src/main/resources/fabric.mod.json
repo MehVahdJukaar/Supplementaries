@@ -23,7 +23,10 @@
     ],
     "modmenu": [
       "net.mehvahdjukaar.supplementaries.integration.fabric.ModMenuCompat"
-    ]
+    ],
+    "rei_client": [
+      "net.mehvahdjukaar.supplementaries.integration.REICompat"
+      ]
   },
   "mixins": [
     "${mod_id}.mixins.json",

@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     {"id":"spelunkery:salt_lamp","required":false},
-    {"id":"supplementaries:crimson_lantern","required":false},
     {"id":"galosphere:chandelier","required":false}
   ]
 }

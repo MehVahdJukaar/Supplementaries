@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,13 +79,13 @@ public class MiscUtils {
 
     public static boolean isSword(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
-        //if (CompatHandler.tetra && TetraToolHelper.isTetraSword(i)) return true;
+        if (CompatHandler.TETRA && TetraCompat.isTetraSword(i)) return true;
         return i instanceof SwordItem;
     }
 
     public static boolean isTool(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
-        //if (CompatHandler.tetra && TetraToolHelper.isTetraTool(i)) return true;
+        if (CompatHandler.TETRA && TetraCompat.isTetraTool(i)) return true;
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
 

@@ -104,8 +104,8 @@ public class ModSetup {
     private static void registerCompostables() {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
         ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD.get(), 0.65F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK.get(), 1);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD.get().asItem(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK.get().asItem(), 1);
     }
 
     //events on setup. fire on world load

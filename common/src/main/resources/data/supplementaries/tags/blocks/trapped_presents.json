@@ -8,7 +8,7 @@
     {"id":"supplementaries:trapped_present_red","required":false},
     {"id":"supplementaries:trapped_present_blue","required":false},
     {"id":"supplementaries:trapped_present_cyan","required":false},
-    {"id":"supplementaries:trapped_present_light_blu\e","required":false},
+    {"id":"supplementaries:trapped_present_light_blue","required":false},
     {"id":"supplementaries:trapped_present_lime","required":false},
     {"id":"supplementaries:trapped_present_green","required":false},
     {"id":"supplementaries:trapped_present_magenta","required":false},
