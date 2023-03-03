@@ -17,10 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -36,15 +33,18 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
 
     @Override
     public void parse(Map<ResourceLocation, JsonElement> jsonMap, RegistryAccess access) {
+        List<HourglassTimeData> list = new ArrayList<>();
         jsonMap.forEach((key, json) -> {
             try {
                 var result = HourglassTimeData.REGISTRY_CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, access), json);
                 HourglassTimeData data = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to parse hourglass data: {}", e));
-                addData(data);
+                list.add(data);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data " + key);
             }
         });
+        list.sort(Comparator.comparing(HourglassTimeData::getOrdering));
+        list.forEach(HourglassTimesManager::addData);
     }
 
     public static void addData(HourglassTimeData data) {

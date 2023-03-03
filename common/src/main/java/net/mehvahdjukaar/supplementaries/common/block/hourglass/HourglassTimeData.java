@@ -72,10 +72,7 @@ public class HourglassTimeData {
         if (this.texture.isEmpty()) {
             ItemRenderer itemRenderer = mc.getItemRenderer();
             BakedModel model = itemRenderer.getModel(i, world, null, 0);
-            TextureAtlasSprite sprite = model.getParticleIcon();
-            // if (sprite instanceof MissingTextureAtlasSprite)
-            // sprite = mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture);
-            return sprite;
+            return model.getParticleIcon();
 
         }
         return mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture.get());

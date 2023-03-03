@@ -19,8 +19,9 @@ public class StasisParticle extends SimpleAnimatedParticle {
         this.setSpriteFromAge(sprite);
     }
 
-    public void move(double p_187110_1_, double p_187110_3_, double p_187110_5_) {
-        this.setBoundingBox(this.getBoundingBox().move(p_187110_1_, p_187110_3_, p_187110_5_));
+    @Override
+    public void move(double x, double y, double z) {
+        this.setBoundingBox(this.getBoundingBox().move(x, y, z));
         this.setLocationFromBoundingbox();
     }
 

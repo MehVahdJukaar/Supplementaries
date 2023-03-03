@@ -15,7 +15,8 @@ dependencies {
     //implementation fileTree(dir: 'mods', include: '*.jar')
     modImplementation("com.lowdragmc.shimmer:Shimmer-common:1.19.2-0.1.14")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
+    //modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")
 
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
 }

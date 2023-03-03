@@ -11,7 +11,13 @@
     {"id":"horse_colors:horse_felinoid","required":false},
     {"id":"ecologics:camel","required":false},
     {"id":"naturalist:zebra","required":false},
-	{"id":"lovely_snails:snail","required":false}
+	{"id":"lovely_snails:snail","required":false},
+	{"id":"pet_cemetery:zombie_wolf","required":false},
+	{"id":"pet_cemetery:zombie_cat","required":false},
+	{"id":"pet_cemetery:zombie_parrot","required":false},
+	{"id":"pet_cemetery:skeleton_wolf","required":false},
+	{"id":"pet_cemetery:skeleton_parrot","required":false},
+	{"id":"pet_cemetery:skeleton_cat","required":false}
   ]
 }
 
