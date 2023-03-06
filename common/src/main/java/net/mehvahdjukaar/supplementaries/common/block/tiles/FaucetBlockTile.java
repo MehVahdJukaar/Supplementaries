@@ -209,7 +209,7 @@ public class FaucetBlockTile extends BlockEntity {
         //TODO: maybe add here insertion in containers below
         if (!this.isConnectedBelow()) {
             ItemStack removed = ItemsUtil.removeFirstStackFromInventory(level, pos, dir, tile);
-            if (removed != null) {
+            if (removed != ItemStack.EMPTY) {
                 drop(level, pos, removed);
                 return COOLDOWN;
             }

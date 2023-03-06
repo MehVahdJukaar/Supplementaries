@@ -5,9 +5,9 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -52,7 +52,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, ISoapWashable {
+public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, IWashable {
 
     private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
         Int2ObjectMap<List<Vec3>> map = new Int2ObjectOpenHashMap<>();

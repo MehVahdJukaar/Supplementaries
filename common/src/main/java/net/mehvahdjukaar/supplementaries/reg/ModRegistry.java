@@ -913,10 +913,12 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
                     .sound(SoundType.WOOD)), "forbidden_arcanus:edelwood_stick", CommonConfigs.Tweaks.PLACEABLE_STICKS);
+
     public static final Supplier<Block> PRISMARINE_ROD_BLOCK = regPlaceableItem("prismarine_rod", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_CYAN)
                     .strength(0.25F, 0F)
                     .sound(SoundType.STONE), 0), "upgrade_aquatic:prismarine_rod", CommonConfigs.Tweaks.PLACEABLE_STICKS);
+
     public static final Supplier<Block> PROPELPLANT_ROD_BLOCK = regPlaceableItem("propelplant_cane", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)

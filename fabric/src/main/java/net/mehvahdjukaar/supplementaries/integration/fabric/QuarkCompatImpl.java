@@ -66,4 +66,8 @@ public class QuarkCompatImpl {
     public static float getEncumbermentFromBackpack(ItemStack backpack) {
         return 0;
     }
+
+    public static boolean isShulkerDropInOn() {
+        return true;
+    }
 }

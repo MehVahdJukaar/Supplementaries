@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
@@ -15,6 +14,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -41,13 +42,12 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class GlobeBlock extends WaterBlock implements EntityBlock, ISoapWashable {
+public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -99,6 +99,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, ISoapWashable
                 tile.toggleShearing();
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
+                level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
                 if (level.isClientSide) {
                     level.addDestroyBlockEffect(pos, state);
                 }

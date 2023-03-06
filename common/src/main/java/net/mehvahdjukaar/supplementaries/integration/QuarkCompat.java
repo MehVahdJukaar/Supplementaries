@@ -85,4 +85,10 @@ public class QuarkCompat {
     public static ItemStack getSlimeBucket(Entity entity) {
         throw new AssertionError();
     }
+
+    @Contract
+    @ExpectPlatform
+    public static boolean isShulkerDropInOn() {
+        throw new AssertionError();
+    }
 }

@@ -4,11 +4,11 @@ import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
-import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -63,7 +63,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, ISoapWashable, IPistonMotionReact {
+public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, IWashable, IPistonMotionReact {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);

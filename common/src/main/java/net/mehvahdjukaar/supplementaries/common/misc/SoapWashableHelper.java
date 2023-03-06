@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.misc;
 
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.api.ISoapWashable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -91,20 +91,20 @@ public class SoapWashableHelper {
     }
 
     private static boolean tryWashWithInterface(Level level, BlockPos pos, BlockState state) {
-        ISoapWashable cap;
+        IWashable cap;
         Block b = state.getBlock();
-        if (b instanceof ISoapWashable soapWashable) {
+        if (b instanceof IWashable soapWashable) {
             cap = soapWashable;
         } else {
-            cap = SuppPlatformStuff.getForgeCap(b, ISoapWashable.class);
+            cap = SuppPlatformStuff.getForgeCap(b, IWashable.class);
         }
         if (cap == null) {
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile != null) {
-                if (tile instanceof ISoapWashable soapWashable) {
+                if (tile instanceof IWashable soapWashable) {
                     cap = soapWashable;
                 } else {
-                    cap = SuppPlatformStuff.getForgeCap(tile, ISoapWashable.class);
+                    cap = SuppPlatformStuff.getForgeCap(tile, IWashable.class);
                 }
             }
         }
@@ -125,7 +125,7 @@ public class SoapWashableHelper {
 
             //TODO: add back
             if (state.getBlock() instanceof BedBlock) {
-                if(true)return false;
+                if (true) return false;
                 BlockPos other = pos.relative(BlockUtil.getConnectedBedDirection(state));
                 BlockState otherBed = level.getBlockState(other);
                 Block otherBedColor = BlocksColorAPI.changeColor(otherBed.getBlock(), null);

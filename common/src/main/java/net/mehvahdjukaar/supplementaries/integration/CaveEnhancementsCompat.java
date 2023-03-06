@@ -15,6 +15,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -23,8 +24,10 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModConstants.CANDLE_HOLDER_NAME;
@@ -81,6 +84,11 @@ public class CaveEnhancementsCompat {
         @Override
         public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
             return level.isClientSide ? null : Utils.getTicker(blockEntityType, SPECTACLE_CANDLE_HOLDER_TILE.get(), CaveEnhancementsCompat::tick);
+        }
+
+        @Override
+        public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+            return super.getDrops(state, builder);
         }
     }
 }

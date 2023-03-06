@@ -6,10 +6,10 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.entity.ExperienceOrbRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -57,7 +57,7 @@ public class SackItem extends BlockItem {
             int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
-                        20 * 10, (((((int)amount) - 1) / inc) - 1), false, false, true));
+                        20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
             }
         }
     }
@@ -116,11 +116,13 @@ public class SackItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+        if (!CompatHandler.QUARK || !QuarkCompat.isShulkerDropInOn()) return false;
         return ItemsUtil.tryInteractingWithContainerItem(stack, incoming, slot, action, player, true);
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+        if (!CompatHandler.QUARK || !QuarkCompat.isShulkerDropInOn()) return false;
         return ItemsUtil.tryInteractingWithContainerItem(stack, slot.getItem(), slot, action, player, false);
     }
 
@@ -157,7 +159,7 @@ public class SackItem extends BlockItem {
             }
             return 0;
         } else if (slotItem.is(ModTags.OVERENCUMBERING)) {
-            return slotItem.getCount() / (float)slotItem.getMaxStackSize();
+            return slotItem.getCount() / (float) slotItem.getMaxStackSize();
         }
         return 0;
     }

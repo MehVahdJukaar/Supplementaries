@@ -1,4 +1,10 @@
 {
+  "conditions": [
+    {
+      "modid": "cave_enhancements",
+      "type": "forge:mod_loaded"
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {

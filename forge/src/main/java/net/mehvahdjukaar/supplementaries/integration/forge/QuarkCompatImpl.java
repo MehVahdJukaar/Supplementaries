@@ -43,6 +43,8 @@ import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
+import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
+import vazkii.quark.content.management.module.InventorySortingModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
 import vazkii.quark.content.tools.module.SlimeInABucketModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
@@ -71,7 +73,7 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isFastSlideModuleEnabled() {
-        return EnhancedLaddersModule.allowSliding;
+        return ModuleLoader.INSTANCE.isModuleEnabled(EnhancedLaddersModule.class) && EnhancedLaddersModule.allowSliding;
     }
 
     public static boolean isDoubleDoorEnabled() {
@@ -210,7 +212,7 @@ public class QuarkCompatImpl {
 
 
     public static boolean isMoreNoteBlockSoundsOn() {
-        return MoreNoteBlockSoundsModule.enableSkullSounds;
+        return ModuleLoader.INSTANCE.isModuleEnabled(MoreNoteBlockSoundsModule.class) && MoreNoteBlockSoundsModule.enableSkullSounds;
     }
 
     public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
@@ -230,6 +232,11 @@ public class QuarkCompatImpl {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static boolean isShulkerDropInOn() {
+        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class)
+                && ExpandedItemInteractionsModule.enableShulkerBoxInteraction;
     }
 
 }
