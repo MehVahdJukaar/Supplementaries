@@ -70,4 +70,9 @@ public class QuarkCompatImpl {
     public static boolean isShulkerDropInOn() {
         return true;
     }
+
+    @org.jetbrains.annotations.Contract
+    public static boolean shouldHideOverlay(ItemStack stack) {
+        return false;
+    }
 }

@@ -28,6 +28,7 @@ public class SupplementariesFabricClient implements ClientModInitializer {
         registerISTER(ModRegistry.JAR_ITEM.get());
         registerISTER(ModRegistry.BLACKBOARD_ITEM.get());
         registerISTER(ModRegistry.BUBBLE_BLOCK_ITEM.get());
+        registerISTER(ModRegistry.ENDERMAN_SKULL_ITEM.get());
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.FLUTE_ITEM.get(),
                 new DifferentProspectiveItemRenderer(ClientRegistry.FLUTE_2D_MODEL, ClientRegistry.FLUTE_3D_MODEL));
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.QUIVER_ITEM.get(),

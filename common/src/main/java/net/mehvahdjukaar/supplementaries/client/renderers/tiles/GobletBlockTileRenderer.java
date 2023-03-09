@@ -61,7 +61,7 @@ public class GobletBlockTileRenderer implements BlockEntityRenderer<GobletBlockT
     @Override
     public void render(GobletBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        if (!tile.fluidTank.isEmpty()) {
+        if (!tile.fluidHolder.isEmpty()) {
             renderFluid(7 / 16f, tile, tile.getSoftFluidTank(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
         }
     }

@@ -17,13 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.renderSkull;
 
 public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<EndermanSkullBlockTile> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/enderman/enderman.png");
-    private static final ResourceLocation EYES = new ResourceLocation("textures/entity/enderman/enderman_eyes.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/enderman/enderman.png");
+    public static final ResourceLocation EYES = new ResourceLocation("textures/entity/enderman/enderman_eyes.png");
 
-    private final EndermanSkullModel model;
+    public static EndermanSkullModel model;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.model = new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
+        model = new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
     }
 
     @Override

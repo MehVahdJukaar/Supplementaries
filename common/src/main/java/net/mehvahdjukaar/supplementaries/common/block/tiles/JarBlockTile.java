@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
@@ -179,14 +180,22 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.fluidHolder.load(compound);
+        try {
+            this.fluidHolder.load(compound);
+        } catch (Exception e) {
+            Supplementaries.LOGGER.warn("Failed to load fluid container at {}:", this.getBlockPos(), e);
+        }
         this.mobContainer.load(compound);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        this.fluidHolder.save(tag);
+        try {
+            this.fluidHolder.save(tag);
+        } catch (Exception e) {
+            Supplementaries.LOGGER.warn("Failed to save fluid container at {}:", this.getBlockPos(), e);
+        }
         this.mobContainer.save(tag);
     }
 

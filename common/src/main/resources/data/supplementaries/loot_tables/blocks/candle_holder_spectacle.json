@@ -1,5 +1,5 @@
 {
-  "conditions": [
+  "global_conditions": [
     {
       "modid": "cave_enhancements",
       "type": "forge:mod_loaded"

@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -24,8 +23,8 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
 
     public static final HourglassTimesManager RELOAD_INSTANCE = new HourglassTimesManager();
 
-    private static final Map<Item, HourglassTimeData> DUSTS_MAP = new Object2ObjectOpenHashMap<>();
-    private static final Set<HourglassTimeData> DUSTS = new HashSet<>();
+    private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
+    private final Set<HourglassTimeData> dusts = new HashSet<>();
 
     public HourglassTimesManager() {
         super(GSON, "hourglass_dusts");
@@ -33,6 +32,8 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
 
     @Override
     public void parse(Map<ResourceLocation, JsonElement> jsonMap, RegistryAccess access) {
+        dusts.clear();
+        dustsMap.clear();
         List<HourglassTimeData> list = new ArrayList<>();
         jsonMap.forEach((key, json) -> {
             try {
@@ -48,25 +49,26 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     }
 
     public static void addData(HourglassTimeData data) {
-        DUSTS.add(data);
+        RELOAD_INSTANCE.dusts.add(data);
         data.getItems().forEach(i -> {
-            if(i.value() == Items.AIR){
+            if (i.value() == Items.AIR) {
                 int aa = 1;
-            }
-            else DUSTS_MAP.put(i.value(), data);
+            } else RELOAD_INSTANCE.dustsMap.put(i.value(), data);
         });
     }
 
     public static HourglassTimeData getData(Item item) {
-        return DUSTS_MAP.getOrDefault(item, HourglassTimeData.EMPTY);
+        return RELOAD_INSTANCE.dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
     }
 
     public static void acceptClientData(List<HourglassTimeData> hourglass) {
+        RELOAD_INSTANCE.dusts.clear();
+        RELOAD_INSTANCE.dustsMap.clear();
         hourglass.forEach(HourglassTimesManager::addData);
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncHourglassPacket(DUSTS));
+        NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(RELOAD_INSTANCE.dusts));
     }
 
 }

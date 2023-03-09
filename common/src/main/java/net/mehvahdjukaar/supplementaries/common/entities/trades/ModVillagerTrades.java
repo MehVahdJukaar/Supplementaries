@@ -208,6 +208,11 @@ public class ModVillagerTrades {
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
 
+        RegHelper.registerVillagerTrades(VillagerProfession.MASON, 1, itemListings -> {
+            if (CommonConfigs.Building.ASH_BRICKS_ENABLED.get())
+                itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD), new ItemStack(ModRegistry.ASH_BRICK_ITEM.get(),10), 16, 1, 0.05f));
+        });
+
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 5, itemListings -> {
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD , 8),

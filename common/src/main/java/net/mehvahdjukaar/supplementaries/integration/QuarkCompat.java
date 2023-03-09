@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Contract;
 public class QuarkCompat {
 
     @ExpectPlatform
-    public static void init(){
+    public static void init() {
     }
 
     @ExpectPlatform
@@ -61,6 +60,12 @@ public class QuarkCompat {
     @Contract
     @ExpectPlatform
     public static boolean isVerticalSlabEnabled() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    @Contract
+    public static boolean shouldHideOverlay(ItemStack stack) {
         throw new AssertionError();
     }
 

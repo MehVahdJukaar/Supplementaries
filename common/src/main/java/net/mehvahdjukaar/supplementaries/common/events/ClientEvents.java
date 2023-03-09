@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -73,8 +75,9 @@ public class ClientEvents {
 
                 String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
-                var item = p.getItemBySlot(EquipmentSlot.HEAD).getItem();
-                String newShader = EFFECTS_PER_ITEM.get(item);
+                ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
+                if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
+                String newShader = EFFECTS_PER_ITEM.get(stack.getItem());
                 if (newShader != null && !newShader.equals(current)) {
                     renderer.loadEffect(new ResourceLocation(newShader));
                 } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {

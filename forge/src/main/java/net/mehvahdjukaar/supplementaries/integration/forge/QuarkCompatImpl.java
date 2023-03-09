@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
@@ -43,6 +44,7 @@ import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
+import vazkii.quark.content.client.module.UsesForCursesModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 import vazkii.quark.content.management.module.InventorySortingModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
@@ -101,6 +103,10 @@ public class QuarkCompatImpl {
 
     public static boolean isVerticalSlabEnabled() {
         return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
+    }
+
+    public static boolean shouldHideOverlay(ItemStack stack){
+        return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
     }
 
 

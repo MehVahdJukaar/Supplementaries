@@ -1,5 +1,5 @@
 {
-  "conditions": [
+  "global_conditions": [
     {
       "modid": "buzzier_bees",
       "type": "forge:mod_loaded"

@@ -89,7 +89,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
-            return tile.fluidTank.isEmpty() ? 0 : 15;
+            return tile.fluidHolder.isEmpty() ? 0 : 15;
         }
         return 0;
     }

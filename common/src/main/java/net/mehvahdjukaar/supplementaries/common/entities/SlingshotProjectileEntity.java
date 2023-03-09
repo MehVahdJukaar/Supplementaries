@@ -142,8 +142,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         boolean success = false;
         if (owner instanceof Player player && player.getAbilities().mayBuild) {
 
-            if (CompatHandler.FLAN){
-                if(level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
+            if (CompatHandler.FLAN) {
+                if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return; //hack since we need client interaction aswell
                 }
             }
@@ -160,12 +160,17 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             }
 
             if (!success) {
-                //null player so sound always plays
-                //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player fakePlayer = FakePlayerManager.getDefault(this, player);
+                if (level.isClientSide && CompatHandler.FLAN) {
+                    //trading no ghost blocks for no sounds when this fuckery is on...
+                    success = true;
+                } else {
+                    //null player so sound always plays
+                    //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
+                    Player fakePlayer = FakePlayerManager.getDefault(this, player);
 
-                success = ItemsUtil.place(item,
-                        new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
+                    success = ItemsUtil.place(item,
+                            new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
+                }
             }
             if (success) {
                 this.remove(RemovalReason.DISCARDED);
