@@ -1052,6 +1052,7 @@ public class CommonConfigs {
 
     //TODO: cleanup
     public static boolean isEnabled(String key) {
+        if(!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
             case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get();

@@ -87,8 +87,8 @@ public class ModConfigScreen extends CustomConfigScreen {
 
         addIcon("redstone", Items.REDSTONE);
         addIcon("building", Items.OXIDIZED_COPPER);
-        addIcon("utilities", Items.SMOKER);
-        //addIcon("tweaks", Items.AMETHYST_SHARD);
+        addIcon("utilities", Items.BARREL);
+        addIcon("functional", Items.AMETHYST_SHARD);
         addIcon("tools", Items.GOLDEN_PICKAXE);
     }
 

@@ -463,7 +463,7 @@ public class MobContainer {
             return name;
         }
 
-        public static class Bucket extends MobNBTData {
+        protected static class Bucket extends MobNBTData {
             private final ItemStack filledBucket;
 
             protected Bucket(@Nullable String name, ItemStack filledBucket, int fishTexture, @Nullable ResourceLocation fluidId) {

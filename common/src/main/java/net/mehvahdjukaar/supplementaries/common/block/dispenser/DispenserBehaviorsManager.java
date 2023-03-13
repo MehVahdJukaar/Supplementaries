@@ -44,37 +44,55 @@ public class DispenserBehaviorsManager {
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
-        for(SoftFluid f : registryAccess.registryOrThrow(SoftFluidRegistry.getRegistryKey())){
+        for (SoftFluid f : registryAccess.registryOrThrow(SoftFluidRegistry.getRegistryKey())) {
             registerFluidBehavior(f);
         }
 
-        if (CommonConfigs.Building.PANCAKES_ENABLED.get() && CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
-            DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
+        if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
+            DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
+
+            if (CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
+                DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
+            }
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
             DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
         }
-        DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
-
-        DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
-            @Override
-            protected ItemStack execute(BlockSource source, ItemStack stack) {
-                this.setSuccess(ArmorItem.dispenseArmor(source, stack));
-                return stack;
-            }
-        };
-        DispenserBlock.registerBehavior(ModRegistry.ENDERMAN_SKULL_ITEM.get(), armorBehavior);
-
-        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
-        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
-        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
-        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
-
-        DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
+        if (CommonConfigs.Redstone.DISPENSER_MINECART_ENABLED.get()) {
+            DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
+        }
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
+            DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
+                @Override
+                protected ItemStack execute(BlockSource source, ItemStack stack) {
+                    this.setSuccess(ArmorItem.dispenseArmor(source, stack));
+                    return stack;
+                }
+            };
+            DispenserBlock.registerBehavior(ModRegistry.ENDERMAN_SKULL_ITEM.get(), armorBehavior);
+        }
+        if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        }
+        if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
+        }
+        if (CommonConfigs.Functional.SACK_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
+        }
+        if (CommonConfigs.Functional.JAR_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
+            DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
+        }
         DispenserHelper.registerCustomBehavior(new FlintAndSteelBehavior(Items.FLINT_AND_STEEL));
-        DispenserHelper.registerCustomBehavior(new BambooSpikesBehavior(Items.LINGERING_POTION));
-        DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_ITEM.get());
+        }
+        if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+            DispenserHelper.registerCustomBehavior(new BambooSpikesBehavior(Items.LINGERING_POTION));
+        }
         if (isForge) {
             DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
         }
@@ -144,12 +162,12 @@ public class DispenserBehaviorsManager {
             Item empty = c.getEmptyContainer();
             //prevents registering stuff twice
             if (empty != Items.AIR && !itemSet.contains(empty)) {
-                DispenserHelper. registerCustomBehavior(new FillFluidHolderBehavior(empty));
+                DispenserHelper.registerCustomBehavior(new FillFluidHolderBehavior(empty));
                 itemSet.add(empty);
             }
             for (Item full : c.getFilledItems()) {
                 if (full != Items.AIR && !itemSet.contains(full)) {
-                    DispenserHelper. registerCustomBehavior(new FillFluidHolderBehavior(full));
+                    DispenserHelper.registerCustomBehavior(new FillFluidHolderBehavior(full));
                     itemSet.add(full);
                 }
             }
