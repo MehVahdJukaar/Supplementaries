@@ -5,10 +5,10 @@
       "item": "supplementaries:turn_table"
     },
     "title": {
-      "translate": "advancements.story.turn_table.title"
+      "translate": "advancements.husbandry.turn_table.title"
     },
     "description": {
-      "translate": "advancements.story.turn_table.description"
+      "translate": "advancements.husbandry.turn_table.description"
     },
     "frame": "task",
     "show_toast": true,

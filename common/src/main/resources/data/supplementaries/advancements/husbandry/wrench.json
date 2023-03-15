@@ -5,10 +5,10 @@
       "item": "supplementaries:wrench"
     },
     "title": {
-      "translate": "advancements.story.wrench.title"
+      "translate": "advancements.husbandry.wrench.title"
     },
     "description": {
-      "translate": "advancements.story.wrench.description"
+      "translate": "advancements.husbandry.wrench.description"
     },
     "frame": "task",
     "show_toast": true,

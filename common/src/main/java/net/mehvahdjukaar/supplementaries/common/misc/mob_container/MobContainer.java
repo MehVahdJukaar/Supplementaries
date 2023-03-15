@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -302,7 +303,7 @@ public class MobContainer {
         if (entity.isPassenger()) {
             entity.getVehicle().ejectPassengers();
         }
-        if (entity instanceof Mob mob) {
+        if (entity instanceof Mob mob && !(mob instanceof Allay)) {
             mob.setPersistenceRequired();
         }
         if (entity instanceof Bucketable bucketable) {

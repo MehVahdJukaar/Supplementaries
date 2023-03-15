@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -27,6 +28,7 @@ public class SoapClearRecipe extends CustomRecipe {
             if (!itemstack.isEmpty()) {
                 Item item = itemstack.getItem();
                 boolean d = (BlocksColorAPI.getColor(item) != null &&
+                        !itemstack.is(ModTags.SOAP_BLACKLIST) &&
                         !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
                 if (d || item instanceof DyeableLeatherItem) {
                     ++i;

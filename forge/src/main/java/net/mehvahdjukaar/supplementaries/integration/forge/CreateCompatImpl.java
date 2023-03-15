@@ -287,9 +287,10 @@ public class CreateCompatImpl {
             var prevSandData = this.sandData;
             NonNullList<ItemStack> l = NonNullList.create();
             ContainerHelper.loadAllItems(com, l);
+            if (l.isEmpty()) return;
             this.sandData = HourglassTimesManager.getData(l.get(0).getItem());
-            if(prevSandData != sandData && context.world.isClientSide){
-                this.cachedTexture = sandData.computeSprite(l.get(0),context.world);
+            if (prevSandData != sandData && context.world.isClientSide) {
+                this.cachedTexture = sandData.computeSprite(l.get(0), context.world);
             }
             this.progress = com.getFloat("Progress");
             this.prevProgress = com.getFloat("PrevProgress");

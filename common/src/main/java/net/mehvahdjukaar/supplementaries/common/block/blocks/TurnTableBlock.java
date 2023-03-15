@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -175,7 +176,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
             if ((e instanceof LivingEntity entity)) {
 
                 if(e instanceof ServerPlayer player){
-                    Advancement advancement = world.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries","story/turn_table"));
+                    Advancement advancement = world.getServer().getAdvancements().getAdvancement(Supplementaries.res("husbandry/turn_table"));
                     if(advancement != null){
                         if(!player.getAdvancements().getOrStartProgress(advancement).isDone()) {
                             player.getAdvancements().award(advancement, "unlock");

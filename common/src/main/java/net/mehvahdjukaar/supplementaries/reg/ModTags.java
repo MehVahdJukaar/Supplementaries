@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
@@ -40,7 +41,6 @@ public class ModTags {
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
 
     //item tags
-    public static final TagKey<Item> CONCRETE_POWDERS = itemTag("concrete_powders");
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");
     public static final TagKey<Item> COOKIES = itemTag("cookies");
@@ -55,14 +55,12 @@ public class ModTags {
     public static final Map<DyeColor, TagKey<Item>> BLACKBOARD_TAGS = Arrays.stream(DyeColor.values())
             .collect(Collectors.toUnmodifiableMap(d -> d, d -> itemTag("blackboard_" + d.getName())));
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");
-    public static final TagKey<Item> DUSTS = itemTag("hourglass_dusts");
-    public static final TagKey<Item> SANDS = itemTag("hourglass_sands");
     public static final TagKey<Item> KEY = itemTag("key");
     public static final TagKey<Item> STATUE_SWORDS = itemTag("statue_swords");
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
-    public static final TagKey<Item> PRESENTS = itemTag("presents");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
     public static final TagKey<Item> OVERENCUMBERING = itemTag("overencumbering");
+    public static final TagKey<Item> SOAP_BLACKLIST = itemTag("soap_blacklist");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
@@ -73,7 +71,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     public static final TagKey<EntityType<?>> ROTATABLE = entityTag("rotatable");
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
-    public static final TagKey<EntityType<?>> ASH_BLACKLIST = entityTag("ash_blacklist");
+    public static final TagKey<EntityType<?>> ASH_BLACKLIST = entityTag("ash_blacklist"); //TODO
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
