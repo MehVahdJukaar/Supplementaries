@@ -65,8 +65,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
     private static Map<BlockState, VoxelShape> shapeMap;
     private static Map<BlockState, VoxelShape> collisionShapesMap;
 
-    protected static final Map<Direction, BooleanProperty> FENCE_PROPERTY = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().filter((d) -> d.getKey().getAxis().isHorizontal()).collect(Util.toMap());
-    protected static final Map<Direction, EnumProperty<WallSide>> WALL_PROPERTY = Map.of(Direction.NORTH, WallBlock.NORTH_WALL, Direction.SOUTH, WallBlock.SOUTH_WALL, Direction.WEST, WallBlock.WEST_WALL, Direction.EAST, WallBlock.EAST_WALL);
 
     public RopeKnotBlock(Properties properties) {
         super(properties);

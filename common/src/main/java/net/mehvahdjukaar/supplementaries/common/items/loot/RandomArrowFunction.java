@@ -4,7 +4,9 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Registry;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -28,6 +30,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     //call on mod setup
     public static void setup() {
         for (Potion potion : Registry.POTION) {
+            if (MiscUtils.isTagged(potion, Registry.POTION, ModTags.QUIVER_POTION_BLACKLIST)) continue;
             boolean isNegative = false;
             for (var e : potion.getEffects()) {
                 if (!e.getEffect().isBeneficial()) {

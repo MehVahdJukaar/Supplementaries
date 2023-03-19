@@ -137,7 +137,7 @@ dependencies {
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:3857246")
     modImplementation("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("vazkii.quark:Quark:3.4-391")
+    modImplementation("curse.maven:quark-243121:4426258")
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:waystones-245755:3835119")
@@ -159,10 +159,43 @@ dependencies {
     modImplementation("curse.maven:mutil-351914:3941314")
     modImplementation("curse.maven:breezy-690628:4055467")
     modImplementation("curse.maven:geckolib-388172:4064451")
+    modImplementation("curse.maven:farmers-respite-551453:4081312")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
 
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
+}
+
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+
+    apiToken = System.getenv('curseforge_token')
+    disableVersionDetection()
+
+    def mainFile = upload(rootProject.project_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.changelog = rootProject.file('changelog.md')
+    mainFile.changelogType = "markdown"
+    mainFile.releaseType = "release"
+    mainFile.addGameVersion(rootProject.minecraft_version)
+    mainFile.addModLoader("forge")
+    mainFile.addRequirement("selene")
+
+    mainFile.addOptional("create")
+    mainFile.addOptional("quark")
+    mainFile.addOptional("cc-tweaked")
+    mainFile.addOptional("waystones")
+    mainFile.addOptional("roughly-enough-items")
+    mainFile.addOptional("jei")
+    mainFile.addOptional("model-gap-fix")
+    mainFile.addOptional("flywheel")
+    mainFile.addOptional("configured")
+    mainFile.addOptional("flan-forge")
+    mainFile.addOptional("haunted-harvest")
+    mainFile.addOptional("snowy-spirit")
+    mainFile.addOptional("map-atlases-forge")
+    mainFile.addOptional("decorative-blocks")
+    mainFile.addOptional("farmers-delight")
+    mainFile.addOptional("the-bumblezone-forge")
+    mainFile.addOptional("map-atlases-forge")
 }

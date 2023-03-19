@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.IFrameBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -20,25 +20,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoulSandBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
-import java.util.function.Supplier;
 
 public class FrameBlockTile extends MimicBlockTile {
 
-    private final Supplier<Block> daub;
-
     public FrameBlockTile(BlockPos pos, BlockState state) {
-        this(pos, state, () -> null);
-    }
-
-    public FrameBlockTile(BlockPos pos, BlockState state, Supplier<Block> daub) {
         super(ModRegistry.TIMBER_FRAME_TILE.get(), pos, state);
-        this.daub = daub;
     }
 
     @Override
@@ -64,12 +59,12 @@ public class FrameBlockTile extends MimicBlockTile {
         Block b = state.getBlock();
 
         if (b == ModRegistry.DAUB.get() && CommonConfigs.Building.REPLACE_DAUB.get()) {
-            if (level != null && !this.level.isClientSide) {
-                state = daub.get().defaultBlockState();
-                if (this.getBlockState().hasProperty(ModBlockProperties.FLIPPED)) {
-                    state = state.setValue(ModBlockProperties.FLIPPED, this.getBlockState().getValue(ModBlockProperties.FLIPPED));
+            if (level != null && !this.level.isClientSide && this.getBlockState().getBlock() instanceof IFrameBlock fb) {
+                var s = fb.getFilledBlock(state.getBlock());
+                if (s != null) {
+                    state = s.withPropertiesOf(this.getBlockState());
+                    this.level.setBlock(this.worldPosition, state, 3);
                 }
-                this.level.setBlock(this.worldPosition, state, 3);
             }
         } else {
             this.setHeldBlock(state);
@@ -81,7 +76,7 @@ public class FrameBlockTile extends MimicBlockTile {
         return state;
     }
 
-    public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
+    public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace, boolean canStrip) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
         if (player.getAbilities().mayBuild) {
@@ -100,7 +95,7 @@ public class FrameBlockTile extends MimicBlockTile {
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-            } else if (item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Building.AXE_TIMBER_FRAME_STRIP.get()) {
+            } else if (canStrip && item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Building.AXE_TIMBER_FRAME_STRIP.get()) {
                 BlockState held = this.getHeldBlock();
                 if (!level.isClientSide) {
                     Block.popResourceFromFace(level, pos, trace.getDirection(), new ItemStack(this.getBlockState().getBlock()));

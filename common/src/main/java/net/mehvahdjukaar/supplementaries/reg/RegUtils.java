@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -15,6 +16,9 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
+import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -28,8 +32,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -48,7 +52,7 @@ public class RegUtils {
     }
 
     //gets the tab given or null if the item is disabled
-    @Nullable
+    @Nonnull
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (CommonConfigs.isEnabled(regName)) {
             return ModCreativeTabs.MOD_TAB == null ? g : ModCreativeTabs.MOD_TAB;
@@ -89,21 +93,21 @@ public class RegUtils {
         return RegHelper.registerBlockEntityType(Supplementaries.res(name), sup);
     }
 
-    public static <T extends Block> Supplier<T> regBlock(String name, Supplier<T> sup) {
+    public static <T extends Block> RegSupplier<T> regBlock(String name, Supplier<T> sup) {
         return RegHelper.registerBlock(Supplementaries.res(name), sup);
     }
 
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
         return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), 0);
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab, int burnTime) {
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab, int burnTime) {
         return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), burnTime);
     }
 
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties, int burnTime) {
-        Supplier<T> block = regBlock(name, blockFactory);
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties, int burnTime) {
+        RegSupplier<T> block = regBlock(name, blockFactory);
         regBlockItem(name, block, properties, burnTime);
         return block;
     }
@@ -113,38 +117,42 @@ public class RegUtils {
         return regWithItem(name, block, t);
     }
 
-    public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
+    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
         return RegHelper.registerItem(Supplementaries.res(name), () -> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
     }
 
-    public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
+    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
         return RegHelper.registerItem(Supplementaries.res(name), () -> burnTime == 0 ? new BlockItem(blockSup.get(), properties) :
                 new WoodBasedBlockItem(blockSup.get(), properties, burnTime));
     }
 
-    public static Supplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
+    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
         return regBlockItem(name, blockSup, properties, 0);
     }
 
 
-
-
     //candle holders
-    public static Map<DyeColor, Supplier<Block>> registerCandleHolders(String baseName) {
+    public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
         Map<DyeColor, Supplier<Block>> map = new HashMap<>();
 
-        Supplier<Block> block = regWithItem(baseName, () -> new CandleHolderBlock(null,
-                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
-                getTab(CreativeModeTab.TAB_DECORATIONS, baseName));
+        Supplier<Block> block = RegHelper.registerBlockWithItem(baseName,
+                () -> new CandleHolderBlock(null, BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder"));
         map.put(null, block);
 
         for (DyeColor color : DyeColor.values()) {
-            String name = baseName + "_" + color.getName();
-            Supplier<Block> bb = regWithItem(name, () -> new CandleHolderBlock(color,
-                            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
-                    getTab(CreativeModeTab.TAB_DECORATIONS, baseName)
+            String name = baseName.getPath() + "_" + color.getName();
+            Supplier<Block> bb = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
+                    () -> new CandleHolderBlock(color, BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                    getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder")
             );
             map.put(color, bb);
+        }
+        if (CompatHandler.BUZZIER_BEES) {
+            BuzzierBeesCompat.registerCandle(baseName);
+        }
+        if(CompatHandler.CAVE_ENHANCEMENTS){
+            CaveEnhancementsCompat.registerCandle(baseName);
         }
         return map;
     }

@@ -283,7 +283,7 @@ public class CreateCompatImpl {
             Rotation rotation = isClockWise(rot, dir);
 
             CompoundTag com = context.tileData;
-
+            this.sandData = HourglassTimeData.EMPTY;
             var prevSandData = this.sandData;
             NonNullList<ItemStack> l = NonNullList.create();
             ContainerHelper.loadAllItems(com, l);

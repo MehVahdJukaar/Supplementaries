@@ -5,11 +5,13 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -29,7 +31,8 @@ public class ModTags {
     public static final TagKey<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final TagKey<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     public static final TagKey<Block> WATER_HOLDER = blockTag("water_holder");
-    public static final TagKey<Block> POURING_TANK = blockTag("pouring_tank");
+    public static final TagKey<Block> FAUCET_CONNECTION_BLACKLIST = blockTag("faucet_connection_blacklist");
+    public static final TagKey<Block> FAUCET_CONNECTION_WHITELIST = blockTag("faucet_connection_whitelist");
     public static final TagKey<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final TagKey<Block> PANE_CONNECTION = blockTag("pane_connection");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
@@ -85,6 +88,8 @@ public class ModTags {
     public static final TagKey<Structure> PILLAGER_OUTPOST = MCstructureTag("pillager_outpost");
     public static final TagKey<Structure> SWAMP_HUT = MCstructureTag("swamp_hut");
 
+    public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
+
 
     //biomes
     public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
@@ -93,12 +98,14 @@ public class ModTags {
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
     private static TagKey<Structure> MCstructureTag(String name) {
-        return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(name));
     }
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));
     }
-
+    private static TagKey<Potion> potionTag(String name) {
+        return TagKey.create(Registry.POTION_REGISTRY, Supplementaries.res(name));
+    }
     private static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registry.ITEM_REGISTRY, Supplementaries.res(name));
     }

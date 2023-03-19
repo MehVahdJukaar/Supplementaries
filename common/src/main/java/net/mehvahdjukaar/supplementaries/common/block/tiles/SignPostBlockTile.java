@@ -44,7 +44,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected, IExtraModelDataProvider {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
 
     public static final ModelDataKey<Boolean> FRAMED = ModBlockProperties.FRAMED;
 

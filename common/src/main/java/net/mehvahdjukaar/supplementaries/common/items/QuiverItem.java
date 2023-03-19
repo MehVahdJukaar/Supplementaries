@@ -37,9 +37,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         super(properties);
     }
 
-
-    //TODO: quark arrow preview
-
     @Override
     public boolean canFitInsideContainerItems() {
         return false;

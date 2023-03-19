@@ -50,7 +50,6 @@ dependencies {
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-restitched-462672:3908334")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modImplementation("curse.maven:ctm-refabricated-633997:3834086")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
 
@@ -128,4 +127,29 @@ publishing {
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
+}
+
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+
+    apiToken = System.getenv('curseforge_token')
+    disableVersionDetection()
+
+    def mainFile = upload(rootProject.project_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}-fabric.jar"))
+    mainFile.changelog = rootProject.file('changelog.md')
+    mainFile.changelogType = "markdown"
+    mainFile.releaseType = "release"
+    mainFile.addGameVersion(rootProject.minecraft_version)
+    mainFile.addModLoader("fabric")
+    mainFile.addRequirement("selene")
+
+    mainFile.addRequirement("the-bumblezone-fabric")
+    mainFile.addOptional("decorative-blocks")
+    mainFile.addOptional("flan")
+    mainFile.addOptional("snowy-spirit")
+    mainFile.addOptional("haunted-harvest")
+    mainFile.addOptional("model-gap-fix")
+    mainFile.addOptional("map-atlases")
+    mainFile.addOptional("farmers-delight-fabric")
+
+
 }

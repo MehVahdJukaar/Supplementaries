@@ -41,6 +41,7 @@ public class ModSetup {
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
+            ModSetup::registerFramed,
             CauldronRegistry::registerInteractions,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
@@ -99,6 +100,12 @@ public class ModSetup {
 
         Parrot.TAME_FOOD.add(ModRegistry.FLAX_SEEDS_ITEM.get());
 
+    }
+
+    private static void registerFramed() {
+        ModRegistry.TIMBER_FRAME.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_FRAME.get());
+        ModRegistry.TIMBER_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_BRACE.get());
+        ModRegistry.TIMBER_CROSS_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_CROSS_BRACE.get());
     }
 
     private static void registerCompostables() {

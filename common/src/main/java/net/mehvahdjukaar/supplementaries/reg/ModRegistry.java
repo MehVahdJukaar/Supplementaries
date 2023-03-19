@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.VerticalSlabBlock;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -36,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static net.mehvahdjukaar.supplementaries.Supplementaries.res;
 import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.*;
 
@@ -54,22 +56,22 @@ public class ModRegistry {
     //misc entries
 
     //loot
-    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(Supplementaries.res("curse_loot"),
+    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
             () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType> RANDOM_ARROW_FUNCTION = RegHelper.register(Supplementaries.res("random_arrows"),
+    public static final Supplier<LootItemFunctionType> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
             () -> new LootItemFunctionType(new RandomArrowFunction.Serializer()), Registry.LOOT_FUNCTION_TYPE);
 
     //paintings
     public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
-            Supplementaries.res("bombs"), () -> new PaintingVariant(32, 32));
+            res("bombs"), () -> new PaintingVariant(32, 32));
 
     //enchantment
     public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerAsync(
-            Supplementaries.res(STASIS_NAME), StasisEnchantment::new, Registry.ENCHANTMENT);
+            res(STASIS_NAME), StasisEnchantment::new, Registry.ENCHANTMENT);
 
     //effects
     public static final Supplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
-            Supplementaries.res("overencumbered"), OverencumberedEffect::new);
+            res("overencumbered"), OverencumberedEffect::new);
 
 
     //red merchant
@@ -287,7 +289,7 @@ public class ModRegistry {
     ));
     public static final Supplier<BlockEntityType<SackBlockTile>> SACK_TILE = regTile(
             SACK_NAME, () -> PlatformHelper.newBlockEntityType(
-                    SackBlockTile::new, SACK.get()));
+                    SackBlockTile::new, SackBlock.SACK_BLOCKS.toArray(Block[]::new)));
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
             new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, SACK_NAME)).stacksTo(1)));
@@ -393,7 +395,7 @@ public class ModRegistry {
 
 
     //candle holder
-    public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(CANDLE_HOLDER_NAME);
+    public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(Supplementaries.res(CANDLE_HOLDER_NAME));
 
 
     //copper lantern
@@ -513,7 +515,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = regTile(
             ITEM_SHELF_NAME, () -> PlatformHelper.newBlockEntityType(
-                    ItemShelfBlockTile::new, ITEM_SHELF.get()));
+                    ItemShelfBlockTile::new, ItemShelfBlock.ITEM_SHELF_BLOCKS.toArray(Block[]::new)));
 
     //doormat
     public static final Supplier<Block> DOORMAT = regWithItem(DOORMAT_NAME, () -> new DoormatBlock(
@@ -936,7 +938,7 @@ public class ModRegistry {
     );
 
     //daub
-    public static final Supplier<Block> DAUB = regWithItem(DAUB_NAME, () -> new Block(
+    public static final RegSupplier<Block> DAUB = regWithItem(DAUB_NAME, () -> new Block(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SNOW)
                     .sound(SoundType.PACKED_MUD)
                     .strength(1.5f, 3f)
@@ -944,67 +946,67 @@ public class ModRegistry {
 
     //wattle and daub
     //frame
-    public static final Supplier<Block> DAUB_FRAME = regWithItem(DAUB_FRAME_NAME, () -> new Block(
+    public static final RegSupplier<Block> DAUB_FRAME = regWithItem(DAUB_FRAME_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(DAUB.get())
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
     //brace
-    public static final Supplier<Block> DAUB_BRACE = regWithItem(DAUB_BRACE_NAME, () -> new FlippedBlock(
+    public static final RegSupplier<Block> DAUB_BRACE = regWithItem(DAUB_BRACE_NAME, () -> new FlippedBlock(
             BlockBehaviour.Properties.copy(DAUB.get())
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //cross brace
-    public static final Supplier<Block> DAUB_CROSS_BRACE = regWithItem(DAUB_CROSS_BRACE_NAME, () -> new Block(
+    public static final RegSupplier<Block> DAUB_CROSS_BRACE = regWithItem(DAUB_CROSS_BRACE_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(DAUB.get())
     ), CreativeModeTab.TAB_BUILDING_BLOCKS);
 
     //timber frame
-    public static final Supplier<Block> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
+    public static final RegSupplier<FrameBlock> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
                 .dynamicShape().sound(SoundType.SCAFFOLDING);
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p, DAUB_FRAME);
+        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber brace
-    public static final Supplier<Block> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
+    public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p, DAUB_BRACE);
+        return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
     });
     public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(TIMBER_BRACE.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     //timber cross brace
-    public static final Supplier<Block> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
+    public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p, DAUB_CROSS_BRACE);
+        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(TIMBER_CROSS_BRACE.get(),
             (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
 
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
             TIMBER_FRAME_NAME, () -> PlatformHelper.newBlockEntityType(
-                    FrameBlockTile::new, TIMBER_FRAME.get(), TIMBER_CROSS_BRACE.get(), TIMBER_BRACE.get()));
+                    FrameBlockTile::new, FrameBlock.FRAMED_BLOCKS.toArray(Block[]::new)));
 
     //lapis bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
-            RegHelper.registerFullBlockSet(Supplementaries.res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
+            RegHelper.registerFullBlockSet(res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
                             .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F),
                     isDisabled(LAPIS_BRICKS_NAME));
 
     //ashen bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
-            RegHelper.registerFullBlockSet(Supplementaries.res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
+            RegHelper.registerFullBlockSet(res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
 
     //stone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
-            RegHelper.registerFullBlockSet(Supplementaries.res(STONE_TILE_NAME), Blocks.STONE_BRICKS, isDisabled(STONE_TILE_NAME));
+            RegHelper.registerFullBlockSet(res(STONE_TILE_NAME), Blocks.STONE_BRICKS, isDisabled(STONE_TILE_NAME));
 
     //blackstone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
-            RegHelper.registerFullBlockSet(Supplementaries.res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE, isDisabled(BLACKSTONE_TILE_NAME));
+            RegHelper.registerFullBlockSet(res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE, isDisabled(BLACKSTONE_TILE_NAME));
 
     //stone lamp
     public static final Supplier<Block> STONE_LAMP = regWithItem(STONE_LAMP_NAME, () -> new Block(

@@ -3,16 +3,16 @@ package net.mehvahdjukaar.supplementaries.integration;
 import com.teamabode.cave_enhancements.common.block.entity.SpectacleCandleBlockEntity;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -27,14 +27,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModConstants.CANDLE_HOLDER_NAME;
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.getTab;
-import static net.mehvahdjukaar.supplementaries.reg.RegUtils.regWithItem;
 
 public class CaveEnhancementsCompat {
+
+    private static final List<Supplier<? extends Block>> SPECTACLE_CANDLE_HOLDERS = new ArrayList<>();
+    private static Supplier<BlockEntityType<SpectacleCandleHolderTile>> tile;
 
     public static void tick(Level level, BlockPos pos, BlockState state) {
         tick(level, pos, state, null);
@@ -44,26 +47,31 @@ public class CaveEnhancementsCompat {
         SpectacleCandleBlockEntity.tick(level, pos, state);
     }
 
-    public static final Supplier<Block> SPECTACLE_CANDLE_HOLDER = regWithItem(CANDLE_HOLDER_NAME + "_spectacle",
-            () -> new SpectacleCandleHolder(null,
-                    BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME),
-            getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME));
-    public static final Supplier<BlockEntityType<SpectacleCandleHolderTile>> SPECTACLE_CANDLE_HOLDER_TILE =
-            RegUtils.regTile(CANDLE_HOLDER_NAME + "_spectacle",
-                    () -> PlatformHelper.newBlockEntityType(SpectacleCandleHolderTile::new, SPECTACLE_CANDLE_HOLDER.get())
-            );
+    public static void registerCandle(ResourceLocation id) {
+        var name = id.getPath() + "_spectacle";
+        ResourceLocation res = new ResourceLocation(id.getNamespace(), name);
+        var b = RegHelper.registerBlockWithItem(res, () -> new SpectacleCandleHolder(null,
+                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME),
+                getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME));
+        SPECTACLE_CANDLE_HOLDERS.add(b);
 
-    public static void init() {
+        tile = RegHelper.registerBlockEntityType(res,
+                () -> PlatformHelper.newBlockEntityType(SpectacleCandleHolderTile::new,
+                        SPECTACLE_CANDLE_HOLDERS.stream().map(Supplier::get).toArray(Block[]::new))
+        );
     }
+
+
 
     public static void setupClient() {
-        ClientPlatformHelper.registerRenderType(SPECTACLE_CANDLE_HOLDER.get(), RenderType.cutout());
+        SPECTACLE_CANDLE_HOLDERS.forEach(b -> ClientPlatformHelper.registerRenderType(b.get(), RenderType.cutout()));
+
     }
 
-    private static class SpectacleCandleHolderTile extends BlockEntity{
+    private static class SpectacleCandleHolderTile extends BlockEntity {
 
         public SpectacleCandleHolderTile(BlockPos blockPos, BlockState blockState) {
-            super(SPECTACLE_CANDLE_HOLDER_TILE.get(), blockPos, blockState);
+            super(tile.get(), blockPos, blockState);
         }
     }
 
@@ -83,7 +91,7 @@ public class CaveEnhancementsCompat {
         @Nullable
         @Override
         public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-            return level.isClientSide ? null : Utils.getTicker(blockEntityType, SPECTACLE_CANDLE_HOLDER_TILE.get(), CaveEnhancementsCompat::tick);
+            return level.isClientSide ? null : Utils.getTicker(blockEntityType, tile.get(), CaveEnhancementsCompat::tick);
         }
 
         @Override

@@ -17,8 +17,8 @@ import java.util.function.Supplier;
 public class FrameBraceBlock extends FrameBlock { //implements IRotationLockable
     public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
-    public FrameBraceBlock(Properties properties, Supplier<Block> daub) {
-        super(properties, daub);
+    public FrameBraceBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FLIPPED, false));
     }
 

@@ -30,27 +30,41 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class FrameBlock extends MimicBlock implements EntityBlock {
+public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
+
+    public static final List<Block> FRAMED_BLOCKS = new ArrayList<>();
 
     public static final BooleanProperty HAS_BLOCK = ModBlockProperties.HAS_BLOCK;
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final VoxelShape OCCLUSION_SHAPE = Block.box(0.01, 0.01, 0.01, 15.99, 15.99, 15.99);
 
-    public final Supplier<Block> daub;
+    private final Map<Block, Block> filledBlocks = new HashMap<>();
 
-    public FrameBlock(Properties properties, Supplier<Block> daub) {
+    public FrameBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
-        this.daub = daub;
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
                 .setValue(LIGHT_LEVEL, 0).setValue(HAS_BLOCK, false));
+        FRAMED_BLOCKS.add(this);
+    }
+
+    public void registerFilledBlock(Block inserted, Block filled) {
+        filledBlocks.put(inserted, filled);
+    }
+
+    @Override
+    public @Nullable Block getFilledBlock(Block inserted) {
+        return filledBlocks.get(inserted);
     }
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if(adjacentBlockState.getBlock() instanceof FrameBlock){
+        if (adjacentBlockState.getBlock() instanceof FrameBlock) {
             boolean hasBlock = state.getValue(HAS_BLOCK);
             boolean neighborHasBlock = adjacentBlockState.getValue(HAS_BLOCK);
             return hasBlock == neighborHasBlock || super.skipRendering(state, adjacentBlockState, side);
@@ -61,7 +75,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FrameBlockTile(pPos, pState, daub);
+        return new FrameBlockTile(pPos, pState);
     }
 
     @Override
@@ -72,7 +86,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
         if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-            return tile.handleInteraction(world, pos, player, hand, trace);
+            return tile.handleInteraction(world, pos, player, hand, trace, true);
         }
         return InteractionResult.PASS;
     }
@@ -125,7 +139,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock {
         }
         return 0;
     }
-    
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);

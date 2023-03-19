@@ -45,9 +45,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SackBlock extends FallingBlock implements EntityBlock {
+
+    public static final List<Block> SACK_BLOCKS = new ArrayList<>();
 
     public static final VoxelShape SHAPE_CLOSED = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
             Block.box(6, 12, 6, 10, 13, 10), Block.box(5, 13, 5, 11, 16, 11));
@@ -62,6 +65,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     public SackBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED, false));
+        SACK_BLOCKS.add(this);
     }
 
     @Override

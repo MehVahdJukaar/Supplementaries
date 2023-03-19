@@ -142,7 +142,8 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     private boolean canConnect(BlockState downState, LevelAccessor world, BlockPos pos, Direction dir) {
         if (downState.getBlock() instanceof JarBlock) return true;
-        else if (downState.is(ModTags.POURING_TANK)) return false;
+        else if (downState.is(ModTags.FAUCET_CONNECTION_BLACKLIST)) return false;
+        else if (downState.is(ModTags.FAUCET_CONNECTION_WHITELIST)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
         return world instanceof Level  level && FluidsUtil.hasFluidHandler(level, pos, dir);
     }

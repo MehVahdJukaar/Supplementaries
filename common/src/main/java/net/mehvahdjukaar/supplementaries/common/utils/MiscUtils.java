@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -128,4 +130,11 @@ public class MiscUtils {
         double myDistW = (dx * dx + dz * dz);
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
+
+
+    @Deprecated(forRemoval = true)
+    public static <T> boolean isTagged(T item, Registry<T> registry, TagKey<T> tag) {
+        return registry.getHolder(registry.getResourceKey(item).get()).map(h -> h.is(tag)).orElse(false);
+    }
+
 }

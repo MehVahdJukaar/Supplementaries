@@ -61,6 +61,7 @@ public class CompatHandler {
     public static final boolean BUMBLEZONE = isLoaded("the_bumblezone");
     public static final boolean CAVE_ENHANCEMENTS = isLoaded("cave_enhancements");
     public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
+    public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
 
 
     private static boolean isLoaded(String name) {
@@ -80,8 +81,6 @@ public class CompatHandler {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
-        if (BUZZIER_BEES) BuzzierBeesCompat.init();
-        if (CAVE_ENHANCEMENTS) CaveEnhancementsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 
