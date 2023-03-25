@@ -128,28 +128,3 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
 }
-
-task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-
-    apiToken = System.getenv('curseforge_token')
-    disableVersionDetection()
-
-    def mainFile = upload(rootProject.project_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}-fabric.jar"))
-    mainFile.changelog = rootProject.file('changelog.md')
-    mainFile.changelogType = "markdown"
-    mainFile.releaseType = "release"
-    mainFile.addGameVersion(rootProject.minecraft_version)
-    mainFile.addModLoader("fabric")
-    mainFile.addRequirement("selene")
-
-    mainFile.addRequirement("the-bumblezone-fabric")
-    mainFile.addOptional("decorative-blocks")
-    mainFile.addOptional("flan")
-    mainFile.addOptional("snowy-spirit")
-    mainFile.addOptional("haunted-harvest")
-    mainFile.addOptional("model-gap-fix")
-    mainFile.addOptional("map-atlases")
-    mainFile.addOptional("farmers-delight-fabric")
-
-
-}

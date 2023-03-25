@@ -1,1 +1,1 @@
-* some changes to accommodate for new mod
+* fixed some possible config issue

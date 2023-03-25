@@ -2,7 +2,8 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
     id 'io.github.juuxel.loom-quiltflower' version '1.7.1' apply false
-    id 'net.darkhax.curseforgegradle' version '1.0.7'
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 architectury {
@@ -12,6 +13,8 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "com.matthewprenger.cursegradle"
+    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -23,6 +26,86 @@ subprojects {
             it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
             it.officialMojangMappings {
                 setNameSyntheticMembers(false)
+            }
+        }
+    }
+
+    var env = System.getenv()
+    var modLoader = name
+
+    var changelogFile = rootProject.file("changelog.md")
+    var changelogText = changelogFile.exists() ? changelogFile.text : ""
+
+    if (env.MODRINTH_TOKEN) {
+        modrinth {
+            projectId = rootProject.mod_id
+            uploadFile = tasks.remapJar
+            gameVersions = [rootProject.minecraft_version]
+            loaders = [modLoader]
+            changelog = changelogText
+
+            if (modLoader == "fabric") {
+                dependencies {
+                    required.project "fabric-api"
+                    required.project "moonlight"
+                }
+            } else {
+                dependencies {
+                    required.project "moonlight"
+                }
+            }
+        }
+    }
+
+    if (env.CURSEFORGE_TOKEN) {
+        curseforge {
+            apiKey = env.CURSEFORGE_TOKEN
+            project {
+                id = rootProject.project_id
+                changelog = changelogText
+                releaseType = 'release'
+                addGameVersion rootProject.minecraft_version
+                addGameVersion modLoader.capitalize()
+
+                mainArtifact(tasks.remapJar)
+
+                if (modLoader == "fabric") {
+                    relations {
+                        requiredDependency "fabric-api"
+                        requiredDependency "selene"
+
+                        optionalDependency "the-bumblezone-fabric"
+                        optionalDependency "decorative-blocks"
+                        optionalDependency("flan")
+                        optionalDependency("snowy-spirit")
+                        optionalDependency("haunted-harvest")
+                        optionalDependency("model-gap-fix")
+                        optionalDependency("map-atlases")
+                        optionalDependency("farmers-delight-fabric")
+                    }
+                } else {
+                    relations {
+                        requiredDependency("selene")
+
+                        optionalDependency("create")
+                        optionalDependency("quark")
+                        optionalDependency("cc-tweaked")
+                        optionalDependency("waystones")
+                        optionalDependency("roughly-enough-items")
+                        optionalDependency("jei")
+                        optionalDependency("model-gap-fix")
+                        optionalDependency("flywheel")
+                        optionalDependency("configured")
+                        optionalDependency("flan-forge")
+                        optionalDependency("haunted-harvest")
+                        optionalDependency("snowy-spirit")
+                        optionalDependency("map-atlases-forge")
+                        optionalDependency("decorative-blocks")
+                        optionalDependency("farmers-delight")
+                        optionalDependency("the-bumblezone-forge")
+                        optionalDependency("map-atlases-forge")
+                    }
+                }
             }
         }
     }

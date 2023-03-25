@@ -52,7 +52,6 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-        ClientPlatformHelper.registerOptionalTexturePack();
         Credits.fetchFromServer();
 
         CommonConfigs.init();

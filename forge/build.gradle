@@ -167,35 +167,3 @@ dependencies {
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
 }
-
-task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-
-    apiToken = System.getenv('curseforge_token')
-    disableVersionDetection()
-
-    def mainFile = upload(rootProject.project_id, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.changelog = rootProject.file('changelog.md')
-    mainFile.changelogType = "markdown"
-    mainFile.releaseType = "release"
-    mainFile.addGameVersion(rootProject.minecraft_version)
-    mainFile.addModLoader("forge")
-    mainFile.addRequirement("selene")
-
-    mainFile.addOptional("create")
-    mainFile.addOptional("quark")
-    mainFile.addOptional("cc-tweaked")
-    mainFile.addOptional("waystones")
-    mainFile.addOptional("roughly-enough-items")
-    mainFile.addOptional("jei")
-    mainFile.addOptional("model-gap-fix")
-    mainFile.addOptional("flywheel")
-    mainFile.addOptional("configured")
-    mainFile.addOptional("flan-forge")
-    mainFile.addOptional("haunted-harvest")
-    mainFile.addOptional("snowy-spirit")
-    mainFile.addOptional("map-atlases-forge")
-    mainFile.addOptional("decorative-blocks")
-    mainFile.addOptional("farmers-delight")
-    mainFile.addOptional("the-bumblezone-forge")
-    mainFile.addOptional("map-atlases-forge")
-}

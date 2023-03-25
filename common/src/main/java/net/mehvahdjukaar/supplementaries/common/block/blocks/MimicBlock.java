@@ -10,6 +10,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -32,7 +34,8 @@ public abstract class MimicBlock extends Block {
             BlockState mimicState = tile.getHeldBlock();
             //prevent infinite recursion
             if (!mimicState.isAir() && !(mimicState.getBlock() instanceof MimicBlock))
-                return mimicState.getDestroyProgress(player, worldIn, pos);
+                return Math.max(state.getDestroyProgress(player, worldIn, pos),
+                        mimicState.getDestroyProgress(player, worldIn, pos));
         }
         return super.getDestroyProgress(state, player, worldIn, pos);
     }
@@ -68,5 +71,18 @@ public abstract class MimicBlock extends Block {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
+        if (world.getBlockEntity(pos) instanceof IBlockHolder tile) {
+            BlockState mimicState = tile.getHeldBlock();
+            if (!mimicState.isAir()) {
+                return Math.max(ForgeHelper.getExplosionResistance(state, (Level) world, pos, explosion),
+                        ForgeHelper.getExplosionResistance(mimicState, (Level) world, pos, explosion));
+            }
+        }
+        return 2;
     }
 }

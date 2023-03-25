@@ -15,7 +15,6 @@
     "SerfOpeneableContainerMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
-    "SelfMimicMixin",
     "SelfSafeMixin",
     "SelfPlanterMixin",
     "SelfSoapItemMixin",
