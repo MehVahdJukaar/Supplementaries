@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.item.FuelBlockItem;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
@@ -22,10 +24,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TimberFrameItem extends WoodBasedBlockItem {
+public class TimberFrameItem extends FuelBlockItem {
+
+    public TimberFrameItem(Block block, Properties properties, int burnTicks) {
+        super(block, properties, () -> burnTicks);
+    }
 
     public TimberFrameItem(Block block, Properties properties) {
-        super(block, properties, 200);
+        this(block, properties, 0);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class TimberFrameItem extends WoodBasedBlockItem {
             BlockState clicked = world.getBlockState(pos);
             if (FrameBlockTile.isValidBlock(clicked, pos, world)) {
                 BlockState frame = this.getBlock().getStateForPlacement(new BlockPlaceContext(context));
-                if(frame != null) {
+                if (frame != null) {
                     world.setBlockAndUpdate(pos, frame);
                     if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
                         SoundType s = frame.getSoundType();
@@ -55,7 +61,6 @@ public class TimberFrameItem extends WoodBasedBlockItem {
         }
         return super.useOn(context);
     }
-
 
 
     @Override

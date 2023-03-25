@@ -28,6 +28,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.mixins.ShulkerBoxBlockEntityMixin;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.PackRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +52,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
+        ClientPlatformHelper.registerOptionalTexturePack();
         Credits.fetchFromServer();
 
         CommonConfigs.init();

@@ -16,6 +16,7 @@ public abstract class ChatMixin {
     @Inject(method = "handleChatInput", at = @At("HEAD"), cancellable = true)
     private void interceptMessage(String string, boolean bl, CallbackInfoReturnable<Boolean> callback) {
         PicklePlayer.onChatEvent(string);
+
     }
 
 }

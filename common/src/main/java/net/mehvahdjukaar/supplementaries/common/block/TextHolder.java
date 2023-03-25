@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -100,10 +101,17 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public void setLine(int line, Component text) {
-        Style style = this.hasAntiqueInk ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY;
-        text = text.copy().setStyle(style);
-        this.textLines[line] = text;
+        MutableComponent t = text.copy();
+        if (this.hasAntiqueInk) {
+            t.setStyle(text.getStyle().withFont(ModTextures.ANTIQUABLE_FONT));
+        }
+        this.textLines[line] = t;
         this.renderText[line] = null;
+    }
+
+    @Deprecated
+    public void setLine(int line, Component text, Style style) {
+        setLine(line, text);
     }
 
     public Component[] getTextLines() {

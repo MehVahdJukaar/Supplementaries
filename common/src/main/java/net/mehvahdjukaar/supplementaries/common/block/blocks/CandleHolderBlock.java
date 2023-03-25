@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -62,6 +65,12 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     public static final IntegerProperty CANDLES = BlockStateProperties.CANDLES;
 
     private static final EnumMap<Direction, EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>>> PARTICLE_OFFSETS;
+
+    private static final List<Vec3> S2_FLOOR_1 = List.of(new Vec3(0.5, 0.6875 + 3 / 16f, 0.5));
+    private static final List<Vec3> S2_FLOOR_3 = List.of(new Vec3(0.1875, 0.9375 - 1 / 16f, 0.5), new Vec3(0.5, 0.9375, 0.5), new Vec3(0.8125, 0.9375 - 1 / 16f, 0.5));
+    private static final List<Vec3> S2_FLOOR_3f = List.of(new Vec3(0.5, 0.9375 - 1 / 16f, 0.1875), new Vec3(0.5, 0.9375, 0.5), new Vec3(0.5, 0.9375 - 1 / 16f, 0.8125));
+    private final Supplier<Boolean> isFromSuppSquared = Suppliers.memoize(() ->
+            !Utils.getID(this).getNamespace().equals(Supplementaries.MOD_ID));
 
     static {
         PARTICLE_OFFSETS = new EnumMap<>(Direction.class);
@@ -225,7 +234,13 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     private List<Vec3> getParticleOffset(BlockState state) {
         Direction direction = state.getValue(FACING);
         AttachFace face = state.getValue(FACE);
-        return PARTICLE_OFFSETS.get(direction).get(face).get((int) state.getValue(CANDLES));
+        int candles = state.getValue(CANDLES);
+        var v = PARTICLE_OFFSETS.get(direction).get(face).get(candles);
+        if (isFromSuppSquared.get() && face == AttachFace.FLOOR) {
+            if (candles == 1) return S2_FLOOR_1;
+            if (candles == 3) return direction.getAxis() == Direction.Axis.Z ? S2_FLOOR_3 : S2_FLOOR_3f;
+        }
+        return v;
     }
 
     @Override
@@ -278,8 +293,8 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     @Nullable
     @Override
     public Item changeItemColor(@Nullable DyeColor color) {
-        var c =  ModRegistry.CANDLE_HOLDERS.get(color);
-        if(c != null)return c.get().asItem();
+        var c = ModRegistry.CANDLE_HOLDERS.get(color);
+        if (c != null) return c.get().asItem();
         return null;
     }
 

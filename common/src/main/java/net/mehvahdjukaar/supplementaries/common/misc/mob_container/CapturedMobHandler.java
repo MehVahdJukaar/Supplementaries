@@ -31,7 +31,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
     private static final Set<String> COMMAND_MOBS = new HashSet<>();
 
     private static final Map<EntityType<?>, DataDefinedCatchableMob> CUSTOM_MOB_PROPERTIES = new IdentityHashMap<>();
-    private static DataDefinedCatchableMob MODDED_FISH_PROPERTIES;
+    private static DataDefinedCatchableMob moddedFishProperty;
 
     protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -50,7 +50,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
             var v = DataDefinedCatchableMob.CODEC.parse(JsonOps.INSTANCE, json);
             var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse captured mob properties: {}", e));
             if (key.getPath().equals("generic_fish")) {
-                MODDED_FISH_PROPERTIES = data;
+                moddedFishProperty = data;
             } else {
                 list.add(data);
             }
@@ -60,18 +60,22 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
                 Registry.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
             }
         }
+        //somebody reported a weird bug with this
+        if (moddedFishProperty == null) {
+            Supplementaries.LOGGER.error("Failed to find json for 'generic_fish'. How? Found jsons were : {}", jsons.keySet());
+        }
     }
 
 
     public static void sendDataToClient(ServerPlayer player) {
         Set<DataDefinedCatchableMob> set = new HashSet<>(CUSTOM_MOB_PROPERTIES.values());
         NetworkHandler.CHANNEL.sendToClientPlayer(player,
-                new ClientBoundSyncCapturedMobsPacket(set,MODDED_FISH_PROPERTIES));
+                new ClientBoundSyncCapturedMobsPacket(set, moddedFishProperty));
     }
 
     public static void acceptClientData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {
-        if(defaultFish != null){
-            MODDED_FISH_PROPERTIES = defaultFish;
+        if (defaultFish != null) {
+            moddedFishProperty = defaultFish;
         }
         CUSTOM_MOB_PROPERTIES.clear();
         for (var c : list) {
@@ -83,7 +87,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     public static ICatchableMob getDataCap(EntityType<?> type, boolean isFish) {
         var c = CUSTOM_MOB_PROPERTIES.get(type);
-        if (c == null && isFish) return MODDED_FISH_PROPERTIES;
+        if (c == null && isFish) return moddedFishProperty;
         return c;
     }
 
@@ -105,7 +109,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         }
         try {
 
-            File exportPath = new File(folder, data.getOwners().get(0).toString().replace(":","_")+ ".json");
+            File exportPath = new File(folder, data.getOwners().get(0).toString().replace(":", "_") + ".json");
             try (FileWriter writer = new FileWriter(exportPath)) {
                 var j = DataDefinedCatchableMob.CODEC.encodeStart(JsonOps.INSTANCE, data);
 
@@ -132,7 +136,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         return jsonObject;
     }
 
-    public static boolean isCommandMob(String entity){
+    public static boolean isCommandMob(String entity) {
         return COMMAND_MOBS.contains(entity);
     }
 

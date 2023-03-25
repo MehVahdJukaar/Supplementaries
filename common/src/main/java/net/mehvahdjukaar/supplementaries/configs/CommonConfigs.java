@@ -61,6 +61,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
+    private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
@@ -71,6 +72,8 @@ public class CommonConfigs {
             }
             return null;
         });
+
+        stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
     }
 
     @Nullable
@@ -84,6 +87,10 @@ public class CommonConfigs {
     @Nullable
     public static Holder.Reference<Block> getRopeOverride() {
         return ropeOverride.get();
+    }
+
+    public static boolean stasisEnabled() {
+        return stasisEnabled;
     }
 
     public enum Hands {

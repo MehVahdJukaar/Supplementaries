@@ -31,7 +31,7 @@ public class LootTablesInjects {
         if (CommonConfigs.Functional.FLAX_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectFlax);
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBlueBomb);
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBomb);
-        if (StasisEnchantment.ENABLED) LOOT_INJECTS.add(LootTablesInjects::tryInjectStasis);
+        if (CommonConfigs.stasisEnabled()) LOOT_INJECTS.add(LootTablesInjects::tryInjectStasis);
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get() &&
                 CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())
             LOOT_INJECTS.add(LootTablesInjects::tryInjectSpikes);

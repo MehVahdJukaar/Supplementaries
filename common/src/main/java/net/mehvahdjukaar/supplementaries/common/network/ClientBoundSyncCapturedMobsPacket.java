@@ -17,24 +17,24 @@ import java.util.Set;
 
 public class ClientBoundSyncCapturedMobsPacket implements Message {
 
-    protected final Set<DataDefinedCatchableMob> mobMap;
+    protected final Set<DataDefinedCatchableMob> mobSet;
     @Nullable
     protected final DataDefinedCatchableMob fish;
 
     public ClientBoundSyncCapturedMobsPacket(final Set<DataDefinedCatchableMob> mobMap, @Nullable DataDefinedCatchableMob fish) {
-        this.mobMap = mobMap;
+        this.mobSet = mobMap;
         this.fish = fish;
     }
 
     public ClientBoundSyncCapturedMobsPacket(FriendlyByteBuf buf) {
         int size = buf.readInt();
-        this.mobMap = new HashSet<>();
+        this.mobSet = new HashSet<>();
         for (int i = 0; i < size; i++) {
             CompoundTag tag = buf.readNbt();
             if (tag != null) {
                 var r = DataDefinedCatchableMob.CODEC.parse(NbtOps.INSTANCE, tag);
                 if (r.result().isPresent()) {
-                    mobMap.add(r.result().get());
+                    mobSet.add(r.result().get());
                 }
             }
         }
@@ -50,7 +50,11 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         List<CompoundTag> tags = new ArrayList<>();
-        for (var entry : this.mobMap) {
+        for (var entry : this.mobSet) {
+            if (entry == null) {
+                Supplementaries.LOGGER.error("Found a null captured mob property. How??");
+                continue; //satefy check
+            }
             var r = DataDefinedCatchableMob.CODEC.encodeStart(NbtOps.INSTANCE, entry);
             if (r.result().isPresent()) {
                 tags.add((CompoundTag) r.result().get());
@@ -58,17 +62,21 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
         }
         buf.writeInt(tags.size());
         tags.forEach(buf::writeNbt);
-        var r = DataDefinedCatchableMob.CODEC.encodeStart(NbtOps.INSTANCE, fish);
-        if (r.result().isPresent()) {
-            buf.writeBoolean(true);
-            buf.writeNbt((CompoundTag) r.result().get());
-        } else buf.writeBoolean(false);
+        if (fish != null) {
+            var r = DataDefinedCatchableMob.CODEC.encodeStart(NbtOps.INSTANCE, fish);
+            if (r.result().isPresent()) {
+                buf.writeBoolean(true);
+                buf.writeNbt((CompoundTag) r.result().get());
+                return;
+            }
+        }
+        buf.writeBoolean(false);
     }
 
     @Override
     public void handle(ChannelHandler.Context context) {
         //client world
-        CapturedMobHandler.acceptClientData(mobMap, fish);
+        CapturedMobHandler.acceptClientData(mobSet, fish);
         Supplementaries.LOGGER.info("Synced Captured Mobs settings");
     }
 

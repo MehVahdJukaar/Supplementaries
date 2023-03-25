@@ -126,32 +126,30 @@ public class RegUtils {
                 new WoodBasedBlockItem(blockSup.get(), properties, burnTime));
     }
 
-    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
-        return regBlockItem(name, blockSup, properties, 0);
-    }
-
-
     //candle holders
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
         Map<DyeColor, Supplier<Block>> map = new HashMap<>();
 
+        BlockBehaviour.Properties prop = BlockBehaviour.Properties.of(Material.DECORATION)
+                .noOcclusion().instabreak().sound(SoundType.LANTERN);
+
         Supplier<Block> block = RegHelper.registerBlockWithItem(baseName,
-                () -> new CandleHolderBlock(null, BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+                () -> new CandleHolderBlock(null, prop),
                 getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder"));
         map.put(null, block);
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName.getPath() + "_" + color.getName();
-            Supplier<Block> bb = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
-                    () -> new CandleHolderBlock(color, BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())),
+            Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
+                    () -> new CandleHolderBlock(color, prop),
                     getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder")
             );
-            map.put(color, bb);
+            map.put(color, coloredBlock);
         }
         if (CompatHandler.BUZZIER_BEES) {
             BuzzierBeesCompat.registerCandle(baseName);
         }
-        if(CompatHandler.CAVE_ENHANCEMENTS){
+        if (CompatHandler.CAVE_ENHANCEMENTS) {
             CaveEnhancementsCompat.registerCandle(baseName);
         }
         return map;

@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Objects;
 
+//TODO: move to lib
 public class ServerBoundSetTextHolderPacket implements Message {
     private final BlockPos pos;
     public final Component[] signText;

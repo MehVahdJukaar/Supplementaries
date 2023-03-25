@@ -77,8 +77,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                             tile.setFakeItem(false);
                             player.setItemInHand(handIn, it);
                             tile.setChanged();
-
-                            return InteractionResult.CONSUME;
                         }
                     }
                     //place or interact
@@ -101,11 +99,10 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
                         else {
                             tile.sendOpenGuiPacket(level, pos, player);
                         }
-                        return InteractionResult.CONSUME;
                     }
                 }
             }
-            return InteractionResult.PASS;
+            return InteractionResult.CONSUME;
         } else {
             return InteractionResult.SUCCESS;
         }

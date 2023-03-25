@@ -13,9 +13,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class StasisEnchantment extends Enchantment {
 
-    public static final boolean ENABLED = CommonConfigs.Tools.STASIS_ENABLED.get() &&
-            (CommonConfigs.Tools.SLINGSHOT_ENABLED.get() || CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get());
-
     public StasisEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentCategory.CROSSBOW,
                 new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
@@ -38,18 +35,18 @@ public class StasisEnchantment extends Enchantment {
 
     @Override
     public boolean isTradeable() {
-        return ENABLED;
+        return CommonConfigs.stasisEnabled();
     }
 
     @Override
     public boolean isDiscoverable() {
-        return ENABLED;
+        return CommonConfigs.stasisEnabled();
     }
 
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public boolean isAllowedOnBooks() {
-        return ENABLED;
+        return CommonConfigs.stasisEnabled();
     }
 
     @Override

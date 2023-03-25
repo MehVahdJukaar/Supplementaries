@@ -968,7 +968,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
 
     //timber brace
     public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
@@ -976,7 +976,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
     });
     public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(TIMBER_BRACE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
 
     //timber cross brace
     public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
@@ -984,7 +984,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(TIMBER_CROSS_BRACE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME))));
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
 
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
             TIMBER_FRAME_NAME, () -> PlatformHelper.newBlockEntityType(
