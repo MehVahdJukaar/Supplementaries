@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.item.WrittenBookItem;
 import net.minecraft.world.level.Level;
@@ -70,16 +71,21 @@ public class AntiqueInkHelper {
     public static void setAntiqueInk(ItemStack stack, boolean ink) {
         if (ink) {
             stack.getOrCreateTag().putBoolean("AntiqueInk", true);
-            if (stack.hasTag() && (stack.getItem() instanceof WrittenBookItem || stack.getItem() instanceof WritableBookItem)) {
-                ListTag listTag = stack.getTag().getList("pages", 8);
-                ListTag newListTag = new ListTag();
-                for (var v : listTag) {
-                    MutableComponent comp = Component.Serializer.fromJson(v.getAsString());
-                    newListTag.add(StringTag.valueOf(
-                            Component.Serializer.toJson(comp.withStyle(comp.getStyle().withFont(ModTextures.ANTIQUABLE_FONT))))
-                    );
+            if ((stack.getItem() instanceof WrittenBookItem || stack.getItem() instanceof WritableBookItem)) {
+                if (stack.hasTag()) {
+                    ListTag listTag = stack.getTag().getList("pages", 8);
+                    ListTag newListTag = new ListTag();
+                    for (var v : listTag) {
+                        MutableComponent comp = Component.Serializer.fromJson(v.getAsString());
+                        newListTag.add(StringTag.valueOf(
+                                Component.Serializer.toJson(comp.withStyle(comp.getStyle().withFont(ModTextures.ANTIQUABLE_FONT))))
+                        );
+                    }
+                    stack.addTagElement("pages", newListTag);
                 }
-                stack.addTagElement("pages",newListTag);
+                if (stack.getItem() == Items.WRITTEN_BOOK) {
+                    stack.getOrCreateTag().putInt("generation", 3);
+                }
             }
         } else if (stack.hasTag()) {
             stack.getTag().remove("AntiqueInk");
@@ -92,7 +98,7 @@ public class AntiqueInkHelper {
                             Component.Serializer.toJson(comp.withStyle(Style.EMPTY)))
                     );
                 }
-                stack.addTagElement("pages",newListTag);
+                stack.addTagElement("pages", newListTag);
             }
         }
     }

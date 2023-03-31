@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -12,8 +13,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public class AntiqueBookRecipe extends CustomRecipe {
-    public AntiqueBookRecipe(ResourceLocation idIn) {
+public class TatteredBookRecipe extends CustomRecipe {
+    public TatteredBookRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
@@ -27,21 +28,12 @@ public class AntiqueBookRecipe extends CustomRecipe {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.isEmpty()) {
-            } else if (isBook(stack)) {
-                boolean c = AntiqueInkHelper.hasAntiqueInk(stack);
-                if (clear != null && c != clear) {
-                    return false;
-                } else clear = c;
-
+            } else if (isValidBook(stack)) {
                 if (itemstack != null) {
                     return false;
                 }
                 itemstack = stack;
-            } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() || stack.getItem() == ModRegistry.SOAP.get()) {
-                boolean c = stack.getItem() == ModRegistry.SOAP.get();
-                if (clear != null && c != clear) {
-                    return false;
-                } else clear = c;
+            } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get()) {
                 if (itemstack1 != null) {
                     return false;
                 }
@@ -52,8 +44,9 @@ public class AntiqueBookRecipe extends CustomRecipe {
         return itemstack != null && itemstack1 != null;
     }
 
-    private static boolean isBook(ItemStack stack) {
-        return (stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK);
+    private static boolean isValidBook(ItemStack stack) {
+        return stack.getItem() == Items.WRITTEN_BOOK &&
+                (!stack.hasTag() || stack.getTag().getInt("generation") == 0);
     }
 
     @Override
@@ -67,10 +60,11 @@ public class AntiqueBookRecipe extends CustomRecipe {
         }
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (isBook(stack)) {
+            if (isValidBook(stack)) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 AntiqueInkHelper.setAntiqueInk(s, antique);
+
                 return s;
             }
         }

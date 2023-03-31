@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
@@ -17,6 +19,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -29,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 
 public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider {
@@ -37,6 +41,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     public ClientDynamicResourcesGenerator() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
+        this.dynamicPack.addNamespaces("minecraft");
         this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get();
     }
 
@@ -52,9 +57,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     @Override
     public void generateStaticAssetsOnStartup(ResourceManager manager) {
-        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-            this.dynamicPack.addNamespaces("minecraft");
-        }
 
         this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
                 """ 
@@ -82,14 +84,60 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     //-------------resource pack dependant textures-------------
 
+    @Deprecated
+    public static void addModelOverride(ResourceManager manager, DynamicTexturePack pack, ResourceLocation modelRes,
+                                        Consumer<RPUtils.CrossbowModelAdder> modelConsumer) {
+        var o = manager.getResource(ResType.ITEM_MODELS.getPath(modelRes));
+        if (o.isPresent()) {
+            try (var model = o.get().open()) {
+                var json = RPUtils.deserializeJson(model);
+                JsonArray overrides;
+                if(json.has("overrides")){
+                    overrides = json.getAsJsonArray("overrides");;
+                }else overrides = new JsonArray();
+
+                modelConsumer.accept(ov -> overrides.add(serializeOverride(ov)));
+
+                json.add("overrides", overrides);
+                pack.addItemModel(modelRes, json);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @Deprecated
+    private static JsonObject serializeOverride(ItemOverride override) {
+        JsonObject json = new JsonObject();
+        json.addProperty("model", override.getModel().toString());
+        JsonObject predicates = new JsonObject();
+        override.getPredicates().forEach(p -> {
+            predicates.addProperty(p.getProperty().toString(), p.getValue());
+        });
+        json.add("predicate", predicates);
+        return json;
+    }
+
+
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
-        RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
-            e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
-                    List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
-                            new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
-        });
+        if(CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
+            RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
+                e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
+                        List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
+                                new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
+            });
+        }
+        if(CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
+            addModelOverride(manager, this.dynamicPack, new ResourceLocation("written_book"), e -> {
+                e.add(new ItemOverride(new ResourceLocation("item/written_book_tattered"),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
+            });
+            addModelOverride(manager, this.dynamicPack, new ResourceLocation("filled_map"), e -> {
+                e.add(new ItemOverride(new ResourceLocation("item/antique_map"),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
+            });
+        }
 
         //need this here for reasons I forgot
         WallLanternTexturesManager.reloadTextures(manager);

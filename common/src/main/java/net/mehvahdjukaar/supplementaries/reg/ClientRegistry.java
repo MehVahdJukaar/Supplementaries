@@ -35,6 +35,7 @@ import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -209,11 +210,15 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
-        ModRegistry.CANDLE_HOLDERS.values().forEach(c-> ClientPlatformHelper.registerRenderType(c.get(), RenderType.cutout()));
+        ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientPlatformHelper.registerRenderType(c.get(), RenderType.cutout()));
 
 
         ClientPlatformHelper.registerItemProperty(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
+
+        ClampedItemPropertyFunction antiqueProp = (itemStack, clientLevel, livingEntity, i) -> AntiqueInkHelper.hasAntiqueInk(itemStack) ? 1 : 0;
+        ClientPlatformHelper.registerItemProperty(Items.WRITTEN_BOOK, Supplementaries.res("antique_ink"), antiqueProp);
+        ClientPlatformHelper.registerItemProperty(Items.FILLED_MAP, Supplementaries.res("antique_ink"), antiqueProp);
 
         ClientPlatformHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pull"),
                 (stack, world, entity, s) -> {
@@ -243,7 +248,7 @@ public class ClientRegistry {
                 (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
 
         ClientPlatformHelper.registerItemProperty(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
-                (stack, world, entity, s) -> ((DyeableLeatherItem)stack.getItem()).hasCustomColor(stack) ? 1 : 0);
+                (stack, world, entity, s) -> ((DyeableLeatherItem) stack.getItem()).hasCustomColor(stack) ? 1 : 0);
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
@@ -266,7 +271,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientPlatformHelper.KeyBindEvent event) {
-        if(PlatformHelper.getPlatform().isForge()) {
+        if (PlatformHelper.getPlatform().isForge()) {
             QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
                     InputConstants.Type.KEYSYM,
                     InputConstants.getKey("key.keyboard.v").getValue(),
@@ -374,7 +379,7 @@ public class ClientRegistry {
         event.register(BELL_ROPE);
         event.register(BELL_CHAIN);
         //not needed on forge
-        if(PlatformHelper.getPlatform().isFabric()){
+        if (PlatformHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);
             event.register(FLUTE_2D_MODEL);
             event.register(QUIVER_2D_MODEL);

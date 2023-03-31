@@ -381,7 +381,6 @@ public class CommonConfigs {
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
 
-
             builder.pop();
         }
 
@@ -610,6 +609,7 @@ public class CommonConfigs {
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
+            HOURGLASS_ENABLED = feature(builder, ModConstants.HOURGLASS_NAME);
             PRESENT_ENABLED = feature(builder, ModConstants.PRESENT_NAME);
 
             builder.pop();
@@ -668,6 +668,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FODDER_ENABLED;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
+
+        public static final Supplier<Boolean> HOURGLASS_ENABLED;
 
     }
 

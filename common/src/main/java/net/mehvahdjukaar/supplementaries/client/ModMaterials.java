@@ -33,6 +33,7 @@ public class ModMaterials {
     public static final Material BOOK_TOME_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_TOME_TEXTURES);
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_AND_QUILL_TEXTURES);
+    public static final Material BOOK_TATTERED_MATERIAL = new Material(SHULKER_SHEET, ModTextures.BOOK_ANTIQUE_TEXTURES);
 
     public static final Supplier<Map<BookPileBlockTile.BookColor, Material>> BOOK_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BookPileBlockTile.BookColor, Material>();

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -63,7 +64,12 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public void updateTileOnInventoryChanged() {
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+            if(b == 0)this.level.removeBlock(this.worldPosition,false);
+            else {
+                //shifts books. Assumes at most one has been removed
+                consolidateBookPile();
+                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+            }
         }
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
@@ -76,9 +82,22 @@ public class BookPileBlockTile extends ItemDisplayTile {
         }
     }
 
+    private void consolidateBookPile() {
+        boolean prevEmpty = false;
+        for (int i = 0; i < 4; i++) {
+            var it = this.getItem(i);
+            if(it.isEmpty())prevEmpty = true;
+            else if(prevEmpty){
+                this.getItems().set(i-1, it);
+                this.getItems().set(i, ItemStack.EMPTY);
+            }
+        }
+    }
+
     @Override
     public void updateClientVisualsOnLoad() {
         this.books.clear();
+        consolidateBookPile();
         List<BookColor> colors = new ArrayList<>(Arrays.asList(VALID_RANDOM_COLORS));
         for (int i = 0; i < 4; i++) {
             ItemStack stack = this.getItem(i);
@@ -134,7 +153,9 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 this.isEnchanted = false;
             } else if (BookPileBlock.isWrittenBook(item)) {
                 this.color = null;
-                this.material = item instanceof WritableBookItem ? ModMaterials.BOOK_AND_QUILL_MATERIAL : ModMaterials.BOOK_WRITTEN_MATERIAL;
+                if (item instanceof WrittenBookItem) {
+                    material = AntiqueInkHelper.hasAntiqueInk(stack) ? ModMaterials.BOOK_TATTERED_MATERIAL : ModMaterials.BOOK_WRITTEN_MATERIAL;
+                } else material = ModMaterials.BOOK_AND_QUILL_MATERIAL;
 
                 this.isEnchanted = false;
             } else {

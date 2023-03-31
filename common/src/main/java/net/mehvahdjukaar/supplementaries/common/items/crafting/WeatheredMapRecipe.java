@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -71,7 +72,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
                 s.setCount(1);
                 if (lastWorld instanceof ServerLevel level) {
                     WeatheredMap.setAntique(level, s, antique);
-
+                    AntiqueInkHelper.setAntiqueInk(s,true);
                 }
                 return s;
             }

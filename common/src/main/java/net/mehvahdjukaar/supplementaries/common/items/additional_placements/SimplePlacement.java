@@ -46,7 +46,7 @@ public record SimplePlacement(@Nullable Block placeable) implements AdditionalPl
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
+        if (ClientConfigs.General.PLACEABLE_TOOLTIP.get() && !getMimic().isDisabled(placeable)) {
             pTooltipComponents.add(Component.translatable("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }

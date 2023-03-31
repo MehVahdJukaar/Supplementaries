@@ -51,7 +51,7 @@ public class BlockPlacerItem extends BlockItem {
         }
     }
 
-    private boolean isDisabled(Block b) {
+    public boolean isDisabled(Block b) {
         var p = PLACEABLE_ITEMS.get(b);
         return p != null && !p.getSecond().get();
     }

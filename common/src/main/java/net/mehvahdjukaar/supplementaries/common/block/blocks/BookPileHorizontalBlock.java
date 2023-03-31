@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -85,12 +87,28 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         boolean x = state.getValue(FACING).getAxis() == Direction.Axis.X;
+        return getVoxelShape(state, x);
+    }
 
+    private static VoxelShape getVoxelShape(BlockState state, boolean x) {
         return switch (state.getValue(BOOKS)) {
             default -> x ? SHAPE_1_X : SHAPE_1_Z;
             case 2 -> x ? SHAPE_2_X : SHAPE_2_Z;
             case 3 -> x ? SHAPE_3_X : SHAPE_3_Z;
             case 4 -> x ? SHAPE_4_X : SHAPE_4_Z;
         };
+    }
+
+
+    protected int getBookIndex(BlockState state, BlockPos pos, Vec3 location) {
+        Direction dir = state.getValue(FACING);
+        double dist = dir.getAxis() == Direction.Axis.Z ? location.x - pos.getX() : location.z - pos.getZ();
+        if (dir == Direction.NORTH || dir == Direction.EAST) {
+            dist = 1 - dist;
+        }
+        dist = dist - (1 - getVoxelShape(state, false).bounds().getXsize()) / 2f;
+
+        double f = dist / 0.25;
+        return Mth.clamp((int) f, 0, state.getValue(BOOKS) - 1);
     }
 }

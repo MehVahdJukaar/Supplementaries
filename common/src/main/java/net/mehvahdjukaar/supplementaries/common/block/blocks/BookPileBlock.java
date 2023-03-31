@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -11,6 +12,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -25,7 +28,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -134,8 +139,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
-            double f = 5 * (target.getLocation().y - pos.getY()) / SHAPE_4.bounds().maxY;
-            return tile.getItem(Mth.clamp((int) f, 0, state.getValue(BOOKS) - 1));
+            return tile.getItem(getBookIndex(state, pos, target.getLocation()));
         }
         return Items.BOOK.getDefaultInstance();
     }
@@ -162,4 +166,20 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         }
         return 0;
     }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
+            if(player.getItemInHand(hand).isEmpty()) {
+                return tile.interact(player, hand, getBookIndex(state, pos, hit.getLocation()));
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    protected int getBookIndex(BlockState state, BlockPos pos, Vec3 location) {
+        double f = 5 * (location.y - pos.getY()) / SHAPE_4.bounds().maxY;
+        return Mth.clamp((int) f, 0, state.getValue(BOOKS) - 1);
+    }
+
 }

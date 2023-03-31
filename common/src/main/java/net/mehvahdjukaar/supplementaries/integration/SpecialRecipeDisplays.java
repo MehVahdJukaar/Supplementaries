@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.ItemLoreRecipe;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -36,6 +37,7 @@ public class SpecialRecipeDisplays {
 
         ItemStack antique = new ItemStack(Items.FILLED_MAP);
         antique.setHoverName(Component.translatable("filled_map.antique"));
+        AntiqueInkHelper.setAntiqueInk(antique, true);
 
         Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
 
@@ -54,6 +56,7 @@ public class SpecialRecipeDisplays {
 
         ItemStack stack = new ItemStack(Items.FILLED_MAP);
         stack.setHoverName(Component.translatable("filled_map.antique"));
+        AntiqueInkHelper.setAntiqueInk(stack, true);
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));
@@ -66,30 +69,12 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<CraftingRecipe> createAntiqueBookSoapRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
-        String group = "supplementaries.antique_map_clean";
-
-        ItemStack antique = new ItemStack(Items.WRITTEN_BOOK);
-        antique.setHoverName(Component.translatable("filled_map.antique"));
-
-        Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
-
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(antique), soap);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_book_clean");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Items.WRITTEN_BOOK), inputs);
-        recipes.add(recipe);
-
-        return recipes;
-    }
-
-
     private static List<CraftingRecipe> createAntiqueBookRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.antique_book";
 
-        ItemStack stack = new ItemStack(Items.FILLED_MAP);
-        stack.setHoverName(Component.translatable("filled_map.antique"));
+        ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
+        AntiqueInkHelper.setAntiqueInk(stack,true);
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.WRITTEN_BOOK));
@@ -392,7 +377,6 @@ public class SpecialRecipeDisplays {
             registry.accept(createSoapCleanRecipe());
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.accept(createAntiqueMapSoapRecipe());
-                registry.accept(createAntiqueBookSoapRecipe());
             }
         }
         if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {

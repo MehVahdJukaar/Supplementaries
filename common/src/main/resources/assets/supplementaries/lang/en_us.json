@@ -278,8 +278,8 @@
   "advancements.husbandry.wrench.description": "Use a Wrench to rotate a block",
   "item.supplementaries.bubble_blower": "Bubble Blower",
   "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
-  "filled_map.antique.tooltip": "Antique",
-  "filled_map.antique": "Antique Map",
+  "filled_map.antique.tooltip": "Weathered",
+  "filled_map.antique": "Weathered Map",
   "block.supplementaries.globe_sepia": "Sepia Globe",
   "block.supplementaries.bubble_block": "Bubble Block",
   "advancements.nether.goblet.title": "Consume the Concoction Chalice",
@@ -423,6 +423,7 @@
   "subtitle.supplementaries.slingshot.charge": "Slingshot charged",
   "subtitle.supplementaries.slingshot.release": "Slingshot released",
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
+  "message.supplementaries.tattered": "Tattered",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",

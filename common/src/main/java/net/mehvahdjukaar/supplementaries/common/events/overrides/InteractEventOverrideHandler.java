@@ -85,8 +85,8 @@ public class InteractEventOverrideHandler {
         itemUseOnBlock.add(new XPBottlingBehavior());
 
         if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
-            ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
+            ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE_H.get()));
+            ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE_H.get()));
         }
         outer:
         for (Item i : Registry.ITEM) {
