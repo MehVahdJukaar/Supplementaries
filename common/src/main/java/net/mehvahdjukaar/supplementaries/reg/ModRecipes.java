@@ -32,6 +32,8 @@ public class ModRecipes {
             "flag_from_banner", FlagFromBannerRecipe::new);
     public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> ANTIQUE_MAP = reg(
             "weathered_map", WeatheredMapRecipe::new);
+    public static final Supplier<RecipeSerializer<AntiqueBookRecipe>> ANTIQUE_BOOK = reg(
+            "antique_book", AntiqueBookRecipe::new);
     public static final Supplier<RecipeSerializer<SoapClearRecipe>> SOAP_CLEARING = reg(
             "soap_clearing", SoapClearRecipe::new);
     public static final Supplier<RecipeSerializer<PresentDyeRecipe>> PRESENT_DYE = reg(

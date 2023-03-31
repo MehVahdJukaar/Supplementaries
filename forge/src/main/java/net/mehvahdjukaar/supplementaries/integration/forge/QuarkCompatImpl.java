@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,8 +34,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
@@ -46,17 +48,13 @@ import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.client.module.UsesForCursesModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
-import vazkii.quark.content.management.module.InventorySortingModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
 import vazkii.quark.content.tools.module.SlimeInABucketModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
@@ -105,7 +103,7 @@ public class QuarkCompatImpl {
         return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
     }
 
-    public static boolean shouldHideOverlay(ItemStack stack){
+    public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
     }
 
@@ -114,7 +112,7 @@ public class QuarkCompatImpl {
 
     //called by mixin code
 
-    public static void tickPiston(Level level, BlockPos pos, AABB pistonBB, boolean sameDir, BlockEntity movingTile) {
+    public static void tickPiston(Level level, BlockPos pos, BlockState spikes, AABB pistonBB, boolean sameDir, BlockEntity movingTile) {
         List<Entity> list = level.getEntities(null, pistonBB);
         for (Entity entity : list) {
             if (entity instanceof Player player && player.isCreative()) return;
@@ -124,7 +122,7 @@ public class QuarkCompatImpl {
                     //apply potions using quark moving tiles
                     if (CompatHandler.QUARK) {
                         //get tile
-                        if (getMovingBlockEntity(pos, level) instanceof BambooSpikesBlockTile tile) {
+                        if (getMovingBlockEntity(pos, spikes, level) instanceof BambooSpikesBlockTile tile) {
                             //apply effects
                             if (tile.interactWithEntity(livingEntity, level)) {
                                 //change block state if empty
@@ -137,7 +135,7 @@ public class QuarkCompatImpl {
                                 }
                             }
                             //update tile entity in its list
-                            updateMovingTile(pos, level, tile);
+                            PistonsMoveTileEntitiesModule.setMovingBlockEntityData(level, pos, tile.saveWithFullMetadata());
                         }
                     }
                     entity.hurt(BambooSpikesBlock.getDamageSource(level), sameDir ? 3 : 1);
@@ -146,29 +144,14 @@ public class QuarkCompatImpl {
         }
     }
 
-    private static final Field MOVEMENTS = ObfuscationReflectionHelper.findField(PistonsMoveTileEntitiesModule.class, "movements");
-
-    private static void updateMovingTile(BlockPos pos, Level world, BlockEntity tile) {
-        //not very nice of me to change its private fields :/
-        try {
-            //Class c = Class.forName("vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule");
-            Object o = MOVEMENTS.get(null);
-            if (o instanceof WeakHashMap) {
-                WeakHashMap<Level, Map<BlockPos, CompoundTag>> movements = (WeakHashMap<Level, Map<BlockPos, CompoundTag>>) o;
-                if (movements.containsKey(world)) {
-                    Map<BlockPos, CompoundTag> worldMovements = movements.get(world);
-                    if (worldMovements.containsKey(pos)) {
-                        worldMovements.remove(pos);
-                        worldMovements.put(pos, tile.saveWithFullMetadata());
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
-        return PistonsMoveTileEntitiesModule.getMovement(level, pos);
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, BlockState state, Level level) {
+        if (!(state.getBlock() instanceof EntityBlock eb)) return null;
+        BlockEntity tile = eb.newBlockEntity(pos, state);
+        if (tile == null) return null;
+        CompoundTag tileTag = PistonsMoveTileEntitiesModule.getMovingBlockEntityData(level, pos);
+        if (tileTag != null && tile.getType() == ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(new ResourceLocation(tileTag.getString("id"))))
+            tile.load(tileTag);
+        return tile;
     }
 
     public static boolean isJukeboxModuleOn() {
@@ -202,7 +185,6 @@ public class QuarkCompatImpl {
     }
 
 
-
     public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
 
     public static final Supplier<Block> TATER_IN_A_JAR;
@@ -229,8 +211,8 @@ public class QuarkCompatImpl {
     }
 
     public static ItemStack getSlimeBucket(Entity entity) {
-        if(ModuleLoader.INSTANCE.isModuleEnabled(SlimeInABucketModule.class)){
-            if(entity.getType() == EntityType.SLIME  && ((Slime) entity).getSize() == 1 && entity.isAlive()){
+        if (ModuleLoader.INSTANCE.isModuleEnabled(SlimeInABucketModule.class)) {
+            if (entity.getType() == EntityType.SLIME && ((Slime) entity).getSize() == 1 && entity.isAlive()) {
                 ItemStack outStack = new ItemStack(SlimeInABucketModule.slime_in_a_bucket);
                 CompoundTag cmp = entity.serializeNBT();
                 ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
@@ -244,5 +226,6 @@ public class QuarkCompatImpl {
         return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class)
                 && ExpandedItemInteractionsModule.enableShulkerBoxInteraction;
     }
+
 
 }

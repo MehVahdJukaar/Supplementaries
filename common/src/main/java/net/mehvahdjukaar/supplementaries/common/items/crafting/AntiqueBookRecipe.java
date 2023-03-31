@@ -1,42 +1,47 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-public class WeatheredMapRecipe extends CustomRecipe {
-    public WeatheredMapRecipe(ResourceLocation idIn) {
+public class AntiqueBookRecipe extends CustomRecipe {
+    public AntiqueBookRecipe(ResourceLocation idIn) {
         super(idIn);
     }
-
-    private Level lastWorld = null;
 
     @Override
     public boolean matches(CraftingContainer inv, Level worldIn) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
+        Boolean clear = null;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.isEmpty()) {
-            } else if (isMap(stack)) {
+            } else if (isBook(stack)) {
+                boolean c = AntiqueInkHelper.hasAntiqueInk(stack);
+                if (clear != null && c != clear) {
+                    return false;
+                } else clear = c;
+
                 if (itemstack != null) {
                     return false;
                 }
                 itemstack = stack;
             } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() || stack.getItem() == ModRegistry.SOAP.get()) {
-
+                boolean c = stack.getItem() == ModRegistry.SOAP.get();
+                if (clear != null && c != clear) {
+                    return false;
+                } else clear = c;
                 if (itemstack1 != null) {
                     return false;
                 }
@@ -44,15 +49,11 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
             } else return false;
         }
-        boolean match = itemstack != null && itemstack1 != null;
-        if (match) {
-            lastWorld = worldIn;
-        }
-        return match;
+        return itemstack != null && itemstack1 != null;
     }
 
-    private static boolean isMap(ItemStack stack) {
-        return stack.getItem() == Items.FILLED_MAP;
+    private static boolean isBook(ItemStack stack) {
+        return (stack.getItem() == Items.WRITTEN_BOOK || stack.getItem() == Items.WRITABLE_BOOK);
     }
 
     @Override
@@ -66,13 +67,10 @@ public class WeatheredMapRecipe extends CustomRecipe {
         }
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() instanceof MapItem) {
+            if (isBook(stack)) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
-                if (lastWorld instanceof ServerLevel level) {
-                    WeatheredMap.setAntique(level, s, antique);
-
-                }
+                AntiqueInkHelper.setAntiqueInk(s, antique);
                 return s;
             }
         }
@@ -92,7 +90,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.ANTIQUE_MAP.get();
+        return ModRecipes.ANTIQUE_BOOK.get();
     }
 
 

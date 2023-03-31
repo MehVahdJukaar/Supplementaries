@@ -66,6 +66,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
             var data = (Map<String, ?>) f2.get(null);
             data.remove(Supplementaries.MOD_ID);
+            data.remove("suppsquared");
         } catch (Exception ignored) {
 
         }
@@ -74,8 +75,6 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return ModSounds.JAR;
     }
-
-
 
     @NotNull
     @Override

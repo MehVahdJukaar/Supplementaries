@@ -54,6 +54,7 @@
     "PaintingItemMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",
+    "ServerGamePacketListenerMixin",
     "ServerLevelMixin",
     "ShulkerBoxBlockEntityMixin",
     "SkeletonMixin",

@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "000",
-    "   ",
-    "   "
+    "000"
   ],
   "key": {
     "0": {
@@ -18,6 +16,13 @@
     {
       "type": "supplementaries:flag",
       "flag": "item_shelf"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "modid": "suppsquared",
+        "type": "forge:mod_loaded"
+      }
     }
   ]
 }

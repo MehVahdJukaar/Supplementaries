@@ -63,7 +63,8 @@
     {"id":"biomemakeover:lightning_bug","required":false},
     {"id":"biomemakeover:lightning_bug_alternate","required":false},
     {"id":"crittersandcompanions:leaf_insect","required":false},
-    {"id":"crittersandcompanions:dragonfly","required":false}
+    {"id":"crittersandcompanions:dragonfly","required":false},
+    {"id":"sleep_tight:bedbug","required":false}
   ]
 }
 

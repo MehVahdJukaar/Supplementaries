@@ -1,12 +1,12 @@
-package net.mehvahdjukaar.supplementaries.reg;
+package net.mehvahdjukaar.supplementaries.common.block.present;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -33,18 +33,18 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 //TODO: add eggs and snowballs
-public class PresentInteractionsRegistry {
+public class PresentBehaviorsManager {
 
     public static void registerBehaviors() {
         for (Item i : Registry.ITEM) {
             if (i instanceof BlockItem bi && bi.getBlock() instanceof TntBlock) {
                 TrappedPresentBlock.registerBehavior(i, TNT_BEHAVIOR);
             }
+            if (i instanceof SpawnEggItem sp) {
+                TrappedPresentBlock.registerBehavior(sp, SPAWN_EGG_BEHAVIOR);
+            }
         }
 
-        for (SpawnEggItem spawneggitem : SpawnEggItem.eggs()) {
-            TrappedPresentBlock.registerBehavior(spawneggitem, SPAWN_EGG_BEHAVIOR);
-        }
         TrappedPresentBlock.registerBehavior(Items.FIREWORK_ROCKET, FIREWORK_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(Items.SPLASH_POTION, SPLASH_POTION_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(Items.LINGERING_POTION, SPLASH_POTION_BEHAVIOR);

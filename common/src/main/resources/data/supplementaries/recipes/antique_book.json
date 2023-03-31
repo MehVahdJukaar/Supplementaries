@@ -1,0 +1,9 @@
+{
+  "type": "supplementaries:antique_book",
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ]
+}

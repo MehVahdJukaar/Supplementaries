@@ -49,3 +49,10 @@ license = "ARR"
     ordering = "NONE"
     side = "BOTH"
 
+[[dependencies.supplementaries]]
+    modId = "quark"
+    mandatory = false
+    versionRange = "[1.19-3.4-395,]"
+    ordering = "AFTER"
+    side = "BOTH"
+

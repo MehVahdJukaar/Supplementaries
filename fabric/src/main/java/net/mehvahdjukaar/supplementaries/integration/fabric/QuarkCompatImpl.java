@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class QuarkCompatImpl {
-    public static void tickPiston(Level level, BlockPos pos, AABB aabb, boolean sameDir, BlockEntity pistonBlockEntityMixin) {
-    }
 
     public static BlockState updateWoodPostShape(BlockState oldHeld, Direction facing, BlockState facingState) {
         return oldHeld;
@@ -32,15 +30,11 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static int getSacksInBackpack(ItemStack backpack) {
-        return 0;
-    }
-
     public static boolean isVerticalSlabEnabled() {
         return true;
     }
 
-    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, BlockState state, Level level) {
         return null;
     }
 
@@ -75,4 +69,8 @@ public class QuarkCompatImpl {
     public static boolean shouldHideOverlay(ItemStack stack) {
         return false;
     }
+
+    public static void tickPiston(Level level, BlockPos pos, BlockState state, AABB aabb, boolean sameDir, BlockEntity tile) {
+    }
+
 }

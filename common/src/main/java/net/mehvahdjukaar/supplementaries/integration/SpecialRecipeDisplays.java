@@ -66,6 +66,42 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
+    private static List<CraftingRecipe> createAntiqueBookSoapRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "supplementaries.antique_map_clean";
+
+        ItemStack antique = new ItemStack(Items.WRITTEN_BOOK);
+        antique.setHoverName(Component.translatable("filled_map.antique"));
+
+        Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(antique), soap);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_book_clean");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Items.WRITTEN_BOOK), inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
+
+    private static List<CraftingRecipe> createAntiqueBookRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "supplementaries.antique_book";
+
+        ItemStack stack = new ItemStack(Items.FILLED_MAP);
+        stack.setHoverName(Component.translatable("filled_map.antique"));
+
+        Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
+        Ingredient map = Ingredient.of(new ItemStack(Items.WRITTEN_BOOK));
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_book_create");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, stack, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
     private static List<CraftingRecipe> createRopeArrowCreateRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "supplementaries.rope_arrow";
@@ -344,6 +380,7 @@ public class SpecialRecipeDisplays {
         }
         if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
             registry.accept(createAntiqueMapRecipe());
+            registry.accept(createAntiqueBookRecipe());
         }
         if (CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get()) {
             registry.accept(createBubbleBlowerChargeRecipe());
@@ -355,6 +392,7 @@ public class SpecialRecipeDisplays {
             registry.accept(createSoapCleanRecipe());
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.accept(createAntiqueMapSoapRecipe());
+                registry.accept(createAntiqueBookSoapRecipe());
             }
         }
         if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {

@@ -21,7 +21,7 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static void tickPiston(Level level, BlockPos pos, AABB aabb, boolean sameDir, BlockEntity tile) {
+    public static void tickPiston(Level level, BlockPos pos, BlockState state, AABB aabb, boolean sameDir, BlockEntity tile) {
         throw new AssertionError();
     }
 
@@ -70,7 +70,7 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static BlockEntity getMovingBlockEntity(BlockPos pos, Level level) {
+    public static BlockEntity getMovingBlockEntity(BlockPos pos, BlockState state, Level level) {
         throw new AssertionError();
     }
 

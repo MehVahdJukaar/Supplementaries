@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -47,7 +48,7 @@ public class ModSetup {
     );
 
     public static void asyncSetup() {
-        PresentInteractionsRegistry.registerBehaviors();
+        PresentBehaviorsManager.registerBehaviors();
         FaucetBehaviorsManager.registerBehaviors();
         RandomArrowFunction.setup();
         LootTablesInjects.setup();

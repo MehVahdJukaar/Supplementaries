@@ -437,7 +437,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos
             pos, Block ropeBlock) {
         ItemStack stack = new ItemStack(ropeBlock);
-        
+
         //TODO: maybe pass fake player here
         BlockPlaceContext context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         if (!context.canPlace()) {
@@ -469,7 +469,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
     private static boolean isBlockMovable(BlockState state, Level level, BlockPos pos) {
-        return (!state.isAir() && !state.is(Blocks.OBSIDIAN) &&
+        //hardcoded stuff from vanilla
+        return (!state.isAir() && !state.is(Blocks.OBSIDIAN) && !state.is(Blocks.SPAWNER) &&
                 !state.is(Blocks.CRYING_OBSIDIAN) && !state.is(Blocks.RESPAWN_ANCHOR))
                 && state.getDestroySpeed(level, pos) != -1;
     }
@@ -484,8 +485,8 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
 
         if (isBlockMovable(state, world, fromPos) &&
                 (
-                        ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY)) && state.canSurvive(world, toPos))
-                                || (state.is(ModTags.ROPE_HANG_TAG))
+                        ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY))
+                                && state.canSurvive(world, toPos)) || (state.is(ModTags.ROPE_HANG_TAG))
                 )
         ) {
 

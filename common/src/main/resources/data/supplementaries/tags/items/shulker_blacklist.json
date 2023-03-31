@@ -3,6 +3,7 @@
   "values": [
     {"id":"#minecraft:shulker_boxes","required":false},
     {"id":"supplementaries:safe","required":false},
-    {"id":"supplementaries:sack","required":false}
+    {"id":"supplementaries:sack","required":false},
+    {"id":"#suppsquared:sacks","required":false}
   ]
 }

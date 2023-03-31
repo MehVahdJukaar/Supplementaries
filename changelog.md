@@ -1,1 +1,1 @@
-* fixed some possible config issue
+* fixed an issue with supp squared

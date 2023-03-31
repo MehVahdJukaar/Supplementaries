@@ -281,6 +281,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public void moveTick(BlockState movedState, Level level, BlockPos pos, AABB aabb, PistonMovingBlockEntity tile) {
         boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(tile.getDirection()));
-        if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, aabb, sameDir, tile);
+        if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, movedState, aabb, sameDir, tile);
     }
 }
