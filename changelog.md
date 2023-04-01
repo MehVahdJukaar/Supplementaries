@@ -1,3 +1,4 @@
+* Candles can be placed on wall skulls
 * Antique ink can be applied to written books turning them into Tattered books (thanks to artkek for gui texture)
 * Tattered books have unique textures and cant be duplicated. They also use the antiquable font
 * Weathered maps have a unique texture too

@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.minecraft.Util;
@@ -18,12 +21,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class WallCandleSkullBlock extends AbstractCandleSkullBlock {
@@ -33,16 +33,32 @@ public class WallCandleSkullBlock extends AbstractCandleSkullBlock {
         Map<Direction, VoxelShape[]> m = new HashMap<>();
 
         for (Direction dir : Direction.Plane.HORIZONTAL) {
-            Vec3 step = MthUtils.V3itoV3(dir.getNormal()).scale(-0.25);
             m.put(dir, new VoxelShape[]{
-                            Utils.rotateVoxelShape(ONE_AABB.move(step.x,step.y,step.z), dir),
-                            Utils.rotateVoxelShape(TWO_AABB.move(step.x,step.y,step.z), dir),
-                            Utils.rotateVoxelShape(THREE_AABB.move(step.x,step.y,step.z), dir),
-                            Utils.rotateVoxelShape(FOUR_AABB.move(step.x,step.y,step.z), dir),
+                            Utils.rotateVoxelShape(ONE_AABB.move(0, 0, 0.25), dir),
+                            Utils.rotateVoxelShape(TWO_AABB.move(0, 0, 0.25), dir),
+                            Utils.rotateVoxelShape(THREE_AABB.move(0, 0, 0.25), dir),
+                            Utils.rotateVoxelShape(FOUR_AABB.move(0, 0, 0.25), dir),
                     }
             );
         }
         return m;
+    });
+
+    protected static final Map<Direction,Int2ObjectMap<List<Vec3>>> H_PARTICLE_OFFSETS = Util.make(()->{
+        Map<Direction,Int2ObjectMap<List<Vec3>>> temp = new Object2ObjectOpenHashMap<>(4);
+        for(Direction dir : Direction.Plane.HORIZONTAL){
+            temp.put(dir, new Int2ObjectOpenHashMap<>(4));
+            PARTICLE_OFFSETS.forEach((key, value) -> {
+                List<Vec3> transformedList = new ArrayList<>();
+                for (Vec3 v : value) {
+                    transformedList.add(MthUtils.rotateVec3(
+                                    new Vec3(v.x - 0.5, v.y,v.z+0.25 - 0.5), dir)
+                            .add(0.5,0,0.5));
+                }
+                temp.get(dir).put(key, transformedList);
+            });
+        }
+        return temp;
     });
 
     public WallCandleSkullBlock(Properties properties) {
@@ -77,8 +93,6 @@ public class WallCandleSkullBlock extends AbstractCandleSkullBlock {
 
     @Override
     protected Iterable<Vec3> getParticleOffsets(BlockState pState) {
-        var step = pState.getValue(FACING).step();
-        return PARTICLE_OFFSETS.get(pState.getValue(CANDLES).intValue())
-                .stream().map(v->v.add(step.x(),step.y(),step.z())).toList();
+        return H_PARTICLE_OFFSETS.get(pState.getValue(FACING)).get(pState.getValue(CANDLES));
     }
 }
