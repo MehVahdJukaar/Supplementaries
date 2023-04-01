@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -79,7 +80,7 @@ public class EnhancedSkullBlockTile extends BlockEntity {
         return ItemStack.EMPTY;
     }
 
-    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player, InteractionHand hand) {
+    public void initialize(SkullBlockEntity oldTile, ItemStack stack, Player player, InteractionHand hand) {
         // this.setOwner(oldTile.getOwnerProfile());
         this.innerTile = (SkullBlockEntity) oldTile.getType().create(this.getBlockPos(), oldTile.getBlockState());
         if (this.innerTile != null) this.innerTile.load(oldTile.saveWithoutMetadata());

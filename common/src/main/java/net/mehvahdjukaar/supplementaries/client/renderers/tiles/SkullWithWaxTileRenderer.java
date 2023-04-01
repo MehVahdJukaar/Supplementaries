@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallCandleSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
@@ -38,18 +40,34 @@ public abstract class SkullWithWaxTileRenderer<T extends EnhancedSkullBlockTile>
     public void render(T tile, float pPartialTicks, PoseStack poseStack, MultiBufferSource buffer, int pCombinedLight, int pCombinedOverlay) {
         BlockEntity inner = tile.getSkullTile();
         if (inner != null) {
-            float yaw = -22.5F * (float) (tile.getBlockState().getValue(SkullBlock.ROTATION)
-                    - inner.getBlockState().getValue(SkullBlock.ROTATION));
+            float yaw;
+            boolean wall = false;
+            BlockState state = tile.getBlockState();
+            if (state.hasProperty(WallCandleSkullBlock.FACING)) {
+                yaw = state.getValue(WallCandleSkullBlock.FACING).toYRot();
+                wall = true;
+            } else {
+                yaw = -22.5F * (state.getValue(SkullBlock.ROTATION)
+                        - inner.getBlockState().getValue(SkullBlock.ROTATION));
+            }
             //let's base block master the rotation
 
 
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
-            poseStack.translate(-0.5, -0.5, -0.5);
-
+            if(!wall) {
+                poseStack.translate(0.5, 0.5, 0.5);
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
+                poseStack.translate(-0.5, -0.5, -0.5);
+            }else{
+                poseStack.translate(0, -0.25, 0);
+            }
 
             renderInner(inner, pPartialTicks, poseStack, buffer, pCombinedLight, pCombinedOverlay);
 
+            if (wall){
+                poseStack.translate(0.5, 0.5, 0.5);
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(180-yaw));
+                poseStack.translate(-0.5, -0.25, -0.25);
+            }
 
             //blockRenderer.renderSingleBlock(blockstate, poseStack, buffer, pCombinedLight, pCombinedOverlay, ModelData.EMPTY);
         }

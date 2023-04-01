@@ -1136,20 +1136,27 @@ public class ModRegistry {
                     DoubleSkullBlockTile::new, SKULL_PILE.get()));
 
     //skulls candles
-    public static final Supplier<Block> SKULL_CANDLE = regBlock(SKULL_CANDLE_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK);
-        return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new CandleSkullBlock(p);
-    });
+    public static final Supplier<Block> SKULL_CANDLE = regBlock(SKULL_CANDLE_NAME, () ->
+            new FloorCandleSkullBlock(BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
+
+    public static final Supplier<Block> SKULL_CANDLE_WALL = regBlock(SKULL_CANDLE_NAME + "_wall", () ->
+            new WallCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get())));
+
 
     //needed for tag so it can repel piglins
-    public static final Supplier<Block> SKULL_CANDLE_SOUL = regBlock(SKULL_CANDLE_SOUL_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(SKULL_CANDLE.get());
-        return /*CompatHandler.create ? SchematicCannonStuff.makeCandleSkull(p) :*/ new SoulCandleSkullBlock(p);
-    });
+    public static final Supplier<Block> SKULL_CANDLE_SOUL = regBlock(SKULL_CANDLE_SOUL_NAME, () ->
+            new FloorCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get()),
+                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME));
+
+    public static final Supplier<Block> SKULL_CANDLE_SOUL_WALL = regBlock(SKULL_CANDLE_SOUL_NAME + "_wall", () ->
+            new WallCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get()),
+                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME));
+
 
     public static final Supplier<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = regTile(
             SKULL_CANDLE_NAME, () -> PlatformHelper.newBlockEntityType(
-                    CandleSkullBlockTile::new, SKULL_CANDLE.get(), SKULL_CANDLE_SOUL.get()));
+                    CandleSkullBlockTile::new, SKULL_CANDLE.get(), SKULL_CANDLE_WALL.get(),
+                    SKULL_CANDLE_SOUL.get(), SKULL_CANDLE_SOUL_WALL.get()));
 
     //bubble
     public static final Supplier<BubbleBlock> BUBBLE_BLOCK = regBlock(BUBBLE_BLOCK_NAME, () ->

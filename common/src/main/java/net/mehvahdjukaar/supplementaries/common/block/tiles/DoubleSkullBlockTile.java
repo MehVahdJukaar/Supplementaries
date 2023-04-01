@@ -92,8 +92,8 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
     }
 
     @Override
-    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack skullStack, Player player, InteractionHand hand) {
-        super.initialize(oldTile, skullBlock, skullStack, player, hand);
+    public void initialize(SkullBlockEntity oldTile, ItemStack skullStack, Player player, InteractionHand hand) {
+        super.initialize(oldTile, skullStack, player, hand);
         if (skullStack.getItem() instanceof BlockItem bi) {
             if (bi.getBlock() instanceof SkullBlock upSkull) {
                 var context = new BlockPlaceContext(player, hand, skullStack,

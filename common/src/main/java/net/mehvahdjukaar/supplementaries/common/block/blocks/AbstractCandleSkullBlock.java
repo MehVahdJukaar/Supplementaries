@@ -9,18 +9,20 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -51,10 +53,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Supplier;
 
-public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, IWashable {
+public abstract class AbstractCandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, IWashable {
 
-    private static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
+    protected static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {
         Int2ObjectMap<List<Vec3>> map = new Int2ObjectOpenHashMap<>();
         map.defaultReturnValue(List.of());
         map.put(1, List.of(new Vec3(0.5D, 0.5 + 0.5D, 0.5D)));
@@ -66,25 +69,27 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
 
     protected static final VoxelShape BASE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 8.0D, 12.0D);
 
-    private static final VoxelShape ONE_AABB = Shapes.or(BASE, Block.box(7.0D, 8.0D, 7.0D, 9.0D, 14.0D, 9.0D));
-    private static final VoxelShape TWO_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 6.0D, 11.0D, 14.0D, 9.0D));
-    private static final VoxelShape THREE_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 6.0D, 10.0D, 14.0D, 11.0D));
-    private static final VoxelShape FOUR_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 5.0D, 11.0D, 14.0D, 10.0D));
+    protected static final VoxelShape ONE_AABB = Shapes.or(BASE, Block.box(7.0D, 8.0D, 7.0D, 9.0D, 14.0D, 9.0D));
+    protected static final VoxelShape TWO_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 6.0D, 11.0D, 14.0D, 9.0D));
+    protected static final VoxelShape THREE_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 6.0D, 10.0D, 14.0D, 11.0D));
+    protected static final VoxelShape FOUR_AABB = Shapes.or(BASE, Block.box(5.0D, 8.0D, 5.0D, 11.0D, 14.0D, 10.0D));
 
-    public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
     public static final IntegerProperty CANDLES = BlockStateProperties.CANDLES;
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;
 
-    public CandleSkullBlock(Properties properties) {
+    private final Supplier<ParticleType<? extends ParticleOptions>> particle;
+
+    protected AbstractCandleSkullBlock(Properties properties, Supplier<ParticleType<? extends ParticleOptions>> particle) {
         super(properties.lightLevel(CandleBlock.LIGHT_EMISSION));
-        this.registerDefaultState(this.defaultBlockState().setValue(CANDLES, 1)
-                .setValue(ROTATION, 0).setValue(LIT, false));
+        this.registerDefaultState(this.defaultBlockState()
+                .setValue(LIT, false).setValue(CANDLES, 1));
+        this.particle = particle;
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
-        pBuilder.add(CANDLES, LIT, ROTATION);
+        pBuilder.add(CANDLES, LIT);
     }
 
     @Override
@@ -211,7 +216,7 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
 
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
-        ((CandleSkullBlock) state.getBlock()).getParticleOffsets(state).forEach((vec3) -> {
+        this.getParticleOffsets(state).forEach((vec3) -> {
             level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
@@ -236,6 +241,27 @@ public class CandleSkullBlock extends AbstractCandleBlock implements EntityBlock
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
         return Utils.getTicker(type, ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTile::tick);
+    }
+
+
+    //copied from candle block
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos blockPos, RandomSource randomSource) {
+        if (state.getValue(LIT)) {
+            this.getParticleOffsets(state).forEach(vec3 -> addParticlesAndSound(particle.get(), level, vec3.add(blockPos.getX(), blockPos.getY(), blockPos.getZ()), randomSource));
+        }
+    }
+
+    protected void addParticlesAndSound(ParticleType<?> particle, Level level, Vec3 vec3, RandomSource randomSource) {
+        float f = randomSource.nextFloat();
+        if (f < 0.3f) {
+            level.addParticle(ParticleTypes.SMOKE, vec3.x, vec3.y, vec3.z, 0.0, 0.0, 0.0);
+            if (f < 0.17f) {
+                level.playLocalSound(vec3.x + 0.5, vec3.y + 0.5, vec3.z + 0.5, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0f + randomSource.nextFloat(), randomSource.nextFloat() * 0.7f + 0.3f, false);
+            }
+        }
+        level.addParticle((ParticleOptions) particle, vec3.x, vec3.y, vec3.z, 0.0, 0.0, 0.0);
     }
 
 }

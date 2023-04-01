@@ -15,10 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CandleBlock;
-import net.minecraft.world.level.block.SkullBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -86,8 +83,8 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
 
     @Override
-    public void initialize(SkullBlockEntity oldTile, SkullBlock skullBlock, ItemStack stack, Player player, InteractionHand hand) {
-        super.initialize(oldTile, skullBlock, stack, player, hand);
+    public void initialize(SkullBlockEntity oldTile, ItemStack stack, Player player, InteractionHand hand) {
+        super.initialize(oldTile, stack, player, hand);
         if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CandleBlock candleBlock) {
             tryAddingCandle(candleBlock);
         }

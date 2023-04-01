@@ -14,9 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SkullBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -57,21 +55,27 @@ class SkullCandlesBehavior implements ItemUseOnBlockOverride {
 
             if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {
                 BlockState state = oldTile.getBlockState();
-                if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
+                if ((state.getBlock() instanceof AbstractSkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
 
                     ItemStack copy = stack.copy();
 
                     Block b;
-                    if (CompatHandler.BUZZIER_BEES && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
-                        b = ModRegistry.SKULL_CANDLE_SOUL.get();
-                    } else b = ModRegistry.SKULL_CANDLE.get();
+                    if(skullBlock instanceof WallSkullBlock) {
+                        if (CompatHandler.BUZZIER_BEES && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
+                            b = ModRegistry.SKULL_CANDLE_SOUL_WALL.get();
+                        } else b = ModRegistry.SKULL_CANDLE_WALL.get();
+                    }else{
+                        if (CompatHandler.BUZZIER_BEES && stack.getItem() == CompatObjects.SOUL_CANDLE_ITEM.get()) {
+                            b = ModRegistry.SKULL_CANDLE_SOUL.get();
+                        } else b = ModRegistry.SKULL_CANDLE.get();
+                    }
 
                     InteractionResult result = InteractEventOverrideHandler.replaceSimilarBlock(b,
-                            player, stack, pos, world, state, SoundType.CANDLE, SkullBlock.ROTATION);
+                            player, stack, pos, world, state, SoundType.CANDLE, SkullBlock.ROTATION, WallSkullBlock.FACING);
 
                     if (result.consumesAction()) {
                         if (world.getBlockEntity(pos) instanceof CandleSkullBlockTile tile) {
-                            tile.initialize(oldTile, skullBlock, copy, player, hand);
+                            tile.initialize(oldTile, copy, player, hand);
                         }
                     }
                     return result;

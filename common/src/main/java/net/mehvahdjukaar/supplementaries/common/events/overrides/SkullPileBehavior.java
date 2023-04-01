@@ -67,7 +67,7 @@ class SkullPileBehavior implements ItemUseOnBlockOverride {
 
                     if (result.consumesAction()) {
                         if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
-                            tile.initialize(oldTile, skullBlock, copy, player, hand);
+                            tile.initialize(oldTile, copy, player, hand);
                         }
                     }
                     return result;

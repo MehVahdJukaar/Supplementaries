@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallCandleSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -26,8 +27,12 @@ public class CandleSkullBlockTileRenderer extends SkullWithWaxTileRenderer<Candl
             candle = candle.setValue(CandleBlock.LIT, blockstate.getValue(CandleBlock.LIT))
                     .setValue(CandleBlock.CANDLES, blockstate.getValue(CandleBlock.CANDLES));
 
-            float yaw = -22.5F * (float) (blockstate.getValue(SkullBlock.ROTATION));
-
+            float yaw;
+            if(blockstate.hasProperty(WallCandleSkullBlock.FACING)){
+                yaw = blockstate.getValue(WallCandleSkullBlock.FACING).toYRot();
+            }else {
+                 yaw = -22.5F * (float) (blockstate.getValue(SkullBlock.ROTATION));
+            }
             this.renderWax(poseStack, buffer, pCombinedLight, tile.getWaxTexture(), yaw);
 
             poseStack.translate(0, 0.5, 0);
