@@ -1,7 +1,12 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -42,6 +47,17 @@ public class SuppPlatformStuffImpl {
 
     public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
         return state.getLightEmission();
+    }
+
+    public static void funnyBoard(PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn) {
+    }
+
+    public static RenderType staticNoise(ResourceLocation location) {
+        return RenderType.entityCutout(location);
+    }
+
+    public static ShaderInstance getNoiseShader() {
+        return null;
     }
 
 }

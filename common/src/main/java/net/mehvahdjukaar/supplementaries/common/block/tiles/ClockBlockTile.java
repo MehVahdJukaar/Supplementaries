@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -112,7 +113,7 @@ public class ClockBlockTile extends BlockEntity {
     }
 
     public static boolean canReadTime(Level level) {
-        return level.dimensionType().natural();
+        return level.dimensionType().natural() && !MiscUtils.FESTIVITY.isAprilsFool();
     }
 
     public static void tick(Level level, BlockPos pPos, BlockState pState, ClockBlockTile tile) {

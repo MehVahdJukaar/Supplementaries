@@ -25,6 +25,7 @@
 	{"id":"twilightforest:bighorn_sheep","required":false},
 	{"id":"ecologics:squirrel","required":false},
 	{"id":"lovely_snails:snail","required":false},
+	{"id":"endergetic:booflo","required":false},
 	{"id":"cave_enhancements:dripstone_tortoise","required":false},
     {"id":"creatures_from_the_snow:snow_trover","required":false}
 

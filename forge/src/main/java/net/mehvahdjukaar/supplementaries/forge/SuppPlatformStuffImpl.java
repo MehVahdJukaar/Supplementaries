@@ -3,8 +3,11 @@ package net.mehvahdjukaar.supplementaries.forge;
 import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -82,8 +85,14 @@ public class SuppPlatformStuffImpl {
     }
 
     public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
-       return state.getLightEmission(level, pos);
+        return state.getLightEmission(level, pos);
     }
 
+    public static RenderType staticNoise(ResourceLocation location) {
+        return SupplementariesForgeClient.staticNoise(location);
+    }
+    public static ShaderInstance getNoiseShader() {
+        return SupplementariesForgeClient.getStaticNoiseShader();
+    }
 
 }

@@ -6,10 +6,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -131,7 +134,11 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
+            if(MiscUtils.FESTIVITY.isAprilsFool()){
+                builder = buffer.getBuffer(SuppPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
+            }else {
+                builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
+            }
         } else {
             builder = buffer.getBuffer(RenderType.entityCutout(texture));
         }
