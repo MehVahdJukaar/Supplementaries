@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -18,8 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BlockUtil {
@@ -58,7 +56,8 @@ public class BlockUtil {
 
     /**
      * A more powerful rotate method. Not only rotates the block itself but tries to rotate its connected ones aswell like chests
-     * If it fails it will also try to rotate using the Y axis
+     * If it fails it will also try to rotate using the Y axis. Used by wrench
+     *
      * @return Optional face on which it was rotated
      */
     public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
@@ -310,7 +309,9 @@ public class BlockUtil {
         if (DoorBlock.isWoodenDoor(state)) {
             //TODO: add
             //level.setBlockAndUpdate(state.rotate(level, pos, rot));
-
+        }
+        if (CompatHandler.QUARK && QuarkCompat.tryRotateStool(level, state, pos)) {
+            return Optional.of(face);
         }
         return Optional.empty();
     }

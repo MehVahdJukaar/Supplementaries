@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ public class RopeItem extends BlockItem {
 
             if (type != null) {
 
-                if (RopeKnotBlock.convertToRopeKnot(type, state, world, pos) == null) {
+                if (AbstractRopeKnotBlock.convertToRopeKnot(type, state, world, pos) == null) {
                     return InteractionResult.FAIL;
                 }
 

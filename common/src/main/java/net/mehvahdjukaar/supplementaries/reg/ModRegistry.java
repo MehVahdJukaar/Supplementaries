@@ -1184,7 +1184,7 @@ public class ModRegistry {
     );
     public static final Supplier<Item> ENDERMAN_SKULL_ITEM = regItem(ENDERMAN_HEAD_NAME, () ->
             new EndermanHeadItem(ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get(),
-                    new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS).rarity(Rarity.UNCOMMON)));
+                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS,ENDERMAN_HEAD_NAME)).rarity(Rarity.UNCOMMON)));
 
     public static final Supplier<BlockEntityType<EndermanSkullBlockTile>> ENDERMAN_SKULL_TILE = regTile(
             ENDERMAN_HEAD_NAME, () -> PlatformHelper.newBlockEntityType(

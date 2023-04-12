@@ -9,6 +9,7 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -31,7 +32,7 @@ public class JEICompat implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
         if (!CompatHandler.REI) {
-            SpecialRecipeDisplays.registerRecipes(r -> registry.addRecipes(RecipeTypes.CRAFTING, r));
+            SpecialRecipeDisplays.registerCraftingRecipes(r -> registry.addRecipes(RecipeTypes.CRAFTING, r));
         }
     }
 

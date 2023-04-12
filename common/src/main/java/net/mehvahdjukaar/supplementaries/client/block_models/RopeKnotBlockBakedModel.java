@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock.*;
 
 public class RopeKnotBlockBakedModel implements CustomBakedModel {
     private final BakedModel knot;
@@ -53,7 +53,7 @@ public class RopeKnotBlockBakedModel implements CustomBakedModel {
         //knot & rope
         try {
             //TODO: add framed block stuff
-            if (state != null && state.getBlock() instanceof RopeKnotBlock) {
+            if (state != null && state.getBlock() instanceof AbstractRopeKnotBlock) {
                 BlockState rope = ModRegistry.ROPE.get().defaultBlockState()
                         .setValue(UP, state.getValue(UP))
                         .setValue(DOWN, state.getValue(DOWN))

@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumMap;
@@ -134,7 +135,12 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            if(MiscUtils.FESTIVITY.isAprilsFool()){
+            if( MiscUtils.FESTIVITY.isAprilsFool()){
+                double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
+                float v =(float) Mth.clamp(si,-0.5, 0.5);
+                float c =(float) Mth.clamp(si,-2, 2);
+                SuppPlatformStuff.getNoiseShader().getUniform("Intensity").set(Mth.cos(Mth.PI*c/4f));
+                poseStack.scale(v+0.5f +0.01f,1,1);
                 builder = buffer.getBuffer(SuppPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
             }else {
                 builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));

@@ -187,34 +187,30 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             }
 
             //render item
-            if (!stack.isEmpty() && !NoticeBoardBlockTile.isPageItem(stack.getItem())) {
 
-                Material pattern = tile.getCachedPattern();
-                if (pattern != null) {
+            Material pattern = tile.getCachedPattern();
+            if (pattern != null) {
 
-                    VertexConsumer builder = pattern.buffer(bufferIn, RenderType::entityNoOutline);
+                VertexConsumer builder = pattern.buffer(bufferIn, RenderType::entityNoOutline);
 
-                    int i = tile.getTextColor().getTextColor();
-                    float b = (NativeImage.getR(i)) / 255f;
-                    float g = (NativeImage.getG(i)) / 255f;
-                    float r = (NativeImage.getB(i)) / 255f;
-                    //if(tile.textHolder.hasGlowingText())combinedLightIn= LightTexture.FULL_BRIGHT;
-                    int lu = frontLight & '\uffff';
-                    int lv = frontLight >> 16 & '\uffff';
-                    VertexUtils.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,
-                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, pattern.sprite());
+                int i = tile.getTextColor().getTextColor();
+                float b = (NativeImage.getR(i)) / 255f;
+                float g = (NativeImage.getG(i)) / 255f;
+                float r = (NativeImage.getB(i)) / 255f;
+                //if(tile.textHolder.hasGlowingText())combinedLightIn= LightTexture.FULL_BRIGHT;
+                int lu = frontLight & '\uffff';
+                int lv = frontLight >> 16 & '\uffff';
+                VertexUtils.addQuadSide(builder, matrixStackIn, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,
+                        0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, pattern.sprite());
 
-                } else {
-                    BakedModel model = itemRenderer.getModel(stack, world, null, 0);
+            } else if (!tile.isNormalItem()) {
+                BakedModel model = itemRenderer.getModel(stack, world, null, 0);
 
-                    matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
-                    matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
-                    itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
-                            combinedOverlayIn, model);
-                    //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
-                }
-                matrixStackIn.popPose();
-                return;
+                matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
+                matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
+                itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
+                        combinedOverlayIn, model);
+                //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
             }
             matrixStackIn.popPose();
         }

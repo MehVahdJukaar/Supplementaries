@@ -1,4 +1,5 @@
 {
+  "group": "flag",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",

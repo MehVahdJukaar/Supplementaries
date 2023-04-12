@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -120,9 +120,9 @@ public class RopeArrowEntity extends AbstractArrow {
                 if (ropeBlock == ModRegistry.ROPE.get()) {
                     ModBlockProperties.PostType knotType = ModBlockProperties.PostType.get(hitState);
                     if (knotType != null) {
-                        BlockState knotState = RopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
+                        BlockState knotState = AbstractRopeKnotBlock.convertToRopeKnot(knotType, hitState, this.level, hitPos);
                         if (knotState != null) {
-                            if (knotState.getValue(RopeKnotBlock.AXIS).isVertical()) {
+                            if (knotState.getValue(AbstractRopeKnotBlock.AXIS).isVertical()) {
                                 this.prevPlacedPos = hitPos.relative(rayTraceResult.getDirection()).above();
                             } else {
                                 this.prevPlacedPos = hitPos;

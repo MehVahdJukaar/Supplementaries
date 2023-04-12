@@ -41,9 +41,11 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
+import vazkii.quark.api.config.IQuarkConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
+import vazkii.quark.content.building.block.StoolBlock;
 import vazkii.quark.content.building.block.WoodPostBlock;
 import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.client.module.UsesForCursesModule;
@@ -52,6 +54,7 @@ import vazkii.quark.content.tools.item.SlimeInABucketItem;
 import vazkii.quark.content.tools.module.SlimeInABucketModule;
 import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
+import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
 import java.util.List;
@@ -105,6 +108,10 @@ public class QuarkCompatImpl {
 
     public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
+    }
+
+    public static int getBannerPatternLimit(int current){
+        return MoreBannerLayersModule.getLimit(current);
     }
 
 
@@ -225,6 +232,14 @@ public class QuarkCompatImpl {
     public static boolean isShulkerDropInOn() {
         return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class)
                 && ExpandedItemInteractionsModule.enableShulkerBoxInteraction;
+    }
+
+    public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
+        if(state.getBlock() instanceof StoolBlock){
+            level.setBlockAndUpdate(pos, state.cycle(StoolBlock.BIG));
+            return true;
+        }
+        return false;
     }
 
 

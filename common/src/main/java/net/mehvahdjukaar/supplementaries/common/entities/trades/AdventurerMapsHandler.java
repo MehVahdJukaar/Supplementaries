@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeBookHack;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -62,6 +63,9 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+        //borrowing this. TODO: remove
+        RecipeBookHack.reloadServer();
+
         CUSTOM_MAPS_TRADES.clear();
 
         jsons.forEach((key, json) -> {

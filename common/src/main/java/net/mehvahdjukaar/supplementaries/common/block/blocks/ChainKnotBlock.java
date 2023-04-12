@@ -20,6 +20,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -27,11 +28,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnection {
+public class ChainKnotBlock extends AbstractRopeKnotBlock {
 
     public static final VoxelShape SIDE_SHAPE = Block.box(6, 9, 0, 10, 13, 10);
 
-    public RopeKnotBlock(Properties properties) {
+    public ChainKnotBlock(Properties properties) {
         super(properties);
     }
 
@@ -101,6 +102,10 @@ public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnect
         return newState;
     }
 
+    private boolean shouldConnectToFace(BlockState state, BlockState facingState, BlockPos facingPos, Direction facing, LevelAccessor world) {
+        return facingState.isFaceSturdy(world, facingPos, facing, SupportType.CENTER);
+    }
+
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -127,7 +132,7 @@ public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnect
         return super.getCloneItemStack(level, pos, state);
     }
 
-    @Override
+    //@Override
     public boolean canSideAcceptConnection(BlockState state, Direction direction) {
         if (state.getValue(AbstractRopeKnotBlock.AXIS) == Direction.Axis.Y) {
             return direction.getAxis() != Direction.Axis.Y;

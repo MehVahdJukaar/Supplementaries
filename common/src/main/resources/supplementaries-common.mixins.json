@@ -8,6 +8,7 @@
     "BellRendererMixin",
     "BlockBehaviourPlanterMixin",
     "BookViewScreenMixin",
+    "ClientRecipeBookMixin",
     "FontRendererMixin",
     "GameRendererMixin",
     "IronGolemRendererMixin",

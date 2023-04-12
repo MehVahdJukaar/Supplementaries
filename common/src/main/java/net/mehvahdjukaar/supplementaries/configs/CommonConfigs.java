@@ -12,13 +12,10 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,9 +27,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
-
-    public static void init() {
-    }
 
     private static final Map<String, Supplier<Boolean>> FEATURE_TOGGLES = new HashMap<>();
 
@@ -166,7 +160,7 @@ public class CommonConfigs {
 
             PULLEY_ENABLED = feature(builder);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
-                            .define("mineshaft_elevator", 0.02, 0,1);
+                    .define("mineshaft_elevator", 0.02, 0, 1);
             builder.pop();
 
 
@@ -351,7 +345,7 @@ public class CommonConfigs {
             builder.pop();
 
             DAUB_ENABLED = feature(builder, ModConstants.DAUB_NAME);
-            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICK_NAME);
+            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICK_NAME+"s");
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -574,8 +568,8 @@ public class CommonConfigs {
             TIPPED_SPIKES_ENABLED = feature(builder, "tipped_spikes");
             BAMBOO_SPIKES_DROP_LOOT = builder.comment("Allows entities killed by spikes to drop loot as if they were killed by a player")
                     .define("player_loot", false);
-            BAMBOO_SPIKES_ALTERNATIVE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
-                    .define("alternative_mode", true);
+            ONLY_ALLOW_HARMFUL = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
+                    .define("only_allow_harmful_effects", true);
             builder.pop();
 
             builder.push("urn");
@@ -622,7 +616,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
         public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
-        public static final Supplier<Boolean> BAMBOO_SPIKES_ALTERNATIVE;
+        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL;
         public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 
         public static final Supplier<Boolean> SACK_ENABLED;
@@ -1061,7 +1055,7 @@ public class CommonConfigs {
 
     //TODO: cleanup
     public static boolean isEnabled(String key) {
-        if(!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
+        if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
             case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get();
@@ -1076,5 +1070,17 @@ public class CommonConfigs {
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
         };
+    }
+
+
+    public static void init() {
+        int disabled = 0;
+        for (var c : FEATURE_TOGGLES.values()) {
+            if (!c.get()) disabled++;
+        }
+        float percentage = disabled / (float) FEATURE_TOGGLES.size();
+        if (percentage > 0.66f) {
+            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage*100));
+        }
     }
 }

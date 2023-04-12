@@ -109,25 +109,6 @@ public class FarmersDelightCompatImpl {
         return false;
     }
 
-    public static boolean tryTomatoLogging(BlockState facingState, LevelAccessor level, BlockPos facingPos, boolean isRope) {
-        if (facingState.is(ModBlocks.TOMATO_CROP.get()) && facingState.getValue(TomatoVineBlock.ROPELOGGED)) {
-            if (Configuration.ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES.get()) {
-                BlockState toPlace;
-                if (isRope) {
-                    toPlace = ROPE_TOMATO.get().defaultBlockState();
-                    toPlace = Block.updateFromNeighbourShapes(toPlace, level, facingPos);
-                } else {
-                    toPlace = STICK_TOMATOES.get().defaultBlockState();
-                }
-                level.setBlock(facingPos, toPlace, 3);
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
         if (blockstate.getBlock() == STICK_TOMATOES.get()) {
             return !blockstate.getValue(axis);
@@ -139,13 +120,6 @@ public class FarmersDelightCompatImpl {
         return STICK_TOMATOES.get();
     }
 
-
-
-    public interface ITomatoLoggable {
-
-        void doTomatoLog(Level level, BlockPos pos, BlockState state);
-
-    }
 
     private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
 
@@ -255,10 +229,6 @@ public class FarmersDelightCompatImpl {
                                       BlockPos facingPos) {
             super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 
-            if (facing == Direction.DOWN && !world.isClientSide()) {
-                tryTomatoLogging(facingState, world, facingPos, true);
-            }
-
             if (facing.getAxis() == Direction.Axis.Y) {
                 return state;
             }
@@ -299,17 +269,6 @@ public class FarmersDelightCompatImpl {
         protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
             builder.add(AXIS_X, AXIS_Z);
             super.createBlockStateDefinition(builder);
-        }
-
-        @Override
-        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
-                                      BlockPos facingPos) {
-            super.updateShape(state, facing, facingState, world, currentPos, facingPos);
-
-            if (facing == Direction.DOWN && !world.isClientSide()) {
-                tryTomatoLogging(facingState, world, facingPos, false);
-            }
-            return state;
         }
 
         @Override

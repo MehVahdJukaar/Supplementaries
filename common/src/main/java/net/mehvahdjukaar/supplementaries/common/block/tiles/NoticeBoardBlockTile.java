@@ -53,6 +53,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     //TODO: FINISH THIS!
     private final TextHolder textHolder;
+    private boolean isNormalItem = false;
 
     public NoticeBoardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.NOTICE_BOARD_TILE.get(), pos, state);
@@ -103,6 +104,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.cachedPageLines = Collections.emptyList();
         this.text = null;
         updateText();
+
+        this.isNormalItem = isPageItem(itemstack.getItem());
+    }
+
+    public boolean isNormalItem() {
+        return isNormalItem;
     }
 
     public void updateText() {

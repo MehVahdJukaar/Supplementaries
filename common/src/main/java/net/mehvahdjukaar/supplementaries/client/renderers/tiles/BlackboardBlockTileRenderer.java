@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -71,6 +72,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
+            SuppPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);

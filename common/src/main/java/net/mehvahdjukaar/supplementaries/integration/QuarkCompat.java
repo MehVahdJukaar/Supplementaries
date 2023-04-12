@@ -21,6 +21,11 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
+    public static int getBannerPatternLimit(int current) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static void tickPiston(Level level, BlockPos pos, BlockState state, AABB aabb, boolean sameDir, BlockEntity tile) {
         throw new AssertionError();
     }
@@ -94,6 +99,11 @@ public class QuarkCompat {
     @Contract
     @ExpectPlatform
     public static boolean isShulkerDropInOn() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
         throw new AssertionError();
     }
 }

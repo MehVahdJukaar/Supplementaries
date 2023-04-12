@@ -46,7 +46,7 @@ dependencies {
     modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
     modRuntimeOnly("curse.maven:architectury-api-419699:4147351")
     modImplementation("curse.maven:flan-404578:3902630")
-    modCompileOnly("curse.maven:farmers-delight-fabric-482834:3929455")
+    modImplementation("curse.maven:farmers-delight-fabric-482834:4111426")
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-restitched-462672:3908334")
     modCompileOnly("curse.maven:jei-238222:4405345")

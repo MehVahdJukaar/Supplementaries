@@ -15,7 +15,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Objects;
 
-import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock.*;
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock.*;
 
 
 public class RopeKnotBlockTile extends MimicBlockTile {

@@ -78,9 +78,9 @@ public abstract class MimicBlock extends Block {
     public float getExplosionResistance(BlockState state, BlockGetter world, BlockPos pos, Explosion explosion) {
         if (world.getBlockEntity(pos) instanceof IBlockHolder tile) {
             BlockState mimicState = tile.getHeldBlock();
-            if (!mimicState.isAir()) {
-                return Math.max(ForgeHelper.getExplosionResistance(state, (Level) world, pos, explosion),
-                        mimicState.getBlock().getExplosionResistance());
+            if (!mimicState.isAir() && !(mimicState.getBlock() instanceof MimicBlock)) {
+                return Math.max(ForgeHelper.getExplosionResistance(mimicState, (Level) world, pos, explosion),
+                        state.getBlock().getExplosionResistance());
             }
         }
         return 2;

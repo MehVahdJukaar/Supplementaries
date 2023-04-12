@@ -1,5 +1,5 @@
 {
   "items": ["supplementaries:sugar_cube","sugar"],
   "duration": 40,
-  "texture": "supplementaries:blocks/sugar_block"
+  "texture": "supplementaries:blocks/sugar"
 }

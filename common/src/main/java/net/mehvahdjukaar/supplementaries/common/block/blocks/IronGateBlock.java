@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.VerticalSlabBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,10 +12,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -155,4 +153,21 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         world.setBlock(pos, state, 10);
     }
 
+
+
+    public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState returnValue) {
+        boolean altered = false;
+        for(Direction d : Direction.Plane.HORIZONTAL){
+            BooleanProperty prop = CrossCollisionBlock.PROPERTY_BY_DIRECTION.get(d);
+            if(!returnValue.getValue(prop)) {
+                BlockState blockState = level.getBlockState(clickedPos.relative(d));
+                if (blockState.getBlock() instanceof FenceGateBlock &&
+                        blockState.getValue(FenceGateBlock.FACING).getAxis() != d.getAxis()) {
+                    altered = true;
+                    returnValue = returnValue.setValue(prop, true);
+                }
+            }
+        }
+        return altered ? returnValue : null;
+    }
 }

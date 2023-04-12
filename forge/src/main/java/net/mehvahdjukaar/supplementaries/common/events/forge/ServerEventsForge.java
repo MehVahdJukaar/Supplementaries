@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeKnotBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -28,7 +25,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -38,7 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -52,7 +48,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ServerEventsForge {
 
@@ -98,11 +93,6 @@ public class ServerEventsForge {
         CapabilityHandler.attachBlockEntityCapabilities(event);
     }
 
-    @SubscribeEvent
-    public static void onAttachPlayerCapabilities(AttachCapabilitiesEvent<Player> event) {
-        CapabilityHandler.attachPlayerCapabilities(event);
-    }
-
     //TODO: soap tool event
     @SubscribeEvent
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
@@ -130,13 +120,6 @@ public class ServerEventsForge {
             ServerEvents.onPlayerLoggedIn(player);
         }
     }
-
-    @Deprecated(forRemoval = true)
-    @SubscribeEvent
-    public static void onTagUpdated(TagsUpdatedEvent event) {
-        RegistryAccessJsonReloadListener.runReloads(event.getRegistryAccess());
-    }
-
 
     @SubscribeEvent
     public static void onDataSync(OnDatapackSyncEvent event) {

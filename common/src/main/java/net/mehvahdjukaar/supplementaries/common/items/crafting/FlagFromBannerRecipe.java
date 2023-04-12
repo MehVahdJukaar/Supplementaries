@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +41,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 }
 
                 int j = BannerBlockEntity.getPatternCount(itemStack);
-                if (j > 6) {
+                if (j > getMaxBannerPatterns()) {
                     return false;
                 }
 
@@ -66,7 +68,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 }
 
                 int j = BannerBlockEntity.getPatternCount(itemStack);
-                if (j > 6) {
+                if (j > getMaxBannerPatterns()) {
                     return false;
                 }
                 //exclude banner to banner
@@ -89,6 +91,10 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         return withPatterns != null && empty != null;
     }
 
+    private static int getMaxBannerPatterns() {
+        return CompatHandler.QUARK ? QuarkCompat.getBannerPatternLimit(6) : 6;
+    }
+
     @Override
     public ItemStack assemble(CraftingContainer inv) {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
@@ -96,7 +102,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
             if (!withPatterns.isEmpty()) {
                 int patternCount = BannerBlockEntity.getPatternCount(withPatterns);
                 //find item with patterns
-                if (patternCount > 0 && patternCount <= 6) {
+                if (patternCount > 0 && patternCount <= getMaxBannerPatterns()) {
                     for (int k = 0; k < inv.getContainerSize(); ++k) {
                         if (i != k) {
                             ItemStack empty = inv.getItem(k);

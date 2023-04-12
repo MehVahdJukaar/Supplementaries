@@ -73,4 +73,12 @@ public class QuarkCompatImpl {
     public static void tickPiston(Level level, BlockPos pos, BlockState state, AABB aabb, boolean sameDir, BlockEntity tile) {
     }
 
+    public static int getBannerPatternLimit(int current) {
+        return current;
+    }
+
+    public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
+        return false;
+    }
+
 }

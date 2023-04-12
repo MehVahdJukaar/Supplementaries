@@ -189,6 +189,9 @@ public class ModVillagerTrades {
     //runs on init since we need to be early enough to register stuff to forge busses
     public static void init() {
         RegHelper.registerWanderingTraderTrades(2, listings -> {
+            if(!CommonConfigs.SPEC.isLoaded()){
+                throw new AssertionError("Common config was not loaded. How is this possible");
+            }
             if (CommonConfigs.Building.GLOBE_ENABLED.get()) {
                 //adding twice because it's showing up too rarely
                 for (int i = 0; i < CommonConfigs.Building.GLOBE_TRADES.get(); i++) {
@@ -204,16 +207,25 @@ public class ModVillagerTrades {
             }
         });
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
+            if(!CommonConfigs.SPEC.isLoaded()){
+                throw new AssertionError("Common config was not loaded. How is this possible");
+            }
             if (CommonConfigs.Functional.FLAX_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
         });
 
         RegHelper.registerVillagerTrades(VillagerProfession.MASON, 1, itemListings -> {
+            if(!CommonConfigs.SPEC.isLoaded()){
+                throw new AssertionError("Common config was not loaded. How is this possible");
+            }
             if (CommonConfigs.Building.ASH_BRICKS_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD), new ItemStack(ModRegistry.ASH_BRICK_ITEM.get(),10), 16, 1, 0.05f));
         });
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 5, itemListings -> {
+            if(!CommonConfigs.SPEC.isLoaded()){
+                throw new AssertionError("Common config was not loaded. How is this possible");
+            }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get())
                 itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD , 8),
                         new ItemStack(ModRegistry.ANTIQUE_INK.get()), 16, 30, 0.05f));

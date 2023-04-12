@@ -1,6 +1,6 @@
 #version 150
 
-//#moj_import <fog.glsl>
+#moj_import <fog.glsl>
 
 uniform sampler2D Sampler0;
 
@@ -9,14 +9,19 @@ uniform float FogStart;
 uniform float FogEnd;
 uniform vec4 FogColor;
 
+
 uniform float GameTime;
 
 uniform int NoiseSpeed;
 uniform int NoiseScale;
+uniform float Intensity;
 
 in float vertexDistance;
-in vec2 texCoord0;
 in vec4 vertexColor;
+in vec4 lightMapColor;
+in vec4 overlayColor;
+in vec2 texCoord0;
+in vec4 normal;
 
 out vec4 fragColor;
 
@@ -34,9 +39,12 @@ void main() {
         gold_noise(texCoord0*NoiseScale, seed + 0.3), // b
         gold_noise(texCoord0*NoiseScale, seed + 0.4));// α
 
-    //vec4 color = texture(Sampler0, texCoord0);
-    //fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
-    fragColor = color;
+    vec4 textColor = texture(Sampler0, texCoord0);
+
+    textColor *= vertexColor * ColorModulator;
+    textColor *= lightMapColor;
+    textColor = linear_fog(textColor, vertexDistance, FogStart, FogEnd, FogColor);
+    fragColor.rgb = mix(textColor.rgb, color.rgb, Intensity);
 }
 
 

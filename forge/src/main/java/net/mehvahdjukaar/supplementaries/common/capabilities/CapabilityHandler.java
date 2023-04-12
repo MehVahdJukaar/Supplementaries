@@ -44,12 +44,6 @@ public class CapabilityHandler {
         }
     }
 
-    public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Player> event) {
-        //if (CommonConfigs.Tools.QUIVER_ENABLED.get() && event.getObject() instanceof Player) {
-         //   event.addCapability(Supplementaries.res("quiver_entity"), new QuiverEntityProvider(event.getObject()));
-        //}
-    }
-
     @Nullable
     public static <T> Capability<T> getToken(Class<T> capClass) {
        return (Capability<T>) TOKENS.get(capClass);
