@@ -28,6 +28,7 @@
     {"id":"createdeco:dean_brick","required":false},
     {"id":"createdeco:blue_brick","required":false},
     {"id":"createdeco:dusk_brick","required":false},
-    {"id":"createdeco:pearl_brick","required":false}
+    {"id":"createdeco:pearl_brick","required":false},
+    {"id":"createdeco:scarlet_brick","required":false}
   ]
 }

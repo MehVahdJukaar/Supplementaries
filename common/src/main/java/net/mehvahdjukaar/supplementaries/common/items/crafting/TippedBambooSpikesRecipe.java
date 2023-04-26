@@ -42,9 +42,10 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
                 }
                 itemstack = stack;
             } else if (stack.getItem() == Items.LINGERING_POTION) {
-                var effects = PotionUtils.getPotion(stack).getEffects();
+                Potion potion = PotionUtils.getPotion(stack);
+                var effects = potion.getEffects();
                 if (effects.isEmpty()) return false;
-                if (!BambooSpikesTippedItem.areEffectsValid(effects)) return false;
+                if (!BambooSpikesTippedItem.isPotionValid(potion)) return false;
 
                 if (stack1 != null) {
                     return false;

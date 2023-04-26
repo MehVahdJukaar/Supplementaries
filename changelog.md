@@ -1,3 +1,1 @@
-- Fixed notice boards not working with banner patterns
-- Fixed ash brick config not working
-- Iron gates can now only connect their side faces
+- fixed a server crash

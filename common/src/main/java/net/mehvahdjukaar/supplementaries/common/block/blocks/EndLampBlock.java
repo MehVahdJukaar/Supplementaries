@@ -3,8 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Rune;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +38,8 @@ public class EndLampBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(RUNE, Rune.values()[context.getLevel().random.nextInt(Rune.values().length)]);
+        RandomSource r = RandomSource.create(context.getClickedPos().asLong());
+        return this.defaultBlockState().setValue(RUNE, Rune.values()[r.nextInt(Rune.values().length)]);
     }
 
     @Override

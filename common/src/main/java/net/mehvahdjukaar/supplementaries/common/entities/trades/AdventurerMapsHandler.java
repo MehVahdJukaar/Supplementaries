@@ -63,8 +63,6 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-        //borrowing this. TODO: remove
-        RecipeBookHack.reloadServer();
 
         CUSTOM_MAPS_TRADES.clear();
 

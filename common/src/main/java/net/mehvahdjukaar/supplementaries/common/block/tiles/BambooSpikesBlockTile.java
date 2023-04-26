@@ -71,7 +71,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
     public boolean tryApplyPotion(Potion newPotion) {
 
         if (this.charges == 0 || this.potion == Potions.EMPTY || this.potion.equals(newPotion) && this.charges != MAX_CHARGES) {
-            if(BambooSpikesTippedItem.areEffectsValid(newPotion.getEffects())) {
+            if(BambooSpikesTippedItem.isPotionValid(newPotion)) {
                 this.potion = newPotion;
                 this.charges = MAX_CHARGES;
                 this.setChanged();

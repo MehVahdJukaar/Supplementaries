@@ -8,7 +8,6 @@
     "BellRendererMixin",
     "BlockBehaviourPlanterMixin",
     "BookViewScreenMixin",
-    "ClientRecipeBookMixin",
     "FontRendererMixin",
     "GameRendererMixin",
     "IronGolemRendererMixin",
@@ -28,6 +27,7 @@
   ],
   "mixins": [
     "AbstractArrowMixin",
+
     "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "AbstractSkullBlockMixin",

@@ -14,12 +14,13 @@ public class RecipeBookHack {
     public static void reloadServer() {
         SERVER_SPECIAL_RECIPE_VIEWS.clear();
 
-        var map = createSpecialRecipeDisplays();
+        var map = createClientRecipes();
         map.values().forEach(h -> h.forEach(j -> j.forEach(k -> SERVER_SPECIAL_RECIPE_VIEWS.put(k.getId(), k))));
     }
 
 
-    public static Map<RecipeBookCategories, List<List<Recipe<?>>>> createSpecialRecipeDisplays() {
+
+    public static Map<RecipeBookCategories, List<List<Recipe<?>>>> createClientRecipes() {
         Map<RecipeBookCategories, List<List<Recipe<?>>>> map = new EnumMap<>(RecipeBookCategories.class);
         for (var c : RecipeBookCategories.values()) {
             SpecialRecipeDisplays.registerRecipes(c, v -> {

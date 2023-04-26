@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -166,5 +167,13 @@ public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
             case LAND, AIR -> true;
             case WATER -> worldIn.getFluidState(pos).is(FluidTags.WATER);
         };
+    }
+
+    @Override
+    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        if(state.getValue(HAS_BLOCK)){
+            return level.getMaxLightLevel();
+        }
+        else return super.getLightBlock(state, level, pos);
     }
 }

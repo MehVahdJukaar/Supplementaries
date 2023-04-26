@@ -3,10 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.CreativeModeTab;
@@ -56,13 +59,14 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get();
     }
 
-    public static boolean areEffectsValid(List<MobEffectInstance> effects){
+    public static boolean isPotionValid(Potion potion){
+        List<MobEffectInstance> effects = potion.getEffects();
         if(CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()){
             for(var e: effects){
                 if(e.getEffect().isBeneficial()) return false;
             }
         }
-        return true;
+        return !MiscUtils.isTagged(potion, Registry.POTION,ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     @Override
@@ -83,7 +87,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         //freaking bookshelf mod is calling this method before configs are loaded...
-        if(!ClientConfigs.SPEC.isLoaded() ||  ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+        if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
             if (this.allowedIn(group)) {
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));
@@ -91,7 +95,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
                 for (Potion potion : net.minecraft.core.Registry.POTION) {
                     if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
                         continue;
-                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && areEffectsValid(potion.getEffects())) {
+                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && isPotionValid(potion)) {
                         items.add(makeSpikeItem(potion));
                     }
                 }
