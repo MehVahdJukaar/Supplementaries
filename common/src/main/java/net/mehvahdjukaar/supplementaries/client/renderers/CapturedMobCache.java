@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -66,5 +67,10 @@ public class CapturedMobCache {
         entity.setUUID(crystalID);
         addMob(entity);
         return entity;
+    }
+
+    //clears immediately so level itself can unload immediately too
+    public static void clear(){
+        MOB_CACHE.invalidateAll();
     }
 }

@@ -228,7 +228,7 @@ public class SpecialRecipeDisplays {
 
         for (Potion potionType : Registry.POTION) {
             if (!potionType.getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(potionType)) {
-               // recipes.add(makeSpikeRecipe(potionType, group));
+                recipes.add(makeSpikeRecipe(potionType, group));
             }
         }
         return recipes;

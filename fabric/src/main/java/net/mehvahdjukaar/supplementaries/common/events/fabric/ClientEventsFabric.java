@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -43,7 +44,6 @@ public class ClientEventsFabric {
                 e.register(new QuiverLayer(r, true));
             }
         });
-
 
     }
 
