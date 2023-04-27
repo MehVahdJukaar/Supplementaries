@@ -238,6 +238,11 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return getRotatedState(state, null, null, rotation, Direction.UP, null).orElse(state);
+    }
+
+    @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder pBuilder) {
         int i = 0;
         if (state.getValue(AXIS_X)) i++;

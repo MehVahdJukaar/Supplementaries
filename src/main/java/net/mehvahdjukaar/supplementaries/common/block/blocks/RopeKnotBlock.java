@@ -268,20 +268,6 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         return newState;
     }
 
-    //TODO: fix this not updating mimic block
-    @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        if (rotation == Rotation.CLOCKWISE_180) {
-            return state;
-        } else {
-            return switch (state.getValue(AXIS)) {
-                case X -> state.setValue(AXIS, Direction.Axis.Z);
-                case Z -> state.setValue(AXIS, Direction.Axis.X);
-                default -> state;
-            };
-        }
-    }
-
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
@@ -341,5 +327,36 @@ public class RopeKnotBlock extends MimicBlock implements SimpleWaterloggedBlock,
         }
         newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
         return newState;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        state = switch (rotation) {
+            case CLOCKWISE_180 ->
+                    state.setValue(NORTH, state.getValue(SOUTH)).setValue(EAST, state.getValue(WEST)).setValue(SOUTH, state.getValue(NORTH)).setValue(WEST, state.getValue(EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(EAST)).setValue(EAST, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(WEST)).setValue(WEST, state.getValue(NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(NORTH, state.getValue(WEST)).setValue(EAST, state.getValue(NORTH)).setValue(SOUTH, state.getValue(EAST)).setValue(WEST, state.getValue(SOUTH));
+            default -> state;
+        };
+        if (rotation == Rotation.CLOCKWISE_180) {
+            return state;
+        } else {
+            return switch (state.getValue(AXIS)) {
+                case X -> state.setValue(AXIS, Direction.Axis.Z);
+                case Z -> state.setValue(AXIS, Direction.Axis.X);
+                default -> state;
+            };
+        }
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return switch (mirror) {
+            case LEFT_RIGHT -> state.setValue(NORTH, state.getValue(SOUTH)).setValue(SOUTH, state.getValue(NORTH));
+            case FRONT_BACK -> state.setValue(EAST, state.getValue(WEST)).setValue(WEST, state.getValue(EAST));
+            default -> super.mirror(state, mirror);
+        };
     }
 }
