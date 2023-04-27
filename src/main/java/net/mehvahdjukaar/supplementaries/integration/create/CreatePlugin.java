@@ -69,6 +69,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import javax.annotation.Nonnull;
@@ -238,6 +239,7 @@ public class CreatePlugin {
 
         private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
             CompoundTag com = context.tileData;
+
             if (com == null) return;
             long lastTicked = com.getLong("LastTicked");
             if (!this.isOnCooldown(world, lastTicked)) {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import com.ibm.icu.impl.Pair;
 import net.mehvahdjukaar.supplementaries.client.renderers.GlobeTextureManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.mobholder.CapturedMobsHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.QuiverLayer;

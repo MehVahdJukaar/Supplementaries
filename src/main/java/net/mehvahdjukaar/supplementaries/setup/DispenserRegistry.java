@@ -84,6 +84,9 @@ public class DispenserRegistry {
 
         DispenserHelper.registerCustomBehavior(new FlintAndSteelDispenserBehavior(Items.FLINT_AND_STEEL));
         DispenserHelper.registerCustomBehavior(new BambooSpikesDispenserBehavior(Items.LINGERING_POTION));
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_ITEM.get());
+        DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+
         DispenserHelper.registerCustomBehavior(new PancakesDispenserBehavior(Items.HONEY_BOTTLE));
 
         if (ServerConfigs.cached.THROWABLE_BRICKS_ENABLED) {
