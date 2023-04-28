@@ -1,1 +1,3 @@
-- fixed a server crash
+- Minor optimizations with some memory usage on level unload
+- Added tag blacklist for potions that cant go in spikes
+- soap can clear filled maps

@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ public class CapturedMobCache {
     }
 
     private static UUID crystalID = UUID.randomUUID();
+    private static boolean updateCrystal = false;
 
     @Nullable
     public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {
@@ -49,6 +51,7 @@ public class CapturedMobCache {
     }
 
     public static void tickCrystal() {
+        if(!updateCrystal)return;
         var e = MOB_CACHE.getIfPresent(crystalID);
         if (e instanceof EndCrystal c){
             c.time++;
@@ -57,9 +60,11 @@ public class CapturedMobCache {
                 crystalID = UUID.randomUUID();
             }
         }
+        updateCrystal = false;
     }
 
     public static EndCrystal getEndCrystal(Level level) {
+        updateCrystal = true;
         var e = MOB_CACHE.getIfPresent(crystalID);
         if (e instanceof EndCrystal c) return c;
         EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, level);

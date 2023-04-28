@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -12,6 +10,9 @@ import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -22,10 +23,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
-import java.util.List;
+import java.lang.reflect.Constructor;
 
 /**
  * Author: MehVahdJukaar
@@ -48,6 +50,8 @@ public class SupplementariesForge {
             ClientEventsForge.init();
             ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
         });
+
+        crashIfOptifineHasNukedForge();
     }
 
     @SubscribeEvent
@@ -76,5 +80,14 @@ public class SupplementariesForge {
 
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
+
+    private static void crashIfOptifineHasNukedForge() {
+        try {
+            var constructor = BakedQuad.class.getDeclaredConstructor(
+                    int[].class, int.class, Direction.class, TextureAtlasSprite.class, boolean.class, boolean.class);
+        }catch (Exception e){
+            throw  new Error(e);
+        }
+    }
 
 }

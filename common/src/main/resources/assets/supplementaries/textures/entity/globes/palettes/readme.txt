@@ -1,6 +1,6 @@
 Here you can put custom colors that will be assigned to each globe depending on the dimension where its placed.
 The dimension which will be assigned to it depends on the path of the texture itself which should match its dimension id.
-For example you can use twilight_forest.twilight_forest.png (use . instead of : for modded ones), not needed for vanillas
+For example, you can use twilight_forest.twilight_forest.png (use . instead of : for modded ones), not needed for vanillas
 
 The texture itself will have to contain an array of colors which will be mapped in order to each of the globe "biomes" as follors.
 Colors are read from left to right then from top to bottom

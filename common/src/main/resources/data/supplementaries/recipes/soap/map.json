@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:filled_map"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+
+  ],
+  "result": {
+    "item": "minecraft:map",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ]
+}

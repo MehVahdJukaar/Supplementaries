@@ -364,7 +364,7 @@ public class SpecialRecipeDisplays {
                 registry.accept(createFlagFromBanner());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                registry.accept(createAntiqueMapRecipe());
+                //registry.accept(createAntiqueMapRecipe());
                 registry.accept(createAntiqueBookRecipe());
             }
             registry.accept(createItemLoreRecipe());

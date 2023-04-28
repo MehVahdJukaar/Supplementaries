@@ -36,7 +36,9 @@ public class WeatheredMapRecipe extends CustomRecipe {
                     return false;
                 }
                 itemstack = stack;
-            } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() || stack.getItem() == ModRegistry.SOAP.get()) {
+            } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() ||
+                    (false && //disabled
+                    stack.getItem() == ModRegistry.SOAP.get())) {
 
                 if (itemstack1 != null) {
                     return false;
