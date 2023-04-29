@@ -137,7 +137,7 @@ public class BucketHelper {
     }
 
     public static boolean isModdedFish(Entity entity) {
-        return entity instanceof WaterAnimal || entity instanceof Bucketable;
+        return  entity instanceof Bucketable; //entity instanceof WaterAnimal ||
     }
 
 }

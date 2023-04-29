@@ -126,21 +126,22 @@ public class SpecialRecipeDisplays {
         String group = "supplementaries.soap";
 
         for (String k : BlocksColorAPI.getBlockKeys()) {
-            var n = BlocksColorAPI.getItemHolderSet(k);
-            Item out = BlocksColorAPI.getColoredItem(k, null);
-            if (n == null || out == null) continue;
+            if (!CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(k)) {
+                var n = BlocksColorAPI.getItemHolderSet(k);
+                Item out = BlocksColorAPI.getColoredItem(k, null);
+                if (n == null || out == null) continue;
 
-            Ingredient ing = n.unwrap().map(Ingredient::of, l ->
-                    Ingredient.of(l.stream().map(Holder::value)
-                            .filter(i -> !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(i)))
-                            .map(Item::getDefaultInstance)));
-            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
-                    ing, Ingredient.of(ModRegistry.SOAP.get()));
+                Ingredient ing = n.unwrap().map(Ingredient::of, l ->
+                        Ingredient.of(l.stream().map(Holder::value)
+                                .map(Item::getDefaultInstance)));
+                NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY,
+                        ing, Ingredient.of(ModRegistry.SOAP.get()));
 
-            ItemStack output = out.getDefaultInstance();
-            ResourceLocation id = Supplementaries.res("soap_clean_" + k.replace(":", "_"));
-            ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
-            recipes.add(recipe);
+                ItemStack output = out.getDefaultInstance();
+                ResourceLocation id = Supplementaries.res("soap_clean_" + k.replace(":", "_"));
+                ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+                recipes.add(recipe);
+            }
         }
         return recipes;
     }
@@ -155,7 +156,7 @@ public class SpecialRecipeDisplays {
 
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
 
-            ResourceLocation id = Supplementaries.res("trapped_present_" + color.getName()+"_display");
+            ResourceLocation id = Supplementaries.res("trapped_present_" + color.getName() + "_display");
             recipes.add(new ShapelessRecipe(id, group, output, inputs));
         }
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
@@ -178,7 +179,7 @@ public class SpecialRecipeDisplays {
 
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
-            ResourceLocation id = Supplementaries.res("present_" + color.getName()+"_display");
+            ResourceLocation id = Supplementaries.res("present_" + color.getName() + "_display");
             recipes.add(new ShapelessRecipe(id, group, output, inputs));
         }
         return recipes;
@@ -270,7 +271,7 @@ public class SpecialRecipeDisplays {
 
             Ingredient emptyFlag = Ingredient.of(new ItemStack(ModRegistry.FLAGS.get(color).get()));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "flag_from_banner_display_"+color.getName());
+            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "flag_from_banner_display_" + color.getName());
 
             ShapelessRecipe recipe = new ShapelessRecipe(id, group, fullFlag, inputs);
             recipes.add(recipe);
@@ -364,14 +365,14 @@ public class SpecialRecipeDisplays {
                 registry.accept(createFlagFromBanner());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                //registry.accept(createAntiqueMapRecipe());
+                registry.accept(createAntiqueMapRecipe());
                 registry.accept(createAntiqueBookRecipe());
             }
             registry.accept(createItemLoreRecipe());
             if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
                 registry.accept(createSoapCleanRecipe());
                 if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                    registry.accept(createAntiqueMapSoapRecipe());
+                    //registry.accept(createAntiqueMapSoapRecipe());
                 }
             }
             if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {

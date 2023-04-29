@@ -50,8 +50,6 @@ public class SupplementariesForge {
             ClientEventsForge.init();
             ClientPlatformHelper.addClientSetup(ClientRegistry::setup);
         });
-
-        crashIfOptifineHasNukedForge();
     }
 
     @SubscribeEvent
@@ -81,13 +79,6 @@ public class SupplementariesForge {
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
 
-    private static void crashIfOptifineHasNukedForge() {
-        try {
-            var constructor = BakedQuad.class.getDeclaredConstructor(
-                    int[].class, int.class, Direction.class, TextureAtlasSprite.class, boolean.class, boolean.class);
-        }catch (Exception e){
-            throw  new Error(e);
-        }
-    }
+
 
 }
