@@ -30,6 +30,7 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComp
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.PaintingTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
@@ -58,6 +59,8 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -250,8 +253,33 @@ public class ClientRegistry {
         ClientPlatformHelper.registerItemProperty(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
                 (stack, world, entity, s) -> ((DyeableLeatherItem) stack.getItem()).hasCustomColor(stack) ? 1 : 0);
 
+        ClientPlatformHelper.registerItemProperty(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
+                new GlobeProperty());
+
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
+
+    }
+
+    private static class GlobeProperty implements ClampedItemPropertyFunction {
+
+        @Override
+        public float call(ItemStack itemStack, @javax.annotation.Nullable ClientLevel clientLevel, @javax.annotation.Nullable LivingEntity livingEntity, int i) {
+            CompoundTag compoundTag = itemStack.getTagElement("display");
+            if (compoundTag != null) {
+                var n = compoundTag.getString("Name");
+                if (n != null) {
+                    var v = GlobeBlockTile.GlobeType.getTextureID(Component.Serializer.fromJson(n).getString());
+                    if (v != null) return Float.valueOf(v);
+                }
+            }
+            return Float.NEGATIVE_INFINITY;
+        }
+
+        @Override
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
+            return call(itemStack, clientLevel, livingEntity, i);
+        }
 
     }
 

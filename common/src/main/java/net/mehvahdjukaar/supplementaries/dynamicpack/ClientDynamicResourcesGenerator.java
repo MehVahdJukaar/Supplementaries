@@ -19,7 +19,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -92,15 +92,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
             try (var model = o.get().open()) {
                 var json = RPUtils.deserializeJson(model);
                 JsonArray overrides;
-                if(json.has("overrides")){
-                    overrides = json.getAsJsonArray("overrides");;
-                }else overrides = new JsonArray();
+                if (json.has("overrides")) {
+                    overrides = json.getAsJsonArray("overrides");
+                    ;
+                } else overrides = new JsonArray();
 
                 modelConsumer.accept(ov -> overrides.add(serializeOverride(ov)));
 
                 json.add("overrides", overrides);
                 pack.addItemModel(modelRes, json);
             } catch (Exception ignored) {
+                int aa = 1;
             }
         }
     }
@@ -121,14 +123,15 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
-        if(CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
                         List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
                                 new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
             });
         }
-        if(CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
+
+        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
             addModelOverride(manager, this.dynamicPack, new ResourceLocation("written_book"), e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/written_book_tattered"),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
@@ -138,7 +141,27 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
             });
         }
+        GlobeBlockTile.GlobeType.recomputeCache();
+        addModelOverride(manager, this.dynamicPack, Supplementaries.res("globe"), e -> {
+            int i = 0;
+            for (var s : GlobeBlockTile.GlobeType.textures) {
+                String name = s.getPath().split("/")[3].split("\\.")[0];
+                e.add(new ItemOverride(Supplementaries.res("item/" + name),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
+                i++;
+                this.dynamicPack.addItemModel(Supplementaries.res(name), JsonParser.parseString(
+                        """ 
+                                {
+                                    "parent": "item/generated",
+                                    "textures": {
+                                        "layer0": "supplementaries:items/globes/""" + name + "\""+
+                                """               
+                                    }
+                                }
+                                """));
+            }
 
+        });
         //need this here for reasons I forgot
         WallLanternTexturesManager.reloadTextures(manager);
         GlobeManager.refreshColorsAndTextures(manager);

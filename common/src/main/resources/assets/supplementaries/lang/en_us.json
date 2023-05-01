@@ -438,8 +438,13 @@
   "block_type.supplementaries.hanging_sign": "Hanging Sign",
   "block_type.supplementaries.sign_post": "Sign Post",
 
-  "block.supplementaries.laser_block": "Ender Beamer",
-  "death.attack.supplementaries.amethyst_shard": "%1$s was sharded to death",
-  "death.attack.supplementaries.amethyst_shard.player": "%1$s was sharded to death by %2$s",
-  "item.supplementaries.amethyst_arrow": "Amethyst Arrow"
+
+  "wood_type.domum_ornamentum.cactus": "Green Cactus",
+  "wood_type.domum_ornamentum.cactus_extra": "Cactus",
+  "wood_type.twilightforest.dark": "Darkwood",
+  "wood_type.twilightforest.time": "Timewood",
+  "wood_type.twilightforest.trans": "Transwood",
+  "wood_type.twilightforest.sorting": "Sortingwood",
+  "leaves_type.twilightforest.dark": "Darkwood",
+  "leaves_type.ulterlands.souldrained": "Petrified"
 }

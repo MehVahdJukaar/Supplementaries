@@ -1,2 +1,2 @@
-- other fix
-- jars can no longer catch all water animals by default
+- fixed blackboard overlay
+- custom item textures for supporters globes (thanks to TorchTheDragon)

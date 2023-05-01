@@ -5,7 +5,7 @@
       "tag": "forge:dyes/brown"
     },
     {
-      "tag": "supplementaries:candle_holders"
+      "item": "supplementaries:candle_holder"
     }
   ],
   "result": {

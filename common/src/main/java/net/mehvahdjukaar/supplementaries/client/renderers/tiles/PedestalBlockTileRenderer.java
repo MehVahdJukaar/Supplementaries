@@ -137,7 +137,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                                 boolean sepia = tile.getDisplayType() == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
                                 Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
                                         stack.hasCustomHoverName() ?
-                                                GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :
+                                                GlobeBlockTile.GlobeType.getModelAndTexture(stack.getHoverName().getString()) :
                                                 Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
 
                                 GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,

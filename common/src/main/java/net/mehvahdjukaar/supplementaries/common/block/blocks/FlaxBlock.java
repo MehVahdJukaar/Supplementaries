@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,6 +88,9 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+        if (!state.is(this)) {
+            throw new IllegalArgumentException("Somebody (a mod) passed a [" + Utils.getID(state.getBlock()) + "] blockstate to a member function of [Flax] block. This breaks a contract");
+        }
         if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             //no more mods messing with my upper stage smh
             BlockState above = worldIn.getBlockState(pos.above());

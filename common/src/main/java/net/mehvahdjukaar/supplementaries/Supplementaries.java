@@ -100,7 +100,6 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
-    //rotate quark seat
     //rope slide animation and sound instance
     //jeed multi
     //finish bedbugs
@@ -120,7 +119,6 @@ public class Supplementaries {
     //pulley flint
     //TODO relayer on piston retract
     //mod to wax anything to prevent interaction
-    //special recipes conditions dont work
     //sugar block fall in water
     //soap in water makes soap particles
     //yeet java models in favor or json ones
@@ -128,7 +126,6 @@ public class Supplementaries {
 
 
     //punching swings lanterns
-    //ehcnahted books placed vertically. fix placement based off player look dir
     //wind physics for wind vane
 
     //ash makes mobs jump
@@ -146,8 +143,6 @@ public class Supplementaries {
     //ash jei plugin
     //bubble sound for bellows
     //bundle sound for sacks
-
-    //TODO: shift click to pickup placed book
 
     //todo: fix projectile hitbox being a single point on y = 0
     //divining rod

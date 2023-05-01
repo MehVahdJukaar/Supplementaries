@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
+import java.util.*;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
 
@@ -72,9 +73,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         if (this.sheared) {
             this.renderData = Pair.of(GlobeModel.SHEARED,
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
-                    GLOBE_SHEARED_TEXTURE);
+                            GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
-            this.renderData = GlobeType.getGlobeTexture(this.getCustomName().getString());
+            this.renderData = GlobeType.getModelAndTexture(this.getCustomName().getString());
         } else this.renderData = Pair.of(GlobeModel.GLOBE, null);
     }
 
@@ -194,31 +195,51 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         public final Component transKeyWord;
         public final ResourceLocation texture;
 
-        public static Pair<GlobeModel, ResourceLocation> getGlobeTexture(String text) {
-            GlobeModel model = GlobeModel.GLOBE;
-            String name = text.toLowerCase(Locale.ROOT);
-            ResourceLocation r = Credits.INSTANCE.globes().get(name);
+        private static final Map<String, Pair<GlobeModel, ResourceLocation>> nameCache = new HashMap<>();
+        private static final Map<String, Integer> idMap = new Object2IntArrayMap<>();
+        public static final List<ResourceLocation> textures = new ArrayList<>();
 
-            if (r != null) {
-                if (r.getPath().contains("globe_wais")) {
-                    model = GlobeModel.SNOW;
+        public static void recomputeCache() {
+            nameCache.clear();
+            for (GlobeType type : GlobeType.values()) {
+                GlobeModel model = type == FLAT ? GlobeModel.FLAT : GlobeModel.GLOBE;
+                var pair = Pair.of(model, type.texture);
+                if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
+                    nameCache.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
                 }
-                return Pair.of(model, r);
-            }
-            for (GlobeType n : GlobeType.values()) {
-                if (n.keyWords == null) continue;
-                if (n.transKeyWord != null && !n.transKeyWord.getString().equals("") && name.equals(n.transKeyWord.getString().toLowerCase(Locale.ROOT))) {
-                    if (n == FLAT) model = GlobeModel.FLAT;
-                    return Pair.of(model, n.texture);
-                }
-                for (String s : n.keyWords) {
-                    if (!s.equals("") && name.equals(s)) {
-                        if (n == FLAT) model = GlobeModel.FLAT;
-                        return Pair.of(model, n.texture);
+                for (String s : type.keyWords) {
+                    if (!s.equals("")) {
+                        nameCache.put(s, pair);
                     }
                 }
             }
-            return Pair.of(GlobeModel.GLOBE, null);
+
+            for (var g : Credits.INSTANCE.globes().entrySet()) {
+                var path = g.getValue();
+                GlobeModel model = GlobeModel.GLOBE;
+                if (path.getPath().contains("globe_wais")) {
+                    model = GlobeModel.SNOW;
+                }
+                nameCache.put(g.getKey(), Pair.of(model, path));
+            }
+            textures.clear();
+            nameCache.values().forEach(o -> {
+                if(!textures.contains(o.getSecond())) textures.add(o.getSecond());
+            });
+            Collections.sort(textures);
+            idMap.clear();
+            nameCache.forEach((key, value) -> idMap.put(key, textures.indexOf(value.getSecond())));
+
+        }
+
+        @Nullable
+        public static Pair<GlobeModel, ResourceLocation> getModelAndTexture(String text) {
+            return nameCache.get(text.toLowerCase(Locale.ROOT));
+        }
+
+        @Nullable
+        public static Integer getTextureID(String text) {
+            return idMap.get(text.toLowerCase(Locale.ROOT));
         }
     }
 

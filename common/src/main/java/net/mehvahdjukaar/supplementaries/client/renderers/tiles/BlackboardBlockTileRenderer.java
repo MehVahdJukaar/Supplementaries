@@ -120,10 +120,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
                         matrixStackIn.translate(x, 1 - y - p, 0.001);
 
-                        VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, p, p,
-
-                                1, 1, 1, 1,
-                                lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
+                        VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1,
+                                1, 1, 1, 1, lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
 
                         matrixStackIn.popPose();
                     }

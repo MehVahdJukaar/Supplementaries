@@ -189,7 +189,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
                         Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
                                 stack.hasCustomHoverName() ?
-                                        GlobeBlockTile.GlobeType.getGlobeTexture(stack.getHoverName().getString()) :
+                                        GlobeBlockTile.GlobeType.getModelAndTexture(stack.getHoverName().getString()) :
                                         Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
 
                         GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -85,6 +86,9 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
             } catch (Exception ignored) {
             }
         }
+
+        //globe stuff
+        GlobeBlockTile.GlobeType.recomputeCache();
     }
 
     private static void initialize() {
