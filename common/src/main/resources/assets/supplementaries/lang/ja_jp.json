@@ -1,7 +1,7 @@
 {
   "itemGroup.supplementaries": "Supplementaries",
   "block.supplementaries.faucet": "蛇口",
-  "block.supplementaries.wall_lantern": "壁付きランタン",
+  "block.supplementaries.wall_lantern": "壁に付けられたランタン",
   "block.supplementaries.planter": "プランター",
   "block.supplementaries.bellows": "ふいご",
   "block.supplementaries.wind_vane": "風向計",
@@ -120,7 +120,7 @@
   "entity.supplementaries.brick_projectile": "投げたレンガ",
   "entity.supplementaries.rope_arrow": "ロープの矢",
   "block.supplementaries.checker_slab": "チェッカーのハーフブロック",
-  "message.supplementaries.rope_arrow": "Rope: %s",
+  "message.supplementaries.rope_arrow": "ロープ: %s",
   "block.supplementaries.pulley_block": "滑車",
   "block.supplementaries.fodder": "飼料",
   "item.supplementaries.bomb": "爆弾",
@@ -288,7 +288,7 @@
   "advancements.story.turn_table.description": "回転台を利用して自分自身を回す",
   "gui.supplementaries.present": "贈り物",
   "gui.supplementaries.present.send": "To:",
-  "gui.supplementaries.present.pack": "Pack",
+  "gui.supplementaries.present.pack": "梱包",
   "message.supplementaries.present.from": "%sから",
   "message.supplementaries.present.to": "%sへ",
   "message.supplementaries.present.public": "梱包済み",
@@ -308,7 +308,10 @@
   "supplementaries.virtual_resourcepack.title": "仮想リソースパック",
   "supplementaries.virtual_resourcepack.description": "ダイナミックランタイムリソース",
   "block.supplementaries.tater_in_a_jar": "小さなポテトの入った瓶",
-  "block.supplementaries.skull_candles": "ろうそくが乗った頭",
+  "block.supplementaries.skull_candles": "ろうそくの乗った頭",
+  "block.supplementaries.skull_candles_soul": "魂のろうそくの乗った頭",
+  "block.supplementaries.skull_candles_wall": "壁に付けられたろうそくの乗った頭",
+  "block.supplementaries.skull_candles_soul_wall": "壁に付けられた魂のろうそくの乗った頭",
   "block.supplementaries.skull_pile": "重ねた頭",
   "gui.supplementaries.present.trapped": "仕込む",
   "gui.supplementaries.trapped_present": "トラッププレゼント",
@@ -368,9 +371,10 @@
   "block.supplementaries.candle_holder_orange": "橙色のろうそく立て",
   "block.supplementaries.candle_holder_gray": "灰色のろうそく立て",
   "block.supplementaries.candle_holder_soul": "魂のろうそく立て",
+  "block.supplementaries.candle_holder_spectacle": "Spectacleのろうそく立て",
   "block.supplementaries.enderman_head": "エンダーマンの頭",
   "block.supplementaries.ashen_basalt": "玄武岩",
-  "block.supplementaries.skull_candle": "ろうそくが乗った頭",
+  "block.supplementaries.skull_candle": "ろうそくの乗った頭",
   "block.supplementaries.structure_temp": "0",
 
   "block.supplementaries.ceiling_banner_black": "黒色の旗",
@@ -404,6 +408,7 @@
   "subtitle.supplementaries.sack.open": "袋が開く",
   "subtitle.supplementaries.rope.break": "ロープが破壊される",
   "subtitle.supplementaries.rope.place": "ロープが設置される",
+  "subtitle.supplementaries.rope.slide": "ロープを滑り降りる",
   "subtitle.supplementaries.bubble.pop": "シャボンが弾ける",
   "subtitle.supplementaries.bubble.blow": "シャボンが飛ばされる",
   "subtitle.supplementaries.present.place": "プレゼントが設置される",
@@ -421,6 +426,7 @@
   "subtitle.supplementaries.slingshot.charge": "パチンコが引かれる",
   "subtitle.supplementaries.slingshot.release": "パチンコが打たれる",
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
+  "message.supplementaries.tattered": "骨董品",
 
   "supplementaries.display_source.item_name": "アイテム名",
   "supplementaries.display_source.world_position": "座標",
@@ -433,8 +439,12 @@
   "block_type.supplementaries.sign_post": "道標",
 
 
-  "block.supplementaries.laser_block": "エンダービーマー",
-  "death.attack.supplementaries.amethyst_shard": "%1$sは飛び散った破片によって死んだ",
-  "death.attack.supplementaries.amethyst_shard.player": "%1$sは%2$sによる飛び散った破片によって死んだ",
-  "item.supplementaries.amethyst_arrow": "アメジストの矢"
+  "wood_type.domum_ornamentum.cactus": "緑色のサボテン",
+  "wood_type.domum_ornamentum.cactus_extra": "サボテン",
+  "wood_type.twilightforest.dark": "ダークウッド",
+  "wood_type.twilightforest.time": "刻の木",
+  "wood_type.twilightforest.trans": "変化の木",
+  "wood_type.twilightforest.sorting": "分類の木",
+  "leaves_type.twilightforest.dark": "ダークウッド",
+  "leaves_type.ulterlands.souldrained": "Petrified"
 }

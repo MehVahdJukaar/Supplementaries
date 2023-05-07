@@ -438,8 +438,13 @@
   "block_type.supplementaries.hanging_sign": "挂牌",
   "block_type.supplementaries.sign_post": "路标",
   
-  "block.supplementaries.laser_block": "末影激光座",
-  "death.attack.supplementaries.amethyst_shard": "%1$s被碎片扎死了",
-  "death.attack.supplementaries.amethyst_shard.player": "%1$s被%2$s用碎片扎死了",
-  "item.supplementaries.amethyst_arrow": "紫水晶箭"
+
+  "wood_type.domum_ornamentum.cactus": "绿色仙人掌",
+  "wood_type.domum_ornamentum.cactus_extra": "仙人掌",
+  "wood_type.twilightforest.dark": "黑木",
+  "wood_type.twilightforest.time": "时光木",
+  "wood_type.twilightforest.trans": "变化木",
+  "wood_type.twilightforest.sorting": "分类木",
+  "leaves_type.twilightforest.dark": "黑树",
+  "leaves_type.ulterlands.souldrained": "石化"
 }
