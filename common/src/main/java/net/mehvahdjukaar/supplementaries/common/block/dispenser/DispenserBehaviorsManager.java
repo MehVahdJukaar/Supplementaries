@@ -10,10 +10,12 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBe
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
+import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockSource;
@@ -137,8 +139,9 @@ public class DispenserBehaviorsManager {
 
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         boolean jar = CommonConfigs.Functional.JAR_ENABLED.get();
+        boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
 
-        if (axe || jar) {
+        if (axe || jar || key) {
             for (Item i : Registry.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
@@ -146,6 +149,9 @@ public class DispenserBehaviorsManager {
                     }
                     if (isForge && axe && i instanceof AxeItem) {
                         DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(i));
+                    }
+                    if(key && i instanceof KeyItem){
+                        DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsManager;
@@ -43,7 +44,7 @@ public class ModSetup {
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             ModSetup::registerFramed,
-            CauldronRegistry::registerInteractions,
+            CauldronBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 

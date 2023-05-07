@@ -34,7 +34,7 @@ public abstract class MimicBlock extends Block {
             BlockState mimicState = tile.getHeldBlock();
             //prevent infinite recursion
             if (!mimicState.isAir() && !(mimicState.getBlock() instanceof MimicBlock))
-                return Math.max(super.getDestroyProgress(state, player, worldIn, pos),
+                return Math.min(super.getDestroyProgress(state, player, worldIn, pos),
                         mimicState.getDestroyProgress(player, worldIn, pos));
         }
         return super.getDestroyProgress(state, player, worldIn, pos);

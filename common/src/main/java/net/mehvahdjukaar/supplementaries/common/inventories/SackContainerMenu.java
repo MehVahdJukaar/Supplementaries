@@ -54,7 +54,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                this.addSlot(new SackSlot(inventory, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
+                this.addSlot(new DelegatingSlot(inventory, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
             }
             size -= dims[0];
         }

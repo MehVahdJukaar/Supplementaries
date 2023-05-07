@@ -1,2 +1,1 @@
-- fixed blackboard overlay
-- custom item textures for supporters globes (thanks to TorchTheDragon)
+fixed framed blocks breaking instantly when full

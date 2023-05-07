@@ -47,17 +47,21 @@ public class LockBlock extends Block implements EntityBlock {
         if (state.getValue(POWERED)) return InteractionResult.PASS;
         if (worldIn.getBlockEntity(pos) instanceof KeyLockableTile tile) {
             if (tile.handleAction(player, handIn, "lock_block")) {
-                if (!worldIn.isClientSide) {
-                    worldIn.setBlock(pos, state.setValue(POWERED, true), 2 | 4 | 3);
-                    worldIn.scheduleTick(pos, this, 20);
-                }
-
+                this.activate(state, worldIn, pos, player);
                 worldIn.levelEvent(player, 1037, pos, 0);
-                //this.playSound(player, worldIn, pos, true);
             }
         }
 
         return InteractionResult.sidedSuccess(worldIn.isClientSide);
+    }
+
+    public void activate(BlockState state, Level worldIn, BlockPos pos, Player player) {
+        if (!worldIn.isClientSide) {
+            worldIn.setBlock(pos, state.setValue(POWERED, true), 2 | 4 | 3);
+            worldIn.scheduleTick(pos, this, 20);
+        }
+
+        this.playSound(player, worldIn, pos, true);
     }
 
     protected void playSound(@Nullable Player player, Level worldIn, BlockPos pos, boolean isOpened) {

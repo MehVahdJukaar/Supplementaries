@@ -8,11 +8,14 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Locale;
 
 public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, VillagerModel<RedMerchantEntity>> {
 
@@ -26,7 +29,9 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
 
     @Override
     public ResourceLocation getTextureLocation(RedMerchantEntity entity) {
-        return MiscUtils.FESTIVITY.isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
+        return entity.getDisplayName().getString().toLowerCase(Locale.ROOT).equals("morshu") ?
+                ModTextures.ORANGE_MERCHANT :
+                MiscUtils.FESTIVITY.isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
     }
 
     @Override

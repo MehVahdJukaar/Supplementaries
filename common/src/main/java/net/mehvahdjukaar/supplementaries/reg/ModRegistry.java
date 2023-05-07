@@ -122,8 +122,8 @@ public class ModRegistry {
 
 
     //key
-    public static final Supplier<Item> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
+    public static final Supplier<KeyItem> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(
+            new Item.Properties().tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
 
     //candy
     public static final Supplier<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())

@@ -1,6 +1,7 @@
-package net.mehvahdjukaar.supplementaries.reg;
+package net.mehvahdjukaar.supplementaries.common.block.cauldron;
 
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.resources.ResourceLocation;
@@ -8,9 +9,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 
-public class CauldronRegistry {
+public class CauldronBehaviorsManager {
 
-    public static void registerInteractions() {
+    public static void registerBehaviors() {
         for (var item : ModRegistry.FLAGS.values()) {
             CauldronInteraction.WATER.put(item.get().asItem(), CauldronInteraction.BANNER);
         }

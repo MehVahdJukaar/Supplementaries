@@ -70,7 +70,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     public SafeBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LAVALOGGED) ? 15 : 0));
+        super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false)
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
     }
@@ -82,8 +82,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     //schedule block tick
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
-        if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+    public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource rand) {
+        if (serverLevel.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             tile.recheckOpen();
         }
     }
@@ -99,13 +99,13 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(LAVALOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(worldIn));
+            level.scheduleTick(currentPos, Fluids.LAVA, Fluids.LAVA.getTickDelay(level));
         } else if (stateIn.getValue(WATERLOGGED)) {
-            worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
 
     @Override
@@ -130,82 +130,29 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new SafeBlockTile(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new SafeBlockTile(pos, state);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-                ItemStack stack = player.getItemInHand(handIn);
-                Item item = stack.getItem();
-
-                //clear ownership with tripwire
-                boolean cleared = false;
-                if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
-                    if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
-                            (tile.isOwnedBy(player) || (tile.isNotOwnedBy(player) && player.isCreative()))) {
-                        cleared = true;
-                    }
-                } else {
-                    if (player.isShiftKeyDown() && stack.is(ModTags.KEY) && (player.isCreative() ||
-                            KeyLockableTile.isCorrectKey(stack, tile.getPassword()))) {
-                        cleared = true;
-                    }
-                }
-
-                if (cleared) {
-                    tile.clearOwner();
-                    player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
-                    worldIn.playSound(null, pos,
-                            SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
+            if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+                if(tile.handleAction(player,handIn)){
                     return InteractionResult.CONSUME;
                 }
-
-                BlockPos p = pos.relative(state.getValue(FACING));
-                if (!worldIn.getBlockState(p).isRedstoneConductor(worldIn, p)) {
-                    if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
-                        UUID owner = tile.getOwner();
-                        if (owner == null) {
-                            owner = player.getUUID();
-                            tile.setOwner(owner);
-                        }
-                        if (!owner.equals(player.getUUID())) {
-                            player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", tile.getOwnerName()), true);
-                            if (!player.isCreative()) return InteractionResult.CONSUME;
-                        }
-                    } else {
-                        String key = tile.getPassword();
-                        if (key == null) {
-                            if (stack.is(ModTags.KEY)) {
-                                tile.setPassword(stack.getHoverName().getString());
-                                player.displayClientMessage(Component.translatable("message.supplementaries.safe.assigned_key", tile.getPassword()), true);
-                                worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                                        SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
-                                return InteractionResult.CONSUME;
-                            }
-                        } else if (!tile.canPlayerOpen(player, true) && !player.isCreative()) {
-                            return InteractionResult.CONSUME;
-                        }
-                    }
-                    player.openMenu(tile);
-                    PiglinAi.angerNearbyPiglins(player, true);
-                }
-
-                return InteractionResult.CONSUME;
             }
             return InteractionResult.PASS;
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, level, tooltip, flagIn);
 
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag != null) {
@@ -268,19 +215,19 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     //overrides creative drop
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+            if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
                 ItemStack itemstack = this.getSafeItem(tile);
 
-                ItemEntity itementity = new ItemEntity(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
+                ItemEntity itementity = new ItemEntity(level,  pos.getX() + 0.5D,  pos.getY() + 0.5D,  pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
-                worldIn.addFreshEntity(itementity);
+                level.addFreshEntity(itementity);
             } else {
                 tile.unpackLootTable(player);
             }
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     //TODO: use loot table instead
@@ -304,8 +251,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (worldIn.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             if (stack.hasCustomHoverName()) {
                 tile.setCustomName(stack.getHoverName());
             }
@@ -322,15 +269,15 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            worldIn.updateNeighbourForOutputSignal(pos, state.getBlock());
-            super.onRemove(state, worldIn, pos, newState, isMoving);
+            level.updateNeighbourForOutputSignal(pos, state.getBlock());
+            super.onRemove(state, level, pos, newState, isMoving);
         }
     }
 
@@ -345,9 +292,9 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity blockEntity = worldIn.getBlockEntity(pos);
-        return blockEntity instanceof MenuProvider ? (MenuProvider) blockEntity : null;
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        return blockEntity instanceof MenuProvider m ? m : null;
     }
 
     @Override

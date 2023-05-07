@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
+import net.mehvahdjukaar.supplementaries.common.inventories.DelegatingSlot;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -14,19 +17,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
+import net.minecraft.world.inventory.ShulkerBoxSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwnerProtected {
+public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwnerProtected, IKeyLockable {
 
+    //max length a item name can have
     private String password = null;
     private String ownerName = null;
     private UUID owner = null;
@@ -36,38 +46,94 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
 
+    public boolean handleAction(Player player, InteractionHand handIn) {
+        ItemStack stack = player.getItemInHand(handIn);
+        Item item = stack.getItem();
+
+        //clear ownership with tripwire
+        boolean cleared = false;
+        if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
+            if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
+                    (this.isOwnedBy(player) || (this.isNotOwnedBy(player) && player.isCreative()))) {
+                cleared = true;
+            }
+        } else {
+            if (player.isShiftKeyDown() && (player.isCreative() || this.getKeyStatus(stack).isCorrect())) {
+                cleared = true;
+            }
+        }
+
+        if (cleared) {
+            this.clearPassword();
+            this.onPasswordCleared(player, worldPosition);
+            return true;
+        }
+
+        BlockPos frontPos = worldPosition.relative(getBlockState().getValue(SafeBlock.FACING));
+        if (!level.getBlockState(frontPos).isRedstoneConductor(level, frontPos)) {
+            if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
+                UUID owner = this.getOwner();
+                if (owner == null) {
+                    owner = player.getUUID();
+                    this.setOwner(owner);
+                }
+                if (!owner.equals(player.getUUID())) {
+                    player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", this.ownerName), true);
+                    if (!player.isCreative()) {
+                        return true;
+                    }
+                }
+            } else {
+                String key = this.getPassword();
+                if (key == null) {
+                    String newKey = IKeyLockable.getKeyPassword(stack);
+                    if (newKey != null) {
+                        this.setPassword(newKey);
+                        this.onKeyAssigned(level, worldPosition, player, newKey);
+                        return true;
+                    }
+                } else if (!this.canPlayerOpen(player, true) && !player.isCreative()) {
+                    return true;
+                }
+            }
+            player.openMenu(this);
+            PiglinAi.angerNearbyPiglins(player, true);
+        }
+
+        return true;
+    }
+
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             if (this.isNotOwnedBy(player)) {
-                if (feedbackMessage)
+                if (feedbackMessage) {
                     player.displayClientMessage(Component.translatable("message.supplementaries.safe.owner", this.ownerName), true);
+                }
                 return false;
             }
         } else {
-            return KeyLockableTile.doesPlayerHaveKeyToOpen(player, this.password, feedbackMessage, "safe");
+            return this.testIfHasCorrectKey(player, this.password, feedbackMessage, "safe");
         }
         return true;
     }
 
-    //TODO: use vanilla system??
-    //default lockable tile method. just used for compat
+
     @Override
-    public boolean canOpen(Player pPlayer) {
-        return canPlayerOpen(pPlayer, false);
-    }
-
-
     public String getPassword() {
         return password;
     }
 
-    public String getOwnerName() {
-        return ownerName;
-    }
-
+    @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public void clearPassword() {
+        this.ownerName = null;
+        this.owner = null;
+        this.password = null;
     }
 
     @Nullable
@@ -88,20 +154,25 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         }
     }
 
-    public void clearOwner() {
-        this.ownerName = null;
-        this.owner = null;
-        this.password = null;
+    //TODO: use vanilla system??
+    //default lockable tile method. just used for compat
+    @Override
+    public boolean canOpen(Player pPlayer) {
+        return canPlayerOpen(pPlayer, false);
     }
 
     @Override
     public Component getDisplayName() {
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             if (this.ownerName != null) {
-                return (Component.translatable("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
+                if (this.shouldShowPassword()) {
+                    return (Component.translatable("gui.supplementaries.safe.name", this.ownerName, super.getDisplayName()));
+                }
             }
         } else if (this.password != null) {
-            return (Component.translatable("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
+            if (this.shouldShowPassword()) {
+                return (Component.translatable("gui.supplementaries.safe.password", this.password, super.getDisplayName()));
+            }
         }
         return super.getDisplayName();
     }
@@ -114,18 +185,18 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     @Override
     protected void playOpenSound(BlockState state) {
         Vec3i vec3i = state.getValue(SafeBlock.FACING).getNormal();
-        double d0 = (double) this.worldPosition.getX() + 0.5D + (double) vec3i.getX() / 2.0D;
-        double d1 = (double) this.worldPosition.getY() + 0.5D + (double) vec3i.getY() / 2.0D;
-        double d2 = (double) this.worldPosition.getZ() + 0.5D + (double) vec3i.getZ() / 2.0D;
+        double d0 = (double) this.worldPosition.getX() + 0.5D + vec3i.getX() / 2.0D;
+        double d1 = (double) this.worldPosition.getY() + 0.5D + vec3i.getY() / 2.0D;
+        double d2 = (double) this.worldPosition.getZ() + 0.5D + vec3i.getZ() / 2.0D;
         this.level.playSound(null, d0, d1, d2, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
     }
 
     @Override
     protected void playCloseSound(BlockState state) {
         Vec3i vec3i = state.getValue(SafeBlock.FACING).getNormal();
-        double d0 = (double) this.worldPosition.getX() + 0.5D + (double) vec3i.getX() / 2.0D;
-        double d1 = (double) this.worldPosition.getY() + 0.5D + (double) vec3i.getY() / 2.0D;
-        double d2 = (double) this.worldPosition.getZ() + 0.5D + (double) vec3i.getZ() / 2.0D;
+        double d0 = (double) this.worldPosition.getX() + 0.5D + vec3i.getX() / 2.0D;
+        double d1 = (double) this.worldPosition.getY() + 0.5D + vec3i.getY() / 2.0D;
+        double d2 = (double) this.worldPosition.getZ() + 0.5D + vec3i.getZ() / 2.0D;
         this.level.playSound(null, d0, d1, d2, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.65F);
     }
 
@@ -139,13 +210,13 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         super.load(tag);
         if (tag.contains("Owner")) {
             this.owner = tag.getUUID("Owner");
-        }else this.owner = null;
+        } else this.owner = null;
         if (tag.contains("OwnerName")) {
             this.ownerName = tag.getString("OwnerName");
-        }else this.owner = null;
+        } else this.owner = null;
         if (tag.contains("Password")) {
             this.password = tag.getString("Password");
-        }else this.password = null;
+        } else this.password = null;
     }
 
     @Override
@@ -160,7 +231,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return MiscUtils.isAllowedInShulker(stack);
+        return MiscUtils.isAllowedInShulker(stack) && !getKeyStatus(stack).isCorrect();
     }
 
     @Override
@@ -180,11 +251,19 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     private static class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvider {
 
-        private final Container container;
+        private final SafeBlockTile container;
 
-        public SafeContainerMenu(int id, Inventory inventory, Container container) {
+        public SafeContainerMenu(int id, Inventory inventory, SafeBlockTile container) {
             super(id, inventory, container);
             this.container = container;
+        }
+
+        @Override
+        protected Slot addSlot(Slot slot) {
+            if (slot instanceof ShulkerBoxSlot) {
+                return super.addSlot(new DelegatingSlot(slot.container, slot.index, slot.x, slot.y));
+            }
+            return super.addSlot(slot);
         }
 
         @Override
@@ -192,4 +271,6 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             return container;
         }
     }
+
+
 }

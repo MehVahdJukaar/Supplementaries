@@ -91,6 +91,7 @@
   "gui.supplementaries.safe.password": "%2$s key: %1$s",
   "message.supplementaries.safe.bound": "Locked",
   "message.supplementaries.safe.assigned_key": "Assigned to '%s' key",
+  "message.supplementaries.safe.assigned_key_generic": "Assigned to key",
   "item.supplementaries.key": "Key",
 
   "item.supplementaries.bamboo_spikes_tipped_effect": "Bamboo Spikes of %s",

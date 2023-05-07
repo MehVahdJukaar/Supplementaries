@@ -33,6 +33,13 @@ import net.minecraft.world.item.crafting.Recipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -163,7 +170,6 @@ public class Supplementaries {
     //TODO: goblet & jars dynamic baked model
     //ghast fireball mob griefing
 
-    //TODO: fireflies deflect arrows
 
     //firefly glow block
 

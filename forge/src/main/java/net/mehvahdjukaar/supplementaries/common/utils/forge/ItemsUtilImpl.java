@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
@@ -144,9 +145,11 @@ public class ItemsUtilImpl {
         if (itemHandler.get() != null) {
             for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(idx);
-                if (stack.is(ModTags.KEY)) {
-                    found = KeyLockableTile.KeyStatus.INCORRECT_KEY;
-                    if (KeyLockableTile.isCorrectKey(stack, key)) return KeyLockableTile.KeyStatus.CORRECT_KEY;
+                KeyLockableTile.KeyStatus status = IKeyLockable.getKeyStatus(stack, key);
+                if(status == KeyLockableTile.KeyStatus.CORRECT_KEY){
+                    return status;
+                }else if(status == KeyLockableTile.KeyStatus.INCORRECT_KEY){
+                    found = status;
                 }
             }
         }

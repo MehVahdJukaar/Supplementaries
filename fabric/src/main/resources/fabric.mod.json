@@ -26,7 +26,10 @@
     ],
     "rei_client": [
       "net.mehvahdjukaar.supplementaries.integration.REICompat"
-      ]
+    ],
+    "jei_mod_plugin": [
+      "net.mehvahdjukaar.supplementaries.integration.JEICompat"
+    ]
   },
   "mixins": [
     "${mod_id}.mixins.json",

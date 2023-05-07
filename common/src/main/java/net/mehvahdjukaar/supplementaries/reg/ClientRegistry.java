@@ -38,6 +38,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Paintin
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

@@ -4,6 +4,8 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -18,13 +20,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class KeyItem extends Item {
 
     public KeyItem(Properties properties) {
         super(properties);
     }
-
 
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
@@ -56,10 +58,16 @@ public class KeyItem extends Item {
                 if (t.tryClearingKey(context.getPlayer(), context.getItemInHand())) {
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-            }else if(tile instanceof SafeBlockTile){
+            } else if (tile instanceof SafeBlockTile) {
                 return level.getBlockState(pos).use(level, context.getPlayer(), context.getHand(), new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
             }
         }
         return super.useOn(context);
     }
+
+    public String getPassword(ItemStack stack) {
+        return stack.getHoverName().getString();
+    }
+
+
 }

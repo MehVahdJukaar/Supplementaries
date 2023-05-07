@@ -27,7 +27,6 @@
   ],
   "mixins": [
     "AbstractArrowMixin",
-
     "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "AbstractSkullBlockMixin",

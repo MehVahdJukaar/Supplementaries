@@ -175,20 +175,23 @@ public class MobContainer {
                 var cap = CapturedMobHandler.getDataCap(type, true);
                 var f = cap.shouldRenderWithFluid();
                 ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
+                if (stack.isEmpty()) {
+                    Supplementaries.LOGGER.error("Bucket error 3: name " + "none" + ", bucket " + stack + " fluid, " + fluidId);
+                }
                 MobNBTData data = new MobNBTData.Bucket(null, stack.copy(), cap.getFishTextureIndex(), fluidId);
                 this.setData(data);
             }
-        } else if(item == Items.BUCKET){
+        } else if (item == Items.BUCKET) {
             //empty
-            if(this.data instanceof MobNBTData.Bucket bucketData){
+            if (this.data instanceof MobNBTData.Bucket bucketData) {
                 world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = bucketData.filledBucket.copy();
                 this.setData(null);
-            }else if(this.data instanceof MobNBTData.Entity && mobInstance != null){
+            } else if (this.data instanceof MobNBTData.Entity && mobInstance != null) {
                 Entity temp = mobInstance.getEntityForRenderer();
-                if(temp != null){
+                if (temp != null) {
                     ItemStack bucket = BucketHelper.getBucketFromEntity(temp);
-                    if(!bucket.isEmpty()) {
+                    if (!bucket.isEmpty()) {
                         world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                         returnStack = bucket.copy();
                         this.setData(null);
@@ -265,7 +268,10 @@ public class MobContainer {
         if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
             var f = cap.shouldRenderWithFluid();
             ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
-            data = new MobNBTData.Bucket(name,bucketStack, cap.getFishTextureIndex(), fluidId);
+            if (bucketStack.isEmpty()) {
+                Supplementaries.LOGGER.error("Bucket error 2: name " + name + ", bucket " + bucketStack + " fluid, " + fluidId);
+            }
+            data = new MobNBTData.Bucket(name, bucketStack, cap.getFishTextureIndex(), fluidId);
         } else {
             Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, blockW, blockH, false);
             float scale = dimensions.getLeft();
@@ -434,7 +440,7 @@ public class MobContainer {
             this.fluidID = fluidID;
         }
 
-        public boolean is2DFish(){
+        public boolean is2DFish() {
             return this.fishTexture != 0;
         }
 
@@ -452,9 +458,9 @@ public class MobContainer {
         @Nullable
         protected static MobNBTData load(CompoundTag tag) {
             if (tag.contains("BucketHolder")) {
-               return Bucket.of(tag.getCompound("BucketHolder"));
+                return Bucket.of(tag.getCompound("BucketHolder"));
             } else if (tag.contains("MobHolder")) {
-               return Entity.of(tag.getCompound("MobHolder"));
+                return Entity.of(tag.getCompound("MobHolder"));
             }
             return null;
         }
@@ -502,6 +508,9 @@ public class MobContainer {
                 ResourceLocation fluid = null;
                 if (cmp.contains("Fluid")) {
                     fluid = new ResourceLocation(cmp.getString("Fluid"));
+                }
+                if (bucket.isEmpty()) {
+                    Supplementaries.LOGGER.error("Bucket error 1: name " + name + ", bucket " + bucket + " fluid, " + fluid);
                 }
                 return new Bucket(name, bucket, fish, fluid);
             }
