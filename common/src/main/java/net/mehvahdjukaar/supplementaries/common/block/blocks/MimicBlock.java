@@ -58,7 +58,8 @@ public abstract class MimicBlock extends Block {
             //checks again if the content itself can be mined
             BlockState heldState = tile.getHeldBlock();
             if (builder.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof ServerPlayer player) {
-                if (!ForgeHelper.canHarvestBlock(heldState, builder.getLevel(), new BlockPos(builder.getParameter(LootContextParams.ORIGIN)), player)) {
+                if (!ForgeHelper.canHarvestBlock(heldState, builder.getLevel(),
+                        BlockPos.containing(builder.getParameter(LootContextParams.ORIGIN)), player)) {
                     return drops;
                 }
             }

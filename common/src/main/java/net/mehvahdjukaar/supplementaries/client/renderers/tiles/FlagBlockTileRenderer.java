@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -15,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
@@ -29,6 +26,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import org.joml.Quaternionf;
 
 import java.util.List;
 
@@ -49,10 +47,10 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(0.05f*ang));
-        this.flag.xRot = (float) (0.5*Math.PI);
-        this.flag.yRot = (float) (1*Math.PI);
-        this.flag.zRot = (float) (0.5*Math.PI);
+        matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
+        this.flag.xRot = (float) (0.5 * Math.PI);
+        this.flag.yRot = (float) (1 * Math.PI);
+        this.flag.zRot = (float) (0.5 * Math.PI);
         this.flag.y = -12;
         this.flag.x = 1.5f;
         BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
@@ -100,9 +98,9 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
                     renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(ang));
+                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(ang));
                     matrixStackIn.translate(0, 0, segmentLen / 16f);
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-ang));
+                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(-ang));
                 }
             }
 
@@ -122,7 +120,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         for (int p = 0; p < list.size(); p++) {
 
             Material material = ModMaterials.FLAG_MATERIALS.get().get(list.get(p).getFirst().value());
-            if(material == null){
+            if (material == null) {
                 continue;
             }
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
@@ -165,8 +163,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         maxV = VertexUtils.getRelativeV(sprite, maxV);
         v = VertexUtils.getRelativeV(sprite, v);
 
-        Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
-        Quaternion rotation2 = Vector3f.YP.rotationDegrees(-angle);
+        Quaternionf rotation = Axis.YP.rotationDegrees(angle);
+        Quaternionf rotation2 = Axis.YP.rotationDegrees(-angle);
 
         int nx = 1;
         int nz = 0;

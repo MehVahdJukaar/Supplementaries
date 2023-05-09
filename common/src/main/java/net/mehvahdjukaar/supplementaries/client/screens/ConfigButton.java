@@ -50,7 +50,7 @@ public class ConfigButton extends Button {
                     String name = b.getMessage().getString();
                     if (targets.contains(name)) {
                         int spacing = 4;
-                        GuiEventListener button = new ConfigButton(b.x + (isOnRight ? b.getWidth() + spacing : -20 - spacing), b.y);
+                        GuiEventListener button = new ConfigButton(b.getX() + (isOnRight ? b.getWidth() + spacing : -20 - spacing), b.getY());
                         adder.accept(button);
                         return;
                     }

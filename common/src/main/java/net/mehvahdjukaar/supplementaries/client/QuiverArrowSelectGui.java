@@ -60,7 +60,6 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
 
-
     public static void ohMouseMoved(double deltaX) {
         double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
         int oldI = (int) (lastCumulativeMouseDx * scale);
@@ -114,11 +113,11 @@ public abstract class QuiverArrowSelectGui extends Gui {
         return false;
     }
 
-    private void renderSlot(int pX, int pY, Player pPlayer, ItemStack pStack, int seed) {
+    private void renderSlot(PoseStack poseStack, int pX, int pY, ItemStack pStack, int seed) {
         if (!pStack.isEmpty()) {
-            this.itemRenderer.renderAndDecorateItem(pPlayer, pStack, pX, pY, seed);
+            this.itemRenderer.renderAndDecorateItem(poseStack, pStack, pX, pY, seed);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            this.itemRenderer.renderGuiItemDecorations(this.minecraft.font, pStack, pX, pY);
+            this.itemRenderer.renderGuiItemDecorations(poseStack, this.minecraft.font, pStack, pX, pY);
         }
     }
 
@@ -153,9 +152,9 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 px += ClientConfigs.Items.QUIVER_GUI_X.get();
                 py += ClientConfigs.Items.QUIVER_GUI_Y.get();
 
-                this.blit(poseStack, centerX - px, py, 0, 0, uWidth - 1, 22);
-                this.blit(poseStack, centerX + px - 1, py, 0, 0, 1, 22);
-                this.blit(poseStack, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
+                blit(poseStack, centerX - px, py, 0, 0, uWidth - 1, 22);
+                blit(poseStack, centerX + px - 1, py, 0, 0, 1, 22);
+                blit(poseStack, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
 
 
                 this.setBlitOffset(z);
@@ -165,7 +164,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
                 for (int i = 0; i < slots; ++i) {
                     int kx = centerX - px + 3 + i * 20;
-                    this.renderSlot(kx, py + 3, player, items.get(i), i1++);
+                    this.renderSlot(poseStack, kx, py + 3, items.get(i), i1++);
                 }
                 RenderSystem.disableBlend();
 

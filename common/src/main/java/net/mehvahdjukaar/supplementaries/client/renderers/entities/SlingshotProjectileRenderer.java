@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
@@ -32,22 +34,23 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
     }
 
     @Override
-    public void render(T entity, float pEntityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
+    public void render(T entity, float pEntityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         //centers everything to hitbox y = 0 (rendered hitbox will be lowered)
-        matrixStack.translate(0, -entity.getBbHeight() / 2f, 0);
+        poseStack.translate(0, -entity.getBbHeight() / 2f, 0);
         if (entity.tickCount >= 3 || (this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) >= 12.25D)) {
-            matrixStack.pushPose();
-            matrixStack.translate(0, 0.25, 0);
+            poseStack.pushPose();
+            poseStack.translate(0, 0.25, 0);
 
-            matrixStack.mulPose(Vector3f.YN.rotationDegrees(180 - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
-            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot())));
+            poseStack.mulPose(Axis.YN.rotationDegrees(180 - Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot())));
+            poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.rotLerp(partialTicks, entity.xRotO, entity.getXRot())));
 
             float scale = (float)(double)ClientConfigs.Items.SLINGSHOT_PROJECTILE_SCALE.get();
-            matrixStack.scale(scale, scale, scale);
+            poseStack.scale(scale, scale, scale);
 
-            this.itemRenderer.renderStatic(entity.getItem(), ItemTransforms.TransformType.NONE, light, OverlayTexture.NO_OVERLAY, matrixStack, buffer, 0);
-            matrixStack.popPose();
-            super.render(entity, pEntityYaw, partialTicks, matrixStack, buffer, light);
+            this.itemRenderer.renderStatic(entity.getItem(), ItemDisplayContext.NONE, light, OverlayTexture.NO_OVERLAY,
+                    poseStack, buffer, entity.level, 0);
+            poseStack.popPose();
+            super.render(entity, pEntityYaw, partialTicks, poseStack, buffer, light);
         }
     }
 

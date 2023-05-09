@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -14,6 +14,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -65,7 +66,7 @@ public class AshLayerBlock extends FallingBlock {
         BlockPos pos = pHit.getBlockPos();
         if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
             Entity entity = projectile.getOwner();
-            boolean flag = entity == null || entity instanceof Player || PlatformHelper.isMobGriefingOn(level, entity);
+            boolean flag = entity == null || entity instanceof Player || PlatHelper.isMobGriefingOn(level, entity);
             if (flag) {
                 this.removeOneLayer(state, pos, level);
             }
@@ -219,7 +220,7 @@ public class AshLayerBlock extends FallingBlock {
             BlockPos pos = event.getPos();
 
             Item i = state.getBlock().asItem();
-            int count = PlatformHelper.getBurnTime(i.getDefaultInstance()) / 100;
+            int count = PlatHelper.getBurnTime(i.getDefaultInstance()) / 100;
             if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
 
             if (count > 0) {
@@ -259,7 +260,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float height) {
         int layers = state.getValue(LAYERS);
-        entity.causeFallDamage(height, layers > 2 ? 0.3f : 1, DamageSource.FALL);
+        entity.causeFallDamage(height, layers > 2 ? 0.3f : 1, level.damageSources().fall());
         if (level.isClientSide) {
             for (int i = 0; i < Math.min(12, height * 1.4); i++) {
 
@@ -274,9 +275,9 @@ public class AshLayerBlock extends FallingBlock {
         if (blockstate.getBlock() instanceof BonemealableBlock bonemealableblock) {
             if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate, level.isClientSide)) {
 
-                if (level instanceof ServerLevel) {
+                if (level instanceof ServerLevel serverLevel) {
                     if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {
-                        bonemealableblock.performBonemeal((ServerLevel) level, level.random, pos, blockstate);
+                        bonemealableblock.performBonemeal(serverLevel, level.random, pos, blockstate);
                     }
 
                     stack.shrink(1);

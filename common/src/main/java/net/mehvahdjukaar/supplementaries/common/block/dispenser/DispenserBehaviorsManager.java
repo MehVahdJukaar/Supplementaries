@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 import net.mehvahdjukaar.moonlight.api.fluids.FluidContainerList;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -42,7 +42,7 @@ public class DispenserBehaviorsManager {
     //hacky. uses default tags to register stuff like bricks and fluids. wont properly work with reloads
     //TODO: make a reload safe dispenser map for these
     public static void registerBehaviors(RegistryAccess registryAccess) {
-        boolean isForge = PlatformHelper.getPlatform().isForge();
+        boolean isForge = PlatHelper.getPlatform().isForge();
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
@@ -100,7 +100,7 @@ public class DispenserBehaviorsManager {
         }
 
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
-            Registry.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
+            BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
                     DispenserHelper.registerCustomBehavior(new ThrowableBricksBehavior(h.value()))
             );
         }
@@ -142,7 +142,7 @@ public class DispenserBehaviorsManager {
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
 
         if (axe || jar || key) {
-            for (Item i : Registry.ITEM) {
+            for (Item i : BuiltInRegistries.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
                         DispenserHelper.registerCustomBehavior(new FishBucketJarBehavior(i));

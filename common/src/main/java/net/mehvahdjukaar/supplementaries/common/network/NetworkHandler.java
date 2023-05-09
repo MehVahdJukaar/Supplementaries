@@ -45,8 +45,6 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSendKnockbackPacket.class, ClientBoundSendKnockbackPacket::new);
 
-        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
-                ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSyncAntiqueInk.class, ClientBoundSyncAntiqueInk::new);

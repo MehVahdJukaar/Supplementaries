@@ -4,19 +4,17 @@ import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.BannerDuplicateRecipe;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class RopeArrowCreateRecipe extends CustomRecipe {
     public RopeArrowCreateRecipe(ResourceLocation idIn) {
-        super(idIn);
+        super(idIn, CraftingBookCategory.EQUIPMENT);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
 
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         int ropes = 0;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             if (inv.getItem(i).is(ModTags.ROPES)) {
@@ -73,18 +71,4 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
         return ModRecipes.ROPE_ARROW_CREATE.get();
     }
 
-
-    //just used for crafting recipe book stuff
-
-    private final NonNullList<Ingredient> ingredients = NonNullList.of(Ingredient.of(Items.ARROW), Ingredient.of(ModTags.ROPES));
-    private final ItemStack result = ModRegistry.ROPE_ARROW_ITEM.get().getDefaultInstance();
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return this.ingredients;
-    }
-
-    @Override
-    public ItemStack getResultItem() {
-        return result;
-    }
 }

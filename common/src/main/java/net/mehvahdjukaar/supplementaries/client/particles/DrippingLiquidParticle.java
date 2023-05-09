@@ -35,7 +35,7 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
                 this.xd *=  0.98F;
                 this.yd *=  0.98F;
                 this.zd *=  0.98F;
-                BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+                BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
                 if (fluidstate.getType() == this.fluid && this.y <  ( blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();

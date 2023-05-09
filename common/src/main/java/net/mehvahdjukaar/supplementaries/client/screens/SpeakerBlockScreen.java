@@ -67,7 +67,6 @@ public class SpeakerBlockScreen extends Screen {
     @Override
     public void init() {
         assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
         int range = CommonConfigs.Redstone.SPEAKER_RANGE.get();
 
@@ -101,7 +100,6 @@ public class SpeakerBlockScreen extends Screen {
 
     @Override
     public void removed() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         this.tileSpeaker.setMode(this.mode);
         this.tileSpeaker.setMessage(this.editBox.getValue());
         this.tileSpeaker.setVolume(this.volumeSlider.getValue());
@@ -121,10 +119,10 @@ public class SpeakerBlockScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
-        } else if (p_keyPressed_1_ != 257 && p_keyPressed_1_ != 335) {
+        } else if (keyCode != 257 && keyCode != 335) {
             return false;
         } else {
             this.onDone();

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
@@ -48,17 +48,17 @@ import java.util.List;
 public class QuarkClientCompatImpl {
 
     public static void initClient() {
-        ClientPlatformHelper.addBlockEntityRenderersRegistration(QuarkClientCompatImpl::registerEntityRenderers);
+        ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompatImpl::registerEntityRenderers);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::quiverUsageTicker);
     }
 
-    private static void registerEntityRenderers(ClientPlatformHelper.BlockEntityRendererEvent event) {
+    private static void registerEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
         event.register(QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
     }
 
     public static void setupClient() {
-        ClientPlatformHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
     }
 
     public static boolean shouldHaveButtonOnRight() {
@@ -74,7 +74,7 @@ public class QuarkClientCompatImpl {
                 (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
     }
 
-    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
+    public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
     }
 

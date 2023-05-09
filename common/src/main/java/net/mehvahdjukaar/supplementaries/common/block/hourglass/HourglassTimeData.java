@@ -13,6 +13,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -31,7 +33,7 @@ public class HourglassTimeData {
     public static final HourglassTimeData EMPTY = new HourglassTimeData(HolderSet.direct(), 0, 0, Optional.empty(), 99);
 
     public static final Codec<HourglassTimeData> REGISTRY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registry.ITEM_REGISTRY).fieldOf("items").forGetter(p -> p.dusts),
+            RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(p -> p.dusts),
             ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
             Codec.intRange(0, 15).optionalFieldOf("light_level", 0).forGetter(p -> p.light),
             ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(p -> p.texture),
@@ -48,7 +50,7 @@ public class HourglassTimeData {
 
     private static HourglassTimeData createSafe(List<ResourceLocation> dusts, int dur, int light, Optional<ResourceLocation> texture, int order) {
         List<Holder<Item>> holders = new ArrayList<>();
-        dusts.forEach(r -> Registry.ITEM.getHolder(ResourceKey.create(Registry.ITEM_REGISTRY, r)).ifPresent(holders::add));
+        dusts.forEach(r -> BuiltInRegistries.ITEM.getHolder(ResourceKey.create(Registries.ITEM, r)).ifPresent(holders::add));
         return new HourglassTimeData(HolderSet.direct(holders), dur, light, texture, order);
     }
 

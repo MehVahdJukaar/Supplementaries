@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
-import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -15,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -29,6 +27,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
@@ -188,7 +187,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         SimpleParticleType particle = entity.isUnderWater() ? ParticleTypes.BUBBLE : ParticleTypes.NOTE;
 
-        level.addParticle(particle, x, y, z,  level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+        level.addParticle(particle, x, y, z, level.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -200,32 +199,35 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
             matrixStack.translate(-0.4 * mirror, 0.2, 0);
 
-            float timeLeft =  stack.getUseDuration() - ( entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = stack.getUseDuration() - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
 
             float sin = Mth.sin((timeLeft - 0.1F) * 1.3F);
 
             matrixStack.translate(0, sin * 0.0038F, 0);
-            matrixStack.mulPose(Vector3f.ZN.rotationDegrees(90));
+            matrixStack.mulPose(Axis.ZN.rotationDegrees(90));
 
             matrixStack.scale(1.0F * mirror, -1.0F * mirror, -1.0F);
         }
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, false);
-            twoHanded.setTwoHanded(true);
             return true;
         }
         return false;
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
+    public boolean isTwoHanded() {
+        return true;
+    }
+
+    @Override
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
             this.animateHands(model, entity, true);
-            twoHanded.setTwoHanded(true);
             return true;
         }
         return false;
@@ -303,7 +305,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
 
         if (!stack.isEmpty()) {
 
-            ItemTransforms.TransformType transform;
+            ItemDisplayContext transform;
 
             poseStack.pushPose();
 
@@ -321,23 +323,23 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
                 CustomHeadLayer.translateToHead(poseStack, false);
 
                 poseStack.translate(0, -4.25 / 16f, -8.5 / 16f);
-                if (leftHand) poseStack.mulPose(Vector3f.XP.rotationDegrees(-90));
+                if (leftHand) poseStack.mulPose(Axis.XP.rotationDegrees(-90));
 
-                transform = ItemTransforms.TransformType.HEAD;
+                transform = ItemDisplayContext.HEAD;
             } else {
                 //default rendering
                 parentModel.translateToHand(humanoidArm, poseStack);
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+                poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
 
-                poseStack.translate( (leftHand ? -1 : 1) / 16.0F, 0.125D, -0.625D);
+                poseStack.translate((leftHand ? -1 : 1) / 16.0F, 0.125D, -0.625D);
 
-                transform = leftHand ? ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND : ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
+                transform = leftHand ? ItemDisplayContext.THIRD_PERSON_LEFT_HAND : ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
             }
 
             //let the model handle it
             //poseStack.translate(0, -0.0625D, 0.0D);
-            //poseStack.mulPose(Vector3f.XP.rotationDegrees(-30));
+            //poseStack.mulPose(Axis.XP.rotationDegrees(-30));
             Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, stack, transform,
                     leftHand, poseStack, bufferSource, light);
 

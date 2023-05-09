@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;

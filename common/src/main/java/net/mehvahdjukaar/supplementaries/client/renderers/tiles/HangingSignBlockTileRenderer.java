@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
@@ -70,7 +71,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         //animation
 
         if (tile.shouldRenderFancy()) {
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(tile.getSwingAngle(partialTicks)));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getSwingAngle(partialTicks)));
 
             poseStack.translate(-0.5, -0.875, -0.5);
             //render block
@@ -145,7 +146,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                         poseStack.scale(0.75f, 0.75f, 0.75f);
                         poseStack.translate(0, 0, -0.1);
                         //poseStack.mulPose(Const.Y180);
-                        itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, poseStack, bufferIn, combinedLightIn,
+                        itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, bufferIn, combinedLightIn,
                                 combinedOverlayIn, model);
                         poseStack.popPose();
 

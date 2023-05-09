@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -121,22 +122,22 @@ public class FeatherParticle extends TextureSheetParticle {
         float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vector3d.x());
         float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vector3d.y());
         float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vector3d.z());
-        Quaternion quaternion;
+        Quaternionf quaternion;
         if (this.roll == 0.0F) {
             quaternion = info.rotation();
         } else {
-            quaternion = new Quaternion(info.rotation());
+            quaternion = new Quaternionf(info.rotation());
             float p = (float) (180 / Math.PI);
             float f3 = Mth.rotLerp(partialTicks, (this.rotOffset + this.oRoll) * p,
                     (this.rotOffset + this.roll) * p);
-            quaternion.mul(Vector3f.ZP.rotation(f3 / p));
+            quaternion.mul(Axis.ZP.rotation(f3 / p));
         }
         Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
         float f4 = this.getQuadSize(partialTicks);
 
         for (int i = 0; i < 4; ++i) {
             Vector3f vector3f = avector3f[i];
-            vector3f.transform(quaternion);
+            vector3f.rotate(quaternion);
             vector3f.mul(f4);
             vector3f.add(f, f1, f2);
         }

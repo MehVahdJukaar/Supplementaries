@@ -184,7 +184,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
                 j += this.width * 3;
             }
 
-            this.blit(poseStack, this.x, this.y, j, i, this.width, this.height);
+            blit(poseStack, this.getX(), this.getY(), j, i, this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {

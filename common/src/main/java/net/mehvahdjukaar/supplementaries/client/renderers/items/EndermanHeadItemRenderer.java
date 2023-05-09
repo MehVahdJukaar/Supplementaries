@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.EndermanSkullBlo
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 
@@ -23,7 +24,7 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType,
+    public void renderByItem(ItemStack stack, ItemDisplayContext transformType,
                              PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlayIn) {
         float f = 0;
         var model = EndermanSkullBlockTileRenderer.model;

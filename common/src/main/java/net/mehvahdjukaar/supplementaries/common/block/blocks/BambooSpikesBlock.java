@@ -7,8 +7,8 @@ import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -241,7 +241,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, @Nullable CompoundTag nbt, int amount) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (f == VanillaSoftFluids.POTION.get() && nbt != null && nbt.getString("PotionType").equals("Lingering")) {
+        if (f == BuiltInSoftFluids.POTION.get() && nbt != null && nbt.getString("PotionType").equals("Lingering")) {
             return tryAddingPotion(state, world, pos, PotionUtils.getPotion(nbt));
         }
         return false;

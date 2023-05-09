@@ -4,8 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -26,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector2i;
 
 
 public class BlackboardBlockTileRenderer implements BlockEntityRenderer<BlackboardBlockTile> {
@@ -39,7 +39,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.mc = Minecraft.getInstance();
         this.camera = this.mc.gameRenderer.getMainCamera();
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatformHelper.getPlatform().isForge();
+        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatHelper.getPlatform().isForge();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         int lu = combinedLightIn & '\uffff';
                         int lv = combinedLightIn >> 16 & '\uffff';
 
-                        Vec2i pair = BlackboardBlock.getHitSubPixel(blockHit);
+                        Vector2i pair = BlackboardBlock.getHitSubPixel(blockHit);
                         float p = 1 / 16f;
                         float x = pair.x() * p;
                         float y = pair.y() * p;

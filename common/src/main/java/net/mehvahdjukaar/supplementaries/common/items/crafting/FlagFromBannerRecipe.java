@@ -6,12 +6,14 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -21,7 +23,7 @@ import java.util.Optional;
 
 public class FlagFromBannerRecipe extends CustomRecipe {
     public FlagFromBannerRecipe(ResourceLocation idIn) {
-        super(idIn);
+        super(idIn, CraftingBookCategory.BUILDING);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack withPatterns = inv.getItem(i);
             if (!withPatterns.isEmpty()) {

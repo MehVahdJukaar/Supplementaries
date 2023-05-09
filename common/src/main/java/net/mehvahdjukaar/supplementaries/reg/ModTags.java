@@ -104,11 +104,11 @@ public class ModTags {
         return TagKey.create(Registry.POTION_REGISTRY, Supplementaries.res(name));
     }
     private static TagKey<Item> itemTag(String name) {
-        return TagKey.create(Registry.ITEM_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(BuiltInRegistries.ITEM_REGISTRY, Supplementaries.res(name));
     }
 
     private static TagKey<Block> blockTag(String name) {
-        return TagKey.create(Registry.BLOCK_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(BuiltInRegistries.BLOCK_REGISTRY, Supplementaries.res(name));
     }
 
     private static TagKey<EntityType<?>> entityTag(String name) {

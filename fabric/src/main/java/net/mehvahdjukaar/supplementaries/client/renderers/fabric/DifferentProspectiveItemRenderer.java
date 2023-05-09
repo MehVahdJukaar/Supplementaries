@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -26,18 +26,18 @@ public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegi
     }
 
     @Override
-    public void render(ItemStack stack, ItemTransforms.TransformType transform, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
+    public void render(ItemStack stack, ItemDisplayContext transform, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
         if (!stack.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
             matrixStack.pushPose();
-            boolean gui = transform == ItemTransforms.TransformType.GUI || transform == ItemTransforms.TransformType.GROUND || transform == ItemTransforms.TransformType.FIXED;
+            boolean gui = transform == ItemDisplayContext.GUI || transform == ItemDisplayContext.GROUND || transform == ItemDisplayContext.FIXED;
 
             BakedModel model;
             if (gui) {
-                model = ClientPlatformHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model2d);
+                model = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model2d);
             } else {
-                model = ClientPlatformHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model3d);
+                model = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model3d);
             }
             RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
             VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(buffer, rendertype, true, stack.hasFoil());

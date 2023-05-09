@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -55,8 +56,8 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return PlatformHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return PlatHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class RopeArrowEntity extends AbstractArrow {
             this.prevPlacedPos = null;
             Entity entity = this.getOwner();
             Player player = null;
-            if (!(entity instanceof Mob) || PlatformHelper.isMobGriefingOn(this.level, this)) {
+            if (!(entity instanceof Mob) || PlatHelper.isMobGriefingOn(this.level, this)) {
                 BlockPos hitPos = rayTraceResult.getBlockPos();
 
                 if (entity instanceof Player pl) {

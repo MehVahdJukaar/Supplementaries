@@ -27,7 +27,7 @@ class SappyLogInteraction implements IFaucetBlockSource {
             prepareToTransferBottle(faucetTank, ModSoftFluids.SAP.get());
             if (fillAction == null) return InteractionResult.SUCCESS;
             if (fillAction.tryExecute()) {
-                Optional<Block> log = Registry.BLOCK.getOptional(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
+                Optional<Block> log = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(Utils.getID(backBlock).toString().replace("sappy", "stripped")));
                 log.ifPresent(block -> level.setBlock(pos, block.withPropertiesOf(state), 3));
                 return InteractionResult.SUCCESS;
             }

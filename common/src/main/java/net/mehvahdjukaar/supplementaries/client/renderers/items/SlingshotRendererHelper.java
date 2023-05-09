@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -8,6 +7,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,21 +24,21 @@ import javax.annotation.Nullable;
 
 public class SlingshotRendererHelper {
 
-    private static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
-    private static BlockPos LOOK_POS = null;
+    private static ItemStack clientCurrentAmmo = ItemStack.EMPTY;
+    private static BlockPos lookPos = null;
 
     public static ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
         if (world != null) {
             if (world.getGameTime() % 10 == 0) {
-                CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
+                clientCurrentAmmo = ItemStack.EMPTY;
 
                 ItemStack findAmmo = player.getProjectile(cannon);
                 if (findAmmo.getItem() != net.minecraft.world.item.Items.ARROW) {
-                    CLIENT_CURRENT_AMMO = findAmmo;
+                    clientCurrentAmmo = findAmmo;
                 }
             }
         }
-        return CLIENT_CURRENT_AMMO;
+        return clientCurrentAmmo;
     }
 
     public static void grabNewLookPos(Player player) {
@@ -52,17 +52,17 @@ public class SlingshotRendererHelper {
         BlockHitResult raytrace = world
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
-            LOOK_POS = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
+            lookPos = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
         }
     }
 
     public static void renderBlockOutline(PoseStack matrixStack, Camera camera, Minecraft mc) {
-        if (LOOK_POS != null) {
+        if (lookPos != null) {
 
             Player player = mc.player;
             Level world = player.level;
             world.getProfiler().popPush("outline");
-            BlockPos pos = LOOK_POS;
+            BlockPos pos = lookPos;
             BlockState blockstate = world.getBlockState(pos);
             if (!blockstate.isAir() && world.getWorldBorder().isWithinBounds(pos)) {
                 VertexConsumer builder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.lines());
@@ -74,16 +74,16 @@ public class SlingshotRendererHelper {
 
                 int color = ClientConfigs.Items.SLINGSHOT_OUTLINE_COLOR.get();
 
-                float a = NativeImage.getR(color) / 255f;
-                float b = NativeImage.getG(color) / 255f;
-                float g = NativeImage.getB(color) / 255f;
-                float r = NativeImage.getA(color) / 255f;
+                float a = FastColor.ABGR32.alpha(color) / 255f;
+                float b = FastColor.ABGR32.blue(color) / 255f;
+                float g = FastColor.ARGB32.green(color) / 255f;
+                float r = FastColor.ABGR32.red(color) / 255f;
 
                 renderVoxelShape(matrixStack, builder, blockstate.getShape(world, pos, CollisionContext.of(camera.getEntity())),
                         pos.getX() - pX, pos.getY() - pY, pos.getZ() - pZ, r, g, b, a);
             }
         }
-        LOOK_POS = null;
+        lookPos = null;
     }
 
     private static void renderVoxelShape(PoseStack pMatrixStack, VertexConsumer pBuffer, VoxelShape pShape,

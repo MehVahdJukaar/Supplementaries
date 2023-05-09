@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -38,7 +38,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
             return false;
         } else if (evoker.tickCount < this.nextAttackTickCount) {
             return false;
-        } else if (!PlatformHelper.isMobGriefingOn(evoker.level, evoker)) {
+        } else if (!PlatHelper.isMobGriefingOn(evoker.level, evoker)) {
             return false;
         } else {
             List<WanderingTrader> list = evoker.level.getNearbyEntities(WanderingTrader.class, this.selector, evoker, evoker.getBoundingBox().inflate(16.0, 4.0, 16.0));

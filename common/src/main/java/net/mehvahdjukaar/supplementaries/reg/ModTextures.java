@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -131,10 +132,10 @@ public class ModTextures {
     public static List<ResourceLocation> getTexturesForBannerAtlas() {
         List<ResourceLocation> list = new ArrayList<>();
         if (ModTextures.FLAG_TEXTURES.isEmpty()) {
-            for (BannerPattern pattern : Registry.BANNER_PATTERN) {
+            for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
 
                 FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
-                        Registry.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
+                        BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
             }
         }
         try {

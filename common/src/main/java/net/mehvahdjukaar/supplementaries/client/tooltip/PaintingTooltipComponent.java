@@ -43,7 +43,7 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer, int pBlitOffset) {
+    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer) {
         poseStack.pushPose();
         PaintingTextureManager paintingTextureManager = Minecraft.getInstance().getPaintingTextures();
         var sprite = paintingTextureManager.get(pattern);

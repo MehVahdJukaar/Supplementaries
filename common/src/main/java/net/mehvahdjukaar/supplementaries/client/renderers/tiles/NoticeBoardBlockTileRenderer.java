@@ -28,9 +28,11 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ComplexItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
@@ -148,10 +150,10 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     return;
                 }
                 int i = tile.getTextColor().getTextColor();
-                int r = (int) ((double) NativeImage.getR(i) * d0);
-                int g = (int) ((double) NativeImage.getG(i) * d0);
-                int b = (int) ((double) NativeImage.getB(i) * d0);
-                int i1 = NativeImage.combine(0, b, g, r);
+                int r = (int) ((double) FastColor.ABGR32.red(i) * d0);
+                int g = (int) ((double) FastColor.ABGR32.green(i) * d0);
+                int b = (int) ((double) FastColor.ABGR32.blue(i) * d0);
+                int i1 = FastColor.ABGR32.color(0, b, g, r);
 
                 if (tile.needsVisualUpdate()) {
                     float paperWidth = 1 - (2 * PAPER_X_MARGIN);
@@ -194,9 +196,9 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 VertexConsumer builder = pattern.buffer(bufferIn, RenderType::entityNoOutline);
 
                 int i = tile.getTextColor().getTextColor();
-                float b = (NativeImage.getR(i)) / 255f;
-                float g = (NativeImage.getG(i)) / 255f;
-                float r = (NativeImage.getB(i)) / 255f;
+                float b = (FastColor.ARGB32.blue(i)) / 255f;
+                float g = (FastColor.ARGB32.green(i)) / 255f;
+                float r = (FastColor.ARGB32.red(i)) / 255f;
                 //if(tile.textHolder.hasGlowingText())combinedLightIn= LightTexture.FULL_BRIGHT;
                 int lu = frontLight & '\uffff';
                 int lv = frontLight >> 16 & '\uffff';
@@ -208,7 +210,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
                 matrixStackIn.translate(0, 0, 0.015625 + 0.00005);
                 matrixStackIn.scale(-0.5f, 0.5f, -0.5f);
-                itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, frontLight,
+                itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, frontLight,
                         combinedOverlayIn, model);
                 //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
             }

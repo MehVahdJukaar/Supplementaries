@@ -4,12 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
@@ -35,14 +35,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 
-public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider {
+public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
 
     public static final ClientDynamicResourcesGenerator INSTANCE = new ClientDynamicResourcesGenerator();
 
     public ClientDynamicResourcesGenerator() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
         this.dynamicPack.addNamespaces("minecraft");
-        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get();
+        this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
     }
 
     @Override
@@ -84,47 +84,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
 
     //-------------resource pack dependant textures-------------
 
-    @Deprecated
-    public static void addModelOverride(ResourceManager manager, DynamicTexturePack pack, ResourceLocation modelRes,
-                                        Consumer<RPUtils.CrossbowModelAdder> modelConsumer) {
-        var o = manager.getResource(ResType.ITEM_MODELS.getPath(modelRes));
-        if (o.isPresent()) {
-            try (var model = o.get().open()) {
-                var json = RPUtils.deserializeJson(model);
-                JsonArray overrides;
-                if (json.has("overrides")) {
-                    overrides = json.getAsJsonArray("overrides");
-                    ;
-                } else overrides = new JsonArray();
-
-                modelConsumer.accept(ov -> overrides.add(serializeOverride(ov)));
-
-                json.add("overrides", overrides);
-                pack.addItemModel(modelRes, json);
-            } catch (Exception ignored) {
-                int aa = 1;
-            }
-        }
-    }
-
-    @Deprecated
-    private static JsonObject serializeOverride(ItemOverride override) {
-        JsonObject json = new JsonObject();
-        json.addProperty("model", override.getModel().toString());
-        JsonObject predicates = new JsonObject();
-        override.getPredicates().forEach(p -> {
-            predicates.addProperty(p.getProperty().toString(), p.getValue());
-        });
-        json.add("predicate", predicates);
-        return json;
-    }
-
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-            RPUtils.addCrossbowModel(manager, this.dynamicPack, e -> {
+            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("crossbow"), e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
                         List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
                                 new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
@@ -132,17 +97,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesProvider 
         }
 
         if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-            addModelOverride(manager, this.dynamicPack, new ResourceLocation("written_book"), e -> {
+            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("written_book"), e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/written_book_tattered"),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
             });
-            addModelOverride(manager, this.dynamicPack, new ResourceLocation("filled_map"), e -> {
+            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("filled_map"), e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/antique_map"),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
             });
         }
         GlobeBlockTile.GlobeType.recomputeCache();
-        addModelOverride(manager, this.dynamicPack, Supplementaries.res("globe"), e -> {
+        RPUtils.appendModelOverride(manager, this.dynamicPack, Supplementaries.res("globe"), e -> {
             int i = 0;
             for (var s : GlobeBlockTile.GlobeType.textures) {
                 String name = s.getPath().split("/")[3].split("\\.")[0];

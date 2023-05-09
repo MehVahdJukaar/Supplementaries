@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.teamabode.cave_enhancements.common.block.entity.SpectacleCandleBlockEntity;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
@@ -56,7 +56,7 @@ public class CaveEnhancementsCompat {
         SPECTACLE_CANDLE_HOLDERS.add(b);
 
         tile = RegHelper.registerBlockEntityType(res,
-                () -> PlatformHelper.newBlockEntityType(SpectacleCandleHolderTile::new,
+                () -> PlatHelper.newBlockEntityType(SpectacleCandleHolderTile::new,
                         SPECTACLE_CANDLE_HOLDERS.stream().map(Supplier::get).toArray(Block[]::new))
         );
     }
@@ -64,7 +64,7 @@ public class CaveEnhancementsCompat {
 
 
     public static void setupClient() {
-        SPECTACLE_CANDLE_HOLDERS.forEach(b -> ClientPlatformHelper.registerRenderType(b.get(), RenderType.cutout()));
+        SPECTACLE_CANDLE_HOLDERS.forEach(b -> ClientHelper.registerRenderType(b.get(), RenderType.cutout()));
 
     }
 

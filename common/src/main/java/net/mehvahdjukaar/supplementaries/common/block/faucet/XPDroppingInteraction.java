@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,7 +17,7 @@ class XPDroppingInteraction implements IFaucetBlockTarget {
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         var fluid = faucetTank.getFluid();
         if (state.isAir()) {
-            if (fluid == VanillaSoftFluids.XP.get()) {
+            if (fluid == BuiltInSoftFluids.XP.get()) {
                 this.dropXP(level, pos);
                 return InteractionResult.SUCCESS;
             }

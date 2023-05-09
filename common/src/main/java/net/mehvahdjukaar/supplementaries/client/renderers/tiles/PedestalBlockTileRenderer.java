@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Matrix4f;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
@@ -84,7 +86,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                 matrixStackIn.mulPose(RotHlpr.Y90);
             }
 
-            ItemTransforms.TransformType transform = ItemTransforms.TransformType.FIXED;
+            ItemDisplayContext transform = ItemDisplayContext.FIXED;
             ItemStack stack = tile.getDisplayedItem();
 
             if (ClientConfigs.Blocks.PEDESTAL_SPECIAL.get()) {
@@ -126,7 +128,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             long time = tile.getLevel().getGameTime();
                             float angle = ((float) Math.floorMod(time, (long) scale) + partialTicks) / (float) scale;
                             // float angle = (time % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;
-                            Quaternion rotation = Vector3f.YP.rotation((float) (angle * Math.PI * 10));
+                            Quaternionf rotation = Axis.YP.rotation((float) (angle * Math.PI * 10));
 
                             matrixStackIn.mulPose(rotation);
                         }

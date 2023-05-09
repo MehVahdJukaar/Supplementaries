@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
@@ -117,7 +117,7 @@ public class ModEntities {
             String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height,
             int clientTrackingRange, boolean velocityUpdates, int updateInterval) {
         return RegHelper.registerEntityType(Supplementaries.res(name), () ->
-                PlatformHelper.newEntityType(name, factory, category, width, height,
+                PlatHelper.newEntityType(name, factory, category, width, height,
                         clientTrackingRange, velocityUpdates, updateInterval));
     }
 

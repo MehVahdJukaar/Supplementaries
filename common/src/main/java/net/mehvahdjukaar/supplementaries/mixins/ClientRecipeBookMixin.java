@@ -17,6 +17,7 @@ import java.util.Map;
 @Mixin(ClientRecipeBook.class)
 public abstract class ClientRecipeBookMixin extends RecipeBook {
 
+    /*
     @Inject(method = "setupCollections",
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION,
@@ -32,5 +33,5 @@ public abstract class ClientRecipeBookMixin extends RecipeBook {
                 v.getValue().forEach(r->r.forEach(this::add));
             }
         }
-    }
+    }*/
 }

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -61,7 +61,7 @@ public class RegUtils {
     }
 
     public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
-        return PlatformHelper.isModLoaded(modId) ? getTab(g, regName) : null;
+        return PlatHelper.isModLoaded(modId) ? getTab(g, regName) : null;
     }
 
 
@@ -70,7 +70,7 @@ public class RegUtils {
      */
     public static Supplier<Block> regPlaceableItem(
             String name, Supplier<? extends Block> sup, String itemLocation, Supplier<Boolean> config) {
-        Supplier<Item> itemSupp = () -> Registry.ITEM.get(new ResourceLocation(itemLocation));
+        Supplier<Item> itemSupp = () -> BuiltInRegistries.ITEM.get(new ResourceLocation(itemLocation));
         return regPlaceableItem(name, sup, itemSupp, config);
     }
 
@@ -113,7 +113,7 @@ public class RegUtils {
     }
 
     public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> block, CreativeModeTab tab, String requiredMod) {
-        CreativeModeTab t = PlatformHelper.isModLoaded(requiredMod) ? tab : null;
+        CreativeModeTab t = PlatHelper.isModLoaded(requiredMod) ? tab : null;
         return regWithItem(name, block, t);
     }
 

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ class PancakeBehavior extends DispenserHelper.AdditionalDispenserBehavior {
         BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof PancakeBlock block) {
-            if (block.tryAcceptingFluid(world, state, blockpos, VanillaSoftFluids.HONEY.get(), null, 1)) {
+            if (block.tryAcceptingFluid(world, state, blockpos, BuiltInSoftFluids.HONEY.get(), null, 1)) {
                 return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
             }
             return InteractionResultHolder.fail(stack);

@@ -32,7 +32,7 @@ public class SugarParticle extends TerrainParticle {
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;
-        var pos = new BlockPos(this.x, this.y, this.z);
+        var pos = BlockPos.containing(this.x, this.y, this.z);
         var fluid = this.level.getFluidState(pos);
         boolean wasTouchingWater = fluid.is(FluidTags.WATER);
         if (wasTouchingWater && Math.abs((this.y - pos.getY() - fluid.getOwnHeight())) < 0.01 && this.level.getFluidState(pos.above()).isEmpty()) {
@@ -46,7 +46,7 @@ public class SugarParticle extends TerrainParticle {
 
 
         if(gravity != 0) {
-            var pos2 = new BlockPos(this.x, this.y, this.z);
+            var pos2 = BlockPos.containing(this.x, this.y, this.z);
             var fluid2 = this.level.getFluidState(pos2);
             boolean isTouchingWater = fluid2.is(FluidTags.WATER);
 

@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
@@ -21,6 +21,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import org.joml.Vector2i;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -61,7 +62,7 @@ public class StructureLocator {
         if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) {
             return foundStructures;
         }
-        Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tagKey);
+        Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);
         if (taggedStructures.isEmpty()) return foundStructures;
 
         List<Holder<Structure>> selectedTargets = taggedStructures.get().stream().toList();
@@ -134,7 +135,7 @@ public class StructureLocator {
 
                 //<> madness
                 //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
-                TreeMap<Vec2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>();
+                TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>();
 
                 for (Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>> p : list) {
                     RandomSpreadStructurePlacement placement = p.getFirst();
@@ -144,7 +145,7 @@ public class StructureLocator {
                     for (int r = innerRing; r < outerRing; r += spacing) {
                         addAllPossibleFeatureChunksAtDistance(chunkX, chunkZ, r, seed, placement, c -> {
                             //converts chunkpos to relative pos, so they are ordered by distance already
-                            var v = new Vec2i(c.x - chunkX, c.z - chunkZ);
+                            var v = new Vector2i(c.x - chunkX, c.z - chunkZ);
                             if (possiblePositions.containsKey(v)) {
                                 int aaa = 1;
                             }
@@ -277,7 +278,7 @@ public class StructureLocator {
         if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) {
             return null;
         } else {
-            Optional<HolderSet.Named<Structure>> optional = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tagKey);
+            Optional<HolderSet.Named<Structure>> optional = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);
             if (optional.isEmpty()) {
                 return null;
             } else {

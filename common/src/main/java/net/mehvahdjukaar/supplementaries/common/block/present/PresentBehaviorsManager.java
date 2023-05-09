@@ -36,7 +36,7 @@ import java.util.Optional;
 public class PresentBehaviorsManager {
 
     public static void registerBehaviors() {
-        for (Item i : Registry.ITEM) {
+        for (Item i : BuiltInRegistries.ITEM) {
             if (i instanceof BlockItem bi && bi.getBlock() instanceof TntBlock) {
                 TrappedPresentBlock.registerBehavior(i, TNT_BEHAVIOR);
             }

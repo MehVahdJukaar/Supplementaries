@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -65,14 +65,14 @@ public class CompatHandler {
 
 
     private static boolean isLoaded(String name) {
-        return PlatformHelper.isModLoaded(name);
+        return PlatHelper.isModLoaded(name);
     }
 
     public static void setup() {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
 
-        var i = Registry.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
+        var i = BuiltInRegistries.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
 
         i.ifPresent(b -> BlockPlacerItem.registerPlaceableItem(ModRegistry.BOOK_PILE.get(), () -> b, CommonConfigs.Tweaks.PLACEABLE_BOOKS));
     }

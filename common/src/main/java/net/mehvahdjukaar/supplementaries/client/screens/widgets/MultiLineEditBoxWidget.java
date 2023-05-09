@@ -305,11 +305,11 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     }
 
     private Pos2i convertScreenToLocal(Pos2i pos2i) {
-        return new Pos2i(pos2i.x - this.x, pos2i.y - this.y);
+        return new Pos2i(pos2i.x - this.getX(), pos2i.y - this.getY());
     }
 
     private Pos2i convertLocalToScreen(Pos2i pos2i) {
-        return new Pos2i(pos2i.x + this.x, pos2i.y + this.y);
+        return new Pos2i(pos2i.x + this.getX(), pos2i.y + this.getY());
     }
 
     @Override

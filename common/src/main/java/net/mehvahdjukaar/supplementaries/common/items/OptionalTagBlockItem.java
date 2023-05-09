@@ -16,12 +16,12 @@ public class OptionalTagBlockItem extends BlockItem {
     private final Supplier<Boolean> hidden;
 
     public OptionalTagBlockItem(Block pBlock, Properties pProperties, String emptyTagKey) {
-        this(pBlock, pProperties, TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(emptyTagKey)));
+        this(pBlock, pProperties, TagKey.create(BuiltInRegistries.ITEM_REGISTRY, new ResourceLocation(emptyTagKey)));
     }
 
     public OptionalTagBlockItem(Block pBlock, Properties pProperties, TagKey<Item> emptyTag) {
         super(pBlock, pProperties);
-        this.hidden = () -> !Registry.ITEM.getTagOrEmpty(emptyTag).iterator().hasNext();
+        this.hidden = () -> !BuiltInRegistries.ITEM.getTagOrEmpty(emptyTag).iterator().hasNext();
     }
 
     @Override

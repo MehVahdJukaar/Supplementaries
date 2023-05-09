@@ -2,11 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -66,11 +68,11 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             float scale = 8f / 14f;
             matrixStackIn.scale(scale, scale, scale);
             for (float i = 0; i < height; i++) {
-                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(rand.nextInt(16) * 22.5f));
+                matrixStackIn.mulPose(Axis.ZP.rotationDegrees(rand.nextInt(16) * 22.5f));
                 // matrixStackIn.translate(0, 0, 0.0625);
                 matrixStackIn.translate(0, 0, 1 / (16f * scale));
                 BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
-                itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                         combinedOverlayIn, model);
             }
             matrixStackIn.popPose();
@@ -89,7 +91,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 float ho = 0.1f * Mth.sin((float) (2 * Math.PI * angle3 / 360));
                 VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                 matrixStackIn.translate(0.5, 0.5, 0.5);
-                Quaternion rotation = Vector3f.YP.rotationDegrees(-angle);
+                Quaternionf rotation = Axis.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
                 matrixStackIn.translate(0, -0.2, -0.335 * (LIQUID_DIMENSIONS.x() / 0.5f));
@@ -104,7 +106,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
             var fluid = tile.mobContainer.shouldRenderWithFluid();
             if (fluid != null && fluid.isPresent()) {
-                if (fluid.get() == VanillaSoftFluids.WATER.get()) {
+                if (fluid.get() == BuiltInSoftFluids.WATER.get()) {
                     //sand
                     matrixStackIn.pushPose();
                     matrixStackIn.translate(0.5, 0.0015 + LIQUID_DIMENSIONS.z(), 0.5);

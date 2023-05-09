@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -20,6 +20,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -98,8 +99,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return PlatformHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return PlatHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -293,7 +294,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     private void createExplosion() {
 
         boolean breaks = this.getOwner() instanceof Player ||
-                PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
+                PlatHelper.isMobGriefingOn(this.level, this.getOwner());
 
         if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))) {
             breaks = false;

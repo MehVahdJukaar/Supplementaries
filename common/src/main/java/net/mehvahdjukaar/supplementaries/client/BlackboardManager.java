@@ -6,7 +6,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -150,12 +150,12 @@ public class BlackboardManager {
         }
 
         private static int getTintedColor(TextureAtlasSprite sprite, int x, int y, int offset, int tint) {
-            if (sprite == null || sprite.getFrameCount() == 0) return -1;
+            if (sprite == null || sprite.contents().getFrameCount() == 0) return -1;
             int tintR = tint >> 16 & 255;
             int tintG = tint >> 8 & 255;
             int tintB = tint & 255;
 
-            int pixel = ClientPlatformHelper.getPixelRGBA(sprite, 0, Math.min(sprite.getWidth() - 1, x + offset), Math.min(sprite.getHeight() - 1, y));
+            int pixel = ClientHelper.getPixelRGBA(sprite, 0, Math.min(sprite.contents().width() - 1, x + offset), Math.min(sprite.contents().height() - 1, y));
 
             // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
             int totalB = pixel >> 16 & 255;

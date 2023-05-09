@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +21,7 @@ class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockT
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
             int waterLevel = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
             if (waterLevel == 3) {
-                prepareToTransferBucket(faucetTank, VanillaSoftFluids.POWDERED_SNOW.get());
+                prepareToTransferBucket(faucetTank, BuiltInSoftFluids.POWDERED_SNOW.get());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
@@ -40,7 +40,7 @@ class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockT
 
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        if (state.is(Blocks.CAULDRON) && faucetTank.getFluid() == VanillaSoftFluids.POWDERED_SNOW.get()) {
+        if (state.is(Blocks.CAULDRON) && faucetTank.getFluid() == BuiltInSoftFluids.POWDERED_SNOW.get()) {
             if (faucetTank.getCount() == 5) {
                 level.setBlock(pos, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
                         .setValue(LayeredCauldronBlock.LEVEL, 3), 3);

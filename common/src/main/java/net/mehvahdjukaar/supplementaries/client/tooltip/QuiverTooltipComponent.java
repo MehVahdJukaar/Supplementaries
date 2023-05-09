@@ -35,7 +35,7 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
+    public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer) {
         int i = this.gridSizeX();
         int j = this.gridSizeY();
         int k = 0;
@@ -43,13 +43,13 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
             for (int m = 0; m < i; ++m) {
                 int n = mouseX + m * 18 + 1;
                 int o = mouseY + l * 20 + 1;
-                this.renderSlot(n, o, k++,  font, poseStack, itemRenderer, blitOffset);
+                this.renderSlot(n, o, k++,  font, poseStack, itemRenderer);
             }
         }
-        this.drawBorder(mouseX, mouseY, i, j, poseStack, blitOffset);
+        this.drawBorder(mouseX, mouseY, i, j, poseStack);
     }
 
-    private void renderSlot(int x, int y, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
+    private void renderSlot(int x, int y, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer) {
         if (itemIndex >= this.items.size()) {
             this.blit(poseStack, x, y, blitOffset, Texture.SLOT);
             return;

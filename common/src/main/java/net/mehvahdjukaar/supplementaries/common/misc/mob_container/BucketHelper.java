@@ -1,13 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -57,7 +59,7 @@ public class BucketHelper {
             }
             if (mobId != null) {
                 ResourceLocation res = new ResourceLocation(mobId);
-                var opt = Registry.ENTITY_TYPE.getOptional(res);
+                var opt = BuiltInRegistries.ENTITY_TYPE.getOptional(res);
                 if (opt.isPresent()) {
                     EntityType<?> en = opt.get();
                     BUCKET_TO_MOB_MAP.putIfAbsent(bucket, en);
@@ -96,7 +98,7 @@ public class BucketHelper {
     @NotNull
     public static ItemStack getBucketFromEntity(Entity entity) {
         if (entity instanceof Bucketable bucketable) {
-            return bucketable.getBucketItemStack();
+            return Preconditions.checkNotNull(bucketable.getBucketItemStack(), "Bucketable modded entity " + Utils.getID(entity.getType()) + " returned a null bucket!");
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {
@@ -137,7 +139,7 @@ public class BucketHelper {
     }
 
     public static boolean isModdedFish(Entity entity) {
-        return  entity instanceof Bucketable; //entity instanceof WaterAnimal ||
+        return entity instanceof Bucketable; //entity instanceof WaterAnimal ||
     }
 
 }

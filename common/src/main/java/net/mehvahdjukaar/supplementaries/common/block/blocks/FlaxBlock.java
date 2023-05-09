@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -149,7 +149,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     // Tick function
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (!PlatformHelper.isAreaLoaded(level, pos, 1))
+        if (!PlatHelper.isAreaLoaded(level, pos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) return; //only bottom one handles ticking
         if (level.getRawBrightness(pos, 0) >= 9) {

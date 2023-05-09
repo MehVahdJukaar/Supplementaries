@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -19,7 +19,7 @@ class WaterBlockInteraction implements IFaucetFluidSource {
 
         if (fluidState.getType() == Fluids.WATER) {
             //Unlimited water!!
-            prepareToTransferBottle(faucetTank, VanillaSoftFluids.WATER.get());
+            prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.get());
             if (fillAction == null || fillAction.tryExecute()) {
                 return InteractionResult.SUCCESS;
             }

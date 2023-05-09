@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
@@ -30,7 +30,7 @@ public class AntiqueInkHelper {
     }
 
     public static boolean isEnabled() {
-        return PlatformHelper.getPlatform().isForge() && CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get();
+        return PlatHelper.getPlatform().isForge() && CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get();
     }
 
     public static boolean toggleAntiqueInkOnSigns(Level world, Player player, ItemStack stack,

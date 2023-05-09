@@ -27,7 +27,7 @@ public abstract class PageButtonMixin implements IAntiqueTextProvider {
         this.antiqueInk = hasInk;
     }
 
-    @Inject(method = "renderButton", at = @At(value = "INVOKE",
+    @Inject(method = "renderWidget", at = @At(value = "INVOKE",
             shift = At.Shift.AFTER,
             target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/resources/ResourceLocation;)V"))
     void setTatteredBookTexture(PoseStack poseStack, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {

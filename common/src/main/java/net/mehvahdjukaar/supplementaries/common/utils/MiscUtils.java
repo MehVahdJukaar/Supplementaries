@@ -6,18 +6,28 @@ import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.function.Supplier;
 
 public class MiscUtils {
+
 
     public enum Festivity {
         NONE,
@@ -131,10 +141,10 @@ public class MiscUtils {
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
 
-
-    @Deprecated(forRemoval = true)
-    public static <T> boolean isTagged(T item, Registry<T> registry, TagKey<T> tag) {
-        return registry.getHolder(registry.getResourceKey(item).get()).map(h -> h.is(tag)).orElse(false);
+    public static BlockState readBlockState(CompoundTag compound, @Nullable Level level) {
+        HolderGetter<Block> holderGetter = level != null ? level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
+        return NbtUtils.readBlockState(holderGetter, compound);
     }
+
 
 }

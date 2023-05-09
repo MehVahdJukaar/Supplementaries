@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
@@ -18,6 +18,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -27,13 +29,13 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 
-public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider {
+public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
     public static final ServerDynamicResourcesGenerator INSTANCE = new ServerDynamicResourcesGenerator();
 
     public ServerDynamicResourcesGenerator() {
         super(new DynamicDataPack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.generateDebugResources = PlatformHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get();
+        this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
     }
 
     @Override
@@ -77,7 +79,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
             if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
-            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
         //cave urns tag
@@ -88,7 +90,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
             if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
-            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
         //wild flax tag
@@ -99,7 +101,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
             if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
                 builder.addTag(BiomeTags.IS_OVERWORLD);
             }
-            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
         //ash
@@ -110,7 +112,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
             if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
                 builder.add(Biomes.BASALT_DELTAS.location());
             }
-            dynamicPack.addTag(builder, Registry.BIOME_REGISTRY);
+            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
     }
@@ -127,14 +129,14 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesProvider 
                 builder.addEntry(sign);
             });
             //tag
-            dynamicPack.addTag(builder, Registry.BLOCK_REGISTRY);
-            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
+            dynamicPack.addTag(builder, Registries.BLOCK);
+            dynamicPack.addTag(builder, Registries.ITEM);
         }
         //sing posts
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
             builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
-            dynamicPack.addTag(builder, Registry.ITEM_REGISTRY);
+            dynamicPack.addTag(builder, Registries.ITEM);
         }
     }
 

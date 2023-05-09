@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -64,7 +65,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 matrixStack.translate(0.5, 0.5, 0.5);
 
                 float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
-                matrixStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
+                matrixStack.mulPose(Axis.YP.rotationDegrees(yaw));
                 matrixStack.translate(-0.3125, -3 / 16f, 0);
 
                 if (state.getValue(FlowerBoxBlock.FLOOR)) {
@@ -107,7 +108,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 //dont render double plants
                 return;
             }
-            model = ClientPlatformHelper.getModel(blockModelShaper.getModelManager(), res);
+            model = ClientHelper.getModel(blockModelShaper.getModelManager(), res);
         } else {
             model = blockModelShaper.getBlockModel(state);
         }

@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
@@ -113,7 +114,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         boolean left = sign.left();
         int o = left ? 1 : -1;
 
-        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(sign.yaw() - 90));
+        matrixStackIn.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
 
         if (tile.isSlim()) matrixStackIn.translate(0, 0, -1 / 16f);
 

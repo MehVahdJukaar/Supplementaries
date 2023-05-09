@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -14,15 +12,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-class KeyBehavior extends  DispenserHelper.AdditionalDispenserBehavior{
+class KeyBehavior extends DispenserHelper.AdditionalDispenserBehavior {
     protected KeyBehavior(Item item) {
         super(item);
     }
@@ -39,9 +33,9 @@ class KeyBehavior extends  DispenserHelper.AdditionalDispenserBehavior{
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
             BlockHitResult blockHitResult = new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false);
 
-            kt.getBlockState().use(level, fp,  InteractionHand.MAIN_HAND,blockHitResult);
+            kt.getBlockState().use(level, fp, InteractionHand.MAIN_HAND, blockHitResult);
             //var v = stack.useOn(context);
-                //doesnt consume key
+            //doesnt consume key
             return InteractionResultHolder.consume(stack);
         }
         return InteractionResultHolder.pass(stack);

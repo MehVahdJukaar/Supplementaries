@@ -4,7 +4,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CeilingBannerBlockTile;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -50,8 +52,7 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
             }
             matrixStack.translate(0.5D, -0.3125 - 0.0208333333333, 0.5D); //1/32 * 2/3
 
-            float f3 = -blockstate.getValue(CeilingBannerBlock.FACING).toYRot();
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(f3));
+            matrixStack.mulPose(RotHlpr.rot(blockstate.getValue(CeilingBannerBlock.FACING).getOpposite()));
 
             matrixStack.pushPose();
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);

@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -16,14 +14,15 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FastColor;
 
 
-public class BlackBoardButton extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
+public class BlackBoardButton extends GuiComponent implements GuiEventListener, NarratableEntry {
     public final int u;
     public final int v;
     public final int x;
     public final int y;
-    public static final int WIDTH = 6;
+    public static final int SIZE = 6;
     protected boolean isHovered;
     protected byte color = 0;
     protected boolean focused;
@@ -33,8 +32,8 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
     public BlackBoardButton(int centerX, int centerY, int u, int v, IPressable pressedAction,
                             IDraggable dragAction) {
-        this.x = centerX - ((8 - u) * WIDTH);
-        this.y = centerY - ((-v) * WIDTH);
+        this.x = centerX - ((8 - u) * SIZE);
+        this.y = centerY - ((-v) * SIZE);
         this.u = u;
         this.v = v;
         this.onPress = pressedAction;
@@ -50,12 +49,12 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
-        this.renderButton(matrixStack);
+        renderButton(poseStack);
         //soboolean wasHovered = this.isHovered();
-    }
 
+    }
 
     public void renderButton(PoseStack matrixStack) {
 
@@ -65,12 +64,12 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
         int offset = this.color > 0 ? 16 : 0;
 
         int rgb = BlackboardBlock.colorFromByte(this.color);
-        float b = NativeImage.getR(rgb) / 255f;
-        float g = NativeImage.getG(rgb) / 255f;
-        float r = NativeImage.getB(rgb) / 255f;
+        float b = FastColor.ABGR32.blue(rgb) / 255f;
+        float g = FastColor.ABGR32.green(rgb) / 255f;
+        float r = FastColor.ABGR32.red(rgb) / 255f;
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
-        blit(matrixStack, this.x, this.y, (float)(this.u + offset) * WIDTH, (float)this.v * WIDTH, WIDTH, WIDTH, 32 * WIDTH, 16 * WIDTH);
+        blit(matrixStack, this.x, this.y, (float) (this.u + offset) * SIZE, (float) this.v * SIZE, SIZE, SIZE, 32 * SIZE, 16 * SIZE);
     }
 
     public void renderTooltip(PoseStack matrixStack) {
@@ -81,7 +80,8 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
-        blit(matrixStack, this.x - 1, this.y - 1, 16f * WIDTH, 0, WIDTH + 2, WIDTH + 2, 32 * WIDTH, 16 * WIDTH);
+        blit(matrixStack, this.x - 1, this.y - 1, 16f * SIZE, 0, SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
+        //render again to cover stuff
         this.renderButton(matrixStack);
     }
 
@@ -152,7 +152,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >=  this.x && mouseY >=  this.y && mouseX <  (this.x + WIDTH) && mouseY <  (this.y + WIDTH);
+        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + SIZE) && mouseY < (this.y + SIZE);
     }
 
 
@@ -166,7 +166,7 @@ public class BlackBoardButton extends GuiComponent implements Widget, GuiEventLi
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public interface IPressable {

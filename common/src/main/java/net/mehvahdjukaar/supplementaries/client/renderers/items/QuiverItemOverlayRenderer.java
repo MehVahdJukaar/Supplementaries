@@ -12,38 +12,38 @@ import net.minecraft.world.item.ItemStack;
 
 public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
 
-    public boolean render(Font font, ItemStack stack, int x, int y, float blitOffset) {
+    @Override
+    public boolean render(PoseStack poseStack, Font font, ItemStack stack, int x, int y) {
         boolean overlay = ClientConfigs.Items.QUIVER_OVERLAY.get();
-        if (overlay ) {
+        if (overlay) {
             LocalPlayer player = Minecraft.getInstance().player;
 
             if (player != null) {
                 ItemStack ammo = QuiverItem.getQuiverData(stack).getSelected();
-                renderAmmo(x, y, blitOffset, ammo);
+                renderAmmo(poseStack, x, y, ammo);
             }
             return true;
         }
         return false;
     }
 
-    public static void renderAmmo(int x, int y, float blitOffset, ItemStack ammo) {
+    public static void renderAmmo(PoseStack poseStack, int x, int y, ItemStack ammo) {
         if (!ammo.isEmpty()) {
 
-            PoseStack posestack = RenderSystem.getModelViewStack();
-            posestack.pushPose();
+            poseStack.pushPose();
             float xOff = 22;
             float yOff = 8;
-            posestack.translate(16.0F * (-0.25D) + (xOff + x) * (1 - 0.4f),
+            poseStack.translate(16.0F * (-0.25D) + (xOff + x) * (1 - 0.4f),
                     16.0F * (0.25D + 0.025) + (yOff + y) * (1 - 0.4f),
-                    16.0F + (200.0F + blitOffset) * (1 - 0.4f));
-            posestack.scale(0.4f, 0.4f, 0.4f);
+                    16.0F + (200.0F) * (1 - 0.4f));
+            poseStack.scale(0.4f, 0.4f, 0.4f);
 
             //0.4 scale
             RenderSystem.applyModelViewMatrix();
 
-            Minecraft.getInstance().getItemRenderer().renderGuiItem(ammo, x, y);
+            Minecraft.getInstance().getItemRenderer().renderGuiItem(poseStack, ammo, x, y);
 
-            posestack.popPose();
+            poseStack.popPose();
             RenderSystem.applyModelViewMatrix();
         }
     }

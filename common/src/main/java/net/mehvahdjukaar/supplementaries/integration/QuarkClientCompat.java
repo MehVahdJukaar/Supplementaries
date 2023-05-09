@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import org.jetbrains.annotations.Contract;
 
 public class QuarkClientCompat {
@@ -25,7 +25,7 @@ public class QuarkClientCompat {
     }
 
     @ExpectPlatform
-    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
+    public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         throw new AssertionError();
     }
 

@@ -33,7 +33,7 @@ public class ItemsUtil {
 
     @Nullable
     public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
-        return ModRegistry.BLOCK_PLACER.get().mimicGetPlacementState(context, block);
+        return ModBuiltInRegistries.BLOCK_PLACER.get().mimicGetPlacementState(context, block);
     }
 
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
@@ -41,7 +41,7 @@ public class ItemsUtil {
     }
 
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace, @Nullable SoundType placeSound) {
-        return ModRegistry.BLOCK_PLACER.get().mimicPlace(context, blockToPlace, placeSound);
+        return ModBuiltInRegistries.BLOCK_PLACER.get().mimicPlace(context, blockToPlace, placeSound);
     }
 
     //helper for slingshot. Calls both block item and this in case it as additional behavior

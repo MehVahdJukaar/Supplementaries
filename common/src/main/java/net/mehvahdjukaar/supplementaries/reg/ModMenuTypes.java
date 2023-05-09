@@ -15,9 +15,6 @@ public class ModMenuTypes {
     }
 
     //menu
-    public static final Supplier<MenuType<RedMerchantContainerMenu>> RED_MERCHANT = RegHelper.registerMenuType(
-            Supplementaries.res(RED_MERCHANT_NAME), RedMerchantContainerMenu::new);
-
     public static final Supplier<MenuType<PresentContainerMenu>> PRESENT_BLOCK = RegHelper.registerMenuType(
             Supplementaries.res(PRESENT_NAME), PresentContainerMenu::new);
 

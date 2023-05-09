@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.present.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
@@ -77,7 +77,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
         if (this.isUnused() &&
                 Mth.abs((float) time - lastActivated) > 10) {
             if (this.canOpen(player)) {
-                PlatformHelper.openCustomMenu(player, this, pos);
+                PlatHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
                 detonate(player.getLevel(), pos);

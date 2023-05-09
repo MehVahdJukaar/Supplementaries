@@ -29,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
@@ -55,7 +56,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             HitResult hit = Minecraft.getInstance().hitResult;
             if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
                 BlockPos pos = tile.getBlockPos();
-                BlockPos hitPos = new BlockPos(hit.getLocation());
+                BlockPos hitPos = BlockPos.containing(hit.getLocation());
                 if (pos.equals(hitPos)) {
                     double d0 = entityRenderer.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                     return d0 < 16 * 16;
@@ -141,8 +142,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 matrixStackIn.scale(-0.625f, -0.625f, 0.625f);
 
                 matrixStackIn.translate(0, 0.1875, 0);
-                itemRenderer.renderStatic(Items.CARVED_PUMPKIN.getDefaultInstance(), ItemTransforms.TransformType.FIXED,
-                        combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 0);
+                itemRenderer.renderStatic(Items.CARVED_PUMPKIN.getDefaultInstance(), ItemDisplayContext.FIXED,
+                        combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, tile.getLevel(), 0);
                 matrixStackIn.popPose();
             }
         } else {
@@ -196,7 +197,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                                 combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                     }
                 } else {
-                    this.itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    this.itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, itemModel);
 
                 }

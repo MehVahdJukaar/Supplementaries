@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ class HoneyPotInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
 
         if (state.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
             if (state.getValue(ModBlockProperties.HONEY_LEVEL_POT) > 0) {
-                prepareToTransferBottle(faucetTank, VanillaSoftFluids.HONEY.get());
+                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.HONEY.get());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, state.setValue(ModBlockProperties.HONEY_LEVEL_POT,
@@ -36,7 +36,7 @@ class HoneyPotInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         var fluid = faucetTank.getFluid();
 
-        if (fluid == VanillaSoftFluids.HONEY.get() && state.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
+        if (fluid == BuiltInSoftFluids.HONEY.get() && state.hasProperty(ModBlockProperties.HONEY_LEVEL_POT)) {
             int h = state.getValue(ModBlockProperties.HONEY_LEVEL_POT);
             if (h < 4) {
                 level.setBlock(pos, state.setValue(ModBlockProperties.HONEY_LEVEL_POT, h + 1), 3);

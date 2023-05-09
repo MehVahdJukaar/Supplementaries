@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -286,8 +286,8 @@ public class FarmersDelightCompatImpl {
 
 
     public static void setupClient() {
-        ClientPlatformHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
-        ClientPlatformHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
     }
 
 }

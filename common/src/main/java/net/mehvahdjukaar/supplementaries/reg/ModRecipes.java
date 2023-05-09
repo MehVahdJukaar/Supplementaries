@@ -3,12 +3,11 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModRecipes {
@@ -44,7 +43,7 @@ public class ModRecipes {
             "item_lore", ItemLoreRecipe::new);
 
 
-    private static <T extends Recipe<?>> Supplier<RecipeSerializer<T>> reg(String name, Function<ResourceLocation, T> factory) {
-        return RegHelper.registerRecipeSerializer(Supplementaries.res(name), () -> new SimpleRecipeSerializer<>(factory));
+    private static <T extends CraftingRecipe> Supplier<RecipeSerializer<T>> reg(String name, SimpleCraftingRecipeSerializer.Factory<T> factory) {
+        return RegHelper.registerRecipeSerializer(Supplementaries.res(name), () -> new SimpleCraftingRecipeSerializer<>(factory));
     }
 }

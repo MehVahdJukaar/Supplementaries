@@ -156,7 +156,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;//package net.mehvahdj
 //    }
 //
 //    @Override
-//    public Packet<?> getAddEntityPacket() {
+//    public Packet<ClientGamePacketListener> getAddEntityPacket() {
 //        return NetworkHooks.getEntitySpawningPacket(this);
 //    }
 //

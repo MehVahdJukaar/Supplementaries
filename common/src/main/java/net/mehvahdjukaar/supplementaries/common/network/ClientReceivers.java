@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -72,12 +71,12 @@ public class ClientReceivers {
             //bubble blow
             switch (message.id) {
                 case BUBBLE_BLOW -> {
-                    ParticleUtil.spawnParticlesOnBlockFaces(l, new BlockPos(message.pos),
+                    ParticleUtil.spawnParticlesOnBlockFaces(l, BlockPos.containing(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.001f, 0.01f, true);
                 }
                 case BUBBLE_CLEAN -> {
-                    ParticleUtil.spawnParticleOnBlockShape(l, new BlockPos(message.pos),
+                    ParticleUtil.spawnParticleOnBlockShape(l, BlockPos.containing(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
                 }
@@ -112,7 +111,7 @@ public class ClientReceivers {
                 case FLINT_BLOCK_IGNITE -> {
                     if (message.extraData != null && message.pos != null) {
                         boolean isIronMoving = message.extraData == 1;
-                        BlockPos pos = new BlockPos(message.pos);
+                        BlockPos pos = BlockPos.containing(message.pos);
 
                         for (var ironDir : Direction.values()) {
                             BlockPos facingPos = pos.relative(ironDir);
@@ -138,19 +137,6 @@ public class ClientReceivers {
             BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
                 AntiqueInkHelper.setAntiqueInk(tile, message.ink);
-            }
-        });
-    }
-
-    public static void handleSyncTradesPacket(ClientBoundSyncTradesPacket message) {
-        withPlayerDo(p -> {
-            AbstractContainerMenu container = p.containerMenu;
-            if (message.containerId == container.containerId && container instanceof RedMerchantContainerMenu containerMenu) {
-                containerMenu.setOffers(new MerchantOffers(message.offers.createTag()));
-                containerMenu.setXp(message.villagerXp);
-                containerMenu.setMerchantLevel(message.villagerLevel);
-                containerMenu.setShowProgressBar(message.showProgress);
-                containerMenu.setCanRestock(message.canRestock);
             }
         });
     }

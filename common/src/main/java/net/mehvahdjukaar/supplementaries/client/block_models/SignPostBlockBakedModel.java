@@ -79,7 +79,7 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
 
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
-        BlockState mimic = data.get(SignPostBlockTile.MIMIC);
+        BlockState mimic = data.get(SignPostBlockTile.MIMIC_KEY);
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);

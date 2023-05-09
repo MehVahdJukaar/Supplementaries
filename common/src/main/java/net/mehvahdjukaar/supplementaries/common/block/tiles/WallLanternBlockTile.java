@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
-    public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC;
+    public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC_KEY;
 
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
 
@@ -58,7 +59,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.setHeldBlock(NbtUtils.readBlockState(compound.getCompound("Lantern")));
+        this.setHeldBlock(MiscUtils.readBlockState(compound.getCompound("Lantern"), level));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
 

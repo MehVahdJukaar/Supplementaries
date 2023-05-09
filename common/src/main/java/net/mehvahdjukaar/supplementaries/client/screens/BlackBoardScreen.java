@@ -46,7 +46,6 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void removed() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new image to the server
         byte[][] pixels = new byte[16][16];
         for (int xx = 0; xx < 16; xx++) {
@@ -97,19 +96,18 @@ public class BlackBoardScreen extends Screen {
             }
         }
 
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, CLEAR, b -> this.clear()));
         this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, button -> this.close()));
     }
 
     @Override
-    public void render(PoseStack matrixstack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(matrixstack);
-        drawCenteredString(matrixstack, this.font, this.title, this.width / 2, 40, 16777215);
+        this.renderBackground(poseStack);
+        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
 
 
-        matrixstack.pushPose();
+        poseStack.pushPose();
 
         int ut = -1;
         int vt = -1;
@@ -119,14 +117,14 @@ public class BlackBoardScreen extends Screen {
                     ut = xx;
                     vt = yy;
                 }
-                this.buttons[xx][yy].render(matrixstack, mouseX, mouseY, partialTicks);
+                this.buttons[xx][yy].render(poseStack, mouseX, mouseY, partialTicks);
             }
         }
-        if (ut != -1) this.buttons[ut][vt].renderTooltip(matrixstack);
-        matrixstack.popPose();
+        if (ut != -1) this.buttons[ut][vt].renderTooltip(poseStack);
+        poseStack.popPose();
 
         Lighting.setupFor3DItems();
-        super.render(matrixstack, mouseX, mouseY, partialTicks);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 }
 

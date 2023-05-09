@@ -62,27 +62,27 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
         super.render(poseStack, mouseX, mouseY, partialTicks);
         if (this.visible) {
             if (this.canConsumeInput() && this.suggestion != null) {
-                int x = this.x;
+                int x = this.getX();
                 var cache = this.getDisplayCache();
                 if (cache.lines.length > 0) {
                     x += this.font.width(cache.lines[0].contents);
                 }
 
-                this.font.draw(poseStack, this.suggestion, x, this.y, -8355712);
+                this.font.draw(poseStack, this.suggestion, x, this.getY(), -8355712);
             }
 
             if (this.getText().isEmpty()) {
-                this.font.draw(poseStack, EMPTY_SEARCH, (float) this.x, (float) this.y, 0);
+                this.font.draw(poseStack, EMPTY_SEARCH, (float) this.getX(), (float) this.getY(), 0);
             } else {
                 if (this.selectedPlayer != null) {
-                    this.selectedPlayer.render(poseStack, this.x, this.y, this.width, this.height, partialTicks);
+                    this.selectedPlayer.render(poseStack, this.getX(), this.getY(), this.width, this.height, partialTicks);
                 }
             }
         }
     }
 
     @Override
-    public boolean keyPressed(int key, int p_94133_, int p_94134_) {
+    public boolean keyPressed(int key, int alt, int ctrl) {
         //fill in suggestion
         if (key == 258 && this.canConsumeInput()) {
             if (!this.fullSuggestion.isEmpty()) {
@@ -92,7 +92,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             }
             return true;
         }
-        return super.keyPressed(key, p_94133_, p_94134_);
+        return super.keyPressed(key, alt, ctrl);
     }
 
     @Override

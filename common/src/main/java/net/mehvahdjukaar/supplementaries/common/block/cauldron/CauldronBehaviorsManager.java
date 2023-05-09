@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
@@ -17,7 +18,7 @@ public class CauldronBehaviorsManager {
         }
         CauldronInteraction.WATER.put(ModRegistry.QUIVER_ITEM.get(), CauldronInteraction.DYED_ITEM);
 
-        var atlas = Registry.ITEM.getOptional(new ResourceLocation("map_atlases:atlas"));
+        var atlas = BuiltInRegistries.ITEM.getOptional(new ResourceLocation("map_atlases:atlas"));
         atlas.ifPresent(item -> CauldronInteraction.WATER.put(item, MAP_INTERACTION));
 
         CauldronInteraction.WATER.put(Items.FILLED_MAP, MAP_INTERACTION);

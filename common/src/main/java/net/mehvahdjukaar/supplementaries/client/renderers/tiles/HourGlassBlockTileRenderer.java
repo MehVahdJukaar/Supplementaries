@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
+import org.joml.Quaternionf;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
@@ -44,11 +44,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
 
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        Quaternion q = RotHlpr.rot(dir);
+        Quaternionf q = RotHlpr.rot(dir);
         matrixStackIn.mulPose(q);
 
-        q = q.copy();
-        q.conj();
+        q = new Quaternionf(q);
+        q.conjugate();
 
         if (height != 0) {
             matrixStackIn.pushPose();

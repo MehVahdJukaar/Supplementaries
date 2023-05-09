@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEventListener {
+public class FilteredPlayerListWidget extends GuiComponent implements NarratableEntry, GuiEventListener {
 
     private static final int ENTRY_PER_SCREEN = 3;
     private static final int ITEM_HEIGHT = 12;
@@ -187,7 +187,6 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
                 currentY += ITEM_HEIGHT;
             }
         }
-
     }
 
     private void renderScroller(PoseStack poseStack, int size) {
@@ -215,8 +214,7 @@ public class FilteredPlayerListWidget implements Widget, NarratableEntry, GuiEve
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput elementOutput) {
-
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public void setState(boolean hasItem, boolean packed) {

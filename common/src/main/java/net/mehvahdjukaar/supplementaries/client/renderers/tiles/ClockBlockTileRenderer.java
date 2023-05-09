@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
@@ -61,7 +62,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         //hours
         matrixStackIn.pushPose();
 
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(tile.getRoll(partialTicks)));
+        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(tile.getRoll(partialTicks)));
         matrixStackIn.translate(0, -1.5, -0.5 + 0.02083333);
 
         this.hourHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
@@ -71,7 +72,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         //minutes
         matrixStackIn.pushPose();
 
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(tile.getRollS(partialTicks)));
+        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(tile.getRollS(partialTicks)));
         matrixStackIn.translate(0, -1.5, -0.5 + 0.04166667);
 
         this.minuteHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -49,7 +50,7 @@ public class EnhancedSkullBlockTile extends BlockEntity {
     @Nullable
     protected SkullBlockEntity loadInnerTile(String tagName, @Nullable SkullBlockEntity tile, CompoundTag tag) {
         if (tag.contains(tagName)) {
-            BlockState state = NbtUtils.readBlockState(tag.getCompound(tagName + "State"));
+            BlockState state = MiscUtils.readBlockState(tag.getCompound(tagName + "State"), this.level);
             CompoundTag tileTag = tag.getCompound(tagName);
             if (tile == null) {
                 BlockEntity newTile = BlockEntity.loadStatic(this.getBlockPos(), state, tileTag);

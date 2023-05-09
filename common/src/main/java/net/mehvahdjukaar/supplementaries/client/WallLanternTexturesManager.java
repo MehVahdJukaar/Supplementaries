@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -93,7 +94,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
 
     private static void initialize() {
         ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
-        for (Block i : Registry.BLOCK) {
+        for (Block i : BuiltInRegistries.BLOCK) {
             if (WallLanternBlock.isValidBlock(i)) builder.add(i);
         }
         POSSIBLE_LANTERNS.clear();

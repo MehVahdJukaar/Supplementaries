@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallCandleSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -55,7 +56,7 @@ public abstract class SkullWithWaxTileRenderer<T extends EnhancedSkullBlockTile>
 
             if(!wall) {
                 poseStack.translate(0.5, 0.5, 0.5);
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(yaw));
+                poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
                 poseStack.translate(-0.5, -0.5, -0.5);
             }else{
                 poseStack.translate(0, -0.25, 0);
@@ -65,7 +66,7 @@ public abstract class SkullWithWaxTileRenderer<T extends EnhancedSkullBlockTile>
 
             if (wall){
                 poseStack.translate(0.5, 0.5, 0.5);
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(180-yaw));
+                poseStack.mulPose(Axis.YP.rotationDegrees(180-yaw));
                 poseStack.translate(-0.5, -0.25, -0.25);
             }
 

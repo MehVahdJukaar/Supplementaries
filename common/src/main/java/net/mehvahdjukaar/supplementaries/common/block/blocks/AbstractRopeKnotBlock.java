@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -156,9 +157,9 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
         VoxelShape down = Block.box(6, 0, 6, 10, 13, 10);
         VoxelShape up = Block.box(6, 9, 6, 10, 16, 10);
         VoxelShape north = getSideShape();
-        VoxelShape south = Utils.rotateVoxelShape(north, Direction.SOUTH);
-        VoxelShape west = Utils.rotateVoxelShape(north, Direction.WEST);
-        VoxelShape east = Utils.rotateVoxelShape(north, Direction.EAST);
+        VoxelShape south = MthUtils.rotateVoxelShape(north, Direction.SOUTH);
+        VoxelShape west = MthUtils.rotateVoxelShape(north, Direction.WEST);
+        VoxelShape east = MthUtils.rotateVoxelShape(north, Direction.EAST);
         //VoxelShape knot = Block.box(6, 9, 6, 10, 13, 10);
 
         for (BlockState state : this.stateDefinition.getPossibleStates()) {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;

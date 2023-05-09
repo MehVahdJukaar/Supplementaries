@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -17,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class GoldTrapdoorBlock extends TrapDoorBlock {
     public GoldTrapdoorBlock(Properties properties) {
-        super(properties);
+        super(properties, BlockSetType.GOLD);
     }
 
 

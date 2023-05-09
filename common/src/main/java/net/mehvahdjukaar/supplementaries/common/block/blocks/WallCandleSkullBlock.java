@@ -34,10 +34,10 @@ public class WallCandleSkullBlock extends AbstractCandleSkullBlock {
 
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             m.put(dir, new VoxelShape[]{
-                            Utils.rotateVoxelShape(ONE_AABB.move(0, 0, 0.25), dir),
-                            Utils.rotateVoxelShape(TWO_AABB.move(0, 0, 0.25), dir),
-                            Utils.rotateVoxelShape(THREE_AABB.move(0, 0, 0.25), dir),
-                            Utils.rotateVoxelShape(FOUR_AABB.move(0, 0, 0.25), dir),
+                            MthUtils.rotateVoxelShape(ONE_AABB.move(0, 0, 0.25), dir),
+                            MthUtils.rotateVoxelShape(TWO_AABB.move(0, 0, 0.25), dir),
+                            MthUtils.rotateVoxelShape(THREE_AABB.move(0, 0, 0.25), dir),
+                            MthUtils.rotateVoxelShape(FOUR_AABB.move(0, 0, 0.25), dir),
                     }
             );
         }

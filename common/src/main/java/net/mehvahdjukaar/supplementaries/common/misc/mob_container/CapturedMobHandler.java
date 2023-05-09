@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
@@ -102,7 +102,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     //debug
     public static void saveFile(DataDefinedCatchableMob data) {
-        File folder = PlatformHelper.getGamePath().resolve("test_cap").toFile();
+        File folder = PlatHelper.getGamePath().resolve("test_cap").toFile();
 
         if (!folder.exists()) {
             folder.mkdir();

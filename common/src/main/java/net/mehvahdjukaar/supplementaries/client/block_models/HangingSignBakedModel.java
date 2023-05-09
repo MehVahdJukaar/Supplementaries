@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -81,7 +81,7 @@ public class HangingSignBakedModel implements CustomBakedModel {
                 boolean fancy = Boolean.TRUE.equals(data.get(ModBlockProperties.FANCY));
                 if (!fancy) {
 
-                    BakedModel model = ClientPlatformHelper.getModel(blockModelShaper.getModelManager(), ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
+                    BakedModel model = ClientHelper.getModel(blockModelShaper.getModelManager(), ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
                     if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
                     var signQuads = model.getQuads(state, side, rand);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;

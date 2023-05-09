@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
@@ -70,7 +71,7 @@ public class ModBlockProperties {
     public static final EnumProperty<BlockAttachment> BLOCK_ATTACHMENT = EnumProperty.create("attachment", BlockAttachment.class);
 
     //model properties
-    public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC;
+    public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC_KEY;
     public static final ModelDataKey<Boolean> FANCY = new ModelDataKey<>(Boolean.class);
     public static final ModelDataKey<Boolean> FRAMED = new ModelDataKey<>(Boolean.class);
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
@@ -219,7 +220,7 @@ public class ModBlockProperties {
         }
 
         public static Topping fromFluid(SoftFluid s) {
-            if (s == VanillaSoftFluids.HONEY.get()) return HONEY;
+            if (s == BuiltInSoftFluids.HONEY.get()) return HONEY;
             String name = Utils.getID(s).getPath();
             if (name.equals("chocolate")) return CHOCOLATE;
             var containers = s.getFilledContainer(Items.GLASS_BOTTLE);
@@ -231,7 +232,7 @@ public class ModBlockProperties {
             Item item = stack.getItem();
             if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
             if (item instanceof HoneyBottleItem) return Topping.HONEY;
-            var tag = Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS);
+            var tag = BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS);
             if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
                 return Topping.CHOCOLATE;
             }

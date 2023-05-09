@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -11,7 +12,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
 
-    public boolean render(Font font, ItemStack stack, int x, int y, float blitOffset) {
+    @Override
+    public boolean render(PoseStack poseStack, Font font, ItemStack stack, int x, int y) {
         boolean overlay = ClientConfigs.Items.SLINGSHOT_OVERLAY.get();
         boolean outline = ClientConfigs.Items.SLINGSHOT_OUTLINE.get();
         if (overlay || outline) {
@@ -22,7 +24,7 @@ public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
                 if (overlay) {
                     ItemStack ammo = SlingshotRendererHelper.getAmmoForPreview(stack, Minecraft.getInstance().level, player);
 
-                    QuiverItemOverlayRenderer.renderAmmo(x, y, blitOffset, ammo);
+                    QuiverItemOverlayRenderer.renderAmmo(poseStack, x, y, ammo);
                 }
                 if (outline) {
                     if (EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0) {
@@ -34,4 +36,5 @@ public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
         }
         return false;
     }
+
 }

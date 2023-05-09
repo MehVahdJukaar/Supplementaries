@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -96,21 +98,21 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
                 if (mode == QuiverMode.HIP) {
                     o += (offset == -1 ? 3.5 / 16f : 3 / 16f + offset);
                     poseStack.translate(0, 0.1, o);
-                    poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(90));
                     if (flipped) poseStack.scale(-1, 1, -1);
 
                     poseStack.translate(0, 0.4, -3 / 16f);
-                    poseStack.mulPose(Vector3f.XN.rotationDegrees(-22.5f));
+                    poseStack.mulPose(Axis.XN.rotationDegrees(-22.5f));
                 } else {
                     o += (offset == -1 ? 4 / 16f : 3 / 16f + offset);
                     poseStack.translate(0, 0.1, o);
-                    poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                    poseStack.mulPose(Axis.YP.rotationDegrees(90));
                     if (flipped) poseStack.scale(-1, 1, -1);
 
                     poseStack.translate(0, 0, -0.125);
                 }
             }
-            itemRenderer.renderStatic(livingEntity, quiver, ItemTransforms.TransformType.HEAD, false,
+            itemRenderer.renderStatic(livingEntity, quiver, ItemDisplayContext.HEAD, false,
                     poseStack, buffer, livingEntity.level, packedLight, OverlayTexture.NO_OVERLAY, 0);
 
             poseStack.popPose();

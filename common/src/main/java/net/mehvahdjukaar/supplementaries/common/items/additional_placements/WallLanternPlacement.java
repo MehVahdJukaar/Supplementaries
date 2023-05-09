@@ -35,6 +35,6 @@ public class WallLanternPlacement implements AdditionalPlacement {
     }
 
     BlockPlacerItem getMimic() {
-        return ModRegistry.BLOCK_PLACER.get();
+        return ModBuiltInRegistries.BLOCK_PLACER.get();
     }
 }

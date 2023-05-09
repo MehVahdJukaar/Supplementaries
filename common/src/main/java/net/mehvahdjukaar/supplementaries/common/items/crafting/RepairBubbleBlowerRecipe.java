@@ -3,16 +3,18 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class RepairBubbleBlowerRecipe extends CustomRecipe {
     public RepairBubbleBlowerRecipe(ResourceLocation idIn) {
-        super(idIn);
+        super(idIn, CraftingBookCategory.EQUIPMENT);
     }
 
 
@@ -40,7 +42,7 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         ItemStack blower = null;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);

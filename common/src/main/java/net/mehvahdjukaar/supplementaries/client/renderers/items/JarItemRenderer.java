@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
@@ -28,7 +30,7 @@ public class JarItemRenderer extends CageItemRenderer {
     private static final Random RAND = new Random(420);
 
     @Override
-    public void renderContent(CompoundTag tag, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderContent(CompoundTag tag, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         super.renderContent(tag, transformType, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
@@ -79,12 +81,12 @@ public class JarItemRenderer extends CageItemRenderer {
                 float scale = 8f / 14f;
                 matrixStackIn.scale(scale, scale, scale);
                 for (float i = 0; i < height; i++) {
-                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(RAND.nextInt(360)));
+                    matrixStackIn.mulPose(Axis.ZP.rotationDegrees(RAND.nextInt(360)));
                     // matrixStackIn.translate(0, 0, 0.0625);
                     matrixStackIn.translate(0, 0, 1 / (16f * scale));
                     ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                     BakedModel model = itemRenderer.getModel(cookieStack, null, null, 0);
-                    itemRenderer.render(cookieStack, ItemTransforms.TransformType.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    itemRenderer.render(cookieStack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
                             combinedOverlayIn, model);
                 }
                 matrixStackIn.popPose();

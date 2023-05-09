@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
@@ -14,6 +14,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -60,9 +62,9 @@ public class CommonConfigs {
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
         ropeOverride = Suppliers.memoize(() -> {
-            var o = Registry.BLOCK.getHolder(ResourceKey.create(Registry.BLOCK.key(), Functional.ROPE_OVERRIDE.get()));
-            if (o.isPresent() && o.get() instanceof Holder.Reference<Block> hr && hr.value() != ModRegistry.ROPE.get()) {
-                return hr;
+            var o = BuiltInRegistries.BLOCK.getHolder(ResourceKey.create(Registries.BLOCK, Functional.ROPE_OVERRIDE.get()));
+            if (o.isPresent() && o.get().value() != ModRegistry.ROPE.get()) {
+                return o.get();
             }
             return null;
         });
@@ -85,6 +87,10 @@ public class CommonConfigs {
 
     public static boolean stasisEnabled() {
         return stasisEnabled;
+    }
+
+    public static double getRedMerchantSpawnMultiplier() {
+        return Tools.BOMB_ENABLED.get() ? General.RED_MERCHANT_SPAWN_MULTIPLIER.get() : 0;
     }
 
     public enum Hands {
@@ -245,7 +251,7 @@ public class CommonConfigs {
             builder.push("blackboard");
             BLACKBOARD_ENABLED = feature(builder);
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
-                    .define("colored_blackboard", PlatformHelper.isModLoaded("chalk"));
+                    .define("colored_blackboard", PlatHelper.isModLoaded("chalk"));
             BLACKBOARD_MODE = builder.comment("Interaction mode for blackboards")
                     .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
             builder.pop();
@@ -1025,7 +1031,7 @@ public class CommonConfigs {
             SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
                             "Useful for protected servers. Note that it will affect only blocks placed after this is turned on and such blocks will keep being protected after this option is disabled")
                     .define("server_protection", false);
-            RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red marchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
+            RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
         }

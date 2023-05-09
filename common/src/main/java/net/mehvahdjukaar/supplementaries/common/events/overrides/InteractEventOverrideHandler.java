@@ -89,7 +89,7 @@ public class InteractEventOverrideHandler {
             ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE_H.get()));
         }
         outer:
-        for (Item i : Registry.ITEM) {
+        for (Item i : BuiltInRegistries.ITEM) {
 
             if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
                 if (i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock())) {
@@ -133,7 +133,7 @@ public class InteractEventOverrideHandler {
                 }
             }
         }
-        for (Block block : Registry.BLOCK) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             for (BlockUseOverride b : blockUse) {
                 if (b.appliesToBlock(block)) {
                     BLOCK_USE.put(block, b);

@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -85,8 +86,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return PlatformHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return PlatHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -186,12 +187,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Entity owner = this.getOwner();
             if (i > 0 && this.isAcceptableReturnOwner(owner)) {
                 Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D * (double) i, this.getZ());
+                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D *  i, this.getZ());
                 if (this.level.isClientSide) {
                     this.yOld = this.getY();
                 }
 
-                double d0 = 0.05D * (double) i;
+                double d0 = 0.05D *  i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.clientSideReturnTridentTickCount;

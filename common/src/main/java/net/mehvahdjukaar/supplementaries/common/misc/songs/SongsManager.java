@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
@@ -259,7 +259,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     private static void saveRecordedSong(Song song) {
-        File folder = PlatformHelper.getGamePath().resolve("recorded_songs").toFile();
+        File folder = PlatHelper.getGamePath().resolve("recorded_songs").toFile();
 
         if (!folder.exists()) {
             folder.mkdir();

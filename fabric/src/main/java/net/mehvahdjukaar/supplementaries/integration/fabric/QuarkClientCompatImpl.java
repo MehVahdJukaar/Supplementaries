@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 
@@ -18,7 +18,7 @@ public class QuarkClientCompatImpl {
         return true;
     }
 
-    public static void registerTooltipComponent(ClientPlatformHelper.TooltipComponentEvent event) {
+    public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
 
     }
 

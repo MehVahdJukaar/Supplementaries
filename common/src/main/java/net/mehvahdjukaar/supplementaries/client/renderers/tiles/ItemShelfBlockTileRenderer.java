@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -42,12 +44,12 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
             matrixStackIn.translate(0.5, 0.5, 0.5);
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
             float yaw = tile.getYaw();
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(yaw));
+            matrixStackIn.mulPose(Axis.YP.rotationDegrees(yaw));
             matrixStackIn.translate(0, 0, 0.8125);
 
             if (this.canRenderName(tile)) {
                 matrixStackIn.pushPose();
-                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-yaw));
+                matrixStackIn.mulPose(Axis.YP.rotationDegrees(-yaw));
                 Component name = tile.getItem(0).getHoverName();
 
                 PedestalBlockTileRenderer.renderName(name,0.625f, matrixStackIn, bufferIn, combinedLightIn);
@@ -60,7 +62,7 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
             if (model.usesBlockLight() && ClientConfigs.Blocks.SHELF_TRANSLATE.get()) matrixStackIn.translate(0, -0.25, 0);
 
 
-            itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, true, matrixStackIn,
+            itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn,
                     bufferIn, combinedLightIn, combinedOverlayIn, model);
 
             matrixStackIn.popPose();

@@ -12,10 +12,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
@@ -33,14 +30,9 @@ public class SignPostBlockLoader implements CustomModelLoader {
     private static class Geometry implements CustomGeometry {
 
         @Override
-        public CustomBakedModel bake(ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
-            return new SignPostBlockBakedModel();
-        }
+        public CustomBakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState transform, ResourceLocation location) {
+                   return new SignPostBlockBakedModel();
 
-        @Override
-        public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-            return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS,
-                    ModMaterials.SIGN_POSTS_MATERIALS.get().get(WoodTypeRegistry.OAK_TYPE).texture()));
         }
     }
 }

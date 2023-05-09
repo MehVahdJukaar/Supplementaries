@@ -76,10 +76,10 @@ public class SoapWashableHelper {
         for (String key : keywords) {
             if (name.contains(key)) {
                 String newName = name.replace(key, "");
-                var bb = Registry.BLOCK.getOptional(new ResourceLocation(r.getNamespace(), newName));
+                var bb = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(r.getNamespace(), newName));
                 if (bb.isEmpty()) {
                     //tries minecraft namespace
-                    bb = Registry.BLOCK.getOptional(new ResourceLocation(newName));
+                    bb = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(newName));
                 }
                 if (bb.isPresent()) {
                     BlockState newState = bb.get().withPropertiesOf(oldState);

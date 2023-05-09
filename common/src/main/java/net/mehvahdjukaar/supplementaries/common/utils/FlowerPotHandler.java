@@ -61,7 +61,7 @@ public class FlowerPotHandler {
 
     private static void registerCompatFlower(String itemRes) {
         var id = new ResourceLocation(itemRes);
-        var opt = Registry.ITEM.getOptional(id);
+        var opt = BuiltInRegistries.ITEM.getOptional(id);
         if (opt.isPresent()) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
             CUSTOM_MODELS.add(res);

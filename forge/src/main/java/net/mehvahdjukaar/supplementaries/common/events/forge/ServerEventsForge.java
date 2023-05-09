@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
@@ -135,7 +135,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onTagUpdate(TagsUpdatedEvent event) {
-        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatformHelper.getEnv().isClient());
+        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatHelper.getEnv().isClient());
     }
 
     //for flute and cage. fabric calls directly

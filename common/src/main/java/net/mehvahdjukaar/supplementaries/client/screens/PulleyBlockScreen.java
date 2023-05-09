@@ -26,7 +26,7 @@ public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContai
         RenderSystem.setShaderTexture(0, ModTextures.PULLEY_BLOCK_GUI_TEXTURE);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
@@ -48,13 +48,11 @@ public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContai
     @Override
     public void removed() {
         super.removed();
-        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override
     public void init() {
         super.init();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 }

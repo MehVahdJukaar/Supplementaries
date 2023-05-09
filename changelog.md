@@ -1,1 +1,3 @@
-fixed framed blocks breaking instantly when full
+- dispensers can now deploy keys against key lockable blocks. Might be useful with lock block
+- safes can no longer contain their own key
+- added funny red merchant texture

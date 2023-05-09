@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -75,7 +75,7 @@ public class SupplementariesForgeClient {
 
     @SuppressWarnings("all")
     private static void crashIfOptifineHasNukedForge() {
-        if (PlatformHelper.isModLoaded("optifinefixer")) return;
+        if (PlatHelper.isModLoaded("optifinefixer")) return;
         try {
             new BakedQuad(new int[]{}, 0, Direction.UP, null, true, false);
         } catch (Exception e) {

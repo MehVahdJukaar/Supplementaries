@@ -1,11 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.misc.DualWeildState;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
@@ -31,6 +28,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,10 +92,9 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
-        Quaternion quaternion = new Quaternion(new Vector3f(vector3d1), yaw, true);
-        Vec3 vector3d = entity.getViewVector(1.0F);
-        Vector3f vector3f = new Vector3f(vector3d);
-        vector3f.transform(quaternion);
+        Quaternionf quaternion = new Quaternionf(vector3d1.toVector3f(), yaw, true);
+        Vector3f vector3f = entity.getViewVector(1.0F).toVector3f();
+        vector3f.rotate(quaternion);
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, accuracy);
 
         stack.hurtAndBreak(1, entity, (p) -> p.broadcastBreakEvent(hand));
@@ -194,9 +192,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
     @Override
-    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
-            //twoHanded.setTwoHanded(true);
             model.leftArm.yRot = MthUtils.wrapRad(0.1F + model.head.yRot);
             model.leftArm.xRot = MthUtils.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
             return true;
@@ -206,9 +203,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
     //TODO: finish this
     @Override
-    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand, DualWeildState twoHanded) {
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
         if (entity.getUseItemRemainingTicks() > 0 && entity.getUseItem().getItem() == this) {
-            //twoHanded.setTwoHanded(true);
             model.rightArm.yRot = MthUtils.wrapRad(-0.1F + model.head.yRot);
             //model.leftArm.yRot = 0.1F + model.head.yRot + 0.4F;
             model.rightArm.xRot = MthUtils.wrapRad((-(float) Math.PI / 2F) + model.head.xRot);
@@ -237,7 +233,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = (float) stack.getUseDuration() - ((float) entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft =  stack.getUseDuration() - ( entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {
@@ -249,7 +245,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
             matrixStack.translate(0, 0, f12 * 0.04F);
             matrixStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
-            //matrixStack.mulPose(Vector3f.YN.rotationDegrees((float)k * 45.0F));
+            //matrixStack.mulPose(Axis.YN.rotationDegrees((float)k * 45.0F));
         }
     }
 
@@ -258,10 +254,10 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
         //mainHand.xRot = -0.97079635F;
         offHand.xRot = mainHand.xRot;
-        float f = (float) CrossbowItem.getChargeDuration(entity.getUseItem());
-        float f1 = Mth.clamp((float) entity.getTicksUsingItem(), 0.0F, f);
+        float f =  CrossbowItem.getChargeDuration(entity.getUseItem());
+        float f1 = Mth.clamp( entity.getTicksUsingItem(), 0.0F, f);
         float f2 = f1 / f;
-        offHand.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (float) (right ? 1 : -1);
+        offHand.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (right ? 1 : -1);
         offHand.xRot = Mth.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));
     }
 

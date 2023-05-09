@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Matrix4f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
@@ -11,8 +13,8 @@ import net.minecraft.util.Mth;
 
 public class SlimedRenderType extends RenderType {
 
-    public SlimedRenderType(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
-        super(s, vertexFormat, mode, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
+    public SlimedRenderType(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean b, boolean b1, Runnable runnable, Runnable aSuper) {
+        super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
 
     protected static final TexturingStateShard TEXTURING_STATE_SHARD = new TexturingStateShard("entity_glint_texturing", () -> {
@@ -41,8 +43,8 @@ public class SlimedRenderType extends RenderType {
         float f = (float) (i % 80000L) / 80000.0F;
         float f1 = 0.5f + Mth.sin((float) (((float) (i % 30000L) / 30000.0F) * Math.PI)) * 0.5f;
         Matrix4f matrix4f = Matrix4f.createTranslateMatrix(0.0F, f, 0.0F);
-        matrix4f.multiply(Vector3f.ZP.rotationDegrees(30));
-        matrix4f.multiply(Matrix4f.createScaleMatrix(0.5f, 0.5f, 0.5f));
+        matrix4f.rotate(Axis.ZP.rotationDegrees(30));
+        matrix4f.rotate(Matrix4f.createScaleMatrix(0.5f, 0.5f, 0.5f));
         RenderSystem.setTextureMatrix(matrix4f);
 
 

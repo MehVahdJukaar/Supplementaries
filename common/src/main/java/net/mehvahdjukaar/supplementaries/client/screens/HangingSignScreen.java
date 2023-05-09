@@ -95,7 +95,6 @@ public class HangingSignScreen extends Screen {
 
     @Override
     public void removed() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
         // send new text to the server
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
         //this.tileSign.setEditable(true);
@@ -108,9 +107,6 @@ public class HangingSignScreen extends Screen {
 
     @Override
     protected void init() {
-
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_169820_) -> {
             this.close();
         }));

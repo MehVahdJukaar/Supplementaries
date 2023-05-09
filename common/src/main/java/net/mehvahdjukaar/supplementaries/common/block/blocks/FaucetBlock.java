@@ -45,13 +45,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class FaucetBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_NORTH = Block.box(5, 5, 5, 11, 15, 16);
-    protected static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
-    protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
-    protected static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
+    protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
+    protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_NORTH_JAR = Block.box(5, 0, 5, 11, 10, 16);
-    protected static final VoxelShape SHAPE_SOUTH_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.SOUTH);
-    protected static final VoxelShape SHAPE_WEST_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.WEST);
-    protected static final VoxelShape SHAPE_EAST_JAR = Utils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.EAST);
+    protected static final VoxelShape SHAPE_SOUTH_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_WEST_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.WEST);
+    protected static final VoxelShape SHAPE_EAST_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.EAST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -50,7 +50,7 @@ public class KeyItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         //only needed for fabric. forge uses better stuff
-        if (PlatformHelper.getPlatform().isFabric() && context.getPlayer().isSecondaryUseActive()) {
+        if (PlatHelper.getPlatform().isFabric() && context.getPlayer().isSecondaryUseActive()) {
             Level level = context.getLevel();
             BlockPos pos = context.getClickedPos();
             var tile = level.getBlockEntity(pos);

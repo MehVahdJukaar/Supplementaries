@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
@@ -63,7 +64,7 @@ public class ModMaterials {
     public static Material getFlagMaterialForPatternItem(BannerPatternItem item) {
         var p = ITEM_TO_PATTERNS.get(item);
         if (p == null) {
-            for (var j : Registry.BANNER_PATTERN.getTag(item.getBannerPattern()).get()) {
+            for (var j : BuiltInRegistries.BANNER_PATTERN.getTag(item.getBannerPattern()).get()) {
                 ITEM_TO_PATTERNS.put(item, j.value());
                 return FLAG_MATERIALS.get().get(j.value());
             }

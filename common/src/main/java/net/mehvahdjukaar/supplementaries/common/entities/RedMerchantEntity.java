@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
-import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncTradesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -14,11 +13,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,7 +50,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     private BlockPos wanderTarget;
     private int despawnDelay;
 
-    public int attackCooldown = 0;
+    private int attackCooldown = 0;
 
     public RedMerchantEntity(EntityType<? extends RedMerchantEntity> type, Level world) {
         super(type, world);
@@ -59,8 +61,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return PlatformHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return PlatHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -87,11 +89,6 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.35D));
         //this.goalSelector.addGoal(9, new LookAtWithoutMovingGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
-    }
-
-    @Override
-    public void setLastHurtByMob(@Nullable LivingEntity entity) {
-        super.setLastHurtByMob(entity);
     }
 
     @Nullable
@@ -134,11 +131,11 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     @Override
     public void openTradingScreen(Player player, Component name, int level) {
-        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new RedMerchantContainerMenu(i, p, this), name));
-        if (optionalint.isPresent() && player instanceof ServerPlayer) {
+        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new MerchantMenu(i, p, this), name));
+        if (optionalint.isPresent() && player instanceof ServerPlayer serverPlayer) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
+                NetworkHandler.CHANNEL.sendToClientPlayer(serverPlayer,
                         new ClientBoundSyncTradesPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }
@@ -146,11 +143,11 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag p_213281_1_) {
-        super.addAdditionalSaveData(p_213281_1_);
-        p_213281_1_.putInt("DespawnDelay", this.despawnDelay);
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("DespawnDelay", this.despawnDelay);
         if (this.wanderTarget != null) {
-            p_213281_1_.put("WanderTarget", NbtUtils.writeBlockPos(this.wanderTarget));
+            compound.put("WanderTarget", NbtUtils.writeBlockPos(this.wanderTarget));
         }
     }
 
@@ -203,8 +200,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     }
 
     @Override
-    protected SoundEvent getTradeUpdatedSound(boolean p_213721_1_) {
-        return p_213721_1_ ? SoundEvents.WANDERING_TRADER_YES : SoundEvents.WANDERING_TRADER_NO;
+    protected SoundEvent getTradeUpdatedSound(boolean isYesSound) {
+        return isYesSound ? SoundEvents.WANDERING_TRADER_YES : SoundEvents.WANDERING_TRADER_NO;
     }
 
     @Override
@@ -273,7 +270,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
             amount = 0.0F;
         }
         //explosion resistant!
-        if (source.isExplosion()) {
+        if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             amount = (float) (amount * 0.2D);
         }
 

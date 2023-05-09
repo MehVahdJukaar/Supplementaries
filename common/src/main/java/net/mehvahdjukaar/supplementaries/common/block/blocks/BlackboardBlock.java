@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
@@ -41,15 +41,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.joml.Vector2i;
 
 import javax.annotation.Nullable;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashable {
 
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SHAPE_SOUTH = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
-    protected static final VoxelShape SHAPE_EAST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
-    protected static final VoxelShape SHAPE_WEST = Utils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
+    protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
+    protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty GLOWING = ModBlockProperties.GLOWING;
@@ -112,7 +113,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
         };
     }
 
-    public static Vec2i getHitSubPixel(BlockHitResult hit) {
+    public static Vector2i getHitSubPixel(BlockHitResult hit) {
         Vec3 pos = hit.getLocation();
         Vec3 v = pos.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
         double fx = ((v.x % 1) * 16);
@@ -121,7 +122,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
 
         int y = 15 - (int) Mth.clamp(Math.abs((v.y % 1) * 16), 0, 15);
         if (pos.y < 0) y = 15 - y; //crappy logic
-        return new Vec2i(x, y);
+        return new Vector2i(x, y);
     }
 
     @Nullable
@@ -185,7 +186,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 
                 if (i instanceof SoapItem) return InteractionResult.PASS;
-                Vec2i pair = getHitSubPixel(hit);
+                Vector2i pair = getHitSubPixel(hit);
                 int x = pair.x();
                 int y = pair.y();
 

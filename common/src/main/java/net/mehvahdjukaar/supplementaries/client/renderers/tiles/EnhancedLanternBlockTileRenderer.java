@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -33,7 +34,7 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         float angle = tile.getSwingAngle(partialTicks);
 
         // animation
-        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(angle));
+        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(angle));
         matrixStackIn.translate(-0.5, -0.75 - tile.getAttachmentOffset(), -0.375);
 
         // render block

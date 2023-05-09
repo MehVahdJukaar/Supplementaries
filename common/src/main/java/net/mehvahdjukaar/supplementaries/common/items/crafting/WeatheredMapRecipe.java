@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -59,7 +60,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         boolean antique = true;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             if (inv.getItem(i).getItem() == ModRegistry.SOAP.get()) {

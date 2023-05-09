@@ -25,7 +25,7 @@ import java.util.List;
 public record SimplePlacement(@Nullable Block placeable) implements AdditionalPlacement {
 
     BlockPlacerItem getMimic() {
-        return ModRegistry.BLOCK_PLACER.get();
+        return ModBuiltInRegistries.BLOCK_PLACER.get();
     }
 
     @Override

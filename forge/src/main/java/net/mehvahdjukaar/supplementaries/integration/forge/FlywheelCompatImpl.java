@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.core.hardcoded.ModelPart;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
+import org.joml.Quaternionf;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
@@ -40,7 +40,7 @@ public class FlywheelCompatImpl {
             super(materialManager, tile);
 
             this.texture = ModMaterials.BELLOWS_MATERIAL.sprite();
-            Quaternion rotation = this.getDirection().getRotation();
+            Quaternionf rotation = this.getDirection().getRotation();
             this.stack = new PoseStack();
 
             var p = this.getInstancePosition();

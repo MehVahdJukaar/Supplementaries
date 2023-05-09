@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -31,7 +31,7 @@ public class BuzzierBeesCompat {
     }
 
     public static void setupClient() {
-        SOUL_CANDLE_HOLDERS.forEach(b -> ClientPlatformHelper.registerRenderType(b.get(), RenderType.cutout()));
+        SOUL_CANDLE_HOLDERS.forEach(b -> ClientHelper.registerRenderType(b.get(), RenderType.cutout()));
 
     }
 }

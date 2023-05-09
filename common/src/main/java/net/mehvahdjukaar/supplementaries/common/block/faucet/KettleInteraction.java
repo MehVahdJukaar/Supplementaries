@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.FarmersRespriteCompat;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ class KettleInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
             int waterLevel = state.getValue(p);
             if (waterLevel > 0) {
 
-                prepareToTransferBottle(faucetTank, VanillaSoftFluids.WATER.get());
+                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.get());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, state.setValue(p,
@@ -40,7 +40,7 @@ class KettleInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         if (FarmersRespriteCompat.isKettle(state)) {
             SoftFluid softFluid = faucetTank.getFluid();
-            if (softFluid == VanillaSoftFluids.WATER.get()) {
+            if (softFluid == BuiltInSoftFluids.WATER.get()) {
                 var p = FarmersRespriteCompat.getWaterLevel();
                 int levels = state.getValue(p);
                 if (levels < 3) {
