@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -98,27 +99,18 @@ public class RegUtils {
     }
 
 
-    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab) {
-        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), 0);
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory) {
+        return regWithItem(name, blockFactory, 0);
     }
 
-    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, CreativeModeTab tab, int burnTime) {
-        return regWithItem(name, blockFactory, new Item.Properties().tab(getTab(tab, name)), burnTime);
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, int burnTime) {
+        return regWithItem(name, blockFactory, new Item.Properties(), burnTime);
     }
 
     public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties, int burnTime) {
         RegSupplier<T> block = regBlock(name, blockFactory);
         regBlockItem(name, block, properties, burnTime);
         return block;
-    }
-
-    public static <T extends Block> Supplier<T> regWithItem(String name, Supplier<T> block, CreativeModeTab tab, String requiredMod) {
-        CreativeModeTab t = PlatHelper.isModLoaded(requiredMod) ? tab : null;
-        return regWithItem(name, block, t);
-    }
-
-    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, CreativeModeTab group, String tagKey) {
-        return RegHelper.registerItem(Supplementaries.res(name), () -> new OptionalTagBlockItem(blockSup.get(), new Item.Properties().tab(group), tagKey));
     }
 
     public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
@@ -134,15 +126,13 @@ public class RegUtils {
                 .noOcclusion().instabreak().sound(SoundType.LANTERN);
 
         Supplier<Block> block = RegHelper.registerBlockWithItem(baseName,
-                () -> new CandleHolderBlock(null, prop),
-                getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder"));
+                () -> new CandleHolderBlock(null, prop));
         map.put(null, block);
 
         for (DyeColor color : DyeColor.values()) {
             String name = baseName.getPath() + "_" + color.getName();
             Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
-                    () -> new CandleHolderBlock(color, prop),
-                    getTab(CreativeModeTab.TAB_DECORATIONS, "candle_holder")
+                    () -> new CandleHolderBlock(color, prop)
             );
             map.put(color, coloredBlock);
         }
@@ -171,7 +161,6 @@ public class RegUtils {
 
             regItem(name, () -> new FlagItem(block.get(), new Item.Properties()
                     .stacksTo(16)
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))
             ));
         }
         return builder.build();
@@ -202,8 +191,7 @@ public class RegUtils {
                         .strength(1.0F)
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
-        regItem(baseName, () -> new PresentItem(block.get(),
-                new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))));
+        regItem(baseName, () -> new PresentItem(block.get(), new Item.Properties()));
 
 
         for (DyeColor color : DyeColor.values()) {
@@ -216,8 +204,7 @@ public class RegUtils {
             map.put(color, bb);
             //item
 
-            regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())
-                    .tab(getTab(CreativeModeTab.TAB_DECORATIONS, baseName))));
+            regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())));
         }
         return map;
     }
@@ -234,7 +221,7 @@ public class RegUtils {
                             .noCollission(),
                     wood
             );
-            wood.addChild("supplementaries:hanging_sign", (Object) block);
+            wood.addChild("supplementaries:hanging_sign", block);
             event.register(Supplementaries.res(name), block);
             ModRegistry.HANGING_SIGNS.put(wood, block);
         }
@@ -245,11 +232,7 @@ public class RegUtils {
             WoodType wood = entry.getKey();
             //should be there already since this is fired after block reg
             Block block = entry.getValue();
-            Item item = new WoodBasedBlockItem(block,
-                    new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, ModConstants.HANGING_SIGN_NAME)),
-                    wood, 200
-            );
+            Item item = new WoodBasedBlockItem(block, new Item.Properties().stacksTo(16), wood, 200);
             event.register(Utils.getID(block), item);
         }
     }
@@ -258,12 +241,8 @@ public class RegUtils {
     public static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(ModConstants.SIGN_POST_NAME);
-            SignPostItem item = new SignPostItem(
-                    new Item.Properties().stacksTo(16).tab(
-                            getTab(CreativeModeTab.TAB_DECORATIONS, ModConstants.SIGN_POST_NAME)),
-                    wood
-            );
-            wood.addChild("supplementaries:sign_post", (Object) item);
+            SignPostItem item = new SignPostItem(new Item.Properties().stacksTo(16), wood);
+            wood.addChild("supplementaries:sign_post", item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }

@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
@@ -20,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class GoldDoorBlock extends DoorBlock {
 
     public GoldDoorBlock(Properties builder) {
-        super(builder);
+        super(builder, BlockSetType.GOLD);
     }
 
     public boolean canBeOpened(BlockState state) {

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -24,7 +25,7 @@ public class LeadDoorBlock extends DoorBlock {
     public static final IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
 
     public LeadDoorBlock(Properties builder) {
-        super(builder);
+        super(builder, BlockSetType.IRON);
     }
 
     @Override

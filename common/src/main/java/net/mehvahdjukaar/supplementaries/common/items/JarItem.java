@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -178,13 +177,6 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (CommonConfigs.General.JAR_TAB.get() && group == ModCreativeTabs.JAR_TAB) {
-            //lets jar tab populate itself
-        } else super.fillItemCategory(group, items);
-    }
-
-    @Override
     public Rarity getRarity(ItemStack stack) {
         CompoundTag tag = stack.getTagElement("BlockEntityTag");
         if (tag != null) {
@@ -226,17 +218,14 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         return super.use(world, playerEntity, hand);
     }
 
-    private JarBlockTile DUMMY_TILE = null;
-
     @Override
     public int getUseDuration(ItemStack stack) {
         if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-                if (DUMMY_TILE == null)
-                    DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-                DUMMY_TILE.load(tag);
-                SoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
+                var jarBlockTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
+                jarBlockTile.load(tag);
+                SoftFluidTank fh = jarBlockTile.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();

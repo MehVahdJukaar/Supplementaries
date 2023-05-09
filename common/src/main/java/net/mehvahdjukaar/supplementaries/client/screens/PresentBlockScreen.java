@@ -241,7 +241,6 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
-        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
     }
 
     public class PackButton extends AbstractButton {
@@ -252,7 +251,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(PoseStack poseStack, int i1, int i2, float v) {
             RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;

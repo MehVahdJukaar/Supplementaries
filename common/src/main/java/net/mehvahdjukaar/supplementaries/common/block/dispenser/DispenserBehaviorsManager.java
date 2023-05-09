@@ -25,6 +25,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -46,7 +47,7 @@ public class DispenserBehaviorsManager {
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
-        for (SoftFluid f : registryAccess.registryOrThrow(SoftFluidRegistry.getRegistryKey())) {
+        for (SoftFluid f : SoftFluidRegistry.getRegistry(registryAccess)) {
             registerFluidBehavior(f);
         }
 

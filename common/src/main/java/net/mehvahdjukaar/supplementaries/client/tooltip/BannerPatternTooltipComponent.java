@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class BannerPatternTooltipComponent implements ClientTooltipComponent {
 
@@ -31,15 +32,18 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer, int pBlitOffset) {
+    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer) {
         poseStack.pushPose();
 
-        var mat = Registry.BANNER_PATTERN.getTag(tooltip.pattern())
+        var mat = BuiltInRegistries.BANNER_PATTERN.getTag(tooltip.pattern())
                 .flatMap(n -> n.stream().findAny()).flatMap(Holder::unwrapKey).map(Sheets::getBannerMaterial);
         if (mat.isPresent()) {
             var sprite = mat.get().sprite();
             RenderSystem.enableBlend();
-            RenderUtil.blitSprite(poseStack, x, y, SIZE, SIZE, (16f) / sprite.getWidth(), (16f / sprite.getHeight()) * 12, (int) (20f / 64 * sprite.getWidth()), (int) (20f / 64 * sprite.getHeight()), sprite);
+            var contents = sprite.contents();
+            int width = contents.width();
+            int height = contents.height();
+            RenderUtil.blitSprite(poseStack, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
         }
 
         poseStack.popPose();

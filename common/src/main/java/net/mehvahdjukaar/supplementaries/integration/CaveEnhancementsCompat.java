@@ -52,7 +52,7 @@ public class CaveEnhancementsCompat {
         ResourceLocation res = new ResourceLocation(id.getNamespace(), name);
         var b = RegHelper.registerBlockWithItem(res, () -> new SpectacleCandleHolder(null,
                         BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME),
-                getTab(CreativeModeTab.TAB_DECORATIONS, CANDLE_HOLDER_NAME));
+                getTab( CANDLE_HOLDER_NAME));
         SPECTACLE_CANDLE_HOLDERS.add(b);
 
         tile = RegHelper.registerBlockEntityType(res,

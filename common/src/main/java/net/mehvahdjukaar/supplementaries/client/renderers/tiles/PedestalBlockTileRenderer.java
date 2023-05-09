@@ -3,10 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
-import org.joml.Matrix4f;
-import net.minecraft.world.item.ItemDisplayContext;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
@@ -16,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -24,16 +19,19 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 
 public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBlockTile> {
-    private final Minecraft minecraft = Minecraft.getInstance();
     private final ItemRenderer itemRenderer;
     private final EntityRenderDispatcher entityRenderer;
 
     public PedestalBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        Minecraft minecraft = Minecraft.getInstance();
         this.itemRenderer = minecraft.getItemRenderer();
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
     }
@@ -62,7 +60,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         float f1 = mc.options.getBackgroundOpacity(0.25F);
         int j = (int) (f1 * 255.0F) << 24;
 
-        float f2 = (float) (-mc.font.width(name) / 2);
+        float f2 = (-mc.font.width(name) / 2f);
 
         mc.font.drawInBatch(name, f2, i, -1, false, matrix4f, bufferIn, false, j, combinedLightIn);
         poseStack.popPose();
@@ -76,7 +74,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
             var displayType = tile.getDisplayType();
-            if (this.canRenderName(tile, displayType )) {
+            if (this.canRenderName(tile, displayType)) {
                 renderName(tile.getItem(0).getHoverName(), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
             }
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
@@ -154,7 +152,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
 
             if (MiscUtils.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
-            this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 0);
+            this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, tile.getLevel(), 0);
 
             matrixStackIn.popPose();
         }

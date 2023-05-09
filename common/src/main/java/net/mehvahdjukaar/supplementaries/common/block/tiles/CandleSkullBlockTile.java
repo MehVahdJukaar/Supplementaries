@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -45,7 +46,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("Candle", 10)) {
-            this.candle = NbtUtils.readBlockState(tag.getCompound("Candle"));
+            this.candle = MiscUtils.readBlockState(tag.getCompound("Candle"), level);
             if (this.candle.getBlock() instanceof CandleBlock candleBlock) {
                 this.waxTexture = getWaxColor(candleBlock);
             } else this.waxTexture = ModTextures.SKULL_CANDLES_TEXTURES.get(Blocks.CANDLE);

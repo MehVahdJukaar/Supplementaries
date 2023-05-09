@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -271,7 +272,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
                 level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
             List<EntityType<?>> list = new ArrayList<>();
-            for (var e : Registry.ENTITY_TYPE.getTagOrEmpty(ModTags.URN_SPAWN)) {
+            for (var e : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(ModTags.URN_SPAWN)) {
                 list.add(e.value());
             }
             if (!list.isEmpty()) {

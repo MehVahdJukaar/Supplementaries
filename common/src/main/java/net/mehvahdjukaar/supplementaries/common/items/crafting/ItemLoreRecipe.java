@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -10,13 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class ItemLoreRecipe extends CustomRecipe {
     public ItemLoreRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation);
+        super(resourceLocation, CraftingBookCategory.MISC);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class ItemLoreRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingContainer) {
+    public ItemStack assemble(CraftingContainer craftingContainer, RegistryAccess registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack nameTag = ItemStack.EMPTY;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {

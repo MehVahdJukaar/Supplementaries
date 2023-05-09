@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -40,7 +41,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
 
     public NetheriteTrapdoorBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LAVALOGGED) ? 15 : 0));
+        super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0), BlockSetType.IRON);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(OPEN, false).setValue(HALF, Half.BOTTOM).setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));

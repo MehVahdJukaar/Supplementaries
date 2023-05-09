@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -42,7 +43,7 @@ public class SpecialRecipeDisplays {
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(antique), soap);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_map_clean_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, new ItemStack(Items.FILLED_MAP), inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, new ItemStack(Items.FILLED_MAP), inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -62,7 +63,7 @@ public class SpecialRecipeDisplays {
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_map_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, stack, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, stack, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -80,7 +81,7 @@ public class SpecialRecipeDisplays {
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_book_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, stack, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, stack, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -97,7 +98,7 @@ public class SpecialRecipeDisplays {
         Ingredient rope = Ingredient.of(ModTags.ROPES);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, arrow, rope, rope, rope, rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -115,7 +116,7 @@ public class SpecialRecipeDisplays {
         Ingredient rope = Ingredient.of(ModTags.ROPES);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, rope, rope, rope, rope, arrow, rope, rope, rope, rope);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_add_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -139,7 +140,7 @@ public class SpecialRecipeDisplays {
 
                 ItemStack output = out.getDefaultInstance();
                 ResourceLocation id = Supplementaries.res("soap_clean_" + k.replace(":", "_"));
-                ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+                ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
                 recipes.add(recipe);
             }
         }
@@ -157,7 +158,7 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
 
             ResourceLocation id = Supplementaries.res("trapped_present_" + color.getName() + "_display");
-            recipes.add(new ShapelessRecipe(id, group, output, inputs));
+            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
         }
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
         ItemStack output = ModRegistry.TRAPPED_PRESENTS.get(null).get().asItem().getDefaultInstance();
@@ -165,7 +166,7 @@ public class SpecialRecipeDisplays {
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(Items.TRIPWIRE_HOOK));
 
         ResourceLocation id = Supplementaries.res("trapped_present_display");
-        recipes.add(new ShapelessRecipe(id, group, output, inputs));
+        recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
         return recipes;
     }
 
@@ -180,7 +181,7 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
             ResourceLocation id = Supplementaries.res("present_" + color.getName() + "_display");
-            recipes.add(new ShapelessRecipe(id, group, output, inputs));
+            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
         }
         return recipes;
     }
@@ -197,7 +198,7 @@ public class SpecialRecipeDisplays {
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SLIME_BALL), Ingredient.of(tag));
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "item_lore_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, output, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -216,7 +217,7 @@ public class SpecialRecipeDisplays {
         Ingredient soap = Ingredient.of(ModRegistry.SOAP.get());
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, soap);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "bubble_blower_charge_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, ropeArrow, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, ropeArrow, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -227,7 +228,7 @@ public class SpecialRecipeDisplays {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "tipped_spikes";
 
-        for (Potion potionType : Registry.POTION) {
+        for (Potion potionType : BuiltInRegistries.POTION) {
             if (!potionType.getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(potionType)) {
                 recipes.add(makeSpikeRecipe(potionType, group));
             }
@@ -244,7 +245,7 @@ public class SpecialRecipeDisplays {
         ItemStack output = BambooSpikesTippedItem.makeSpikeItem(potionType);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, potionType.getName("tipped_spikes_display."));
 
-        return new ShapelessRecipe(id, group, output, inputs);
+        return new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs);
     }
 
     private static List<CraftingRecipe> createFlagFromBanner() {
@@ -273,7 +274,7 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
             ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "flag_from_banner_display_" + color.getName());
 
-            ShapelessRecipe recipe = new ShapelessRecipe(id, group, fullFlag, inputs);
+            ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, fullFlag, inputs);
             recipes.add(recipe);
         }
 
@@ -290,7 +291,7 @@ public class SpecialRecipeDisplays {
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "blackboard_duplicate_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, blackboard, inputs);
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, blackboard, inputs);
         recipes.add(recipe);
 
         return recipes;

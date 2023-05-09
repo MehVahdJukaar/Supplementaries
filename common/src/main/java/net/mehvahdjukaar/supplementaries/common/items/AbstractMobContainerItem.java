@@ -275,7 +275,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
         //piglin workaround. don't know why they are IAngerable
         if (entity instanceof Piglin) {
-            entity.hurt(DamageSource.playerAttack(player), 0);
+            entity.hurt(entity.level.damageSources().playerAttack(player), 0);
         }
         if (entity instanceof Villager villager && player.level instanceof ServerLevel serverLevel) {
             Optional<NearestVisibleLivingEntities> optional = villager.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);

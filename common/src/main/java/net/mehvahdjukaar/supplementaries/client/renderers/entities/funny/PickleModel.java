@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
@@ -107,8 +108,8 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
 
     public static class PickleArmor<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends HumanoidArmorLayer<T, M, A> {
 
-        public PickleArmor(RenderLayerParent<T, M> renderer, A modelChest) {
-            super(renderer, modelChest, modelChest);
+        public PickleArmor(RenderLayerParent<T, M> renderer, A modelChest, ModelManager manager) {
+            super(renderer, modelChest, modelChest, manager);
         }
 
         @Override

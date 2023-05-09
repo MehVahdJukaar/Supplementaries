@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -172,7 +173,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         private ItemStack createMap(Level level, BlockPos pos) {
             if (level instanceof ServerLevel serverLevel) {
-                if (!serverLevel.getServer().getWorldData().worldGenSettings().generateStructures())
+                if (!serverLevel.getServer().getWorldData().worldGenOptions().generateStructures())
                     return ItemStack.EMPTY;
 
                 var found = StructureLocator.findNearestRandomMapFeature(
@@ -200,7 +201,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     public static ItemStack createStructureMap(Level world, BlockPos pos, ResourceLocation structureName,
                                                @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
 
-        var destination = TagKey.create(Registry.STRUCTURE_REGISTRY, structureName);
+        var destination = TagKey.create(Registries.STRUCTURE, structureName);
 
         if (world instanceof ServerLevel serverLevel) {
 

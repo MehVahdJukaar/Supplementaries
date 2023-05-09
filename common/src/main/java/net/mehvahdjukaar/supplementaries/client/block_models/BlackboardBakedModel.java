@@ -140,8 +140,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
                                             TextureAtlasSprite sprite, int color, Transformation transform,
                                             boolean litUp, Direction dd) {
 
-        float tu = (1 - (1 + sprite.getWidth() * width));
-        float tv = (1 - (1 + sprite.getHeight() * height));
+        float tu = (1 - (1 + sprite.contents().width() * width));
+        float tv = (1 - (1 + sprite.contents().height() * height));
         float u0 = (1 - x) * 16;
         float v0 = (1 - y) * 16;
 

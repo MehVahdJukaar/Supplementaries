@@ -29,7 +29,7 @@ public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, 
                     ResourceLocation.CODEC.optionalFieldOf("mapMarker", new ResourceLocation("")).forGetter(p -> p.mapMarker))
             .apply(i, AdventurerMapTrade::new)).comapFlatMap(trade -> {
         if (trade.maxPrice < trade.minPrice)
-            return DataResult.error("Max price must be larger than min price: [" + trade.minPrice + ", " + trade.maxPrice + "]");
+            return DataResult.error(()->"Max price must be larger than min price: [" + trade.minPrice + ", " + trade.maxPrice + "]");
         return DataResult.success(trade);
     }, Function.identity());
 

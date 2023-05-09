@@ -101,8 +101,8 @@ public class WeatheredMap {
         if (!(level.dimension() == data.dimension && entity instanceof Player)) return false;
 
         int scale = 1 << data.scale;
-        int mapX = data.x;
-        int mapZ = data.z;
+        int mapX = data.centerX;
+        int mapZ = data.centerZ;
         int playerX = Mth.floor(entity.getX() - mapX) / scale + 64;
         int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
         int centerY = 128 / scale;

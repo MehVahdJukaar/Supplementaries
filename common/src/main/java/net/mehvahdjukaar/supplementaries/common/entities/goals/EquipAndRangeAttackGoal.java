@@ -41,7 +41,7 @@ public class EquipAndRangeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.mob.attackCooldown > 0) return false;
+        if (this.mob.getAttackCooldown() > 0) return false;
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity != null && livingentity.isAlive()) {
             this.target = livingentity;
@@ -97,7 +97,7 @@ public class EquipAndRangeAttackGoal extends Goal {
             float lvt_5_1_ = Mth.clamp(f, 0.1F, 1.0F);
             this.mob.performRangedAttack(this.target, lvt_5_1_);
             this.attackTime = Mth.floor(f *  (this.attackIntervalMax - this.attackIntervalMin) +  this.attackIntervalMin);
-            this.mob.attackCooldown = cooldown + mob.getRandom().nextInt(20);
+            this.mob.setAttackCooldown( cooldown + mob.getRandom().nextInt(20));
         } else if (this.attackTime < 0) {
             float f2 = Mth.sqrt((float) d0) / this.attackRadius;
             this.attackTime = Mth.floor(f2 *  (this.attackIntervalMax - this.attackIntervalMin) +  this.attackIntervalMin);

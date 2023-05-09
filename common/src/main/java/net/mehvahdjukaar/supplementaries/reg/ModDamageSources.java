@@ -2,19 +2,14 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,15 +31,15 @@ public class ModDamageSources {
     }
     //these are data defined now
 
-    public static DamageSource getSpikePlayerDamage(Player level) {
+    public static DamageSource spikePlayer(Player level) {
         return new SpikePlayerDamageSource(spikeDamage);
     }
 
-    public static DamageSource getSpikeDamage(ServerLevel level) {
+    public static DamageSource spike() {
         return spikeDamage;
     }
 
-    public static DamageSource getBottlingDamage() {
+    public static DamageSource bottling() {
         return bottlingDamage;
     }
 

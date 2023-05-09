@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.model.HumanoidModel;
@@ -34,13 +33,15 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
     public static JarredRenderer INSTANCE = null;
 
     public JarredRenderer(EntityRendererProvider.Context context) {
-        super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)),0);
+        super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)), 0);
 
         this.shadowStrength = 0;
         this.shadowRadius = 0;
         this.addLayer(new PlayerItemInHandLayer<>(this, context.getItemInHandRenderer()));
 
-        this.addLayer(new PickleModel.PickleArmor<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+        this.addLayer(new PickleModel.PickleArmor<>(this,
+                new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
+                context.getModelManager()));
 
         this.addLayer(new ArrowLayer<>(context, this));
         this.addLayer(new PickleModel.PickleElytra<>(this, context.getModelSet()));

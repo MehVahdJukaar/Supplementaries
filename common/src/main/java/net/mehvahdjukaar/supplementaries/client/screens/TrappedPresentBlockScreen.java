@@ -52,7 +52,6 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
     @Override
     public void init() {
         super.init();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
@@ -160,7 +159,6 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
-        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
     }
 
     public class PackButton extends AbstractButton {
@@ -171,7 +169,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
@@ -192,6 +190,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
             this.active = hasItem;
         }
 
+        //TODO:
         @Override
         public void renderToolTip(PoseStack matrixStack, int x, int y) {
             if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
@@ -205,7 +204,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput output) {
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         }
     }
 

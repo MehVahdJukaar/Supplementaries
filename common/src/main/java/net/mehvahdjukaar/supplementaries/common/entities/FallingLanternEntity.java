@@ -40,7 +40,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
         if (CommonConfigs.Tweaks.FALLING_LANTERNS.get().hasFire() && this.getDeltaMovement().lengthSqr() > 0.4 * 0.4) {
             BlockState state = this.getBlockState();
 
-            BlockPos pos = new BlockPos(this.getX(), this.getY() + 0.25, this.getZ());
+            BlockPos pos = BlockPos.containing(this.getX(), this.getY() + 0.25, this.getZ());
             //break event
             level.levelEvent(null, 2001, pos, Block.getId(state));
             if (state.getLightEmission() != 0) {

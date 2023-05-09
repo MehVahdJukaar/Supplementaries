@@ -41,7 +41,9 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         this.shadowRadius = 0;
         this.addLayer(new PlayerItemInHandLayer<>(this, context.getItemInHandRenderer()));
 
-        this.addLayer(new PickleModel.PickleArmor<>(this, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+        this.addLayer(new PickleModel.PickleArmor<>(this,
+                new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
+                context.getModelManager()));
 
         this.addLayer(new ArrowLayer<>(context, this));
 

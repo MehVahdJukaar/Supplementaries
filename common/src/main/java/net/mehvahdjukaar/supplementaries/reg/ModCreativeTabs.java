@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -16,7 +16,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.List;
 
@@ -79,12 +81,13 @@ public class ModCreativeTabs {
         }
     }
 
-    public static void init(){
-        RegHelper.addItemsToTabsRegistration(CreativeModeTab::registerItemsToTabs);
+    public static void init() {
+        RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
     }
 
-    public static void registerItemsToTabs(RegHelper.ItemToTabEvent event){
-
+    public static void registerItemsToTabs(RegHelper.ItemToTabEvent event) {
+        event.addAfter(CreativeModeTabs.REDSTONE_BLOCKS, i -> i.is(Items.REDSTONE),
+                ModRegistry.RELAYER.get());
 
     }
 

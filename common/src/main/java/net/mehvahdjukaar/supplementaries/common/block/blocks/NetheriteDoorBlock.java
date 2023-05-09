@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -28,7 +29,7 @@ import java.util.List;
 public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
 
     public NetheriteDoorBlock(Properties builder) {
-        super(builder);
+        super(builder, BlockSetType.IRON);
     }
 
     @Override

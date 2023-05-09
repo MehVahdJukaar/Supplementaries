@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -10,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.CreativeModeTab;
@@ -66,7 +68,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
                 if(e.getEffect().isBeneficial()) return false;
             }
         }
-        return !MiscUtils.isTagged(potion, Registry.POTION,ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        return !Utils.isTagged(potion, BuiltInRegistries.POTION,ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));
                 items.add(makeSpikeItem(Potions.STRONG_POISON));
-                for (Potion potion : net.minecraft.core.Registry.POTION) {
+                for (Potion potion : BuiltInRegistries.POTION) {
                     if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
                         continue;
                     if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && isPotionValid(potion)) {

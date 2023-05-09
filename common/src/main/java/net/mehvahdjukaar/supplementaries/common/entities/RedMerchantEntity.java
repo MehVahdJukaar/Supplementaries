@@ -60,6 +60,14 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         this(ModEntities.RED_MERCHANT.get(), world);
     }
 
+    public int getAttackCooldown() {
+        return attackCooldown;
+    }
+
+    public void setAttackCooldown(int attackCooldown) {
+        this.attackCooldown = attackCooldown;
+    }
+
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return PlatHelper.getEntitySpawnPacket(this);

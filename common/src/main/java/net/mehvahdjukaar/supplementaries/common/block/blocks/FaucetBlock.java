@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -172,10 +173,10 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     public void trySolidifyConcrete(BlockPos pos, Level world) {
         Block b = world.getBlockState(pos).getBlock();
-        if (b instanceof ConcretePowderBlock concretePowderBlock) {
-            world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
-        }else if(b instanceof SugarBlock){
+         if(b instanceof SugarBlock){
             world.removeBlock(pos, false);
+        }else if (b instanceof ConcretePowderBlock concretePowderBlock) {
+            world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
         }
     }
 

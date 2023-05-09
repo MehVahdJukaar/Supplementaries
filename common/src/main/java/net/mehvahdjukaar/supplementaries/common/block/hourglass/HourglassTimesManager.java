@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
@@ -46,6 +47,8 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
         });
         list.sort(Comparator.comparing(HourglassTimeData::getOrdering));
         list.forEach(HourglassTimesManager::addData);
+
+        ModDamageSources.reload(access);
     }
 
     public static void addData(HourglassTimeData data) {

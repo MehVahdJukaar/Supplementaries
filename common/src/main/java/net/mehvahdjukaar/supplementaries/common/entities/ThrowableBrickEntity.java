@@ -117,7 +117,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super.onHitEntity(entityHitResult);
         Entity entity = entityHitResult.getEntity();
         int i = 1;
-        entity.hurt(DamageSource.thrown(this, this.getOwner()), i);
+        entity.hurt(this.level.damageSources().thrown(this, this.getOwner()), i);
     }
 
 

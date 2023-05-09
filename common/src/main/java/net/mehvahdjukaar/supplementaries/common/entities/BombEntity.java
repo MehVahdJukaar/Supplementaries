@@ -24,7 +24,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -208,7 +207,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     protected void onHitEntity(EntityHitResult hit) {
         super.onHitEntity(hit);
-        hit.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), 1);
+        hit.getEntity().hurt(level.damageSources().thrown(this, this.getOwner()), 1);
         if (hit.getEntity() instanceof LargeFireball) {
             this.superCharged = true;
             hit.getEntity().remove(RemovalReason.DISCARDED);
@@ -296,19 +295,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         boolean breaks = this.getOwner() instanceof Player ||
                 PlatHelper.isMobGriefingOn(this.level, this.getOwner());
 
-        if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))) {
+        if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, BlockPos.containing(position()))) {
             breaks = false;
         }
 
         if (this.superCharged) {
             //second explosion when supercharged
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
         }
 
         BombExplosion explosion = new BombExplosion(this.level, this, null,
                 new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
-                this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
+                this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
 
         explosion.explode();
         explosion.doFinalizeExplosion();
@@ -326,15 +325,15 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         SPIKY(ModRegistry.BOMB_SPIKY_ITEM, ModRegistry.BOMB_SPIKY_ITEM_ON);
 
         public final Supplier<Item> item;
-        public final Supplier<Item> item_on;
+        public final Supplier<Item> itemOn;
 
         BombType(Supplier<Item> item, Supplier<Item> itemOn) {
             this.item = item;
-            this.item_on = itemOn;
+            this.itemOn = itemOn;
         }
 
         public ItemStack getDisplayStack(boolean active) {
-            return (active ? item_on : item).get().getDefaultInstance();
+            return (active ? itemOn : item).get().getDefaultInstance();
         }
 
         public double getRadius() {
@@ -407,7 +406,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                     }
                     if (shouldPoison) {
                         if (entity instanceof LivingEntity livingEntity) {
-                            livingEntity.hurt(DamageSource.MAGIC, 2);
+                            livingEntity.hurt(level.damageSources().magic(), 2);
                             livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (260 * 0.5f)));
                             var effect = CompatObjects.STUNNED_EFFECT.get();
                             if (effect != null) {

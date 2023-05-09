@@ -72,7 +72,7 @@ class XPBottlingBehavior implements ItemUseOnBlockOverride {
                 }
 
                 if (returnStack != null) {
-                    player.hurt(ModDamageSources.BOTTLING_DAMAGE, CommonConfigs.Tweaks.BOTTLING_COST.get());
+                    player.hurt(ModDamageSources.bottling(), CommonConfigs.Tweaks.BOTTLING_COST.get());
                     Utils.swapItem(player, hand, returnStack);
 
                     if (!player.isCreative())

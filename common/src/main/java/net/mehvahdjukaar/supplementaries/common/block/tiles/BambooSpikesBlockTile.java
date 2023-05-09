@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -136,7 +137,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
         compound.putInt("Charges", this.charges);
         compound.putLong("LastTicked", this.lastTicked);
 
-        ResourceLocation resourcelocation = net.minecraft.core.Registry.POTION.getKey(this.potion);
+        ResourceLocation resourcelocation = BuiltInRegistries.POTION.getKey(this.potion);
         compound.putString("Potion", resourcelocation.toString());
     }
 

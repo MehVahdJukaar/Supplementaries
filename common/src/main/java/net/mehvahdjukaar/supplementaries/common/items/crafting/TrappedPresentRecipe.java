@@ -4,19 +4,21 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TrappedPresentRecipe extends CustomRecipe {
     public TrappedPresentRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation);
+        super(resourceLocation, CraftingBookCategory.BUILDING);
     }
 
     public boolean matches(CraftingContainer craftingContainer, Level level) {
@@ -51,7 +53,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingContainer) {
+    public ItemStack assemble(CraftingContainer craftingContainer, RegistryAccess registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         DyeColor dyecolor = DyeColor.WHITE;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.teamabode.cave_enhancements.core.integration.quark.VerticalSlabBlock;
+import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -18,7 +19,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -77,70 +78,64 @@ public class ModRegistry {
 
     //red merchant
     public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
-            PlatHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0,
-                    new Item.Properties().tab(getTab(null, RED_MERCHANT_NAME))));
+            PlatHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0, new Item.Properties()));
 
 
     //dispenser minecart
     public static final Supplier<Item> DISPENSER_MINECART_ITEM = regItem(DISPENSER_MINECART_NAME, () -> new DispenserMinecartItem(new Item.Properties()
-            .stacksTo(1).tab(getTab(CreativeModeTab.TAB_TRANSPORTATION, DISPENSER_MINECART_NAME))));
+            .stacksTo(1)));
 
 
-    public static final Supplier<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME))));
-    public static final Supplier<Item> BOMB_ITEM_ON = regItem("bomb_projectile", () -> new BombItem(new Item.Properties()
-            .tab(null)));
+    public static final Supplier<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()));
+    public static final Supplier<Item> BOMB_ITEM_ON = regItem("bomb_projectile", () -> new BombItem(new Item.Properties()));
 
-    public static final Supplier<Item> BOMB_BLUE_ITEM = regItem(BOMB_BLUE_NAME, () -> new BombItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_NAME)), BombEntity.BombType.BLUE, true));
-    public static final Supplier<Item> BOMB_BLUE_ITEM_ON = regItem("bomb_blue_projectile", () -> new BombItem(new Item.Properties()
-            .tab(null), BombEntity.BombType.BLUE, false));
+    public static final Supplier<Item> BOMB_BLUE_ITEM = regItem(BOMB_BLUE_NAME, () -> new BombItem(new Item.Properties(),
+            BombEntity.BombType.BLUE, true));
+    public static final Supplier<Item> BOMB_BLUE_ITEM_ON = regItem("bomb_blue_projectile", () -> new BombItem(new Item.Properties(),
+            BombEntity.BombType.BLUE, false));
 
     //sharpnel bomb
-    public static final Supplier<Item> BOMB_SPIKY_ITEM = regItem(BOMB_SPIKY_NAME, () -> new BombItem(new Item.Properties()
-            .tab(getTab(CreativeModeTab.TAB_COMBAT, BOMB_SPIKY_NAME)), BombEntity.BombType.SPIKY, false));
-    public static final Supplier<Item> BOMB_SPIKY_ITEM_ON = regItem("bomb_spiky_projectile", () -> new BombItem(new Item.Properties()
-            .tab(null), BombEntity.BombType.SPIKY, false));
+    public static final Supplier<Item> BOMB_SPIKY_ITEM = regItem(BOMB_SPIKY_NAME, () -> new BombItem(new Item.Properties(),
+            BombEntity.BombType.SPIKY, false));
+    public static final Supplier<Item> BOMB_SPIKY_ITEM_ON = regItem("bomb_spiky_projectile", () -> new BombItem(new Item.Properties(),
+            BombEntity.BombType.SPIKY, false));
 
     //rope arrow
-    public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, ROPE_ARROW_NAME)).defaultDurability(32)));
-
+    public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(new Item.Properties()
+            .defaultDurability(32)));
 
     //soap bubbler
-    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, BUBBLE_BLOWER_NAME))
+    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower(new Item.Properties()
             .stacksTo(1).durability(250)));
 
     //slingshot
-    public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, SLINGSHOT_NAME))
-            .stacksTo(1).durability(192)));
+    public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()
+            .stacksTo(1)
+            .durability(192)));
 
     //flute
-    public static final Supplier<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, FLUTE_NAME)).stacksTo(1).durability(64)));
-
+    public static final Supplier<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem(new Item.Properties()
+            .stacksTo(1)
+            .durability(64)));
 
     //key
-    public static final Supplier<KeyItem> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_TOOLS, KEY_NAME))));
+    public static final Supplier<KeyItem> KEY_ITEM = regItem(KEY_NAME, () -> new KeyItem(new Item.Properties()));
 
     //candy
-    public static final Supplier<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_FOOD, CANDY_NAME))));
+    public static final Supplier<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem(new Item.Properties()));
 
     //antique ink
-    public static final Supplier<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_MISC, ANTIQUE_INK_NAME))));
+    public static final Supplier<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item(new Item.Properties()));
 
     //wrench
-    public static final Supplier<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, WRENCH_NAME)).stacksTo(1).durability(200)));
+    public static final Supplier<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem(new Item.Properties()
+            .stacksTo(1)
+            .durability(200)));
 
     //quiver
     public static final Supplier<QuiverItem> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
-            .tab(getTab(CreativeModeTab.TAB_TOOLS, QUIVER_NAME)).stacksTo(1).rarity(Rarity.RARE)));
+            .stacksTo(1)
+            .rarity(Rarity.RARE)));
 
 
     //speedometer
@@ -217,13 +212,12 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
                     .strength(2f, 6f)
                     .requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
 
     //pedestal
     public static final Supplier<Block> PEDESTAL = regWithItem(PEDESTAL_NAME, () -> new PedestalBlock(
-                    BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)),
-            CreativeModeTab.TAB_DECORATIONS);
+            BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)));
 
     public static final Supplier<BlockEntityType<PedestalBlockTile>> PEDESTAL_TILE = regTile(
             PEDESTAL_NAME, () -> PlatHelper.newBlockEntityType(
@@ -233,7 +227,7 @@ public class ModRegistry {
     //notice board
     public static final Supplier<Block> NOTICE_BOARD = regWithItem(NOTICE_BOARD_NAME, () -> new NoticeBoardBlock(
                     BlockBehaviour.Properties.copy(Blocks.BARREL)),
-            CreativeModeTab.TAB_DECORATIONS, 300);
+            300);
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
@@ -248,8 +242,9 @@ public class ModRegistry {
                     SafeBlockTile::new, SAFE.get()));
 
 
-    public static final Supplier<Item> SAFE_ITEM = regItem(SAFE_NAME, () -> new SafeItem(SAFE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SAFE_NAME)).stacksTo(1).fireResistant()));
+    public static final Supplier<Item> SAFE_ITEM = regItem(SAFE_NAME, () ->
+            new SafeItem(SAFE.get(), new Item.Properties()
+                    .stacksTo(1).fireResistant()));
 
     //cage
     public static final Supplier<Block> CAGE = regBlock(CAGE_NAME, () -> new CageBlock(
@@ -262,8 +257,8 @@ public class ModRegistry {
             CAGE_NAME, () -> PlatHelper.newBlockEntityType(
                     CageBlockTile::new, CAGE.get()));
 
-    public static final Supplier<Item> CAGE_ITEM = regItem(CAGE_NAME, () -> new CageItem(CAGE.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, CAGE_NAME))
+    public static final Supplier<Item> CAGE_ITEM = regItem(CAGE_NAME, () ->
+            new CageItem(CAGE.get(), new Item.Properties()
                     .stacksTo(16)));
 
     //jar
@@ -278,8 +273,9 @@ public class ModRegistry {
             JAR_NAME, () -> PlatHelper.newBlockEntityType(
                     JarBlockTile::new, JAR.get()));
 
-    public static final Supplier<Item> JAR_ITEM = regItem(JAR_NAME, () -> new JarItem(JAR.get(), new Item.Properties().tab(
-            getTab(CreativeModeTab.TAB_DECORATIONS, JAR_NAME)).stacksTo(16)));
+    public static final Supplier<Item> JAR_ITEM = regItem(JAR_NAME, () ->
+            new JarItem(JAR.get(), new Item.Properties()
+                    .stacksTo(16)));
 
 
     //sack
@@ -293,7 +289,7 @@ public class ModRegistry {
                     SackBlockTile::new, SackBlock.SACK_BLOCKS.toArray(Block[]::new)));
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, SACK_NAME)).stacksTo(1)));
+            new Item.Properties().stacksTo(1)));
 
     //blackboard
     public static final Supplier<Block> BLACKBOARD = regBlock(BLACKBOARD_NAME, () -> new BlackboardBlock(
@@ -304,8 +300,8 @@ public class ModRegistry {
             BLACKBOARD_NAME, () -> PlatHelper.newBlockEntityType(
                     BlackboardBlockTile::new, BLACKBOARD.get()));
 
-    public static final Supplier<Item> BLACKBOARD_ITEM = regItem(BLACKBOARD_NAME, () -> new BlackboardItem(BLACKBOARD.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, BLACKBOARD_NAME))));
+    public static final Supplier<Item> BLACKBOARD_ITEM = regItem(BLACKBOARD_NAME, () ->
+            new BlackboardItem(BLACKBOARD.get(), new Item.Properties()));
 
     //globe
     public static final Supplier<Block> GLOBE = regBlock(GLOBE_NAME, () -> new GlobeBlock(
@@ -315,12 +311,12 @@ public class ModRegistry {
                     .requiresCorrectToolForDrops()
     ));
     public static final Supplier<Item> GLOBE_ITEM = regItem(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_NAME)).rarity(Rarity.RARE)));
+            new Item.Properties().rarity(Rarity.RARE)));
 
     public static final Supplier<Block> GLOBE_SEPIA = regBlock(GLOBE_SEPIA_NAME, () -> new GlobeBlock(
             BlockBehaviour.Properties.copy(GLOBE.get())));
     public static final Supplier<Item> GLOBE_SEPIA_ITEM = regItem(GLOBE_SEPIA_NAME, () -> new BlockItem(GLOBE_SEPIA.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, GLOBE_SEPIA_NAME)).rarity(Rarity.RARE)));
+            new Item.Properties().rarity(Rarity.RARE)));
 
 
     public static final Supplier<BlockEntityType<GlobeBlockTile>> GLOBE_TILE = regTile(
@@ -338,8 +334,8 @@ public class ModRegistry {
     public static final Supplier<Block> SCONCE_WALL = regBlock("sconce_wall", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE.get()), () -> ParticleTypes.FLAME));
-    public static final Supplier<Item> SCONCE_ITEM = regItem(SCONCE_NAME, () -> new StandingAndWallBlockItem(SCONCE.get(), SCONCE_WALL.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
+    public static final Supplier<Item> SCONCE_ITEM = regItem(SCONCE_NAME, () ->
+            new StandingAndWallBlockItem(SCONCE.get(), SCONCE_WALL.get(), new Item.Properties(), Direction.DOWN));
 
     //soul
     public static final Supplier<Block> SCONCE_SOUL = regBlock(SCONCE_NAME_SOUL, () -> new SconceBlock(
@@ -349,8 +345,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(SCONCE_SOUL.get())
                     .dropsLike(SCONCE_SOUL.get()),
             () -> ParticleTypes.SOUL_FIRE_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_SOUL = regItem(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
+    public static final Supplier<Item> SCONCE_ITEM_SOUL = regItem(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(
+            SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(), new Item.Properties(), Direction.DOWN));
 
     //optional: endergetic
     public static final Supplier<Block> SCONCE_ENDER = regBlock(SCONCE_NAME_ENDER, () -> new SconceBlock(
@@ -360,8 +356,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_ENDER.get()),
             CompatObjects.ENDER_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_ENDER = regItem(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(),
-            (new Item.Properties()).tab(getTab("endergetic", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
+    public static final Supplier<Item> SCONCE_ITEM_ENDER = regItem(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(
+            SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(), new Item.Properties(), Direction.DOWN));
 
     //glow
     public static final Supplier<Block> SCONCE_GLOW = regBlock(SCONCE_NAME_GLOW, () -> new SconceBlock(
@@ -371,8 +367,8 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_GLOW.get()),
             CompatObjects.GLOW_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_GLOW = regItem(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(),
-            (new Item.Properties()).tab(getTab("infernalexp", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
+    public static final Supplier<Item> SCONCE_ITEM_GLOW = regItem(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(
+            SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(), new Item.Properties(), Direction.DOWN));
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
@@ -380,8 +376,8 @@ public class ModRegistry {
     public static final Supplier<Block> SCONCE_WALL_GREEN = regBlock("sconce_wall_green", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME_GREEN))));
+    public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(
+            SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(), new Item.Properties(), Direction.DOWN));
 
     //nether brass
     public static final Supplier<Block> SCONCE_NETHER_BRASS = regBlock(SCONCE_NAME_NETHER_BRASS, () -> new SconceBlock(
@@ -391,8 +387,9 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_NETHER_BRASS.get()),
             CompatObjects.NETHER_BRASS_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_NETHER_BRASS = regItem(SCONCE_NAME_NETHER_BRASS, () -> new StandingAndWallBlockItem(SCONCE_NETHER_BRASS.get(), SCONCE_WALL_NETHER_BRASS.get(),
-            (new Item.Properties()).tab(getTab("architects_palette", CreativeModeTab.TAB_DECORATIONS, SCONCE_NAME))));
+    public static final Supplier<Item> SCONCE_ITEM_NETHER_BRASS = regItem(SCONCE_NAME_NETHER_BRASS, () -> new StandingAndWallBlockItem(
+            SCONCE_NETHER_BRASS.get(), SCONCE_WALL_NETHER_BRASS.get(),
+            new Item.Properties(), Direction.DOWN));
 
 
     //candle holder
@@ -407,7 +404,7 @@ public class ModRegistry {
                     .lightLevel((state) -> state.getValue(LightableLanternBlock.LIT) ? 15 : 0)
                     //TODO: add custom sound mixed
                     .sound(SoundType.COPPER)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     //brass lantern
     public static final Supplier<Block> BRASS_LANTERN = regBlock(BRASS_LANTERN_NAME, () -> new LightableLanternBlock(
@@ -416,35 +413,25 @@ public class ModRegistry {
                     Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),
                     Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D))));
 
-    public static final Supplier<BlockItem> BRASS_LANTERN_ITEM = regBlockItem(BRASS_LANTERN_NAME, BRASS_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, BRASS_LANTERN_NAME), "forge:ingots/brass");
-
     //crimson lantern
     public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
-                    BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
-                            .strength(1.5f)
-                            .sound(SoundType.WOOL)
-                            .lightLevel((state) -> 15)
-                            .noOcclusion()),
-            CreativeModeTab.TAB_DECORATIONS);
+            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
+                    .strength(1.5f)
+                    .sound(SoundType.WOOL)
+                    .lightLevel((state) -> 15)
+                    .noOcclusion())
+    );
 
     //silver lantern
-    public static final Supplier<Block> SILVER_LANTERN = regBlock(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
+    public static final Supplier<Block> SILVER_LANTERN = regWithItem(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
             Block.box(4.0D, 0.0D, 4.0D, 12.0D, 9.0D, 12.0D)));
 
-    public static final Supplier<BlockItem> SILVER_LANTERN_ITEM = regBlockItem(SILVER_LANTERN_NAME, SILVER_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, SILVER_LANTERN_NAME), "forge:ingots/silver");
-
     //lead lantern
-    public static final Supplier<Block> LEAD_LANTERN = regBlock(LEAD_LANTERN_NAME, () -> new LightableLanternBlock(
+    public static final Supplier<Block> LEAD_LANTERN = regWithItem(LEAD_LANTERN_NAME, () -> new LightableLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
             Shapes.or(Block.box(4.0D, 4.0D, 4.0D, 12.0D, 7.0D, 12.0D),
                     Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D))));
-
-    public static final Supplier<BlockItem> LEAD_LANTERN_ITEM = regBlockItem(LEAD_LANTERN_NAME, LEAD_LANTERN,
-            getTab(CreativeModeTab.TAB_DECORATIONS, LEAD_LANTERN_NAME), "forge:ingots/lead");
-
 
     //rope
     public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
@@ -457,8 +444,8 @@ public class ModRegistry {
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
 
-    public static final Supplier<Item> ROPE_ITEM = regItem(ROPE_NAME, () -> new RopeItem(ROPE.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS, ROPE_NAME))));
+    public static final Supplier<Item> ROPE_ITEM = regItem(ROPE_NAME, () -> new RopeItem(
+            ROPE.get(), new Item.Properties()));
 
     public static final Supplier<BlockEntityType<RopeKnotBlockTile>> ROPE_KNOT_TILE = regTile(
             ROPE_KNOT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -476,18 +463,18 @@ public class ModRegistry {
             BAMBOO_SPIKES_NAME, () -> PlatHelper.newBlockEntityType(
                     BambooSpikesBlockTile::new, BAMBOO_SPIKES.get()));
 
-    public static final Supplier<Item> BAMBOO_SPIKES_ITEM = regItem(BAMBOO_SPIKES_NAME, () -> new BambooSpikesItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, BAMBOO_SPIKES_NAME))));
+    public static final Supplier<Item> BAMBOO_SPIKES_ITEM = regItem(BAMBOO_SPIKES_NAME, () -> new WoodBasedBlockItem(
+            BAMBOO_SPIKES.get(), new Item.Properties(), 150));
 
-    public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(BAMBOO_SPIKES.get(),
-            (new Item.Properties()).defaultDurability(BambooSpikesBlockTile.MAX_CHARGES).tab(getTab(CreativeModeTab.TAB_BREWING, TIPPED_SPIKES_NAME))));
+    public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(
+            BAMBOO_SPIKES.get(), new Item.Properties()
+            .defaultDurability(BambooSpikesBlockTile.MAX_CHARGES)));
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
-                    BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
-                            .strength(1.5f, 2f)
-                            .sound(SoundType.METAL)),
-            CreativeModeTab.TAB_DECORATIONS);
+            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+                    .strength(1.5f, 2f)
+                    .sound(SoundType.METAL)));
 
     public static final Supplier<BlockEntityType<GobletBlockTile>> GOBLET_TILE = regTile(
             GOBLET_NAME, () -> PlatHelper.newBlockEntityType(
@@ -499,7 +486,7 @@ public class ModRegistry {
                     .sound(SoundType.METAL)
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     public static final Supplier<BlockEntityType<HourGlassBlockTile>> HOURGLASS_TILE = regTile(
             HOURGLASS_NAME, () -> PlatHelper.newBlockEntityType(
@@ -512,7 +499,7 @@ public class ModRegistry {
                     .strength(0.75f, 0.1f)
                     .noOcclusion()
                     .noCollission()
-    ), CreativeModeTab.TAB_DECORATIONS, 100);
+    ), 100);
 
     public static final Supplier<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = regTile(
             ITEM_SHELF_NAME, () -> PlatHelper.newBlockEntityType(
@@ -524,7 +511,7 @@ public class ModRegistry {
                     .strength(0.1F)
                     .sound(SoundType.WOOL)
                     .noOcclusion()
-    ), CreativeModeTab.TAB_DECORATIONS, 134);
+    ), 134);
 
     public static final Supplier<BlockEntityType<DoormatBlockTile>> DOORMAT_TILE = regTile(
             DOORMAT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -534,14 +521,14 @@ public class ModRegistry {
     //public static final Supplier<Block> MAGMA_CREAM_BLOCK = regBlock(MAGMA_CREAM_BLOCK_NAME, () -> new MagmaCreamBlock(
     //        BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)));
     //public static final Supplier<Item> MAGMA_CREAM_BLOCK_ITEM = regItem(MAGMA_CREAM_BLOCK_NAME, () -> new BlockItem(MAGMA_CREAM_BLOCK.get(),
-    //        (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_DECORATIONS, MAGMA_CREAM_BLOCK_NAME))));
+    //        (new Item.Properties()).tab(getTab( MAGMA_CREAM_BLOCK_NAME))));
 
     //raked gravel
     public static final Supplier<Block> RAKED_GRAVEL = regWithItem(RAKED_GRAVEL_NAME, () -> new RakedGravelBlock(
             BlockBehaviour.Properties.copy(Blocks.GRAVEL)
                     .isViewBlocking((w, s, p) -> true)
                     .isSuffocating((w, s, p) -> true)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     //redstone blocks
 
@@ -551,12 +538,12 @@ public class ModRegistry {
                     .strength(3f, 6f)
                     .sound(SoundType.COPPER)
                     .requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //diode block
     public static final Supplier<Block> RELAYER = regWithItem(RELAYER_NAME, () -> new RelayerBlock(
             BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
@@ -567,7 +554,7 @@ public class ModRegistry {
                     .isRedstoneConductor((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
                     .isSuffocating((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
                     .isViewBlocking((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     public static final Supplier<Block> SPRING_LAUNCHER_HEAD = regBlock(PISTON_LAUNCHER_HEAD_NAME, () -> new SpringLauncherHeadBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
@@ -594,7 +581,7 @@ public class ModRegistry {
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
         return CompatHandler.COMPUTERCRAFT ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
-    }, CreativeModeTab.TAB_REDSTONE, 300);
+    }, 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
             SPEAKER_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -605,7 +592,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
                     .strength(0.75f, 2f)
                     .sound(SoundType.STONE)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     public static final Supplier<BlockEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = regTile(
             TURN_TABLE_NAME, () -> PlatHelper.newBlockEntityType(
@@ -617,13 +604,13 @@ public class ModRegistry {
                     .sound(SoundType.GLASS)
                     .isValidSpawn((s, w, p, g) -> true)
                     .strength(0.3f, 0.3f)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
             BlockBehaviour.Properties.copy(Blocks.BARREL)
-    ), CreativeModeTab.TAB_DECORATIONS, 300);
+    ), 300);
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
             PULLEY_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -635,7 +622,7 @@ public class ModRegistry {
                     .requiresCorrectToolForDrops()
                     .strength(5.0F)
                     .sound(SoundType.METAL)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //bellows
     public static final Supplier<Block> BELLOWS = regWithItem(BELLOWS_NAME, () -> new BellowsBlock(
@@ -643,7 +630,7 @@ public class ModRegistry {
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
                     .noOcclusion()
-    ), CreativeModeTab.TAB_REDSTONE, 300);
+    ), 300);
 
     public static final Supplier<BlockEntityType<BellowsBlockTile>> BELLOWS_TILE = regTile(
             BELLOWS_NAME, () -> PlatHelper.newBlockEntityType(
@@ -655,7 +642,7 @@ public class ModRegistry {
                     .strength(3f, 6f)
                     .sound(SoundType.WOOD)
                     .lightLevel((state) -> 1)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     public static final Supplier<BlockEntityType<ClockBlockTile>> CLOCK_BLOCK_TILE = regTile(
             CLOCK_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -666,13 +653,13 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
                     .sound(SoundType.POLISHED_DEEPSLATE)
                     .strength(0.5f, 0.5f)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //sconce lever
     public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
             BlockBehaviour.Properties.copy(SCONCE.get()),
             () -> ParticleTypes.FLAME
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //crank
     public static final Supplier<Block> CRANK = regWithItem(CRANK_NAME, () -> new CrankBlock(
@@ -680,7 +667,7 @@ public class ModRegistry {
                     .strength(0.6f, 0.6f)
                     .noCollission()
                     .noOcclusion()
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //wind vane
     public static final Supplier<Block> WIND_VANE = regWithItem(WIND_VANE_NAME, () -> new WindVaneBlock(
@@ -689,7 +676,7 @@ public class ModRegistry {
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.METAL)
                     .noOcclusion()
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     public static final Supplier<BlockEntityType<WindVaneBlockTile>> WIND_VANE_TILE = regTile(
             WIND_VANE_NAME, () -> PlatHelper.newBlockEntityType(
@@ -701,7 +688,7 @@ public class ModRegistry {
                     .strength(3f, 4.8f)
                     .sound(SoundType.METAL)
                     .noOcclusion()
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     public static final Supplier<BlockEntityType<FaucetBlockTile>> FAUCET_TILE = regTile(
             FAUCET_NAME, () -> PlatHelper.newBlockEntityType(
@@ -711,53 +698,45 @@ public class ModRegistry {
     public static final Supplier<Block> GOLD_DOOR = regWithItem(GOLD_DOOR_NAME, () -> new GoldDoorBlock(
             BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
                     .noOcclusion()
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //gold trapdoor
     public static final Supplier<Block> GOLD_TRAPDOOR = regWithItem(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
             BlockBehaviour.Properties.copy(GOLD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //silver door
-    public static final Supplier<Block> SILVER_DOOR = regBlock(SILVER_DOOR_NAME, () -> new SilverDoorBlock(
+    public static final Supplier<Block> SILVER_DOOR = regWithItem(SILVER_DOOR_NAME, () -> new SilverDoorBlock(
             BlockBehaviour.Properties.of(Material.METAL)
                     .strength(4.0F, 5.0F)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final Supplier<BlockItem> SILVER_DOOR_ITEM = regBlockItem(SILVER_DOOR_NAME, SILVER_DOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_DOOR_NAME), "forge:ingots/silver");
 
     //silver trapdoor
-    public static final Supplier<Block> SILVER_TRAPDOOR = regBlock(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
+    public static final Supplier<Block> SILVER_TRAPDOOR = regWithItem(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
             BlockBehaviour.Properties.copy(SILVER_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final Supplier<BlockItem> SILVER_TRAPDOOR_ITEM = regBlockItem(SILVER_TRAPDOOR_NAME, SILVER_TRAPDOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, SILVER_TRAPDOOR_NAME), "forge:ingots/silver");
 
     //lead door
-    public static final Supplier<Block> LEAD_DOOR = regBlock(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
+    public static final Supplier<Block> LEAD_DOOR = regWithItem(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
             BlockBehaviour.Properties.of(Material.METAL)
                     .strength(5.0f, 6.0f)
                     .sound(SoundType.METAL)
                     .noOcclusion()));
-    public static final Supplier<BlockItem> LEAD_DOOR_ITEM = regBlockItem(LEAD_DOOR_NAME, LEAD_DOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_DOOR_NAME), "forge:ingots/lead");
-
     //lead trapdoor
-    public static final Supplier<Block> LEAD_TRAPDOOR = regBlock(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
+    public static final Supplier<Block> LEAD_TRAPDOOR = regWithItem(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
             BlockBehaviour.Properties.copy(LEAD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)));
-    public static final Supplier<BlockItem> LEAD_TRAPDOOR_ITEM = regBlockItem(LEAD_TRAPDOOR_NAME, LEAD_TRAPDOOR,
-            getTab(CreativeModeTab.TAB_REDSTONE, LEAD_TRAPDOOR_NAME), "forge:ingots/lead");
-
 
     //netherite doors
     public static final Supplier<Block> NETHERITE_DOOR = regBlock(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).noOcclusion()
+            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+                    .noOcclusion()
     ));
-    public static final Supplier<Item> NETHERITE_DOOR_ITEM = regItem(NETHERITE_DOOR_NAME, () -> new BlockItem(NETHERITE_DOOR.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_DOOR_NAME)).fireResistant()));
+    public static final Supplier<Item> NETHERITE_DOOR_ITEM = regItem(NETHERITE_DOOR_NAME, () -> new BlockItem(
+            NETHERITE_DOOR.get(), new Item.Properties()
+            .fireResistant()));
 
     //netherite trapdoor
     public static final Supplier<Block> NETHERITE_TRAPDOOR = regBlock(NETHERITE_TRAPDOOR_NAME, () -> new NetheriteTrapdoorBlock(
@@ -765,8 +744,9 @@ public class ModRegistry {
                     .noOcclusion()
                     .isValidSpawn((a, b, c, d) -> false)
     ));
-    public static final Supplier<Item> NETHERITE_TRAPDOOR_ITEM = regItem(NETHERITE_TRAPDOOR_NAME, () -> new BlockItem(NETHERITE_TRAPDOOR.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_REDSTONE, NETHERITE_TRAPDOOR_NAME)).fireResistant()));
+    public static final Supplier<Item> NETHERITE_TRAPDOOR_ITEM = regItem(NETHERITE_TRAPDOOR_NAME, () -> new BlockItem(
+            NETHERITE_TRAPDOOR.get(), new Item.Properties()
+            .fireResistant()));
 
     public static final Supplier<BlockEntityType<KeyLockableTile>> KEY_LOCKABLE_TILE = regTile(
             "key_lockable_tile", () -> PlatHelper.newBlockEntityType(
@@ -775,12 +755,11 @@ public class ModRegistry {
     //iron gate
     public static final Supplier<Block> IRON_GATE = regWithItem(IRON_GATE_NAME, () -> new IronGateBlock(
             BlockBehaviour.Properties.copy(Blocks.IRON_BARS), false
-    ), CreativeModeTab.TAB_REDSTONE);
+    ));
 
     //gold gate
     public static final Supplier<Block> GOLD_GATE = regWithItem(GOLD_GATE_NAME, () -> new IronGateBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS), true
-    ), CreativeModeTab.TAB_REDSTONE, "quark");
+            BlockBehaviour.Properties.copy(Blocks.IRON_BARS), true));
 
     //wall lantern
     public static final Supplier<WallLanternBlock> WALL_LANTERN = regBlock(WALL_LANTERN_NAME, () -> {
@@ -819,18 +798,16 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE)
                     .requiresCorrectToolForDrops()
                     .strength(1.5F, 6.0F)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //slab
     public static final Supplier<Block> CHECKER_SLAB = regWithItem(CHECKER_SLAB_NAME, () -> new SlabBlock(
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //vertical slab
     public static final Supplier<Block> CHECKER_VERTICAL_SLAB = regWithItem(CHECKER_VERTICAL_SLAB_NAME, () -> new VerticalSlabBlock(
-                    BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
-            ), CreativeModeTab.TAB_BUILDING_BLOCKS, "quark"
-    );
+            BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())));
 
     //pancakes
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
@@ -838,11 +815,11 @@ public class ModRegistry {
                     .strength(0.5F)
                     .sound(SoundType.WOOL))
     );
-    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(PANCAKE.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_FOOD, PANCAKE_NAME))
-    ));
+    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(
+            PANCAKE.get(), new Item.Properties()));
+
     public static final Supplier<Item> PANCAKE_DISC = regItem("pancake_disc",
-            () -> PlatHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties().tab(null), 345));
+            () -> PlatHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties(), 345));
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
@@ -854,15 +831,14 @@ public class ModRegistry {
                     .sound(SoundType.CROP))
     );
 
-    public static final Supplier<Item> FLAX_ITEM = regItem(FLAX_NAME, () -> new Item(
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, FLAX_NAME))));
+    public static final Supplier<Item> FLAX_ITEM = regItem(FLAX_NAME, () -> new Item(new Item.Properties()));
 
-    public static final Supplier<Item> FLAX_SEEDS_ITEM = regItem("flax_seeds", () -> new ItemNameBlockItem(FLAX.get(),
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, FLAX_NAME))));
+    public static final Supplier<Item> FLAX_SEEDS_ITEM = regItem("flax_seeds", () -> new ItemNameBlockItem(
+            FLAX.get(), new Item.Properties()));
 
     public static final Supplier<Block> FLAX_WILD = regWithItem(FLAX_WILD_NAME, () -> new WildFlaxBlock(
             BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).offsetType(BlockBehaviour.OffsetType.NONE)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     //pot
     public static final Supplier<Block> FLAX_POT = regBlock("potted_flax", () -> PlatHelper.newFlowerPot(
@@ -871,19 +847,18 @@ public class ModRegistry {
     //fodder
     public static final Supplier<Block> FODDER = regWithItem(FODDER_NAME, () -> new FodderBlock(
             BlockBehaviour.Properties.copy(Blocks.MOSS_BLOCK)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //flax block
     public static final Supplier<Block> FLAX_BLOCK = regWithItem(FLAX_BLOCK_NAME, () -> new FlaxBaleBlock(
             BlockBehaviour.Properties.of(Material.GRASS, MaterialColor.TERRACOTTA_LIGHT_GREEN)
                     .strength(0.5F)
                     .sound(SoundType.GRASS)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //boat in a jar
     public static final Supplier<Block> JAR_BOAT = regWithItem(JAR_BOAT_NAME, () -> new JarBoatBlock(
-            BlockBehaviour.Properties.copy(Blocks.GLASS)
-    ), (CreativeModeTab) null);
+            BlockBehaviour.Properties.copy(Blocks.GLASS)));
 
     public static final Supplier<BlockEntityType<JarBoatTile>> JAR_BOAT_TILE = regTile(
             JAR_BOAT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -897,8 +872,8 @@ public class ModRegistry {
             STRUCTURE_TEMP_NAME, () -> PlatHelper.newBlockEntityType(
                     StructureTempBlockTile::new, STRUCTURE_TEMP.get()));
 
-    public static final Supplier<BlockPlacerItem> BLOCK_PLACER = regItem("placeable_item", () -> new BlockPlacerItem(STRUCTURE_TEMP.get(),
-            (new Item.Properties()).tab(null)));
+    public static final Supplier<BlockPlacerItem> BLOCK_PLACER = regItem("placeable_item", () -> new BlockPlacerItem(
+            STRUCTURE_TEMP.get(), new Item.Properties()));
 
     public static final Supplier<Block> BLOCK_GENERATOR = regBlock(BLOCK_GENERATOR_NAME, () -> new BlockGeneratorBlock(
             BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));
@@ -943,22 +918,22 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SNOW)
                     .sound(SoundType.PACKED_MUD)
                     .strength(1.5f, 3f)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //wattle and daub
     //frame
     public static final RegSupplier<Block> DAUB_FRAME = regWithItem(DAUB_FRAME_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(DAUB.get())
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
     //brace
     public static final RegSupplier<Block> DAUB_BRACE = regWithItem(DAUB_BRACE_NAME, () -> new FlippedBlock(
             BlockBehaviour.Properties.copy(DAUB.get())
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //cross brace
     public static final RegSupplier<Block> DAUB_CROSS_BRACE = regWithItem(DAUB_CROSS_BRACE_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(DAUB.get())
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //timber frame
     public static final RegSupplier<FrameBlock> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
@@ -968,24 +943,24 @@ public class ModRegistry {
                 .dynamicShape().sound(SoundType.SCAFFOLDING);
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
     });
-    public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(TIMBER_FRAME.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(
+            TIMBER_FRAME.get(), new Item.Properties(), 200));
 
     //timber brace
     public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
         return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
     });
-    public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(TIMBER_BRACE.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(
+            TIMBER_BRACE.get(), new Item.Properties(), 200));
 
     //timber cross brace
     public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
     });
-    public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(TIMBER_CROSS_BRACE.get(),
-            new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, TIMBER_FRAME_NAME)), 200));
+    public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(
+            TIMBER_CROSS_BRACE.get(), new Item.Properties(), 200));
 
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
             TIMBER_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
@@ -994,20 +969,19 @@ public class ModRegistry {
     //lapis bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
-                            .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F),
-                    isDisabled(LAPIS_BRICKS_NAME));
+                    .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F));
 
     //ashen bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
-            RegHelper.registerFullBlockSet(res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS, isDisabled(ASH_BRICKS_NAME));
+            RegHelper.registerFullBlockSet(res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS);
 
     //stone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
-            RegHelper.registerFullBlockSet(res(STONE_TILE_NAME), Blocks.STONE_BRICKS, isDisabled(STONE_TILE_NAME));
+            RegHelper.registerFullBlockSet(res(STONE_TILE_NAME), Blocks.STONE_BRICKS);
 
     //blackstone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> BLACKSTONE_TILE_BLOCKS =
-            RegHelper.registerFullBlockSet(res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE, isDisabled(BLACKSTONE_TILE_NAME));
+            RegHelper.registerFullBlockSet(res(BLACKSTONE_TILE_NAME), Blocks.BLACKSTONE);
 
     //stone lamp
     public static final Supplier<Block> STONE_LAMP = regWithItem(STONE_LAMP_NAME, () -> new Block(
@@ -1015,7 +989,7 @@ public class ModRegistry {
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
                     .sound(SoundType.STONE)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //blackstone lamp
     public static final Supplier<Block> BLACKSTONE_LAMP = regWithItem(BLACKSTONE_LAMP_NAME, () -> new RotatedPillarBlock(
@@ -1023,23 +997,23 @@ public class ModRegistry {
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
                     .sound(SoundType.STONE)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //deepslate lamp
     public static final Supplier<Block> DEEPSLATE_LAMP = regWithItem(DEEPSLATE_LAMP_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).lightLevel(s -> 15)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //end_stone lamp
     public static final Supplier<Block> END_STONE_LAMP = regWithItem(END_STONE_LAMP_NAME, () -> new EndLampBlock(
             BlockBehaviour.Properties.copy(Blocks.END_STONE).lightLevel(s -> 15)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //flower box
     public static final Supplier<Block> FLOWER_BOX = regWithItem(FLOWER_BOX_NAME, () -> {
         var p = BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F);
         return /*CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : */new FlowerBoxBlock(p);
-    }, CreativeModeTab.TAB_DECORATIONS);
+    });
 
     public static final Supplier<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = regTile(FLOWER_BOX_NAME, () ->
             PlatHelper.newBlockEntityType(FlowerBoxBlockTile::new, FLOWER_BOX.get()));
@@ -1048,7 +1022,7 @@ public class ModRegistry {
     public static final Supplier<Block> STATUE = regWithItem(STATUE_NAME, () -> new StatueBlock(
             BlockBehaviour.Properties.of(Material.STONE)
                     .strength(2)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     public static final Supplier<BlockEntityType<StatueBlockTile>> STATUE_TILE = regTile(
             STATUE_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1058,20 +1032,20 @@ public class ModRegistry {
     public static final Supplier<Block> FEATHER_BLOCK = regWithItem(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
             BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f)
                     .noCollission()
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //flint block
     public static final Supplier<Block> FLINT_BLOCK = regWithItem(FLINT_BLOCK_NAME, () -> new FlintBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)
-    ), CreativeModeTab.TAB_BUILDING_BLOCKS);
+    ));
 
     //sugar block
     public static final Supplier<Block> SUGAR_CUBE = regBlock(SUGAR_CUBE_NAME, () -> new SugarBlock(
             BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
     ));
     public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_CUBE_NAME, () -> new SugarCubeItem(
-            SUGAR_CUBE.get(), new Item.Properties().tab(getTab(CreativeModeTab.TAB_BUILDING_BLOCKS, SUGAR_CUBE_NAME))
-    ));
+            SUGAR_CUBE.get(), new Item.Properties())
+    );
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regPlaceableItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
@@ -1097,7 +1071,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.WOOD)
                     .sound(SoundType.GLASS)
                     .strength(0.1f, 0)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     public static final Supplier<BlockEntityType<UrnBlockTile>> URN_TILE = regTile(
             URN_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1107,23 +1081,21 @@ public class ModRegistry {
     public static final Supplier<Block> ASH_BLOCK = regWithItem(ASH_NAME, () -> new AshLayerBlock(
             BlockBehaviour.Properties.of(Material.TOP_SNOW, MaterialColor.COLOR_GRAY)
                     .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()
-    ), CreativeModeTab.TAB_MISC);
+    ));
 
 
     //ash
-    public static final Supplier<Item> ASH_BRICK_ITEM = regItem(ASH_BRICK_NAME, () -> new Item(
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, ASH_BRICKS_NAME))));
+    public static final Supplier<Item> ASH_BRICK_ITEM = regItem(ASH_BRICK_NAME, () -> new Item(new Item.Properties()));
 
     //soap
-    public static final Supplier<Item> SOAP = regItem(SOAP_NAME, () -> new SoapItem(
-            (new Item.Properties()).tab(getTab(CreativeModeTab.TAB_MISC, SOAP_NAME))));
+    public static final Supplier<Item> SOAP = regItem(SOAP_NAME, () -> new SoapItem(new Item.Properties()));
 
     public static final Supplier<Block> SOAP_BLOCK = regWithItem(SOAP_BLOCK_NAME, () -> new SoapBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_PINK)
                     .friction(0.94f)
                     .strength(1.25F, 4.0F)
                     .sound(SoundType.CORAL_BLOCK)
-    ), CreativeModeTab.TAB_DECORATIONS);
+    ));
 
     //stackable skulls
     public static final Supplier<Block> SKULL_PILE = regBlock(SKULL_PILE_NAME, () -> {
@@ -1170,7 +1142,7 @@ public class ModRegistry {
                     .instabreak())
     );
     public static final Supplier<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BubbleBlockItem(
-            BUBBLE_BLOCK.get(), (new Item.Properties()).tab(null)));
+            BUBBLE_BLOCK.get(), new Item.Properties()));
 
     public static final Supplier<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = regTile(
             BUBBLE_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1185,7 +1157,7 @@ public class ModRegistry {
     );
     public static final Supplier<Item> ENDERMAN_SKULL_ITEM = regItem(ENDERMAN_HEAD_NAME, () ->
             new EndermanHeadItem(ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get(),
-                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_DECORATIONS,ENDERMAN_HEAD_NAME)).rarity(Rarity.UNCOMMON)));
+                    new Item.Properties().rarity(Rarity.UNCOMMON)));
 
     public static final Supplier<BlockEntityType<EndermanSkullBlockTile>> ENDERMAN_SKULL_TILE = regTile(
             ENDERMAN_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1196,18 +1168,4 @@ public class ModRegistry {
             new AshenBasaltBlock(BlockBehaviour.Properties.copy(Blocks.BASALT))
     );
 
-    //public static final String CRE
-    // ATIVE_WAND = "creative_wand";
-    //public static final Supplier<Item> TELEPORT_WAND = regItem(CREATIVE_WAND, () ->
-    //        new TeleportWand((new Item.Properties()).tab(null)));
-    /* //magnetic driver?
-    public static final String REDSTONE_DRIVER_NAME = "redstone_driver";
-    public static final Supplier<Block> REDSTONE_DRIVER = regBlock(REDSTONE_DRIVER_NAME,()-> new RedstoneDriverBlock(
-            AbstractBlock.Properties.copy(Blocks.REPEATER)));
-    public static final Supplier<Item> REDSTONE_DRIVER_ITEM = regItem(REDSTONE_DRIVER_NAME,()-> new BlockItem(REDSTONE_DRIVER.get(),
-            (new Item.Properties()).tab(getTab(ItemGroup.TAB_REDSTONE,REDSTONE_DRIVER_NAME))));
-
-
-
-    */
 }

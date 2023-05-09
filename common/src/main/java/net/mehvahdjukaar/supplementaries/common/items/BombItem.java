@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,15 +33,6 @@ public class BombItem extends Item {
 
     public BombEntity.BombType getType() {
         return type;
-    }
-
-    @Override
-    protected boolean allowedIn(CreativeModeTab pCategory) {
-        if(this.type == BombEntity.BombType.SPIKY && !BuiltInRegistries.ITEM.getTagOrEmpty(TagKey.create(BuiltInRegistries.ITEM_REGISTRY,
-                new ResourceLocation("forge:ingots/lead"))).iterator().hasNext()){
-            return false;
-        }
-        return super.allowedIn(pCategory);
     }
 
     @Override
