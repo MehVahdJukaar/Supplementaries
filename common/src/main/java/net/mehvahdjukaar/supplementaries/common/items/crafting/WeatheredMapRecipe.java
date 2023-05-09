@@ -15,12 +15,18 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
+import java.lang.ref.WeakReference;
+
 public class WeatheredMapRecipe extends CustomRecipe {
     public WeatheredMapRecipe(ResourceLocation idIn) {
         super(idIn);
     }
 
-    private Level lastWorld = null;
+    private static WeakReference<ServerLevel> lastLevelHack = null;
+
+    public static void onWorldUnload(){
+        lastLevelHack = null;
+    }
 
     @Override
     public boolean matches(CraftingContainer inv, Level worldIn) {
@@ -48,8 +54,8 @@ public class WeatheredMapRecipe extends CustomRecipe {
             } else return false;
         }
         boolean match = itemstack != null && itemstack1 != null;
-        if (match) {
-            lastWorld = worldIn;
+        if (match && worldIn instanceof ServerLevel serverLevel) {
+            lastLevelHack = new WeakReference(serverLevel);
         }
         return match;
     }
@@ -72,8 +78,8 @@ public class WeatheredMapRecipe extends CustomRecipe {
             if (stack.getItem() instanceof MapItem) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
-                if (lastWorld instanceof ServerLevel level) {
-                    WeatheredMap.setAntique(level, s, antique);
+                if (lastLevelHack != null) {
+                    WeatheredMap.setAntique(lastLevelHack.get(), s, antique);
                     AntiqueInkHelper.setAntiqueInk(s,true);
                 }
                 return s;

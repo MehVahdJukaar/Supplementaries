@@ -226,17 +226,17 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         return super.use(world, playerEntity, hand);
     }
 
-    private JarBlockTile DUMMY_TILE = null;
+    private JarBlockTile dummyTile = null;
 
     @Override
     public int getUseDuration(ItemStack stack) {
         if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-                if (DUMMY_TILE == null)
-                    DUMMY_TILE = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-                DUMMY_TILE.load(tag);
-                SoftFluidTank fh = DUMMY_TILE.getSoftFluidTank();
+                if (dummyTile == null)
+                    dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
+                dummyTile.load(tag);
+                SoftFluidTank fh = dummyTile.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
                 return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
