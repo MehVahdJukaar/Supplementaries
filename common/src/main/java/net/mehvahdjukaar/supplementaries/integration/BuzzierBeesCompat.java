@@ -25,8 +25,7 @@ public class BuzzierBeesCompat {
     public static void registerCandle(ResourceLocation id) {
         var name = id.getPath() + "_soul";
         var b = RegHelper.registerBlockWithItem(new ResourceLocation(id.getNamespace(), name), () -> new CandleHolderBlock(null,
-                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), CompatObjects.SMALL_SOUL_FLAME),
-                getTab( CANDLE_HOLDER_NAME));
+                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), CompatObjects.SMALL_SOUL_FLAME));
         SOUL_CANDLE_HOLDERS.add(b);
     }
 

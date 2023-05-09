@@ -2,6 +2,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:items/quiver_full"
+    "layer0": "supplementaries: item/quiver_full"
   }
 }

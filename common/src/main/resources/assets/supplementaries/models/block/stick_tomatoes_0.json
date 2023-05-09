@@ -4,7 +4,7 @@
 	"textures": {
 		"crop": "farmersdelight:block/tomatoes_vine_stage0",
 		"2": "farmersdelight:block/tomatoes_coiled_rope",
-		"rope_side": "supplementaries:blocks/stick",
-		"rope_top": "supplementaries:blocks/stick"
+		"rope_side": "supplementaries:block/stick",
+		"rope_top": "supplementaries:block/stick"
 	}
 }

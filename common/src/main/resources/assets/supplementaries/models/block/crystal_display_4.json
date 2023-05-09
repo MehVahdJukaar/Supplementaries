@@ -3,10 +3,10 @@
 	"parent": "supplementaries:block/crystal_display_1",
 	"render_type": "cutout",
 	"textures": {
-		"0": "supplementaries:blocks/display_side",
-		"2": "supplementaries:blocks/display_4",
-		"3": "supplementaries:blocks/display_front",
-		"4": "supplementaries:blocks/display_back",
-		"particle": "supplementaries:blocks/display_side"
+		"0": "supplementaries:block/display_side",
+		"2": "supplementaries:block/display_4",
+		"3": "supplementaries:block/display_front",
+		"4": "supplementaries:block/display_back",
+		"particle": "supplementaries:block/display_side"
 	}
 }

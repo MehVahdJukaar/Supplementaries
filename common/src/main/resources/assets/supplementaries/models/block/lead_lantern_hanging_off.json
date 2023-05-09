@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:blocks/lead_lantern_off",
-		"particle": "supplementaries:blocks/lead_lantern_off"
+		"1": "supplementaries:block/lead_lantern_off",
+		"particle": "supplementaries:block/lead_lantern_off"
 	},
 	"elements": [
 		{

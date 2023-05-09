@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/bamboo_spikes"
+		"layer0": "supplementaries: item/bamboo_spikes"
 	}
 }

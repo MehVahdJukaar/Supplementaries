@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/goblet",
-		"particle": "supplementaries:blocks/goblet"
+		"0": "supplementaries:block/goblet",
+		"particle": "supplementaries:block/goblet"
 	},
 	"elements": [
 		{

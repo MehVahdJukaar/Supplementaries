@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "supplementaries:blocks/magma_cream_block_inner",
-		"particle": "supplementaries:blocks/magma_cream_block_side",
-		"side": "supplementaries:blocks/magma_cream_block_side",
-		"platform": "supplementaries:blocks/magma_cream_block_top",
-		"bottom": "supplementaries:blocks/magma_cream_block_bottom"
+		"3": "supplementaries:block/magma_cream_block_inner",
+		"particle": "supplementaries:block/magma_cream_block_side",
+		"side": "supplementaries:block/magma_cream_block_side",
+		"platform": "supplementaries:block/magma_cream_block_top",
+		"bottom": "supplementaries:block/magma_cream_block_bottom"
 	},
 	"elements": [
 		{

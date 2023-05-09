@@ -1,11 +1,11 @@
 {
   "parent": "builtin/entity",
   "textures": {
-    "0": "supplementaries:blocks/jar_side",
-    "1": "supplementaries:blocks/jar_top",
-    "2": "supplementaries:blocks/jar_cork",
-    "3": "supplementaries:blocks/jar_bottom",
-    "4": "supplementaries:blocks/firefly"
+    "0": "supplementaries:block/jar_side",
+    "1": "supplementaries:block/jar_top",
+    "2": "supplementaries:block/jar_cork",
+    "3": "supplementaries:block/jar_bottom",
+    "4": "supplementaries:block/firefly"
   },
 	"display": {
 		"thirdperson_righthand": {

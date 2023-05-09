@@ -32,7 +32,7 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "name": "supplementaries:blocks/urn_loot/urn_loot",
+          "name": "supplementaries:block/urn_loot/urn_loot",
           "conditions": [
             {
               "condition": "minecraft:block_state_property",

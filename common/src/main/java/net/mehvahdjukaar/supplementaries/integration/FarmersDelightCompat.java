@@ -34,13 +34,13 @@ public class FarmersDelightCompat {
     public static final String PLANTER_RICH_NAME = "planter_rich";
     public static final Supplier<Block> PLANTER_RICH = RegUtils.regWithItem(PLANTER_RICH_NAME, () ->
             new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
-                    .randomTicks(), CompatObjects.RICH_SOIL), CreativeModeTab.TAB_DECORATIONS);
+                    .randomTicks(), CompatObjects.RICH_SOIL));
 
     public static final String PLANTER_RICH_SOUL_NAME = "planter_rich_soul";
     public static final Supplier<Block> PLANTER_RICH_SOUL = !CompatHandler.NETHERSDELIGHT ? null :
             RegUtils.regWithItem(PLANTER_RICH_SOUL_NAME, () ->
                     new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
-                            .randomTicks(), CompatObjects.RICH_SOUL_SOIL), CreativeModeTab.TAB_DECORATIONS);
+                            .randomTicks(), CompatObjects.RICH_SOUL_SOIL));
 
 
     @ExpectPlatform
@@ -80,7 +80,7 @@ public class FarmersDelightCompat {
         }
 
         @Override
-        public List<ItemStack> getDrops(BlockState p_220076_1_, LootContext.Builder p_220076_2_) {
+        public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
             return Collections.singletonList(new ItemStack(this));
         }
 

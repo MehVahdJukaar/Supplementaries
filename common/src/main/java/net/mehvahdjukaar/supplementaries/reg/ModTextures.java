@@ -30,20 +30,20 @@ public class ModTextures {
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
 
     //blocks (to stitch)
-    public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("blocks/fishies");
+    public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("entity/bellows");
-    public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("blocks/clock_hand");
-    public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("blocks/hourglass_redstone");
-    public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("blocks/hourglass_glowstone");
-    public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("blocks/hourglass_blaze");
-    public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("blocks/hourglass_gunpowder");
-    public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("blocks/blackboard_grid");
+    public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
+    public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("block/hourglass_redstone");
+    public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("block/hourglass_glowstone");
+    public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("block/hourglass_blaze");
+    public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("block/hourglass_gunpowder");
+    public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("block/blackboard_grid");
 
 
-    public static final ResourceLocation SUGAR = Supplementaries.res("blocks/sugar");
-    public static final ResourceLocation ASH = Supplementaries.res("blocks/ash");
-    public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("blocks/timber_cross_brace");
-    public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("blocks/blackboard");
+    public static final ResourceLocation SUGAR = Supplementaries.res("block/sugar");
+    public static final ResourceLocation ASH = Supplementaries.res("block/ash");
+    public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("block/timber_cross_brace");
+    public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("block/blackboard");
 
     //entities
     public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res("textures/entity/globes/globe_the_world.png");
@@ -88,7 +88,7 @@ public class ModTextures {
     public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
     public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("entity/books/book_and_quill");
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
-    public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("blocks/bubble_block");
+    public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
 
     public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = Util.make(() -> {
         Map<Block, ResourceLocation> map = new LinkedHashMap<>();

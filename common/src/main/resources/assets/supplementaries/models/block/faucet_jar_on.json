@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/faucet",
-		"particle": "supplementaries:blocks/faucet"
+		"0": "supplementaries:block/faucet",
+		"particle": "supplementaries:block/faucet"
 	},
 	"elements": [
 		{

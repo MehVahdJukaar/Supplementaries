@@ -7,8 +7,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 
 public class ModSoftFluids {
 
-    public static final DataObjectReference<SoftFluid> DIRT = new DataObjectReference<>(Supplementaries.res("dirt"), SoftFluidRegistry.getRegistryKey());
-    public static final DataObjectReference<SoftFluid> SAP = new DataObjectReference<>(Supplementaries.res("sap"), SoftFluidRegistry.getRegistryKey());
+    public static final DataObjectReference<SoftFluid> DIRT = new DataObjectReference<>(Supplementaries.res("dirt"), SoftFluidRegistry.KEY);
+    public static final DataObjectReference<SoftFluid> SAP = new DataObjectReference<>(Supplementaries.res("sap"), SoftFluidRegistry.KEY);
 
 
 }

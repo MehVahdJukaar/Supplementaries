@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"end": "supplementaries:blocks/pulley_top",
-		"side": "supplementaries:blocks/pulley_side_rope"
+		"end": "supplementaries:block/pulley_top",
+		"side": "supplementaries:block/pulley_side_rope"
 	},
 	"elements": [
 		{

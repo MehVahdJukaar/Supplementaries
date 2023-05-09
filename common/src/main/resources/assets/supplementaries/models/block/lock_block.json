@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "supplementaries:blocks/lock_block"
+    "all": "supplementaries:block/lock_block"
   }
 }

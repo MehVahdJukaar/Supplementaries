@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"0": "supplementaries:blocks/item_shelf",
-		"particle": "supplementaries:blocks/item_shelf"
+		"0": "supplementaries:block/item_shelf",
+		"particle": "supplementaries:block/item_shelf"
 	},
 	"elements": [
 		{

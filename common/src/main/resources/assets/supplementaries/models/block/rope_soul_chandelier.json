@@ -2,7 +2,7 @@
 	"credit": "Decorative Blocks mod",
 	"parent": "supplementaries:block/rope_chandelier",
 	"textures": {
-		"3": "supplementaries:blocks/rope",
+		"3": "supplementaries:block/rope",
 		"particle": "decorative_blocks:block/chandelier_base",
 		"torch2": "decorative_blocks:block/soul_torch_2",
 		"torch": "decorative_blocks:block/soul_torch_1",

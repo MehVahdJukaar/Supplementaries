@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"0": "supplementaries:blocks/jar_tinted_side",
-		"1": "supplementaries:blocks/jar_tinted_top",
-		"3": "supplementaries:blocks/jar_tinted_bottom",
-		"particle": "supplementaries:blocks/jar_tinted_side"
+		"0": "supplementaries:block/jar_tinted_side",
+		"1": "supplementaries:block/jar_tinted_top",
+		"3": "supplementaries:block/jar_tinted_bottom",
+		"particle": "supplementaries:block/jar_tinted_side"
 	},
 	"elements": [
 		{

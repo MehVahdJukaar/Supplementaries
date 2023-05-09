@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -25,7 +26,7 @@ public class LeadTrapdoorBlock extends TrapDoorBlock {
     public static final IntegerProperty OPENING_PROGRESS = ModBlockProperties.OPENING_PROGRESS;
 
     public LeadTrapdoorBlock(Properties properties) {
-        super(properties);
+        super(properties, BlockSetType.IRON);
     }
 
     @Override

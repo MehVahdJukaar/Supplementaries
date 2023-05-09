@@ -3,8 +3,8 @@
   
 
 	"textures": {
-		"particle": "supplementaries:blocks/cog_block_on",
-		"all": "supplementaries:blocks/cog_block_on"
+		"particle": "supplementaries:block/cog_block_on",
+		"all": "supplementaries:block/cog_block_on"
 	},
   "display": {
     "thirdperson": {

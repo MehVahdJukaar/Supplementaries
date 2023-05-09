@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"1": "supplementaries:blocks/cog_block_on_overlay",
-		"particle": "supplementaries:blocks/cog_block_on",
-		"all": "supplementaries:blocks/cog_block_on"
+		"1": "supplementaries:block/cog_block_on_overlay",
+		"particle": "supplementaries:block/cog_block_on",
+		"all": "supplementaries:block/cog_block_on"
 	},
 	"elements": [
 		{

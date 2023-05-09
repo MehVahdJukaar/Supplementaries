@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"2": "supplementaries:blocks/dirt_moist",
-		"rope_top": "supplementaries:blocks/rope",
+		"2": "supplementaries:block/dirt_moist",
+		"rope_top": "supplementaries:block/rope",
 		"particle": "#crop"
 	},
 	"elements": [

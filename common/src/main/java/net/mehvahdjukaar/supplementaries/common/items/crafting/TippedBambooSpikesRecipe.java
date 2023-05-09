@@ -19,8 +19,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TippedBambooSpikesRecipe extends CustomRecipe {
-    public TippedBambooSpikesRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.BUILDING);
+    public TippedBambooSpikesRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
     private boolean isEmptySpike(ItemStack stack) {

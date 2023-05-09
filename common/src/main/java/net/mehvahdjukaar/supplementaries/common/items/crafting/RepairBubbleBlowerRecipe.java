@@ -13,8 +13,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class RepairBubbleBlowerRecipe extends CustomRecipe {
-    public RepairBubbleBlowerRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.EQUIPMENT);
+    public RepairBubbleBlowerRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
 

@@ -2,8 +2,8 @@
 {
   "parent": "minecraft:block/template_piston",
   "textures": {
-    "platform": "supplementaries:blocks/relayer_front",
-    "bottom": "supplementaries:blocks/relayer_back_off",
-    "side": "supplementaries:blocks/relayer_side"
+    "platform": "supplementaries:block/relayer_front",
+    "bottom": "supplementaries:block/relayer_back_off",
+    "side": "supplementaries:block/relayer_side"
   }
 }

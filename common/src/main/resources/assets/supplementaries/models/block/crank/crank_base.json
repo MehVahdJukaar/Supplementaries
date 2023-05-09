@@ -1,8 +1,8 @@
 {
 
   "textures": {
-    "particle": "supplementaries:blocks/crank_base",
-    "1": "supplementaries:blocks/crank_base"
+    "particle": "supplementaries:block/crank_base",
+    "1": "supplementaries:block/crank_base"
   },
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,

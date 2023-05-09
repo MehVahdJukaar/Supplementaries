@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"1": "supplementaries:blocks/urn_side",
-		"2": "supplementaries:blocks/urn_top",
-		"particle": "supplementaries:blocks/urn_side"
+		"1": "supplementaries:block/urn_side",
+		"2": "supplementaries:block/urn_top",
+		"particle": "supplementaries:block/urn_side"
 	},
 	"elements": [
 		{

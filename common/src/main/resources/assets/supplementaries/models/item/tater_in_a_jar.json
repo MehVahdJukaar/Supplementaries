@@ -2,12 +2,12 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"0": "supplementaries:blocks/jar_side",
-		"1": "supplementaries:blocks/jar_top",
-		"2": "supplementaries:blocks/jar_cork",
-		"3": "supplementaries:blocks/jar_bottom",
+		"0": "supplementaries:block/jar_side",
+		"1": "supplementaries:block/jar_top",
+		"2": "supplementaries:block/jar_cork",
+		"3": "supplementaries:block/jar_bottom",
 		"4": "quark:model/tiny_potato/default",
-		"particle": "supplementaries:blocks/jar_side"
+		"particle": "supplementaries:block/jar_side"
 	},
 	"elements": [
 		{

@@ -1,9 +1,9 @@
 {
     "parent": "supplementaries:block/vertical_slab",
     "textures": {
-        "bottom": "supplementaries:blocks/blackstone_tiles",
-        "top": "supplementaries:blocks/blackstone_tiles",
-        "side": "supplementaries:blocks/blackstone_tiles",
-        "back": "supplementaries:blocks/blackstone_tiles"
+        "bottom": "supplementaries:block/blackstone_tiles",
+        "top": "supplementaries:block/blackstone_tiles",
+        "side": "supplementaries:block/blackstone_tiles",
+        "back": "supplementaries:block/blackstone_tiles"
     }
 }

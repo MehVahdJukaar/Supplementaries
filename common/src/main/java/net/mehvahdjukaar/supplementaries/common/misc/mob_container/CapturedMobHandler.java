@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -57,7 +58,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         });
         for (var c : list) {
             for (var o : c.getOwners()) {
-                Registry.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
+                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
             }
         }
         //somebody reported a weird bug with this
@@ -80,7 +81,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         CUSTOM_MOB_PROPERTIES.clear();
         for (var c : list) {
             for (var o : c.getOwners()) {
-                Registry.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
+                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
             }
         }
     }

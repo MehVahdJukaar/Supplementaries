@@ -2,11 +2,8 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.decoration.PaintingVariant;
-import net.minecraft.world.entity.decoration.PaintingVariants;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.HangingEntityItem;
 import net.minecraft.world.item.Item;
@@ -27,14 +24,11 @@ public abstract class PaintingItemMixin extends Item {
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         if (this == Items.PAINTING && ClientConfigs.Tweaks.PAINTINGS_TOOLTIPS.get()) {
             var tag = stack.getTag();
-            if (tag != null) {
-                var nbt = tag.getCompound("EntityTag");
-                if (nbt != null) {
-                    var v = ResourceLocation.tryParse(tag.getString("variant"));
-                    if (v != null) {
-                        var variant = Registry.PAINTING_VARIANT.getOptional(v);
-                        return variant.map(PaintingTooltip::new);
-                    }
+            if (tag != null && tag.contains("EntityTag")) {
+                var v = ResourceLocation.tryParse(tag.getString("variant"));
+                if (v != null) {
+                    var variant = BuiltInRegistries.PAINTING_VARIANT.getOptional(v);
+                    return variant.map(PaintingTooltip::new);
                 }
             }
         }

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/blaze_rod_cross",
-		"particle": "supplementaries:blocks/blaze_rod_cross"
+		"0": "supplementaries:block/blaze_rod_cross",
+		"particle": "supplementaries:block/blaze_rod_cross"
 	},
 	"elements": [
 		{

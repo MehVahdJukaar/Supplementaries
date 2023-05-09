@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"1": "supplementaries:blocks/iron_gate_top",
-		"particle": "supplementaries:blocks/iron_gate_top"
+		"1": "supplementaries:block/iron_gate_top",
+		"particle": "supplementaries:block/iron_gate_top"
 	},
 	"elements": [
 		{

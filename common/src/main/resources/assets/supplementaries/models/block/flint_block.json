@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "supplementaries:blocks/flint_block"
+		"all": "supplementaries:block/flint_block"
 	}
 }

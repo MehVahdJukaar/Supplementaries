@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"melon": "supplementaries:blocks/plants/cantaloupe_block",
+		"melon": "supplementaries:block/plants/cantaloupe_block",
 		"particle": "minecraft:block/flower_pot"
 	},
 	"elements": [

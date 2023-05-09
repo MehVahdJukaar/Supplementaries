@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"2": "supplementaries:blocks/candle_holder",
+		"2": "supplementaries:block/candle_holder",
 		"3": "block/chain",
-		"particle": "supplementaries:blocks/candle_holder_ceiling", "chain": "block/chain",
+		"particle": "supplementaries:block/candle_holder_ceiling", "chain": "block/chain",
 		"all": "block/candle"
 	},
 	"elements": [

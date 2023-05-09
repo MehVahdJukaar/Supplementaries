@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "supplementaries:blocks/soap_block"
+		"all": "supplementaries:block/soap_block"
 	}
 }

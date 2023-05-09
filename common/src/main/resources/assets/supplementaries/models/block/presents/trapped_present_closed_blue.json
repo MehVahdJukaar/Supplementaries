@@ -2,10 +2,10 @@
 	"parent": "supplementaries:block/trapped_present_closed_template",
 	"credit": "Made with Blockbench",
 	"textures": {
-			"3": "supplementaries:blocks/presents/present_trapped_blue",
-		"bottom": "supplementaries:blocks/presents/present_bottom_blue",
-		"top": "supplementaries:blocks/presents/present_top_blue",
-		"particle": "supplementaries:blocks/presents/present_side_blue",
-		"side": "supplementaries:blocks/presents/present_side_blue"
+			"3": "supplementaries:block/presents/present_trapped_blue",
+		"bottom": "supplementaries:block/presents/present_bottom_blue",
+		"top": "supplementaries:block/presents/present_top_blue",
+		"particle": "supplementaries:block/presents/present_side_blue",
+		"side": "supplementaries:block/presents/present_side_blue"
 	}
 }

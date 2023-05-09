@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_trapdoor_open",
   "textures": {
-    "texture": "supplementaries:blocks/netherite_trapdoor"
+    "texture": "supplementaries:block/netherite_trapdoor"
   }
 }

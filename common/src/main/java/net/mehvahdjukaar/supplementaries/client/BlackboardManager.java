@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.Nullable;
 
@@ -151,17 +152,16 @@ public class BlackboardManager {
 
         private static int getTintedColor(TextureAtlasSprite sprite, int x, int y, int offset, int tint) {
             if (sprite == null || sprite.contents().getFrameCount() == 0) return -1;
-            int tintR = tint >> 16 & 255;
-            int tintG = tint >> 8 & 255;
-            int tintB = tint & 255;
+            int tintR = FastColor.ABGR32.red(tint);
+            int tintG = FastColor.ABGR32.green(tintR);
+            int tintB = FastColor.ABGR32.blue(tint);
 
             int pixel = ClientHelper.getPixelRGBA(sprite, 0, Math.min(sprite.contents().width() - 1, x + offset), Math.min(sprite.contents().height() - 1, y));
 
-            // this is in 0xAABBGGRR format, not the usual 0xAARRGGBB.
-            int totalB = pixel >> 16 & 255;
-            int totalG = pixel >> 8 & 255;
-            int totalR = pixel & 255;
-            return NativeImage.combine(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
+            int totalB = FastColor.ABGR32.blue(pixel);
+            int totalG = FastColor.ABGR32.green(pixel);
+            int totalR = FastColor.ABGR32.red(pixel);
+            return FastColor.ABGR32.color(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
         }
 
         @Nonnull

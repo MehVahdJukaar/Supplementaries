@@ -19,7 +19,7 @@ license = "ARR"
 
 [modproperties.supplementaries]
     catalogueItemIcon = "supplementaries:globe" #catalogue icon
-    configuredBackground = "supplementaries:textures/blocks/blackstone_tiles.png"
+    configuredBackground = "supplementaries:textures/block/blackstone_tiles.png"
 
 [[dependencies.supplementaries]]
     modId = "forge"

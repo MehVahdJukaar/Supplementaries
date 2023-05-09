@@ -20,8 +20,8 @@ import net.minecraft.world.level.Level;
 import java.lang.ref.WeakReference;
 
 public class WeatheredMapRecipe extends CustomRecipe {
-    public WeatheredMapRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.MISC);
+    public WeatheredMapRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
     private static WeakReference<ServerLevel> lastLevelHack = null;

@@ -53,13 +53,15 @@ public class StructureLocator {
     }
 
 
+    private static final Comparator<Vector2i> COMPARATOR = (o1, o2) -> Float.compare(o1.lengthSquared(), o2.lengthSquared());
+
     public static List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
             ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
 
         List<Pair<BlockPos, Holder<Structure>>> foundStructures = new ArrayList<>();
 
-        if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) {
+        if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return foundStructures;
         }
         Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);
@@ -135,7 +137,7 @@ public class StructureLocator {
 
                 //<> madness
                 //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
-                TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>();
+                TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>(COMPARATOR);
 
                 for (Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>> p : list) {
                     RandomSpreadStructurePlacement placement = p.getFirst();

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	  "parent": "supplementaries:block/stick_y",
 	"textures": {
-		"0": "supplementaries:blocks/prismarine_rod",
-		"particle": "supplementaries:blocks/prismarine_rod"
+		"0": "supplementaries:block/prismarine_rod",
+		"particle": "supplementaries:block/prismarine_rod"
 	}
 }

@@ -2,6 +2,6 @@
 	"parent": "minecraft:block/template_farmland",
 	"textures": {
 		"dirt": "minecraft:block/gravel",
-		"top": "supplementaries:blocks/raked_gravel_curved"
+		"top": "supplementaries:block/raked_gravel_curved"
 	}
 }

@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/wind_vane",
-		"1": "supplementaries:blocks/wind_vane_details",
-		"particle": "supplementaries:blocks/wind_vane"
+		"0": "supplementaries:block/wind_vane",
+		"1": "supplementaries:block/wind_vane_details",
+		"particle": "supplementaries:block/wind_vane"
 	},
 	"elements": [
 		{

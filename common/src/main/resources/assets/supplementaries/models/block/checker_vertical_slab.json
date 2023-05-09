@@ -1,9 +1,9 @@
 {
     "parent": "supplementaries:block/vertical_slab",
     "textures": {
-        "bottom": "supplementaries:blocks/checkerboard2",
-        "top": "supplementaries:blocks/checkerboard2",
-        "side": "supplementaries:blocks/checkerboard2",
-        "back": "supplementaries:blocks/checkerboard"
+        "bottom": "supplementaries:block/checkerboard2",
+        "top": "supplementaries:block/checkerboard2",
+        "side": "supplementaries:block/checkerboard2",
+        "back": "supplementaries:block/checkerboard"
     }
 }

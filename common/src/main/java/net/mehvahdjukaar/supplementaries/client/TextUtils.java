@@ -73,7 +73,7 @@ public class TextUtils {
             int rgba = NativeImage.combine(a, col, col, col);
 
             fontRenderer.drawInBatch(str, dx, borderY * SCALING_FACTOR - (offset) + 8 * n, rgba, false,
-                    matrixStack.last().pose(), bufferIn, false, 0, light);
+                    matrixStack.last().pose(), bufferIn, Font.DisplayMode.NORMAL, 0, light);
         }
         matrixStack.popPose();
     }

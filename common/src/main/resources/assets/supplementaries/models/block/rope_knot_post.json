@@ -2,8 +2,8 @@
 	"loader": "supplementaries:rope_knot",
 	"knot": {
 		"textures": {
-			"2": "supplementaries:blocks/rope",
-			"particle": "supplementaries:blocks/rope"
+			"2": "supplementaries:block/rope",
+			"particle": "supplementaries:block/rope"
 		},
 		"elements": [
 			{

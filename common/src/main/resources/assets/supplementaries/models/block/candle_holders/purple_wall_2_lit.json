@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:block/candle_holders/wall_2",
 	"textures": {
-		"2": "supplementaries:blocks/candle_holder",
-		"particle": "supplementaries:blocks/candle_holder",
+		"2": "supplementaries:block/candle_holder",
+		"particle": "supplementaries:block/candle_holder",
 		"all": "block/purple_candle_lit"
 	}
 }

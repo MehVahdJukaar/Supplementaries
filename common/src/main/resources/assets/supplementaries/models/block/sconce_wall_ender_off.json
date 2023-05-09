@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:block/sconce_wall_off",
 	"textures": {
-		"0": "supplementaries:blocks/sconce_ender",
-		"particle": "supplementaries:blocks/sconce_ender"
+		"0": "supplementaries:block/sconce_ender",
+		"particle": "supplementaries:block/sconce_ender"
 	}
 }

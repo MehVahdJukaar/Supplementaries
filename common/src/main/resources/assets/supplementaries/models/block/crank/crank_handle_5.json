@@ -1,7 +1,7 @@
 {
   "textures": {
-    "particle": "supplementaries:blocks/crank_handle",
-    "0": "supplementaries:blocks/crank_handle"
+    "particle": "supplementaries:block/crank_handle",
+    "0": "supplementaries:block/crank_handle"
   },
   "elements": [
     {

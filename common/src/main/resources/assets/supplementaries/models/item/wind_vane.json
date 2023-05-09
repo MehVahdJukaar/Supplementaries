@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:items/wind_vane"
+    "layer0": "supplementaries: item/wind_vane"
   }
 }

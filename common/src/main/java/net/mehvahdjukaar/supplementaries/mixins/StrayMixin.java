@@ -96,14 +96,14 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     }
 
     @Override
-    public boolean equipItemIfPossible(ItemStack stack) {
+    public ItemStack equipItemIfPossible(ItemStack stack) {
         if(stack.getItem() == ModRegistry.QUIVER_ITEM.get()){
             if(this.quiver != null){
                 this.spawnAtLocation(quiver);
             }
             this.setQuiver(stack);
             this.quiverDropChance = 1;
-            return true;
+            return stack;
         }
         return super.equipItemIfPossible(stack);
     }

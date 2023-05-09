@@ -1,5 +1,5 @@
 {
   "items": ["minecraft:redstone"],
   "duration": 400,
-  "texture":  "supplementaries:blocks/hourglass_redstone"
+  "texture":  "supplementaries:block/hourglass_redstone"
 }

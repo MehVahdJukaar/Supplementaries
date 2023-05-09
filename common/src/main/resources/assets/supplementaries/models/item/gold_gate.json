@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "supplementaries:blocks/gold_gate_top"
+    "layer0": "supplementaries:block/gold_gate_top"
   }
 }

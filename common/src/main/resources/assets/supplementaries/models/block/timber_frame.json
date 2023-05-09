@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "supplementaries:blocks/timber_frame",
-		"particle": "supplementaries:blocks/timber_frame"
+		"1": "supplementaries:block/timber_frame",
+		"particle": "supplementaries:block/timber_frame"
 	},
 	"elements": [
 		{

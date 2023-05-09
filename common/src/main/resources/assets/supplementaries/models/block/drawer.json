@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/drawer_top",
-		"4": "supplementaries:blocks/drawer_sides",
-		"particle": "supplementaries:blocks/drawer_sides"
+		"0": "supplementaries:block/drawer_top",
+		"4": "supplementaries:block/drawer_sides",
+		"particle": "supplementaries:block/drawer_sides"
 	},
 	"elements": [
 		{

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +27,7 @@ public class CurseLootFunction extends LootItemConditionalFunction {
 
     //call on mod setup
     public static void setup() {
-        for (var e : Registry.ENCHANTMENT) {
+        for (var e : BuiltInRegistries.ENCHANTMENT) {
             if (e.isCurse()) CURSES.add(e);
         }
     }

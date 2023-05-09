@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -23,6 +24,7 @@ public class ModDamageSources {
     private static DamageSource spikeDamage;
     private static DamageSource bottlingDamage;
 
+    private static DataObjectReference<DamageType> spike = new DataObjectReference<>( SPIKE_DAMAGE.location(),Registries.DAMAGE_TYPE);
 
     public static void reload(RegistryAccess registryAccess){
         var reg = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);

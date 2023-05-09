@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:block/sconce_wall",
 	"textures": {
-		"0": "supplementaries:blocks/sconce_nether_brass",
-		"1": "supplementaries:blocks/sconce_fire_nether_brass",
-		"particle": "supplementaries:blocks/sconce_nether_brass"
+		"0": "supplementaries:block/sconce_nether_brass",
+		"1": "supplementaries:block/sconce_fire_nether_brass",
+		"particle": "supplementaries:block/sconce_nether_brass"
 	}
 }

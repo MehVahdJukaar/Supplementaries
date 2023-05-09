@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:blocks/globe_1",
-		"2": "supplementaries:blocks/globe_2",
-		"particle": "supplementaries:blocks/globe_1"
+		"1": "supplementaries:block/globe_1",
+		"2": "supplementaries:block/globe_2",
+		"particle": "supplementaries:block/globe_1"
 	},
 	"elements": [
 		{

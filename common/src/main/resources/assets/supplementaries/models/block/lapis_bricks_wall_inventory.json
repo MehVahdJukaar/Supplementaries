@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/wall_inventory",
   "textures": {
-    "wall": "supplementaries:blocks/lapis_bricks"
+    "wall": "supplementaries:block/lapis_bricks"
   }
 }

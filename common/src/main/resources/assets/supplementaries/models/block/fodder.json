@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "supplementaries:blocks/fodder_side",
+        "particle": "supplementaries:block/fodder_side",
         "down": "minecraft:block/dirt",
-        "up": "supplementaries:blocks/fodder_top",
-        "north": "supplementaries:blocks/fodder_side",
-        "east": "supplementaries:blocks/fodder_side",
-        "south": "supplementaries:blocks/fodder_side",
-        "west": "supplementaries:blocks/fodder_side"
+        "up": "supplementaries:block/fodder_top",
+        "north": "supplementaries:block/fodder_side",
+        "east": "supplementaries:block/fodder_side",
+        "south": "supplementaries:block/fodder_side",
+        "west": "supplementaries:block/fodder_side"
     }
 }

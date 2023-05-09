@@ -3,7 +3,7 @@
 	"overlay": {
 		"parent": "supplementaries:block/timber_brace_f_overlay",
 		"textures": {
-			"all": "supplementaries:blocks/timber_brace_f"
+			"all": "supplementaries:block/timber_brace_f"
 		}
 	}
 }

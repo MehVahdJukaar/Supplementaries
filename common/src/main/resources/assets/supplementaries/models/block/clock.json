@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/clock_front",
-		"1": "supplementaries:blocks/clock_side",
-		"2": "supplementaries:blocks/clock_back",
-		"particle": "supplementaries:blocks/clock_front"
+		"0": "supplementaries:block/clock_front",
+		"1": "supplementaries:block/clock_side",
+		"2": "supplementaries:block/clock_back",
+		"particle": "supplementaries:block/clock_front"
 	},
 	"elements": [
 		{

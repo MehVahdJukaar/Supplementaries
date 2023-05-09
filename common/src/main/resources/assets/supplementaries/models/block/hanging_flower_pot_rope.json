@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"3": "supplementaries:blocks/hanging_flower_pot",
+		"3": "supplementaries:block/hanging_flower_pot",
 		"particle": "block/flower_pot"
 	},
 	"elements": [

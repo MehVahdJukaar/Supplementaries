@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,18 +23,18 @@ public abstract class SheetsClassloadingFixHackMixin {
         //TODO: remove when forge fixes
 
         boolean applied = false;
-        if (!Sheets.BANNER_MATERIALS.keySet().equals(Registry.BANNER_PATTERN.registryKeySet())) {
+        if (!Sheets.BANNER_MATERIALS.keySet().equals(BuiltInRegistries.BANNER_PATTERN.registryKeySet())) {
             var map = new HashMap<>(Sheets.BANNER_MATERIALS);
-            for (var v : Registry.BANNER_PATTERN.registryKeySet())
+            for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet())
                 map.put(v,
                         new Material(Sheets.BANNER_SHEET, BannerPattern.location(v, true)));
             Sheets.BANNER_MATERIALS = map;
             applied = true;
         }
 
-        if (!Sheets.SHIELD_MATERIALS.keySet().equals(Registry.BANNER_PATTERN.registryKeySet())) {
+        if (!Sheets.SHIELD_MATERIALS.keySet().equals(BuiltInRegistries.BANNER_PATTERN.registryKeySet())) {
             var map = new HashMap<>(Sheets.SHIELD_MATERIALS);
-            for (var v : Registry.BANNER_PATTERN.registryKeySet())
+            for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet())
                 map.put(v,
                         new Material(Sheets.SHIELD_SHEET, BannerPattern.location(v, false)));
             Sheets.SHIELD_MATERIALS = map;

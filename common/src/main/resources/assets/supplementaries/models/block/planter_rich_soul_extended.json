@@ -1,9 +1,9 @@
 {
 	"parent": "supplementaries:block/planter_extended",
 	"textures": {
-		"0": "supplementaries:blocks/planter_bottom_soul",
-		"1": "supplementaries:blocks/planter_side_soul",
+		"0": "supplementaries:block/planter_bottom_soul",
+		"1": "supplementaries:block/planter_side_soul",
 		"2": "nethers_delight:block/rich_soul_soil",
-		"particle": "supplementaries:blocks/planter_side_soul"
+		"particle": "supplementaries:block/planter_side_soul"
 	}
 }

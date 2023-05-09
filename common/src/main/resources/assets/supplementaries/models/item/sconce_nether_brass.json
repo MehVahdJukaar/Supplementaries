@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/sconce_nether_brass"
+		"layer0": "supplementaries: item/sconce_nether_brass"
 	}
 }

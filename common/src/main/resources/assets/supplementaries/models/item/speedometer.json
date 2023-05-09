@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "supplementaries:items/speedometer_0"
+        "layer0": "supplementaries: item/speedometer_0"
     },
     "overrides": [
         { "predicate": { "speed": 0.0 }, "model": "supplementaries:item/speedometer" },

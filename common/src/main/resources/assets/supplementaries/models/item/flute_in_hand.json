@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"spyglass": "supplementaries:items/flute_model",
-			    "particles": "supplementaries:items/flute",
-			    "particle": "supplementaries:items/flute"
+		"spyglass": "supplementaries: item/flute_model",
+			    "particles": "supplementaries: item/flute",
+			    "particle": "supplementaries: item/flute"
 	},
 	"elements": [
 		{

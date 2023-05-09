@@ -22,8 +22,8 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import java.util.Optional;
 
 public class FlagFromBannerRecipe extends CustomRecipe {
-    public FlagFromBannerRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.BUILDING);
+    public FlagFromBannerRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
     @Override

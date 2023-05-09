@@ -1,9 +1,9 @@
 {
   "parent": "builtin/entity",
   "textures": {
-    "layer0": "supplementaries:items/quiver_full",
-    "particles": "supplementaries:items/quiver_full",
-    "particle": "supplementaries:items/quiver_full"
+    "layer0": "supplementaries: item/quiver_full",
+    "particles": "supplementaries: item/quiver_full",
+    "particle": "supplementaries: item/quiver_full"
   },
   "gui_light": "front",
   "display": {

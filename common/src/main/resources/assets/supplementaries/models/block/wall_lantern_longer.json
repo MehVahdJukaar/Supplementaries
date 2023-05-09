@@ -3,7 +3,7 @@
 	"support": {
 		"parent": "supplementaries:block/wall_lantern_longer_template",
 		"textures": {
-			"1": "supplementaries:blocks/wall_lanterns/wall_lantern"
+			"1": "supplementaries:block/wall_lanterns/wall_lantern"
 		}
 	}
 }

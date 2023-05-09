@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/sconce_ender"
+		"layer0": "supplementaries: item/sconce_ender"
 	}
 }

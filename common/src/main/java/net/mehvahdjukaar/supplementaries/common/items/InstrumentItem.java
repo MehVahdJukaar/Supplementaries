@@ -57,7 +57,7 @@ public abstract class InstrumentItem extends Item {
 
 
     public SoundEvent getSound() {
-        return SoundEvents.NOTE_BLOCK_FLUTE;
+        return SoundEvents.NOTE_BLOCK_FLUTE.value();
     }
 
     //client stuff

@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.reg;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -95,28 +97,28 @@ public class ModTags {
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
     private static TagKey<Structure> MCstructureTag(String name) {
-        return TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(name));
+        return TagKey.create(Registries.STRUCTURE, new ResourceLocation(name));
     }
     private static TagKey<Structure> structureTag(String name) {
-        return TagKey.create(Registry.STRUCTURE_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.STRUCTURE, Supplementaries.res(name));
     }
     private static TagKey<Potion> potionTag(String name) {
-        return TagKey.create(Registry.POTION_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.POTION, Supplementaries.res(name));
     }
     private static TagKey<Item> itemTag(String name) {
-        return TagKey.create(BuiltInRegistries.ITEM_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.ITEM, Supplementaries.res(name));
     }
 
     private static TagKey<Block> blockTag(String name) {
-        return TagKey.create(BuiltInRegistries.BLOCK_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.BLOCK, Supplementaries.res(name));
     }
 
     private static TagKey<EntityType<?>> entityTag(String name) {
-        return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.ENTITY_TYPE, Supplementaries.res(name));
     }
 
     private static TagKey<Biome> biomeTag(String name) {
-        return TagKey.create(Registry.BIOME_REGISTRY, Supplementaries.res(name));
+        return TagKey.create(Registries.BIOME, Supplementaries.res(name));
     }
 
 }

@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "supplementaries:blocks/flax_block_top",
-    "north": "supplementaries:blocks/flax_block",
-    "south": "supplementaries:blocks/flax_block",
-    "east": "supplementaries:blocks/flax_block",
-    "west": "supplementaries:blocks/flax_block",
-    "up": "supplementaries:blocks/flax_block_top",
-    "down": "supplementaries:blocks/flax_block_bottom"
+    "particle": "supplementaries:block/flax_block_top",
+    "north": "supplementaries:block/flax_block",
+    "south": "supplementaries:block/flax_block",
+    "east": "supplementaries:block/flax_block",
+    "west": "supplementaries:block/flax_block",
+    "up": "supplementaries:block/flax_block_top",
+    "down": "supplementaries:block/flax_block_bottom"
   }
 }

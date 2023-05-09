@@ -2,9 +2,9 @@
 	"parent": "supplementaries:block/present_closed_template",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"bottom": "supplementaries:blocks/presents/present_bottom_orange",
-		"top": "supplementaries:blocks/presents/present_top_orange",
-		"particle": "supplementaries:blocks/presents/present_side_orange",
-		"side": "supplementaries:blocks/presents/present_side_orange"
+		"bottom": "supplementaries:block/presents/present_bottom_orange",
+		"top": "supplementaries:block/presents/present_top_orange",
+		"particle": "supplementaries:block/presents/present_side_orange",
+		"side": "supplementaries:block/presents/present_side_orange"
 	}
 }

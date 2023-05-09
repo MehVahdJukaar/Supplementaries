@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	  "parent": "supplementaries:block/stick_cross_f",
 	"textures": {
-		"0": "supplementaries:blocks/propelplant_cane_cross",
-		"particle": "supplementaries:blocks/propelplant_cane_cross"
+		"0": "supplementaries:block/propelplant_cane_cross",
+		"particle": "supplementaries:block/propelplant_cane_cross"
 	}
 }

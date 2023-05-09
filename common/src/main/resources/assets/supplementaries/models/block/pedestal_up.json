@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/pedestal_top",
-		"2": "supplementaries:blocks/pedestal_bottom",
-		"3": "supplementaries:blocks/pedestal_side_bottom",
-		"particle": "supplementaries:blocks/pedestal_side_bottom"
+		"0": "supplementaries:block/pedestal_top",
+		"2": "supplementaries:block/pedestal_bottom",
+		"3": "supplementaries:block/pedestal_side_bottom",
+		"particle": "supplementaries:block/pedestal_side_bottom"
 	},
 	"elements": [
 		{

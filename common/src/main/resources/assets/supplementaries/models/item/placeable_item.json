@@ -2,6 +2,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:blocks/statue_base"
+    "layer0": "supplementaries:block/statue_base"
   }
 }

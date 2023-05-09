@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/stick_cross",
-		"particle": "supplementaries:blocks/stick_cross"
+		"0": "supplementaries:block/stick_cross",
+		"particle": "supplementaries:block/stick_cross"
 	},
 	"elements": [
 		{

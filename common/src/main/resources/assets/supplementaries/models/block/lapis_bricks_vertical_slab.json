@@ -1,9 +1,9 @@
 {
     "parent": "supplementaries:block/vertical_slab",
     "textures": {
-        "bottom": "supplementaries:blocks/lapis_bricks",
-        "top": "supplementaries:blocks/lapis_bricks",
-        "side": "supplementaries:blocks/lapis_bricks",
-        "back": "supplementaries:blocks/lapis_bricks"
+        "bottom": "supplementaries:block/lapis_bricks",
+        "top": "supplementaries:block/lapis_bricks",
+        "side": "supplementaries:block/lapis_bricks",
+        "back": "supplementaries:block/lapis_bricks"
     }
 }

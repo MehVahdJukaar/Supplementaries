@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "supplementaries:blocks/rope",
+		"3": "supplementaries:block/rope",
 		"torch": "decorative_blocks:block/torch_1",
 		"particle": "decorative_blocks:block/chandelier_base",
 		"base": "decorative_blocks:block/chandelier_base",

@@ -1,12 +1,12 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/jar_tinted_side",
-		"1": "supplementaries:blocks/jar_tinted_top",
-		"2": "supplementaries:blocks/jar_tinted_cork",
-		"3": "supplementaries:blocks/jar_tinted_bottom",
+		"0": "supplementaries:block/jar_tinted_side",
+		"1": "supplementaries:block/jar_tinted_top",
+		"2": "supplementaries:block/jar_tinted_cork",
+		"3": "supplementaries:block/jar_tinted_bottom",
 		"4": "block/soul_sand",
-		"particle": "supplementaries:blocks/jar_tinted_side"
+		"particle": "supplementaries:block/jar_tinted_side"
 	},
 	"elements": [
 		{

@@ -5,18 +5,20 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class SoapClearRecipe extends CustomRecipe {
     public SoapClearRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation);
+        super(resourceLocation, CraftingBookCategory.MISC);
     }
 
     public boolean matches(CraftingContainer craftingContainer, Level level) {
@@ -49,7 +51,7 @@ public class SoapClearRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingContainer) {
+    public ItemStack assemble(CraftingContainer craftingContainer, RegistryAccess registryAccess) {
         ItemStack toRecolor = ItemStack.EMPTY;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {
             ItemStack stack = craftingContainer.getItem(i);

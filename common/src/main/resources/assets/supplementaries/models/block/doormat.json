@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/thin_block",
 	"textures": {
-		"particle": "supplementaries:blocks/doormat",
-		"wool": "supplementaries:blocks/doormat"
+		"particle": "supplementaries:block/doormat",
+		"wool": "supplementaries:block/doormat"
 	},
 	"elements": [
 		{

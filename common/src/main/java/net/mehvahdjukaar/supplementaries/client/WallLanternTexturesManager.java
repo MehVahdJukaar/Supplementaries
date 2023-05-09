@@ -40,7 +40,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
     public static final WallLanternTexturesManager RELOAD_INSTANCE = new WallLanternTexturesManager();
 
     private WallLanternTexturesManager() {
-        super(GSON, "textures/blocks/wall_lanterns");
+        super(GSON, "textures/block/wall_lanterns");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
 
             ResourceLocation reg = Utils.getID(i);
             String namespace = (reg.getNamespace().equals("minecraft") || reg.getNamespace().equals("supplementaries")) ? "" : reg.getNamespace() + "/";
-            String s = "textures/blocks/wall_lanterns/" + namespace + reg.getPath() + ".json";
+            String s = "textures/block/wall_lanterns/" + namespace + reg.getPath() + ".json";
             ResourceLocation fullPath = Supplementaries.res(s);
             var resource = manager.getResource(fullPath);
             if (resource.isPresent()) {
@@ -75,7 +75,7 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
 
         //jar stuff
         //using this to also load jar model
-        ResourceLocation fullPath = Supplementaries.res("textures/blocks/jar_fluid.json");
+        ResourceLocation fullPath = Supplementaries.res("textures/block/jar_fluid.json");
         var resource = manager.getResource(fullPath);
         if (resource.isPresent()) {
             try (var stream = resource.get().open()) {

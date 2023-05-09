@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/rope",
-		"particle": "supplementaries:blocks/rope"
+		"0": "supplementaries:block/rope",
+		"particle": "supplementaries:block/rope"
 	},
 	"elements": [
 		{

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:items/bomb_blue"
+    "layer0": "supplementaries: item/bomb_blue"
   }
 }

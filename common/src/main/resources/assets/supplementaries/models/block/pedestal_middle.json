@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/pedestal_top",
-		"2": "supplementaries:blocks/pedestal_full",
-		"particle": "supplementaries:blocks/pedestal_full"
+		"0": "supplementaries:block/pedestal_top",
+		"2": "supplementaries:block/pedestal_full",
+		"particle": "supplementaries:block/pedestal_full"
 	},
 	"elements": [
 		{

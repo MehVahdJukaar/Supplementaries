@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:blocks/drawers_shelf_front",
-		"2": "supplementaries:blocks/drawers_shelf_side",
-		"3": "supplementaries:blocks/drawers_shelf_top",
-		"particle": "supplementaries:blocks/drawers"
+		"1": "supplementaries:block/drawers_shelf_front",
+		"2": "supplementaries:block/drawers_shelf_side",
+		"3": "supplementaries:block/drawers_shelf_top",
+		"particle": "supplementaries:block/drawers"
 	},
 	"elements": [
 		{

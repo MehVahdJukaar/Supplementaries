@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "supplementaries:blocks/candle_holder",
-		"particle": "supplementaries:blocks/candle_holder",
+		"1": "supplementaries:block/candle_holder",
+		"particle": "supplementaries:block/candle_holder",
 		"all": "block/candle"
 	},
 	"elements": [

@@ -14,8 +14,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class RopeArrowAddRecipe extends CustomRecipe {
-    public RopeArrowAddRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.EQUIPMENT);
+    public RopeArrowAddRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+        super(idIn, category);
     }
 
 

@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "supplementaries:blocks/checkerboard",
-        "down": "supplementaries:blocks/checkerboard2",
-        "up": "supplementaries:blocks/checkerboard2",
-        "north": "supplementaries:blocks/checkerboard",
-        "east": "supplementaries:blocks/checkerboard2",
-        "south": "supplementaries:blocks/checkerboard",
-        "west": "supplementaries:blocks/checkerboard2"
+        "particle": "supplementaries:block/checkerboard",
+        "down": "supplementaries:block/checkerboard2",
+        "up": "supplementaries:block/checkerboard2",
+        "north": "supplementaries:block/checkerboard",
+        "east": "supplementaries:block/checkerboard2",
+        "south": "supplementaries:block/checkerboard",
+        "west": "supplementaries:block/checkerboard2"
     }
 }

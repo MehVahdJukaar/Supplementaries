@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/planter_bottom",
-		"1": "supplementaries:blocks/planter_side",
-		"2": "supplementaries:blocks/dirt_moist",
-		"particle": "supplementaries:blocks/planter_side"
+		"0": "supplementaries:block/planter_bottom",
+		"1": "supplementaries:block/planter_side",
+		"2": "supplementaries:block/dirt_moist",
+		"particle": "supplementaries:block/planter_side"
 	},
 	"elements": [
 		{

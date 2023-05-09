@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	  "parent": "supplementaries:block/stick_cross_2",
 	"textures": {
-		"0": "supplementaries:blocks/prismarine_rod_cross",
-		"particle": "supplementaries:blocks/prismarine_rod_cross"
+		"0": "supplementaries:block/prismarine_rod_cross",
+		"particle": "supplementaries:block/prismarine_rod_cross"
 	}
 }

@@ -10,6 +10,8 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -36,7 +38,7 @@ public class ModWorldgenRegistry {
     //structure pieces
 
     public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR = RegHelper.register(
-            Supplementaries.res("mineshaft_elevator"), () -> MineshaftElevatorPiece::new, Registry.STRUCTURE_PIECE);
+            Supplementaries.res("mineshaft_elevator"), () -> MineshaftElevatorPiece::new, Registries.STRUCTURE_PIECE);
 
     //structure types
 
@@ -57,7 +59,7 @@ public class ModWorldgenRegistry {
     //modifiers
 
     public static final Supplier<PlacementModifierType<CaveFilter>> CAVE_MODIFIER = RegHelper.register(
-            Supplementaries.res("cave"), CaveFilter.Type::new, Registry.PLACEMENT_MODIFIERS);
+            Supplementaries.res("cave"), CaveFilter.Type::new, Registries.PLACEMENT_MODIFIER_TYPE);
 
 
     //placed features predicates

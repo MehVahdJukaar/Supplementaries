@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:item/slingshot",
 	"textures": {
-		"layer0": "supplementaries:items/slingshot_pulling_0"
+		"layer0": "supplementaries: item/slingshot_pulling_0"
 	},
 	"display": {
 		"firstperson_righthand": {

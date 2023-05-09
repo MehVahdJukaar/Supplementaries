@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -43,6 +45,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.level.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -135,7 +138,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onTagUpdate(TagsUpdatedEvent event) {
-        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatHelper.getEnv().isClient());
+        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatHelper.getPhysicalSide().isClient());
     }
 
     //for flute and cage. fabric calls directly
@@ -217,5 +220,13 @@ public class ServerEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if(event.getLevel().isClientSide()){
+            CapturedMobCache.clear();
+        }else{
+            WeatheredMapRecipe.onWorldUnload();
+        }
+    }
 
 }

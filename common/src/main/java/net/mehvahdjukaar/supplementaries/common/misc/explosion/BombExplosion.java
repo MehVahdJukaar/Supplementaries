@@ -142,12 +142,12 @@ public class BombExplosion extends Explosion {
 
     @Override
     public void explode() {
-        this.level.gameEvent(this.source, GameEvent.EXPLODE, new BlockPos(this.x, this.y, this.z));
+        this.level.gameEvent(this.source, GameEvent.EXPLODE, BlockPos.containing(this.x, this.y, this.z));
         Set<BlockPos> set = Sets.newHashSet();
 
         Player owner = this.source instanceof Projectile pr && pr.getOwner() instanceof Player pl ? pl : null;
 
-        if (mode != BlockInteraction.NONE) {
+        if (mode != BlockInteraction.KEEP) {
             for (int j = 0; j < 16; ++j) {
                 for (int k = 0; k < 16; ++k) {
                     for (int l = 0; l < 16; ++l) {
@@ -165,7 +165,7 @@ public class BombExplosion extends Explosion {
                             double d8 = this.z;
 
                             for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
-                                BlockPos blockpos = new BlockPos(d4, d6, d8);
+                                BlockPos blockpos = BlockPos.containing(d4, d6, d8);
                                 BlockState blockstate = this.level.getBlockState(blockpos);
                                 FluidState fluidstate = this.level.getFluidState(blockpos);
                                 Optional<Float> optional = this.damageCalculator.getBlockExplosionResistance(this, this.level, blockpos, blockstate, fluidstate);

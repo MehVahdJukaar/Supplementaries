@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/pancake_side",
-		"1": "supplementaries:blocks/pancake_top",
-		"2": "supplementaries:blocks/pancake_bottom",
-		"particle": "supplementaries:blocks/pancake_side"
+		"0": "supplementaries:block/pancake_side",
+		"1": "supplementaries:block/pancake_top",
+		"2": "supplementaries:block/pancake_bottom",
+		"particle": "supplementaries:block/pancake_side"
 	},
 	"elements": [
 		{

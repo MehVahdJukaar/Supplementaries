@@ -3,8 +3,8 @@
 	"parent": "minecraft:block/potted_cactus",
 	"ambientocclusion": false,
 	"textures": {
-		"cactus": "pokecube_legends:blocks/crystallized_cactus_side",
-		"cactus_top": "pokecube_legends:blocks/crystallized_cactus_top"
+		"cactus": "pokecube_legends:block/crystallized_cactus_side",
+		"cactus_top": "pokecube_legends:block/crystallized_cactus_top"
 	},
 	"elements": [
 		{

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/silver_lantern_off",
-		"particle": "supplementaries:blocks/silver_lantern_off"
+		"0": "supplementaries:block/silver_lantern_off",
+		"particle": "supplementaries:block/silver_lantern_off"
 	},
 	"elements": [
 		{

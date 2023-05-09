@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:blocks/sack_front",
-		"2": "supplementaries:blocks/sack_top",
-		"3": "supplementaries:blocks/sack_bottom",
-		"4": "supplementaries:blocks/sack_open",
-		"particle": "supplementaries:blocks/sack_front"
+		"1": "supplementaries:block/sack_front",
+		"2": "supplementaries:block/sack_top",
+		"3": "supplementaries:block/sack_bottom",
+		"4": "supplementaries:block/sack_open",
+		"particle": "supplementaries:block/sack_front"
 	},
 	"elements": [
 		{

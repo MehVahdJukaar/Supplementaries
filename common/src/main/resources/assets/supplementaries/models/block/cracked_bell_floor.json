@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"bottom": "supplementaries:blocks/cracked_bell_bottom",
-		"particle": "supplementaries:blocks/cracked_bell_top",
-		"top": "supplementaries:blocks/cracked_bell_top",
-		"side": "supplementaries:blocks/cracked_bell_side"
+		"bottom": "supplementaries:block/cracked_bell_bottom",
+		"particle": "supplementaries:block/cracked_bell_top",
+		"top": "supplementaries:block/cracked_bell_top",
+		"side": "supplementaries:block/cracked_bell_side"
 	},
 	"elements": [
 		{

@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/safe_front_open",
-		"1": "supplementaries:blocks/safe_side",
-		"2": "supplementaries:blocks/safe_bottom",
-		"particle": "supplementaries:blocks/safe_front_open"
+		"0": "supplementaries:block/safe_front_open",
+		"1": "supplementaries:block/safe_side",
+		"2": "supplementaries:block/safe_bottom",
+		"particle": "supplementaries:block/safe_front_open"
 	},
 	"elements": [
 		{

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
@@ -30,14 +31,14 @@ public class CompatObjects {
     public static final Supplier<Block> TATER = makeCompatObject("quark:tiny_potato", BuiltInRegistries.BLOCK);
 
 
-    public static final Supplier<ParticleType<?>> ENDER_FLAME = makeCompatObject("endergetic:ender_flame", Registry.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> ENDER_FLAME = makeCompatObject("endergetic:ender_flame", BuiltInRegistries.PARTICLE_TYPE);
 
-    public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", Registry.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> GLOW_FLAME = makeCompatObject("infernalexp:glowstone_sparkle", BuiltInRegistries.PARTICLE_TYPE);
 
-    public static final Supplier<ParticleType<?>> NETHER_BRASS_FLAME = makeCompatObject("architects_palette:green_flame", Registry.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> NETHER_BRASS_FLAME = makeCompatObject("architects_palette:green_flame", BuiltInRegistries.PARTICLE_TYPE);
 
 
-    public static final Supplier<ParticleType<?>> SMALL_SOUL_FLAME = makeCompatObject("buzzier_bees:small_soul_fire_flame", Registry.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> SMALL_SOUL_FLAME = makeCompatObject("buzzier_bees:small_soul_fire_flame", BuiltInRegistries.PARTICLE_TYPE);
 
     public static final Supplier<Item> SOUL_CANDLE_ITEM = makeCompatObject("buzzier_bees:soul_candle", BuiltInRegistries.ITEM);
 
@@ -56,9 +57,9 @@ public class CompatObjects {
 
     public static final Supplier<Block> RICH_SOUL_SOIL = makeCompatObject("nethers_delight:rich_soul_soil", BuiltInRegistries.BLOCK);
 
-    public static final Supplier<ParticleType<?>> SHARPNEL = makeCompatObject("oreganized:lead_shrapnel", Registry.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> SHARPNEL = makeCompatObject("oreganized:lead_shrapnel", BuiltInRegistries.PARTICLE_TYPE);
 
-    public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", Registry.MOB_EFFECT);
+    public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", BuiltInRegistries.MOB_EFFECT);
 
 
 

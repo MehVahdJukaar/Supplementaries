@@ -17,20 +17,20 @@ public class Song {
 
     public static final Codec<Song> CODEC = RecordCodecBuilder.<Song>create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(p -> p.name),
-            Codec.intRange(1,1000).optionalFieldOf("tempo",1).forGetter(p -> p.tempo),
+            Codec.intRange(1, 1000).optionalFieldOf("tempo", 1).forGetter(p -> p.tempo),
             Codec.INT.listOf().fieldOf("notes").forGetter(p -> List.of(p.notes)),
-            Codec.STRING.optionalFieldOf("credits","").forGetter(p->p.credits),
+            Codec.STRING.optionalFieldOf("credits", "").forGetter(p -> p.credits),
             Codec.intRange(0, 10000).optionalFieldOf("weight", 100).forGetter(p -> p.weight)
     ).apply(instance, Song::new)).comapFlatMap((s) -> {
         if (s.notes.length == 0)
-            return DataResult.error("Song note list cant be empty");
+            return DataResult.error(() -> "Song note list cant be empty");
         return DataResult.success(s);
     }, Function.identity());
 
-  //  public static final Codec<Song> CLIENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-  //          Codec.STRING.fieldOf("name").forGetter(p -> p.name),
-  //          Codec.STRING.optionalFieldOf("credits","").forGetter(p->p.credits)
-  //  ).apply(instance, Song::new));
+    //  public static final Codec<Song> CLIENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    //          Codec.STRING.fieldOf("name").forGetter(p -> p.name),
+    //          Codec.STRING.optionalFieldOf("credits","").forGetter(p->p.credits)
+    //  ).apply(instance, Song::new));
 
 
     private final String name;
@@ -49,7 +49,7 @@ public class Song {
         this.weight = weight;
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return this.processed;
     }
 
@@ -75,7 +75,7 @@ public class Song {
     }
 
     public int getTempo() {
-        return  Math.max(1,tempo);
+        return Math.max(1, tempo);
     }
 
     public Integer[] getNotes() {
@@ -88,7 +88,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return "Song: "+ name;
+        return "Song: " + name;
     }
 
     public int getWeight() {
@@ -113,7 +113,7 @@ public class Song {
     }
 
     public void validatePlayReady() {
-        if(!this.processed){
+        if (!this.processed) {
             processForPlaying();
             this.processed = true;
         }

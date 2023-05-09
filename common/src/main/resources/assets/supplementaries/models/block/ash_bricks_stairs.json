@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/stairs",
   "textures": {
-    "bottom": "supplementaries:blocks/ash_bricks",
-    "top": "supplementaries:blocks/ash_bricks",
-    "side": "supplementaries:blocks/ash_bricks"
+    "bottom": "supplementaries:block/ash_bricks",
+    "top": "supplementaries:block/ash_bricks",
+    "side": "supplementaries:block/ash_bricks"
   }
 }

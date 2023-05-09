@@ -160,7 +160,7 @@ public class GunpowderExplosion extends Explosion {
         }
 
         if (spawnFire) {
-            BlockPos pos = new BlockPos(this.x,this.y,this.z);
+            BlockPos pos = BlockPos.containing(this.x,this.y,this.z);
             if (this.level.getBlockState(pos).isAir() && this.level.getBlockState(pos.below()).isSolidRender(this.level, pos.below())) {
                 this.level.setBlockAndUpdate(pos, BaseFireBlock.getState(this.level, pos));
             }

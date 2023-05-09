@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "end": "supplementaries:blocks/blackstone_lamp_top",
-    "side": "supplementaries:blocks/blackstone_lamp"
+    "end": "supplementaries:block/blackstone_lamp_top",
+    "side": "supplementaries:block/blackstone_lamp"
   }
 }

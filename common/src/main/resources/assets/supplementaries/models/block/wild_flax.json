@@ -1,6 +1,6 @@
 {
   "parent": "block/cross",
   "textures": {
-    "cross": "supplementaries:blocks/wild_flax"
+    "cross": "supplementaries:block/wild_flax"
   }
 }

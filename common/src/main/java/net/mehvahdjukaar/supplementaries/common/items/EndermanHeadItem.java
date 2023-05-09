@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.EndermanHeadItemRenderer;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +15,7 @@ import java.util.function.Supplier;
 
 public class EndermanHeadItem extends StandingAndWallBlockItem implements ICustomItemRendererProvider {
     public EndermanHeadItem(Block block, Block block2, Properties properties) {
-        super(block, block2, properties);
+        super(block, block2, properties, Direction.DOWN);
     }
 
     //@Override

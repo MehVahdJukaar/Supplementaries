@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"2": "supplementaries:blocks/jar_tinted_cork"
+		"2": "supplementaries:block/jar_tinted_cork"
 	},
 	"elements": [
 		{

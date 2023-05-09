@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:blocks/statue_base",
-		"particle": "supplementaries:blocks/statue_base"
+		"1": "supplementaries:block/statue_base",
+		"particle": "supplementaries:block/statue_base"
 	},
 	"elements": [
 		{

@@ -128,11 +128,6 @@ public class ClientEventsForge {
         }
     }
 
-    @SubscribeEvent
-    public static void onLevelUnload(LevelEvent.Unload event) {
-        if(event.getLevel().isClientSide()){
-            CapturedMobCache.clear();
-        }
-    }
+
 
 }

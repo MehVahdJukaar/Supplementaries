@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "supplementaries:blocks/wall_lanterns/wall_lantern",
-		"particle": "supplementaries:blocks/wall_lanterns/wall_lantern"
+		"1": "supplementaries:block/wall_lanterns/wall_lantern",
+		"particle": "supplementaries:block/wall_lanterns/wall_lantern"
 	},
 	"elements": [
 		{

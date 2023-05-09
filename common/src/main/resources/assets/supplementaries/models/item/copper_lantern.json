@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "supplementaries:items/copper_lantern"
+		"layer0": "supplementaries: item/copper_lantern"
 	}
 }

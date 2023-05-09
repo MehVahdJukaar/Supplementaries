@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/copper_lantern",
-		"particle": "supplementaries:blocks/copper_lantern"
+		"0": "supplementaries:block/copper_lantern",
+		"particle": "supplementaries:block/copper_lantern"
 	},
 	"elements": [
 		{

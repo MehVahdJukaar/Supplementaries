@@ -1,6 +1,6 @@
 {
   "parent": "supplementaries:block/crop_cross",
   "textures": {
-    "cross": "supplementaries:blocks/flax_seal"
+    "cross": "supplementaries:block/flax_seal"
   }
 }

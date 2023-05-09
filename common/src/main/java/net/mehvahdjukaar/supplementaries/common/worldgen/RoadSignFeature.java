@@ -152,7 +152,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
         reader.setBlock(pos, FENCE, 2);
         pos = pos.above();
         reader.setBlock(pos, FENCE, 2);
-        reader.setBlock(pos.above(), ModBuiltInRegistries.BLOCK_GENERATOR.get().defaultBlockState(), 2);
+        reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(), 2);
 
 
         return true;

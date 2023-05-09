@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "supplementaries:blocks/blackboard_side",
-		"1": "supplementaries:blocks/blackboard_back",
-		"2": "supplementaries:blocks/blackboard",
-		"particle": "supplementaries:blocks/blackboard_side"
+		"0": "supplementaries:block/blackboard_side",
+		"1": "supplementaries:block/blackboard_back",
+		"2": "supplementaries:block/blackboard",
+		"particle": "supplementaries:block/blackboard_side"
 	},
 	"elements": [
 		{

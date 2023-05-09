@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "supplementaries:blocks/lapis_bricks"
+		"all": "supplementaries:block/lapis_bricks"
 	}
 }

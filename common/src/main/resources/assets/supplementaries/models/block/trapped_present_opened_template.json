@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "supplementaries:blocks/presents/present_trapped",
-		"bottom": "supplementaries:blocks/presents/present_bottom",
-		"inside": "supplementaries:blocks/presents/present_inside",
-		"particle": "supplementaries:blocks/presents/present_side",
-		"side": "supplementaries:blocks/presents/present_side"
+		"3": "supplementaries:block/presents/present_trapped",
+		"bottom": "supplementaries:block/presents/present_bottom",
+		"inside": "supplementaries:block/presents/present_inside",
+		"particle": "supplementaries:block/presents/present_side",
+		"side": "supplementaries:block/presents/present_side"
 	},
 	"elements": [
 		{

@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:block/crystal_display_0",
 	"textures": {
-		"0": "supplementaries:blocks/display_side",
-		"2": "supplementaries:blocks/display_full",
-		"4": "supplementaries:blocks/display_back"
+		"0": "supplementaries:block/display_side",
+		"2": "supplementaries:block/display_full",
+		"4": "supplementaries:block/display_back"
 	},
 	"elements": [
 		{

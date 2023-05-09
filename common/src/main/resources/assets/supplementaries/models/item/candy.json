@@ -2,7 +2,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:items/candy"
+    "layer0": "supplementaries: item/candy"
   },
   "overrides": [
     {

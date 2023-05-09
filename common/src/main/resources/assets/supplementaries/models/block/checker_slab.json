@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"particle": "supplementaries:blocks/checkerboard2",
-		"top": "supplementaries:blocks/checkerboard2",
-		"bottom": "supplementaries:blocks/checkerboard"
+		"particle": "supplementaries:block/checkerboard2",
+		"top": "supplementaries:block/checkerboard2",
+		"bottom": "supplementaries:block/checkerboard"
 	},
 	"elements": [
 		{

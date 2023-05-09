@@ -1,6 +1,6 @@
 {
 	"parent": "supplementaries:block/timber_frame",
 	"textures": {
-		"1": "supplementaries:blocks/timber_brace_f"
+		"1": "supplementaries:block/timber_brace_f"
 	}
 }

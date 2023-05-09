@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -62,7 +63,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
         float f2 = (-mc.font.width(name) / 2f);
 
-        mc.font.drawInBatch(name, f2, i, -1, false, matrix4f, bufferIn, false, j, combinedLightIn);
+        mc.font.drawInBatch(name, f2, i, -1, false, matrix4f, bufferIn, Font.DisplayMode.NORMAL, j, combinedLightIn);
         poseStack.popPose();
     }
 

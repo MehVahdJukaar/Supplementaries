@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "supplementaries:block/sconce",
 	"textures": {
-		"0": "supplementaries:blocks/sconce_glow",
-		"1": "supplementaries:blocks/sconce_fire_glow",
-		"particle": "supplementaries:blocks/sconce_glow"
+		"0": "supplementaries:block/sconce_glow",
+		"1": "supplementaries:block/sconce_fire_glow",
+		"particle": "supplementaries:block/sconce_glow"
 	}
 }

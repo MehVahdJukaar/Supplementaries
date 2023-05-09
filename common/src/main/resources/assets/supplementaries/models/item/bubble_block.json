@@ -1,7 +1,7 @@
 {
 	"parent": "builtin/entity",
 	"textures": {
-		"particle": "supplementaries:blocks/bubble_block"
+		"particle": "supplementaries:block/bubble_block"
 	},
 	"display": {
 		"thirdperson_righthand": {

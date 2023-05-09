@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries:blocks/wild_flax"
+    "layer0": "supplementaries:block/wild_flax"
   }
 }

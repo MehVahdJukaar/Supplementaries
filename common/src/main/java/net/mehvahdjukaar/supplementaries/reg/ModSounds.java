@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
@@ -99,7 +100,7 @@ public class ModSounds {
 
 
     public static Supplier<SoundEvent> regSound(String name) {
-        return RegHelper.register(Supplementaries.res(name), () -> new SoundEvent(Supplementaries.res(name)), Registry.SOUND_EVENT);
+        return RegHelper.register(Supplementaries.res(name), () -> SoundEvent.createVariableRangeEvent(Supplementaries.res(name)), Registries.SOUND_EVENT);
     }
 
 }

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,7 +38,9 @@ public abstract class ParrotLayerMixin<T extends Player> {
                     entityType == EntityType.PARROT).ifPresent((entityType) -> {
                 matrixStack.pushPose();
                 matrixStack.translate(leftShoulder ? 0.4000000059604645 : -0.4000000059604645, livingEntity.isCrouching() ? -1.2999999523162842 : -1.5, 0.0);
-                VertexConsumer vertexConsumer = buffer.getBuffer(this.model.renderType(ParrotRenderer.PARROT_LOCATIONS[compoundTag.getInt("Variant")]));
+                Parrot.Variant variant = Parrot.Variant.byId(compoundTag.getInt("Variant"));
+
+                VertexConsumer vertexConsumer = buffer.getBuffer(this.model.renderType(ParrotRenderer.getVariantTexture(variant)));
                 renderOnShoulderPartying(model, matrixStack, vertexConsumer, packedLight,
                         OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch,
                         livingEntity.tickCount, 0);

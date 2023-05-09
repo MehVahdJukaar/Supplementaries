@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/spring_launcher_top",
-		"1": "supplementaries:blocks/spring_launcher_arm",
-		"2": "supplementaries:blocks/spring_launcher_side",
-		"particle": "supplementaries:blocks/spring_launcher_top"
+		"0": "supplementaries:block/spring_launcher_top",
+		"1": "supplementaries:block/spring_launcher_arm",
+		"2": "supplementaries:block/spring_launcher_side",
+		"particle": "supplementaries:block/spring_launcher_top"
 	},
 	"elements": [
 		{

@@ -88,7 +88,7 @@ public class PresentBehaviorsManager {
         BlockPos blockpos = source.getPos().above();
         if (stack.getItem() instanceof BlockItem bi && bi.getBlock() instanceof TntBlock tnt) {
             Explosion dummyExplosion = new Explosion(level, null,
-                    blockpos.getX() + 0.5, blockpos.getX() + 0.5, blockpos.getX() + 0.5, 0, false, Explosion.BlockInteraction.NONE);
+                    blockpos.getX() + 0.5, blockpos.getX() + 0.5, blockpos.getX() + 0.5, 0, false, Explosion.BlockInteraction.KEEP);
             tnt.wasExploded(level, blockpos, dummyExplosion);
 
             var entities = level.getEntitiesOfClass(PrimedTnt.class, (new AABB(blockpos)).move(0, 0.5, 0));

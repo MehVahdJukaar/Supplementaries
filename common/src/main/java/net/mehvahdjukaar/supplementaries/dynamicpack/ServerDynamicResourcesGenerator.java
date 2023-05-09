@@ -17,10 +17,9 @@ import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
@@ -147,14 +146,11 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
         ModRegistry.HANGING_SIGNS.forEach((w, b) -> {
             if (w != WoodTypeRegistry.OAK_TYPE) {
-                Item i = b.asItem();
                 //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                if (i.getItemCategory() != null) {
-                    FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                    if (newR == null) return;
-                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                    this.dynamicPack.addRecipe(newR);
-                }
+                FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                if (newR == null) return;
+                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                this.dynamicPack.addRecipe(newR);
             }
         });
     }
@@ -166,7 +162,8 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         WoodType oak = WoodTypeRegistry.OAK_TYPE;
 
         if (signPostTemplate2 == null) {
-            ShapedRecipeBuilder.shaped(ModRegistry.SIGN_POST_ITEMS.get(oak), 3)
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
+                            ModRegistry.SIGN_POST_ITEMS.get(oak), 3)
                     .pattern("   ")
                     .pattern("222")
                     .pattern(" 1 ")
@@ -178,7 +175,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         }
 
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
-            if (w != oak && i.getItemCategory() != null) {
+            if (w != oak) {
                 //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                 IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 

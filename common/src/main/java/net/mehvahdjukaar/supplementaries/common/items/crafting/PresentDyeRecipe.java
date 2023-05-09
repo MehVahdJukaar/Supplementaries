@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
@@ -21,7 +22,7 @@ import java.util.List;
 public class PresentDyeRecipe extends CustomRecipe {
 
     public PresentDyeRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation);
+        super(resourceLocation, CraftingBookCategory.BUILDING);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class PresentDyeRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer craftingContainer) {
+    public ItemStack assemble(CraftingContainer craftingContainer, RegistryAccess registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         DyeColor dyecolor = DyeColor.WHITE;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {

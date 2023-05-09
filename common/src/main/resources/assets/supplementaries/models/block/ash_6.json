@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/thin_block",
 	"textures": {
-		"particle": "supplementaries:blocks/ash",
-		"up": "supplementaries:blocks/ash"
+		"particle": "supplementaries:block/ash",
+		"up": "supplementaries:block/ash"
 	},
 	"elements": [
 		{

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/hourglass",
-		"particle": "supplementaries:blocks/hourglass"
+		"0": "supplementaries:block/hourglass",
+		"particle": "supplementaries:block/hourglass"
 	},
 	"elements": [
 		{

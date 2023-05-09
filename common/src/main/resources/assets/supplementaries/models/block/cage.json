@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "supplementaries:blocks/cage_base",
-		"1": "supplementaries:blocks/cage_side",
-		"2": "supplementaries:blocks/cage_top",
-		"particle": "supplementaries:blocks/cage_side"
+		"0": "supplementaries:block/cage_base",
+		"1": "supplementaries:block/cage_side",
+		"2": "supplementaries:block/cage_top",
+		"particle": "supplementaries:block/cage_side"
 	},
 	"elements": [
 		{

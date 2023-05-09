@@ -2,10 +2,10 @@
 	"parent": "supplementaries:block/trapped_present_opened_template",
 	"credit": "Made with Blockbench",
 	"textures": {
-			"3": "supplementaries:blocks/presents/present_trapped_gray",
-		"bottom": "supplementaries:blocks/presents/present_bottom_gray",
-		"inside": "supplementaries:blocks/presents/present_inside_gray",
-		"particle": "supplementaries:blocks/presents/present_side_gray",
-		"side": "supplementaries:blocks/presents/present_side_gray"
+			"3": "supplementaries:block/presents/present_trapped_gray",
+		"bottom": "supplementaries:block/presents/present_bottom_gray",
+		"inside": "supplementaries:block/presents/present_inside_gray",
+		"particle": "supplementaries:block/presents/present_side_gray",
+		"side": "supplementaries:block/presents/present_side_gray"
 	}
 }

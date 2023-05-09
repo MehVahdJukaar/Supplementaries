@@ -13,8 +13,8 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class RopeArrowCreateRecipe extends CustomRecipe {
-    public RopeArrowCreateRecipe(ResourceLocation idIn) {
-        super(idIn, CraftingBookCategory.EQUIPMENT);
+    public RopeArrowCreateRecipe(ResourceLocation idIn,CraftingBookCategory category) {
+        super(idIn, category);
     }
 
     @Override

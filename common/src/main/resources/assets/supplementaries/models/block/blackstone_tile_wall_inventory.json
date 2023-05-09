@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/wall_inventory",
   "textures": {
-    "wall": "supplementaries:blocks/blackstone_tiles"
+    "wall": "supplementaries:block/blackstone_tiles"
   }
 }
