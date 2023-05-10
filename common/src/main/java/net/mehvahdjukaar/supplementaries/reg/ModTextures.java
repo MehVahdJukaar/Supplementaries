@@ -31,7 +31,7 @@ public class ModTextures {
 
     //blocks (to stitch)
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
-    public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("entity/bellows");
+    public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("block/bellows");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
     public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("block/hourglass_redstone");
     public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("block/hourglass_glowstone");
@@ -82,28 +82,27 @@ public class ModTextures {
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
 
-    public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = new IdentityHashMap<>();
-    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("entity/books/book_enchanted");
-    public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("entity/books/book_tome");
-    public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("entity/books/book_written");
-    public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("entity/books/book_and_quill");
-    public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("entity/books/book_antique");
+    public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
+    public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");
+    public static final ResourceLocation BOOK_WRITTEN_TEXTURES = Supplementaries.res("block/books/book_written");
+    public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("block/books/book_and_quill");
+    public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("block/books/book_antique");
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
 
     public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = Util.make(() -> {
         Map<Block, ResourceLocation> map = new LinkedHashMap<>();
         //first key and default one too
-        map.put(Blocks.CANDLE, Supplementaries.res("textures/entity/skull_candles/default.png"));
+        map.put(Blocks.CANDLE, Supplementaries.res("textures/block/skull_candles/default.png"));
         for (DyeColor color : DyeColor.values()) {
             Block candle = BlocksColorAPI.getColoredBlock("candle", color);
-            map.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
+            map.put(candle, Supplementaries.res("textures/block/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
         if(CompatObjects.SOUL_CANDLE.get() != null) {
-            map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
+            map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/soul.png"));
         }
         if(CompatObjects.SPECTACLE_CANDLE.get() != null) {
-            map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/spectacle.png"));
+            map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/spectacle.png"));
         }
         return map;
     });
@@ -111,52 +110,19 @@ public class ModTextures {
     public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = Util.make(() -> {
         Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
-            map.put(color, Supplementaries.res("entity/books/book_" + color.getName()));
+            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
         }
         return map;
     });
 
-    public static List<ResourceLocation> getTexturesForBlockAtlas() {
-        List<ResourceLocation> blocks = new ArrayList<>(List.of(
-                FISHIES_TEXTURE, BELLOWS_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE,
-                HOURGLASS_GLOWSTONE, HOURGLASS_BLAZE,
-                HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
-
-        for (var s : ModMaterials.SIGN_POSTS_MATERIALS.get().values()) {
-            blocks.add(s.texture());
-        }
-        blocks.addAll(WallLanternTexturesManager.SPECIAL_TEXTURES.values());
-        return blocks;
-    }
-
-    public static List<ResourceLocation> getTexturesForBannerAtlas() {
-        List<ResourceLocation> list = new ArrayList<>();
-        if (ModTextures.FLAG_TEXTURES.isEmpty()) {
+    public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(()->{
+        var map = new IdentityHashMap<BannerPattern, ResourceLocation>();
             for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
-
-                FLAG_TEXTURES.put(pattern, Supplementaries.res("entity/flags/" +
+                map.put(pattern, Supplementaries.res("block/flags/" +
                         BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
             }
-        }
-        try {
-            ModTextures.FLAG_TEXTURES.values().stream().filter(r -> !MissingTextureAtlasSprite.getLocation().equals(r))
-                    .forEach(list::add);
-        } catch (Exception ignored) {
-        }
-        return list;
-    }
+        return map;
+    });
 
-    public static List<ResourceLocation> getTexturesForShulkerAtlas() {
-        List<ResourceLocation> list = new ArrayList<>();
-
-        list.add(ModTextures.BOOK_ENCHANTED_TEXTURES);
-        list.add(ModTextures.BOOK_TOME_TEXTURES);
-        list.add(ModTextures.BOOK_WRITTEN_TEXTURES);
-        list.add(ModTextures.BOOK_AND_QUILL_TEXTURES);
-        list.add(ModTextures.BOOK_ANTIQUE_TEXTURES);
-        list.addAll(ModTextures.BOOK_TEXTURES.values());
-
-        return list;
-    }
 
 }

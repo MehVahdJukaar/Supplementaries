@@ -9,12 +9,12 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "snowyspirit:eggnog"
   },
   "from_mod": "snowyspirit",
-  "still_texture": "moonlight:soft_fluids/potion_still",
+  "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.snowyspirit.eggnog"
 }

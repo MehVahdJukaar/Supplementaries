@@ -9,12 +9,12 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "betteranimalsplus:horseshoe_crab_blood"
   },
   "from_mod": "betteranimalsplus",
-  "still_texture": "moonlight:soft_fluids/potion_still",
+  "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.betteranimalsplus.horseshoe_crab_blood"
 }

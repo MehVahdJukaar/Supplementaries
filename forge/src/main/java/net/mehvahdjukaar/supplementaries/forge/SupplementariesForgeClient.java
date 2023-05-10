@@ -44,7 +44,7 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void registerShader(RegisterShadersEvent event) {
         try {
-            ShaderInstance translucentParticleShader = new ShaderInstance(event.getResourceManager(),
+            ShaderInstance translucentParticleShader = new ShaderInstance(event.getResourceProvider(),
                     Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY);
 
             event.registerShader(translucentParticleShader, s -> staticNoiseShader = s);
@@ -56,7 +56,8 @@ public class SupplementariesForgeClient {
 
     private abstract static class RenderTypeAccessor extends RenderType {
         protected static final ShaderStateShard STATIC_NOISE_SHARD = new ShaderStateShard(SupplementariesForgeClient::getStaticNoiseShader);
-        static Function<ResourceLocation, RenderType> STATIC_NOISE = Util.memoize((resourceLocation) -> {
+
+        static final Function<ResourceLocation, RenderType> STATIC_NOISE = Util.memoize((resourceLocation) -> {
             CompositeState compositeState = RenderType.CompositeState.builder()
                     .setShaderState(STATIC_NOISE_SHARD)
                     .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))

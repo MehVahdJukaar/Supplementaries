@@ -15,7 +15,7 @@
       "capacity": 4
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "upgrade_aquatic:mulberry_jam_bottle"

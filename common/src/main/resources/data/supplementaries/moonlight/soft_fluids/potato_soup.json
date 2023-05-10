@@ -11,12 +11,12 @@
   "equivalent_fluids": [
     "inspirations:potato_soup"
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 2,
     "item": "inspirations:potato_soup"
   },
   "from_mod": "inspirations",
-  "still_texture": "moonlight:soft_fluids/soup_liquid",
+  "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "use_texture_from": "inspirations:potato_soup"
 }

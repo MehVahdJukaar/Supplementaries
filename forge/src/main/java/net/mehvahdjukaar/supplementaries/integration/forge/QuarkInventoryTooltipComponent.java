@@ -49,7 +49,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer, int something) {
+    public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer) {
         if (locked) return;
         BlockEntity te = ItemsUtil.loadBlockEntityFromItem(this.tag, this.item);
         if (te != null) {
@@ -86,8 +86,8 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
                     int yp = tooltipY + 6 + (i / dimensions[0]) * EDGE;
 
                     if (!itemstack.isEmpty()) {
-                        render.renderAndDecorateFakeItem(itemstack, xp, yp);
-                        render.renderGuiItemDecorations(mc.font, itemstack, xp, yp);
+                        render.renderAndDecorateFakeItem(pose, itemstack, xp, yp);
+                        render.renderGuiItemDecorations(pose, mc.font, itemstack, xp, yp);
                     }
 
                     if (!ChestSearchingModule.namesMatch(itemstack)) {

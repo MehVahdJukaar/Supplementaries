@@ -12,13 +12,13 @@
   "equivalent_fluids": [
     "thermal:syrup"
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "autumnity:syrup_bottle"
   },
   "from_mod": "autumnity",
-  "still_texture": "moonlight:soft_fluids/honey_liquid",
+  "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "translation_key": "item.autumnity.syrup",
   "use_texture_from": "create:honey"
 }

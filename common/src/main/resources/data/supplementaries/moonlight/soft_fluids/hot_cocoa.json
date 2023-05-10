@@ -9,12 +9,12 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/milk_liquid",
+  "flowing_texture": "moonlight:block/soft_fluids/milk_liquid",
   "food": {
     "divider": 1,
     "item": "farmersdelight:hot_cocoa"
   },
   "from_mod": "farmersdelight",
-  "still_texture": "moonlight:soft_fluids/milk_liquid",
+  "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.farmersdelight.hot_cocoa"
 }

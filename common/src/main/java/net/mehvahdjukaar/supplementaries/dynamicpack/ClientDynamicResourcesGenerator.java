@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -25,6 +23,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 
 public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
@@ -119,11 +117,11 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                                 {
                                     "parent": "item/generated",
                                     "textures": {
-                                        "layer0": "supplementaries:item/globes/""" + name + "\""+
+                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
                                 """               
-                                    }
-                                }
-                                """));
+                                            }
+                                        }
+                                        """));
             }
 
         });
@@ -244,7 +242,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.masked(boardTemplate, boardMask);
 
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
-
+                if (sign.requiredFeatures() != FeatureFlags.VANILLA_SET) return;
                 //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res("item/hanging_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
@@ -303,6 +301,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
+                if (sign.requiredFeatures() != FeatureFlags.VANILLA_SET) return;
                 //if (wood.isVanilla()) continue;
 
                 ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
@@ -353,13 +352,13 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         //sign posts block textures
         try (TextureImage template = TextureImage.open(manager,
-                Supplementaries.res("entity/sign_posts/sign_post_oak"))) {
+                Supplementaries.res("block/sign_posts/sign_post_oak"))) {
 
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                var textureRes = Supplementaries.res("entity/sign_posts/" + Utils.getID(sign).getPath());
+                var textureRes = Supplementaries.res("block/sign_posts/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 try (TextureImage plankTexture = TextureImage.open(manager,

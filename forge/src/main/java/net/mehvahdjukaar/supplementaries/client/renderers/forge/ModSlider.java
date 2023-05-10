@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client;
+package net.mehvahdjukaar.supplementaries.client.renderers.forge;
 
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.network.chat.Component;

@@ -16,13 +16,13 @@
       "capacity": 4
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "autumnity:sap_bottle"
   },
   "from_mod": "supplementaries",
-  "still_texture": "moonlight:soft_fluids/honey_liquid",
+  "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "translation_key": "fluid.supplementaries.sap",
   "use_texture_from": "thermal:sap"
 }

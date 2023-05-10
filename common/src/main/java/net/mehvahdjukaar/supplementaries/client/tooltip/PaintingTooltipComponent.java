@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -21,14 +22,14 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
 
     public PaintingTooltipComponent(PaintingTooltip tooltip) {
         this.pattern = tooltip.pattern();
-        int h = pattern.getHeight();
-        int w = pattern.getWidth();
+        float h = pattern.getHeight();
+        float w = pattern.getWidth();
         if (h > w) {
             this.height = MAX_SIZE;
-            this.width = MAX_SIZE / h * w;
+            this.width = (int)((MAX_SIZE / h) * w);
         } else {
             this.width = MAX_SIZE;
-            this.height = MAX_SIZE / w * h;
+            this.height = (int)((MAX_SIZE / w) * h);
         }
     }
 
@@ -49,9 +50,9 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
         var sprite = paintingTextureManager.get(pattern);
 
         RenderSystem.enableBlend();
+        var c = sprite.contents();
 
-        GuiComponent.blit(poseStack, x, y,0, width, height, sprite);
-        //RenderUtil.blitSprite(poseStack, x, y, MAX_SIZE, MAX_SIZE, (16f) / sprite.getWidth(), (16f / sprite.getHeight()) * 12, (int) (20f / 64 * sprite.getWidth()), (int) (20f / 64 * sprite.getHeight()), sprite);
+        RenderUtil.blitSprite(poseStack, x, y, width, height, 0, 0, c.width(), c.height(), sprite);
 
         poseStack.popPose();
     }

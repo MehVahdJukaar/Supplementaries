@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 public class ShulkerShellItem extends ArmorItem {
 
     public ShulkerShellItem(Properties properties) {
-        super(new SkulkerShellArmorMaterial(), EquipmentSlot.HEAD, properties);
+        super(new SkulkerShellArmorMaterial(), Type.HELMET, properties);
     }
 
     @Override
@@ -34,12 +34,13 @@ public class ShulkerShellItem extends ArmorItem {
         private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
 
         @Override
-        public int getDurabilityForSlot(EquipmentSlot slotType) {
-            return HEALTH_PER_SLOT[slotType.getIndex()] * 10;
+        public int getDurabilityForType(Type slotType) {
+            return HEALTH_PER_SLOT[slotType.ordinal()] * 10;
+
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlot equipmentSlot) {
+        public int getDefenseForType(Type arg) {
             return 0;
         }
 

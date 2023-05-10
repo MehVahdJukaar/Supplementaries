@@ -9,12 +9,12 @@
       "capacity": 2
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 2,
     "item": "farmersdelight:pumpkin_soup"
   },
   "from_mod": "farmersdelight",
-  "still_texture": "moonlight:soft_fluids/soup_liquid",
+  "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.farmersdelight.pumpkin_soup"
 }

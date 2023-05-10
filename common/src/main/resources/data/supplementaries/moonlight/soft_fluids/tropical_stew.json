@@ -9,11 +9,11 @@
       "capacity": 2
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 2,
     "item": "ecologics:tropical_stew"
   },
   "from_mod": "ecologics",
-  "still_texture": "moonlight:soft_fluids/soup_liquid"
+  "still_texture": "moonlight:block/soft_fluids/soup_liquid"
 }

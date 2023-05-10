@@ -73,11 +73,11 @@ public class SlingshotRendererHelper {
                 double pZ = vector3d.z();
 
                 int color = ClientConfigs.Items.SLINGSHOT_OUTLINE_COLOR.get();
-
-                float a = FastColor.ABGR32.alpha(color) / 255f;
-                float b = FastColor.ABGR32.blue(color) / 255f;
+                //config is setup to use RGBA
+                float r = FastColor.ARGB32.red(color) / 255f;
                 float g = FastColor.ARGB32.green(color) / 255f;
-                float r = FastColor.ABGR32.red(color) / 255f;
+                float b = FastColor.ARGB32.blue(color) / 255f;
+                float a = FastColor.ARGB32.alpha(color) / 255f;
 
                 renderVoxelShape(matrixStack, builder, blockstate.getShape(world, pos, CollisionContext.of(camera.getEntity())),
                         pos.getX() - pX, pos.getY() - pY, pos.getZ() - pZ, r, g, b, a);

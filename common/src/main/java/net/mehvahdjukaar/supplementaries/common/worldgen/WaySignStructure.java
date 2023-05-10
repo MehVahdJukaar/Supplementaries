@@ -16,6 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -188,7 +189,6 @@ public class WaySignStructure extends Structure {
         for(var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.WAY_SIGN_DESTINATIONS)){
             VALID_BIOMES.addAll(s.value().biomes().stream().toList());
         }
-        ModDamageSources
     }
 
     public static void clearCache(){

@@ -9,12 +9,12 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/honey_liquid",
+  "flowing_texture": "moonlight:block/soft_fluids/honey_liquid",
   "food": {
     "divider": 1,
     "item": "simplefarming:jam"
   },
   "from_mod": "simplefarming",
-  "still_texture": "moonlight:soft_fluids/honey_liquid",
+  "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "translation_key": "item.simplefarming.jam"
 }

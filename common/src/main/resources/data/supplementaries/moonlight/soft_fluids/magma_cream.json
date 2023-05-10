@@ -9,8 +9,8 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/magma_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/magma_flow",
   "from_mod": "minecraft",
-  "still_texture": "moonlight:soft_fluids/magma_still",
+  "still_texture": "moonlight:block/soft_fluids/magma_still",
   "translation_key": "item.minecraft.magma_cream"
 }

@@ -199,7 +199,7 @@ public class QuarkCompatImpl {
 
     static {
         TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
-                new Item.Properties().tab(null).rarity(Rarity.UNCOMMON), 0);
+                new Item.Properties().rarity(Rarity.UNCOMMON), 0);
 
         TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));

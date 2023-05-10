@@ -48,7 +48,7 @@ public class Supplementaries {
 
     public static final String MOD_ID = "supplementaries";
 
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger("Supplementaries");
 
 
     public static ResourceLocation res(String n) {

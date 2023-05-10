@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.supplementaries.client.ModSlider;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.ModSlider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -28,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
 

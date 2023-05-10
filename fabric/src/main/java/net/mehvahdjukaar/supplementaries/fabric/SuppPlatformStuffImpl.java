@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
-import net.mehvahdjukaar.supplementaries.client.ModSlider;
+import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.MultiBufferSource;

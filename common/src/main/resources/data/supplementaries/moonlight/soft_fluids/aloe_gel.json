@@ -15,7 +15,7 @@
       "capacity": 4
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 1,
     "item": "atmospheric:aloe_gel_bottle"

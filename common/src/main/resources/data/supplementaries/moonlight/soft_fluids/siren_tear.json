@@ -9,8 +9,8 @@
       "capacity": 1
     }
   ],
-  "flowing_texture": "moonlight:soft_fluids/milk_liquid",
+  "flowing_texture": "moonlight:block/soft_fluids/milk_liquid",
   "from_mod": "iceandfire",
-  "still_texture": "moonlight:soft_fluids/milk_liquid",
+  "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.iceandfire.siren_tear"
 }

@@ -64,6 +64,10 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundParticlePacket.class, ClientBoundParticlePacket::new);
 
+        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
+                ClientBoundSyncTradesPacket.class, ClientBoundSyncTradesPacket::new);
+
+
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::new);

@@ -25,7 +25,7 @@ public abstract class PaintingItemMixin extends Item {
         if (this == Items.PAINTING && ClientConfigs.Tweaks.PAINTINGS_TOOLTIPS.get()) {
             var tag = stack.getTag();
             if (tag != null && tag.contains("EntityTag")) {
-                var v = ResourceLocation.tryParse(tag.getString("variant"));
+                var v = ResourceLocation.tryParse(tag.getCompound("EntityTag").getString("variant"));
                 if (v != null) {
                     var variant = BuiltInRegistries.PAINTING_VARIANT.getOptional(v);
                     return variant.map(PaintingTooltip::new);

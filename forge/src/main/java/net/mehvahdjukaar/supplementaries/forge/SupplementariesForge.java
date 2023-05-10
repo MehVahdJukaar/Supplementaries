@@ -45,7 +45,7 @@ public class SupplementariesForge {
 
         ServerEventsForge.init();
 
-        PlatHelper.getEnv().ifClient(() -> {
+        PlatHelper.getPhysicalSide().ifClient(() -> {
             ClientRegistry.init();
             ClientEventsForge.init();
             ClientHelper.addClientSetup(ClientRegistry::setup);
@@ -71,7 +71,7 @@ public class SupplementariesForge {
                 event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
                         new ShulkerShellItem(new Item.Properties()
                                 .stacksTo(64)
-                                .tab(CreativeModeTab.TAB_MATERIALS)));
+                                ));
             }
         }
     }

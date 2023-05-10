@@ -323,7 +323,7 @@ public class CreateCompatImpl {
             if (v == null) {
                 v = new Vec3(0, 0, 0);
             }
-            BlockPos pos = new BlockPos(v);
+            BlockPos pos =  BlockPos.containing(v);
 
             int light = LevelRenderer.getLightColor(context.world, pos);
 
