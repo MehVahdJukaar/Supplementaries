@@ -36,14 +36,12 @@ public class ModSetup {
     private static boolean firstTagLoad = false;
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
-            CurseLootFunction::setup,
             CompatHandler::setup,
             FlowerPotHandler::setup,
             WeatheredMap::setup,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
-            ModSetup::registerFramed,
             CauldronBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
@@ -53,6 +51,9 @@ public class ModSetup {
         FaucetBehaviorsManager.registerBehaviors();
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
+        ModCreativeTabs.setup();
+        ModSetup.registerFrameBlocks();
+        CurseLootFunction.setup();
     }
 
     public static void setup() {
@@ -104,7 +105,7 @@ public class ModSetup {
 
     }
 
-    private static void registerFramed() {
+    private static void registerFrameBlocks() {
         ModRegistry.TIMBER_FRAME.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_FRAME.get());
         ModRegistry.TIMBER_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_BRACE.get());
         ModRegistry.TIMBER_CROSS_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_CROSS_BRACE.get());

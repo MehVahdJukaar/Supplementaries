@@ -45,10 +45,9 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     }
 
     @Override
-    public boolean rideableUnderWater() {
-        return CommonConfigs.Tweaks.ZOMBIE_HORSE_UNDERWATER.get();
+    public boolean dismountsUnderwater() {
+        return false;
     }
-
     //called server side. needs syncing with entity event
 
     public void startConverting() {

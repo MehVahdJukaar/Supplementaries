@@ -8,11 +8,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -103,14 +103,20 @@ public class WaySignStructure extends Structure {
         LevelHeightAccessor heightLimitView = context.heightAccessor();
         RandomState randomState = context.randomState();
 
-        //if it can generate villages
-        boolean hasVillages = generator.possibleStructureSets().anyMatch(f -> {
-                    for (var s : f.value().structures()) {
-                        if (s.structure().is(ModTags.WAY_SIGN_DESTINATIONS)) return true;
+        boolean hasVillages = true;
+        //TODO: fix
+        if(heightLimitView instanceof LevelAccessor l && l.getChunkSource() instanceof ServerChunkCache c){
+            ChunkGeneratorStructureState structureState = c.getGeneratorState();
+            //if it can generate villages
+            hasVillages = structureState.possibleStructureSets().stream().anyMatch(f -> {
+                        for (var s : f.value().structures()) {
+                            if (s.structure().is(ModTags.WAY_SIGN_DESTINATIONS)) return true;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-        );
+            );
+        }
+
         if (!hasVillages) return Optional.empty();
 
 

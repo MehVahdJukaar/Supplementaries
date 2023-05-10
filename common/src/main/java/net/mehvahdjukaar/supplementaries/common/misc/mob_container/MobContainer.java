@@ -320,9 +320,9 @@ public class MobContainer {
         if (entity instanceof LivingEntity le) {
             le.yHeadRotO = 0;
             le.yHeadRot = 0;
-            le.animationSpeed = 0;
-            le.animationSpeedOld = 0;
-            le.animationPosition = 0;
+            le.walkAnimation.setSpeed(0);
+            le.walkAnimation.update(-le.walkAnimation.position(),1);
+            le.walkAnimation.setSpeed(0);
             le.hurtDuration = 0;
             le.hurtTime = 0;
             le.attackAnim = 0;

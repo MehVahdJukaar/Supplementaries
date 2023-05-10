@@ -14,6 +14,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
@@ -80,11 +81,11 @@ public class StructureLocator {
 
         //structures that can generate
         Map<StructurePlacement, Set<Holder<Structure>>> reachableTargetsMap = new Object2ObjectArrayMap<>();
-
+        ChunkGeneratorStructureState structureState = level.getChunkSource().getGeneratorState();
 
         for (var holder : selectedTargets) {
             //if it can't generate in these biomes it won't return anything here so previous biome check isnt needed
-            for (StructurePlacement structureplacement : chunkGenerator.getPlacementsForStructure(holder, level.getChunkSource().randomState())) {
+            for (StructurePlacement structureplacement : structureState.getPlacementsForStructure(holder)) {
                 reachableTargetsMap.computeIfAbsent(structureplacement, (placement) -> new ObjectArraySet<>()).add(holder);
             }
         }
@@ -277,7 +278,7 @@ public class StructureLocator {
     @Nullable
     public BlockPos findRandomMapFeature(TagKey<Structure> tagKey, BlockPos pos,
                                          int radius, boolean unexplored, ServerLevel level) {
-        if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) {
+        if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return null;
         } else {
             Optional<HolderSet.Named<Structure>> optional = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);

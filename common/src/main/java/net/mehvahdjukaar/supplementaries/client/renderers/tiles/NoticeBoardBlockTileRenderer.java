@@ -178,9 +178,9 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
                     float dy = (((1f / scale) - (8 * numberOfLines)) / 2f) + 0.5f;
                     if (!bookName.equals("missingno")) {
-                        font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
+                        font.drawInBatch(str, dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, Font.DisplayMode.NORMAL, 0, frontLight);
                     } else {
-                        font.drawInBatch("\u00A7ka", dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, false, 0, frontLight);
+                        font.drawInBatch("§ka", dx, dy + 8 * lin, i1, false, matrixStackIn.last().pose(), bufferIn, Font.DisplayMode.NORMAL, 0, frontLight);
                     }
                 }
                 matrixStackIn.popPose();

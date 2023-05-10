@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import net.mehvahdjukaar.moonlight.api.util.fake_player.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.supplementaries.client.ModSlider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
 
@@ -91,8 +95,15 @@ public class SuppPlatformStuffImpl {
     public static RenderType staticNoise(ResourceLocation location) {
         return SupplementariesForgeClient.staticNoise(location);
     }
+
     public static ShaderInstance getNoiseShader() {
         return SupplementariesForgeClient.getStaticNoiseShader();
     }
+
+    public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
+                                                    double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
+        return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
+    }
+
 
 }

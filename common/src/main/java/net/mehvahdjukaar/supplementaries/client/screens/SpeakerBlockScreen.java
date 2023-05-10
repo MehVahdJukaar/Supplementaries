@@ -1,18 +1,21 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.screens.widgets.ForgeSlider;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.FancyTrunkPlacer;
 
 public class SpeakerBlockScreen extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
@@ -28,7 +31,7 @@ public class SpeakerBlockScreen extends Screen {
     private SpeakerBlockTile.Mode mode;
     private final String message;
     private Button modeBtn;
-    private ForgeSlider volumeSlider;
+    private AbstractSliderButton volumeSlider;
     private final double initialVolume;
 
     public SpeakerBlockScreen(SpeakerBlockTile te) {
@@ -70,17 +73,19 @@ public class SpeakerBlockScreen extends Screen {
 
         int range = CommonConfigs.Redstone.SPEAKER_RANGE.get();
 
-        this.volumeSlider = new ForgeSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
+        this.volumeSlider = SuppPlatformStuff.createSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
                 VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
                 initialVolume, 1, 1, true);
 
         this.addRenderableWidget(this.volumeSlider);
 
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_214266_1_) -> this.onDone()));
-        this.modeBtn = this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, CHAT_TEXT, (p_214186_1_) -> {
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onDone())
+                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
+        this.modeBtn = this.addRenderableWidget(Button.builder(CHAT_TEXT, button -> {
             this.toggleMode();
             this.updateMode();
-        }));
+        }).bounds(this.width / 2 - 75, this.height / 4 + 50, 150, 20).build());
+        
         if (!CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) {
             this.modeBtn.active = false;
         }
@@ -95,14 +100,14 @@ public class SpeakerBlockScreen extends Screen {
         this.editBox.setMaxLength(32);
         this.addRenderableWidget(this.editBox);
         this.setInitialFocus(this.editBox);
-        this.editBox.setFocus(true);
+        this.editBox.setFocused(true);
     }
 
     @Override
     public void removed() {
         this.tileSpeaker.setMode(this.mode);
         this.tileSpeaker.setMessage(this.editBox.getValue());
-        this.tileSpeaker.setVolume(this.volumeSlider.getValue());
+        this.tileSpeaker.setVolume(((ISlider)this.volumeSlider).getValue());
         //refreshTextures server tile
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
                 this.tileSpeaker.getMessage(), this.tileSpeaker.getMode(), this.tileSpeaker.getVolume()));
@@ -136,7 +141,7 @@ public class SpeakerBlockScreen extends Screen {
             if (button == 0) {
                 this.volumeSlider.onRelease(mouseX, mouseY);
                 this.setFocused(this.editBox);
-                this.editBox.setFocus(true);
+                this.editBox.setFocused(true);
             }
         }
         return true;

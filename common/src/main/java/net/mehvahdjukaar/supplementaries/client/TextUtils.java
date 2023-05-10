@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 
@@ -70,7 +71,7 @@ public class TextUtils {
             float dx =  (-fontRenderer.width(str) / 2f) + 0.5f;
             int a = (int) (255 * (-Math.pow(((-o + n - 6f) / 7.2f), 2) + 1));
             int col = (int) (255 * side);
-            int rgba = NativeImage.combine(a, col, col, col);
+            int rgba = FastColor.ARGB32.color(a, col, col, col);
 
             fontRenderer.drawInBatch(str, dx, borderY * SCALING_FACTOR - (offset) + 8 * n, rgba, false,
                     matrixStack.last().pose(), bufferIn, Font.DisplayMode.NORMAL, 0, light);

@@ -15,13 +15,12 @@ import java.util.Random;
 
 public class ChangeGlobeSeedCommand implements Command<CommandSourceStack> {
 
-    private static final ChangeGlobeSeedCommand CMD = new ChangeGlobeSeedCommand();
     private static final Random rand = new Random();
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("newseed")
                 .requires(cs -> cs.hasPermission(2))
-                .executes(CMD);
+                .executes(new ChangeGlobeSeedCommand());
     }
 
     @Override

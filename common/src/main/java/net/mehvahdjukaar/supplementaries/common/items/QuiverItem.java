@@ -318,6 +318,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             ItemStack selected = this.getSelected(null);
             int amount = 0;
             for (var item : this.getContentView()) {
+
                 if (ForgeHelper.canItemStack(selected, item)) {
                     amount += item.getCount();
                 }

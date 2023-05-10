@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class ItemLoreRecipe extends CustomRecipe {
-    public ItemLoreRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation, CraftingBookCategory.MISC);
+    public ItemLoreRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
+        super(resourceLocation, category);
     }
 
     @Override

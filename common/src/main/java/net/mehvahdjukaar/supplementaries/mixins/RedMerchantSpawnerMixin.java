@@ -32,7 +32,9 @@ import java.util.Optional;
 @Mixin(WanderingTraderSpawner.class)
 public abstract class RedMerchantSpawnerMixin {
 
-    @Shadow @Final private RandomSource random;
+    @Shadow
+    @Final
+    private RandomSource random;
     @Final
     @Shadow
     private ServerLevelData serverLevelData;
@@ -71,7 +73,7 @@ public abstract class RedMerchantSpawnerMixin {
                     if (spawnPos != null && this.hasEnoughSpace(world, spawnPos)) {
                         if (!world.getBiome(spawnPos).is(Biomes.THE_VOID)) {
 
-                            RedMerchantEntity trader = ModEntities.RED_MERCHANT.get().spawn(world, null, null, null, spawnPos, MobSpawnType.EVENT, false, false);
+                            RedMerchantEntity trader = ModEntities.RED_MERCHANT.get().spawn(world, spawnPos, MobSpawnType.EVENT);
                             if (trader != null) {
                                 this.serverLevelData.setWanderingTraderId(trader.getUUID());
                                 int lifetime = 25000;
@@ -126,7 +128,7 @@ public abstract class RedMerchantSpawnerMixin {
         diff *= dragon;
 
         //ho ho ho
-        if(MiscUtils.FESTIVITY.isChristmas()) diff *= 15;
+        if (MiscUtils.FESTIVITY.isChristmas()) diff *= 15;
 
         return diff;
     }

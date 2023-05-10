@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class FilteredPlayerListWidget extends GuiComponent implements NarratableEntry, GuiEventListener {
+public class FilteredPlayerListWidget extends GuiComponent implements NarratableEntry, GuiEventListener, Renderable {
 
     private static final int ENTRY_PER_SCREEN = 3;
     private static final int ITEM_HEIGHT = 12;
@@ -45,6 +46,8 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
     private String filter;
     private int scrollOff;
     private boolean isDragging;
+    //TODO: finish
+    private boolean focused;
 
 
     public FilteredPlayerListWidget(Minecraft minecraft, int x, int y, Consumer<String> onClick) {
@@ -67,6 +70,16 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
         }
 
         this.filtered.addAll(allPlayers);
+    }
+
+    @Override
+    public void setFocused(boolean bl) {
+        this.focused = bl;
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
     }
 
     //set filter and return filtered values

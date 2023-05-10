@@ -43,7 +43,7 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
             for (int m = 0; m < i; ++m) {
                 int n = mouseX + m * 18 + 1;
                 int o = mouseY + l * 20 + 1;
-                this.renderSlot(n, o, k++,  font, poseStack, itemRenderer);
+                this.renderSlot(n, o, k++, font, poseStack, itemRenderer);
             }
         }
         this.drawBorder(mouseX, mouseY, i, j, poseStack);
@@ -51,38 +51,38 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
 
     private void renderSlot(int x, int y, int itemIndex, Font font, PoseStack poseStack, ItemRenderer itemRenderer) {
         if (itemIndex >= this.items.size()) {
-            this.blit(poseStack, x, y, blitOffset, Texture.SLOT);
+            this.blit(poseStack, x, y, Texture.SLOT);
             return;
         }
         ItemStack itemStack = this.items.get(itemIndex);
-        this.blit(poseStack, x, y, blitOffset, Texture.SLOT);
-        itemRenderer.renderAndDecorateItem(itemStack, x + 1, y + 1, itemIndex);
-        itemRenderer.renderGuiItemDecorations(font, itemStack, x + 1, y + 1);
+        this.blit(poseStack, x, y, Texture.SLOT);
+        itemRenderer.renderAndDecorateItem(poseStack, itemStack, x + 1, y + 1, itemIndex);
+        itemRenderer.renderGuiItemDecorations(poseStack, font, itemStack, x + 1, y + 1);
         if (itemIndex == selectedSlot) {
-            AbstractContainerScreen.renderSlotHighlight(poseStack, x + 1, y + 1, blitOffset);
+            AbstractContainerScreen.renderSlotHighlight(poseStack, x + 1, y + 1, 0);
         }
     }
 
-    private void drawBorder(int x, int y, int slotWidth, int slotHeight, PoseStack poseStack, int blitOffset) {
+    private void drawBorder(int x, int y, int slotWidth, int slotHeight, PoseStack poseStack) {
         int i;
-        this.blit(poseStack, x, y, blitOffset, Texture.BORDER_CORNER_TOP);
-        this.blit(poseStack, x + slotWidth * 18 + 1, y, blitOffset, Texture.BORDER_CORNER_TOP);
+        this.blit(poseStack, x, y, Texture.BORDER_CORNER_TOP);
+        this.blit(poseStack, x + slotWidth * 18 + 1, y, Texture.BORDER_CORNER_TOP);
         for (i = 0; i < slotWidth; ++i) {
-            this.blit(poseStack, x + 1 + i * 18, y, blitOffset, Texture.BORDER_HORIZONTAL_TOP);
-            this.blit(poseStack, x + 1 + i * 18, y + slotHeight * 20, blitOffset, Texture.BORDER_HORIZONTAL_BOTTOM);
+            this.blit(poseStack, x + 1 + i * 18, y, Texture.BORDER_HORIZONTAL_TOP);
+            this.blit(poseStack, x + 1 + i * 18, y + slotHeight * 20, Texture.BORDER_HORIZONTAL_BOTTOM);
         }
         for (i = 0; i < slotHeight; ++i) {
-            this.blit(poseStack, x, y + i * 20 + 1, blitOffset, Texture.BORDER_VERTICAL);
-            this.blit(poseStack, x + slotWidth * 18 + 1, y + i * 20 + 1, blitOffset, Texture.BORDER_VERTICAL);
+            this.blit(poseStack, x, y + i * 20 + 1, Texture.BORDER_VERTICAL);
+            this.blit(poseStack, x + slotWidth * 18 + 1, y + i * 20 + 1, Texture.BORDER_VERTICAL);
         }
-        this.blit(poseStack, x, y + slotHeight * 20, blitOffset, Texture.BORDER_CORNER_BOTTOM);
-        this.blit(poseStack, x + slotWidth * 18 + 1, y + slotHeight * 20, blitOffset, Texture.BORDER_CORNER_BOTTOM);
+        this.blit(poseStack, x, y + slotHeight * 20, Texture.BORDER_CORNER_BOTTOM);
+        this.blit(poseStack, x + slotWidth * 18 + 1, y + slotHeight * 20, Texture.BORDER_CORNER_BOTTOM);
     }
 
-    private void blit(PoseStack poseStack, int x, int y, int blitOffset, Texture texture) {
+    private void blit(PoseStack poseStack, int x, int y, Texture texture) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        GuiComponent.blit(poseStack, x, y, blitOffset, texture.x, texture.y, texture.w, texture.h, 128, 128);
+        GuiComponent.blit(poseStack, x, y, 0, texture.x, texture.y, texture.w, texture.h, 128, 128);
     }
 
     private int gridSizeX() {

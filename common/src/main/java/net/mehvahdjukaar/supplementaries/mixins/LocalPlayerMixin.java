@@ -24,13 +24,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LocalPlayerMixin extends AbstractClientPlayer implements IQuiverEntity {
 
 
+    protected LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
+        super(clientLevel, gameProfile);
+    }
+
     @Shadow
     @Override
     public abstract InteractionHand getUsedItemHand();
 
-    protected LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
-        super(clientLevel, gameProfile, profilePublicKey);
-    }
 
     @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)
     private void hasEnoughImpulseToStartSprinting(CallbackInfoReturnable<Boolean> cir) {

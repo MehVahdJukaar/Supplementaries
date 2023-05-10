@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TrappedPresentRecipe extends CustomRecipe {
-    public TrappedPresentRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation, CraftingBookCategory.BUILDING);
+    public TrappedPresentRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
+        super(resourceLocation, category);
     }
 
     public boolean matches(CraftingContainer craftingContainer, Level level) {

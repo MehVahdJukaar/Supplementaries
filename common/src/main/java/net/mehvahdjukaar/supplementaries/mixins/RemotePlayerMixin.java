@@ -22,9 +22,10 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverEntity 
     @Unique
     private ItemStack quiver = ItemStack.EMPTY;
 
-    protected RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey profilePublicKey) {
-        super(level, blockPos, f, gameProfile, profilePublicKey);
+    private RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
+        super(level, blockPos, f, gameProfile);
     }
+
 
     //this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",

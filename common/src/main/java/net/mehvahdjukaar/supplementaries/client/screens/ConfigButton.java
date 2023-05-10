@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class ConfigButton extends Button {
 
     public ConfigButton(int x, int y) {
-        super(x, y, 20, 20, Component.literal("s"), ConfigButton::click);
+        super(x, y, 20, 20, Component.literal("s"), ConfigButton::click, Button.DEFAULT_NARRATION);
     }
 
     //@Override

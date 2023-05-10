@@ -63,7 +63,7 @@ public class ClientReceivers {
     }
 
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
-        withPlayerDo(p -> PlayerSuggestionBoxWidget.USERNAME_CACHE = message.usernameCache);
+        withPlayerDo(p -> PlayerSuggestionBoxWidget.setUsernameCache(message.usernameCache));
     }
 
     public static void handleSpawnBlockParticlePacket(ClientBoundParticlePacket message) {

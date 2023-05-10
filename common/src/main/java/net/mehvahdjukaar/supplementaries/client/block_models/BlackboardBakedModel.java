@@ -98,40 +98,40 @@ public class BlackboardBakedModel implements CustomBakedModel {
         byte[][] pixels = blackboard.getPixels();
         boolean emissive = blackboard.isGlow();
         List<BakedQuad> quads;
-        try (TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
-             TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"))) {
+        TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
+        TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"));
 
-            quads = new ArrayList<>();
-            var rotation = modelTransform.getRotation();
+        quads = new ArrayList<>();
+        var rotation = modelTransform.getRotation();
 
-            for (int x = 0; x < pixels.length; x++) {
-                int length = 0;
-                int startY = 0;
-                byte prevColor = pixels[0][x];
-                for (int y = 0; y <= pixels[x].length; y++) {
-                    Byte current = null;
-                    if (y < pixels[x].length) {
-                        byte b = pixels[x][y];
-                        if (prevColor == b) {
-                            length++;
-                            continue;
-                        }
-                        current = b;
+        for (int x = 0; x < pixels.length; x++) {
+            int length = 0;
+            int startY = 0;
+            byte prevColor = pixels[0][x];
+            for (int y = 0; y <= pixels[x].length; y++) {
+                Byte current = null;
+                if (y < pixels[x].length) {
+                    byte b = pixels[x][y];
+                    if (prevColor == b) {
+                        length++;
+                        continue;
                     }
-                    //draws prev quad
-                    int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
-                    TextureAtlasSprite sprite = prevColor == 0 ? black : white;
-                    quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 5 / 16f,
-                            1 / 16f, length / 16f, sprite, tint, rotation,
-                            prevColor != 0 && emissive, dir));
-
-                    startY = y;
-                    if (current != null) {
-                        prevColor = current;
-                    }
-                    length = 1;
+                    current = b;
                 }
+                //draws prev quad
+                int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
+                TextureAtlasSprite sprite = prevColor == 0 ? black : white;
+                quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 5 / 16f,
+                        1 / 16f, length / 16f, sprite, tint, rotation,
+                        prevColor != 0 && emissive, dir));
+
+                startY = y;
+                if (current != null) {
+                    prevColor = current;
+                }
+                length = 1;
             }
+
         }
         return quads;
     }

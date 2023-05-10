@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolder
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -110,7 +109,8 @@ public class DoormatScreen extends Screen {
 
     @Override
     protected void init() {
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (button) -> this.close()));
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.close())
+                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (h) -> {
             this.cachedLines[this.editLine] = h;

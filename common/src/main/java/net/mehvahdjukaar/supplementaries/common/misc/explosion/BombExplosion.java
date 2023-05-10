@@ -32,6 +32,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -197,7 +198,8 @@ public class BombExplosion extends Explosion {
         int i1 = Mth.floor(this.y + diameter + 1.0D);
         int j2 = Mth.floor(this.z - diameter - 1.0D);
         int j1 = Mth.floor(this.z + diameter + 1.0D);
-        List<Entity> list = this.level.getEntities(this.getSourceMob(), new AABB(k1, i2, j2, l1, i1, j1));
+
+        List<Entity> list = this.level.getEntities(this.getIndirectSourceEntity(), new AABB(k1, i2, j2, l1, i1, j1));
         ForgeHelper.onExplosionDetonate(this.level, this, list, diameter);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 

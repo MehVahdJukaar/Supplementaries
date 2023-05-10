@@ -123,7 +123,9 @@ public class SignPostScreen extends Screen {
 
     @Override
     protected void init() {
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (button) -> this.close()));
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.close())
+                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
+
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
             this.cachedLines[this.editLine] = s;
             this.tile.getTextHolder().setLine(this.editLine, Component.literal(s));

@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -124,7 +125,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
 
-        float humidity = reader.getBiome(pos).value().getDownfall();
+        float humidity = reader.getBiome(pos).value().climateSettings.downfall();
 
 
         //generate cobble path

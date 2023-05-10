@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class TextHolder implements IAntiqueTextProvider {
@@ -230,7 +231,7 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     @Environment(EnvType.CLIENT)
-    public TextUtil.RenderTextProperties getRenderTextProperties(int combinedLight, Supplier<Boolean> shouldShowGlow) {
+    public TextUtil.RenderTextProperties getRenderTextProperties(int combinedLight, BooleanSupplier shouldShowGlow) {
         return new TextUtil.RenderTextProperties(this.getColor(), this.hasGlowingText(), combinedLight,
                 this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY, shouldShowGlow);
     }

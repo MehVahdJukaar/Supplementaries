@@ -13,12 +13,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class OpenConfiguredCommand implements Command<CommandSourceStack> {
-    private static final OpenConfiguredCommand CMD = new OpenConfiguredCommand();
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("configs")
                 .requires(cs -> cs.hasPermission(0))
-                .executes(CMD);
+                .executes(new OpenConfiguredCommand());
     }
 
     @Override

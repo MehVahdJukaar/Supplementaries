@@ -13,12 +13,10 @@ import net.minecraft.server.level.ServerLevel;
 
 public class ResetGlobeSeedCommand implements Command<CommandSourceStack> {
 
-    private static final ResetGlobeSeedCommand CMD = new ResetGlobeSeedCommand();
-
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("resetseed")
                 .requires(cs -> cs.hasPermission(2))
-                .executes(CMD);
+                .executes(new ResetGlobeSeedCommand());
     }
 
     @Override

@@ -30,6 +30,10 @@ accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadiu
 #touching water
 accessible field net/minecraft/world/entity/Entity wasTouchingWater Z
 
+#climate settings
+accessible field net/minecraft/world/level/biome/Biome climateSettings Lnet/minecraft/world/level/biome/Biome$ClimateSettings;
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+
 #concrete
 accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/state/BlockState;
 

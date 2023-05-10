@@ -7,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -17,7 +19,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FastColor;
 
 
-public class BlackBoardButton extends GuiComponent implements GuiEventListener, NarratableEntry {
+public class BlackBoardButton extends GuiComponent implements GuiEventListener, Renderable, NarratableEntry {
     public final int u;
     public final int v;
     public final int x;
@@ -144,10 +146,13 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
     }
 
     @Override
-    public boolean changeFocus(boolean focus) {
-        this.focused = !this.focused;
-        //this.onFocusedChanged(this.focused);
-        return this.focused;
+    public boolean isFocused() {
+        return focused;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        this.focused = focused;
     }
 
     @Override
@@ -166,7 +171,8 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
     }
 
     public interface IPressable {

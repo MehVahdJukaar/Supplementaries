@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.particle.ShriekParticle;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -50,7 +51,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             if (!projectileStack.isEmpty() && this.getAllSupportedProjectiles().test(projectileStack)) {
 
                 float power = getPowerForTime(stack, timeLeft);
-                if (!((double) power < 0.085D)) {
+                if ((power >= 0.085D)) {
 
                     int maxProjectiles = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0 ? 3 : 1;
 
@@ -92,9 +93,10 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
-        Quaternionf quaternion = new Quaternionf(vector3d1.toVector3f(), yaw, true);
+        Quaternionf quaternionf = new Quaternionf().setAngleAxis(yaw, vector3d1.x(), vector3d1.y(), vector3d1.z());
+
         Vector3f vector3f = entity.getViewVector(1.0F).toVector3f();
-        vector3f.rotate(quaternion);
+        vector3f.rotate(quaternionf);
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), power, accuracy);
 
         stack.hurtAndBreak(1, entity, (p) -> p.broadcastBreakEvent(hand));

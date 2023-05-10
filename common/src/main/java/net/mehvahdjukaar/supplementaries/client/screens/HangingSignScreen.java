@@ -107,9 +107,8 @@ public class HangingSignScreen extends Screen {
 
     @Override
     protected void init() {
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 200, 20, CommonComponents.GUI_DONE, (p_169820_) -> {
-            this.close();
-        }));
+        this.addRenderableWidget(Button.builder( CommonComponents.GUI_DONE,button -> this.close())
+                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (t) -> {
             this.cachedLines[this.editLine] = t;

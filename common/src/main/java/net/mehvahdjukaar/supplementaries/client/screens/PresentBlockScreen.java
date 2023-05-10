@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPac
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -29,8 +30,6 @@ import java.util.UUID;
 
 public class PresentBlockScreen extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
 
-    private static final Component PACK_BUTTON = Component.translatable("gui.supplementaries.present.pack");
-
     private static final int DESCRIPTION_BOX_X = 53;
     private static final int DESCRIPTION_BOX_Y = 33;
     private static final int DESCRIPTION_BOX_H = 36;
@@ -38,6 +37,15 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     private static final int SUGGESTION_BOX_Y = 19;
     private static final int SUGGESTION_BOX_W = 99;
     private static final int SUGGESTION_BOX_H = 12;
+
+    public static final MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockScreen> GUI_FACTORY =
+            (container, inventory, title) -> {
+                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
+                if (te instanceof PresentBlockTile presentBlockTile) {
+                    return new PresentBlockScreen(container, inventory, title, presentBlockTile);
+                }
+                return null;
+            };
 
     private final PresentBlockTile tile;
 
@@ -48,15 +56,6 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     private boolean packed;
     //hasn't received items yet
     private boolean needsInitialization = true;
-
-    public static MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockScreen> GUI_FACTORY =
-            (container, inventory, title) -> {
-                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
-                if (te instanceof PresentBlockTile presentBlockTile) {
-                    return new PresentBlockScreen(container, inventory, title, presentBlockTile);
-                }
-                return null;
-            };
 
     public PresentBlockScreen(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
         super(container, inventory, text);
@@ -179,14 +178,14 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        if(this.packed){
+        if (this.packed) {
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
-            blit(poseStack, k + slot.x, l + slot.y,  300,12, 232, 16, 16, 256, 256);
+            blit(poseStack, k + slot.x, l + slot.y, 300, 12, 232, 16, 16, 256, 256);
         }
         this.renderTooltip(poseStack, mouseX, mouseY);
     }
@@ -194,7 +193,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     @Override
     protected void renderLabels(PoseStack poseStack, int x, int y) {
         super.renderLabels(poseStack, x, y);
-        packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
+        //packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
     }
 
     @Override
@@ -216,7 +215,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
             this.minecraft.player.closeContainer();
         }
         return this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput() ||
-            this.descriptionBox.keyPressed(key, a, b) || this.descriptionBox.canConsumeInput()
+                this.descriptionBox.keyPressed(key, a, b) || this.descriptionBox.canConsumeInput()
                 || super.keyPressed(key, a, b);
     }
 
@@ -243,6 +242,8 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     }
 
     public class PackButton extends AbstractButton {
+        private static final Tooltip TOOLTIP = Tooltip.create(Component.translatable("gui.supplementaries.present.pack"));
+
         private boolean packed;
 
         protected PackButton(int x, int y) {
@@ -250,7 +251,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int i1, int i2, float v) {
+        public void renderWidget(PoseStack poseStack, int i1, int i2, float v) {
             RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = 198;
@@ -269,13 +270,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
         public void setState(boolean hasItem, boolean packed) {
             this.packed = packed;
             this.active = hasItem;
-        }
-
-        @Override
-        public void renderToolTip(PoseStack matrixStack, int x, int y) {
-            if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                PresentBlockScreen.this.renderTooltip(matrixStack, PACK_BUTTON, x, y);
-            }
+            this.setTooltip(!packed ? TOOLTIP : null);
         }
 
         @Override
@@ -284,7 +279,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput output) {
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         }
     }
 

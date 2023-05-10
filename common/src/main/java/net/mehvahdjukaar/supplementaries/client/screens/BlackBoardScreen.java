@@ -91,13 +91,16 @@ public class BlackBoardScreen extends Screen {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
-                this.addWidget(this.buttons[xx][yy]);
+                this.addRenderableWidget(this.buttons[xx][yy]);
                 this.buttons[xx][yy].setColor(this.tileBoard.getPixel(xx,yy));
             }
         }
 
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20, CLEAR, b -> this.clear()));
-        this.addRenderableWidget(new Button(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20, CommonComponents.GUI_DONE, button -> this.close()));
+        this.addRenderableWidget(Button.builder(CLEAR, b -> this.clear())
+                .bounds(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20).build());
+
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.close())
+                .bounds(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20).build());
     }
 
     @Override

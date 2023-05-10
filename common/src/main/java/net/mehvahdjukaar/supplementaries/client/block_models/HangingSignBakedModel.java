@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -82,7 +83,6 @@ public class HangingSignBakedModel implements CustomBakedModel {
                 if (!fancy) {
 
                     BakedModel model = ClientHelper.getModel(blockModelShaper.getModelManager(), ClientRegistry.HANGING_SIGNS_BLOCK_MODELS.get(hs.woodType));
-                    if (model.getParticleIcon() instanceof MissingTextureAtlasSprite) return quads;
                     var signQuads = model.getQuads(state, side, rand);
                     boolean flipped = state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X;
                     boolean ceiling = state.getValue(HangingSignBlock.ATTACHMENT) == ModBlockProperties.SignAttachment.CEILING;

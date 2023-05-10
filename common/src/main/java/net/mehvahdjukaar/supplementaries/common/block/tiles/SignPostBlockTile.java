@@ -5,7 +5,6 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -79,7 +78,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     //@Override
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
-        return new AABB(this.getBlockPos().offset(-0.25, 0, -0.25), this.getBlockPos().offset(1.25, 1, 1.25));
+        BlockPos pos = this.getBlockPos();
+        return new AABB(pos.getX() - 0.25, pos.getY(), pos.getZ() - 0.25,
+                pos.getX() + 1.25, pos.getY() + 1d, pos.getZ() + 1.25);
     }
 
     public void pointToward(BlockPos targetPos, boolean up) {

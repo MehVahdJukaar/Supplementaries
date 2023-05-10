@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -29,7 +30,8 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     private final boolean gold;
 
     public IronGateBlock(Properties properties, boolean gold) {
-        super(properties, BlockSetType.IRON);
+        super(properties, WoodType.OAK);
+        properties.sound(SoundType.METAL);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE));
         this.gold = gold;
     }

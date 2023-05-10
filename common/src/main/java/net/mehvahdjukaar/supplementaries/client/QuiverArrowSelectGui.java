@@ -143,8 +143,10 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 RenderSystem.setShaderTexture(0, TEXTURE);
 
                 int centerX = screenWidth / 2;
-                int z = this.getBlitOffset();
-                this.setBlitOffset(-90);
+
+                poseStack.pushPose();
+                poseStack.translate(0,0,-90);
+
                 int uWidth = slots * 20 + 2;
                 int px = uWidth / 2;
                 int py = screenHeight / 2 - 40;
@@ -156,8 +158,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 blit(poseStack, centerX + px - 1, py, 0, 0, 1, 22);
                 blit(poseStack, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
 
+                poseStack.popPose();
 
-                this.setBlitOffset(z);
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
                 int i1 = 1;

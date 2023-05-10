@@ -12,12 +12,10 @@ import net.minecraft.network.chat.Component;
 
 public class ReloadConfigsCommand implements Command<CommandSourceStack> {
 
-    private static final ReloadConfigsCommand CMD = new ReloadConfigsCommand();
-
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("reload")
                 .requires((p) -> p.hasPermission(0))
-                .executes(CMD);
+                .executes(new ReloadConfigsCommand());
     }
 
     @Override

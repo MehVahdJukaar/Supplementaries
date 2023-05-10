@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -229,7 +230,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             do {
                 selectedLoot = loottable.getRandomItems(lootContext);
                 //remove disabled stuff. hacky
-                selectedLoot = selectedLoot.stream().filter(e -> e.getItem().getItemCategory() != null).toList();
+                selectedLoot = selectedLoot.stream().filter(e -> !ModCreativeTabs.isHidden(e.getItem())).toList();
             } while (selectedLoot.isEmpty());
             return selectedLoot;
         }

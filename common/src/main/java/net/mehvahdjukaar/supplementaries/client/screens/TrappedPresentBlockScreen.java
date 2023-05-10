@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPre
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -138,7 +139,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
     @Override
     protected void renderLabels(PoseStack poseStack, int x, int y) {
         super.renderLabels(poseStack, x, y);
-        packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
+        //packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
     }
 
     @Override
@@ -162,6 +163,8 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
     }
 
     public class PackButton extends AbstractButton {
+        private static final Tooltip TOOLTIP = Tooltip.create(Component.translatable("gui.supplementaries.present.trapped"));
+
         private boolean packed;
 
         protected PackButton(int x, int y) {
@@ -188,14 +191,8 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
         public void setState(boolean hasItem, boolean packed) {
             this.packed = packed;
             this.active = hasItem;
-        }
+            this.setTooltip(!packed ? TOOLTIP : null);
 
-        //TODO:
-        @Override
-        public void renderToolTip(PoseStack matrixStack, int x, int y) {
-            if (this.isActive() && this.isHoveredOrFocused() && !this.packed) {
-                TrappedPresentBlockScreen.this.renderTooltip(matrixStack, Component.translatable("gui.supplementaries.present.trapped"), x, y);
-            }
         }
 
         @Override

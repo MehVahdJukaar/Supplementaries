@@ -21,8 +21,8 @@ import java.util.List;
 
 public class PresentDyeRecipe extends CustomRecipe {
 
-    public PresentDyeRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation, CraftingBookCategory.BUILDING);
+    public PresentDyeRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
+        super(resourceLocation, category);
     }
 
     @Override

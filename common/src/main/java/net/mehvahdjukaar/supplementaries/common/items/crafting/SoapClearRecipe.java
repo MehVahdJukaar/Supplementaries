@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class SoapClearRecipe extends CustomRecipe {
-    public SoapClearRecipe(ResourceLocation resourceLocation) {
-        super(resourceLocation, CraftingBookCategory.MISC);
+    public SoapClearRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
+        super(resourceLocation, category);
     }
 
     public boolean matches(CraftingContainer craftingContainer, Level level) {

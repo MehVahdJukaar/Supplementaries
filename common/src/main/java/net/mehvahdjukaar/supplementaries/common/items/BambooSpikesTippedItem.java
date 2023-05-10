@@ -86,30 +86,6 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return false;
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        //freaking bookshelf mod is calling this method before configs are loaded...
-        if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
-            if (this.allowedIn(group)) {
-                items.add(makeSpikeItem(Potions.POISON));
-                items.add(makeSpikeItem(Potions.LONG_POISON));
-                items.add(makeSpikeItem(Potions.STRONG_POISON));
-                for (Potion potion : BuiltInRegistries.POTION) {
-                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
-                        continue;
-                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && isPotionValid(potion)) {
-                        items.add(makeSpikeItem(potion));
-                    }
-                }
-            }
-        }
-    }
-
-    public static ItemStack makeSpikeItem(Potion potion) {
-        ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        PotionUtils.setPotion(stack, potion);
-        return stack;
-    }
 
     @Override
     public String getDescriptionId(ItemStack stack) {
@@ -132,5 +108,12 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public ItemStack getDefaultInstance() {
         return makeSpikeItem(Potions.POISON);
+    }
+
+
+    public static ItemStack makeSpikeItem(Potion potion) {
+        ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+        PotionUtils.setPotion(stack, potion);
+        return stack;
     }
 }

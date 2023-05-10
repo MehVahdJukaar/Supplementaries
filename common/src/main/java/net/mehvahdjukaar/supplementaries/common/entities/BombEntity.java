@@ -389,11 +389,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         public void afterExploded(BombExplosion exp, Level level) {
             if (this == SPIKY) {
                 Vec3 pos = exp.getDamageSource().getSourcePosition();
-                Entity e = exp.getSourceMob();
+                Entity e = exp.getIndirectSourceEntity();
                 if (e == null) return;
                 for (Entity entity : level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
                         pos.x + 30, pos.y + 4, pos.z + 30))) {
-                    int random = (int) (level.random.nextInt() * 100);
+                    int random =  (level.random.nextInt() * 100);
                     boolean shouldPoison = false;
                     if (entity.distanceToSqr(e) <= 4 * 4) {
                         shouldPoison = true;

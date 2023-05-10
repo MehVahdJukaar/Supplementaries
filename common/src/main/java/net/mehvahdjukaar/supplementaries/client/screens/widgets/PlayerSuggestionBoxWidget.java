@@ -18,7 +18,12 @@ import java.util.function.Supplier;
 
 public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
-    public static Map<UUID, String> USERNAME_CACHE = new HashMap<>();
+    private static final Map<UUID, String> USERNAME_CACHE = new HashMap<>();
+
+    public static void setUsernameCache(Map<UUID, String> usernameCache) {
+        USERNAME_CACHE.clear();
+        USERNAME_CACHE.putAll(usernameCache);
+    }
 
     private static final Component EMPTY_SEARCH = (Component.translatable("gui.supplementaries.present.send"))
             .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC);

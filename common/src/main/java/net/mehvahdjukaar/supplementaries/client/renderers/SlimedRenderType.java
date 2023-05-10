@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
+import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import org.joml.Matrix4f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -42,9 +43,12 @@ public class SlimedRenderType extends RenderType {
         long i = Util.getMillis() * time;
         float f = (float) (i % 80000L) / 80000.0F;
         float f1 = 0.5f + Mth.sin((float) (((float) (i % 30000L) / 30000.0F) * Math.PI)) * 0.5f;
-        Matrix4f matrix4f = Matrix4f.createTranslateMatrix(0.0F, f, 0.0F);
+
+        Matrix4f matrix4f = (new Matrix4f()).translation(0.0F, f, 0.0F);
+
         matrix4f.rotate(Axis.ZP.rotationDegrees(30));
-        matrix4f.rotate(Matrix4f.createScaleMatrix(0.5f, 0.5f, 0.5f));
+
+        matrix4f.mul((new Matrix4f()).scale(0.5f, 0.5f, 0.5f));
         RenderSystem.setTextureMatrix(matrix4f);
 
 

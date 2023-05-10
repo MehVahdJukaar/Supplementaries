@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -15,14 +17,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 
-import java.util.List;
+import java.util.*;
 
 public class ModCreativeTabs {
+
+    private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
 
     public static final CreativeModeTab MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             PlatHelper.createModTab(Supplementaries.res("supplementaries"),
@@ -83,12 +87,48 @@ public class ModCreativeTabs {
 
     public static void init() {
         RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
+
+    }
+
+    public static void setup() {
+        List<Item> hidden = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
+                .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
+        var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, aBoolean, itemStacks) -> {
+            itemStacks.forEach(i -> hidden.remove(i.getItem()));
+        });
+        registerItemsToTabs(dummy);
+        HIDDEN_ITEMS.addAll(hidden);
+    }
+
+    public static boolean isHidden(Item item){
+        return HIDDEN_ITEMS.contains(item);
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent event) {
-        event.addAfter(CreativeModeTabs.REDSTONE_BLOCKS, i -> i.is(Items.REDSTONE),
-                ModRegistry.RELAYER.get());
+        if (CommonConfigs.isEnabled(ModConstants.RELAYER_NAME)) {
+            event.addAfter(CreativeModeTabs.REDSTONE_BLOCKS, i -> i.is(Items.REDSTONE),
+                    ModRegistry.RELAYER.get());
+        }
 
     }
+
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        //freaking bookshelf mod is calling this method before configs are loaded...
+        if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
+            if (this.allowedIn(group)) {
+                items.add(BambooSpikesTippedItem. makeSpikeItem(Potions.POISON));
+                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.LONG_POISON));
+                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.STRONG_POISON));
+                for (Potion potion : BuiltInRegistries.POTION) {
+                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
+                        continue;
+                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && BambooSpikesTippedItem.isPotionValid(potion)) {
+                        items.add(BambooSpikesTippedItem.makeSpikeItem(potion));
+                    }
+                }
+            }
+        }
+    }
+
 
 }
