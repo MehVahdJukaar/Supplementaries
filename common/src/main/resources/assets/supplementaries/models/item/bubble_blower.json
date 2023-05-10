@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/handheld",
 	"textures": {
-		"layer0": "supplementaries: item/bubble_blower"
+		"layer0": "supplementaries:item/bubble_blower"
 	},
 	"display": {
 		"thirdperson_righthand": {

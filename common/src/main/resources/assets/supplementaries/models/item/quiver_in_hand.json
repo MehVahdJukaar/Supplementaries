@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "supplementaries: item/quiver_model_overlay",
-		"spyglass": "supplementaries: item/quiver_model",
-		"particle": "supplementaries: item/quiver_full"
+		"2": "supplementaries:item/quiver_model_overlay",
+		"spyglass": "supplementaries:item/quiver_model",
+		"particle": "supplementaries:item/quiver_full"
 	},
 	"elements": [
 		{

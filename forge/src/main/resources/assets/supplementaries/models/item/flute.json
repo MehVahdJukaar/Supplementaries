@@ -15,9 +15,9 @@
     }
   },
   "textures": {
-    "layer0": "supplementaries: item/flute",
-    "particles": "supplementaries: item/flute",
-    "particle": "supplementaries: item/flute"
+    "layer0": "supplementaries:item/flute",
+    "particles": "supplementaries:item/flute",
+    "particle": "supplementaries:item/flute"
   },
   "gui_light": "front",
   "display": {

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.teamabode.cave_enhancements.core.integration.quark.VerticalSlabBlock;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -806,7 +805,8 @@ public class ModRegistry {
     ));
 
     //vertical slab
-    public static final Supplier<Block> CHECKER_VERTICAL_SLAB = regWithItem(CHECKER_VERTICAL_SLAB_NAME, () -> new VerticalSlabBlock(
+    //TODO: fix
+    public static final Supplier<Block> CHECKER_VERTICAL_SLAB = regWithItem(CHECKER_VERTICAL_SLAB_NAME, () -> new Block(
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())));
 
     //pancakes

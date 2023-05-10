@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecip
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
@@ -226,6 +227,7 @@ public class ServerEventsForge {
             CapturedMobCache.clear();
         }else{
             WeatheredMapRecipe.onWorldUnload();
+            WaySignStructure.clearCache();
         }
     }
 

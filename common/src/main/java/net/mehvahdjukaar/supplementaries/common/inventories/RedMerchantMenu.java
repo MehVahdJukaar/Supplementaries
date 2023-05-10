@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -23,12 +24,16 @@ public class RedMerchantMenu extends AbstractContainerMenu {
     private boolean showProgressBar;
     private boolean canRestock;
 
+    public RedMerchantMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(id,playerInventory);
+    }
+
     public RedMerchantMenu(int i, Inventory inventory) {
         this(i, inventory, new ClientSideMerchant(inventory.player));
     }
 
     public RedMerchantMenu(int i, Inventory inventory, Merchant merchant) {
-        super(ModMenuTypes.RED_MERCHANT, i);
+        super(ModMenuTypes.RED_MERCHANT.get(), i);
         this.trader = merchant;
         this.tradeContainer = new MerchantContainer(merchant);
         this.addSlot(new Slot(this.tradeContainer, 0, 136, 37));

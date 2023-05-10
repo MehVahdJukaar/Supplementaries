@@ -47,8 +47,6 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
         });
         list.sort(Comparator.comparing(HourglassTimeData::getOrdering));
         list.forEach(HourglassTimesManager::addData);
-
-        ModDamageSources.reload(access);
     }
 
     public static void addData(HourglassTimeData data) {

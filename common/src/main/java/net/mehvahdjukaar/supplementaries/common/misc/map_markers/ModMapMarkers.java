@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 public class ModMapMarkers {
 
 
+    //builtin code defined ones
+
     //with markers
     public static final CustomDecorationType<CustomMapDecoration, SignPostMarker> SIGN_POST_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("sign_post"), SignPostMarker::new, SignPostMarker::getFromWorld, CustomMapDecoration::new);
@@ -58,19 +60,15 @@ public class ModMapMarkers {
     public static final ResourceLocation ANCIENT_CITY_TYPE = Supplementaries.res("ancient_city");
 
     public static void init() {
-        reg(SIGN_POST_DECORATION_TYPE);
-        reg(BED_DECORATION_TYPE);
-        reg(FLAG_DECORATION_TYPE);
-        reg(NETHER_PORTAL_DECORATION_TYPE);
-        reg(BEACON_DECORATION_TYPE);
-        reg(BANNER_DECORATION_TYPE);
-        reg(CHEST_DECORATION_TYPE);
-        reg(WAYSTONE_DECORATION_TYPE);
-        reg(END_PORTAL_DECORATION_TYPE);
-    }
-
-    private static void reg(CustomDecorationType<?, ?> type) {
-        MapDecorationRegistry.register(type.getCustomFactoryID(), () -> type);
+        MapDecorationRegistry.registerCustomType(SIGN_POST_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(BED_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(FLAG_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(NETHER_PORTAL_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(BEACON_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(BANNER_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(CHEST_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(WAYSTONE_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(END_PORTAL_DECORATION_TYPE);
     }
 
 }

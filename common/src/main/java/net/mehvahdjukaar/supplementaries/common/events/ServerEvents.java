@@ -18,8 +18,10 @@ import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
+import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
@@ -138,6 +140,11 @@ public class ServerEvents {
     @EventCalled
     public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
         ModSetup.tagDependantSetup(registryAccess);
+
+        if(!client) {
+            ModDamageSources.reload(registryAccess);
+            WaySignStructure.recomputeValidStructureCache(registryAccess);
+        }
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

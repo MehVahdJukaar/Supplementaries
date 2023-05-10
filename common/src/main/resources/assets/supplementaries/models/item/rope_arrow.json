@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries: item/rope_arrow"
+    "layer0": "supplementaries:item/rope_arrow"
   }
 }

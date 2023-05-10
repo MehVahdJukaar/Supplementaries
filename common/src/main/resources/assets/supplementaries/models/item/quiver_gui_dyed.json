@@ -2,7 +2,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries: item/quiver_full",
-    "layer1": "supplementaries: item/quiver_overlay_dyed"
+    "layer0": "supplementaries:item/quiver_full",
+    "layer1": "supplementaries:item/quiver_overlay_dyed"
   }
 }

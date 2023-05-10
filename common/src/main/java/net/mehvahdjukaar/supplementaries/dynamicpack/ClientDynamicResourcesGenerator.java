@@ -119,7 +119,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                                 {
                                     "parent": "item/generated",
                                     "textures": {
-                                        "layer0": "supplementaries: item/globes/""" + name + "\""+
+                                        "layer0": "supplementaries:item/globes/""" + name + "\""+
                                 """               
                                     }
                                 }
@@ -235,18 +235,18 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         //hanging sign item textures
         try (TextureImage boardTemplate = TextureImage.open(manager,
-                Supplementaries.res(" item/hanging_signs/template"));
+                Supplementaries.res("item/hanging_signs/template"));
              TextureImage boardMask = TextureImage.open(manager,
-                     Supplementaries.res(" item/hanging_signs/board_mask"));
+                     Supplementaries.res("item/hanging_signs/board_mask"));
              TextureImage signMask = TextureImage.open(manager,
-                     Supplementaries.res(" item/hanging_signs/sign_board_mask"))) {
+                     Supplementaries.res("item/hanging_signs/sign_board_mask"))) {
 
             Respriter respriter = Respriter.masked(boardTemplate, boardMask);
 
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
 
                 //if (wood.isVanilla()) continue;
-                ResourceLocation textureRes = Supplementaries.res(" item/hanging_signs/" + Utils.getID(sign).getPath());
+                ResourceLocation textureRes = Supplementaries.res("item/hanging_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;
@@ -259,16 +259,16 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                         newImage = respriter.recolor(targetPalette);
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSignTexture,
-                                Supplementaries.res(" item/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res(" item/hanging_signs/scribbles_template"))) {
+                                Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
+                                Supplementaries.res("item/hanging_signs/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Hanging Sign texture for {} : {}", sign, ex);
                         }
 
                         try (TextureImage stick = recolorFromVanilla(manager, vanillaSignTexture,
-                                Supplementaries.res(" item/hanging_signs/sign_stick_mask"),
-                                Supplementaries.res(" item/hanging_signs/stick_template"))) {
+                                Supplementaries.res("item/hanging_signs/sign_stick_mask"),
+                                Supplementaries.res("item/hanging_signs/stick_template"))) {
                             newImage.applyOverlay(stick);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Hanging Sign item texture for {} : {}", sign, ex);
@@ -298,14 +298,14 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         //sign posts item textures
         try (TextureImage template = TextureImage.open(manager,
-                Supplementaries.res(" item/sign_posts/template"))) {
+                Supplementaries.res("item/sign_posts/template"))) {
 
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
 
-                ResourceLocation textureRes = Supplementaries.res(" item/sign_posts/" + Utils.getID(sign).getPath());
+                ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
 
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
@@ -315,14 +315,14 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                     try (TextureImage vanillaSign = TextureImage.open(manager,
                             RPUtils.findFirstItemTextureLocation(manager, signItem));
                          TextureImage signMask = TextureImage.open(manager,
-                                 Supplementaries.res(" item/hanging_signs/sign_board_mask"))) {
+                                 Supplementaries.res("item/hanging_signs/sign_board_mask"))) {
 
                         List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
                         newImage = respriter.recolor(targetPalette);
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res(" item/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res(" item/sign_posts/scribbles_template"))) {
+                                Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
+                                Supplementaries.res("item/sign_posts/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);

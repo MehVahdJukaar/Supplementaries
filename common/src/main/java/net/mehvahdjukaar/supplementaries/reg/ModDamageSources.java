@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -33,8 +34,8 @@ public class ModDamageSources {
     }
     //these are data defined now
 
-    public static DamageSource spikePlayer(Player level) {
-        return new SpikePlayerDamageSource(spikeDamage);
+    public static DamageSource spikePlayer(Player player) {
+        return new SpikePlayerDamageSource(spikeDamage.typeHolder(), player);
     }
 
     public static DamageSource spike() {
@@ -47,8 +48,8 @@ public class ModDamageSources {
 
     public static class SpikePlayerDamageSource extends DamageSource {
 
-        public SpikePlayerDamageSource(String string, Entity entity) {
-            super(string, entity);
+        public SpikePlayerDamageSource(Holder<DamageType> typeHolder, Entity entity) {
+            super(typeHolder, entity);
         }
 
         @Override
@@ -65,7 +66,7 @@ public class ModDamageSources {
         @Override
         public Component getLocalizedDeathMessage(LivingEntity livingEntity) {
             LivingEntity livingEntity2 = livingEntity.getKillCredit();
-            String string = "death.attack." + this.msgId;
+            String string = "death.attack." + this.type().msgId();
             String string2 = string + ".player";
             return livingEntity2 != null
                     ? Component.translatable(string2, livingEntity.getDisplayName(), livingEntity2.getDisplayName())

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries: item/lead_door"
+    "layer0": "supplementaries:item/lead_door"
   }
 }

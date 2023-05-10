@@ -30,5 +30,7 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK = RegHelper.registerMenuType(
             Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
 
+    public static final Supplier<MenuType<RedMerchantMenu>> RED_MERCHANT = RegHelper.registerMenuType(
+            Supplementaries.res(RED_MERCHANT_NAME), RedMerchantMenu::new);
 
 }

@@ -3,13 +3,21 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import mezz.jei.core.util.WeakList;
+import net.mehvahdjukaar.moonlight.api.misc.WeakHashSet;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
@@ -20,10 +28,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 public class WaySignStructure extends Structure {
 
@@ -93,6 +98,8 @@ public class WaySignStructure extends Structure {
                 32);
     }
 
+
+
     /**
      * gets spawning position or empty if not suitable
      */
@@ -100,21 +107,18 @@ public class WaySignStructure extends Structure {
 
         ChunkPos chunkPos = context.chunkPos();
         ChunkGenerator generator = context.chunkGenerator();
-        LevelHeightAccessor heightLimitView = context.heightAccessor();
+        LevelHeightAccessor levelHeightAccessor = context.heightAccessor();
         RandomState randomState = context.randomState();
 
-        boolean hasVillages = true;
-        //TODO: fix
-        if(heightLimitView instanceof LevelAccessor l && l.getChunkSource() instanceof ServerChunkCache c){
-            ChunkGeneratorStructureState structureState = c.getGeneratorState();
-            //if it can generate villages
-            hasVillages = structureState.possibleStructureSets().stream().anyMatch(f -> {
-                        for (var s : f.value().structures()) {
-                            if (s.structure().is(ModTags.WAY_SIGN_DESTINATIONS)) return true;
-                        }
-                        return false;
-                    }
-            );
+        var biomes = context.biomeSource().possibleBiomes();
+
+        boolean hasVillages = false;
+
+        for(var v : VALID_BIOMES) {
+            if(biomes.contains(v)) {
+                hasVillages = true;
+                break;
+            }
         }
 
         if (!hasVillages) return Optional.empty();
@@ -123,7 +127,7 @@ public class WaySignStructure extends Structure {
         int x = chunkPos.getMiddleBlockX();
         int z = chunkPos.getMiddleBlockZ();
         // Grab height of land. Will stop at first non-air block.
-        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
+        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState);
 
         if (y < structure.minY || y > structure.maxY) return Optional.empty();
         if (y > 105 || y < generator.getSeaLevel()) return Optional.empty();
@@ -131,10 +135,10 @@ public class WaySignStructure extends Structure {
         List<Integer> list = new ArrayList<>();
         //I could remove this but it makes for nicer generation
         list.add(y);
-        if (isPosNotValid(generator, x + 2, z + 2, list, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x + 2, z - 2, list, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x - 2, z + 2, list, heightLimitView, randomState)) return Optional.empty();
-        if (isPosNotValid(generator, x - 2, z - 2, list, heightLimitView, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x + 2, z + 2, list, levelHeightAccessor, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x + 2, z - 2, list, levelHeightAccessor, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x - 2, z + 2, list, levelHeightAccessor, randomState)) return Optional.empty();
+        if (isPosNotValid(generator, x - 2, z - 2, list, levelHeightAccessor, randomState)) return Optional.empty();
 
         TreeSet<Integer> set = new TreeSet<>(list);
         if (set.last() - set.first() > 1) return Optional.empty();
@@ -177,5 +181,18 @@ public class WaySignStructure extends Structure {
         return true;
     }
 
+
+    private static final Set<Holder<Biome>> VALID_BIOMES = new WeakHashSet<>();
+
+    public static void recomputeValidStructureCache(RegistryAccess access){
+        for(var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.WAY_SIGN_DESTINATIONS)){
+            VALID_BIOMES.addAll(s.value().biomes().stream().toList());
+        }
+        ModDamageSources
+    }
+
+    public static void clearCache(){
+        VALID_BIOMES.clear();
+    }
 
 }

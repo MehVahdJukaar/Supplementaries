@@ -111,7 +111,7 @@ public class ModCreativeTabs {
         }
 
     }
-
+/*
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         //freaking bookshelf mod is calling this method before configs are loaded...
         if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
@@ -128,7 +128,7 @@ public class ModCreativeTabs {
                 }
             }
         }
-    }
+    }*/
 
 
 }

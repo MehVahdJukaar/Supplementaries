@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries: item/flint_shard"
+    "layer0": "supplementaries:item/flint_shard"
   }
 }

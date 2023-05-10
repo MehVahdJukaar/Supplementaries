@@ -46,7 +46,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
                     shift = At.Shift.BEFORE),
-            require = 3)
+            require = 1)
     private void cancelQuiverSlow(CallbackInfo ci) {
         this.cancelUsingQuiver = true;
     }
@@ -55,7 +55,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
                     shift = At.Shift.AFTER),
-            require = 3)
+            require = 1)
     private void reset(CallbackInfo ci) {
         this.cancelUsingQuiver = false;
     }

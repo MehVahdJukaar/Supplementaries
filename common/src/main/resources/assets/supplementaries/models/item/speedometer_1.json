@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "supplementaries: item/speedometer_1"
+    "layer0": "supplementaries:item/speedometer_1"
   }
 }

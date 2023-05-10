@@ -70,7 +70,7 @@ public class ModWorldgenRegistry {
             BlockPredicate.matchesFluids(new BlockPos(0, -1, 1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
             BlockPredicate.matchesFluids(new BlockPos(0, -1, -1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)));
 
-
+/*
     //configured features
 
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> WILD_FLAX_PATCH =
@@ -141,6 +141,7 @@ public class ModWorldgenRegistry {
     public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
             RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
 
+    */
 
     //helper
     private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier... placementRule) {

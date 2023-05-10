@@ -22,32 +22,25 @@ configurations {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    // Remove the next line if you don't want to depend on the API
-    //modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
     //modImplementation("curse.maven:yacl-667299:3987709")
 
-    //modCompileOnly("curse.maven:modmenu-308702:3920481")
-
-    modImplementation("curse.maven:modmenu-308702:3920481") {
+    modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
-    //modCompileOnly "com.terraformersmc:modmenu:4.0.6", {
-    //     exclude module: "fabric-api"
-    // }
 
     modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
-    modRuntimeOnly("curse.maven:architectury-api-419699:4147351")
-    modImplementation("curse.maven:flan-404578:3902630")
-    modImplementation("curse.maven:farmers-delight-fabric-482834:4111426")
-    modImplementation("curse.maven:decorative-blocks-362528:3941637")
+    //modRuntimeOnly("curse.maven:architectury-api-419699:4147351")
+    modCompileOnly("curse.maven:flan-404578:3902630")
+    modCompileOnly("curse.maven:farmers-delight-fabric-482834:4111426")
+    modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-restitched-462672:3908334")
     modCompileOnly("curse.maven:jei-238222:4405345")
     //modImplementation("curse.maven:twigs-496913:3943447")

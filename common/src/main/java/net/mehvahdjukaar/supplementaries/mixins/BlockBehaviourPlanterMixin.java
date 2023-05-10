@@ -26,20 +26,19 @@ public abstract class BlockBehaviourPlanterMixin {
     @Shadow
     public abstract boolean is(TagKey<Block> tagKey);
 
-    @Inject(method = "getOffset", at = @At(
-            value = "RETURN",
-            ordinal = 1),
+    @Inject(method = "method_49227", at = @At(
+            value = "RETURN"),
             cancellable = true)
     @SuppressWarnings("ConstantConditions")
-    public void getOffset(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Vec3> cir) {
+    public void getOffset(BlockGetter level, BlockPos pos, BlockBehaviour.OffsetFunction offsetFunction, CallbackInfoReturnable<Vec3> cir) {
         //null check for world since some mods like to throw a null world here...
-        if (world != null && cir.getReturnValue() != Vec3.ZERO &&
-                !world.isOutsideBuildHeight(pos.getY() - 2) && world instanceof RenderChunkRegion) {
+        if (level != null && cir.getReturnValue() != Vec3.ZERO &&
+                !level.isOutsideBuildHeight(pos.getY() - 2) && level instanceof RenderChunkRegion) {
             int b = 1;
             if (this.getBlock() instanceof DoublePlantBlock && ((BlockBehaviour.BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;
             }
-            if (world.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
+            if (level.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
                 cir.setReturnValue(Vec3.ZERO);
             }
         }

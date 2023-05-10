@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
+import net.mehvahdjukaar.moonlight.fabric.MLFabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ClientEventsFabric;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ServerEventsFabric;
@@ -16,14 +16,14 @@ public class SupplementariesFabric implements ModInitializer {
 
         ServerEventsFabric.init();
 
-        if (PlatHelper.getEnv().isClient()) {
+        if (PlatHelper.getPhysicalSide().isClient()) {
             throwIfFabricRenderingAPIHasBeenNuked();
             ClientEventsFabric.init();
             SupplementariesFabricClient.clientInitAndSetup();
         }
 
-        FabricSetupCallbacks.COMMON_SETUP.add(ModSetup::setup);
-        FabricSetupCallbacks.COMMON_SETUP.add(ModSetup::asyncSetup);
+        MLFabricSetupCallbacks.COMMON_SETUP.add(ModSetup::setup);
+        MLFabricSetupCallbacks.COMMON_SETUP.add(ModSetup::asyncSetup);
 
     }
 

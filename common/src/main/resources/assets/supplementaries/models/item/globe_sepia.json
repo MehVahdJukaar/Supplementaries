@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "supplementaries: item/globe_sepia"
+    "layer0": "supplementaries:item/globe_sepia"
   }
 }
