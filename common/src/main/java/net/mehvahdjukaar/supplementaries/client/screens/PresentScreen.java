@@ -16,6 +16,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -28,7 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.UUID;
 
-public class PresentBlockScreen extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
+public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu> implements ContainerListener {
 
     private static final int DESCRIPTION_BOX_X = 53;
     private static final int DESCRIPTION_BOX_Y = 33;
@@ -38,11 +40,11 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     private static final int SUGGESTION_BOX_W = 99;
     private static final int SUGGESTION_BOX_H = 12;
 
-    public static final MenuScreens.ScreenConstructor<PresentContainerMenu, PresentBlockScreen> GUI_FACTORY =
+    public static final MenuScreens.ScreenConstructor<PresentContainerMenu, PresentScreen> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof PresentBlockTile presentBlockTile) {
-                    return new PresentBlockScreen(container, inventory, title, presentBlockTile);
+                    return new PresentScreen(container, inventory, title, presentBlockTile);
                 }
                 return null;
             };
@@ -57,7 +59,7 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
     //hasn't received items yet
     private boolean needsInitialization = true;
 
-    public PresentBlockScreen(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
+    public PresentScreen(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -274,8 +276,13 @@ public class PresentBlockScreen extends AbstractContainerScreen<PresentContainer
         }
 
         @Override
+        protected ClientTooltipPositioner createTooltipPositioner() {
+            return new MenuTooltipPositioner(this);
+        }
+
+        @Override
         public void onPress() {
-            PresentBlockScreen.this.pack();
+            PresentScreen.this.pack();
         }
 
         @Override

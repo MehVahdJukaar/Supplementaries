@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
-import net.mehvahdjukaar.supplementaries.client.screens.PresentBlockScreen;
+import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.social.PlayerSocialManager;
@@ -22,7 +22,7 @@ public abstract class PlayerSocialManagerMixin {
     @Inject(method = "addPlayer", at = @At("TAIL"))
     public void addPlayer(PlayerInfo info, CallbackInfo ci) {
         Screen screen = this.minecraft.screen;
-        if (screen instanceof PresentBlockScreen gui) {
+        if (screen instanceof PresentScreen gui) {
             gui.onAddPlayer(info);
         }
     }
@@ -30,7 +30,7 @@ public abstract class PlayerSocialManagerMixin {
     @Inject(method = "removePlayer", at = @At("TAIL"))
     public void removePlayer(UUID id, CallbackInfo ci) {
         Screen screen = this.minecraft.screen;
-        if (screen instanceof PresentBlockScreen gui) {
+        if (screen instanceof PresentScreen gui) {
             gui.onRemovePlayer(id);
         }
     }

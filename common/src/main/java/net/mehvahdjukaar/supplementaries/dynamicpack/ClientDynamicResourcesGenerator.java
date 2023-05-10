@@ -242,7 +242,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.masked(boardTemplate, boardMask);
 
             ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
-                if (sign.requiredFeatures() != FeatureFlags.VANILLA_SET) return;
                 //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res("item/hanging_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
@@ -273,6 +272,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                         }
 
                     } catch (Exception ex) {
+                        int aa = 1;
                         //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
                     }
                 }

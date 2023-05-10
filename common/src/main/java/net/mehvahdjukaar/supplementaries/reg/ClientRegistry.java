@@ -38,7 +38,6 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Paintin
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -58,7 +57,6 @@ import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -143,8 +141,8 @@ public class ClientRegistry {
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyBlockScreen::new);
         MenuScreens.register(ModMenuTypes.SACK.get(), SackScreen::new);
-        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentBlockScreen.GUI_FACTORY);
-        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentBlockScreen.GUI_FACTORY);
+        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen.GUI_FACTORY);
+        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen.GUI_FACTORY);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
 
         ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientHelper.registerRenderType(s, RenderType.cutout()));

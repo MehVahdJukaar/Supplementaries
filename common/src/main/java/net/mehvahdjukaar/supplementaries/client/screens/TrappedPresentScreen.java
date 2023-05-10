@@ -14,6 +14,9 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,13 +26,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
+public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
 
-    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentBlockScreen> GUI_FACTORY =
+    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentScreen> GUI_FACTORY =
             (container, inventory, title) -> {
                 BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
                 if (te instanceof TrappedPresentBlockTile presentBlockTile) {
-                    return new TrappedPresentBlockScreen(container, inventory, title, presentBlockTile);
+                    return new TrappedPresentScreen(container, inventory, title, presentBlockTile);
                 }
                 return null;
             };
@@ -42,7 +45,7 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
     private boolean needsInitialization = true;
 
 
-    public TrappedPresentBlockScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
+    public TrappedPresentScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -192,12 +195,21 @@ public class TrappedPresentBlockScreen extends AbstractContainerScreen<TrappedPr
             this.packed = packed;
             this.active = hasItem;
             this.setTooltip(!packed ? TOOLTIP : null);
+        }
 
+        @Override
+        protected ClientTooltipPositioner createTooltipPositioner() {
+            return new BelowOrAboveWidgetTooltipPositioner(this);
+        }
+
+        @Override
+        public void setTooltipDelay(int tooltipMsDelay) {
+            super.setTooltipDelay(tooltipMsDelay);
         }
 
         @Override
         public void onPress() {
-            TrappedPresentBlockScreen.this.pack();
+            TrappedPresentScreen.this.pack();
         }
 
         @Override
