@@ -50,6 +50,7 @@ dependencies {
     modImplementation("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-restitched-462672:3908334")
     modCompileOnly("curse.maven:jei-238222:4405345")
+    modCompileOnly("dev.emi:emi:${project.emi_version}+${project.minecraft_version}:api")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
 
