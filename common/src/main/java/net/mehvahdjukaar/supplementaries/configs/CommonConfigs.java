@@ -345,7 +345,7 @@ public class CommonConfigs {
             builder.pop();
 
             DAUB_ENABLED = feature(builder, ModConstants.DAUB_NAME);
-            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICK_NAME+"s");
+            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICK_NAME + "s");
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -604,7 +604,11 @@ public class CommonConfigs {
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
             HOURGLASS_ENABLED = feature(builder, ModConstants.HOURGLASS_NAME);
-            PRESENT_ENABLED = feature(builder, ModConstants.PRESENT_NAME);
+
+            builder.push("present");
+            PRESENT_ENABLED = feature(builder);
+            TRAPPED_PRESENT_ENABLED = feature(builder, ModConstants.TRAPPED_PRESENT_NAME);
+            builder.pop();
 
             builder.pop();
         }
@@ -662,6 +666,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FODDER_ENABLED;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
+        public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
 
@@ -1058,7 +1063,8 @@ public class CommonConfigs {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
-            case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get();
+            case ModConstants.TRAPPED_PRESENT_NAME ->
+                    Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
             case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
             case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
             case ModConstants.CHECKER_SLAB_NAME, ModConstants.CHECKER_VERTICAL_SLAB_NAME ->
@@ -1080,7 +1086,7 @@ public class CommonConfigs {
         }
         float percentage = disabled / (float) FEATURE_TOGGLES.size();
         if (percentage > 0.66f) {
-            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage*100));
+            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
         }
     }
 }
