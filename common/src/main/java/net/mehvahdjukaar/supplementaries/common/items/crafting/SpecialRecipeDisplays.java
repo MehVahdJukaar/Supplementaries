@@ -378,7 +378,9 @@ public class SpecialRecipeDisplays {
             }
             if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
                 registry.accept(makePresentCloringRecipes());
-                registry.accept(makeTrappedPresentRecipes());
+                if(CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
+                    registry.accept(makeTrappedPresentRecipes());
+                }
             }
         } else if (category == RecipeBookCategories.CRAFTING_BUILDING_BLOCKS) {
             if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {

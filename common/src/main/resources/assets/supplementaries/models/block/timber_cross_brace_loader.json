@@ -1,9 +1,4 @@
 {
 	"loader": "supplementaries:frame_block",
-	"overlay": {
-		"parent": "supplementaries:block/timber_cross_brace_overlay",
-		"textures": {
-			"all": "supplementaries:block/timber_cross_brace"
-		}
-	}
+	"overlay": "supplementaries:block/timber_cross_brace_overlay"
 }

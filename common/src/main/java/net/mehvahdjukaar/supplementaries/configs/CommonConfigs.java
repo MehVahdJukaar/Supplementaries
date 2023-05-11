@@ -597,6 +597,12 @@ public class CommonConfigs {
                     .define("clean_blacklist", List.of("minecraft:glazed_terracotta"));
             builder.pop();
 
+            builder.push("present");
+            PRESENT_ENABLED = feature(builder);
+            TRAPPED_PRESENT_ENABLED = feature(builder, ModConstants.TRAPPED_PRESENT_NAME);
+            builder.pop();
+
+
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
             builder.push("wild_flax");
@@ -610,7 +616,6 @@ public class CommonConfigs {
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
             HOURGLASS_ENABLED = feature(builder, ModConstants.HOURGLASS_NAME);
-            PRESENT_ENABLED = feature(builder, ModConstants.PRESENT_NAME);
 
             builder.pop();
         }
@@ -668,6 +673,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FODDER_ENABLED;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
+        public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
 
@@ -1064,7 +1070,7 @@ public class CommonConfigs {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
-            case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get();
+            case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
             case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
             case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
             case ModConstants.CHECKER_SLAB_NAME, ModConstants.CHECKER_VERTICAL_SLAB_NAME ->

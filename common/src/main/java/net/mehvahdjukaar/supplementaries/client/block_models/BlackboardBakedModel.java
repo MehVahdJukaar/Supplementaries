@@ -5,10 +5,13 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -35,9 +38,9 @@ public class BlackboardBakedModel implements CustomBakedModel {
     private final BakedModel back;
     private final BlockModel owner;
 
-    public BlackboardBakedModel(BlockModel owner, BakedModel baked, Function<Material, TextureAtlasSprite> spriteGetter,
+    public BlackboardBakedModel(BlockModel owner, BakedModel back, Function<Material, TextureAtlasSprite> spriteGetter,
                                 ModelState modelTransform) {
-        this.back = baked;
+        this.back = back;
         this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
         this.owner = owner;
@@ -90,7 +93,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
                 quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
         }
-
+        var v = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), Supplementaries.res("block/timber_brace_overlay"));
+        quads.addAll(v.getQuads(state,side, rand));
         return quads;
     }
 

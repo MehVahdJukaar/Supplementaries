@@ -17,6 +17,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
@@ -277,7 +278,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
 
         @Override
         protected ClientTooltipPositioner createTooltipPositioner() {
-            return new MenuTooltipPositioner(this);
+            return DefaultTooltipPositioner.INSTANCE;
         }
 
         @Override
