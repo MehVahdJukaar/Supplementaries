@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(GunpowderBlock.class)
 public abstract class SelfGunpowderMixin extends LightUpBlock {
-    public SelfGunpowderMixin(Properties arg) {
+    protected SelfGunpowderMixin(Properties arg) {
         super(arg);
     }
 

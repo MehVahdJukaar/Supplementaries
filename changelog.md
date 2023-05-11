@@ -1,3 +1,5 @@
-- dispensers can now deploy keys against key lockable blocks. Might be useful with lock block
-- safes can no longer contain their own key
-- added funny red merchant texture
+Early WIP version. Known issues
+- creative tabs arent done yet
+- many custom models dont work properly
+- items overrides dont work
+- as usual all worldgen is disabled due to constant changes every damn update
