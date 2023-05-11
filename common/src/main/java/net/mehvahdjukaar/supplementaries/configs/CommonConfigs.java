@@ -1027,7 +1027,9 @@ public class CommonConfigs {
                     .push("general");
             CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab", false);
 
-            DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble").define("dispensers", true);
+            DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble")
+                    .gameRestart()
+                    .define("dispensers", true);
 
             JAR_TAB = builder.gameRestart().comment("Creates a creative tab full of filled jars")
                     .define("jar_tab", false);

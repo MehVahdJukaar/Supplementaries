@@ -31,9 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.ModConstants.CANDLE_HOLDER_NAME;
-import static net.mehvahdjukaar.supplementaries.reg.RegUtils.getTab;
-
 public class CaveEnhancementsCompat {
 
     private static final List<Supplier<? extends Block>> SPECTACLE_CANDLE_HOLDERS = new ArrayList<>();

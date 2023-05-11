@@ -52,20 +52,6 @@ public class RegUtils {
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
     }
 
-    //gets the tab given or null if the item is disabled
-    @Nonnull
-    public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
-        if (CommonConfigs.isEnabled(regName)) {
-            return ModCreativeTabs.MOD_TAB == null ? g : ModCreativeTabs.MOD_TAB;
-        }
-        return null;
-    }
-
-    public static CreativeModeTab getTab(String modId, CreativeModeTab g, String regName) {
-        return PlatHelper.isModLoaded(modId) ? getTab(g, regName) : null;
-    }
-
-
     /**
      * Registers a placeable item for a modded item with the given string
      */

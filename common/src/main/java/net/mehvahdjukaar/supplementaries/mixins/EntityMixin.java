@@ -27,7 +27,7 @@ public abstract class EntityMixin {
 
     @Unique
     private BlockState cachedBlockState;
-
+//TODO: use sound instance and redo
     //cancel rope slide down sound
     @Inject(method = "playStepSound", at = @At(value = "INVOKE",
             shift = At.Shift.AFTER,

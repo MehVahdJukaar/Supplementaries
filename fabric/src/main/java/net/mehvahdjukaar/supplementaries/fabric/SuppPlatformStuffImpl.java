@@ -70,4 +70,8 @@ public class SuppPlatformStuffImpl {
         return new ModSlider(x,y,width, height, prefix, minValue, maxValue, currentValue);
     }
 
+    public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
+        return c;
+    }
+
 }

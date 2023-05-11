@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
@@ -83,6 +85,11 @@ public class SuppPlatformStuff {
     @ExpectPlatform
     public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue,
                                                     double currentValue, double stepSize, int precision, boolean drawString) {
+        throw new ArrayStoreException();
+    }
+
+    @ExpectPlatform
+    public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         throw new ArrayStoreException();
     }
 }

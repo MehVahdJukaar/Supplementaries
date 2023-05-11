@@ -84,6 +84,7 @@ public class Supplementaries {
         ModVillagerTrades.init();
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
+        ModCreativeTabs.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
@@ -107,6 +108,8 @@ public class Supplementaries {
 
 
     //yes this is where I write crap. deal with it XD
+
+    //TODO: merge FD planters
 
     //rope slide animation and sound instance
     //jeed multi

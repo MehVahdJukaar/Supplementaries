@@ -21,7 +21,6 @@
     "ParrotMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",
-    "SheetsClassloadingFixHackMixin",
     "UndeadHorseRenderMixin",
     "WrittenBookAccessMixin"
   ],
