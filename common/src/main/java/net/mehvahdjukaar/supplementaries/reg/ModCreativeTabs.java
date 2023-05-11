@@ -16,17 +16,20 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ModCreativeTabs {
 
     private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
+    private static final Set<Item> ALL_ITEMS = new LinkedHashSet<>();
 
     public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
@@ -55,6 +58,11 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
+
+        if(MOD_TAB != null){
+
+            return;
+        }
 
         before(e, Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SCONCE_NAME,
@@ -167,22 +175,71 @@ public class ModCreativeTabs {
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);
 
-        before(e, Items.CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+
+        after(e, ItemTags.SIGNS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.HANGING_SIGN_NAME,
+                ModRegistry.HANGING_SIGNS.values().stream().map(i -> (Supplier<Item>) i::asItem).toArray(Supplier[]::new));
+
+        after(e, ItemTags.SIGNS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SIGN_POST_NAME,
                 ModRegistry.SIGN_POST_ITEMS.values().stream().map(i -> (Supplier<Item>) () -> i).toArray(Supplier[]::new));
+
+
+        before(e, Items.CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.ITEM_SHELF_NAME,
+                ModRegistry.ITEM_SHELF);
+
+        after(e, ItemTags.CANDLES, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.CANDLE_HOLDER_NAME,
+                ModRegistry.CANDLE_HOLDERS.values().toArray(Supplier[]::new));
+
+        after(e, Items.ENDER_CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.SAFE_NAME,
+                ModRegistry.SAFE);
+
+        before(e, Items.SHULKER_BOX, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.SACK_NAME,
+                ModRegistry.SACK);
+
+        after(e, Items.PINK_SHULKER_BOX, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.TRAPPED_PRESENT_NAME,
+                ModRegistry.TRAPPED_PRESENTS.values().toArray(Supplier[]::new));
+
+        after(e, Items.PINK_SHULKER_BOX, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.PRESENT_NAME,
+                ModRegistry.PRESENTS.values().toArray(Supplier[]::new));
+    }
+
+    private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {
+        after(event, i -> i.is(target), tab, key, items);
     }
 
     private static void after(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+        after(event, i -> i.is(target), tab, key, items);
+    }
+
+    private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
-            if (MOD_TAB != null) tab = MOD_TAB.get();
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-            event.addAfter(tab, i -> i.is(target), entries);
+            for(var v : entries){
+                if(new ItemStack(v.asItem()).isEmpty()){
+                    int aa = 1;
+                    return;
+                }
+            }
+            event.addAfter(tab, targetPred, entries);
         }
     }
 
     private static void before(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
+            for(var v : entries){
+                if(new ItemStack(v.asItem()).isEmpty()){
+                    int aa = 1;
+                    return;
+                }
+            }
             event.addBefore(tab, i -> i.is(target), entries);
         }
     }

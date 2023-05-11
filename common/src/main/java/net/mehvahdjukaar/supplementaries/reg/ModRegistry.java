@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -150,7 +151,7 @@ public class ModRegistry {
     //variants:
 
     //dynamic. Handled by wood set handler
-    public static final Map<WoodType, HangingSignBlock> HANGING_SIGNS = new LinkedHashMap<>();
+    public static final Map<WoodType, HangingSignBlock> HANGING_SIGNS = new Object2ObjectLinkedOpenHashMap<>();
 
     //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
 
@@ -171,7 +172,7 @@ public class ModRegistry {
             SIGN_POST_NAME, () -> PlatHelper.newBlockEntityType(
                     SignPostBlockTile::new, SIGN_POST.get()));
 
-    public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new IdentityHashMap<>();
+    public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
 
     //flags
     public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);

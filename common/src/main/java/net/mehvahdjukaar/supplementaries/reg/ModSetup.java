@@ -43,6 +43,7 @@ public class ModSetup {
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
+            ModCreativeTabs::setup,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
@@ -51,7 +52,6 @@ public class ModSetup {
         FaucetBehaviorsManager.registerBehaviors();
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
-        ModCreativeTabs.setup();
         ModSetup.registerFrameBlocks();
         CurseLootFunction.setup();
     }

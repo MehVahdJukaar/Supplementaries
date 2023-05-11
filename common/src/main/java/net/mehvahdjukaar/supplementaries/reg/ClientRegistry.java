@@ -43,6 +43,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -57,6 +58,7 @@ import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -204,14 +206,14 @@ public class ClientRegistry {
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
 
 
-        ClientHelper.registerItemProperty(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
+        ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
         ClampedItemPropertyFunction antiqueProp = (itemStack, clientLevel, livingEntity, i) -> AntiqueInkHelper.hasAntiqueInk(itemStack) ? 1 : 0;
-        ClientHelper.registerItemProperty(Items.WRITTEN_BOOK, Supplementaries.res("antique_ink"), antiqueProp);
-        ClientHelper.registerItemProperty(Items.FILLED_MAP, Supplementaries.res("antique_ink"), antiqueProp);
+        ItemProperties.register(Items.WRITTEN_BOOK, Supplementaries.res("antique_ink"), antiqueProp);
+        ItemProperties.register(Items.FILLED_MAP, Supplementaries.res("antique_ink"), antiqueProp);
 
-        ClientHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pull"),
+        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pull"),
                 (stack, world, entity, s) -> {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
@@ -221,27 +223,27 @@ public class ClientRegistry {
                 });
 
 
-        ClientHelper.registerItemProperty(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pulling"),
+        ItemProperties.register(ModRegistry.SLINGSHOT_ITEM.get(), Supplementaries.res("pulling"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
 
 
-        ClientHelper.registerItemProperty(ModRegistry.BUBBLE_BLOWER.get(), Supplementaries.res("using"),
+        ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), Supplementaries.res("using"),
                 (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ForgeHelper.areStacksEqual(stack, entity.getUseItem(), true) ? 1.0F : 0.0F);
 
 
-        ModRegistry.PRESENTS.values().forEach(i -> ClientHelper.registerItemProperty(i.get().asItem(), Supplementaries.res("packed"),
+        ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), Supplementaries.res("packed"),
                 (stack, world, entity, s) -> 1));
 
-        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ClientHelper.registerItemProperty(i.get().asItem(), Supplementaries.res("primed"),
+        ModRegistry.TRAPPED_PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), Supplementaries.res("primed"),
                 (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
-        ClientHelper.registerItemProperty(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
+        ItemProperties.register(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
                 (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
 
-        ClientHelper.registerItemProperty(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
+        ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
                 (stack, world, entity, s) -> ((DyeableLeatherItem) stack.getItem()).hasCustomColor(stack) ? 1 : 0);
 
-        ClientHelper.registerItemProperty(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
+        ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
                 new GlobeProperty());
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),

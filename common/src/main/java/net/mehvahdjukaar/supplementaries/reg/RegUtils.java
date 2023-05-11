@@ -1,15 +1,18 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
@@ -35,6 +38,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -106,7 +110,7 @@ public class RegUtils {
 
     //candle holders
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
-        Map<DyeColor, Supplier<Block>> map = new HashMap<>();
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
         BlockBehaviour.Properties prop = BlockBehaviour.Properties.of(Material.DECORATION)
                 .noOcclusion().instabreak().sound(SoundType.LANTERN);
@@ -115,7 +119,7 @@ public class RegUtils {
                 () -> new CandleHolderBlock(null, prop));
         map.put(null, block);
 
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName.getPath() + "_" + color.getName();
             Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
                     () -> new CandleHolderBlock(color, prop)
@@ -133,9 +137,9 @@ public class RegUtils {
 
     //flags
     public static Map<DyeColor, Supplier<Block>> registerFlags(String baseName) {
-        ImmutableMap.Builder<DyeColor, Supplier<Block>> builder = new ImmutableMap.Builder<>();
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> block = regBlock(name, () -> new FlagBlock(color,
                     BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
@@ -143,19 +147,19 @@ public class RegUtils {
                             .noOcclusion()
                             .sound(SoundType.WOOD))
             );
-            builder.put(color, block);
+            map.put(color, block);
 
             regItem(name, () -> new FlagItem(block.get(), new Item.Properties()
                     .stacksTo(16)
             ));
         }
-        return builder.build();
+        return map;
     }
 
     //ceiling banners
     public static Map<DyeColor, Supplier<Block>> registerCeilingBanners(String baseName) {
-        Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
-        for (DyeColor color : DyeColor.values()) {
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
                             BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
@@ -170,7 +174,7 @@ public class RegUtils {
 
     //presents
     public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
-        Map<DyeColor, Supplier<Block>> map = new LinkedHashMap<>();
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
         Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
                 BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
@@ -180,7 +184,7 @@ public class RegUtils {
         regItem(baseName, () -> new PresentItem(block.get(), new Item.Properties()));
 
 
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> bb = regBlock(name, () -> presentFactory.apply(color,
                     BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
