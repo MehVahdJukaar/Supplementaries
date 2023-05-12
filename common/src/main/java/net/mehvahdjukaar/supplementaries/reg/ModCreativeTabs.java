@@ -208,6 +208,7 @@ public class ModCreativeTabs {
         after(e, Items.PINK_SHULKER_BOX, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.PRESENT_NAME,
                 ModRegistry.PRESENTS.values().toArray(Supplier[]::new));
+
     }
 
     private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {
