@@ -6,7 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -41,7 +44,9 @@ import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
-import vazkii.quark.api.config.IQuarkConfig;
+import vazkii.quark.api.event.GatherAdvancementModifiersEvent;
+import vazkii.quark.base.handler.advancement.AdvancementModifier;
+import vazkii.quark.base.handler.advancement.QuarkAdvancementHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
@@ -58,6 +63,7 @@ import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
@@ -110,7 +116,7 @@ public class QuarkCompatImpl {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
     }
 
-    public static int getBannerPatternLimit(int current){
+    public static int getBannerPatternLimit(int current) {
         return MoreBannerLayersModule.getLimit(current);
     }
 
@@ -189,8 +195,20 @@ public class QuarkCompatImpl {
     }
 
     public static void init() {
+        MinecraftForge.EVENT_BUS.addListener(QuarkCompatImpl::gatherAdvModifiersEvent);
     }
 
+    public static void gatherAdvModifiersEvent(GatherAdvancementModifiersEvent event) {
+        if (CommonConfigs.Tools.CANDY_ENABLED.get()) {
+            QuarkAdvancementHandler.addModifier((AdvancementModifier)
+                    event.delegate.modifyBalancedDiet(Set.of(ModRegistry.CANDY_ITEM.get())));
+        }
+
+        if (CommonConfigs.Functional.SACK_PENALTY.get() && CommonConfigs.Functional.SACK_ENABLED.get()) {
+            QuarkAdvancementHandler.addModifier((AdvancementModifier)
+                    event.delegate.modifyFuriousCocktail(() -> false, Set.of(ModRegistry.OVERENCUMBERED.get())));
+        }
+    }
 
     public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
 
@@ -235,7 +253,7 @@ public class QuarkCompatImpl {
     }
 
     public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
-        if(state.getBlock() instanceof StoolBlock){
+        if (state.getBlock() instanceof StoolBlock) {
             level.setBlockAndUpdate(pos, state.cycle(StoolBlock.BIG));
             return true;
         }
