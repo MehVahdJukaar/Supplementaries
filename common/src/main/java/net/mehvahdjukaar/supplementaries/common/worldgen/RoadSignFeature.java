@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -125,7 +126,7 @@ public class RoadSignFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
 
-        float humidity = reader.getBiome(pos).value().climateSettings.downfall();
+        float humidity = SuppPlatformStuff.getDownfall(reader.getBiome(pos).value());
 
 
         //generate cobble path

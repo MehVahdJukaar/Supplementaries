@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -39,7 +40,8 @@ public class CapabilityHandler {
     }
 
     public static void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (AntiqueInkHelper.isEnabled() && event.getObject() instanceof SignBlockEntity) {
+        if (AntiqueInkHelper.isEnabled() && (event.getObject() instanceof SignBlockEntity ||
+                event.getObject() instanceof HangingSignBlockEntity)) {
             event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProvider());
         }
     }

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.client.Minecraft;
@@ -36,14 +37,11 @@ public class BlackboardBakedModel implements CustomBakedModel {
     private final ModelState modelTransform;
 
     private final BakedModel back;
-    private final BlockModel owner;
 
-    public BlackboardBakedModel(BlockModel owner, BakedModel back, Function<Material, TextureAtlasSprite> spriteGetter,
-                                ModelState modelTransform) {
+    public BlackboardBakedModel(BakedModel back, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
         this.back = back;
         this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
-        this.owner = owner;
     }
 
     @Override
@@ -93,8 +91,6 @@ public class BlackboardBakedModel implements CustomBakedModel {
                 quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
         }
-        var v = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), Supplementaries.res("block/timber_brace_overlay"));
-        quads.addAll(v.getQuads(state,side, rand));
         return quads;
     }
 
@@ -102,8 +98,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
         byte[][] pixels = blackboard.getPixels();
         boolean emissive = blackboard.isGlow();
         List<BakedQuad> quads;
-        TextureAtlasSprite black = spriteGetter.apply(owner.getMaterial("black"));
-        TextureAtlasSprite white = spriteGetter.apply(owner.getMaterial("white"));
+        TextureAtlasSprite black = spriteGetter.apply(ModMaterials.BLACKBOARD_BLACK);
+        TextureAtlasSprite white = spriteGetter.apply(ModMaterials.BLACKBOARD_WHITE);
 
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();

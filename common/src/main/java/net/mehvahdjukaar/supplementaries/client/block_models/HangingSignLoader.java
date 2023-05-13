@@ -53,6 +53,17 @@ public class HangingSignLoader implements CustomModelLoader {
 
         @Override
         public CustomBakedModel bake(ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
+            stick.resolveParents(bakery::getModel);
+            leftFence.resolveParents(bakery::getModel);
+            leftPalisade.resolveParents(bakery::getModel);
+            leftWall.resolveParents(bakery::getModel);
+            leftBeam.resolveParents(bakery::getModel);
+            leftStick.resolveParents(bakery::getModel);
+            rightFence.resolveParents(bakery::getModel);
+            rightPalisade.resolveParents(bakery::getModel);
+            rightWall.resolveParents(bakery::getModel);
+            rightBeam.resolveParents(bakery::getModel);
+            rightStick.resolveParents(bakery::getModel);
             BakedModel bakedStick = this.stick.bake(bakery, stick, spriteGetter, modelTransform, modelLocation, true);
             BakedModel bakedLeftFence = this.leftFence.bake(bakery, leftFence, spriteGetter, modelTransform, modelLocation, true);
             BakedModel bakedLeftPalisade = this.leftPalisade.bake(bakery, leftPalisade, spriteGetter, modelTransform, modelLocation, true);

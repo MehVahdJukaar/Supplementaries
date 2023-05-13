@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
+import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -72,6 +74,10 @@ public class SuppPlatformStuffImpl {
 
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c;
+    }
+
+    public static float getDownfall(Biome biome) {
+        return ((BiomeAccessor)(Object)biome).getClimateSettings().downfall();
     }
 
 }

@@ -44,6 +44,8 @@ public class ModTextures {
     public static final ResourceLocation ASH = Supplementaries.res("block/ash");
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("block/timber_cross_brace");
     public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("block/blackboard");
+    public static final ResourceLocation BLACKBOARD_WHITE_TEXTURE = Supplementaries.res("block/blackboard_white");
+    public static final ResourceLocation BLACKBOARD_BLACK_TEXTURE = Supplementaries.res("block/blackboard_black");
 
     //entities
     public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res("textures/entity/globes/globe_the_world.png");

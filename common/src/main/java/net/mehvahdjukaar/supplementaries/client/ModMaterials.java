@@ -33,6 +33,8 @@ public class ModMaterials {
     public static final Material BOOK_WRITTEN_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_WRITTEN_TEXTURES);
     public static final Material BOOK_AND_QUILL_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_AND_QUILL_TEXTURES);
     public static final Material BOOK_TATTERED_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_ANTIQUE_TEXTURES);
+    public static final Material BLACKBOARD_WHITE = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_WHITE_TEXTURE);
+    public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
 
     public static final Supplier<Map<BookPileBlockTile.BookColor, Material>> BOOK_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BookPileBlockTile.BookColor, Material>();
@@ -45,7 +47,7 @@ public class ModMaterials {
     public static final Supplier<Map<WoodType, Material>> SIGN_POSTS_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<WoodType, Material>();
         ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> map
-                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("entity/sign_posts/" +
+                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("block/sign_posts/" +
                         Utils.getID(item).getPath()))));
         return map;
     });

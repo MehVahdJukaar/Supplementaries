@@ -34,8 +34,9 @@ public class BlackboardBlockLoader implements CustomModelLoader {
         @Override
         public CustomBakedModel bake(ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
             UnbakedModel model = bakery.getModel(modelRes);
+            model.resolveParents(bakery::getModel);
             BakedModel bakedOverlay = model.bake(bakery, spriteGetter, modelTransform, modelLocation);
-            return new BlackboardBakedModel((BlockModel) model,bakedOverlay, spriteGetter, modelTransform);
+            return new BlackboardBakedModel(bakedOverlay, spriteGetter, modelTransform);
         }
 
     }

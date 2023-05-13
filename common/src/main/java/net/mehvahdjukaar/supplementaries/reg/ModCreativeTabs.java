@@ -222,12 +222,6 @@ public class ModCreativeTabs {
     private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-            for(var v : entries){
-                if(new ItemStack(v.asItem()).isEmpty()){
-                    int aa = 1;
-                    return;
-                }
-            }
             event.addAfter(tab, targetPred, entries);
         }
     }
@@ -235,12 +229,6 @@ public class ModCreativeTabs {
     private static void before(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
-            for(var v : entries){
-                if(new ItemStack(v.asItem()).isEmpty()){
-                    int aa = 1;
-                    return;
-                }
-            }
             event.addBefore(tab, i -> i.is(target), entries);
         }
     }

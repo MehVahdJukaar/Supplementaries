@@ -74,17 +74,17 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
         blit(matrixStack, this.x, this.y, (float) (this.u + offset) * SIZE, (float) this.v * SIZE, SIZE, SIZE, 32 * SIZE, 16 * SIZE);
     }
 
-    public void renderTooltip(PoseStack matrixStack) {
+    public void renderTooltip(PoseStack poseStack) {
         //maybe remove this
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-
+        poseStack.translate(0,0,90);
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
-        blit(matrixStack, this.x - 1, this.y - 1, 16f * SIZE, 0, SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
+        blit(poseStack, this.x - 1, this.y - 1, 16f * SIZE, 0, SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
         //render again to cover stuff
-        this.renderButton(matrixStack);
+        this.renderButton(poseStack);
     }
 
     //toggle
@@ -142,7 +142,7 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
     }
 
     public boolean isHovered() {
-        return this.isHovered || this.focused;
+        return this.isHovered;
     }
 
     @Override

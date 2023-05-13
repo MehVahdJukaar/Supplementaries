@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     {"id":"snowyspirit:ginger_flower","required":false},
+    {"id":"minecraft:small_dripleaf","required":false},
+    {"id":"minecraft:big_dripleaf","required":false},
     {"id":"#forge:mushrooms","required":false},
     {"id":"#forge:bushes","required":false},
     {"id":"#pokecube:berries","required":false},

@@ -8,6 +8,7 @@
     "SkullBlockRendererMixin"
   ],
   "mixins": [
+    "BiomeAccessor",
     "BowMixin",
     "BushBlockMixin",
     "CropBlockMixin",

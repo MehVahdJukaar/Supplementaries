@@ -22,6 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -107,6 +108,10 @@ public class SuppPlatformStuffImpl {
 
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c.withSearchBar();
+    }
+
+    public static float getDownfall(Biome biome) {
+        return biome.getModifiedClimateSettings().downfall();
     }
 
 

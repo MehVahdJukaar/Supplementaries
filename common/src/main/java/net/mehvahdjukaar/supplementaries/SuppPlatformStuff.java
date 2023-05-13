@@ -22,6 +22,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 
@@ -91,5 +92,10 @@ public class SuppPlatformStuff {
     @ExpectPlatform
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         throw new ArrayStoreException();
+    }
+
+    @ExpectPlatform
+    public static float getDownfall(Biome biome){
+        throw new AssertionError();
     }
 }

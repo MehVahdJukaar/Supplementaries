@@ -23,7 +23,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -301,7 +300,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
-                if (sign.requiredFeatures() != FeatureFlags.VANILLA_SET) return;
                 //if (wood.isVanilla()) continue;
 
                 ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
@@ -364,6 +362,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 try (TextureImage plankTexture = TextureImage.open(manager,
                         RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                     Palette palette = Palette.fromImage(plankTexture);
+
                     TextureImage newImage = respriter.recolor(palette);
 
                     dynamicPack.addAndCloseTexture(textureRes, newImage);
