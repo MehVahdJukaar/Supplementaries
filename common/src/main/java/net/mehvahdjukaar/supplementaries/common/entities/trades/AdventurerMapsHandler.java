@@ -109,7 +109,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
     private static Pair<ResourceLocation, Integer> getStructureMarker(Holder<Structure> structure) {
         ResourceLocation res = structure.unwrapKey().get().location();
-        int color = -1;
+        int color = 0;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
             if (structure.is(v.getKey())) {
                 res = v.getValue().getFirst();
@@ -175,7 +175,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         private ItemStack createMap(Level level, BlockPos pos) {
             if (level instanceof ServerLevel serverLevel) {
 
-                if(CompatHandler.QUARK){
+                if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
                     return QuarkCompat.makeAdventurerQuill(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
                 }
 
@@ -187,7 +187,8 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
                         pos, 250, true);
                 if (found != null) {
                     BlockPos toPos = found.getFirst();
-                    return createAdventurerMap(serverLevel, toPos, found.getSecond());
+                    return createStructureMap(serverLevel, toPos, found.getSecond(), 2,
+                            null, "filled_map.adventure",0x78151a);
                 }
 
             }
@@ -196,15 +197,32 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
     @NotNull
-    public static ItemStack createAdventurerMap(ServerLevel level, BlockPos pos, Holder<Structure> structure) {
-        ItemStack stack = MapItem.create(level, pos.getX(), pos.getZ(), (byte) 2, true, true);
+    public static ItemStack createStructureMap(ServerLevel level, BlockPos pos, Holder<Structure> structure, int zoom,
+                                               @Nullable MapDecoration.Type vanillaDeco, @Nullable String name,
+                                               int color) {
+        ItemStack stack = MapItem.create(level, pos.getX(), pos.getZ(), (byte) zoom, true, true);
         MapItem.renderBiomePreviewMap(level, stack);
 
-        var decoration = getStructureMarker(structure);
-
         //adds custom decoration
-        MapHelper.addDecorationToMap(stack, pos, decoration.getFirst(), 0x78151a);
-        stack.setHoverName(Component.translatable("filled_map.adventure"));
+        ResourceLocation decoId;
+        if (vanillaDeco == null) {
+            var s = getStructureMarker(structure);
+            decoId = s.getFirst();
+            if(color == 0){
+                color = s.getSecond();
+            }
+        } else {
+            //vanilla deco
+            decoId = new ResourceLocation(vanillaDeco.toString().toLowerCase(Locale.ROOT));
+            if(color == 0 && vanillaDeco.hasMapColor()){
+                color = vanillaDeco.getMapColor();
+            }
+        }
+        MapHelper.addDecorationToMap(stack, pos, decoId, color);
+
+        if (name != null) {
+            stack.setHoverName(Component.translatable(name));
+        }
         return stack;
     }
 

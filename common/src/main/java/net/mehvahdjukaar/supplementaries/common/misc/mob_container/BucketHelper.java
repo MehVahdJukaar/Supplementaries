@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -96,7 +97,7 @@ public class BucketHelper {
     @NotNull
     public static ItemStack getBucketFromEntity(Entity entity) {
         if (entity instanceof Bucketable bucketable) {
-            return bucketable.getBucketItemStack();
+            return Preconditions.checkNotNull(bucketable.getBucketItemStack(), "Bucketable modded entity " + Utils.getID(entity.getType()) + " returned a null bucket!");
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {

@@ -8,6 +8,7 @@
     "BlockEntityRendererDispatcherMixin"
   ],
   "mixins": [
+    "ExplorationMapFunctionMixin",
     "CompatFarmersDelightMixin",
     "SelfSpeakerBlockTileMixin",
     "SelfSlingshotMixin",

@@ -1,21 +1,20 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.longs.Long2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
@@ -24,8 +23,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -36,27 +36,58 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import org.jetbrains.annotations.Nullable;
+import vazkii.arl.util.ItemNBTHelper;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.tools.item.PathfindersQuillItem;
 import vazkii.quark.content.tools.module.PathfinderMapsModule;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AdventurersQuillItem extends PathfindersQuillItem {
 
     public static final String TAG_STRUCTURE = "targetStructure";
+    public static final String TAG_SKIP_KNOWN = "skinKnown";
+    public static final String TAG_SEARCH_RADIUS = "maxSearchRadius";
+    public static final String TAG_ZOOM = "zoomLevel";
+    public static final String TAG_DECORATION = "decoration";
+    public static final String TAG_NAME = "decoration";
+
     protected static final String TAG_RADIUS = "searchRadius";
     protected static final String TAG_POS_INDEX = "searchIndex";
     protected static final String TAG_WAITING = "waiting";
 
-
     public AdventurersQuillItem() {
         super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
-                new Properties().tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
+                new Properties().stacksTo(1)
+                        .tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
 
         QuarkCompatImpl.removeStuffFromARLHack();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
+        var tag = stack.getTag();
+        if (tag != null) {
+            String structure = tag.getString(TAG_STRUCTURE);
+            if (!structure.isEmpty()) {
+                var r = new ResourceLocation(structure);
+                if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
+                    comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
+                StringBuilder b = new StringBuilder();
+                b.append("filled_map.");
+                if(!r.getNamespace().equals("minecraft")){
+                    b.append(r.getNamespace()).append(".");
+                }
+                b.append(r.getPath());
+                comps.add(Component.translatable( b.toString()).withStyle(ChatFormatting.GRAY));
+            }
+        } else
+            comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -73,16 +104,12 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     }
 
     private int getMaxIterations() {
-        return 1000;//PathfinderMapsModule.pathfindersQuillSpeed;
+        return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
     }
 
     @Override
     protected boolean isNBTValid(ItemStack stack) {
         return true;
-    }
-
-    private int getSearchRadius() {
-        return AdventurerMapsHandler.SEARCH_RADIUS;
     }
 
     @Override
@@ -96,18 +123,18 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
         if (structure == null || state == null) return ItemStack.EMPTY;
         BlockPos center = getOrCreateStartPos(tag, player);
-        int radius = getSearchRadius();
+        int radius = getSearchRadius(tag);
+        boolean skipKnown = getSkipKnown(tag);
         int iter = getMaxIterations();
-        var s = Stopwatch.createStarted();
-        BlockPos pos = findNearestMapStructure(level, structure, radius, center, true, state, iter);
-        Supplementaries.LOGGER.warn(state.radius + ":----" + s.elapsed());
+        BlockPos pos = findNearestMapStructure(level, structure, radius, center, skipKnown, state, iter);
         state.save(tag);
         if (pos == null) {
             return ItemStack.EMPTY;
         } else if (pos == center) {
             return stack;
         } else
-            return AdventurerMapsHandler.createAdventurerMap(level, pos, structure);
+            return AdventurerMapsHandler.createStructureMap(level, pos, structure,
+                    getZoomLevel(tag), getDecoration(tag), getMapName(tag), getColor(tag));
     }
 
 
@@ -124,13 +151,58 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         }
     }
 
+    private int getSearchRadius(CompoundTag tag) {
+        if (tag.contains(TAG_SEARCH_RADIUS)) {
+            return tag.getInt(TAG_SEARCH_RADIUS);
+        }
+        return AdventurerMapsHandler.SEARCH_RADIUS;
+    }
+
+    @Nullable
+    private String getMapName(CompoundTag tag) {
+        if (tag.contains(TAG_NAME)) {
+            return tag.getString(TAG_NAME);
+        }
+        return null;
+    }
+
+    private int getColor(CompoundTag tag) {
+        if (tag.contains(TAG_COLOR)) {
+            return tag.getInt(TAG_COLOR);
+        }
+        return 0;
+    }
+
+
+    @Nullable
+    private MapDecoration.Type getDecoration(CompoundTag tag) {
+        if (tag.contains(TAG_DECORATION)) {
+            return MapDecoration.Type.byIcon((byte) tag.getInt(TAG_DECORATION));
+        }
+        return null;
+    }
+
+    private int getZoomLevel(CompoundTag tag) {
+        if (tag.contains(TAG_ZOOM)) {
+            return tag.getInt(TAG_ZOOM);
+        }
+        return 2;
+    }
+
+    private boolean getSkipKnown(CompoundTag tag) {
+        if (tag.contains(TAG_SKIP_KNOWN)) {
+            return tag.getBoolean(TAG_SKIP_KNOWN);
+        }
+        return true;
+    }
+
     @Nullable
     private Holder<Structure> getTargetStructure(CompoundTag tag, ServerLevel level) {
 
         String str = tag.getString(TAG_STRUCTURE);
         if (str.isEmpty()) {
             //re-generate for empty one
-            str = "igloo";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
+            str = "mansion";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
             if (str == null) return null;
             tag.putString(TAG_STRUCTURE, str);
         }
@@ -189,7 +261,6 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
         int currentIter = 0;
 
-        outer:
         for (; state.radius <= searchRadius; ++state.radius) {
 
             //for all placements
@@ -216,10 +287,10 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                             int testX = centerX + spacing * state.x;
                             int testY = centerY + spacing * state.z;
                             ChunkPos chunkPos = placement.getPotentialStructureChunk(seed, testX, testY);
-                            var s = Stopwatch.createStarted();
+                            //var s = Stopwatch.createStarted();
                             var pair = getStructureGeneratingAt(holderSet, source, structureManager,
                                     skipKnownStructures, placement, chunkPos, state);
-                            Supplementaries.LOGGER.warn("get: " + s.elapsed());
+                            //Supplementaries.LOGGER.warn("GenAT: "+s.elapsed());
                             if (pair != null) {
                                 Optional<BlockPos> left = pair.left();
                                 if (left.isPresent()) {
@@ -227,13 +298,12 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                                     state.z = -state.radius;
                                     break inner; //found structure for this placement at this lastRadius. might not be the closest one tho
                                 } else {
+                                    //we are waiting here
                                     return center;
                                 }
                             }
                             if (currentIter > maxIterations) {
                                 return center;
-                            } else {
-                                int aa = 1;
                             }
                         }
                     }
@@ -268,16 +338,22 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public static Either<BlockPos, ChunkPos> getStructureGeneratingAt(
             Set<Holder<Structure>> structureHoldersSet, ServerChunkCache chunkCache, StructureManager structureManager,
             boolean skipKnownStructures, StructurePlacement placement, ChunkPos chunkPos, State state) {
+        var s2 =Stopwatch.createStarted();
 
         for (Holder<Structure> holder : structureHoldersSet) {
-            StructureCheckResult structureCheckResult = structureManager.checkStructurePresence(chunkPos, holder.value(), skipKnownStructures);
+            Structure structure = holder.value();
+
+            //TODO: this operation here is still pretty expensive
+            StructureCheckResult structureCheckResult = structureManager.checkStructurePresence(chunkPos, structure, skipKnownStructures);
             if (structureCheckResult == StructureCheckResult.START_NOT_PRESENT) {
                 continue;
             }
+
             if (!skipKnownStructures && structureCheckResult == StructureCheckResult.START_PRESENT) {
                 return Either.left(placement.getLocatePos(chunkPos));
             }
             //get cached one
+
             ChunkAccess chunkAccess = chunkCache.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS, false);
 
             if (chunkAccess == null) {
@@ -286,14 +362,18 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                         state.waiting = false;
                     }
                 }
+
                 if (!state.waiting) {
-                    BEING_COMPUTED.add(chunkPos);
                     EXECUTORS.submit(() -> {
+                        BEING_COMPUTED.add(chunkPos);
                         //this is where all the expensiveness of this comes from
                         chunkCache.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS, true);
                         BEING_COMPUTED.remove(chunkPos);
                     });
+
                     state.waiting = true;
+                } else {
+                    //it usually neveer goes here as by the time this runs again the thread has done
                 }
                 //resets to old pos hack
                 if (state.z == -state.radius) {
@@ -305,14 +385,16 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                 } else {
                     state.z -= 1;
                 }
+                Supplementaries.LOGGER.warn("E "+s2.elapsed());
+
                 return Either.right(chunkPos);
             } else {
                 state.waiting = false;
             }
 
-            StructureStart structureStart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkAccess), holder.value(), chunkAccess);
+            StructureStart structureStart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkAccess), structure, chunkAccess);
             if (structureStart != null && structureStart.isValid()) {
-                if (skipKnownStructures || tryAddReference(structureManager, structureStart)) {
+                if (!skipKnownStructures || tryAddReference(structureManager, structureStart)) {
                     return Either.left(placement.getLocatePos(structureStart.getChunkPos()));
                 }
             }
@@ -328,6 +410,24 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         } else {
             return false;
         }
+    }
+
+    public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag, int searchRadius,
+                                         boolean skipKnown, int zoom, MapDecoration.Type deco,
+                                         @Nullable String name, int color) {
+        ItemStack stack = forStructure(level, tag);
+        var t = stack.getOrCreateTag();
+        t.putInt(TAG_SEARCH_RADIUS, searchRadius);
+        t.putBoolean(TAG_SKIP_KNOWN, skipKnown);
+        t.putInt(TAG_ZOOM, zoom);
+        t.putByte(TAG_DECORATION, deco.getIcon());
+        if (name != null) {
+            t.putString(TAG_NAME, name);
+        }
+        if (color != 0) {
+            t.putInt(TAG_ZOOM, color);
+        }
+        return stack;
     }
 
     public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag) {
@@ -361,7 +461,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
     }
 
-
+    //in the end we dont even need this. iterating over those 3 looks is not what slows this down
     private static final class State {
         private boolean waiting;
         private int radius;
