@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -30,9 +33,7 @@ public class GunpowderBlockColor implements BlockColor {
             int redInt = Mth.clamp(Mth.floor(red * 255), 0, 255);
             int greenInt = Mth.clamp(Mth.floor(green * 255), 0, 255);
             int blueInt = Mth.clamp(Mth.floor(blue * 255), 0, 255);
-
-
-            COLORS[i] = Mth.color(redInt, greenInt, blueInt);
+            COLORS[i] = FastColor.ARGB32.color(0, redInt, greenInt, blueInt);;
             //if(i==0) COLORS[i] = 0xffffff;
             // return 6579300;
         }

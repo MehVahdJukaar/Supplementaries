@@ -106,7 +106,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && HourglassTimesManager.getData(stack.getItem()) != null;
+        return this.isEmpty() && !HourglassTimesManager.getData(stack.getItem()).isEmpty();
     }
 
     @Override
