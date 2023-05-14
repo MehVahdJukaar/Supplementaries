@@ -1063,6 +1063,7 @@ public class CommonConfigs {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
+            case "adventurer_map" -> Tweaks.RANDOM_ADVENTURER_MAPS.get();
             case ModConstants.TRAPPED_PRESENT_NAME ->
                     Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
             case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();

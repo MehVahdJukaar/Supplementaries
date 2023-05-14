@@ -2,18 +2,26 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.AdventurersQuillItem;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,27 +34,30 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.level.NoteBlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
 import vazkii.quark.api.event.GatherAdvancementModifiersEvent;
-import vazkii.quark.base.handler.advancement.AdvancementModifier;
-import vazkii.quark.base.handler.advancement.QuarkAdvancementHandler;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
@@ -62,11 +73,79 @@ import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
 import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
+
+    public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
+
+    public static final Supplier<Block> TATER_IN_A_JAR;
+    public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
+    public static final Supplier<Item> ADVENTURER_QUILL;
+
+    static {
+        TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
+                new Item.Properties().tab(null).rarity(Rarity.UNCOMMON), 0);
+
+        TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
+                TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
+
+        ADVENTURER_QUILL = RegUtils.regItem("adventurers_quill", AdventurersQuillItem::new);
+    }
+
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(QuarkCompatImpl.class);
+    }
+
+    @SubscribeEvent
+    public static void gatherAdvModifiersEvent(GatherAdvancementModifiersEvent event) {
+        if (CommonConfigs.Tools.CANDY_ENABLED.get()) {
+            event.register(event.createBalancedDietMod(Set.of(ModRegistry.CANDY_ITEM.get())));
+        }
+
+        if (CommonConfigs.Functional.SACK_PENALTY.get() && CommonConfigs.Functional.SACK_ENABLED.get()) {
+            event.register(event.createFuriousCocktailMod(() -> false, Set.of(ModRegistry.OVERENCUMBERED.get())));
+        }
+
+        if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
+            event.register(event.createASeedyPlaceMod(Set.of(ModRegistry.FLAX.get())));
+        }
+        Set<Block> signs = new HashSet<>();
+        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+            signs.add(ModRegistry.SIGN_POST.get());
+        }
+        if (CommonConfigs.Building.HANGING_SIGN_ENABLED.get()) {
+            signs.addAll(ModRegistry.HANGING_SIGNS.values());
+        }
+        if (!signs.isEmpty()) {
+            event.register(event.createGlowAndBeholdMod(signs));
+        }
+    }
+
+    @SubscribeEvent
+    public static void noteBlockEvent(final NoteBlockEvent.Play event) {
+        if (isMoreNoteBlockSoundsOn()) {
+            LevelAccessor world = event.getLevel();
+            BlockPos pos = event.getPos();
+            if (world.getBlockState(pos).getBlock() == Blocks.NOTE_BLOCK) {
+                for (Direction dir : Direction.Plane.HORIZONTAL) {
+                    BlockState state = world.getBlockState(pos.relative(dir));
+                    Block block = state.getBlock();
+                    if (block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == dir) {
+                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL.get()) {
+                            SoundEvent sound = SoundEvents.ENDERMAN_TELEPORT;
+                            event.setCanceled(true);
+                            float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
+                            world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1.0F, pitch);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     //this should have been implemented in the post block updateShape method
     public static @Nullable BlockState updateWoodPostShape(BlockState post, Direction facing, BlockState facingState) {
@@ -119,11 +198,6 @@ public class QuarkCompatImpl {
     public static int getBannerPatternLimit(int current) {
         return MoreBannerLayersModule.getLimit(current);
     }
-
-
-    //--------bamboo spikes-------
-
-    //called by mixin code
 
     public static void tickPiston(Level level, BlockPos pos, BlockState spikes, AABB pistonBB, boolean sameDir, BlockEntity movingTile) {
         List<Entity> list = level.getEntities(null, pistonBB);
@@ -194,36 +268,6 @@ public class QuarkCompatImpl {
         return InteractionResult.PASS;
     }
 
-    public static void init() {
-        MinecraftForge.EVENT_BUS.addListener(QuarkCompatImpl::gatherAdvModifiersEvent);
-    }
-
-    public static void gatherAdvModifiersEvent(GatherAdvancementModifiersEvent event) {
-        if (CommonConfigs.Tools.CANDY_ENABLED.get()) {
-            QuarkAdvancementHandler.addModifier((AdvancementModifier)
-                    event.delegate.modifyBalancedDiet(Set.of(ModRegistry.CANDY_ITEM.get())));
-        }
-
-        if (CommonConfigs.Functional.SACK_PENALTY.get() && CommonConfigs.Functional.SACK_ENABLED.get()) {
-            QuarkAdvancementHandler.addModifier((AdvancementModifier)
-                    event.delegate.modifyFuriousCocktail(() -> false, Set.of(ModRegistry.OVERENCUMBERED.get())));
-        }
-    }
-
-    public static final String TATER_IN_A_JAR_NAME = "tater_in_a_jar";
-
-    public static final Supplier<Block> TATER_IN_A_JAR;
-    public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
-
-    static {
-        TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
-                new Item.Properties().tab(null).rarity(Rarity.UNCOMMON), 0);
-
-        TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
-                TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
-    }
-
-
     public static boolean isMoreNoteBlockSoundsOn() {
         return ModuleLoader.INSTANCE.isModuleEnabled(MoreNoteBlockSoundsModule.class) && MoreNoteBlockSoundsModule.enableSkullSounds;
     }
@@ -261,4 +305,22 @@ public class QuarkCompatImpl {
     }
 
 
+    private static Field f2 = null;
+
+    public static void removeStuffFromARLHack() {
+        if (f2 == null) {
+            f2 = ObfuscationReflectionHelper.findField(RegistryHelper.class, "modData");
+            f2.setAccessible(true);
+        }
+        try {
+            var data = (Map<String, ?>) f2.get(null);
+            data.remove(Supplementaries.MOD_ID);
+            data.remove("suppsquared");
+        } catch (Exception ignored) {
+        }
+    }
+
+    public static ItemStack makeAdventurerQuill(ServerLevel level, TagKey<Structure> tag) {
+        return AdventurersQuillItem.forStructure(level, tag);
+    }
 }
