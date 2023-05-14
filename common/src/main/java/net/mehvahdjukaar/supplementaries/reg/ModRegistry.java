@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -34,8 +35,6 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -208,12 +207,12 @@ public class ModRegistry {
     //decoration blocks
 
     //planter
-    public static final Supplier<Block> PLANTER = regWithItem(PLANTER_NAME, () -> new PlanterBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
-                    .strength(2f, 6f)
-                    .requiresCorrectToolForDrops()
-    ));
-
+    public static final Supplier<PlanterBlock> PLANTER = regWithItem(PLANTER_NAME, () ->
+            CompatHandler.FARMERS_DELIGHT ? FarmersDelightCompat.makePlanterRich() :
+                    new PlanterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
+                            .strength(2f, 6f)
+                            .requiresCorrectToolForDrops()
+                    ));
 
     //pedestal
     public static final Supplier<Block> PEDESTAL = regWithItem(PEDESTAL_NAME, () -> new PedestalBlock(
@@ -417,7 +416,6 @@ public class ModRegistry {
     public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
                     .strength(1.5f)
-                    .sound(SoundType.WOOL)
                     .lightLevel((state) -> 15)
                     .noOcclusion())
     );
@@ -804,11 +802,6 @@ public class ModRegistry {
     public static final Supplier<Block> CHECKER_SLAB = regWithItem(CHECKER_SLAB_NAME, () -> new SlabBlock(
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
     ));
-
-    //vertical slab
-    //TODO: fix
-    public static final Supplier<Block> CHECKER_VERTICAL_SLAB = regWithItem(CHECKER_VERTICAL_SLAB_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())));
 
     //pancakes
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(

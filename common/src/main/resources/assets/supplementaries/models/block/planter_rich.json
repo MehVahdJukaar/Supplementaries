@@ -1,9 +1,0 @@
-{
-	"parent": "supplementaries:block/planter",
-	"textures": {
-		"0": "supplementaries:block/planter_bottom",
-		"1": "supplementaries:block/planter_side",
-		"2": "farmersdelight:block/rich_soil",
-		"particle": "supplementaries:block/planter_side"
-	}
-}

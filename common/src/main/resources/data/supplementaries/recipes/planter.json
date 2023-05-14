@@ -1,4 +1,17 @@
 {
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "modid": "farmersdelight",
+        "type": "forge:mod_loaded"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "010",
@@ -19,11 +32,5 @@
   "result": {
     "item": "supplementaries:planter",
     "count": 1
-  },
-  "conditions": [
-    {
-      "type": "supplementaries:flag",
-      "flag": "planter"
-    }
-  ]
+  }
 }

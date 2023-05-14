@@ -63,7 +63,7 @@ subprojects {
             project {
                 id = rootProject.project_id
                 changelog = changelogText
-                releaseType = 'alpha'
+                releaseType = 'beta'
                 addGameVersion rootProject.minecraft_version
                 addGameVersion modLoader.capitalize()
 

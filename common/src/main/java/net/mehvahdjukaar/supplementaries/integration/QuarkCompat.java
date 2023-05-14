@@ -62,12 +62,6 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
-    @Contract
-    @ExpectPlatform
-    public static boolean isVerticalSlabEnabled() {
-        throw new AssertionError();
-    }
-
     @ExpectPlatform
     @Contract
     public static boolean shouldHideOverlay(ItemStack stack) {

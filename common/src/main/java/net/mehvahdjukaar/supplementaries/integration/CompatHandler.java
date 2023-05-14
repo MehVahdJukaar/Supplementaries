@@ -89,9 +89,4 @@ public class CompatHandler {
     public static Block DynTreesGetOptionalDynamicSapling(Item item, Level level, BlockPos worldPosition) {
         return null;
     }
-
-
-    public static boolean isVerticalSlabEnabled() {
-        return QUARK && QuarkCompat.isVerticalSlabEnabled();
-    }
 }

@@ -36,7 +36,7 @@ dependencies {
         exclude module: "fabric-api"
     }
 
-    modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
+    modImplementation("curse.maven:roughly-enough-items-310111:4440734")
     //modRuntimeOnly("curse.maven:architectury-api-419699:4147351")
     modCompileOnly("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:4111426")

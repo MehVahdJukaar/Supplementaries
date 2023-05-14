@@ -102,10 +102,6 @@ public class QuarkCompatImpl {
         return j;
     }
 
-    public static boolean isVerticalSlabEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
-    }
-
     public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
     }

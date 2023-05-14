@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -31,17 +34,12 @@ public class FarmersDelightCompat {
     public static void init() {
     }
 
-    public static final String PLANTER_RICH_NAME = "planter_rich";
-    public static final Supplier<Block> PLANTER_RICH = RegUtils.regWithItem(PLANTER_RICH_NAME, () ->
-            new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
-                    .randomTicks(), CompatObjects.RICH_SOIL));
-
-    public static final String PLANTER_RICH_SOUL_NAME = "planter_rich_soul";
-    public static final Supplier<Block> PLANTER_RICH_SOUL = !CompatHandler.NETHERSDELIGHT ? null :
-            RegUtils.regWithItem(PLANTER_RICH_SOUL_NAME, () ->
-                    new PlanterRichBlock(BlockBehaviour.Properties.copy(ModRegistry.PLANTER.get())
-                            .randomTicks(), CompatObjects.RICH_SOUL_SOIL));
-
+    public static PlanterBlock makePlanterRich(){
+        return new PlanterRichBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
+                        .strength(2f, 6f)
+                        .requiresCorrectToolForDrops()
+                        .randomTicks(), CompatObjects.RICH_SOIL);
+    }
 
     @ExpectPlatform
     public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {

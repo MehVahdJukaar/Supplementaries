@@ -111,6 +111,8 @@ public class Supplementaries {
 
     //TODO: merge FD planters
 
+    //lectern colors in gui
+
     //rope slide animation and sound instance
     //jeed multi
     //finish bedbugs

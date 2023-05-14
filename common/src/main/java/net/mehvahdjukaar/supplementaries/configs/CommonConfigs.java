@@ -9,11 +9,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -345,13 +343,16 @@ public class CommonConfigs {
             WAY_SIGN_ENABLED = feature(builder.comment("Entirely disables them from spawning"));
             WAY_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
-
             builder.pop();
 
             builder.pop();
 
-            DAUB_ENABLED = feature(builder, ModConstants.DAUB_NAME);
-            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICK_NAME+"s");
+            builder.push("daub");
+            DAUB_ENABLED = feature(builder);
+            WATTLE_AND_DAUB_ENABLED = feature(builder, ModConstants.WATTLE_AND_DAUB);
+            builder.pop();
+
+            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICKS_NAME);
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -434,6 +435,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
 
         public static final Supplier<Boolean> DAUB_ENABLED;
+        public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
 
         public static final Supplier<Boolean> ASH_ENABLED;
 
@@ -1070,15 +1072,12 @@ public class CommonConfigs {
     //TODO: cleanup
     public static boolean isEnabled(String key) {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
-        if (key.contains("daub")) return Building.DAUB_ENABLED.get();
         return switch (key) {
+            case ModConstants.ASH_BRICK_NAME -> Building.ASH_BRICKS_ENABLED.get();
             case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
             case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
             case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
-            case ModConstants.CHECKER_SLAB_NAME, ModConstants.CHECKER_VERTICAL_SLAB_NAME ->
-                    Building.CHECKERBOARD_ENABLED.get();
-            case "planter_rich", "planter_rich_soul" -> Building.PLANTER_ENABLED.get();
-            case "vertical_slabs" -> CompatHandler.isVerticalSlabEnabled();
+            case ModConstants.CHECKER_SLAB_NAME -> Building.CHECKERBOARD_ENABLED.get();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();

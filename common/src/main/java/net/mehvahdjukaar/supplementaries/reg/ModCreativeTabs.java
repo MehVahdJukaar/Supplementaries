@@ -9,17 +9,22 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.*;
@@ -31,9 +36,10 @@ public class ModCreativeTabs {
     private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
     private static final Set<Item> ALL_ITEMS = new LinkedHashSet<>();
 
-    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
+    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() && false ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
-                    (c) -> c.icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
+                    (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
+                            .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
 
     public static final Supplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
@@ -43,6 +49,8 @@ public class ModCreativeTabs {
         RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
     }
 
+    private static boolean flag = true;
+
     public static void setup() {
         List<Item> hidden = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
@@ -51,6 +59,7 @@ public class ModCreativeTabs {
         });
         registerItemsToTabs(dummy);
         HIDDEN_ITEMS.addAll(hidden);
+        flag = false;
     }
 
     public static boolean isHidden(Item item) {
@@ -58,10 +67,14 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
-
-        if(MOD_TAB != null){
-
-            return;
+        if (MOD_TAB != null && !flag) {
+            e.add(MOD_TAB.get(), HIDDEN_ITEMS.toArray(ItemLike[]::new));
+            //return;
+        }
+        if (JAR_TAB != null) {
+            if (CommonConfigs.Functional.JAR_ENABLED.get()) {
+                e.addAfter(JAR_TAB.get(), null, getJars());
+            }
         }
 
         before(e, Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
@@ -184,12 +197,19 @@ public class ModCreativeTabs {
                 ModConstants.SIGN_POST_NAME,
                 ModRegistry.SIGN_POST_ITEMS.values().stream().map(i -> (Supplier<Item>) () -> i).toArray(Supplier[]::new));
 
+        before(e, Items.CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.DOORMAT_NAME,
+                ModRegistry.DOORMAT);
 
         before(e, Items.CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.ITEM_SHELF_NAME,
                 ModRegistry.ITEM_SHELF);
 
         after(e, ItemTags.CANDLES, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.CANDLE_HOLDER_NAME,
+                ModRegistry.CANDLE_HOLDERS.values().toArray(Supplier[]::new));
+
+        after(e, ItemTags.CANDLES, CreativeModeTabs.COLORED_BLOCKS,
                 ModConstants.CANDLE_HOLDER_NAME,
                 ModRegistry.CANDLE_HOLDERS.values().toArray(Supplier[]::new));
 
@@ -209,6 +229,262 @@ public class ModCreativeTabs {
                 ModConstants.PRESENT_NAME,
                 ModRegistry.PRESENTS.values().toArray(Supplier[]::new));
 
+
+        after(e, Items.PINK_SHULKER_BOX, CreativeModeTabs.COLORED_BLOCKS,
+                ModConstants.TRAPPED_PRESENT_NAME,
+                ModRegistry.TRAPPED_PRESENTS.values().toArray(Supplier[]::new));
+
+        after(e, Items.PINK_SHULKER_BOX, CreativeModeTabs.COLORED_BLOCKS,
+                ModConstants.PRESENT_NAME,
+                ModRegistry.PRESENTS.values().toArray(Supplier[]::new));
+
+        e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(Items.INFESTED_DEEPSLATE), getSpikeItems());
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.FODDER_NAME,
+                ModRegistry.FODDER);
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.SUGAR_CUBE_NAME,
+                ModRegistry.SUGAR_CUBE);
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.FEATHER_BLOCK_NAME,
+                ModRegistry.FEATHER_BLOCK);
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.FLINT_BLOCK_NAME,
+                ModRegistry.FLINT_BLOCK);
+
+
+        after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.FLAG_NAME,
+                ModRegistry.FLAGS.values().toArray(Supplier[]::new));
+
+        after(e, ItemTags.BANNERS, CreativeModeTabs.COLORED_BLOCKS,
+                ModConstants.FLAG_NAME,
+                ModRegistry.FLAGS.values().toArray(Supplier[]::new));
+
+
+        after(e, Items.TNT_MINECART, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.DISPENSER_MINECART_NAME,
+                ModRegistry.DISPENSER_MINECART_ITEM);
+
+        after(e, Items.REDSTONE_TORCH, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.SCONCE_LEVER_NAME,
+                ModRegistry.SCONCE_LEVER);
+
+        before(e, Items.LEVER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.CRANK_NAME,
+                ModRegistry.CRANK);
+
+        before(e, Items.PISTON, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.TURN_TABLE_NAME,
+                ModRegistry.TURN_TABLE);
+
+        before(e, Items.PISTON, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.SPRING_LAUNCHER_NAME,
+                ModRegistry.SPRING_LAUNCHER);
+
+        after(e, Items.NOTE_BLOCK, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.SPEAKER_BLOCK_NAME,
+                ModRegistry.SPEAKER_BLOCK);
+
+        after(e, Items.NOTE_BLOCK, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.SPEAKER_BLOCK_NAME,
+                ModRegistry.SPEAKER_BLOCK);
+
+        after(e, Items.HOPPER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.FAUCET_NAME,
+                ModRegistry.FAUCET);
+
+        before(e, Items.TARGET, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.COG_BLOCK_NAME,
+                ModRegistry.COG_BLOCK);
+
+        before(e, Items.NOTE_BLOCK, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.BELLOWS_NAME,
+                ModRegistry.BELLOWS);
+
+        after(e, Items.OBSERVER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.CRYSTAL_DISPLAY_NAME,
+                ModRegistry.CRYSTAL_DISPLAY);
+
+        after(e, Items.OBSERVER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.RELAYER_NAME,
+                ModRegistry.RELAYER);
+
+        after(e, Items.LIGHTNING_ROD, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.WIND_VANE_NAME,
+                ModRegistry.WIND_VANE);
+
+        after(e, Items.IRON_DOOR, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.NETHERITE_DOOR_NAME,
+                ModRegistry.NETHERITE_DOOR);
+
+        after(e, Items.IRON_DOOR, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.GOLD_DOOR_NAME,
+                ModRegistry.GOLD_DOOR);
+
+        after(e, Items.IRON_TRAPDOOR, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.NETHERITE_TRAPDOOR_NAME,
+                ModRegistry.NETHERITE_TRAPDOOR);
+
+        after(e, Items.IRON_TRAPDOOR, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.GOLD_TRAPDOOR_NAME,
+                ModRegistry.GOLD_TRAPDOOR);
+
+        before(e, Items.OAK_DOOR, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.LOCK_BLOCK_NAME,
+                ModRegistry.LOCK_BLOCK);
+
+        before(e, Items.REDSTONE_LAMP, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.REDSTONE_ILLUMINATOR_NAME,
+                ModRegistry.REDSTONE_ILLUMINATOR);
+
+        after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
+                ModConstants.BOMB_BLUE_NAME,
+                ModRegistry.BOMB_BLUE_ITEM);
+
+        after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
+                ModConstants.BOMB_NAME,
+                ModRegistry.BOMB_ITEM);
+
+        before(e, Items.BOW, CreativeModeTabs.COMBAT,
+                ModConstants.QUIVER_NAME,
+                ModRegistry.QUIVER_ITEM);
+
+        before(e, Items.LIGHT_WEIGHTED_PRESSURE_PLATE, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.GOLD_DOOR_NAME,
+                ModRegistry.GOLD_DOOR);
+
+        before(e, Items.LIGHT_WEIGHTED_PRESSURE_PLATE, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.GOLD_TRAPDOOR_NAME,
+                ModRegistry.GOLD_TRAPDOOR);
+
+        after(e, Items.NETHERITE_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.NETHERITE_TRAPDOOR_NAME,
+                ModRegistry.NETHERITE_TRAPDOOR);
+
+        after(e, Items.NETHERITE_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.NETHERITE_DOOR_NAME,
+                ModRegistry.NETHERITE_DOOR);
+
+        after(e, Items.SMALL_DRIPLEAF, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.FLAX_NAME,
+                ModRegistry.FLAX_WILD);
+
+        after(e, Items.BEETROOT_SEEDS, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.FLAX_NAME,
+                ModRegistry.FLAX_SEEDS_ITEM);
+
+        after(e, Items.HAY_BLOCK, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.FLAX_NAME,
+                ModRegistry.FLAX_BLOCK);
+
+        after(e, Items.GRAVEL, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.RAKED_GRAVEL_NAME,
+                ModRegistry.RAKED_GRAVEL);
+
+        after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
+                ModConstants.PANCAKE_NAME,
+                ModRegistry.PANCAKE);
+
+        after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
+                ModConstants.CANDY_NAME,
+                ModRegistry.CANDY_ITEM);
+
+        after(e, Items.NETHER_BRICK, CreativeModeTabs.INGREDIENTS,
+                ModConstants.ASH_BRICKS_NAME,
+                ModRegistry.ASH_BRICK_ITEM);
+
+        after(e, Items.GLOW_INK_SAC, CreativeModeTabs.INGREDIENTS,
+                ModConstants.ANTIQUE_INK_NAME,
+                ModRegistry.ANTIQUE_INK);
+
+        after(e, Items.WHEAT, CreativeModeTabs.INGREDIENTS,
+                ModConstants.FLAX_NAME,
+                ModRegistry.FLAX_ITEM);
+
+        before(e, Items.PAPER, CreativeModeTabs.INGREDIENTS,
+                ModConstants.ASH_NAME,
+                ModRegistry.ASH_BLOCK);
+
+        add(e, CreativeModeTabs.SPAWN_EGGS,
+                ModConstants.RED_MERCHANT_NAME,
+                ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
+
+        before(e, Items.BRICKS, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.ASH_BRICKS_NAME,
+                ModRegistry.ASH_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
+
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.WRENCH_NAME,
+                ModRegistry.WRENCH);
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.SLINGSHOT_NAME,
+                ModRegistry.SLINGSHOT_ITEM);
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.ROPE_ARROW_NAME,
+                ModRegistry.ROPE_ARROW_ITEM);
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.SOAP_NAME,
+                ModRegistry.SOAP);
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.BUBBLE_BLOWER_NAME,
+                ModRegistry.BUBBLE_BLOWER);
+
+
+        before(e, i -> i.getItem() instanceof DyeItem, CreativeModeTabs.INGREDIENTS,
+                ModConstants.SOAP_NAME,
+                ModRegistry.SOAP);
+
+
+        after(e, Items.SPECTRAL_ARROW, CreativeModeTabs.COMBAT,
+                ModConstants.ROPE_ARROW_NAME,
+                ModRegistry.ROPE_ARROW_ITEM);
+
+        after(e, Items.LEAD, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.FLUTE_NAME,
+                ModRegistry.FLUTE_ITEM);
+
+
+        after(e, Items.MOSSY_STONE_BRICK_WALL, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.STONE_TILE_NAME,
+                ModRegistry.STONE_TILE_BLOCKS.values().toArray(Supplier[]::new));
+
+        after(e, Items.POLISHED_BLACKSTONE_BRICK_WALL, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.BLACKSTONE_TILE_NAME,
+                ModRegistry.BLACKSTONE_TILE_BLOCKS.values().toArray(Supplier[]::new));
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.LAPIS_BRICKS_NAME,
+                ModRegistry.LAPIS_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.CHECKER_BLOCK_NAME,
+                ModRegistry.CHECKER_BLOCK, ModRegistry.CHECKER_SLAB);
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.DAUB_NAME,
+                ModRegistry.DAUB);
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.WATTLE_AND_DAUB,
+                ModRegistry.DAUB_FRAME, ModRegistry.DAUB_BRACE, ModRegistry.DAUB_CROSS_BRACE);
+
+        after(e, Items.IRON_BARS, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.IRON_GATE_NAME,
+                ModRegistry.IRON_GATE);
+
+        before(e, Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.SOAP_NAME,
+                ModRegistry.SOAP_BLOCK);
     }
 
     private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {
@@ -227,9 +503,20 @@ public class ModCreativeTabs {
     }
 
     private static void before(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+        before(event, i -> i.is(target), tab, key, items);
+    }
+
+    private static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
-            event.addBefore(tab, i -> i.is(target), entries);
+            event.addBefore(tab, targetPred, entries);
+        }
+    }
+
+    private static void add(RegHelper.ItemToTabEvent event, CreativeModeTab tab, String key, Supplier<?>... items) {
+        if (CommonConfigs.isEnabled(key)) {
+            ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
+            event.add(tab, entries);
         }
     }
 
@@ -255,12 +542,13 @@ public class ModCreativeTabs {
             }
         return false;
     }
-/*
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        //freaking bookshelf mod is calling this method before configs are loaded...
-        if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
-            if (this.allowedIn(group)) {
-                items.add(BambooSpikesTippedItem. makeSpikeItem(Potions.POISON));
+
+    public static ItemStack[] getSpikeItems() {
+        var items = new ArrayList<ItemStack>();
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
+            items.add(ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance());
+            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.LONG_POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.STRONG_POISON));
                 for (Potion potion : BuiltInRegistries.POTION) {
@@ -272,9 +560,11 @@ public class ModCreativeTabs {
                 }
             }
         }
-    }*/
+        return items.toArray(ItemStack[]::new);
+    }
 
-    private static void populateJarTab(List<ItemStack> items, CreativeModeTab tab) {
+    private static ItemStack[] getJars() {
+        List<ItemStack> items = new ArrayList<>();
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
@@ -309,6 +599,7 @@ public class ModCreativeTabs {
                 tryAddJar(items, com2);
             }
         }
+        return items.toArray(ItemStack[]::new);
     }
 
 

@@ -95,7 +95,6 @@ public final class ModConstants {
     public static final String DIRECTIONAL_CAKE_NAME = "directional_cake";
     public static final String CHECKER_BLOCK_NAME = "checker_block";
     public static final String CHECKER_SLAB_NAME = "checker_slab";
-    public static final String CHECKER_VERTICAL_SLAB_NAME = "checker_vertical_slab";
     public static final String PANCAKE_NAME = "pancake";
     public static final String FLAX_NAME = "flax";
     public static final String FLAX_WILD_NAME = "wild_flax";
@@ -107,6 +106,7 @@ public final class ModConstants {
     public static final String STICK_NAME = "stick";
     public static final String BLAZE_ROD_NAME = "blaze_rod";
     public static final String DAUB_NAME = "daub";
+    public static final String WATTLE_AND_DAUB = "wattle_and_daub";
     public static final String DAUB_FRAME_NAME = "daub_frame";
     public static final String DAUB_BRACE_NAME = "daub_brace";
     public static final String DAUB_CROSS_BRACE_NAME = "daub_cross_brace";

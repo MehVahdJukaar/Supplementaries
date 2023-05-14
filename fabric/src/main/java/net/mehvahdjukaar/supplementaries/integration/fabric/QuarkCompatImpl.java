@@ -30,10 +30,6 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static boolean isVerticalSlabEnabled() {
-        return true;
-    }
-
     public static BlockEntity getMovingBlockEntity(BlockPos pos, BlockState state, Level level) {
         return null;
     }
