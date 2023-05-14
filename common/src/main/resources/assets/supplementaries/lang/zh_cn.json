@@ -91,6 +91,7 @@
   "gui.supplementaries.safe.password": "%2$s的钥匙：%1$s",
   "message.supplementaries.safe.bound": "已上锁",
   "message.supplementaries.safe.assigned_key": "已配对“%s”钥匙",
+  "message.supplementaries.safe.assigned_key_generic": "已配对钥匙",
   "item.supplementaries.key": "钥匙",
   
   "item.supplementaries.bamboo_spikes_tipped_effect": "%s竹刺",
