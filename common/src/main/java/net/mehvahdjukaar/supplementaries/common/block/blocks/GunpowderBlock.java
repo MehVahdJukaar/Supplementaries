@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -482,14 +483,12 @@ public class GunpowderBlock extends LightUpBlock {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
-        //TODO: add tag
-        if (b instanceof FireBlock || b instanceof MagmaBlock || (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock)) ||
-                b == ModRegistry.BLAZE_ROD_BLOCK.get())
+        if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
         if (b instanceof CampfireBlock || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isBrazier(b))) {
             return state.getValue(CampfireBlock.LIT);
         }
-        return world.getFluidState(pos).getType() == Fluids.LAVA;
+        return state.is(ModTags.LIGHTS_GUNPOWDER);
     }
 
     //TODO: this is not working

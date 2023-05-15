@@ -37,6 +37,7 @@
   "globe.supplementaries.moon": "Moon",
   "globe.supplementaries.earth": "Earth",
   "globe.supplementaries.flat": "Flat",
+  "globe.supplementaries.sun": "Sun",
   "message.supplementaries.command.globe_changed": "Globe seed changed",
   "message.supplementaries.command.globe_reset": "Globe seed reset",
   "block.supplementaries.hourglass" : "Hourglass",

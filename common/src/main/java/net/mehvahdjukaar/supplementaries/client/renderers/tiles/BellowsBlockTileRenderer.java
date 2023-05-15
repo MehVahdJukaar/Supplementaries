@@ -78,7 +78,6 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         matrixStackIn.mulPose(RotHlpr.rot(dir.getOpposite()));
         matrixStackIn.mulPose(RotHlpr.XN90);
         matrixStackIn.mulPose(RotHlpr.Z180);
-        //TODO: figure out why models are always flipped
 
         center.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 

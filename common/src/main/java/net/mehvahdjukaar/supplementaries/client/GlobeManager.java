@@ -2,20 +2,25 @@ package net.mehvahdjukaar.supplementaries.client;
 
 
 import com.google.common.collect.Maps;
+import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
+import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SUN_TEXTURE;
 
 public class GlobeManager {
 
@@ -103,6 +108,7 @@ public class GlobeManager {
      * Refresh colors and textures
      */
     public static void refreshColorsAndTextures(ResourceManager manager) {
+        Type.recomputeCache();
 
         DIMENSION_COLOR_MAP.clear();
         int targetColors = 13;
@@ -124,6 +130,76 @@ public class GlobeManager {
         }
 
         refreshTextures();
+    }
+
+    public enum Type {
+        FLAT(new String[]{"flat", "flat earth"}, Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
+        MOON(new String[]{"moon", "luna", "selene", "cynthia"},
+                Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
+        EARTH(new String[]{"earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"},
+                Component.translatable("globe.supplementaries.earth"), GLOBE_TEXTURE),
+        SUN(new String[]{"sun", "sol", "helios"},
+                Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
+
+        Type(String[] key, Component tr, ResourceLocation res) {
+            this.keyWords = key;
+            this.transKeyWord = tr;
+            this.texture = res;
+        }
+
+        private final String[] keyWords;
+        public final Component transKeyWord;
+        public final ResourceLocation texture;
+
+        private static final Map<String, Pair<Model, ResourceLocation>> nameCache = new HashMap<>();
+        private static final Map<String, Integer> idMap = new Object2IntArrayMap<>();
+        public static final List<ResourceLocation> textures = new ArrayList<>();
+
+        public static void recomputeCache() {
+            nameCache.clear();
+            for (Type type : Type.values()) {
+                Model model = type == FLAT ? Model.FLAT : Model.GLOBE;
+                var pair = Pair.of(model, type.texture);
+                if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
+                    nameCache.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
+                }
+                for (String s : type.keyWords) {
+                    if (!s.equals("")) {
+                        nameCache.put(s, pair);
+                    }
+                }
+            }
+
+            for (var g : Credits.INSTANCE.globes().entrySet()) {
+                var path = g.getValue();
+                Model model = Model.GLOBE;
+                if (path.getPath().contains("globe_wais")) {
+                    model = Model.SNOW;
+                }
+                nameCache.put(g.getKey(), Pair.of(model, path));
+            }
+            textures.clear();
+            nameCache.values().forEach(o -> {
+                if(!textures.contains(o.getSecond())) textures.add(o.getSecond());
+            });
+            Collections.sort(textures);
+            idMap.clear();
+            nameCache.forEach((key, value) -> idMap.put(key, textures.indexOf(value.getSecond())));
+        }
+
+        @Nullable
+        public static Pair<Model, ResourceLocation> getModelAndTexture(String text) {
+            return nameCache.get(text.toLowerCase(Locale.ROOT));
+        }
+
+        @Nullable
+        public static Integer getTextureID(String text) {
+            return idMap.get(text.toLowerCase(Locale.ROOT));
+        }
+    }
+
+    public enum Model {
+        GLOBE, FLAT, SNOW, SHEARED
     }
 
 }

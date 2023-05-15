@@ -93,8 +93,6 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
 
         //extra stuff here
 
-        //TODO: blit trade offer thing
-
         MutableComponent tradeOffer = TRADE_OFFER
                 .withStyle(ChatFormatting.WHITE)
                 .withStyle(ChatFormatting.BOLD);

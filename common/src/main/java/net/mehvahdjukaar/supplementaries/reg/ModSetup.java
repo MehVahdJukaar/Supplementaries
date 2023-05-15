@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
@@ -90,19 +91,9 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
-        //todo USE HELPER
-
-        List<ItemStack> chickenFood = new ArrayList<>(List.of(Chicken.FOOD_ITEMS.getItems()));
-        chickenFood.add(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get()));
-        Chicken.FOOD_ITEMS = Ingredient.of(chickenFood.stream());
-
-        List<ItemStack> horseFood = new ArrayList<>(List.of(new ItemStack(ModRegistry.FLAX_ITEM.get()),
-                new ItemStack(ModRegistry.FLAX_BLOCK.get()), new ItemStack(ModRegistry.SUGAR_CUBE.get())));
-        horseFood.addAll(List.of(AbstractHorse.FOOD_ITEMS.getItems()));
-        AbstractHorse.FOOD_ITEMS = Ingredient.of(horseFood.stream());
-
-        Parrot.TAME_FOOD.add(ModRegistry.FLAX_SEEDS_ITEM.get());
-
+        AnimalFoodHelper.addChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
+        AnimalFoodHelper.addHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
+        AnimalFoodHelper.addParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
     }
 
     private static void registerFrameBlocks() {

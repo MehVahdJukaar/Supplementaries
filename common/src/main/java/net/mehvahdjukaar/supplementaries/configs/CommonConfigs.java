@@ -757,7 +757,6 @@ public class CommonConfigs {
                     .define("explosion_radius", 5.15, 0.1, 10);
             BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .define("break_blocks", BombEntity.BreakingMode.WEAK);
-            //TODO: blue bomb config
             builder.pop();
             builder.pop();
 

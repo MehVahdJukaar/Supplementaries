@@ -23,7 +23,6 @@ class FishBucketJarBehavior extends DispenserHelper.AdditionalDispenserBehavior 
         ServerLevel world = source.getLevel();
         BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
         if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
-            //TODO: add fish buckets
             if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
                 if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
                     tile.setChanged();

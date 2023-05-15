@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager.Type;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager.Model;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -36,7 +37,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     private Component customName;
     private float yaw = 0;
     private float prevYaw = 0;
-    private Pair<GlobeModel, @Nullable ResourceLocation> renderData = Pair.of(GlobeModel.GLOBE, null);
+    private Pair<Model, @Nullable ResourceLocation> renderData = Pair.of(Model.GLOBE, null);
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
@@ -51,7 +52,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         return Mth.lerp(partialTicks, prevYaw + face, yaw + face);
     }
 
-    public Pair<GlobeModel, ResourceLocation> getRenderData() {
+    public Pair<Model, ResourceLocation> getRenderData() {
         return renderData;
     }
 
@@ -71,12 +72,12 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private void updateRenderData() {
         if (this.sheared) {
-            this.renderData = Pair.of(GlobeModel.SHEARED,
+            this.renderData = Pair.of(Model.SHEARED,
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
                             GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
-            this.renderData = GlobeType.getModelAndTexture(this.getCustomName().getString());
-        } else this.renderData = Pair.of(GlobeModel.GLOBE, null);
+            this.renderData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
+        } else this.renderData = Pair.of(Model.GLOBE, null);
     }
 
     @Override
@@ -172,79 +173,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     public int getSignalPower() {
         if (this.yaw != 0) return 15;
         else return this.face / -90 + 1;
-    }
-
-
-    //TODO: improve. this is a mess
-    public enum GlobeType {
-        FLAT(new String[]{"flat", "flat earth"}, Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
-        MOON(new String[]{"moon", "luna", "selene", "cynthia"},
-                Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
-        EARTH(new String[]{"earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"},
-                Component.translatable("globe.supplementaries.earth"), GLOBE_TEXTURE),
-        SUN(new String[]{"sun", "sol", "helios"},
-                Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
-
-        GlobeType(String[] key, Component tr, ResourceLocation res) {
-            this.keyWords = key;
-            this.transKeyWord = tr;
-            this.texture = res;
-        }
-
-        private final String[] keyWords;
-        public final Component transKeyWord;
-        public final ResourceLocation texture;
-
-        private static final Map<String, Pair<GlobeModel, ResourceLocation>> nameCache = new HashMap<>();
-        private static final Map<String, Integer> idMap = new Object2IntArrayMap<>();
-        public static final List<ResourceLocation> textures = new ArrayList<>();
-
-        public static void recomputeCache() {
-            nameCache.clear();
-            for (GlobeType type : GlobeType.values()) {
-                GlobeModel model = type == FLAT ? GlobeModel.FLAT : GlobeModel.GLOBE;
-                var pair = Pair.of(model, type.texture);
-                if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
-                    nameCache.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
-                }
-                for (String s : type.keyWords) {
-                    if (!s.equals("")) {
-                        nameCache.put(s, pair);
-                    }
-                }
-            }
-
-            for (var g : Credits.INSTANCE.globes().entrySet()) {
-                var path = g.getValue();
-                GlobeModel model = GlobeModel.GLOBE;
-                if (path.getPath().contains("globe_wais")) {
-                    model = GlobeModel.SNOW;
-                }
-                nameCache.put(g.getKey(), Pair.of(model, path));
-            }
-            textures.clear();
-            nameCache.values().forEach(o -> {
-                if(!textures.contains(o.getSecond())) textures.add(o.getSecond());
-            });
-            Collections.sort(textures);
-            idMap.clear();
-            nameCache.forEach((key, value) -> idMap.put(key, textures.indexOf(value.getSecond())));
-
-        }
-
-        @Nullable
-        public static Pair<GlobeModel, ResourceLocation> getModelAndTexture(String text) {
-            return nameCache.get(text.toLowerCase(Locale.ROOT));
-        }
-
-        @Nullable
-        public static Integer getTextureID(String text) {
-            return idMap.get(text.toLowerCase(Locale.ROOT));
-        }
-    }
-
-    public enum GlobeModel {
-        GLOBE, FLAT, SNOW, SHEARED
     }
 
 }

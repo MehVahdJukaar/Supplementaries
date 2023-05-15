@@ -49,7 +49,6 @@ public class PedestalBlockTile extends ItemDisplayTile {
         //doing this here since I need crystal on server too
         ItemStack stack = getDisplayedItem();
         Item it = stack.getItem();
-        //TODO: maybe add tag
 
         if (MiscUtils.isSword(it) || stack.is(ModTags.PEDESTAL_DOWNRIGHT)) {
             this.type = DisplayType.SWORD;

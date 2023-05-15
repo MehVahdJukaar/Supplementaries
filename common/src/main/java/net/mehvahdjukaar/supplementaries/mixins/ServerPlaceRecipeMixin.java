@@ -33,7 +33,8 @@ public abstract class ServerPlaceRecipeMixin<C extends Container> {
 
     @Shadow protected abstract void handleRecipeClicked(Recipe<C> recipe, boolean placeAll);
 
-    @Shadow protected abstract void clearGrid(boolean bl);
+
+    @Shadow protected abstract void clearGrid();
 
     @Inject(method = "recipeClicked", at = @At("HEAD"))
     public void handleSpecialRecipeDisplays(ServerPlayer player, Recipe<C> recipe, boolean placeAll, CallbackInfo ci) {
@@ -46,7 +47,7 @@ public abstract class ServerPlaceRecipeMixin<C extends Container> {
                 if (this.stackedContents.canCraft(recipe, null)) {
                     this.handleRecipeClicked(recipe, placeAll);
                 } else {
-                    this.clearGrid(true);
+                    this.clearGrid();
                     player.connection.send(new ClientboundPlaceGhostRecipePacket(player.containerMenu.containerId, recipe));
                 }
                 player.getInventory().setChanged();

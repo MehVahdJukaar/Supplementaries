@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
+import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
@@ -87,9 +88,6 @@ public class WallLanternTexturesManager extends SimpleJsonResourceReloadListener
             } catch (Exception ignored) {
             }
         }
-
-        //globe stuff
-        GlobeBlockTile.GlobeType.recomputeCache();
     }
 
     private static void initialize() {

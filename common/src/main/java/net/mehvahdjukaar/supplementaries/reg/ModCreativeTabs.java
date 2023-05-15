@@ -34,9 +34,9 @@ import java.util.function.Supplier;
 public class ModCreativeTabs {
 
     private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
-    private static final Set<Item> ALL_ITEMS = new LinkedHashSet<>();
+    private static final List<ItemStack> NON_HIDDEN_ITEMS = new ArrayList<>();
 
-    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() && false ? null :
+    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
@@ -52,13 +52,20 @@ public class ModCreativeTabs {
     private static boolean flag = true;
 
     public static void setup() {
-        List<Item> hidden = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
+        List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
-        var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, aBoolean, itemStacks) -> {
-            itemStacks.forEach(i -> hidden.remove(i.getItem()));
+        var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, reverse, itemStacks) -> {
+            if(reverse){
+                var v = new ArrayList<>(itemStacks);
+                Collections.reverse(v);
+                NON_HIDDEN_ITEMS.addAll(v);
+            }else NON_HIDDEN_ITEMS.addAll(itemStacks);
         });
         registerItemsToTabs(dummy);
-        HIDDEN_ITEMS.addAll(hidden);
+        for(var v : NON_HIDDEN_ITEMS){
+            all.remove(v.getItem());
+        }
+        HIDDEN_ITEMS.addAll(all);
         flag = false;
     }
 
@@ -67,14 +74,14 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
-        if (MOD_TAB != null && !flag) {
-            e.add(MOD_TAB.get(), HIDDEN_ITEMS.toArray(ItemLike[]::new));
-            //return;
-        }
         if (JAR_TAB != null) {
             if (CommonConfigs.Functional.JAR_ENABLED.get()) {
                 e.addAfter(JAR_TAB.get(), null, getJars());
             }
+        }
+        if (MOD_TAB != null && !flag) {
+            e.add(MOD_TAB.get(), HIDDEN_ITEMS.toArray(ItemLike[]::new));
+            return;
         }
 
         before(e, Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
@@ -343,12 +350,8 @@ public class ModCreativeTabs {
                 ModRegistry.REDSTONE_ILLUMINATOR);
 
         after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
-                ModConstants.BOMB_BLUE_NAME,
-                ModRegistry.BOMB_BLUE_ITEM);
-
-        after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
                 ModConstants.BOMB_NAME,
-                ModRegistry.BOMB_ITEM);
+                ModRegistry.BOMB_ITEM,ModRegistry.BOMB_BLUE_ITEM);
 
         before(e, Items.BOW, CreativeModeTabs.COMBAT,
                 ModConstants.QUIVER_NAME,
@@ -386,13 +389,14 @@ public class ModCreativeTabs {
                 ModConstants.RAKED_GRAVEL_NAME,
                 ModRegistry.RAKED_GRAVEL);
 
-        after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
-                ModConstants.PANCAKE_NAME,
-                ModRegistry.PANCAKE);
 
         after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
                 ModConstants.CANDY_NAME,
                 ModRegistry.CANDY_ITEM);
+
+        after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
+                ModConstants.PANCAKE_NAME,
+                ModRegistry.PANCAKE);
 
         after(e, Items.NETHER_BRICK, CreativeModeTabs.INGREDIENTS,
                 ModConstants.ASH_BRICKS_NAME,
@@ -440,7 +444,7 @@ public class ModCreativeTabs {
                 ModRegistry.BUBBLE_BLOWER);
 
 
-        before(e, i -> i.getItem() instanceof DyeItem, CreativeModeTabs.INGREDIENTS,
+        after(e, i -> i.getItem() instanceof DyeItem, CreativeModeTabs.INGREDIENTS,
                 ModConstants.SOAP_NAME,
                 ModRegistry.SOAP);
 
@@ -528,6 +532,21 @@ public class ModCreativeTabs {
     }
 
     private static void afterTL(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key,
+                                List<String> tags,
+                                Supplier<?>... items) {
+        if (isTagOn(tags.toArray(String[]::new))) {
+            after(event, target, tab, key, items);
+        }
+    }
+
+    private static void beforeML(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, String modLoaded,
+                                Supplier<?>... items) {
+        if (PlatHelper.isModLoaded(modLoaded)) {
+            before(event, target, tab, key, items);
+        }
+    }
+
+    private static void beforeTL(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key,
                                 List<String> tags,
                                 Supplier<?>... items) {
         if (isTagOn(tags.toArray(String[]::new))) {

@@ -90,6 +90,7 @@ public class ModTextures {
     public static final ResourceLocation BOOK_AND_QUILL_TEXTURES = Supplementaries.res("block/books/book_and_quill");
     public static final ResourceLocation BOOK_ANTIQUE_TEXTURES = Supplementaries.res("block/books/book_antique");
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
+    public static final ResourceLocation BUBBLE_BLOCK_COLORS_TEXTURE = Supplementaries.res("block/bubble_block_colors");
 
     public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = Util.make(() -> {
         Map<Block, ResourceLocation> map = new LinkedHashMap<>();

@@ -1,25 +1,16 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
+import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
 public class ColorHelper {
-    private static final float[][] SOAP_COLORS;
-
-    //TODO: save to strip
-    static {
-        int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
-        float[][] temp = new float[c.length][];
-        for (int i = 0; i < c.length; i++) {
-            int j = c[i];
-            temp[i] = new float[]{FastColor.ARGB32.red(j) / 255f,
-                    FastColor.ARGB32.green(j) / 255f, FastColor.ARGB32.blue(j) / 255f};
-        }
-        SOAP_COLORS = temp;
-    }
+    private static float[][] soapColors;
 
     public static int pack(float[] rgb) {
         return FastColor.ARGB32.color(255, (int) (rgb[0] * 255), (int) (rgb[1] * 255), (int) (rgb[2] * 255));
@@ -52,13 +43,13 @@ public class ColorHelper {
     }
 
     public static float[] getBubbleColor(float phase) {
-        int n = SOAP_COLORS.length;
+        int n = soapColors.length;
         int ind = (int) Math.floor(n * phase);
 
         float delta = n * phase % 1;
 
-        float[] start = SOAP_COLORS[ind];
-        float[] end = SOAP_COLORS[(ind + 1) % n];
+        float[] start = soapColors[ind];
+        float[] end = soapColors[(ind + 1) % n];
 
         float red = Mth.lerp(delta, start[0], end[0]);
         float green = Mth.lerp(delta, start[1], end[1]);
@@ -94,4 +85,15 @@ public class ColorHelper {
         return new HSLColor(h, s, l, 1);
     }
 
+    public static void refreshBubbleColors(ResourceManager manager) {
+        var c = SpriteUtils.parsePaletteStrip(manager, ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE, 6);
+        //int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
+        float[][] temp = new float[c.size()][];
+        for (int i = 0; i < c.size(); i++) {
+            int j = c.get(i);
+            temp[i] = new float[]{FastColor.ARGB32.red(j) / 255f,
+                    FastColor.ARGB32.green(j) / 255f, FastColor.ARGB32.blue(j) / 255f};
+        }
+        soapColors = temp;
+    }
 }

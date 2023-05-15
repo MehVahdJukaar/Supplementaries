@@ -5,6 +5,7 @@ import net.minecraft.util.Mth;
 
 import java.util.Random;
 
+//when I wrote this only I and God knew what was going on here. Now only God knows
 //legacy code incoming
 public class GlobeTextureGenerator {
 
@@ -230,13 +231,10 @@ public class GlobeTextureGenerator {
 
 
     private static class Pixel {
-        public TerrainType terrain = TerrainType.WATER;
-        public Biome biome = Biome.TEMPERATE;
-        public boolean shaded = false;
-        public Feature specialFeature = Feature.NORMAL;
-
-        public Pixel() {
-        }
+        private TerrainType terrain = TerrainType.WATER;
+        private Biome biome = Biome.TEMPERATE;
+        private boolean shaded = false;
+        private Feature specialFeature = Feature.NORMAL;
 
         public Pixel(boolean isnull) {
             if (isnull)

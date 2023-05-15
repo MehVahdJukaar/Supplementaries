@@ -75,11 +75,6 @@ public class ItemsUtil {
         }
     }
 
-    //TODO: implement
-    public static void addToInventory(Level world, BlockPos below, ObjectArrayList<ItemStack> randomItems) {
-    }
-
-
     public static boolean tryInteractingWithContainerItem(ItemStack containerStack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot) {
         if (action != ClickAction.PRIMARY) {
             //drop content in empty slot
