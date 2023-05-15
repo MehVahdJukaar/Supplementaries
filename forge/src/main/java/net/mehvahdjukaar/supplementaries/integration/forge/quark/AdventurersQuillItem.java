@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 import com.google.common.base.Stopwatch;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.longs.Long2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -11,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHa
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,6 +18,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -45,8 +45,6 @@ import vazkii.quark.content.tools.module.PathfinderMapsModule;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AdventurersQuillItem extends PathfindersQuillItem {
 
@@ -67,7 +65,10 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                         .tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
 
         QuarkCompatImpl.removeStuffFromARLHack();
+
     }
+
+    private static Thread mainThread;
 
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
@@ -80,11 +81,11 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                     comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
                 StringBuilder b = new StringBuilder();
                 b.append("filled_map.");
-                if(!r.getNamespace().equals("minecraft")){
+                if (!r.getNamespace().equals("minecraft")) {
                     b.append(r.getNamespace()).append(".");
                 }
                 b.append(r.getPath());
-                comps.add(Component.translatable( b.toString()).withStyle(ChatFormatting.GRAY));
+                comps.add(Component.translatable(b.toString()).withStyle(ChatFormatting.GRAY));
             }
         } else
             comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
@@ -97,46 +98,94 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    //leave 1, we use the one below
-    @Override
-    protected int getIterations() {
-        return 1;
-    }
-
-    private int getMaxIterations() {
+    public int getIterations() {
         return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
     }
 
+    @Nullable
     @Override
-    protected boolean isNBTValid(ItemStack stack) {
-        return true;
+    public ResourceLocation getTarget(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        String str = tag.getString(TAG_STRUCTURE);
+        if (str.isEmpty()) {
+            //re-generate for empty one
+            str = "mansion";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
+            if (str == null) return null;
+            tag.putString(TAG_STRUCTURE, str);
+        }
+        return new ResourceLocation(str);
+    }
+
+    @Nullable
+    private Holder<Structure> getStructureHolder(ServerLevel level, ResourceLocation key) {
+        Registry<Structure> reg = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+        var structure = reg.getHolder(ResourceKey.create(reg.key(), key));
+        return structure.orElse(null);
+    }
+
+    @Override
+    public ItemStack createMap(ServerLevel level, BlockPos targetPos, ResourceLocation structure, ItemStack original) {
+        CompoundTag tag = original.getOrCreateTag();
+        return AdventurerMapsHandler.createStructureMap(level, targetPos, getStructureHolder(level, structure),
+                getZoomLevel(tag), getDecoration(tag), getMapName(tag), getColor(tag));
+    }
+
+    @Override
+    protected InteractionResultHolder<BlockPos> searchConcurrent(ResourceLocation target, ItemStack stack,
+                                                                 ServerLevel level, Player player) {
+        CompoundTag tag = stack.getOrCreateTag();
+        Holder<Structure> structure = getStructureHolder(level, target);
+        State state = State.get(tag);
+
+        if (structure == null || state == null) return InteractionResultHolder.fail(BlockPos.ZERO);
+        BlockPos center = getOrCreateStartPos(tag, player);
+        int radius = getSearchRadius(tag);
+        boolean skipKnown = getSkipKnown(tag);
+
+        Key key = new Key(GlobalPos.of(level.dimension(), center),
+                structure.unwrapKey().get().location(), radius, skipKnown);
+
+        if (COMPUTING.contains(key)) {
+            return InteractionResultHolder.pass(BlockPos.ZERO);
+        } else if (RESULTS.containsKey(key)) {
+            var ret = RESULTS.remove(key);
+            //EXECUTORS.submit(() -> RESULTS.remove(key)); //lmao. no lag spikes allowed. write is slow
+            if (ret.getResult() == InteractionResult.PASS) {
+                //this should never happen
+                return InteractionResultHolder.fail(BlockPos.ZERO);
+            }
+            return ret;
+        } else {
+            ItemStack dummy = stack.copy();
+            EXECUTORS.submit(() -> {
+                COMPUTING.add(key);
+                RESULTS.put(key, this.searchIterative(target, dummy, level, player, Integer.MAX_VALUE));
+                COMPUTING.remove(key);
+            });
+            return InteractionResultHolder.pass(BlockPos.ZERO);
+        }
+    }
+
+    @Override
+    protected InteractionResultHolder<BlockPos> searchIterative(ResourceLocation target, ItemStack stack,
+                                                                ServerLevel level, Player player, int maxIter) {
+        CompoundTag tag = stack.getOrCreateTag();
+        Holder<Structure> structure = getStructureHolder(level, target);
+        State state = State.get(tag);
+
+        if (structure == null || state == null) return InteractionResultHolder.fail(BlockPos.ZERO);
+        BlockPos center = getOrCreateStartPos(tag, player);
+        int radius = getSearchRadius(tag);
+        boolean skipKnown = getSkipKnown(tag);
+
+        return findNearestMapStructure(level, structure, radius, center, skipKnown, state, maxIter);
     }
 
     @Override
     protected ItemStack search(ItemStack stack, ServerLevel level, Player player, int slot) {
-
-        CompoundTag tag = stack.getTag();
-        if (tag == null) return ItemStack.EMPTY;
-
-        Holder<Structure> structure = getTargetStructure(tag, level);
-        State state = State.get(tag);
-
-        if (structure == null || state == null) return ItemStack.EMPTY;
-        BlockPos center = getOrCreateStartPos(tag, player);
-        int radius = getSearchRadius(tag);
-        boolean skipKnown = getSkipKnown(tag);
-        int iter = getMaxIterations();
-        BlockPos pos = findNearestMapStructure(level, structure, radius, center, skipKnown, state, iter);
-        state.save(tag);
-        if (pos == null) {
-            return ItemStack.EMPTY;
-        } else if (pos == center) {
-            return stack;
-        } else
-            return AdventurerMapsHandler.createStructureMap(level, pos, structure,
-                    getZoomLevel(tag), getDecoration(tag), getMapName(tag), getColor(tag));
+        if (mainThread == null) mainThread = Thread.currentThread();
+        return super.search(stack, level, player, slot);
     }
-
 
     private BlockPos getOrCreateStartPos(CompoundTag tag, Player player) {
         if (tag.contains(TAG_SOURCE_X) && tag.contains(TAG_SOURCE_Z)) {
@@ -196,27 +245,11 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         return true;
     }
 
-    @Nullable
-    private Holder<Structure> getTargetStructure(CompoundTag tag, ServerLevel level) {
-
-        String str = tag.getString(TAG_STRUCTURE);
-        if (str.isEmpty()) {
-            //re-generate for empty one
-            str = "mansion";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
-            if (str == null) return null;
-            tag.putString(TAG_STRUCTURE, str);
-        }
-
-        Registry<Structure> reg = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
-        var structure = reg.getHolder(ResourceKey.create(reg.key(), new ResourceLocation(str)));
-
-        return structure.orElse(null);
-    }
 
     //center pos ==  not done yet. null==failed
     @Nullable
-    public BlockPos findNearestMapStructure(ServerLevel level, Holder<Structure> holder, int searchRadius, BlockPos center,
-                                            boolean skipKnownStructures, State state, int maxIterations) {
+    public InteractionResultHolder<BlockPos> findNearestMapStructure(ServerLevel level, Holder<Structure> holder, int searchRadius, BlockPos center,
+                                                                     boolean skipKnownStructures, State state, int maxIterations) {
         if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) return null;
 
         ServerChunkCache source = level.getChunkSource();
@@ -228,7 +261,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             map.computeIfAbsent(structurePlacement, (ss) -> new ObjectArraySet<>()).add(holder);
         }
 
-        if (map.isEmpty()) return null;
+        if (map.isEmpty()) return InteractionResultHolder.fail(BlockPos.ZERO);
 
         double d = Double.MAX_VALUE;
         StructureManager structureManager = level.structureManager();
@@ -242,7 +275,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                     BlockPos blockPos = pair2.getFirst();
                     double e = center.distSqr(blockPos);
                     if (e < d) {
-                        return pair2.getFirst();
+                        return InteractionResultHolder.success(pair2.getFirst());
                     }
                 }
             } else if (placement instanceof RandomSpreadStructurePlacement rr) {
@@ -299,11 +332,11 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                                     break inner; //found structure for this placement at this lastRadius. might not be the closest one tho
                                 } else {
                                     //we are waiting here
-                                    return center;
+                                    return InteractionResultHolder.pass(BlockPos.ZERO);
                                 }
                             }
                             if (currentIter > maxIterations) {
-                                return center;
+                                return InteractionResultHolder.pass(BlockPos.ZERO);
                             }
                         }
                     }
@@ -322,23 +355,16 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             }
             state.placementInd = 0;
             if (found != null) {
-                return found;
+                return InteractionResultHolder.success(found);
             }
         }
-
-        return null;
+        return InteractionResultHolder.fail(BlockPos.ZERO);
     }
-
-    private static final Set<ChunkPos> BEING_COMPUTED = ConcurrentHashMap.newKeySet();
-
-    //there should only ever be one but more could come with multiple players.
-    // using 2 for edge cases where one thread might not be done but result will be ignored
-    private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
     public static Either<BlockPos, ChunkPos> getStructureGeneratingAt(
             Set<Holder<Structure>> structureHoldersSet, ServerChunkCache chunkCache, StructureManager structureManager,
             boolean skipKnownStructures, StructurePlacement placement, ChunkPos chunkPos, State state) {
-        var s2 =Stopwatch.createStarted();
+        var s2 = Stopwatch.createStarted();
 
         for (Holder<Structure> holder : structureHoldersSet) {
             Structure structure = holder.value();
@@ -353,27 +379,28 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                 return Either.left(placement.getLocatePos(chunkPos));
             }
             //get cached one
+            boolean shouldMultiThread = Thread.currentThread() == mainThread;
+            ChunkAccess chunkAccess = chunkCache.getChunk(chunkPos.x, chunkPos.z,
+                    ChunkStatus.STRUCTURE_STARTS, !shouldMultiThread);
 
-            ChunkAccess chunkAccess = chunkCache.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS, false);
-
-            if (chunkAccess == null) {
+            if (chunkAccess == null && shouldMultiThread) {
                 if (state.waiting) {
-                    if (!BEING_COMPUTED.contains(chunkPos)) {
+                    if (!COMPUTING_CHUNKPOS.contains(chunkPos)) {
                         state.waiting = false;
                     }
                 }
 
                 if (!state.waiting) {
                     EXECUTORS.submit(() -> {
-                        BEING_COMPUTED.add(chunkPos);
+                        COMPUTING_CHUNKPOS.add(chunkPos);
                         //this is where all the expensiveness of this comes from
                         chunkCache.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS, true);
-                        BEING_COMPUTED.remove(chunkPos);
+                        COMPUTING_CHUNKPOS.remove(chunkPos);
                     });
 
                     state.waiting = true;
                 } else {
-                    //it usually neveer goes here as by the time this runs again the thread has done
+                    //it usually never goes here as by the time this runs again the thread has done
                 }
                 //resets to old pos hack
                 if (state.z == -state.radius) {
@@ -385,7 +412,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
                 } else {
                     state.z -= 1;
                 }
-                Supplementaries.LOGGER.warn("E "+s2.elapsed());
+                Supplementaries.LOGGER.warn("E " + s2.elapsed());
 
                 return Either.right(chunkPos);
             } else {
@@ -511,4 +538,13 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             return new State(radius, x, z, index, waiting);
         }
     }
+
+    private record Key(GlobalPos pos, ResourceLocation structure, int radius, boolean bool) {
+    }
+
+    private static final Map<Key, InteractionResultHolder<BlockPos>> RESULTS = new ConcurrentHashMap<>();
+    private static final Set<Key> COMPUTING = ConcurrentHashMap.newKeySet();
+    private static final Set<ChunkPos> COMPUTING_CHUNKPOS = ConcurrentHashMap.newKeySet();
+
+
 }
