@@ -250,7 +250,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         void setSelectedSlot(int selectedSlot);
 
         /**
-         * Do not modify this list directly
+         * Do not modify this list directly if you are on fabric. On forge it can be modified
          */
         List<ItemStack> getContentView();
 
