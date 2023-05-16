@@ -120,7 +120,8 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+        if (Minecraft.getInstance().screen == null &&
+                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
             int a = event.getAction();
             if (a < 2) {
                 QuiverArrowSelectGui.setUsingKeybind(a == 1);
