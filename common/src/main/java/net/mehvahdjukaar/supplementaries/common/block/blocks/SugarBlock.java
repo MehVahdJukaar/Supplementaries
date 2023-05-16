@@ -49,7 +49,7 @@ public class SugarBlock extends ConcretePowderBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
         level.scheduleTick(currentPos, this, this.getDelayAfterPlace());
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        return state;
     }
 
     @Override
