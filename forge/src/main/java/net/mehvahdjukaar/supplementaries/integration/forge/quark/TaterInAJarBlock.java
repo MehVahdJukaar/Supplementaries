@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge;
+package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -59,17 +60,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
     public TaterInAJarBlock() {
         super(ModuleLoader.INSTANCE.getModuleInstance(TinyPotatoModule.class));
 
-        Field f2;
-        try {
-            f2 = ObfuscationReflectionHelper.findField(RegistryHelper.class, "modData");
-            f2.setAccessible(true);
-
-            var data = (Map<String, ?>) f2.get(null);
-            data.remove(Supplementaries.MOD_ID);
-            data.remove("suppsquared");
-        } catch (Exception ignored) {
-
-        }
+        QuarkCompatImpl.removeStuffFromARLHack();
     }
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {

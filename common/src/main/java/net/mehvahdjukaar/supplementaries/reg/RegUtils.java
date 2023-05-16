@@ -229,7 +229,6 @@ public class RegUtils {
             HangingSignBlock block = new HangingSignBlock(
                     BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
                             .strength(2f, 3f)
-                            .sound(SoundType.WOOD)
                             .noOcclusion()
                             .noCollission(),
                     wood

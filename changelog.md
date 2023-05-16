@@ -1,1 +1,2 @@
-fixed framed blocks breaking instantly when full
+- EMI compat (thanks to Abbie5)
+- Trapped present has a dedicated config

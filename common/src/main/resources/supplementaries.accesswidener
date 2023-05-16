@@ -17,6 +17,9 @@ accessible method net/minecraft/client/model/ParrotModel setupAnim (Lnet/minecra
 
 accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2speech/Narrator;
 
+#structure locator
+accessible method net/minecraft/world/level/chunk/ChunkGenerator getStructureGeneratingAt (Ljava/util/Set;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/StructureManager;ZLnet/minecraft/world/level/levelgen/structure/placement/StructurePlacement;Lnet/minecraft/world/level/ChunkPos;)Lcom/mojang/datafixers/util/Pair;
+
 #relayer diode block reading
 accessible method net/minecraft/world/level/block/DiodeBlock getOutputSignal (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I
 

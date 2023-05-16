@@ -11,10 +11,11 @@ import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeBookHack;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,7 +79,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
 
-    private static final int SEARCH_RADIUS = 100;
+    public static final int SEARCH_RADIUS = 100;
     private static final List<AdventurerMapTrade> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
     private static final Map<TagKey<Structure>,
@@ -105,16 +107,16 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         associateStructureMarker(StructureTags.MINESHAFT, ModMapMarkers.MINESHAFT_TYPE, 0x808080);
     }
 
-    private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(Holder<Structure> structure) {
-        ResourceLocation res = new ResourceLocation("");
-        int color = -1;
+    private static Pair<ResourceLocation, Integer> getStructureMarker(Holder<Structure> structure) {
+        ResourceLocation res = structure.unwrapKey().get().location();
+        int color = 0;
         for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
             if (structure.is(v.getKey())) {
                 res = v.getValue().getFirst();
                 color = v.getValue().getSecond();
             }
         }
-        return Pair.of(MapDecorationRegistry.get(res), color);
+        return Pair.of(res, color);
     }
 
     private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
@@ -125,7 +127,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     public static void addTradesCallback() {
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 1, itemListings ->
-            maybeAddCustomMap(itemListings, 1)
+                maybeAddCustomMap(itemListings, 1)
         );
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 2, itemListings -> {
@@ -172,6 +174,11 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         private ItemStack createMap(Level level, BlockPos pos) {
             if (level instanceof ServerLevel serverLevel) {
+
+                if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
+                    return QuarkCompat.makeAdventurerQuill(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
+                }
+
                 if (!serverLevel.getServer().getWorldData().worldGenSettings().generateStructures())
                     return ItemStack.EMPTY;
 
@@ -180,15 +187,8 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
                         pos, 250, true);
                 if (found != null) {
                     BlockPos toPos = found.getFirst();
-                    ItemStack stack = MapItem.create(level, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
-                    MapItem.renderBiomePreviewMap(serverLevel, stack);
-
-                    var decoration = getStructureMarker(found.getSecond());
-
-                    //adds custom decoration
-                    MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), 0x78151a);
-                    stack.setHoverName(Component.translatable("filled_map.adventure"));
-                    return stack;
+                    return createStructureMap(serverLevel, toPos, found.getSecond(), 2,
+                            null, "filled_map.adventure",0x78151a);
                 }
 
             }
@@ -196,9 +196,39 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         }
     }
 
+    @NotNull
+    public static ItemStack createStructureMap(ServerLevel level, BlockPos pos, Holder<Structure> structure, int zoom,
+                                               @Nullable MapDecoration.Type vanillaDeco, @Nullable String name,
+                                               int color) {
+        ItemStack stack = MapItem.create(level, pos.getX(), pos.getZ(), (byte) zoom, true, true);
+        MapItem.renderBiomePreviewMap(level, stack);
 
-    public static ItemStack createStructureMap(Level world, BlockPos pos, ResourceLocation structureName,
-                                               @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
+        //adds custom decoration
+        ResourceLocation decoId;
+        if (vanillaDeco == null) {
+            var s = getStructureMarker(structure);
+            decoId = s.getFirst();
+            if(color == 0){
+                color = s.getSecond();
+            }
+        } else {
+            //vanilla deco
+            decoId = new ResourceLocation(vanillaDeco.toString().toLowerCase(Locale.ROOT));
+            if(color == 0 && vanillaDeco.hasMapColor()){
+                color = vanillaDeco.getMapColor();
+            }
+        }
+        MapHelper.addDecorationToMap(stack, pos, decoId, color);
+
+        if (name != null) {
+            stack.setHoverName(Component.translatable(name));
+        }
+        return stack;
+    }
+
+
+    public static ItemStack createCustomMap(Level world, BlockPos pos, ResourceLocation structureName,
+                                            @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
 
         var destination = TagKey.create(Registry.STRUCTURE_REGISTRY, structureName);
 

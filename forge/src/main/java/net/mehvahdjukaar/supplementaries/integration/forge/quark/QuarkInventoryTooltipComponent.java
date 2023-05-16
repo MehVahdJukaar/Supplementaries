@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge;
+package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 
 
 import com.mojang.blaze3d.platform.Window;
