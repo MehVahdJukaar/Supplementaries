@@ -5,18 +5,22 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 public class GoldDoorBlock extends DoorBlock {
 
@@ -29,14 +33,14 @@ public class GoldDoorBlock extends DoorBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (this.canBeOpened(state)) {
-            tryOpenDoubleDoor(worldIn, state, pos);
+            tryOpenDoubleDoor(level, state, pos);
 
             state = state.cycle(OPEN);
-            worldIn.setBlock(pos, state, 10);
-            worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            level.setBlock(pos, state, 10);
+            this.playSound(player, level, pos, state.getValue(OPEN));
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
@@ -56,15 +60,6 @@ public class GoldDoorBlock extends DoorBlock {
         if (state != null) state.setValue(OPEN, false);
         return state;
     }
-
-    private int getCloseSound() {
-        return 1011;
-    }
-
-    private int getOpenSound() {
-        return 1005;
-    }
-
 
     //double door stuff
 

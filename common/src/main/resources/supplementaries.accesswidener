@@ -10,6 +10,9 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+#doors
+accessible method net/minecraft/world/level/block/DoorBlock playSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Z)V
+
 #parrot model on shoulder
 accessible method net/minecraft/client/model/ParrotModel prepare (Lnet/minecraft/client/model/ParrotModel$State;)V
 accessible method net/minecraft/client/model/ParrotModel setupAnim (Lnet/minecraft/client/model/ParrotModel$State;IFFFFF)V

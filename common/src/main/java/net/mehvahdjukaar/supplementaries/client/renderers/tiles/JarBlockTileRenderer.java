@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -52,7 +54,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         VertexUtils.addCube(builder, poseStack,
                LIQUID_DIMENSIONS.x(),
                 percentageFill * LIQUID_DIMENSIONS.y(),
-                sprite, light, -1, opacity, combinedOverlayIn, true, true, shading, true);
+                sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
 
         poseStack.popPose();
     }

@@ -39,27 +39,28 @@ public class LeadDoorBlock extends DoorBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (this.canBeOpened(state)) {
-            GoldDoorBlock.tryOpenDoubleDoor(worldIn, state, pos);
+            GoldDoorBlock.tryOpenDoubleDoor(level, state, pos);
 
             state = state.cycle(OPEN).setValue(OPENING_PROGRESS, 0);
-            worldIn.setBlock(pos, state, 10);
-            worldIn.levelEvent(player, state.getValue(OPEN) ? this.getOpenSound() : this.getCloseSound(), pos, 0);
+            level.setBlock(pos, state, 10);
+            this.playSound(player, level, pos, state.getValue(OPEN));
+
         } else {
             //sound here
             int p = state.getValue(OPENING_PROGRESS) + 1;
             if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-                worldIn.setBlock(pos.below(), worldIn.getBlockState(pos.below()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+                level.setBlock(pos.below(), level.getBlockState(pos.below()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
             } else {
-                worldIn.setBlock(pos.above(), worldIn.getBlockState(pos.above()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+                level.setBlock(pos.above(), level.getBlockState(pos.above()).setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
             }
-            worldIn.setBlock(pos, state.setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
+            level.setBlock(pos, state.setValue(OPENING_PROGRESS, p), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
 
-            worldIn.playSound(player, pos, SoundEvents.NETHERITE_BLOCK_STEP, SoundSource.BLOCKS, 1, 1);
-            worldIn.scheduleTick(pos, this, 20);
+            level.playSound(player, pos, SoundEvents.NETHERITE_BLOCK_STEP, SoundSource.BLOCKS, 1, 1);
+            level.scheduleTick(pos, this, 20);
         }
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

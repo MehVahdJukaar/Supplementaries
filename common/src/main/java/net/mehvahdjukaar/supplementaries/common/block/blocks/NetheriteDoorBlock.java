@@ -5,8 +5,10 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -33,24 +35,28 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         BlockPos p = this.hasTileEntity(state) ? pos : pos.below();
-        if (worldIn.getBlockEntity(p) instanceof KeyLockableTile keyLockableTile) {
+        if (level.getBlockEntity(p) instanceof KeyLockableTile keyLockableTile) {
             if (keyLockableTile.handleAction(player, handIn, "door")) {
 
-                GoldDoorBlock.tryOpenDoubleDoorKey(worldIn, state, pos, player, handIn);
+                GoldDoorBlock.tryOpenDoubleDoorKey(level, state, pos, player, handIn);
 
                 state = state.cycle(OPEN);
-                worldIn.setBlock(pos, state, 10);
+                level.setBlock(pos, state, 10);
                 //TODO: replace with proper sound event
                 boolean open = state.getValue(OPEN);
-                worldIn.levelEvent(player, open ? this.getOpenSound() : this.getCloseSound(), pos, 0);
-                worldIn.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                this.playSound(player, level, pos, state.getValue(OPEN));
+                level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
         }
 
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    private void playSound(@Nullable Entity source, Level level, BlockPos pos, boolean isOpening) {
+        level.playSound(source, pos, isOpening ? type.doorOpen() : type.doorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
