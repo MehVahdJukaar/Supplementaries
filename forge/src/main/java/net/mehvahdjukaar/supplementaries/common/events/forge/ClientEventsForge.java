@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -120,7 +121,8 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+        if (Minecraft.getInstance().screen == null &&
+                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
             int a = event.getAction();
             if (a < 2) {
                 QuiverArrowSelectGui.setUsingKeybind(a == 1);

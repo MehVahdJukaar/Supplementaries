@@ -46,6 +46,7 @@ public class SugarBlock extends ConcretePowderBlock {
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+        level.scheduleTick(currentPos, this, this.getDelayAfterPlace());
         return state;
     }
 
@@ -85,7 +86,7 @@ public class SugarBlock extends ConcretePowderBlock {
             if (direction != Direction.DOWN) {
                 mutableBlockPos.setWithOffset(pos, direction);
                 var s = level.getBlockState(mutableBlockPos);
-                if ((direction == Direction.UP && isWater(s) || s.getBlock() == Blocks.WATER)) {
+                if (isWater(s) && (direction == Direction.UP || s.getFluidState().isSource()) ) {
                     count++;
                 }
                 if (count >= 2) return true;
