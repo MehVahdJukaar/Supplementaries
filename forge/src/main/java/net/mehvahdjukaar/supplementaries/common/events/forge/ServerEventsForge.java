@@ -174,11 +174,6 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onEntityVisibility(LivingEvent.LivingVisibilityEvent event) {
-        if (event.getEntity().getType() == EntityType.ENDERMAN) event.modifyVisibility(0.5f);
-    }
-
-    @SubscribeEvent
     public static void onItemPickup(EntityItemPickupEvent event) {
         if (!event.isCanceled() && event.getResult() != Event.Result.DENY) {
             if (ServerEvents.onItemPickup(event.getItem(), event.getEntity())) {
