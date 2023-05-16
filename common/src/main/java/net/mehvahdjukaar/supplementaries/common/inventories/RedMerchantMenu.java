@@ -57,6 +57,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
         this.showProgressBar = showProgressBar;
     }
 
+    @Override
     public void slotsChanged(Container container) {
         this.tradeContainer.updateSellItem();
         super.slotsChanged(container);
@@ -98,13 +99,14 @@ public class RedMerchantMenu extends AbstractContainerMenu {
         return this.canRestock;
     }
 
+    @Override
     public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
         return false;
     }
 
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(index);
+        Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             ItemStack itemStack2 = slot.getItem();
             itemStack = itemStack2.copy();
@@ -151,11 +153,12 @@ public class RedMerchantMenu extends AbstractContainerMenu {
 
     }
 
+    @Override
     public void removed(Player player) {
         super.removed(player);
         this.trader.setTradingPlayer((Player)null);
         if (!this.trader.isClientSide()) {
-            if (!player.isAlive() || player instanceof ServerPlayer && ((ServerPlayer)player).hasDisconnected()) {
+            if (!player.isAlive() || player instanceof ServerPlayer sp && sp.hasDisconnected()) {
                 ItemStack itemStack = this.tradeContainer.removeItemNoUpdate(0);
                 if (!itemStack.isEmpty()) {
                     player.drop(itemStack, false);

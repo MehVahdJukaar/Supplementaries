@@ -147,6 +147,7 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen.GUI_FACTORY);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen.GUI_FACTORY);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
+        MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientHelper.registerRenderType(s, RenderType.cutout()));
 

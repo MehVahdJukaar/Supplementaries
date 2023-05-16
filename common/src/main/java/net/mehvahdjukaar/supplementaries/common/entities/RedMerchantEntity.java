@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
+import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncTradesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -139,7 +140,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     @Override
     public void openTradingScreen(Player player, Component name, int level) {
-        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new MerchantMenu(i, p, this), name));
+        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new RedMerchantMenu(i, p, this), name));
         if (optionalint.isPresent() && player instanceof ServerPlayer serverPlayer) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {

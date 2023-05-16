@@ -4,4 +4,4 @@
 - Basalt ash feature can be fully configured with datapacks
 - Bubble blocks colors are controlled by a texture similar to globe colors
 - Removed all vertical slabs integration
-- 
+- various fixes

@@ -1,13 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ColorHelper {
     private static float[][] soapColors;
@@ -86,14 +92,16 @@ public class ColorHelper {
     }
 
     public static void refreshBubbleColors(ResourceManager manager) {
-        var c = SpriteUtils.parsePaletteStrip(manager, ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE, 6);
+        var c = SpriteUtils. parsePaletteStrip(manager, ResType.TEXTURES.getPath(ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE), 6);
         //int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
         float[][] temp = new float[c.size()][];
         for (int i = 0; i < c.size(); i++) {
             int j = c.get(i);
-            temp[i] = new float[]{FastColor.ARGB32.red(j) / 255f,
-                    FastColor.ARGB32.green(j) / 255f, FastColor.ARGB32.blue(j) / 255f};
+            temp[i] = new float[]{FastColor.ABGR32.red(j) / 255f,
+                    FastColor.ABGR32.green(j) / 255f, FastColor.ABGR32.blue(j) / 255f};
         }
         soapColors = temp;
     }
+
+
 }
