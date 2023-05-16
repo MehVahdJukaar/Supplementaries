@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
+import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
@@ -22,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -98,7 +100,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public void updateClientVisualsOnLoad() {
         this.books.clear();
         consolidateBookPile();
-        List<BookColor> colors = new ArrayList<>(Arrays.asList(VALID_RANDOM_COLORS));
+        List<BookColor> colors = ClientConfigs.Tweaks.PLACEABLE_BOOKS_COLORS.get();
         for (int i = 0; i < 4; i++) {
             ItemStack stack = this.getItem(i);
             if (stack.isEmpty()) break;
@@ -190,10 +192,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
         }
     }
 
-    private static final BookColor[] VALID_RANDOM_COLORS = {BookColor.BROWN, BookColor.ORANGE, BookColor.YELLOW, BookColor.RED,
+    public static final BookColor[] DEFAULT_RANDOM = {BookColor.BROWN, BookColor.ORANGE, BookColor.YELLOW, BookColor.RED,
             BookColor.DARK_GREEN, BookColor.LIME, BookColor.TEAL, BookColor.BLUE, BookColor.PURPLE};
 
-    public enum BookColor {
+    public enum BookColor implements StringRepresentable{
         BROWN(DyeColor.BROWN, 1),
         WHITE(DyeColor.WHITE, 1),
         BLACK(DyeColor.BLACK, 1),
@@ -268,5 +270,12 @@ public class BookPileBlockTile extends ItemDisplayTile {
         public String getName() {
             return name;
         }
+
+        @Override
+        public String getSerializedName() {
+            return getName();
+        }
+
+        public static final Codec<BookColor> CODEC = StringRepresentable.fromEnum(BookColor::values);
     }
 }
