@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -259,7 +260,7 @@ public class ClientRegistry {
             if (compoundTag != null) {
                 var n = compoundTag.getString("Name");
                 if (n != null) {
-                    var v = GlobeBlockTile.GlobeType.getTextureID(Component.Serializer.fromJson(n).getString());
+                    var v = GlobeManager.Type.getTextureID(Component.Serializer.fromJson(n).getString());
                     if (v != null) return Float.valueOf(v);
                 }
             }

@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.StatueEntityModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
@@ -188,10 +189,10 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                     if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
-                        Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
+                        Pair<GlobeManager.Model, ResourceLocation> pair =
                                 stack.hasCustomHoverName() ?
-                                        GlobeBlockTile.GlobeType.getModelAndTexture(stack.getHoverName().getString()) :
-                                        Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
+                                        GlobeManager.Type.getModelAndTexture(stack.getHoverName().getString()) :
+                                        Pair.of(GlobeManager.Model.GLOBE, null);
 
                         GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
                                 combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());

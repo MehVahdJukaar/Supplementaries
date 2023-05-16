@@ -53,7 +53,7 @@ public class ModWorldgenRegistry {
             Supplementaries.res("road_sign_feature"), () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
 
     public static final Supplier<Feature<BasaltAshFeature.Config>> BASALT_ASH_FEATURE = RegHelper.registerFeature(
-            Supplementaries.res("layered_blocks"), () -> new BasaltAshFeature(BasaltAshFeature.Config.CODEC));
+            Supplementaries.res("surface_scan_random_patch"), () -> new BasaltAshFeature(BasaltAshFeature.Config.CODEC));
 
 
     //modifiers
@@ -64,17 +64,16 @@ public class ModWorldgenRegistry {
 
     //placed features predicates
 
-    private static final BlockPredicate HAS_WATER_PREDICATE = BlockPredicate.anyOf(
+    public static final BlockPredicate HAS_WATER_PREDICATE = BlockPredicate.anyOf(
             BlockPredicate.matchesFluids(new BlockPos(1, -1, 0), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
             BlockPredicate.matchesFluids(new BlockPos(-1, -1, 0), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
             BlockPredicate.matchesFluids(new BlockPos(0, -1, 1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)),
             BlockPredicate.matchesFluids(new BlockPos(0, -1, -1), List.of(Fluids.WATER, Fluids.FLOWING_WATER)));
-
 /*
     //configured features
 
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> WILD_FLAX_PATCH =
-            RegHelper.registerConfiguredFeature(Supplementaries.res("wild_flax"), () -> Feature.RANDOM_PATCH,
+            RegHelper.registerConfiguredFeature(Supplementaries.res("wild_flax.json"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
                             CommonConfigs.Functional.FLAX_PATCH_TRIES.get(),
                             4, 0,
@@ -87,7 +86,7 @@ public class ModWorldgenRegistry {
                                     HAS_WATER_PREDICATE))));
 
     public static final RegSupplier<ConfiguredFeature<RandomPatchConfiguration, Feature<RandomPatchConfiguration>>> CAVE_URNS_PATCH =
-            RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns"), () -> Feature.RANDOM_PATCH,
+            RegHelper.registerConfiguredFeature(Supplementaries.res("cave_urns.json"), () -> Feature.RANDOM_PATCH,
                     () -> getPatchConfiguration(
                             CommonConfigs.Functional.URN_PATCH_TRIES.get(),
                             4, 1,
@@ -99,19 +98,19 @@ public class ModWorldgenRegistry {
                                     BlockPredicate.solid(BlockPos.ZERO.below())))));
 
     public static final RegSupplier<ConfiguredFeature<BasaltAshFeature.Config, Feature<BasaltAshFeature.Config>>> BASALT_ASH_PATCH =
-            RegHelper.registerConfiguredFeature(Supplementaries.res("basalt_ash"),
+            RegHelper.registerConfiguredFeature(Supplementaries.res("basalt_ash.json"),
                     () -> new ConfiguredFeature<>(BASALT_ASH_FEATURE.get(),
                             new BasaltAshFeature.Config(CommonConfigs.Building.BASALT_ASH_TRIES.get(),6, 6)));
 
     public static final RegSupplier<ConfiguredFeature<NoneFeatureConfiguration, Feature<NoneFeatureConfiguration>>> ROAD_SIGN =
-            RegHelper.registerConfiguredFeature(Supplementaries.res("road_sign"),
+            RegHelper.registerConfiguredFeature(Supplementaries.res("road_sign.json"),
                     ROAD_SIGN_FEATURE, () -> FeatureConfiguration.NONE);
 
 
     //placed features
 
     public static final RegSupplier<PlacedFeature> PLACED_WILD_FLAX_PATCH =
-            RegHelper.registerPlacedFeature(Supplementaries.res("wild_flax"),
+            RegHelper.registerPlacedFeature(Supplementaries.res("wild_flax.json"),
                     WILD_FLAX_PATCH,
                     () -> List.of(
                             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
@@ -120,7 +119,7 @@ public class ModWorldgenRegistry {
                             BiomeFilter.biome()));
 
     public static final RegSupplier<PlacedFeature> PLACED_CAVE_URNS =
-            RegHelper.registerPlacedFeature(Supplementaries.res("cave_urns"),
+            RegHelper.registerPlacedFeature(Supplementaries.res("cave_urns.json"),
                     CAVE_URNS_PATCH,
                     () -> List.of(
                             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(-16), VerticalAnchor.aboveBottom(64 + 32)),
@@ -130,7 +129,7 @@ public class ModWorldgenRegistry {
                             BiomeFilter.biome()));
 
     public static final RegSupplier<PlacedFeature> PLACED_BASALT_ASH =
-            RegHelper.registerPlacedFeature(Supplementaries.res("basalt_ash"),
+            RegHelper.registerPlacedFeature(Supplementaries.res("basalt_ash.json"),
                     BASALT_ASH_PATCH,
                     () -> List.of(
                             HeightRangePlacement.uniform(VerticalAnchor.aboveBottom(29), VerticalAnchor.aboveBottom(102)),
@@ -139,12 +138,11 @@ public class ModWorldgenRegistry {
                             BiomeFilter.biome()));
 
     public static final RegSupplier<PlacedFeature> PLACED_ROAD_SIGN =
-            RegHelper.registerPlacedFeature(Supplementaries.res("road_sign"), ROAD_SIGN, List::of);
+            RegHelper.registerPlacedFeature(Supplementaries.res("road_sign.json"), ROAD_SIGN, List::of);
 
     */
-
     //helper
-    private static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier... placementRule) {
+    public static RandomPatchConfiguration getPatchConfiguration(int tries, int xzSpread, int ySpread, ConfiguredFeature<?, ?> feature, PlacementModifier... placementRule) {
         return new RandomPatchConfiguration(tries, xzSpread, ySpread, PlacementUtils.inlinePlaced(Holder.direct(feature), placementRule));
     }
 

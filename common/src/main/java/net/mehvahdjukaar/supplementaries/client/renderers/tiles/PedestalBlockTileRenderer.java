@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
@@ -136,10 +137,10 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                                 boolean sepia = tile.getDisplayType() == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
-                                Pair<GlobeBlockTile.GlobeModel, ResourceLocation> pair =
+                                Pair<GlobeManager.Model, ResourceLocation> pair =
                                         stack.hasCustomHoverName() ?
-                                                GlobeBlockTile.GlobeType.getModelAndTexture(stack.getHoverName().getString()) :
-                                                Pair.of(GlobeBlockTile.GlobeModel.GLOBE, null);
+                                                GlobeManager.Type.getModelAndTexture(stack.getHoverName().getString()) :
+                                                Pair.of(GlobeManager.Model.GLOBE, null);
 
                                 GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
                                         combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());

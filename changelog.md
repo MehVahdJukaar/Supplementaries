@@ -1,2 +1,7 @@
-- removed all vertical slabs. Will be handled by vslab compat mod
-- finished the mod creative tabs. pls test them
+- Finished mod creative tabs. Pls test these especially with configs
+- Added all mod worldgen
+- Worldgen is now only data driven so configs for it will be removed, to configure it you need a datapack
+- Basalt ash feature can be fully configured with datapacks
+- Bubble blocks colors are controlled by a texture similar to globe colors
+- Removed all vertical slabs integration
+- 

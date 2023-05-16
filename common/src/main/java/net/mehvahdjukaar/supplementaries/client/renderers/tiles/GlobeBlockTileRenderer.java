@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
-    private final Map<GlobeBlockTile.GlobeModel, ModelPart> models = new EnumMap<>(GlobeBlockTile.GlobeModel.class);
+    private final Map<GlobeManager.Model, ModelPart> models = new EnumMap<>(GlobeManager.Model.class);
 
     public static LayerDefinition createBaseMesh() {
         MeshDefinition mesh = new MeshDefinition();
@@ -99,11 +99,11 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
     public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart model = context.bakeLayer(ClientRegistry.GLOBE_BASE_MODEL);
-        models.put(GlobeBlockTile.GlobeModel.GLOBE, model.getChild("globe"));
+        models.put(GlobeManager.Model.GLOBE, model.getChild("globe"));
         ModelPart special = context.bakeLayer(ClientRegistry.GLOBE_SPECIAL_MODEL);
-        models.put(GlobeBlockTile.GlobeModel.FLAT, special.getChild("flat"));
-        models.put(GlobeBlockTile.GlobeModel.SNOW, special.getChild("snow"));
-        models.put(GlobeBlockTile.GlobeModel.SHEARED, special.getChild("sheared"));
+        models.put(GlobeManager.Model.FLAT, special.getChild("flat"));
+        models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
+        models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
         INSTANCE = this;
     }
 
@@ -126,11 +126,11 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         matrixStackIn.popPose();
     }
 
-    public void renderGlobe(Pair<GlobeBlockTile.GlobeModel, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean isSepia, Level level) {
+    public void renderGlobe(Pair<GlobeManager.Model, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean isSepia, Level level) {
         if (data == null) return;
         poseStack.pushPose();
         poseStack.mulPose(RotHlpr.X180);
-        ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() : GlobeBlockTile.GlobeType.EARTH.texture;
+        ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() : GlobeManager.Type.EARTH.texture;
 
         ModelPart model = this.models.get(data.getFirst());
 

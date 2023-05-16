@@ -1,0 +1,26 @@
+{
+  "config": {
+    "tries": 36,
+    "xz_spread": 6,
+    "y_spread": 6,
+    "target_predicate": {
+      "block_state": {
+        "Name": "minecraft:basalt",
+        "Properties": {
+          "axis": "y"
+        }
+      },
+      "predicate_type": "minecraft:blockstate_match"
+    },
+    "top_block": {
+      "Name": "supplementaries:ash"
+    },
+    "below_block":{
+      "Name": "minecraft:basalt",
+      "Properties": {
+        "axis": "y"
+      }
+    }
+  },
+  "type": "supplementaries:surface_scan_random_patch"
+}

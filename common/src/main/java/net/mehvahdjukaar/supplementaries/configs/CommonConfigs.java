@@ -308,8 +308,9 @@ public class CommonConfigs {
                     .define("ash_from_fire", true);
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
-            builder.push("basalt_ash");
+            builder.push("basalt_ash.json");
             BASALT_ASH_ENABLED = builder.define("enabled", true);
+            //TODO REMOVE
             BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .define("attempts_per_patch", 36, 1, 1000);
             BASALT_ASH_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
@@ -584,7 +585,7 @@ public class CommonConfigs {
             URN_ENABLED = feature(builder);
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01f, 0, 1);
-            builder.push("cave_urns");
+            builder.push("cave_urns.json");
             URN_PILE_ENABLED = builder.worldReload().define("enabled", true);
             URN_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
                     .define("attempts_per_patch", 4, 1, 100);
@@ -607,7 +608,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
-            builder.push("wild_flax");
+            builder.push("wild_flax.json");
             WILD_FLAX_ENABLED = builder.worldReload().define("enabled", true);
             FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
                     .define("rarity", 6, 1, 100);

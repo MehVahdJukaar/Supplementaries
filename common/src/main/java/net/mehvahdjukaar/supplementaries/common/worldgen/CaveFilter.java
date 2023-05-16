@@ -13,6 +13,8 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class CaveFilter extends PlacementFilter {
 
+    public static final CaveFilter BELOW_SURFACE = new CaveFilter(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
+
     public static final Codec<CaveFilter> CODEC =
             RecordCodecBuilder.create((instance) -> instance.group(
                             Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((p) -> p.belowHeightMap))
@@ -24,9 +26,6 @@ public class CaveFilter extends PlacementFilter {
             return CODEC;
         }
     }
-
-    public static final CaveFilter BELOW_SURFACE = new CaveFilter(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
-
 
     private final Heightmap.Types belowHeightMap;
 

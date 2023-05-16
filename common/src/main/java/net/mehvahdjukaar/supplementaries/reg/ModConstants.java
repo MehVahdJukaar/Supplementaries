@@ -97,7 +97,7 @@ public final class ModConstants {
     public static final String CHECKER_SLAB_NAME = "checker_slab";
     public static final String PANCAKE_NAME = "pancake";
     public static final String FLAX_NAME = "flax";
-    public static final String FLAX_WILD_NAME = "wild_flax";
+    public static final String FLAX_WILD_NAME = "wild_flax.json";
     public static final String FODDER_NAME = "fodder";
     public static final String FLAX_BLOCK_NAME = "flax_block";
     public static final String JAR_BOAT_NAME = "jar_boat";

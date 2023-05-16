@@ -1,0 +1,94 @@
+{
+  "config": {
+    "tries": 35,
+    "xz_spread": 4,
+    "y_spread": 0,
+    "feature": {
+      "feature": {
+        "config": {
+          "to_place": {
+            "state": {
+              "Name": "supplementaries:wild_flax"
+            },
+            "type": "minecraft:simple_state_provider"
+          }
+        },
+        "type": "minecraft:simple_block"
+      },
+      "placement": [
+        {
+          "predicate": {
+            "predicates": [
+              {
+                "blocks": "minecraft:air",
+                "type": "minecraft:matching_blocks"
+              },
+              {
+                "state": {
+                  "Name": "supplementaries:wild_flax"
+                },
+                "type": "minecraft:would_survive"
+              },
+              {
+                "predicates": [
+                  {
+                    "offset": [
+                      1,
+                      -1,
+                      0
+                    ],
+                    "fluids": [
+                      "minecraft:water",
+                      "minecraft:flowing_water"
+                    ],
+                    "type": "minecraft:matching_fluids"
+                  },
+                  {
+                    "offset": [
+                      -1,
+                      -1,
+                      0
+                    ],
+                    "fluids": [
+                      "minecraft:water",
+                      "minecraft:flowing_water"
+                    ],
+                    "type": "minecraft:matching_fluids"
+                  },
+                  {
+                    "offset": [
+                      0,
+                      -1,
+                      1
+                    ],
+                    "fluids": [
+                      "minecraft:water",
+                      "minecraft:flowing_water"
+                    ],
+                    "type": "minecraft:matching_fluids"
+                  },
+                  {
+                    "offset": [
+                      0,
+                      -1,
+                      -1
+                    ],
+                    "fluids": [
+                      "minecraft:water",
+                      "minecraft:flowing_water"
+                    ],
+                    "type": "minecraft:matching_fluids"
+                  }
+                ],
+                "type": "minecraft:any_of"
+              }
+            ],
+            "type": "minecraft:all_of"
+          },
+          "type": "minecraft:block_predicate_filter"
+        }
+      ]
+    }
+  },
+  "type": "minecraft:random_patch"
+}

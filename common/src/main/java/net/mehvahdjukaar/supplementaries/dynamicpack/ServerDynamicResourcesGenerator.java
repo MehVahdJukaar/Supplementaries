@@ -23,7 +23,6 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
