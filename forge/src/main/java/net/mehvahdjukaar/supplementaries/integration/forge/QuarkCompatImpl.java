@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
@@ -45,10 +46,12 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.level.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import vazkii.arl.util.ItemNBTHelper;
+import vazkii.arl.util.RegistryHelper;
 import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import vazkii.quark.addons.oddities.item.BackpackItem;
@@ -67,8 +70,10 @@ import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
 import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -311,4 +316,18 @@ public class QuarkCompatImpl {
         return AdventurersQuillItem.forStructure(level, tag);
     }
 
+    private static Field f2 = null;
+
+    public static void removeStuffFromARLHack() {
+        if (f2 == null) {
+            f2 = ObfuscationReflectionHelper.findField(RegistryHelper.class, "modData");
+            f2.setAccessible(true);
+        }
+        try {
+            var data = (Map<String, ?>) f2.get(null);
+            data.remove(Supplementaries.MOD_ID);
+            data.remove("suppsquared");
+        } catch (Exception ignored) {
+        }
+    }
 }

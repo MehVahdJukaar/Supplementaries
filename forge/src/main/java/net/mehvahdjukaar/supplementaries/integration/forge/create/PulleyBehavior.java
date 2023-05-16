@@ -22,7 +22,7 @@ public class PulleyBehavior implements MovementBehaviour {
         BlockState state = context.state;
         var axis = state.getValue(PulleyBlock.AXIS);
         if (axis == Direction.Axis.Y) return;
-        BambooSpikesBehavior.changeState(context, state.cycle(PulleyBlock.FLIPPED));
+        CreateCompatImpl.changeState(context, state.cycle(PulleyBlock.FLIPPED));
         Direction dir = null;
         var center = context.contraption.anchor;
         if (axis == Direction.Axis.X) {

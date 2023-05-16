@@ -4,6 +4,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 
 public class QuarkCompatImpl {
@@ -79,6 +82,10 @@ public class QuarkCompatImpl {
     }
 
     public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
+    }
+
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> adventureMapDestinations) {
+         return ItemStack.EMPTY;
     }
 
 }

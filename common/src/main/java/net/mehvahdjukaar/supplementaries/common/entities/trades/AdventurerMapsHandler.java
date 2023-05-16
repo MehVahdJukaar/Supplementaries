@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -78,7 +79,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
 
-    private static final int SEARCH_RADIUS = 100;
+    public static final int SEARCH_RADIUS = 100;
     private static final List<AdventurerMapTrade> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
     private static final Map<TagKey<Structure>,
@@ -175,7 +176,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             if (level instanceof ServerLevel serverLevel) {
 
                 if(CompatHandler.QUARK){
-                    return QuarkCompatImpl.makeAdventurerQuill(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
+                    return QuarkCompat.makeAdventurerQuill(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
                 }
 
                 if (!serverLevel.getServer().getWorldData().worldGenOptions().generateStructures())
@@ -222,7 +223,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         if (name != null) {
             stack.setHoverName(Component.translatable(name));
-        }CommonConfigs
+        }
         return stack;
     }
 

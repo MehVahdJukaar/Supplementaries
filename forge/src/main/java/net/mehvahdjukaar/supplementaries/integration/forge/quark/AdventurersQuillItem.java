@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
@@ -61,8 +63,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
     public AdventurersQuillItem() {
         super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
-                new Properties().stacksTo(1)
-                        .tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
+                new Properties().stacksTo(1));
 
         QuarkCompatImpl.removeStuffFromARLHack();
 
@@ -91,13 +92,8 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(category)) {
-            items.add(new ItemStack(this));
-        }
-    }
 
+    @Override
     public int getIterations() {
         return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
     }
@@ -118,7 +114,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
     @Nullable
     private Holder<Structure> getStructureHolder(ServerLevel level, ResourceLocation key) {
-        Registry<Structure> reg = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY);
+        Registry<Structure> reg = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
         var structure = reg.getHolder(ResourceKey.create(reg.key(), key));
         return structure.orElse(null);
     }
@@ -250,14 +246,15 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     @Nullable
     public InteractionResultHolder<BlockPos> findNearestMapStructure(ServerLevel level, Holder<Structure> holder, int searchRadius, BlockPos center,
                                                                      boolean skipKnownStructures, State state, int maxIterations) {
-        if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) return null;
+        if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) return null;
 
         ServerChunkCache source = level.getChunkSource();
         ChunkGenerator gen = source.getGenerator();
+        ChunkGeneratorStructureState chunkState = source.getGeneratorState();
 
         Map<StructurePlacement, Set<Holder<Structure>>> map = new Object2ObjectArrayMap<>();
 
-        for (StructurePlacement structurePlacement : gen.getPlacementsForStructure(holder, source.randomState())) {
+        for (StructurePlacement structurePlacement : chunkState.getPlacementsForStructure(holder)) {
             map.computeIfAbsent(structurePlacement, (ss) -> new ObjectArraySet<>()).add(holder);
         }
 
@@ -461,21 +458,20 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         ItemStack stack = QuarkCompatImpl.ADVENTURER_QUILL.get().getDefaultInstance();
         String target = computeTarget(level, tag);
         if (target == null) return ItemStack.EMPTY;
-        stack.getOrCreateTag().putString(AdventurersQuillItem.TAG_STRUCTURE, target);
+        stack.getOrCreateTag().putString(TAG_STRUCTURE, target);
         return stack;
     }
 
     @Nullable
     private static String computeTarget(ServerLevel level, TagKey<Structure> tag) {
         Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess()
-                .registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tag);
+                .registryOrThrow(Registries.STRUCTURE).getTag(tag);
         if (taggedStructures.isPresent()) {
 
             List<Holder<Structure>> reachable = new ArrayList<>();
-            ServerChunkCache source = level.getChunkSource();
-            ChunkGenerator chunkGenerator = source.getGenerator();
+            var source = level.getChunkSource().getGeneratorState();
             for (var s : taggedStructures.get()) {
-                if (!chunkGenerator.getPlacementsForStructure(s, source.randomState()).isEmpty()) {
+                if (!source.getPlacementsForStructure(s).isEmpty()) {
                     reachable.add(s);
                 }
             }

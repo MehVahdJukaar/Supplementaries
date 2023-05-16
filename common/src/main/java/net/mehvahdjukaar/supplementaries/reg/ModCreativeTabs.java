@@ -44,13 +44,15 @@ public class ModCreativeTabs {
 
     public static final Supplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
-                    (c) -> SuppPlatformStuff.searchBar(c).icon(() -> ModRegistry.JAR_ITEM.get().getDefaultInstance()));
+                    (c) -> SuppPlatformStuff.searchBar(c)
+                            .title(Component.translatable("itemGroup.jars"))
+                            .icon(() -> ModRegistry.JAR_ITEM.get().getDefaultInstance()));
 
     public static void init() {
         RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
     }
 
-    private static boolean flag = true;
+    private static boolean hasRunSetup = false;
 
     public static void setup() {
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
@@ -67,7 +69,7 @@ public class ModCreativeTabs {
             all.remove(v.getItem());
         }
         HIDDEN_ITEMS.addAll(all);
-        flag = false;
+        hasRunSetup = true;
     }
 
     public static boolean isHidden(Item item) {
@@ -75,13 +77,13 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
-        if (JAR_TAB != null) {
+        if (JAR_TAB != null && hasRunSetup) {
             if (CommonConfigs.Functional.JAR_ENABLED.get()) {
                 e.addAfter(JAR_TAB.get(), null, getJars());
             }
         }
-        if (MOD_TAB != null && !flag) {
-            e.add(MOD_TAB.get(), HIDDEN_ITEMS.toArray(ItemLike[]::new));
+        if (MOD_TAB != null && hasRunSetup) {
+            e.add(MOD_TAB.get(), NON_HIDDEN_ITEMS.toArray(ItemStack[]::new));
             return;
         }
 
@@ -429,6 +431,10 @@ public class ModCreativeTabs {
                 ModRegistry.WRENCH);
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.KEY_NAME,
+                ModRegistry.KEY_ITEM);
+
+        before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.SLINGSHOT_NAME,
                 ModRegistry.SLINGSHOT_ITEM);
 
@@ -490,6 +496,10 @@ public class ModCreativeTabs {
         before(e, Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.SOAP_NAME,
                 ModRegistry.SOAP_BLOCK);
+
+        before(e, Items.OAK_FENCE_GATE, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.IRON_GATE_NAME,
+                ModRegistry.IRON_GATE);
 
         CompatHandler.addItemsToTabs(e);
     }
@@ -604,6 +614,7 @@ public class ModCreativeTabs {
         }
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
+                if (!PlatHelper.isModLoaded(s.getFromMod()))continue;
                 if (s == BuiltInSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();

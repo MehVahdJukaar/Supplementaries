@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -39,18 +41,20 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
 
     public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f); //Width, Height, y0
 
-    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
-        matrixStackIn.pushPose();
+    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+        poseStack.pushPose();
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-        VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
-        matrixStackIn.translate(0.5, LIQUID_DIMENSIONS.z(), 0.5);
-        VertexUtils.addCube(builder, matrixStackIn,
-                LIQUID_DIMENSIONS.x(),
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.solid());
+        poseStack.translate(0.5, LIQUID_DIMENSIONS.z(), 0.5);
+
+        VertexUtils.addCube(builder, poseStack,
+               LIQUID_DIMENSIONS.x(),
                 percentageFill * LIQUID_DIMENSIONS.y(),
-                sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
-        matrixStackIn.popPose();
+                sprite, light, -1, opacity, combinedOverlayIn, true, true, shading, true);
+
+        poseStack.popPose();
     }
 
     @Override
