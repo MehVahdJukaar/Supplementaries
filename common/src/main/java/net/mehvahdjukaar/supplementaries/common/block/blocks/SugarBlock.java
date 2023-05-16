@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.integration.BumblezoneCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 public class SugarBlock extends ConcretePowderBlock {
 
@@ -46,7 +48,8 @@ public class SugarBlock extends ConcretePowderBlock {
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        return state;
+        level.scheduleTick(currentPos, this, this.getDelayAfterPlace());
+        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
     }
 
     @Override
@@ -85,7 +88,7 @@ public class SugarBlock extends ConcretePowderBlock {
             if (direction != Direction.DOWN) {
                 mutableBlockPos.setWithOffset(pos, direction);
                 var s = level.getBlockState(mutableBlockPos);
-                if ((direction == Direction.UP && isWater(s) || s.getBlock() == Blocks.WATER)) {
+                if (isWater(s) && (direction == Direction.UP || s.getFluidState().isSource()) ) {
                     count++;
                 }
                 if (count >= 2) return true;
@@ -110,11 +113,9 @@ public class SugarBlock extends ConcretePowderBlock {
         return bl;
     }
 
-
     private boolean isWater(BlockState state) {
         return state.getFluidState().is(FluidTags.WATER);
     }
-
 
     public void spawnDissolveParticles(Level level, BlockPos pos) {
         int d = 0, e = 0, f = 0;

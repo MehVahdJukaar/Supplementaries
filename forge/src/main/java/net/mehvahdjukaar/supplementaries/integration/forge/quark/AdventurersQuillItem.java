@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
@@ -18,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -98,8 +100,22 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         }
     }
 
+    @Override
     public int getIterations() {
         return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (level instanceof ServerLevel serverLevel) {
+            CompoundTag tag = player.getItemInHand(hand).getOrCreateTag();
+            if (!tag.contains(TAG_STRUCTURE)) {
+                //re-generate for empty one
+                String str = computeTarget(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
+                if(str != null) tag.putString(TAG_STRUCTURE, str);
+            }
+        }
+        return super.use(level, player, hand);
     }
 
     @Nullable
@@ -107,12 +123,6 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public ResourceLocation getTarget(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         String str = tag.getString(TAG_STRUCTURE);
-        if (str.isEmpty()) {
-            //re-generate for empty one
-            str = "mansion";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
-            if (str == null) return null;
-            tag.putString(TAG_STRUCTURE, str);
-        }
         return new ResourceLocation(str);
     }
 

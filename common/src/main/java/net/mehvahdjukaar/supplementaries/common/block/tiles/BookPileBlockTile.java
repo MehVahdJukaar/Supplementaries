@@ -100,7 +100,8 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public void updateClientVisualsOnLoad() {
         this.books.clear();
         consolidateBookPile();
-        List<BookColor> colors = ClientConfigs.Tweaks.PLACEABLE_BOOKS_COLORS.get();
+        //we need a modifiable copy
+        List<BookColor> colors = new ArrayList<>(ClientConfigs.Tweaks.PLACEABLE_BOOKS_COLORS.get());
         for (int i = 0; i < 4; i++) {
             ItemStack stack = this.getItem(i);
             if (stack.isEmpty()) break;
