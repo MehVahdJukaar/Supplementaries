@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
 import java.lang.ref.WeakReference;
@@ -112,6 +113,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CLOCK_CLICK;
         public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
+        public static final Supplier<List<BookPileBlockTile.BookColor>> BOOK_COLORS;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
@@ -132,6 +134,8 @@ public class ClientConfigs {
                     .define("compass_right_click", false);
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
                     .define("placeable_books_glint", false);
+            BOOK_COLORS = builder.comment("Placeable books random colors")
+                    .defineObjectList("placeable_books_random_colors", ()->BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
             PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")
