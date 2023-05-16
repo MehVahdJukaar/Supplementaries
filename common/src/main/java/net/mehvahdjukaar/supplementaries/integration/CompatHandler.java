@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -83,6 +83,10 @@ public class CompatHandler {
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
+    }
+
+    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
+        if (QUARK) QuarkCompat.addItemsToTabs(event);
     }
 
 

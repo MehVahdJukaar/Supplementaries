@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge;
+package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;

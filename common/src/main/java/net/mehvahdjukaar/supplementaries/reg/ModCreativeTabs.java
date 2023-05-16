@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -489,6 +490,8 @@ public class ModCreativeTabs {
         before(e, Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.SOAP_NAME,
                 ModRegistry.SOAP_BLOCK);
+
+        CompatHandler.addItemsToTabs(e);
     }
 
     private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {

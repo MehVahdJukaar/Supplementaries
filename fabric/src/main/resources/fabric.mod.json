@@ -29,6 +29,9 @@
     ],
     "jei_mod_plugin": [
       "net.mehvahdjukaar.supplementaries.integration.JEICompat"
+    ],
+    "emi": [
+      "net.mehvahdjukaar.supplementaries.integration.fabric.EMICompat"
     ]
   },
   "mixins": [

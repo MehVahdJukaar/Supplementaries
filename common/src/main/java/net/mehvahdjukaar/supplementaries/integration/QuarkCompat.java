@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +19,11 @@ public class QuarkCompat {
 
     @ExpectPlatform
     public static void init() {
+    }
+
+    @ExpectPlatform
+    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
+        throw new AssertionError();
     }
 
     @ExpectPlatform
@@ -100,4 +106,6 @@ public class QuarkCompat {
     public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
         throw new AssertionError();
     }
+
+
 }

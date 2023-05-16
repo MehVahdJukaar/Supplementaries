@@ -941,6 +941,15 @@ public class CommonConfigs {
                     .define("random_adventurer_maps", true);
             MAP_MARKERS = builder.comment("enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
+            if (PlatHelper.getPlatform().isForge()) {
+                QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
+                        .define("quill_adventurer_maps", true);
+                REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
+                        .define("quill_vanilla_maps", true);
+            } else {
+                QUARK_QUILL = () -> false;
+                REPLACE_VANILLA_MAPS = () -> false;
+            }
             builder.pop();
 
             builder.push("ceiling_banners");
@@ -997,6 +1006,8 @@ public class CommonConfigs {
         public static final Supplier<Integer> BOTTLING_COST;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<Boolean> QUARK_QUILL;
+        public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
         public static final Supplier<Boolean> WRITTEN_BOOKS;

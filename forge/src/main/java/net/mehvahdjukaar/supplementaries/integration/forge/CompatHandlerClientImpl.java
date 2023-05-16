@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
-import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
 import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigSelectScreen;
 

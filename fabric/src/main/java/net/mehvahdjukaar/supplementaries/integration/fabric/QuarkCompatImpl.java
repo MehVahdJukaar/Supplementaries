@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -75,6 +76,9 @@ public class QuarkCompatImpl {
 
     public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
         return false;
+    }
+
+    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
     }
 
 }

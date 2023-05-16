@@ -118,7 +118,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
 
-        static{
+        static {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("Game tweaks")
@@ -135,7 +135,7 @@ public class ClientConfigs {
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
                     .define("placeable_books_glint", false);
             BOOK_COLORS = builder.comment("Placeable books random colors")
-                    .defineObjectList("placeable_books_random_colors", ()->BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);
+                    .defineObjectList("placeable_books_random_colors", () -> BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
             PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")
@@ -160,7 +160,7 @@ public class ClientConfigs {
         public static final Supplier<Double> TEST2;
         public static final Supplier<Double> TEST3;
 
-        static{
+        static {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
@@ -241,7 +241,7 @@ public class ClientConfigs {
 
             builder.push("notice_board");
             NOTICE_BOARD_CENTERED_TEXT = builder.comment("Allows notice board displayed text to be centered instead of being left aligned")
-                            .define("centered_text", true);
+                    .define("centered_text", true);
             builder.pop();
 
             builder.push("clock_block");
@@ -361,7 +361,7 @@ public class ClientConfigs {
         public static final Supplier<Integer> TURN_INITIAL_COLOR;
         public static final Supplier<Integer> TURN_FADE_COLOR;
 
-        static{
+        static {
 
             ConfigBuilder builder = builderReference.get();
             builder.comment("Particle parameters")

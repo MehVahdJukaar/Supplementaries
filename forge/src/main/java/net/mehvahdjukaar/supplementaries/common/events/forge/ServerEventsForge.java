@@ -7,8 +7,10 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
+import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
+import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
@@ -184,31 +186,6 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
         SongsManager.recordNote(event.getLevel(), event.getPos());
-
-        if (CompatHandler.QUARK && QuarkCompatImpl.isMoreNoteBlockSoundsOn()) {
-            LevelAccessor world = event.getLevel();
-            BlockPos pos = event.getPos();
-            if (world.getBlockState(pos).getBlock() == Blocks.NOTE_BLOCK) {
-                for (Direction dir : Direction.Plane.HORIZONTAL) {
-                    BlockState state = world.getBlockState(pos.relative(dir));
-                    Block block = state.getBlock();
-                    if (block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == dir) {
-                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL.get()) {
-                            SoundEvent sound = SoundEvents.ENDERMAN_TELEPORT;
-                            event.setCanceled(true);
-                            float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
-                            world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1.0F, pitch);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onEntityVisibility(LivingEvent.LivingVisibilityEvent event) {
-        if (event.getEntity().getType() == EntityType.ENDERMAN) event.modifyVisibility(0.5f);
     }
 
     @SubscribeEvent
