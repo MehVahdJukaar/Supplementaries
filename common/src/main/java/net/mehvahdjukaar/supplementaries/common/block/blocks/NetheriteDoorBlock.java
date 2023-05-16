@@ -55,10 +55,6 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    private void playSound(@Nullable Entity source, Level level, BlockPos pos, boolean isOpening) {
-        level.playSound(source, pos, isOpening ? type.doorOpen() : type.doorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
-    }
-
     @Override
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
     }
@@ -68,14 +64,6 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
         BlockState state = super.getStateForPlacement(context);
         if (state == null) return null;
         return state.setValue(OPEN, false).setValue(POWERED, false);
-    }
-
-    private int getCloseSound() {
-        return 1011;
-    }
-
-    private int getOpenSound() {
-        return 1005;
     }
 
     public boolean hasTileEntity(BlockState state) {

@@ -20,7 +20,7 @@ public class EMICompat implements EmiPlugin {
         SpecialRecipeDisplays.registerCraftingRecipes(recipes -> recipes.stream().map(r ->
                 new EmiCraftingRecipe(
                         r.getIngredients().stream().map(EmiIngredient::of).toList(),
-                        EmiStack.of(r.getResultItem()),
+                        EmiStack.of(r.getResultItem(null)),
                         r.getId(),
                         r instanceof ShapelessRecipe
                 )).forEach(registry::addRecipe));
