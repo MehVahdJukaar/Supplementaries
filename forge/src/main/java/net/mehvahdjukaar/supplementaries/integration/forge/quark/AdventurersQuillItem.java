@@ -76,19 +76,8 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
         var tag = stack.getTag();
         if (tag != null) {
-            String structure = tag.getString(TAG_STRUCTURE);
-            if (!structure.isEmpty()) {
-                var r = new ResourceLocation(structure);
                 if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
                     comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
-                StringBuilder b = new StringBuilder();
-                b.append("filled_map.");
-                if (!r.getNamespace().equals("minecraft")) {
-                    b.append(r.getNamespace()).append(".");
-                }
-                b.append(r.getPath());
-                comps.add(Component.translatable(b.toString()).withStyle(ChatFormatting.GRAY));
-            }
         } else
             comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
     }
@@ -111,7 +100,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             CompoundTag tag = player.getItemInHand(hand).getOrCreateTag();
             if (!tag.contains(TAG_STRUCTURE)) {
                 //re-generate for empty one
-                String str = computeTarget(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
+                String str = selectRandomTarget(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
                 if(str != null) tag.putString(TAG_STRUCTURE, str);
             }
         }
@@ -469,14 +458,14 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
     public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag) {
         ItemStack stack = QuarkCompatImpl.ADVENTURER_QUILL.get().getDefaultInstance();
-        String target = computeTarget(level, tag);
+        String target = selectRandomTarget(level, tag);
         if (target == null) return ItemStack.EMPTY;
         stack.getOrCreateTag().putString(AdventurersQuillItem.TAG_STRUCTURE, target);
         return stack;
     }
 
     @Nullable
-    private static String computeTarget(ServerLevel level, TagKey<Structure> tag) {
+    private static String selectRandomTarget(ServerLevel level, TagKey<Structure> tag) {
         Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess()
                 .registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tag);
         if (taggedStructures.isPresent()) {
