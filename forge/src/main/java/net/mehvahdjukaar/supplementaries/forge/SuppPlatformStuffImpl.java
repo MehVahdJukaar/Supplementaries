@@ -93,18 +93,7 @@ public class SuppPlatformStuffImpl {
         return state.getLightEmission(level, pos);
     }
 
-    public static RenderType staticNoise(ResourceLocation location) {
-        return SupplementariesForgeClient.staticNoise(location);
-    }
 
-    public static ShaderInstance getNoiseShader() {
-        return SupplementariesForgeClient.getStaticNoiseShader();
-    }
-
-    public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
-                                                    double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
-        return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
-    }
 
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c.withSearchBar();

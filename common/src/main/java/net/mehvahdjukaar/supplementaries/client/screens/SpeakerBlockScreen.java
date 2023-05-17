@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -73,7 +74,7 @@ public class SpeakerBlockScreen extends Screen {
 
         int range = CommonConfigs.Redstone.SPEAKER_RANGE.get();
 
-        this.volumeSlider = SuppPlatformStuff.createSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
+        this.volumeSlider = SuppClientPlatformStuff.createSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
                 VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
                 initialVolume, 1, 1, true);
 

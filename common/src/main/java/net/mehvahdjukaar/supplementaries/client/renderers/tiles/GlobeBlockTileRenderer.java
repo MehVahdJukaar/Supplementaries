@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -140,9 +141,9 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
                 float c = (float) Mth.clamp(si, -2, 2);
-                SuppPlatformStuff.getNoiseShader().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
+                SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-                builder = buffer.getBuffer(SuppPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
+                builder = buffer.getBuffer(SuppClientPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
             } else {
                 builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
             }

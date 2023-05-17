@@ -1,49 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
-import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -54,6 +41,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import org.lwjgl.glfw.GLFW;
 
 public class ServerEventsForge {
 
@@ -190,8 +178,8 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onItemPickup(EntityItemPickupEvent event) {
-        if(!event.isCanceled() && event.getResult() != Event.Result.DENY){
-            if(ServerEvents.onItemPickup(event.getItem(), event.getEntity())){
+        if (!event.isCanceled() && event.getResult() != Event.Result.DENY) {
+            if (ServerEvents.onItemPickup(event.getItem(), event.getEntity())) {
                 event.setCanceled(true);
                 event.setResult(Event.Result.DENY);
             }
@@ -200,12 +188,20 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
-        if(event.getLevel().isClientSide()){
+        if (event.getLevel().isClientSide()) {
             CapturedMobCache.clear();
-        }else{
+        } else {
             WeatheredMapRecipe.onWorldUnload();
             WaySignStructure.clearCache();
         }
     }
 
+
+    @SubscribeEvent
+    public static void onPlayerDeath(ScreenEvent.Opening event) {
+        if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs) {
+            cs.keyReleased(GLFW.GLFW_KEY_MINUS, 0, 0);
+            cs.keyReleased(GLFW.GLFW_KEY_ENTER, 0, 0);
+        }
+    }
 }

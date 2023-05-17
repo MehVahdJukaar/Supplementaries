@@ -70,25 +70,6 @@ public class SuppPlatformStuff {
         throw new ArrayStoreException();
     }
 
-    @Environment(EnvType.CLIENT)
-    @ExpectPlatform
-    public static RenderType staticNoise(ResourceLocation location) {
-        throw new ArrayStoreException();
-    }
-
-    @Environment(EnvType.CLIENT)
-    @ExpectPlatform
-    public static ShaderInstance getNoiseShader() {
-        throw new ArrayStoreException();
-    }
-
-    @Environment(EnvType.CLIENT)
-    @ExpectPlatform
-    public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue,
-                                                    double currentValue, double stepSize, int precision, boolean drawString) {
-        throw new ArrayStoreException();
-    }
-
     @ExpectPlatform
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         throw new ArrayStoreException();

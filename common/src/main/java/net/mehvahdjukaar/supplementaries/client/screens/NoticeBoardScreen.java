@@ -46,11 +46,6 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
     }
 
     @Override
-    public void removed() {
-        super.removed();
-    }
-
-    @Override
     public void init() {
         super.init();
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;

@@ -55,23 +55,6 @@ public class SuppPlatformStuffImpl {
         return state.getLightEmission();
     }
 
-    public static void funnyBoard(PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn) {
-    }
-
-    public static RenderType staticNoise(ResourceLocation location) {
-        return RenderType.entityCutout(location);
-    }
-
-    public static ShaderInstance getNoiseShader() {
-        return null;
-    }
-
-    @net.fabricmc.api.Environment(EnvType.CLIENT)
-    public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
-                                                    double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
-        return new ModSlider(x,y,width, height, prefix, minValue, maxValue, currentValue);
-    }
-
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c;
     }

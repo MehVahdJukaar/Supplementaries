@@ -1,5 +1,1 @@
-- Added some missing items to creative tabs
-- Added a configs to add more colors to placed books
-- Fixed mod and jar tabs
-- Fixed door sounds not working
-- Fixed jar items not rendering correctly
+serverside crash

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -72,7 +73,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
-            SuppPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
+            SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -80,7 +81,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             matrixStackIn.mulPose(RotHlpr.XN90);
             matrixStackIn.translate(-0.5, -0.5, -0.1875 + 0.001);
 
-            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppPlatformStuff::staticNoise);
+            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppClientPlatformStuff::staticNoise);
 
             VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1,
 
