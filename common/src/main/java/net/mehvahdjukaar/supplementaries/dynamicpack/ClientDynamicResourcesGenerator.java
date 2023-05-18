@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -9,26 +10,29 @@ import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
-import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
-import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
-import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
-import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.resources.textures.*;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Rotation;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -377,6 +381,33 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
+
+
+        var transformer = ImageTransformer.builder(32, 64, 16, 16)
+                .copyRect(26, 0, 2, 4, 4,0)
+                .copyRect(26, 8, 6, 8, 4,4)
+                .copyRect(28, 24, 4, 8, 0,4)
+                .copyRect(26, 20, 2, 4, 6,0)
+                .copyRect(26, 28, 2, 8, 10,4)
+                .build();
+
+        for(WoodType w : WoodTypeRegistry.getTypes()){
+            //hanging sign extension textures
+            try (TextureImage vanillaTexture = TextureImage.open(manager,
+                    Sheets.getHangingSignMaterial(w.toVanilla()).texture())) {
+                TextureImage flipped = vanillaTexture.createRotated( Rotation.CLOCKWISE_90);
+                TextureImage newIm = flipped.createResized(0.5f, 0.25f);
+                newIm.clear();
+
+                transformer.apply(flipped, newIm);
+                flipped.close();
+                this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/"+w.getVariantId("extension")), newIm);
+            } catch (Exception e) {
+                int aa = 1;
+            }
+        }
+
+
     }
 
     /**

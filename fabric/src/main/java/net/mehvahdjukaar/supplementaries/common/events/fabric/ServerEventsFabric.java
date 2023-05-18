@@ -33,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class ServerEventsFabric {
@@ -55,12 +56,12 @@ public class ServerEventsFabric {
         if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get() && CommonConfigs.Functional.FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
                     GenerationStep.Decoration.VEGETAL_DECORATION,
-                    ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation("wild_flax")));
+                    ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("wild_flax")));
         }
         if (CommonConfigs.Building.BASALT_ASH_ENABLED.get() && CommonConfigs.Building.ASH_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BASALT_ASH),
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                    ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation("basalt_ash")));
+                    ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("basalt_ash")));
         }
     }
 

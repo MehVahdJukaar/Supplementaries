@@ -29,6 +29,8 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundSetBlackboardPacket.class, ServerBoundSetBlackboardPacket::new);
 
+        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
+                ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundSendLoginPacket.class, ClientBoundSendLoginPacket::new);

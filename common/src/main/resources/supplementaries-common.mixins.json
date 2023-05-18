@@ -10,6 +10,7 @@
     "BookViewScreenMixin",
     "FontRendererMixin",
     "GameRendererMixin",
+    "HangingSignRendererMixin",
     "IronGolemRendererMixin",
     "KeyboardHandlerMixin",
     "LevelRendererMixin",

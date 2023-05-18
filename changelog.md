@@ -1,5 +1,1 @@
-- Fixed worldgen not being added to biomes
-- Added a feature config to way sign allowing users to change all the blocks that are used there
-- Added a tweak that sends your current chat if you happen to die while typing
-- Slightly tweaked cave urn spawning
-- Slightly increased wild flax rarity
+fixed fabric startup

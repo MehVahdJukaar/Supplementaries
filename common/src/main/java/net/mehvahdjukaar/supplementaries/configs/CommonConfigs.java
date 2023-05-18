@@ -593,7 +593,7 @@ public class CommonConfigs {
             builder.push("soap");
             SOAP_ENABLED = feature(builder);
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
-                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta"));
+                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta","botania:mystical_flower"));
             builder.pop();
 
             builder.push("present");

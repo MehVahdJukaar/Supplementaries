@@ -74,10 +74,6 @@ import java.util.Map;
 
 public class ClientRegistry {
 
-    //we cant load sheets class thanks to new banners shit
-    private static final ResourceLocation SHULKER_SHEET = new ResourceLocation("textures/atlas/shulker_boxes.png");
-    public static final ResourceLocation BANNER_SHEET = new ResourceLocation("textures/atlas/banner_patterns.png");
-
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
 
@@ -92,6 +88,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
+    public static final ModelLayerLocation HANGING_SIGN_EXTENSION = loc("hanging_sign_extension");
     //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
 
     //special models locations
@@ -470,6 +467,7 @@ public class ClientRegistry {
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
+        event.register(HANGING_SIGN_EXTENSION, HangingSignRendererExtension::createMesh);
     }
 
 
