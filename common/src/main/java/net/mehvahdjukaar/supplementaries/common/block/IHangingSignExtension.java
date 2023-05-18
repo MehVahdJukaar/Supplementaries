@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
@@ -13,4 +14,6 @@ public interface IHangingSignExtension {
     ModBlockProperties.PostType getRightAttachment();
 
     void updateAttachments();
+
+    SwayingAnimation getSwayingAnimation();
 }

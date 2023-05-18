@@ -39,7 +39,7 @@ public class CommonConfigs {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
 
         builderReference = new WeakReference<>(builder);
-        MiscUtils
+
         Redstone.init();
         Functional.init();
         Building.init();

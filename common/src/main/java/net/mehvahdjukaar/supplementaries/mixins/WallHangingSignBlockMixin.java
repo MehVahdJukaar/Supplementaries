@@ -1,16 +1,27 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
+import net.mehvahdjukaar.supplementaries.common.block.SwayingAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.WallHangingSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WallHangingSignBlock.class)
-public abstract class WallHangingSignBlockMixin extends Block {
+public abstract class WallHangingSignBlockMixin extends Block implements EntityBlock {
 
     protected WallHangingSignBlockMixin(Properties properties) {
         super(properties);
@@ -54,4 +65,21 @@ public abstract class WallHangingSignBlockMixin extends Block {
             tile.updateAttachments();
         }
     }
+
+    @Override
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+        super.entityInside(state, world, pos, entity);
+        if (world.getBlockEntity(pos) instanceof IHangingSignExtension tile) {
+            tile.getSwayingAnimation().hitByEntity(entity, state, pos);
+        }
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return Utils.getTicker(pBlockEntityType,BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) ->
+                ((IHangingSignExtension) blockEntity).getSwayingAnimation().clientTick(level, blockPos, blockState) : null);
+    }
+
+
 }

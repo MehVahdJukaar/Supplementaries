@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.SwayingAnimation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,9 +30,11 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
     @Nullable
     private PostType rightAttachment = null;
 
+    private final SwayingAnimation animation = new SwayingAnimation(s ->
+            s.getValue(WallHangingSignBlock.FACING).getOpposite().getNormal());
+
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
-
         return new AABB(worldPosition).inflate(0.5);
     }
 
@@ -60,6 +61,11 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
     }
 
     @Override
+    public SwayingAnimation getSwayingAnimation() {
+        return animation;
+    }
+
+    @Override
     public PostType getLeftAttachment() {
         return leftAttachment;
     }
@@ -77,7 +83,7 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
             rightAttachment = PostType.get(neighborState, true);
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         } else if (direction == selfFacing.getCounterClockWise()) {
-            leftAttachment = PostType.get(neighborState,true);
+            leftAttachment = PostType.get(neighborState, true);
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }
     }
