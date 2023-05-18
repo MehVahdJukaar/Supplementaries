@@ -48,16 +48,13 @@ public class ModWorldgenRegistry {
     //feature types
 
     //feature spawned by the structure
-    public static final Supplier<Feature<NoneFeatureConfiguration>> ROAD_SIGN_FEATURE = RegHelper.registerFeature(
-            Supplementaries.res("road_sign_feature"), () -> new RoadSignFeature(NoneFeatureConfiguration.CODEC));
+    public static final Supplier<Feature<RoadSignFeature.Config>> ROAD_SIGN_FEATURE = RegHelper.registerFeature(
+            Supplementaries.res("road_sign_feature"), () -> new RoadSignFeature(RoadSignFeature.Config.CODEC));
 
     public static final Supplier<Feature<BasaltAshFeature.Config>> BASALT_ASH_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("surface_scan_random_patch"), () -> new BasaltAshFeature(BasaltAshFeature.Config.CODEC));
 
-    //modifiers
 
-    public static final Supplier<PlacementModifierType<CaveFilter>> CAVE_MODIFIER = RegHelper.register(
-            Supplementaries.res("cave"), CaveFilter.Type::new, Registries.PLACEMENT_MODIFIER_TYPE);
 
 }
 

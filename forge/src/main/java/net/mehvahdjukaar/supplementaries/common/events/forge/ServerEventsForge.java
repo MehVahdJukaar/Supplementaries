@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -129,7 +130,8 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onTagUpdate(TagsUpdatedEvent event) {
-        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(), PlatHelper.getPhysicalSide().isClient());
+        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(),
+                event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED);
     }
 
     //for flute and cage. fabric calls directly
@@ -199,9 +201,10 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onPlayerDeath(ScreenEvent.Opening event) {
-        if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs) {
-            cs.keyReleased(GLFW.GLFW_KEY_MINUS, 0, 0);
-            cs.keyReleased(GLFW.GLFW_KEY_ENTER, 0, 0);
+       if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs
+       && ClientConfigs.Tweaks.DEATH_CHAT.get()) {
+            cs.charTyped((char)GLFW.GLFW_KEY_MINUS, 0);
+            cs.keyPressed(GLFW.GLFW_KEY_ENTER, 0, 0);
         }
     }
 }

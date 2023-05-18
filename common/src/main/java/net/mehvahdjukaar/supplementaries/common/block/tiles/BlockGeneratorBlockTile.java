@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +29,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
     private final AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = new AtomicReference<>(null);
     private boolean firstTick = true;
+    private RoadSignFeature.Config config = null;
 
     public BlockGeneratorBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLOCK_GENERATOR_TILE.get(), pos, state);
@@ -39,33 +42,49 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         if (tile.firstTick) {
             tile.firstTick = false;
 
-            ServerLevel world = (ServerLevel) level;
+            ServerLevel serverLevel = (ServerLevel) level;
 
             EXECUTORS.submit(() -> {
                 try {
-                    tile.threadResult.set( StructureLocator.findNearestMapFeatures(
-                            world, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
+                    tile.threadResult.set(StructureLocator.findNearestMapFeatures(
+                            serverLevel, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
                             false, 2));
                 } catch (Exception ignored) {
                 }
             });
         }
-
         try {
-           var result =  tile.threadResult.get();
+            var result = tile.threadResult.get();
             if (result != null) {
-                RoadSignFeature.applyPostProcess((ServerLevel) level, pos, result);
+                RoadSignFeature.applyPostProcess(tile.config, (ServerLevel) level, pos, result);
             }
-        } catch (Exception exception) {
-            tile.failAndRemove(level, pos, exception);
+        } catch (Exception e) {
+            level.removeBlock(pos, false);
+            Supplementaries.LOGGER.error("Failed to generate road sign at " + pos+": "+e);
         }
     }
 
-    private void failAndRemove(Level level, BlockPos pos, Exception e) {
-        level.removeBlock(pos, false);
-        Supplementaries.LOGGER.warn("failed to generate road sign at " + pos + ": " + e);
+    public void setConfig(RoadSignFeature.Config c) {
+        this.config = c;
     }
 
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (this.config != null) {
+            tag.put("config", RoadSignFeature.Config.CODEC.encodeStart(NbtOps.INSTANCE, this.config)
+                    .getOrThrow(false, s -> {
+                    }));
+        }
+    }
 
-
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        if (tag.contains("config")) {
+            this.config = RoadSignFeature.Config.CODEC.decode(NbtOps.INSTANCE, tag.get("config"))
+                    .getOrThrow(true, s -> {
+                    }).getFirst();
+        }
+    }
 }

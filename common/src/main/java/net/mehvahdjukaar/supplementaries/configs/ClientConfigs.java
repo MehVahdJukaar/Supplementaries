@@ -117,6 +117,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
+        public static final Supplier<Boolean> DEATH_CHAT;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -142,6 +143,8 @@ public class ClientConfigs {
                     .define("paintings_tooltip", true);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
+            DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
+                            .define("send_chat_on_death", true);
             builder.pop();
         }
     }

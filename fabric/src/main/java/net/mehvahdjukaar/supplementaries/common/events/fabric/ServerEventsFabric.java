@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -20,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -46,19 +48,19 @@ public class ServerEventsFabric {
         LootTableEvents.MODIFY.register((m, t, r, b, s) -> ServerEvents.injectLootTables(t, r, b::withPool));
 
         if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-           // BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
-             //       GenerationStep.Decoration.UNDERGROUND_DECORATION,
-               //     ResourceKey.create(Registries.PLACED_FEATURE, ModWorldgenRegistry.PLACED_CAVE_URNS.getId()));
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
+                  GenerationStep.Decoration.UNDERGROUND_DECORATION,
+                ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("cave_urns")));
         }
         if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get() && CommonConfigs.Functional.FLAX_ENABLED.get()) {
-            //BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
-            //        GenerationStep.Decoration.VEGETAL_DECORATION,
-            //        ResourceKey.create(Registries.PLACED_FEATURE, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getId()));
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
+                    GenerationStep.Decoration.VEGETAL_DECORATION,
+                    ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation("wild_flax")));
         }
         if (CommonConfigs.Building.BASALT_ASH_ENABLED.get() && CommonConfigs.Building.ASH_ENABLED.get()) {
-           // BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BASALT_ASH),
-           //         GenerationStep.Decoration.UNDERGROUND_DECORATION,
-             //       ResourceKey.create(Registries.PLACED_FEATURE, ModWorldgenRegistry.PLACED_BASALT_ASH.getId()));
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BASALT_ASH),
+                    GenerationStep.Decoration.UNDERGROUND_DECORATION,
+                    ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation("basalt_ash")));
         }
     }
 
