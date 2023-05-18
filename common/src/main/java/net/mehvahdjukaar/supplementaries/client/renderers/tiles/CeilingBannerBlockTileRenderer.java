@@ -52,7 +52,8 @@ public class CeilingBannerBlockTileRenderer implements BlockEntityRenderer<Ceili
             }
             matrixStack.translate(0.5D, -0.3125 - 0.0208333333333, 0.5D); //1/32 * 2/3
 
-            matrixStack.mulPose(RotHlpr.rot(blockstate.getValue(CeilingBannerBlock.FACING).getOpposite()));
+            matrixStack.mulPose(RotHlpr.rot(blockstate.getValue(CeilingBannerBlock.FACING)));
+            matrixStack.mulPose(RotHlpr.XN90);
 
             matrixStack.pushPose();
             matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);

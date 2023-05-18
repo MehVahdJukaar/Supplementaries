@@ -1,1 +1,6 @@
-fixed fabric startup
+- Started hacking into vanilla hanging signs:
+- They will now be visually attached to fences, walls and such
+- Their rendering bounding box has also been increase fixing a vanilla bug where they would disappear when not looking at the support part (which is tiny)
+- Started preparations for *swinging*
+- Fixed ceiling banners having incorrect rotation
+- Fixed red merchant trades noe syncing correctly

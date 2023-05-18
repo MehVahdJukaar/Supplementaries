@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSelectMerchantTradePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -51,7 +53,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     private void postButtonClick() {
         (this.menu).setSelectionHint(this.shopItem);
         (this.menu).tryMoveItems(this.shopItem);
-        this.minecraft.getConnection().send((new ServerboundSelectTradePacket(this.shopItem)));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
     }
 
     @Override
@@ -83,7 +85,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
             int k = 49 + this.imageWidth / 2 - j / 2;
             this.font.draw(poseStack, component, k, 6.0F, 4210752);
         } else {
-            this.font.draw(poseStack, this.title, (49 + this.imageWidth / 2f - this.font.width(this.title) / 2f), 6.0F, 4210752);
+          //  this.font.draw(poseStack, this.title, (49 + this.imageWidth / 2f - this.font.width(this.title) / 2f), 6.0F, 4210752);
         }
 
         this.font.draw(poseStack, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752);

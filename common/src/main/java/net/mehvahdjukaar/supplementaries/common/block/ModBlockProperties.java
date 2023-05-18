@@ -90,14 +90,20 @@ public class ModBlockProperties {
 
         private final String name;
         private final int width;
+        private final float offset;
 
         PostType(String name, int width) {
             this.name = name;
             this.width = width;
+            this.offset = (8-width/2)/16f;
         }
 
         public int getWidth() {
             return width;
+        }
+
+        public float getOffset(){
+            return offset;
         }
 
         @Override

@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.Map;
 
 @Mixin(HangingSignRenderer.class)
@@ -35,7 +36,7 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
     @Shadow abstract Material getSignMaterial(WoodType woodType);
 
     @Unique
-    private ModelPart barModel;
+    private List<ModelPart> barModel;
 
     protected HangingSignRendererMixin(BlockEntityRendererProvider.Context context) {
         super(context);
@@ -62,7 +63,11 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void initEnhancedSign(BlockEntityRendererProvider.Context context, CallbackInfo ci) {
-        this.barModel = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
+        ModelPart model = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
+        this.barModel = List.of(model.getChild("extension_6"),
+                model.getChild("extension_5"),
+                model.getChild("extension_4"),
+                model.getChild("extension_3"));
 
     }
 
