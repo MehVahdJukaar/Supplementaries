@@ -21,7 +21,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (targetClassName.contains("farmers_delight")) {
+        if (mixinClassName.contains("Compat")) {
             try {
                 Class.forName(targetClassName);
                 return true;

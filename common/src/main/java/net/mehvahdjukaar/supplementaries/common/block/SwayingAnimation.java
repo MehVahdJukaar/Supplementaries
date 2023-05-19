@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CeilingBannerBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -17,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 import java.util.function.Function;
 
-public class SwayingAnimation {
+public class SwayingAnimation extends SwingAnimation {
 
     //maximum allowed swing
     protected static float maxSwingAngle = 45f;
@@ -28,11 +26,7 @@ public class SwayingAnimation {
 
     protected static float angleDamping = 150f;
     protected static float periodDamping = 100f;
-    private final Function<BlockState, Vec3i> axisFunc;
 
-    //all client stuff
-    private float angle = 0;
-    private float prevAngle = 0;
 
     // lower counter is used by hitting animation
     private int animationCounter = 800 + new Random().nextInt(80);
@@ -40,10 +34,11 @@ public class SwayingAnimation {
 
 
     public SwayingAnimation(Function<BlockState, Vec3i> getRotationAxis) {
-        this.axisFunc = getRotationAxis;
+        super(getRotationAxis);
     }
 
-    public void clientTick(Level pLevel, BlockPos pPos, BlockState pState) {
+    @Override
+    public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
 
         //TODO: improve physics (water, swaying when it's not exposed to wind)
 
@@ -69,18 +64,20 @@ public class SwayingAnimation {
 
     }
 
-    public float getSwingAngle(float partialTicks) {
+    @Override
+    public float getAngle(float partialTicks) {
         return Mth.lerp(partialTicks, this.prevAngle, this.angle);
     }
 
 
-    public void hitByEntity(Entity entity, BlockState state, BlockPos pos) {
+    @Override
+    public boolean hitByEntity(Entity entity, BlockState state, BlockPos pos) {
         Vec3 mot = entity.getDeltaMovement();
         if (mot.length() > 0.05) {
 
             Vec3 norm = new Vec3(mot.x, 0, mot.z).normalize();
-            Vec3i dv = this.axisFunc.apply(state);
-            Vec3 vec = new Vec3(dv.getX(), 0, dv.getZ()).normalize();
+            Vec3i rotationAxis = this.getRotationAxis(state);
+            Vec3 vec = MthUtils.V3itoV3(rotationAxis);
             double dot = norm.dot(vec);
             if (dot != 0) {
                 this.inv = dot < 0;
@@ -89,19 +86,11 @@ public class SwayingAnimation {
                 if (this.animationCounter > 10) {
                     //TODO: fix this doesnt work because this only works client side
                     Player player = entity instanceof Player p ? p : null;
-                    if (state.getBlock() instanceof HangingSignBlock) {
-                        //hardcoding goes brr
-                        //TODO: replace with proper custom sound & sound event
-                        entity.getLevel().playSound(player, pos, SoundEvents.CHAIN_STEP, SoundSource.BLOCKS, 0.5f, 2);
-                        entity.getLevel().playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 0.75f, 2f);
-
-                    } else {
-                        entity.getLevel().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
-
-                    }
+                    entity.getLevel().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
                 }
                 this.animationCounter = 0;
             }
         }
+        return true;
     }
 }

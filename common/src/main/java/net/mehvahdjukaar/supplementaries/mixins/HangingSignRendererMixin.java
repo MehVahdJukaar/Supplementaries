@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BellowsBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BlackboardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
@@ -47,18 +49,20 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
             at = @At("HEAD"), cancellable = true)
     public void renderEnhancedSign( SignBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                                     int packedLight, int packedOverlay, CallbackInfo ci) {
-        BlockState blockState = blockEntity.getBlockState();
-        WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
-        HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
+        if(ClientConfigs.Tweaks.EXTENDED_HANGING_SIGN.get()) {
+            BlockState blockState = blockEntity.getBlockState();
+            WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
+            HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
-        HangingSignRendererExtension.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
-               blockState, model, barModel,
+            HangingSignRendererExtension.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
+                    blockState, model, barModel,
 
-                this.getSignMaterial(woodType),
-                ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
-                this);
+                    this.getSignMaterial(woodType),
+                    ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
+                    this);
 
-        ci.cancel();
+            ci.cancel();
+        }
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

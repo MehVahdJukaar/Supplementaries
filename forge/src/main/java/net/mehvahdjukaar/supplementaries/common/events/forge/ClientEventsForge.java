@@ -12,6 +12,8 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
@@ -26,6 +28,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.lwjgl.glfw.GLFW;
 
 public class ClientEventsForge {
 
@@ -131,5 +134,13 @@ public class ClientEventsForge {
     }
 
 
+    @SubscribeEvent
+    public static void onPlayerDeath(ScreenEvent.Opening event) {
+        if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs
+                && ClientConfigs.Tweaks.DEATH_CHAT.get()) {
+            cs.charTyped((char) GLFW.GLFW_KEY_MINUS, 0);
+            cs.keyPressed(GLFW.GLFW_KEY_ENTER, 0, 0);
+        }
+    }
 
 }

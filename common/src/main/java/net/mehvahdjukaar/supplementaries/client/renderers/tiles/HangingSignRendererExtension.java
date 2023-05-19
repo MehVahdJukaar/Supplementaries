@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.model.geom.ModelPart;
@@ -56,7 +57,7 @@ public class HangingSignRendererExtension {
         poseStack.pushPose();
 
         model.plank.visible = false;
-        poseStack.mulPose(Axis.XP.rotationDegrees(sign.getSwayingAnimation().getSwingAngle(partialTicks)));
+        poseStack.mulPose(Axis.XP.rotationDegrees(sign.getSwayingAnimation().getAngle(partialTicks)));
         poseStack.translate(0,0.25,0);
 
         model.root.render(poseStack, vertexConsumer, packedLight, packedOverlay);
@@ -92,7 +93,8 @@ public class HangingSignRendererExtension {
         }
         if (right != null) {
             poseStack.pushPose();
-            poseStack.translate(-right.getOffset(), 0, 0);
+            poseStack.mulPose(RotHlpr.Y180);
+            poseStack.translate(1, 0, 0);
             barModel.get(right.ordinal()).render(poseStack, vc2, packedLight, packedOverlay);
             poseStack.popPose();
         }
