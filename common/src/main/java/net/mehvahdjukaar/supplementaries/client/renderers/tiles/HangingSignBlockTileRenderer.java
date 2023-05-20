@@ -118,7 +118,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
                     if (renderMaterial != null) {
 
-                        VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityTranslucent);
+                        VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::itemEntityTranslucentCull);
 
                         float[] color = textHolder.getColor().getTextureDiffuseColors();
                         float b = color[2];

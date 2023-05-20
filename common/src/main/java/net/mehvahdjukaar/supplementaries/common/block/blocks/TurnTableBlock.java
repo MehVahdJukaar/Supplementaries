@@ -92,7 +92,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
         Direction face = hit.getDirection();
         Direction myDir = state.getValue(FACING);
         if (face != myDir && face != myDir.getOpposite()) {
-            if (!player.getAbilities().mayBuild) {
+            if (!Utils.mayBuild(player,pos)) {
                 return InteractionResult.PASS;
             } else {
                 state = state.cycle(INVERTED);

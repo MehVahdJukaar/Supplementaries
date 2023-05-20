@@ -1,11 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.mixins.HangingSignBlockEntityMixin;
+import net.mehvahdjukaar.supplementaries.mixins.WallHangingSignBlockMixin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Unique;
 
 public class EnhancedLanternBlockTile extends SwayingBlockTile{
 
@@ -33,6 +40,6 @@ public class EnhancedLanternBlockTile extends SwayingBlockTile{
 
     @Override
     public Vec3i getNormalRotationAxis(BlockState state) {
-        return state.getValue(WallLanternBlock.FACING).getClockWise().getNormal();
+        return state.getValue(WallLanternBlock.FACING).getNormal();
     }
 }

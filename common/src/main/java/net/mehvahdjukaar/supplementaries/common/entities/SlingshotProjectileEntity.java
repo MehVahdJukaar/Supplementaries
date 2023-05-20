@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -141,7 +142,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player player && player.getAbilities().mayBuild) {
+        if (owner instanceof Player player && player.mayBuild()) {
 
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {

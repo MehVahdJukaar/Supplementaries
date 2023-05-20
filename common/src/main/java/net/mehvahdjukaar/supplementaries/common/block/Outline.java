@@ -36,7 +36,7 @@ public class Outline extends SimpleJsonResourceReloadListener {
         super(new Gson(), "outline_rules");
     }
 
-    public static record OutlineRule(Block self, RuleTest selfTest, Map<Direction, RuleTest> targets) {
+    public record OutlineRule(Block self, RuleTest selfTest, Map<Direction, RuleTest> targets) {
     }
 
     public static final Codec<OutlineRule> CODEC = RecordCodecBuilder.create(instance -> instance.group(

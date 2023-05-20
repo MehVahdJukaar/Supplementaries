@@ -4,7 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
+import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,10 +15,15 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -34,49 +42,91 @@ public class HangingSignRendererExtension {
 
         poseStack.pushPose();
 
-        boolean notCeiling = !(state.getBlock() instanceof CeilingHangingSignBlock);
-        boolean attached = state.hasProperty(BlockStateProperties.ATTACHED) && state.getValue(BlockStateProperties.ATTACHED);
+        boolean wallSign = !(state.getBlock() instanceof CeilingHangingSignBlock);
+        boolean attached = !wallSign && state.hasProperty(BlockStateProperties.ATTACHED) && state.getValue(BlockStateProperties.ATTACHED);
         poseStack.translate(0.5, 0.875, 0.5);
         if (attached) {
             float f = -RotationSegment.convertToDegrees(state.getValue(CeilingHangingSignBlock.ROTATION));
             poseStack.mulPose(Axis.YP.rotationDegrees(f));
         } else {
-            poseStack.mulPose(Axis.YP.rotationDegrees(getSignAngle(state, notCeiling)));
+            poseStack.mulPose(Axis.YP.rotationDegrees(getSignAngle(state, wallSign)));
         }
 
 
         model.evaluateVisibleParts(state);
         VertexConsumer vertexConsumer = material.buffer(bufferSource, model::renderType);
-        IHangingSignExtension sign = (IHangingSignExtension)tile;
+        var sign = ((IExtendedHangingSign) tile).getExtension();
 
         poseStack.scale(1, -1, -1);
+        //TODO: ceiling banner rot
 
         boolean visible = model.plank.visible;
 
+        boolean visibleC = model.normalChains.visible;
 
         poseStack.pushPose();
 
         model.plank.visible = false;
-        model.normalChains.visible = false;
-        poseStack.mulPose(Axis.XP.rotationDegrees(sign.getSwayingAnimation().getAngle(partialTicks)));
-        poseStack.translate(0,0.25,0);
+
+        if (wallSign) model.normalChains.visible = false;
+        poseStack.mulPose(Axis.XP.rotationDegrees(sign.getAngle(partialTicks)));
+        poseStack.translate(0, 0.25, 0);
 
         model.root.render(poseStack, vertexConsumer, packedLight, packedOverlay);
-        chains.render(poseStack, vertexConsumer, packedLight, packedOverlay); //shorter chains
-
-        model.normalChains.visible = true;
+        if (wallSign) {
+            chains.render(poseStack, vertexConsumer, packedLight, packedOverlay); //shorter chains
+            model.normalChains.visible = visibleC;
+        }
         model.plank.visible = visible;
 
 
         poseStack.pushPose();
         poseStack.scale(1, -1, -1);
+
         //this dumb method always pops but doesnt push
         renderer.renderSignText(tile, poseStack, bufferSource, packedLight, 1.0F);
+
+
+        Item item = Items.SKULL_BANNER_PATTERN;
+        if (item instanceof BannerPatternItem bannerPatternItem) {
+            poseStack.translate(0, 5/16f, 0);
+
+            float scale =0.75f;
+            poseStack.scale(scale, -scale, -1);
+
+
+            Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
+            if (renderMaterial != null) {
+
+                VertexConsumer builder = renderMaterial.buffer(bufferSource, RenderType::itemEntityTranslucentCull);
+
+                float[] color = tile.getColor().getTextureDiffuseColors();
+                float b = color[2];
+                float g = color[1];
+                float r = color[0];
+                int light = packedLight;
+                if (tile.hasGlowingText()) {
+                    light = LightTexture.FULL_BRIGHT;
+                }
+
+                int lu = light & '\uffff';
+                int lv = light >> 16 & '\uffff';
+                for (int v = 0; v < 2; v++) {
+                    VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.07f,
+                            0.4375F, 0.4375F, 0.07f,
+                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
+
+                    poseStack.mulPose(RotHlpr.Y180);
+                }
+            }
+        }
 
         poseStack.popPose();
 
 
-        poseStack.translate(0,0.25,0);
+        //Straight stuff
+
+        poseStack.translate(0, 0.25, 0);
 
         if (visible) {
             model.plank.render(poseStack, vertexConsumer, packedLight, packedOverlay);
@@ -131,16 +181,17 @@ public class HangingSignRendererExtension {
                         .addBox(4.0F, -8.0F, -2.0F, 2.0F, 3.0F, 4.0F),
                 PartPose.rotation(0.0F, 0.0F, -1.5708F));
 
-       return LayerDefinition.create(meshDefinition, 16, 16);
+        return LayerDefinition.create(meshDefinition, 16, 16);
     }
+
     public static LayerDefinition createChainMesh() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition root = meshDefinition.getRoot();
 
-        root.addOrReplaceChild("chainL1", CubeListBuilder.create().texOffs(0, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
-        root.addOrReplaceChild("chainL2", CubeListBuilder.create().texOffs(6, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
-        root.addOrReplaceChild("chainR1", CubeListBuilder.create().texOffs(0, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
-        root.addOrReplaceChild("chainR2", CubeListBuilder.create().texOffs(6, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainL1", CubeListBuilder.create().texOffs(0, 7).addBox(-1.5F, 1.0F, 0.0F, 3.0F, 5.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainL2", CubeListBuilder.create().texOffs(6, 7).addBox(-1.5F, 1.0F, 0.0F, 3.0F, 5.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainR1", CubeListBuilder.create().texOffs(0, 7).addBox(-1.5F, 1.0F, 0.0F, 3.0F, 5.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainR2", CubeListBuilder.create().texOffs(6, 7).addBox(-1.5F, 1.0F, 0.0F, 3.0F, 5.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
         return LayerDefinition.create(meshDefinition, 64, 32);
     }
 }

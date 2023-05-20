@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
@@ -100,7 +101,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             BlockHitResult blockHit = (BlockHitResult) hit;
             if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
                 Player player = mc.player;
-                if (player != null && player.getAbilities().mayBuild) {
+                if (player != null && Utils.mayBuild(player, pos)) {
                     if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
 
                         matrixStackIn.pushPose();

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
@@ -118,7 +119,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
-        public static final Supplier<Boolean> EXTENDED_HANGING_SIGN;
+
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -146,9 +147,7 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                             .define("send_chat_on_death", true);
-            EXTENDED_HANGING_SIGN = builder.comment("Ports the old Supplementareies hanging signs features to vanilla hanging signs." +
-                    "This includes things like making them wobbly or visually connecting to fences")
-                            .define("extended_hanging_signs", true);
+
             builder.pop();
         }
     }
@@ -225,7 +224,11 @@ public class ClientConfigs {
         public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
 
         public static final Supplier<Boolean> FAST_SIGNS;
+        public static final Supplier<Boolean> ENHANCED_HANGING_SIGNS;
+        public static final Supplier<PendulumAnimation.Config> HANGING_SIGN_CONFIG;
+
         public static final Supplier<Boolean> FAST_LANTERNS;
+        public static final Supplier<PendulumAnimation.Config> WALL_LANTERN_CONFIG;
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
         public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
@@ -325,12 +328,25 @@ public class ClientConfigs {
             FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_lanterns", false);
+
+            WALL_LANTERN_CONFIG = builder.defineObject("wall_lantern_wobble",
+                    PendulumAnimation.Config::new,
+                    PendulumAnimation.Config.CODEC);
             builder.pop();
 
-            builder.push("hanging_sign");
+            builder.push("enhanced_hanging_sign");
+            ENHANCED_HANGING_SIGNS = builder.comment("Modifies vanilla hanging signs to make them like old Supplementaries ones")
+                    .define("enabled", true);
+
+            HANGING_SIGN_CONFIG = builder.defineObject("hanging_sign_wobble",
+                    PendulumAnimation.Config::new,
+                    PendulumAnimation.Config.CODEC);
+
+            //remove
             FAST_SIGNS = builder.comment("Makes hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_signs", false);
+
             builder.pop();
 
             builder.push("bamboo_spikes");

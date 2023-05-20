@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
@@ -79,7 +80,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace, boolean canStrip) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,pos)) {
             if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
                 BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
 

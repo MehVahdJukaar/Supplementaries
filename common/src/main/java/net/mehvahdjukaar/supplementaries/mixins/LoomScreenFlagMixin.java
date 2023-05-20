@@ -75,9 +75,10 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
 
             FlagBlockTileRenderer.renderPatterns(matrixStack, renderTypeBuffer,this.resultBannerPatterns,15728880);
 
-            Lighting.setupFor3DItems();
             matrixStack.popPose();
             renderTypeBuffer.endBatch();
+
+            Lighting.setupFor3DItems();
         }
     }
 }

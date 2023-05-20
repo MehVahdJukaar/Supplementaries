@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
+import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -34,8 +35,8 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
 
     @Inject(method = "updateShape", at = @At("HEAD"))
     public void updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> cir) {
-        if (level.getBlockEntity(currentPos) instanceof IHangingSignExtension tile) {
-            tile.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        if (level.getBlockEntity(currentPos) instanceof IExtendedHangingSign tile) {
+            tile.getExtension().updateShape(state, direction, neighborState, level, currentPos, neighborPos);
         }
     }
 
@@ -55,24 +56,28 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        if (level.getBlockEntity(pos) instanceof IHangingSignExtension tile) {
-            tile.updateAttachments();
+        if (level.getBlockEntity(pos) instanceof IExtendedHangingSign tile) {
+            tile.getExtension().updateAttachments(level, pos, state);
         }
     }
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         super.entityInside(state, level, pos, entity);
-        if (level.isClientSide && level.getBlockEntity(pos) instanceof IHangingSignExtension tile) {
-            tile.getSwayingAnimation().hitByEntity(entity, state, pos);
+        if (level.isClientSide && ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() &&
+                level.getBlockEntity(pos) instanceof IExtendedHangingSign tile) {
+            tile.getExtension().hitByEntity(entity, state, pos);
         }
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) ->
-                ((IHangingSignExtension) blockEntity).getSwayingAnimation().tick(level, blockPos, blockState) : null);
+        return Utils.getTicker(pBlockEntityType, BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) -> {
+            if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get()) {
+                ((IExtendedHangingSign) blockEntity).getExtension().tick(level, blockPos, blockState);
+            }
+        } : null);
     }
 
 

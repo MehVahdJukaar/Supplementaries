@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.extensions.IForgeBlock;

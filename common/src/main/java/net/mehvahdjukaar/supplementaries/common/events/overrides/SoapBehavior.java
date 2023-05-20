@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -37,7 +38,7 @@ class SoapBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
             if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
                 if (player instanceof ServerPlayer serverPlayer) {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -62,7 +63,7 @@ class DoubleCakeBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
             BlockState state = world.getBlockState(pos);
             Block b = state.getBlock();

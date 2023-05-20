@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -14,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;

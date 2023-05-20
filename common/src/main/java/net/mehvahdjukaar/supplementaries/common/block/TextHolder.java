@@ -34,7 +34,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class TextHolder implements IAntiqueTextProvider {
 
@@ -142,49 +141,47 @@ public class TextHolder implements IAntiqueTextProvider {
     //TODO: make server sided & send block updated
     //should only be called server side
     public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
-        if (player.getAbilities().mayBuild) {
-            ItemStack stack = player.getItemInHand(hand);
-            Item item = stack.getItem();
-            boolean success = false;
-            if (item == Items.INK_SAC) {
-                if (this.hasGlowingText || this.hasAntiqueInk) {
-                    level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    this.setAntiqueInk(false);
-                    this.hasGlowingText = false;
+        ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
+        boolean success = false;
+        if (item == Items.INK_SAC) {
+            if (this.hasGlowingText || this.hasAntiqueInk) {
+                level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                this.setAntiqueInk(false);
+                this.hasGlowingText = false;
+                success = true;
+            }
+        } else if (item == ModRegistry.ANTIQUE_INK.get()) {
+            if (!this.hasAntiqueInk) {
+                level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                this.setAntiqueInk(true);
+                success = true;
+            }
+        } else if (item == Items.GLOW_INK_SAC) {
+            if (!this.hasGlowingText) {
+                level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                this.hasGlowingText = true;
+                success = true;
+            }
+        } else {
+            DyeColor dyeColor = ForgeHelper.getColor(stack);
+            if (dyeColor != null) {
+                if (this.setTextColor(dyeColor)) {
+                    level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     success = true;
-                }
-            } else if (item == ModRegistry.ANTIQUE_INK.get()) {
-                if (!this.hasAntiqueInk) {
-                    level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    this.setAntiqueInk(true);
-                    success = true;
-                }
-            } else if (item == Items.GLOW_INK_SAC) {
-                if (!this.hasGlowingText) {
-                    level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    this.hasGlowingText = true;
-                    success = true;
-                }
-            } else {
-                DyeColor dyeColor = ForgeHelper.getColor(stack);
-                if (dyeColor != null) {
-                    if (this.setTextColor(dyeColor)) {
-                        level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        success = true;
-                    }
                 }
             }
-            if (success) {
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                    tile.setChanged();
-                    level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        if (success) {
+            if (!player.isCreative()) {
+                stack.shrink(1);
             }
+            if (player instanceof ServerPlayer serverPlayer) {
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                tile.setChanged();
+                level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

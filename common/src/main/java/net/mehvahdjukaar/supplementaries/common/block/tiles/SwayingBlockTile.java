@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,10 +46,13 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     //all client stuff
     private float angle = 0;
     private float prevAngle = 0;
-
     // lower counter is used by hitting animation
     private int animationCounter = 800 + new Random().nextInt(80);
     private boolean inv = false;
+
+    private final SwingAnimation animation = new PendulumAnimation(ClientConfigs.Blocks.WALL_LANTERN_CONFIG,
+            this::getNormalRotationAxis);
+
 
     // lod stuff
     protected boolean shouldHaveTESR = false; // current
@@ -115,7 +121,8 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
         }
 
         if (tile.shouldRenderFancy()) {
-
+            tile.animation.tick(pLevel, pPos, pState);
+            if(true)return;
             //TODO: improve physics (water, swaying when it's not exposed to wind)
 
             tile.animationCounter++;
@@ -141,13 +148,17 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     }
 
     public float getSwingAngle(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevAngle, this.angle);
+        return this.animation.getAngle(partialTicks);
+        //return Mth.lerp(partialTicks, this.prevAngle, this.angle);
     }
 
     //rotation axis rotate 90 deg
     public abstract Vec3i getNormalRotationAxis(BlockState state);
 
     public void hitByEntity(Entity entity, BlockState state, BlockPos pos) {
+        animation.hitByEntity(entity, state, pos);
+        if(true)return;
+
         Vec3 mot = entity.getDeltaMovement();
         if (mot.length() > 0.05) {
 

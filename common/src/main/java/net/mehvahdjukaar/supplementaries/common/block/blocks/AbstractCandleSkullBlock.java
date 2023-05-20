@@ -162,7 +162,7 @@ public abstract class AbstractCandleSkullBlock extends AbstractCandleBlock imple
     //same as ILightUpBlock (todo: try to merge)
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult pHit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,pos)) {
             ItemStack stack = player.getItemInHand(hand);
             //add candles
             if (stack.is(ItemTags.CANDLES) && stack.getItem() instanceof BlockItem blockItem) {

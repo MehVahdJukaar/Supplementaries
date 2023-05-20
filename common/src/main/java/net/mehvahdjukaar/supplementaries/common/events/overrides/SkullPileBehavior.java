@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -53,7 +54,7 @@ class SkullPileBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
 
             if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {

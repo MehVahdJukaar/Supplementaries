@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 //Needed on both sides because...
 public class ModTextures {
@@ -92,7 +94,7 @@ public class ModTextures {
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
     public static final ResourceLocation BUBBLE_BLOCK_COLORS_TEXTURE = Supplementaries.res("block/bubble_block_colors");
 
-    public static final Map<Block, ResourceLocation> SKULL_CANDLES_TEXTURES = Util.make(() -> {
+    public static final Supplier<Map<Block, ResourceLocation>> SKULL_CANDLES_TEXTURES = Suppliers.memoize(() -> {
         Map<Block, ResourceLocation> map = new LinkedHashMap<>();
         //first key and default one too
         map.put(Blocks.CANDLE, Supplementaries.res("textures/block/skull_candles/default.png"));

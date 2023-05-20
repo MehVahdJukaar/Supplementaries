@@ -2,13 +2,10 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BellowsBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BlackboardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
+import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -49,14 +46,14 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
 
     @Inject(method = "render(Lnet/minecraft/world/level/block/entity/SignBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
             at = @At("HEAD"), cancellable = true)
-    public void renderEnhancedSign( SignBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
+    public void renderEnhancedSign( SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                                     int packedLight, int packedOverlay, CallbackInfo ci) {
-        if(ClientConfigs.Tweaks.EXTENDED_HANGING_SIGN.get()) {
-            BlockState blockState = blockEntity.getBlockState();
+        if(ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && ((IExtendedHangingSign)tile).getExtension().canSwing()) {
+            BlockState blockState = tile.getBlockState();
             WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
             HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
-            HangingSignRendererExtension.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
+            HangingSignRendererExtension.render(tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
                     blockState, model, barModel,chains,
 
                     this.getSignMaterial(woodType),

@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -18,25 +21,16 @@ import java.util.function.Supplier;
 
 public class PendulumAnimation extends SwingAnimation {
 
-    private static final Supplier<Double> HAMMOCK_FREQUENCY = () -> 0.35;
-    private static final Supplier<Double> HAMMOCK_MAX_ANGLE = () -> 180.0;
-    private static final Supplier<Double> HAMMOCK_MIN_ANGLE = () -> 0.4;
-    private static final Supplier<Double> DAMPING = () -> 0.000;
-
-    static {
-
-        onChange();
-    }
-
-    private float angularVel = 0.0001f;
+    protected final Supplier<Config> config;
+    protected float angularVel = 0.0001f;
     private boolean hasDrag = true;
-
     private float lastImpulse;
-
     private int immunity = 0;
 
-    public PendulumAnimation(Function<BlockState, Vec3i> axisGetter) {
+    public PendulumAnimation(Supplier<Config> config, Function<BlockState, Vec3i> axisGetter) {
         super(axisGetter);
+        this.config = config;
+        //TODO: initialize velocity and angle at random
     }
 
 
@@ -49,22 +43,24 @@ public class PendulumAnimation extends SwingAnimation {
     public void tick(Level level, BlockPos pos, BlockState state) {
         prevAngle = angle;
         if (immunity > 0) immunity--;
-        onChange();
+
         float dt = 1 / 20f; //time step
 
         float energy = 0;
 
-        float k = getK();
+        Config config = this.config.get();
+
+        float k = config.k;
 
         boolean hasAcc = lastImpulse != 0;
         if (hasAcc) hasDrag = true;
         if (hasDrag) energy = calculateEnergy(k, angularVel, angle);
 
 
-        if (hasAcc && (energy < maxAngleEnergy) || (lastImpulse * angularVel) < 0) {
+        if (hasAcc && (energy < config.maxAngleEnergy) || (lastImpulse * angularVel) < 0) {
             angularVel += lastImpulse;
-            if (calculateEnergy(k, angularVel, angle) > maxAngleEnergy) {
-                angularVel = (0.1f * angularVel + 0.9f * capVelocity(k, angularVel, angle, maxAngleEnergy));
+            if (calculateEnergy(k, angularVel, angle) > config.maxAngleEnergy) {
+                angularVel = (0.1f * angularVel + 0.9f * capVelocity(k, angularVel, angle, config.maxAngleEnergy));
             }
 
         }
@@ -74,8 +70,8 @@ public class PendulumAnimation extends SwingAnimation {
 
         if (hasDrag && !hasAcc) {
             //note that since its proportional to speed this effectively limits the max angle
-            if (energy > minAngleEnergy) {
-                double damping = DAMPING.get();
+            if (energy > config.minAngleEnergy) {
+                double damping = config.damping;
 
                 float drag = (float) (damping * angularVel);
 
@@ -107,8 +103,6 @@ public class PendulumAnimation extends SwingAnimation {
 
 
         //float max_yaw = max_swing_angle(self.yaw, self.angular_velocity, ff)
-
-
     }
 
 
@@ -117,15 +111,6 @@ public class PendulumAnimation extends SwingAnimation {
         this.hasDrag = true;
     }
 
-
-    private static void onChange() {
-        double frequency = HAMMOCK_FREQUENCY.get();
-        // g/L. L = length = 1 k=g
-        // spring costant of pendulum and other constants included here like gravity
-        k = (float) Math.pow(2 * Math.PI * frequency, 2);
-        maxAngleEnergy = angleToEnergy(k, (float) Math.toRadians(HAMMOCK_MAX_ANGLE.get()));
-        minAngleEnergy = angleToEnergy(k, (float) Math.toRadians(HAMMOCK_MIN_ANGLE.get()));
-    }
 
     private static float capVelocity(float k, float currentVel, float angle, float targetEnergy) {
         //we need max as its an approximation and might get negative with some values
@@ -143,327 +128,227 @@ public class PendulumAnimation extends SwingAnimation {
         return k * (1 - Mth.cos(radAngle));
     }
 
-    private static float k;
-    private static float maxAngleEnergy;
-    private static float minAngleEnergy;
-
-    public static float getK() {
-        return k;
-    }
-
     @Override
     public boolean hitByEntity(Entity entity, BlockState state, BlockPos pos) {
         if (immunity != 0) return true;
-        Vec3 entityMotion = entity.getDeltaMovement();
+        Vec3 eVel = entity.getDeltaMovement();
 
-        if (entityMotion.length() < 0.01) return true;
+        if (eVel.length() < 0.01) return false; //too little
 
-        AABB boundingBox = entity.getBoundingBox();
+        Config config = ClientConfigs.Blocks.HANGING_SIGN_CONFIG.get();
+
+        double eMass;
+        if (config.considerEntityHitbox) {
+            AABB boundingBox = entity.getBoundingBox();
+            eMass = boundingBox.getXsize() * boundingBox.getYsize() * boundingBox.getZsize();
+        } else eMass = 1;
+        //controls how much the velocity is distributed on impact. sign has mass of 1.
+        //this means that n impact it wil keep 10% of its direction in opposite collisions
+        eMass *= config.collisionInertia;
 
         //scale velocity for more swing forge
         //entity mass
-        float velScale = 50;
-        entityMotion = entityMotion.scale(velScale);
-        float massScale = 1f; //controls how much the velocity is distributed on impact. sign has mass of 1.
-        //this means that n impact it wil keep 10% of its direction in opposite collisions
-        double eMass = boundingBox.getXsize() * boundingBox.getYsize() * boundingBox.getZsize() * massScale;
-        double selfMass = 1;
+        eVel = eVel.scale(config.collisionForce);
+
 
         Vec3 rotationAxis = MthUtils.V3itoV3(this.getRotationAxis(state));
 
         Vec3 normalVec = rotationAxis.cross(new Vec3(0, 1, 0));
 
         //vector in 2d space. y and z
-        Vec3 entityPlaneVector = entityMotion.subtract(entityMotion.multiply(rotationAxis.multiply(rotationAxis)));
+        Vec3 entityPlaneVector = eVel.subtract(eVel.multiply(rotationAxis.multiply(rotationAxis)));
 
 
         float radius = 1;
         double magnitude = angularVel * radius;
 
-        // Calculate x and y components of velocity vector
-        double selfVZ = magnitude * Mth.cos(angle);
-        double selfVY = magnitude * Mth.sin(angle);
+        if (magnitude == 0) magnitude = 0.00001;
 
         // Create the velocity vector
-        Vec3 selfPlaneVector = new Vec3(0, selfVY, 0).add(normalVec.scale(selfVZ));
+        Vec3 signVel = new Vec3(0, Mth.sin(angle), 0).add(normalVec.scale(Mth.cos(angle)));
 
-        double entityIntensityAcrossMine = entityMotion.dot(selfPlaneVector.scale(1000000).normalize());
+        double eRelVel = eVel.dot(signVel.scale(1000000).normalize());
 
+        if (eRelVel * eRelVel < 0.0001) return false;//too little
 
-        double entityVZ;
+        double entityForwardMotion;
         if (normalVec.z != 0) {
-            entityVZ = entityPlaneVector.z;
-        } else entityVZ = entityPlaneVector.x;
+            entityForwardMotion = entityPlaneVector.z;
+        } else entityForwardMotion = entityPlaneVector.x;
 
-        double entityVY = entityPlaneVector.y;
 
-
-        //constant
-        //this is wrong
-        double systemEnergy = (0.5 * selfMass * (selfVY * selfVY + selfVZ * selfVZ))
-                + (0.5 * eMass * Mth.sqrt((float) (entityVY * entityVY + entityVZ * entityVZ)));
-        /*
-        //equations of whats going on below
-        double vel; //?
-        double entityVZf; //?
-        double entityVYf; //?
-
-        selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * entityVZf;
-
-        selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * entityVYf;
-
-        double finalEnergy = (0.5 * vel * vel) + (0.5 * eMass * (entityVZf * entityVZf + entityVYf * entityVYf));
-        */
-
-        //we cant solve this.. just say that half ot the energy is is transferred always
-        float scale = 0.1f;
-        double entityVZf = entityVZ * 0.5;//(systemEnergy * Math.cos(angle) - selfVZ - eMass * entityVZ) / eMass;
-        double entityVYf = entityVY * 0.5;//(systemEnergy * Math.sin(angle) - selfVY - eMass * entityVY) / eMass;
-
-        //calculate again
-        double vel = Math.sqrt(2 * systemEnergy - (eMass * (entityVZf * entityVZf + entityVYf * entityVYf)));
-        double fen = (0.5 * vel * vel) + (0.5 * eMass * (entityVZf * entityVZf + entityVYf * entityVYf));
-
-
-        //if they have different directions its the inverse. square root stuff...
-        //dont ask me why its like this
-        boolean invertedAxis = (normalVec.z < 0 || normalVec.x < 0);
-        if (entityVZ < 0 ^ invertedAxis) vel *= -1;
-        //this does preserve energy at least
-
-        if (Double.isNaN(vel)) {
-            int aa = 1;
-        }
-
-        this.lastImpulse = (float) (vel / radius) - angularVel;
-
-        //  if(rotationAxis.z<0 || rotationAxis.x<0)lastImpulse*=-1;
-
-        immunity = 10;
-
-        //we cant set that as its client only
-        //entity.setDeltaMovement(entityMotion.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
-
-        entity.getLevel().playSound(Minecraft.getInstance().player, pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
-
-
-        /*
-        float entityVZf = (selfVZ + eMass * entityVZ - vel*Mth.cos(angle))/eMass ;
-
-        float  entityVYf =  (selfVY + eMass * entityVY - vel*Mth.sin(angle))/eMass;
-
-        (0.5 * vel * vel) =  systemEnergy - (0.5 * eMass * (entityVZf * entityVZf + entityVYf * entityVYf));
-*/
-
-        /*
-
-        selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * P*cos(l);
-            a + m *b = x*c + m*z
-
-        selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * P*sin(l);;
-            d + m*e = x*s + m*y
-
-        double finalEnergy = (0.5 * vel * vel) + (0.5 * eMass * P*P);
-
-            0.5*x*x + 0.5*m*sqrt(z*z+y*y) = k
-
-            z =  (a + m *b -x*c)/m
-
-            y=   (d + m*e -x*s)/m
-
-            x*x  = 2*k - m*sqrt(z*z+y*y)
-
-            float a = selfVZ;
-            float m = eMass;
-            float b = entityVZ;
-            float x = Mth.cos(angle);
-            float d = selfVY;
-            float s = Mth.sin(angle);
-            float e = entityVY;
-
-            A = (1 - c*c / m*2 - s*s / m*m)
-            B = -(2 * a * c + 2 * m * b * c - 2 * d * s - 2 * m * e * s)
-            C = 2 * k - a^2 - m^2 * b^2 + 2 * a * m * b + 2 * d * m * e - m^2 * e^2
-
-            float x = (-B + Mth.sqrt(B*B - 4*A*C)) / (2*A)
-
-         */
-
-
-        /*
-
-            a+mb = G
-            d + m*e = H
-
-            0.5*x*x + 0.5*m*sqrt(z*z+y*y) = k
-
-            sqrt(i*cos(a)*i*cos(a)+i*sin(a)*i*sin(a))
-
-            x*x  = 2*k - ((a + m *b -x*c)*(a + m *b -x*c)+(d + m*e -x*s)*(d + m*e -x*s))/m
-
-            xx = 2k - ((G -xc)*(G-xc) + (H -xs)*(H - xs))
-
-            xx = 2k - sqrt( (GG - xcG - xcG -+xxcc) - (HH - xsH - xsH + xxss))
-            xx = 2k - sqrt(GG + 2xcG - xxcc - HH + 2xsH - xxss)
-
-            xx + xxcc + xxss - 2xcG - 2xsH  = 2k -GG -HH
-
-            xx(1 + cc + ss) - 2x(cGsH) = 2k - GG -HH
-            xxA + 2xB +
-
-            A = (1+cc+ss);
-            B = -2cGsH;
-            C = -2k + GG +HH
-
-
-x = (2 * c * s * (ad + a * me + d * mb + mbe) ± sqrt((2 * c * s)^2 * ((a + mb)^2 + (d + me)^2 - 2k))) / (2 * (1 + c^2 + s^2))
-         */
-
-
-
-        /*
-
-        selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * P*cos(l);
-
-        a + m*b = x*cos(t) + m* y*cos(z)
-
-        selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * P*sin(l);;
-
-        c + m*d = x*sin(t) + m*y*sin(z)
-
-        0.5*x*x + 0.5*m*y*y = k
-
-        double finalEnergy = (0.5 * vel * vel) + (0.5 * eMass * P*P);
-
-
-        a + m*b = x*cos(t) + m*y*cos(z)
-
-        c + m*d = x*sin(t) + m*y*sin(z)
-
-
-        xx + myy = 2k
-
-
-        A = a+m*b
-
-        C = c+m*d
-
-        A - x*cos(t) = my*cos(z)
-        C - x*sin(t) = m*y*sin(z)
-        xx + myy = 2k
-
-        if(z=t)
-
-
-        a + m*b = x*cos(h) + m*y*cos(h)
-
-        c + m*d = x*sin(h) + m*y*sin(h)
-
-        x*x + m*y*y = 2k
-
-        S = sin(h)
-        C = cos(h)
-
-        A = a + m*b
-
-        P = xC + myC
-        x = (A/C -my)
-
-        (A/C - my)*(A/C - my) + m*y*y = 2k
-
-        AA/CC - 2myA/C + mmyy + myy = 2k
-        yy(mm+m) + y(2mA/C) + (AA/CC -2k)
-
-        j = m*m+m;
-        k = 2*m*A/C;
-        l = (A*A/(C*C) -2systemEn);
-
-        y = (-b + Mth.sqrt(k*k - 4*j*l))/(2*j)
-
-
-        x = my final vec
-        y = other final vec
-        v = my speed
-        X = other intensity speed
-        mv = mv
-        v + m*X = x + m*y
-
-        x = v +mX - m*y
-
-
-        x*x + m*y*y = 2k
-
-        k = 0.5*v*v + 0.5*m*X*X
-
-//these!
-        x*x+m*y*y=v*v+m*X*X
-
-        x=v+mX-m*y
-
-
-        (v+mX-m*y)(v+mX-m*y)+m*y*y=v*v+m*X*X
-
-        (v + mN - my)(v + mN - my) + myy = vv + mNN
-
-        vv + vmN - vmy + vmN + mmNN - mmNy -mvy - mmNy + mmyy + myy = vv + mNN
-
-        2vmN - 2ymv - 2ymmN + mmNN + mmyy + myy = mNN
-
-        yy(mm + m) + y2m(-v -mN) + (mmNN - mNN + 2vmN) = 0
-
-        A = (mm + m);
-        B = 2m(-v -mN);
-        C = (mmNN - mNN + 2vmN);
-
-        y = (-B + Mth.sqrt(B*B - 4*A*C))/(2*A)
-
-        vmN - 2yvm + mmNN - 2ymmN
-         */
-
-        double nEn = (0.5 * magnitude * magnitude) + (0.5 * eMass * entityIntensityAcrossMine * entityIntensityAcrossMine);
-
-
-        double m = eMass;
-        double N = entityIntensityAcrossMine;
         double v = magnitude;
 
 
-        double A = (m * m + m);
-        double B = 2 * m * (-v - m * N);
-        double C = (m * m * N * N - m * N * N + 2 * v * m * N);
+        double f = (eMass * eMass + eMass);
+        double g = 2 * eMass * (-v - eMass * eRelVel);
+        double h = (eMass * eMass * eRelVel * eRelVel - eMass * eRelVel * eRelVel + 2 * v * eMass * eRelVel);
 
-        double y1 = (-B + Mth.sqrt((float) (B * B - 4 * A * C))) / (2 * A);
+        float delta =Mth.sqrt((float) (g * g - 4 * f * h));
+        double y1 = (-g + delta) / (2 * f);
 
-        double y2 = (-B - Mth.sqrt((float) (B * B - 4 * A * C))) / (2 * A);
+        double y2 = (-g - delta) / (2 * f);
 
-        double x1 = v + m * N - m * y1;
+        double x1 = v + eMass * eRelVel - eMass * y1;
 
-        double x2 = v + m * N - m * y2;
+        double x2 = v + eMass * eRelVel - eMass * y2;
 
-        double x = x2;
+        double x;
         //chooses the right one. one is always the same vector
-        if (Mth.abs((float) (x - magnitude)) < 0.0001) {
+        if (Mth.abs((float) (x2 - magnitude)) < 0.0001) {
             x = x1;
-        }
+        } else x = x2;
 
         float dW = (float) (x / radius) - angularVel;
 
         //dont even ask me whats going on here. needed to handle all the faces
-        if (entityIntensityAcrossMine < 0 ^ entityVZ < 0) {
+        if (eRelVel < 0 ^ entityForwardMotion < 0) {
             dW *= -1;
         }
+        boolean invertedAxis = (normalVec.z < 0 || normalVec.x < 0);
+
         if (invertedAxis) {
             dW *= -1;
         }
         this.lastImpulse = dW;
+        this.immunity = 10;
 
-        Minecraft.getInstance().player.displayClientMessage(Component.literal("speed: " + dW + " " + angularVel + " " + (x>angularVel)), false);
+        //we cant set that as its client only
+        //entity.setDeltaMovement(eVel.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
 
-        if (Double.isNaN(lastImpulse)) {
-            int aaa = 1;
-        }
+        entity.getLevel().playSound(Minecraft.getInstance().player, pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
+
         return true;
     }
 
+
+    //some math here just in case i need to derive it again
+
+    /*
+    selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * entityVZf;
+
+    selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * entityVYf;
+
+    double finalEnergy = (0.5 * vel * vel) + (0.5 * eMass * (entityVZf * entityVZf + entityVYf * entityVYf));
+
+
+    selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * P*cos(l);
+
+    a + m*b = x*cos(t) + m* y*cos(z)
+
+    selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * P*sin(l);;
+
+    c + m*d = x*sin(t) + m*y*sin(z)
+
+    0.5*x*x + 0.5*m*y*y = k
+
+
+    a + m*b = x*cos(t) + m*y*cos(z)
+
+    c + m*d = x*sin(t) + m*y*sin(z)
+
+
+    xx + myy = 2k
+
+
+    a + m*b = x*cos(h) + m*y*cos(h)
+
+    c + m*d = x*sin(h) + m*y*sin(h)
+
+    x*x + m*y*y = 2k
+
+
+    x = my final vec
+    y = other final vec
+    v = my speed
+    X = other intensity speed
+    mv = mv
+    v + m*X = x + m*y
+
+    x = v +mX - m*y
+
+
+    x*x + m*y*y = 2k
+
+    k = 0.5*v*v + 0.5*m*X*X
+
+    //these!
+    //conservation of energy
+    x*x+m*y*y=v*v+m*X*X
+
+    //conservation of momentum along motion dir
+    x=v+mX-m*y
+
+
+    (v+mX-m*y)(v+mX-m*y)+m*y*y=v*v+m*X*X
+
+    (v + mN - my)(v + mN - my) + myy = vv + mNN
+
+    vv + vmN - vmy + vmN + mmNN - mmNy -mvy - mmNy + mmyy + myy = vv + mNN
+
+    2vmN - 2ymv - 2ymmN + mmNN + mmyy + myy = mNN
+
+    yy(mm + m) + y2m(-v -mN) + (mmNN - mNN + 2vmN) = 0
+
+    A = (mm + m);
+    B = 2m(-v -mN);
+    C = (mmNN - mNN + 2vmN);
+
+    y = (-B + Mth.sqrt(B*B - 4*A*C))/(2*A)
+
+    vmN - 2yvm + mmNN - 2ymmN
+    */
+
+
+    public static class Config {
+        public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.floatRange(0, 360).fieldOf("min_angle").forGetter(c -> c.minAngle),
+                Codec.floatRange(0, 360).fieldOf("max_angle").forGetter(c -> c.maxAngle),
+                Codec.FLOAT.fieldOf("damping").forGetter(c -> c.damping),
+                Codec.FLOAT.fieldOf("frequency").forGetter(c -> c.frequency),
+                Codec.BOOL.fieldOf("collision_considers_entity_hitbox").forGetter(c -> c.considerEntityHitbox),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("collision_inertia").forGetter(c -> c.collisionInertia),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("collision_force").forGetter(c -> c.collisionForce)
+
+        ).apply(instance, Config::new));
+
+
+        protected final float minAngle;
+        protected final float maxAngle;
+        protected final float damping;
+        protected final float frequency;
+        protected final float maxAngleEnergy;
+        protected final float minAngleEnergy;
+        protected final float k;
+
+        protected final boolean considerEntityHitbox;
+        protected final float collisionInertia;
+        protected final float collisionForce;
+
+
+        public Config(float minAngle, float maxAngle, float damping, float frequency, boolean hitbox, float mass, float force) {
+            this.minAngle = minAngle;
+            this.maxAngle = maxAngle;
+            this.damping = damping;
+            this.frequency = frequency;
+            // g/L. L = length = 1 k=g
+            // spring constant of pendulum and other constants included here like gravity
+            k = (float) Math.pow(2 * Math.PI * frequency, 2);
+            maxAngleEnergy = angleToEnergy(k, (float) Math.toRadians(maxAngle));
+            minAngleEnergy = angleToEnergy(k, (float) Math.toRadians(minAngle));
+
+            this.considerEntityHitbox = hitbox;
+            this.collisionInertia = mass;
+            this.collisionForce = force;
+        }
+
+        public Config() {
+            this(0.8f, 45, 0.5f, 0.30f, true, 1, 50);
+        }
+
+        public float getMinAngle() {
+            return minAngle;
+        }
+    }
 }
 

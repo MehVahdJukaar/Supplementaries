@@ -934,7 +934,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
-                .dynamicShape().sound(SoundType.SCAFFOLDING);
+                .sound(SoundType.SCAFFOLDING); //.dynamicShape()
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(
