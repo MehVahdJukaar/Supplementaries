@@ -37,7 +37,7 @@ public class TimberFrameItem extends FuelBlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (CommonConfigs.Building.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && player.getAbilities().mayBuild) {
+        if (CommonConfigs.Building.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && Utils.mayBuild(player,hit.getBlockPos())) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);

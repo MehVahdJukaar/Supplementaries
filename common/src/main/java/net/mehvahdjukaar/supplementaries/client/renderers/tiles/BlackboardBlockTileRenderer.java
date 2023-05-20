@@ -99,7 +99,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             BlockHitResult blockHit = (BlockHitResult) hit;
             if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
                 Player player = mc.player;
-                if (player != null && player.getAbilities().mayBuild) {
+                if (player != null && Utils.mayBuild(player,hit.getBlockPos())) {
                     if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
 
                         matrixStackIn.pushPose();

@@ -141,7 +141,7 @@ public class TextHolder implements IAntiqueTextProvider {
     //TODO: make server sided & send block updated
     //should only be called server side
     public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             ItemStack stack = player.getItemInHand(hand);
             Item item = stack.getItem();
             boolean success = false;

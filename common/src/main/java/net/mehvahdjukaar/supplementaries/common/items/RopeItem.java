@@ -26,7 +26,7 @@ public class RopeItem extends BlockItem {
     public InteractionResult place(BlockPlaceContext context) {
 
         Player player = context.getPlayer();
-        if (player == null || player.getAbilities().mayBuild) {
+        if (player == null || Utils.mayBuild(player,hit.getBlockPos())) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);

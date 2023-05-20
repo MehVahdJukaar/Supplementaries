@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -104,7 +105,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
             //ink
-            if (player.getAbilities().mayBuild && !state.getValue(ANTIQUE)) {
+            if (Utils.mayBuild(player,hit.getBlockPos()) && !state.getValue(ANTIQUE)) {
                 ItemStack stack = player.getItemInHand(hand);
                 if (stack.is(ModRegistry.ANTIQUE_INK.get())) {
                     level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);

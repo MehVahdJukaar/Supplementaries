@@ -13,23 +13,23 @@ import net.minecraft.world.level.block.state.BlockState;
 public class PermissionsUtils {
     //TODO: add
     public static boolean canBreak(Player player, BlockPos pos) {
-        return player.getAbilities().mayBuild;
+        return Utils.mayBuild(player,hit.getBlockPos());
     }
 
     public static boolean cantPlace(Player player, BlockPos pos, BlockState blockState) {
-        return player.getAbilities().mayBuild;
+        return Utils.mayBuild(player,hit.getBlockPos());
     }
 
     public static boolean cantReplace(Player player, BlockPos pos, BlockState blockState) {
-        return player.getAbilities().mayBuild;
+        return Utils.mayBuild(player,hit.getBlockPos());
     }
 
     public static boolean cantAttack(Player player, Entity victim) {
-        return player.getAbilities().mayBuild;
+        return Utils.mayBuild(player,hit.getBlockPos());
     }
 
     public static boolean cantInteract(Player player, InteractionHand hand, BlockPos targetPos, Direction targetSide) {
-        return player.getAbilities().mayBuild;
+        return Utils.mayBuild(player,hit.getBlockPos());
     }
 
 

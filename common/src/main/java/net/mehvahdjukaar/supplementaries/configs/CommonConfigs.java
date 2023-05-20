@@ -844,6 +844,9 @@ public class CommonConfigs {
                     .define("shoot_ender_pearls", true);
             builder.pop();
 
+            DYE_BLOCKS = builder.comment("Allows using dyes on blocks just like soap")
+                    .define("dye_blocks", false);
+            builder.pop();
 
             //double cake
             builder.push("cake_tweaks");
@@ -977,6 +980,7 @@ public class CommonConfigs {
         }
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
+        public static final Supplier<Boolean> DYE_BLOCKS;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
         public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;

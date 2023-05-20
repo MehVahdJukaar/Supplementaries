@@ -48,7 +48,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
             this.candle = NbtUtils.readBlockState(tag.getCompound("Candle"));
             if (this.candle.getBlock() instanceof CandleBlock candleBlock) {
                 this.waxTexture = getWaxColor(candleBlock);
-            } else this.waxTexture = ModTextures.SKULL_CANDLES_TEXTURES.get(Blocks.CANDLE);
+            } else this.waxTexture = ModTextures.SKULL_CANDLES_TEXTURES.get().get(Blocks.CANDLE);
         }
     }
 
@@ -92,7 +92,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
     @Nullable
     public static ResourceLocation getWaxColor(CandleBlock b) {
-        return ModTextures.SKULL_CANDLES_TEXTURES.get(b);
+        return ModTextures.SKULL_CANDLES_TEXTURES.get().get(b);
     }
 
 

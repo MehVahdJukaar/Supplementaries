@@ -53,7 +53,7 @@ class SkullPileBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
 
             if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {

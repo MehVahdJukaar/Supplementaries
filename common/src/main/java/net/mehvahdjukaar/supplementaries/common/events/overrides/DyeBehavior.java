@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -14,10 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-class SoapBehavior implements ItemUseOnBlockOverride {
+class DyeBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean altersWorld() {
@@ -26,26 +30,30 @@ class SoapBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean isEnabled() {
-        return CommonConfigs.Functional.SOAP_ENABLED.get();
+        return CommonConfigs.Tweaks.DYE_BLOCKS.get();
     }
 
     @Override
     public boolean appliesToItem(Item item) {
-        return item == ModRegistry.SOAP.get();
+        return ForgeHelper.getColor(item.getDefaultInstance()) != null;
     }
 
     @Override
     public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
+        if (Utils.mayBuild(player, hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
-            if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
+            BlockState state = level.getBlockState(pos);
+            Block newBlock = BlocksColorAPI.changeColor(state.getBlock(), ForgeHelper.getColor(stack));
+            if (!state.is(newBlock)) {
+                BlockState newState = newBlock.withPropertiesOf(state);
+                level.setBlockAndUpdate(pos, newState);
                 if (player instanceof ServerPlayer serverPlayer) {
                     if (!player.getAbilities().instabuild) stack.shrink(1);
 
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
-                    level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 }

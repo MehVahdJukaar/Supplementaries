@@ -82,7 +82,7 @@ public class LightableLanternBlock extends LanternBlock {
 
 
     public static Optional<BlockState> toggleLight(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn) {
-        if (player.getAbilities().mayBuild && handIn == InteractionHand.MAIN_HAND) {
+        if (Utils.mayBuild(player,hit.getBlockPos()) && handIn == InteractionHand.MAIN_HAND) {
             ItemStack item = player.getItemInHand(handIn);
             if (!state.getValue(LIT)) {
                 if (item.getItem() instanceof FlintAndSteelItem) {

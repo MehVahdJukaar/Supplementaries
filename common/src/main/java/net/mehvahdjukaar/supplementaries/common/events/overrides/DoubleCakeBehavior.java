@@ -62,7 +62,7 @@ class DoubleCakeBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (player.getAbilities().mayBuild) {
+        if (Utils.mayBuild(player,hit.getBlockPos())) {
             BlockPos pos = hit.getBlockPos();
             BlockState state = world.getBlockState(pos);
             Block b = state.getBlock();

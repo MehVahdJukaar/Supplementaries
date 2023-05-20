@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -33,7 +35,8 @@ import java.util.List;
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
     //so we don't have to save the whole texture location but its index instead
-    private static final List<ResourceLocation> TEXTURE_IND = new ArrayList<>(ModTextures.SKULL_CANDLES_TEXTURES.values());
+    private static final Supplier<List<ResourceLocation>> TEXTURE_IND = Suppliers.memoize(()->
+            new ArrayList<>(ModTextures.SKULL_CANDLES_TEXTURES.get().values()));
 
     @Nullable
     protected SkullBlockEntity innerTileUp = null;
@@ -50,7 +53,7 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
         this.saveInnerTile("SkullUp", this.innerTileUp, tag);
 
         if (waxTexture != null) {
-            tag.putByte("WaxColor", (byte) TEXTURE_IND.indexOf(waxTexture));
+            tag.putByte("WaxColor", (byte) TEXTURE_IND.get().indexOf(waxTexture));
         }
     }
 
@@ -60,7 +63,7 @@ public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
         this.innerTileUp = this.loadInnerTile("SkullUp", this.innerTileUp, tag);
 
         if (tag.contains("WaxColor")) {
-            this.waxTexture = TEXTURE_IND.get(tag.getByte("WaxColor"));
+            this.waxTexture = TEXTURE_IND.get().get(tag.getByte("WaxColor"));
         } else {
             waxTexture = null;
         }

@@ -140,7 +140,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player player && player.getAbilities().mayBuild) {
+        if (owner instanceof Player player && Utils.mayBuild(player,hit.getBlockPos())) {
 
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
