@@ -39,6 +39,8 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
 
     @Unique
     private List<ModelPart> barModel;
+    @Unique
+    private ModelPart chains;
 
     protected HangingSignRendererMixin(BlockEntityRendererProvider.Context context) {
         super(context);
@@ -55,7 +57,7 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
             HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
             HangingSignRendererExtension.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
-                    blockState, model, barModel,
+                    blockState, model, barModel,chains,
 
                     this.getSignMaterial(woodType),
                     ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
@@ -72,7 +74,7 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
                 model.getChild("extension_5"),
                 model.getChild("extension_4"),
                 model.getChild("extension_3"));
-
+        this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
     }
 
 }

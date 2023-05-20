@@ -29,7 +29,7 @@ public class HangingSignRendererExtension {
 
     public static void render(SignBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                               int packedLight, int packedOverlay, BlockState state,
-                              HangingSignRenderer.HangingSignModel model, List<ModelPart> barModel,
+                              HangingSignRenderer.HangingSignModel model, List<ModelPart> barModel, ModelPart chains,
                               Material material, Material extensionMaterial, SignRenderer renderer) {
 
         poseStack.pushPose();
@@ -57,10 +57,14 @@ public class HangingSignRendererExtension {
         poseStack.pushPose();
 
         model.plank.visible = false;
+        model.normalChains.visible = false;
         poseStack.mulPose(Axis.XP.rotationDegrees(sign.getSwayingAnimation().getAngle(partialTicks)));
         poseStack.translate(0,0.25,0);
 
         model.root.render(poseStack, vertexConsumer, packedLight, packedOverlay);
+        chains.render(poseStack, vertexConsumer, packedLight, packedOverlay); //shorter chains
+
+        model.normalChains.visible = true;
         model.plank.visible = visible;
 
 
@@ -126,6 +130,17 @@ public class HangingSignRendererExtension {
                         .texOffs(0, 0)
                         .addBox(4.0F, -8.0F, -2.0F, 2.0F, 3.0F, 4.0F),
                 PartPose.rotation(0.0F, 0.0F, -1.5708F));
-        return LayerDefinition.create(meshDefinition, 16, 16);
+
+       return LayerDefinition.create(meshDefinition, 16, 16);
+    }
+    public static LayerDefinition createChainMesh() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition root = meshDefinition.getRoot();
+
+        root.addOrReplaceChild("chainL1", CubeListBuilder.create().texOffs(0, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainL2", CubeListBuilder.create().texOffs(6, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(-5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainR1", CubeListBuilder.create().texOffs(0, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, -0.7853982F, 0.0F));
+        root.addOrReplaceChild("chainR2", CubeListBuilder.create().texOffs(6, 6).addBox(-1.5F, 2.0F, 0.0F, 3.0F, 4.0F, 0.0F), PartPose.offsetAndRotation(5.0F, -6.0F, 0.0F, 0.0F, 0.7853982F, 0.0F));
+        return LayerDefinition.create(meshDefinition, 64, 32);
     }
 }

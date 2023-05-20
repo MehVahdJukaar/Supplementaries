@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 public class PendulumAnimation extends SwingAnimation {
 
     private static final Supplier<Double> HAMMOCK_FREQUENCY = () -> 0.35;
-    private static final Supplier<Double> HAMMOCK_MAX_ANGLE = () -> 65.0;
+    private static final Supplier<Double> HAMMOCK_MAX_ANGLE = () -> 180.0;
     private static final Supplier<Double> HAMMOCK_MIN_ANGLE = () -> 0.4;
-    private static final Supplier<Double> DAMPING = () -> 0.2;
+    private static final Supplier<Double> DAMPING = () -> 0.000;
 
     static {
 
         onChange();
     }
 
-    private float angularVel = 0f;
+    private float angularVel = 0.0001f;
     private boolean hasDrag = true;
 
     private float lastImpulse;
@@ -154,15 +154,18 @@ public class PendulumAnimation extends SwingAnimation {
     @Override
     public boolean hitByEntity(Entity entity, BlockState state, BlockPos pos) {
         if (immunity != 0) return true;
-        Vec3 motion = entity.getDeltaMovement();
+        Vec3 entityMotion = entity.getDeltaMovement();
 
-        if (motion.length() < 0.01) return true;
+        if (entityMotion.length() < 0.01) return true;
 
         AABB boundingBox = entity.getBoundingBox();
 
-        // Scale the mass of the entity by a constant (e.g., 2)
+        //scale velocity for more swing forge
         //entity mass
-        float massScale = 20; //unused since mass gets candceled out since we arent sing accurate equations
+        float velScale = 50;
+        entityMotion = entityMotion.scale(velScale);
+        float massScale = 1f; //controls how much the velocity is distributed on impact. sign has mass of 1.
+        //this means that n impact it wil keep 10% of its direction in opposite collisions
         double eMass = boundingBox.getXsize() * boundingBox.getYsize() * boundingBox.getZsize() * massScale;
         double selfMass = 1;
 
@@ -171,7 +174,8 @@ public class PendulumAnimation extends SwingAnimation {
         Vec3 normalVec = rotationAxis.cross(new Vec3(0, 1, 0));
 
         //vector in 2d space. y and z
-        Vec3 entityPlaneVector = motion.subtract(motion.multiply(rotationAxis.multiply(rotationAxis)));
+        Vec3 entityPlaneVector = entityMotion.subtract(entityMotion.multiply(rotationAxis.multiply(rotationAxis)));
+
 
         float radius = 1;
         double magnitude = angularVel * radius;
@@ -183,6 +187,9 @@ public class PendulumAnimation extends SwingAnimation {
         // Create the velocity vector
         Vec3 selfPlaneVector = new Vec3(0, selfVY, 0).add(normalVec.scale(selfVZ));
 
+        double entityIntensityAcrossMine = entityMotion.dot(selfPlaneVector.scale(1000000).normalize());
+
+
         double entityVZ;
         if (normalVec.z != 0) {
             entityVZ = entityPlaneVector.z;
@@ -193,7 +200,7 @@ public class PendulumAnimation extends SwingAnimation {
 
         //constant
         //this is wrong
-        double systemEnergy = (0.5 * selfMass * Mth.sqrt ((float) (selfVY * selfVY + selfVZ * selfVZ)))
+        double systemEnergy = (0.5 * selfMass * (selfVY * selfVY + selfVZ * selfVZ))
                 + (0.5 * eMass * Mth.sqrt((float) (entityVY * entityVY + entityVZ * entityVZ)));
         /*
         //equations of whats going on below
@@ -214,8 +221,10 @@ public class PendulumAnimation extends SwingAnimation {
         double entityVYf = entityVY * 0.5;//(systemEnergy * Math.sin(angle) - selfVY - eMass * entityVY) / eMass;
 
         //calculate again
-        double vel = Math.sqrt(2 * (systemEnergy - (0.5 * eMass * Mth.sqrt((float) (entityVZf * entityVZf + entityVYf * entityVYf)))));
-        vel *= 0.2;
+        double vel = Math.sqrt(2 * systemEnergy - (eMass * (entityVZf * entityVZf + entityVYf * entityVYf)));
+        double fen = (0.5 * vel * vel) + (0.5 * eMass * (entityVZf * entityVZf + entityVYf * entityVYf));
+
+
         //if they have different directions its the inverse. square root stuff...
         //dont ask me why its like this
         boolean invertedAxis = (normalVec.z < 0 || normalVec.x < 0);
@@ -233,7 +242,7 @@ public class PendulumAnimation extends SwingAnimation {
         immunity = 10;
 
         //we cant set that as its client only
-        //entity.setDeltaMovement(motion.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
+        //entity.setDeltaMovement(entityMotion.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
 
         entity.getLevel().playSound(Minecraft.getInstance().player, pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
 
@@ -316,20 +325,20 @@ x = (2 * c * s * (ad + a * me + d * mb + mbe) ± sqrt((2 * c * s)^2 * ((a + mb)^
 
         selfVZ + eMass * entityVZ = vel*Mth.cos(angle) + eMass * P*cos(l);
 
-        a + m*b = x*cos(a) + m* y*cos(z)
+        a + m*b = x*cos(t) + m* y*cos(z)
 
         selfVY + eMass * entityVY = vel*Mth.sin(angle) + eMass * P*sin(l);;
 
-        c + m*d = x*sin(a) + m*y*sin(z)
+        c + m*d = x*sin(t) + m*y*sin(z)
 
         0.5*x*x + 0.5*m*y*y = k
 
         double finalEnergy = (0.5 * vel * vel) + (0.5 * eMass * P*P);
 
 
-        a + m*b = x*cos(a) + m*y*cos(z)
+        a + m*b = x*cos(t) + m*y*cos(z)
 
-        c + m*d = x*sin(a) + m*y*sin(z)
+        c + m*d = x*sin(t) + m*y*sin(z)
 
 
         xx + myy = 2k
@@ -339,29 +348,120 @@ x = (2 * c * s * (ad + a * me + d * mb + mbe) ± sqrt((2 * c * s)^2 * ((a + mb)^
 
         C = c+m*d
 
-        A - x*cos(a) = my*cos(z)
-        C - x*sin(a) = m*y*sin(z)
+        A - x*cos(t) = my*cos(z)
+        C - x*sin(t) = m*y*sin(z)
         xx + myy = 2k
 
-        if(z=a)
+        if(z=t)
 
 
+        a + m*b = x*cos(h) + m*y*cos(h)
+
+        c + m*d = x*sin(h) + m*y*sin(h)
+
+        x*x + m*y*y = 2k
+
+        S = sin(h)
+        C = cos(h)
+
+        A = a + m*b
+
+        P = xC + myC
+        x = (A/C -my)
+
+        (A/C - my)*(A/C - my) + m*y*y = 2k
+
+        AA/CC - 2myA/C + mmyy + myy = 2k
+        yy(mm+m) + y(2mA/C) + (AA/CC -2k)
+
+        j = m*m+m;
+        k = 2*m*A/C;
+        l = (A*A/(C*C) -2systemEn);
+
+        y = (-b + Mth.sqrt(k*k - 4*j*l))/(2*j)
 
 
+        x = my final vec
+        y = other final vec
+        v = my speed
+        X = other intensity speed
+        mv = mv
+        v + m*X = x + m*y
+
+        x = v +mX - m*y
+
+
+        x*x + m*y*y = 2k
+
+        k = 0.5*v*v + 0.5*m*X*X
+
+//these!
+        x*x+m*y*y=v*v+m*X*X
+
+        x=v+mX-m*y
+
+
+        (v+mX-m*y)(v+mX-m*y)+m*y*y=v*v+m*X*X
+
+        (v + mN - my)(v + mN - my) + myy = vv + mNN
+
+        vv + vmN - vmy + vmN + mmNN - mmNy -mvy - mmNy + mmyy + myy = vv + mNN
+
+        2vmN - 2ymv - 2ymmN + mmNN + mmyy + myy = mNN
+
+        yy(mm + m) + y2m(-v -mN) + (mmNN - mNN + 2vmN) = 0
+
+        A = (mm + m);
+        B = 2m(-v -mN);
+        C = (mmNN - mNN + 2vmN);
+
+        y = (-B + Mth.sqrt(B*B - 4*A*C))/(2*A)
+
+        vmN - 2yvm + mmNN - 2ymmN
          */
 
-        double a = selfVZ;
+        double nEn = (0.5 * magnitude * magnitude) + (0.5 * eMass * entityIntensityAcrossMine * entityIntensityAcrossMine);
+
+
         double m = eMass;
-        double b = entityVZ;
-        double c = selfVY;
-        double d = entityVY;
+        double N = entityIntensityAcrossMine;
+        double v = magnitude;
 
-        double x = (c + m*d)/Mth.sin((float) a);
 
-        double y = (2*systemEnergy)/(m*Mth.square(Mth.sin((float) a)) - Mth.square(m*d + c)/Mth.square(Mth.sin((float) a)));
+        double A = (m * m + m);
+        double B = 2 * m * (-v - m * N);
+        double C = (m * m * N * N - m * N * N + 2 * v * m * N);
 
-        double finalEnergy = (0.5 * x * x) + (0.5 * eMass * y*y);
+        double y1 = (-B + Mth.sqrt((float) (B * B - 4 * A * C))) / (2 * A);
 
+        double y2 = (-B - Mth.sqrt((float) (B * B - 4 * A * C))) / (2 * A);
+
+        double x1 = v + m * N - m * y1;
+
+        double x2 = v + m * N - m * y2;
+
+        double x = x2;
+        //chooses the right one. one is always the same vector
+        if (Mth.abs((float) (x - magnitude)) < 0.0001) {
+            x = x1;
+        }
+
+        float dW = (float) (x / radius) - angularVel;
+
+        //dont even ask me whats going on here. needed to handle all the faces
+        if (entityIntensityAcrossMine < 0 ^ entityVZ < 0) {
+            dW *= -1;
+        }
+        if (invertedAxis) {
+            dW *= -1;
+        }
+        this.lastImpulse = dW;
+
+        Minecraft.getInstance().player.displayClientMessage(Component.literal("speed: " + dW + " " + angularVel + " " + (x>angularVel)), false);
+
+        if (Double.isNaN(lastImpulse)) {
+            int aaa = 1;
+        }
         return true;
     }
 

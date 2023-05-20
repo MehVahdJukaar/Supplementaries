@@ -89,6 +89,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     public static final ModelLayerLocation HANGING_SIGN_EXTENSION = loc("hanging_sign_extension");
+    public static final ModelLayerLocation HANGING_SIGN_EXTENSION_CHAINS = loc("hanging_sign_chains");
     //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
 
     //special models locations
@@ -468,6 +469,7 @@ public class ClientRegistry {
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(HANGING_SIGN_EXTENSION, HangingSignRendererExtension::createMesh);
+        event.register(HANGING_SIGN_EXTENSION_CHAINS, HangingSignRendererExtension::createChainMesh);
     }
 
 

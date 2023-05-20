@@ -119,9 +119,9 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
     private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
 
-        for (int p = 0; p < list.size(); p++) {
+        for (Pair<Holder<BannerPattern>, DyeColor> holderDyeColorPair : list) {
 
-            Material material = ModMaterials.FLAG_MATERIALS.get().get(list.get(p).getFirst().value());
+            Material material = ModMaterials.FLAG_MATERIALS.get().get(holderDyeColorPair.getFirst().value());
             if (material == null) {
                 continue;
             }
@@ -131,8 +131,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             matrixStackIn.pushPose();
 
 
-
-            float[] color = list.get(p).getSecond().getTextureDiffuseColors();
+            float[] color = holderDyeColorPair.getSecond().getTextureDiffuseColors();
             float b = color[2];
             float g = color[1];
             float r = color[0];
