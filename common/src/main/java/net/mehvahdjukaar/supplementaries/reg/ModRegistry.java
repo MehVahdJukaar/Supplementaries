@@ -1063,7 +1063,7 @@ public class ModRegistry {
     //urn
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(
             BlockBehaviour.Properties.of(Material.STONE, MaterialColor.WOOD)
-                    .sound(SoundType.GLASS)
+                    .sound(SoundType.DECORATED_POT)
                     .strength(0.1f, 0)
     ));
 

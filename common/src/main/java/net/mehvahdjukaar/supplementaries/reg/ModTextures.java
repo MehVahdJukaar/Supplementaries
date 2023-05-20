@@ -121,7 +121,7 @@ public class ModTextures {
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(()->{
         var map = new IdentityHashMap<BannerPattern, ResourceLocation>();
             for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
-                map.put(pattern, Supplementaries.res("block/flags/" +
+                map.put(pattern, Supplementaries.res("entity/banner/flags/" +
                         BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
             }
         return map;

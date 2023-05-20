@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -62,6 +63,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
                        int combinedOverlayIn) {
 
         List<Pair<Holder<BannerPattern>, DyeColor>> list = tile.getPatterns();
+
         if (list != null) {
 
             int lu = combinedLightIn & '\uffff';
@@ -123,9 +125,12 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             if (material == null) {
                 continue;
             }
-            VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
+            RenderSystem.disableBlend();
+            VertexConsumer builder = material.buffer(bufferIn, RenderType::entityTranslucentCull);
 
             matrixStackIn.pushPose();
+
+
 
             float[] color = list.get(p).getSecond().getTextureDiffuseColors();
             float b = color[2];

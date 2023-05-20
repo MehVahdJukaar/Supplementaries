@@ -118,7 +118,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                     Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
                     if (renderMaterial != null) {
 
-                        VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityNoOutline);
+                        VertexConsumer builder = renderMaterial.buffer(bufferIn, RenderType::entityTranslucent);
 
                         float[] color = textHolder.getColor().getTextureDiffuseColors();
                         float b = color[2];
@@ -131,7 +131,8 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
                         int lu = combinedLightIn & '\uffff';
                         int lv = combinedLightIn >> 16 & '\uffff';
                         for (int v = 0; v < 2; v++) {
-                            VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.0725f, 0.4375F, 0.4375F, 0.07f,
+                            VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.1f,
+                                    0.4375F, 0.4375F, 0.1f,
                                     0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
 
                             poseStack.mulPose(RotHlpr.Y180);

@@ -60,7 +60,7 @@ public class ModMaterials {
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BannerPattern, Material>();
         for (var v : ModTextures.FLAG_TEXTURES.entrySet()) {
-            map.put(v.getKey(), new Material(LOCATION_BLOCKS, v.getValue()));
+            map.put(v.getKey(), new Material(BANNER_SHEET, v.getValue()));
         }
         return map;
     });
