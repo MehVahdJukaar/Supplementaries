@@ -74,6 +74,7 @@ public class InteractEventOverrideHandler {
 
         itemUseOnBlockHP.add(new AntiqueInkBehavior());
         itemUseOnBlockHP.add(new SoapBehavior());
+        itemUseOnBlockHP.add(new DyeBehavior());
         itemUseOnBlockHP.add(new WrenchBehavior());
         itemUseOnBlockHP.add(new SkullCandlesBehavior());
 

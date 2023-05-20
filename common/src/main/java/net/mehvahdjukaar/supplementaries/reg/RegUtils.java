@@ -210,7 +210,7 @@ public class RegUtils {
                     BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
                             .strength(2f, 3f)
                             .noOcclusion()
-                            .sound(wood.getSound())
+                            .sound(SoundType.HANGING_SIGN)
                             .noCollission(),
                     wood
             );

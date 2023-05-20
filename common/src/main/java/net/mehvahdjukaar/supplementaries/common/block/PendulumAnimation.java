@@ -184,7 +184,7 @@ public class PendulumAnimation extends SwingAnimation {
         double g = 2 * eMass * (-v - eMass * eRelVel);
         double h = (eMass * eMass * eRelVel * eRelVel - eMass * eRelVel * eRelVel + 2 * v * eMass * eRelVel);
 
-        float delta =Mth.sqrt((float) (g * g - 4 * f * h));
+        float delta = Mth.sqrt((float) (g * g - 4 * f * h));
         double y1 = (-g + delta) / (2 * f);
 
         double y2 = (-g - delta) / (2 * f);
