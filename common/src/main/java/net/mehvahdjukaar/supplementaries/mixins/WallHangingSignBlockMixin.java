@@ -3,11 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
-import net.mehvahdjukaar.supplementaries.common.block.SwayingAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +17,6 @@ import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +34,7 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
 
     @Inject(method = "updateShape", at = @At("HEAD"))
     public void updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> cir) {
-        if(level.getBlockEntity(currentPos ) instanceof IHangingSignExtension tile){
+        if (level.getBlockEntity(currentPos) instanceof IHangingSignExtension tile) {
             tile.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
         }
     }
@@ -67,9 +61,9 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-        super.entityInside(state, world, pos, entity);
-        if (world.getBlockEntity(pos) instanceof IHangingSignExtension tile) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        if (level.isClientSide && level.getBlockEntity(pos) instanceof IHangingSignExtension tile) {
             tile.getSwayingAnimation().hitByEntity(entity, state, pos);
         }
     }
@@ -77,8 +71,8 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType,BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) ->
-                ((IHangingSignExtension) blockEntity).getSwayingAnimation().clientTick(level, blockPos, blockState) : null);
+        return Utils.getTicker(pBlockEntityType, BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) ->
+                ((IHangingSignExtension) blockEntity).getSwayingAnimation().tick(level, blockPos, blockState) : null);
     }
 
 

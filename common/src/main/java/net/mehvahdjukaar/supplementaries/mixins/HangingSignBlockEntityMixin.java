@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.IHangingSignExtension;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
+import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.SwayingAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,8 +32,8 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
     @Nullable
     private PostType rightAttachment = null;
 
-    private final SwayingAnimation animation = new SwayingAnimation(s ->
-            s.getValue(WallHangingSignBlock.FACING).getOpposite().getNormal());
+    private final SwingAnimation animation = new PendulumAnimation(s ->
+            s.getValue(WallHangingSignBlock.FACING).getClockWise().getNormal());
 
     @PlatformOnly(PlatformOnly.FORGE)
     public AABB getRenderBoundingBox() {
@@ -61,7 +63,7 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
     }
 
     @Override
-    public SwayingAnimation getSwayingAnimation() {
+    public SwingAnimation getSwayingAnimation() {
         return animation;
     }
 

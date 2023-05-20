@@ -118,6 +118,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Boolean> EXTENDED_HANGING_SIGN;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -145,6 +146,9 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                             .define("send_chat_on_death", true);
+            EXTENDED_HANGING_SIGN = builder.comment("Ports the old Supplementareies hanging signs features to vanilla hanging signs." +
+                    "This includes things like making them wobbly or visually connecting to fences")
+                            .define("extended_hanging_signs", true);
             builder.pop();
         }
     }

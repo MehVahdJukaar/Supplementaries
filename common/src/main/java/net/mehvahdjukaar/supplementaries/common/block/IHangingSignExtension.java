@@ -15,5 +15,5 @@ public interface IHangingSignExtension {
 
     void updateAttachments();
 
-    SwayingAnimation getSwayingAnimation();
+    SwingAnimation getSwayingAnimation();
 }

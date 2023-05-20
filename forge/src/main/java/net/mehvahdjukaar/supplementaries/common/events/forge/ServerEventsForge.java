@@ -199,12 +199,4 @@ public class ServerEventsForge {
     }
 
 
-    @SubscribeEvent
-    public static void onPlayerDeath(ScreenEvent.Opening event) {
-       if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs
-       && ClientConfigs.Tweaks.DEATH_CHAT.get()) {
-            cs.charTyped((char)GLFW.GLFW_KEY_MINUS, 0);
-            cs.keyPressed(GLFW.GLFW_KEY_ENTER, 0, 0);
-        }
-    }
 }
