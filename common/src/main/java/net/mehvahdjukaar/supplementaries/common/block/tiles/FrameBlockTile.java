@@ -79,7 +79,7 @@ public class FrameBlockTile extends MimicBlockTile {
     public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace, boolean canStrip) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
+        if (Utils.mayBuild(player,pos)) {
             if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
                 BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
 

@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -141,7 +142,7 @@ public class TextHolder implements IAntiqueTextProvider {
     //TODO: make server sided & send block updated
     //should only be called server side
     public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
+        if (Utils.mayBuild(player,pos)) {
             ItemStack stack = player.getItemInHand(hand);
             Item item = stack.getItem();
             boolean success = false;

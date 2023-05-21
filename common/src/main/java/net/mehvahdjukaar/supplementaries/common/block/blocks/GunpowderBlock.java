@@ -6,6 +6,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -360,7 +361,7 @@ public class GunpowderBlock extends LightUpBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         InteractionResult lightUp = super.use(state, world, pos, player, hand, hit);
         if (lightUp.consumesAction()) return lightUp;
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
+        if (Utils.mayBuild(player,pos)) {
             if (isCross(state) || isDot(state)) {
                 BlockState blockstate = isCross(state) ? this.defaultBlockState() : this.crossState;
                 blockstate = blockstate.setValue(BURNING, state.getValue(BURNING));

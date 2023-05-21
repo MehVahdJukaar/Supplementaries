@@ -14,12 +14,14 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOv
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
@@ -35,12 +37,15 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -112,16 +117,21 @@ public class ServerEvents {
     public static InteractionResult onRightClickEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult entityHitResult) {
         if (player.isSpectator()) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof FluteItem) {
+        Item item = stack.getItem();
+        if (item instanceof FluteItem) {
             if (FluteItem.interactWithPet(stack, player, entity, hand)) {
                 return InteractionResult.SUCCESS; // we need this for event to be actually cancelled
             }
-        } else if (stack.getItem() instanceof AbstractMobContainerItem containerItem) {
+        } else if (item instanceof AbstractMobContainerItem containerItem) {
             if (!containerItem.isFull(stack)) {
                 var res = containerItem.doInteract(stack, player, entity, hand);
                 if (res.consumesAction()) {
                     return InteractionResult.SUCCESS;
                 }
+            }
+        } else if(item  == ModRegistry.SOAP){
+            if (SoapItem.interactWithPet(stack, player, entity, hand)) {
+                return InteractionResult.SUCCESS; // we need this for event to be actually cancelled
             }
         }
         return InteractionResult.PASS;

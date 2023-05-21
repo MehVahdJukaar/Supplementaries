@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.item.FuelBlockItem;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -37,7 +38,7 @@ public class TimberFrameItem extends FuelBlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
-        if (CommonConfigs.Building.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && Utils.mayBuild(player,hit.getBlockPos())) {
+        if (CommonConfigs.Building.SWAP_TIMBER_FRAME.get() && player != null && player.isShiftKeyDown() && Utils.mayBuild(player,context.getClickedPos())) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clicked = world.getBlockState(pos);

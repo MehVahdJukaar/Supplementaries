@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingLanternEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -82,7 +83,7 @@ public class LightableLanternBlock extends LanternBlock {
 
 
     public static Optional<BlockState> toggleLight(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn) {
-        if (Utils.mayBuild(player,hit.getBlockPos()) && handIn == InteractionHand.MAIN_HAND) {
+        if (Utils.mayBuild(player,pos) && handIn == InteractionHand.MAIN_HAND) {
             ItemStack item = player.getItemInHand(handIn);
             if (!state.getValue(LIT)) {
                 if (item.getItem() instanceof FlintAndSteelItem) {

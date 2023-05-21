@@ -1,22 +1,30 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
@@ -33,6 +41,22 @@ public class SoapItem extends Item {
 
     public SoapItem(Properties pProperties) {
         super(pProperties.food(SOAP_FOOD));
+    }
+
+    public static boolean interactWithPet(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+        if(entity instanceof TamableAnimal ta && ta.isOwnedBy(player)){
+            if(entity instanceof Wolf wolf){
+                wolf.setCollarColor(DyeColor.RED);
+            }
+            Level level = player.level;
+            if(level.isClientSide) {
+                ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
+                        UniformInt.of(4, 5), 0);
+                var p = entity instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
+                level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(),0,0,0);
+            }
+        }
+        return false;
     }
 
     @Override

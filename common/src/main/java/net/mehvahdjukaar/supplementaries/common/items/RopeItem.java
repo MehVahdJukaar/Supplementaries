@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -26,7 +27,7 @@ public class RopeItem extends BlockItem {
     public InteractionResult place(BlockPlaceContext context) {
 
         Player player = context.getPlayer();
-        if (player == null || Utils.mayBuild(player,hit.getBlockPos())) {
+        if (player == null || Utils.mayBuild(player,context.getClickedPos())) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);
