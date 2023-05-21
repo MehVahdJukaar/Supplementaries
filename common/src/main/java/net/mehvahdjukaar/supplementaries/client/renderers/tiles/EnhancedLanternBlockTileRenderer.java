@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
 import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ShimmerCompat;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
 
-public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile> implements BlockEntityRenderer<T> {
+public class EnhancedLanternBlockTileRenderer<T extends WallLanternBlockTile> implements BlockEntityRenderer<T> {
     protected final BlockRenderDispatcher blockRenderer;
 
     public EnhancedLanternBlockTileRenderer(BlockEntityRendererProvider.Context context) {
@@ -31,7 +31,7 @@ public class EnhancedLanternBlockTileRenderer<T extends EnhancedLanternBlockTile
         matrixStackIn.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING).getOpposite()));
         matrixStackIn.mulPose(RotHlpr.XN90);
 
-        float angle = tile.getSwingAngle(partialTicks);
+        float angle = tile.animation.getAngle(partialTicks);
 
         // animation
         matrixStackIn.mulPose(Axis.ZP.rotationDegrees(angle));

@@ -92,7 +92,6 @@ public class HangingSignRendererExtension {
         //renderBannerPattern(tile, poseStack, bufferSource, packedLight, item);
 
         poseStack.popPose();
-        RenderUtil.renderGuiItemRelative();
 
         //Straight stuff
 

@@ -255,7 +255,7 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         super.entityInside(state, world, pos, entity);
         if (world.getBlockEntity(pos) instanceof SwayingBlockTile tile) {
-            tile.hitByEntity(entity, state, pos);
+            tile.animation.hitByEntity(entity, state, pos);
         }
     }
 
