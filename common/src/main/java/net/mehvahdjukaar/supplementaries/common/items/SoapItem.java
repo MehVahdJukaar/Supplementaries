@@ -1,22 +1,33 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
@@ -85,18 +96,40 @@ public class SoapItem extends Item {
         return false;
     }
 
-    @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (interactionTarget instanceof Sheep s) {
+    //needed because some entities dont fire the normal method so we use event instead
+    public static boolean interactWithEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+        Level level = player.level;
+        boolean success = false;
+        if (entity instanceof Sheep s) {
             if (s.getColor() != DyeColor.WHITE) {
                 s.setColor(DyeColor.WHITE);
-                if(!player.level.isClientSide) {
-                    NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(s,
-                                new ClientBoundParticlePacket(s, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN_ENTITY));
-                }
-                return InteractionResult.sidedSuccess(player.level.isClientSide);
+                success = true;
             }
         }
-        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
+        else if(entity instanceof TamableAnimal ta && ta.isOwnedBy(player)){
+            if(entity instanceof Wolf wolf){
+                wolf.setCollarColor(DyeColor.RED);
+            }
+            ta.setOrderedToSit(true);
+            if(level.isClientSide){
+                var p = entity instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
+                level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(),0,0,0);
+            }
+            success = true;
+        }
+
+        if(success){
+            level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if(level.isClientSide) {
+                ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
+                        UniformInt.of(3, 4), 0);
+            }
+
+            if (!player.getAbilities().instabuild) stack.shrink(1);
+
+            return true;
+        }
+        return false;
     }
+
 }

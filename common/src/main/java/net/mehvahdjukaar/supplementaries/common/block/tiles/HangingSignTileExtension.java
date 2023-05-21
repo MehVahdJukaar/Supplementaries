@@ -35,8 +35,7 @@ public class HangingSignTileExtension extends PendulumAnimation {
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if(!canSwing){
-            angle = config.get().getMinAngle();
-            angularVel = 0;
+            this.reset();
         }else{
             super.tick(level, pos, state);
         }

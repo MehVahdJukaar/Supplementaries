@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -87,42 +88,11 @@ public class HangingSignRendererExtension {
         renderer.renderSignText(tile, poseStack, bufferSource, packedLight, 1.0F);
 
 
-        Item item = Items.SKULL_BANNER_PATTERN;
-        if (item instanceof BannerPatternItem bannerPatternItem) {
-            poseStack.translate(0, 5/16f, 0);
-
-            float scale =0.75f;
-            poseStack.scale(scale, -scale, -1);
-
-
-            Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
-            if (renderMaterial != null) {
-
-                VertexConsumer builder = renderMaterial.buffer(bufferSource, RenderType::itemEntityTranslucentCull);
-
-                float[] color = tile.getColor().getTextureDiffuseColors();
-                float b = color[2];
-                float g = color[1];
-                float r = color[0];
-                int light = packedLight;
-                if (tile.hasGlowingText()) {
-                    light = LightTexture.FULL_BRIGHT;
-                }
-
-                int lu = light & '\uffff';
-                int lv = light >> 16 & '\uffff';
-                for (int v = 0; v < 2; v++) {
-                    VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.07f,
-                            0.4375F, 0.4375F, 0.07f,
-                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
-
-                    poseStack.mulPose(RotHlpr.Y180);
-                }
-            }
-        }
+        //Item item = Items.SKULL_BANNER_PATTERN;
+        //renderBannerPattern(tile, poseStack, bufferSource, packedLight, item);
 
         poseStack.popPose();
-
+        RenderUtil.renderGuiItemRelative();
 
         //Straight stuff
 
@@ -155,6 +125,41 @@ public class HangingSignRendererExtension {
 
 
         poseStack.popPose();
+    }
+
+    private static void renderBannerPattern(SignBlockEntity tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, Item item) {
+        if (item instanceof BannerPatternItem bannerPatternItem) {
+            poseStack.translate(0, 5/16f, 0);
+
+            float scale =0.75f;
+            poseStack.scale(scale, -scale, -1);
+
+
+            Material renderMaterial = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
+            if (renderMaterial != null) {
+
+                VertexConsumer builder = renderMaterial.buffer(bufferSource, RenderType::itemEntityTranslucentCull);
+
+                float[] color = tile.getColor().getTextureDiffuseColors();
+                float b = color[2];
+                float g = color[1];
+                float r = color[0];
+                int light = packedLight;
+                if (tile.hasGlowingText()) {
+                    light = LightTexture.FULL_BRIGHT;
+                }
+
+                int lu = light & '\uffff';
+                int lv = light >> 16 & '\uffff';
+                for (int v = 0; v < 2; v++) {
+                    VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.07f,
+                            0.4375F, 0.4375F, 0.07f,
+                            0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, renderMaterial.sprite());
+
+                    poseStack.mulPose(RotHlpr.Y180);
+                }
+            }
+        }
     }
 
     private static float getSignAngle(BlockState state, boolean attachedToWall) {

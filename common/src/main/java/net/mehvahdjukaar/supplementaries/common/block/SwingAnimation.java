@@ -26,4 +26,6 @@ public abstract class SwingAnimation {
    public abstract void tick(Level pLevel, BlockPos pPos, BlockState pState);
    public abstract boolean hitByEntity(Entity entity, BlockState state, BlockPos pos);
    public abstract float getAngle(float partialTicks);
+
+   public abstract void reset();
 }
