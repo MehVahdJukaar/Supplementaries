@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
@@ -14,17 +13,13 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOv
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
-import net.mehvahdjukaar.supplementaries.reg.ModSetup;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
+import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -43,8 +38,8 @@ import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -56,8 +51,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -114,16 +107,21 @@ public class ServerEvents {
     public static InteractionResult onRightClickEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult entityHitResult) {
         if (player.isSpectator()) return InteractionResult.PASS;
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof FluteItem) {
+        Item item = stack.getItem();
+        if (item instanceof FluteItem) {
             if (FluteItem.interactWithPet(stack, player, entity, hand)) {
                 return InteractionResult.SUCCESS; // we need this for event to be actually cancelled
             }
-        } else if (stack.getItem() instanceof AbstractMobContainerItem containerItem) {
+        } else if (item instanceof AbstractMobContainerItem containerItem) {
             if (!containerItem.isFull(stack)) {
                 var res = containerItem.doInteract(stack, player, entity, hand);
                 if (res.consumesAction()) {
                     return InteractionResult.SUCCESS;
                 }
+            }
+        }else if(item == ModRegistry.SOAP.get()){
+            if(SoapItem.interactWithEntity(stack, player, entity, hand)){
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;

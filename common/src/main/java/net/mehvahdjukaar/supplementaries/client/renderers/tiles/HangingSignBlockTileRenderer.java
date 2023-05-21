@@ -71,7 +71,7 @@ public class HangingSignBlockTileRenderer implements BlockEntityRenderer<Hanging
         //animation
 
         if (tile.shouldRenderFancy()) {
-            poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getSwingAngle(partialTicks)));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(tile.animation.getAngle(partialTicks)));
 
             poseStack.translate(-0.5, -0.875, -0.5);
             //render block

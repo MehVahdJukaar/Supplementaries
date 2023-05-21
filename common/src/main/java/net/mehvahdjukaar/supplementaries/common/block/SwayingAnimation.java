@@ -69,6 +69,10 @@ public class SwayingAnimation extends SwingAnimation {
         return Mth.lerp(partialTicks, this.prevAngle, this.angle);
     }
 
+    @Override
+    public void reset() {
+        animationCounter = 800;
+    }
 
     @Override
     public boolean hitByEntity(Entity entity, BlockState state, BlockPos pos) {

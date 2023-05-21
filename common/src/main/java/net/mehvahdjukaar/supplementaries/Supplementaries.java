@@ -28,9 +28,16 @@ import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisp
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.renderer.blockentity.DecoratedPotRenderer;
+import net.minecraft.client.renderer.blockentity.SuspiciousSandRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.RecipeBook;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.DecoratedPotRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.DecoratedPotBlock;
+import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
+import net.minecraft.world.level.block.entity.SuspiciousSandBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -105,8 +112,6 @@ public class Supplementaries {
             }
         }
     }
-
-
     //yes this is where I write crap. deal with it XD
 
     //TODO: merge FD planters

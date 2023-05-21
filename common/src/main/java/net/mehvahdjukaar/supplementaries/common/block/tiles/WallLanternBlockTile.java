@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Blocks;
@@ -21,11 +22,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
+public class WallLanternBlockTile  extends SwayingBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC_KEY;
 
     private BlockState mimic = Blocks.LANTERN.defaultBlockState();
+    protected double attachmentOffset = 0;
 
     //for charm compat
     protected boolean isRedstoneLantern = false;
@@ -33,11 +35,11 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
     private UUID owner = null;
 
     static {
-        maxSwingAngle = 45f;
-        minSwingAngle = 1.9f;
-        maxPeriod = 28f;
-        angleDamping = 80f;
-        periodDamping = 70f;
+    //    maxSwingAngle = 45f;
+    //    minSwingAngle = 1.9f;
+    //    maxPeriod = 28f;
+    //    angleDamping = 80f;
+     //   periodDamping = 70f;
     }
 
     public WallLanternBlockTile(BlockPos pos, BlockState state) {
@@ -46,6 +48,15 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
 
     public boolean isRedstoneLantern() {
         return isRedstoneLantern;
+    }
+
+    public double getAttachmentOffset() {
+        return attachmentOffset;
+    }
+
+    @Override
+    public Vec3i getNormalRotationAxis(BlockState state) {
+        return state.getValue(WallLanternBlock.FACING).getNormal();
     }
 
     @Override

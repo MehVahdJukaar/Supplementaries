@@ -1,1 +1,9 @@
-fixed server crash
+- Vanilla Hanging signs can now swing
+- Improved hanging signs and wall lanterns swinging logic. They now use proper physics!
+- Added configs to tweak all their parameters
+- Made wall lantern attachment model bulkier
+- You can now use soap to clean pets!
+- Added option to use dyes on blocks just like you can with soap
+- Fixed flags not rendering
+- Fixed placed books not rendering
+- Fixed wax on candle skulls

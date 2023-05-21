@@ -329,7 +329,7 @@ public class ClientConfigs {
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_lanterns", false);
 
-            WALL_LANTERN_CONFIG = builder.defineObject("wall_lantern_wobble",
+            WALL_LANTERN_CONFIG = builder.defineObject("physics",
                     PendulumAnimation.Config::new,
                     PendulumAnimation.Config.CODEC);
             builder.pop();
@@ -338,12 +338,12 @@ public class ClientConfigs {
             ENHANCED_HANGING_SIGNS = builder.comment("Modifies vanilla hanging signs to make them like old Supplementaries ones")
                     .define("enabled", true);
 
-            HANGING_SIGN_CONFIG = builder.defineObject("hanging_sign_wobble",
+            HANGING_SIGN_CONFIG = builder.defineObject("physics",
                     PendulumAnimation.Config::new,
                     PendulumAnimation.Config.CODEC);
 
             //remove
-            FAST_SIGNS = builder.comment("Makes hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
+            FAST_SIGNS = builder.comment("Makes supplementaries hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_signs", false);
 

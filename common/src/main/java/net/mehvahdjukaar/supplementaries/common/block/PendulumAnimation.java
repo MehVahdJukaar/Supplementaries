@@ -21,8 +21,8 @@ import java.util.function.Supplier;
 
 public class PendulumAnimation extends SwingAnimation {
 
-    protected final Supplier<Config> config;
-    protected float angularVel = 0.0001f;
+    private final Supplier<Config> config;
+    private float angularVel = 0.0001f;
     private boolean hasDrag = true;
     private float lastImpulse;
     private int immunity = 0;
@@ -37,6 +37,12 @@ public class PendulumAnimation extends SwingAnimation {
     @Override
     public float getAngle(float partialTicks) {
         return (float) Math.toDegrees(Mth.lerp(partialTicks, prevAngle, angle));
+    }
+
+    @Override
+    public void reset() {
+        angle = config.get().getMinAngle();
+        angularVel = 0;
     }
 
     @Override

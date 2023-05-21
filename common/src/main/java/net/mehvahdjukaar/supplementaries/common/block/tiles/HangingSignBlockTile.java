@@ -39,11 +39,11 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
     static {
-        maxSwingAngle = 45f;
-        minSwingAngle = 2.5f;
-        maxPeriod = 25f;
-        angleDamping = 150f;
-        periodDamping = 100f;
+        //maxSwingAngle = 45f;
+       // minSwingAngle = 2.5f;
+       // maxPeriod = 25f;
+      //  angleDamping = 150f;
+      //  periodDamping = 100f;
     }
 
     public HangingSignBlockTile(BlockPos pos, BlockState state) {
@@ -66,11 +66,6 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     @Override
     public boolean isAlwaysFast() {
         return ClientConfigs.Blocks.FAST_SIGNS.get();
-    }
-
-    @Override
-    public boolean isFlipped() {
-        return this.getBlockState().getValue(HangingSignBlock.AXIS) != Direction.Axis.Z;
     }
 
     @Nullable
