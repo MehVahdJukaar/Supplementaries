@@ -12,6 +12,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
@@ -44,16 +46,33 @@ public class SoapItem extends Item {
     }
 
     public static boolean interactWithPet(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+        Level level = player.level;
+
         if(entity instanceof TamableAnimal ta && ta.isOwnedBy(player)){
             if(entity instanceof Wolf wolf){
                 wolf.setCollarColor(DyeColor.RED);
             }
-            Level level = player.level;
             if(level.isClientSide) {
                 ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
                         UniformInt.of(4, 5), 0);
                 var p = entity instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
                 level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(),0,0,0);
+            }
+            level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+            return true;
+        }
+
+        if (entity instanceof Sheep s) {
+            if (s.getColor() != DyeColor.WHITE) {
+                s.setColor(DyeColor.WHITE);
+                if(player.level.isClientSide) {
+                    ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), player.level, ModParticles.SUDS_PARTICLE.get(),
+                            UniformInt.of(4, 5), 0);
+                }
+                level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+                return true;
             }
         }
         return false;
@@ -109,18 +128,4 @@ public class SoapItem extends Item {
         return false;
     }
 
-    @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (interactionTarget instanceof Sheep s) {
-            if (s.getColor() != DyeColor.WHITE) {
-                s.setColor(DyeColor.WHITE);
-                if(!player.level.isClientSide) {
-                    NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(s,
-                                new ClientBoundParticlePacket(s, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN_ENTITY));
-                }
-                return InteractionResult.sidedSuccess(player.level.isClientSide);
-            }
-        }
-        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
-    }
 }
