@@ -428,8 +428,8 @@
   "subtitle.supplementaries.slingshot.release": "Slingshot released",
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
   "message.supplementaries.tattered": "Tattered",
-  "item.supplementaries.adventurers_quill": "Adventurer's Quill",
-  "message.supplementaries.adventurers_quill": "Unknown",
+  "item.supplementaries.cartographers_quill": "Cartographer's Quill",
+  "message.supplementaries.cartographers_quill": "Unknown",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",

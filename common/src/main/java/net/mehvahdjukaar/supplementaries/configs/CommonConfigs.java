@@ -844,8 +844,9 @@ public class CommonConfigs {
                     .define("shoot_ender_pearls", true);
             builder.pop();
 
+            builder.push("dye_blocks");
             DYE_BLOCKS = builder.comment("Allows using dyes on blocks just like soap")
-                    .define("dye_blocks", false);
+                    .define("enabled", false);
             builder.pop();
 
             //double cake
@@ -940,9 +941,15 @@ public class CommonConfigs {
                         .define("quill_adventurer_maps", true);
                 REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
+                QUILL_TRADE_PRICE_MULT = builder.comment("These maps will roll a difference structure every time. Increase their price to balance them")
+                        .define("map_trade_price_multiplier", 2d, 1, 10);
+                QUILL_MAX_TRADES = builder.comment("These maps will roll a difference structure every time. Decrease their max trades to balance them")
+                        .define("map_trade_max_trades", 2, 1, 12);
             } else {
                 QUARK_QUILL = () -> false;
                 REPLACE_VANILLA_MAPS = () -> false;
+                QUILL_MAX_TRADES = () -> 1;
+                QUILL_TRADE_PRICE_MULT = () -> 1d;
             }
             builder.pop();
 
@@ -1002,6 +1009,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<Boolean> QUARK_QUILL;
+        public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
+        public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;

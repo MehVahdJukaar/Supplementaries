@@ -24,6 +24,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ClientEventsForge {
@@ -33,6 +35,11 @@ public class ClientEventsForge {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddLayers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddGuiLayers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onRegisterSkullModels);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::loadComplete);
+    }
+
+    public static void loadComplete(FMLLoadCompleteEvent event){
+        ClientRegistry.checkIfFailed();
     }
 
     public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {

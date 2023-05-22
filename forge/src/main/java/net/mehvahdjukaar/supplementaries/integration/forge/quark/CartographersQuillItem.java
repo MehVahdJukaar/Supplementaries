@@ -24,6 +24,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
@@ -48,7 +49,7 @@ import vazkii.quark.content.tools.module.PathfinderMapsModule;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AdventurersQuillItem extends PathfindersQuillItem {
+public class CartographersQuillItem extends PathfindersQuillItem {
 
     public static final String TAG_STRUCTURE = "targetStructure";
     public static final String TAG_SKIP_KNOWN = "skinKnown";
@@ -61,11 +62,10 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     protected static final String TAG_POS_INDEX = "searchIndex";
     protected static final String TAG_WAITING = "waiting";
 
-    public AdventurersQuillItem() {
+    public CartographersQuillItem() {
         super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
                 new Properties().stacksTo(1)
                         .tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
-
         QuarkCompatImpl.removeStuffFromARLHack();
 
     }
@@ -76,16 +76,18 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
         var tag = stack.getTag();
         if (tag != null) {
-                if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
-                    comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
+            if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
+                comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
         } else
-            comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
+            comps.add(Component.translatable("message.supplementaries.cartographers_quill").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.allowedIn(category)) {
-            items.add(new ItemStack(this));
+        if (this.category != null) {
+            if (group == category || group == CreativeModeTab.TAB_SEARCH) {
+                items.add(new ItemStack(this));
+            }
         }
     }
 
@@ -101,7 +103,7 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
             if (!tag.contains(TAG_STRUCTURE)) {
                 //re-generate for empty one
                 String str = selectRandomTarget(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
-                if(str != null) tag.putString(TAG_STRUCTURE, str);
+                if (str != null) tag.putString(TAG_STRUCTURE, str);
             }
         }
         return super.use(level, player, hand);
@@ -223,9 +225,9 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
 
     @Nullable
-    private MapDecoration.Type getDecoration(CompoundTag tag) {
+    private ResourceLocation getDecoration(CompoundTag tag) {
         if (tag.contains(TAG_DECORATION)) {
-            return MapDecoration.Type.byIcon((byte) tag.getInt(TAG_DECORATION));
+            return new ResourceLocation(tag.getString(TAG_DECORATION));
         }
         return null;
     }
@@ -438,29 +440,45 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag, int searchRadius,
-                                         boolean skipKnown, int zoom, MapDecoration.Type deco,
+    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag, int searchRadius,
+                                         boolean skipKnown, int zoom, @Nullable MapDecoration.Type deco,
                                          @Nullable String name, int color) {
         ItemStack stack = forStructure(level, tag);
         var t = stack.getOrCreateTag();
         t.putInt(TAG_SEARCH_RADIUS, searchRadius);
         t.putBoolean(TAG_SKIP_KNOWN, skipKnown);
         t.putInt(TAG_ZOOM, zoom);
-        t.putByte(TAG_DECORATION, deco.getIcon());
+        if(deco != null) {
+            t.putString(TAG_DECORATION, deco.toString().toLowerCase(Locale.ROOT));
+        }
         if (name != null) {
             t.putString(TAG_NAME, name);
         }
         if (color != 0) {
-            t.putInt(TAG_ZOOM, color);
+            t.putInt(TAG_COLOR, color);
         }
         return stack;
     }
 
-    public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag) {
-        ItemStack stack = QuarkCompatImpl.ADVENTURER_QUILL.get().getDefaultInstance();
-        String target = selectRandomTarget(level, tag);
-        if (target == null) return ItemStack.EMPTY;
-        stack.getOrCreateTag().putString(AdventurersQuillItem.TAG_STRUCTURE, target);
+    public static int getItemColor(ItemStack stack, int layer){
+        if(layer == 0)return -1;
+        CompoundTag compoundTag = stack.getTag();
+        if (compoundTag != null && compoundTag.contains(TAG_COLOR)) {
+            int i = compoundTag.getInt(TAG_COLOR);
+            return -16777216 | i & 16777215;
+        } else {
+            return 0;
+        }
+    }
+
+    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag) {
+        ItemStack stack = QuarkCompatImpl.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
+        if(tag != null) {
+            //adventurer ones are always random
+            String target = selectRandomTarget(level, tag);
+            if (target == null) return ItemStack.EMPTY;
+            stack.getOrCreateTag().putString(CartographersQuillItem.TAG_STRUCTURE, target);
+        }
         return stack;
     }
 

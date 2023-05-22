@@ -1,2 +1,5 @@
-- EMI compat (thanks to Abbie5)
-- Trapped present has a dedicated config
+- Added Cartographers quill, an item which will replace all structure maps when Quark is installed
+- It functions like Quarks pathfinders quills but for structures, searching for them off thread with no lag spikes
+- You can now wash pets with soap
+- Added an option to use dyes directly on blocks
+- Fixed wax not denring on skull candles

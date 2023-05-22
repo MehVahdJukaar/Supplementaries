@@ -2,9 +2,8 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.quark.AdventurersQuillItem;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.CartographersQuillItem;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
@@ -33,7 +32,7 @@ public abstract class ExplorationMapFunctionMixin {
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
     public void turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir){
         if(CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get()){
-           cir.setReturnValue(AdventurersQuillItem.forStructure(context.getLevel(), this.destination,
+           cir.setReturnValue(CartographersQuillItem.forStructure(context.getLevel(), this.destination,
                   this.searchRadius, this.skipKnownStructures, this.zoom, this.mapDecoration, null, 0));
         }
     }

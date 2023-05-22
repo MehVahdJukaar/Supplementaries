@@ -6,12 +6,12 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 public class CompatHandlerClient {
 
     @ExpectPlatform
-    public static void doSetup() {
+    public static void loaderSpecificSetup() {
         throw new AssertionError();
     }
 
     public static void setup() {
-        doSetup();
+        loaderSpecificSetup();
         if (CompatHandler.DECO_BLOCKS) {
             DecoBlocksCompat.setupClient();
         }

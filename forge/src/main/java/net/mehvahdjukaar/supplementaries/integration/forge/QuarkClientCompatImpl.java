@@ -2,16 +2,25 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.CrossbowColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.DefaultWaterColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.TippedSpikesColor;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.CartographersQuillItem;
 import net.mehvahdjukaar.supplementaries.integration.forge.quark.QuarkInventoryTooltipComponent;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -23,9 +32,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.*;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
@@ -45,6 +52,7 @@ public class QuarkClientCompatImpl {
 
     public static void initClient() {
         ClientPlatformHelper.addBlockEntityRenderersRegistration(QuarkClientCompatImpl::registerEntityRenderers);
+        ClientPlatformHelper.addItemColorsRegistration(QuarkClientCompatImpl::registerItemColors);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::quiverUsageTicker);
     }
@@ -55,6 +63,13 @@ public class QuarkClientCompatImpl {
 
     public static void setupClient() {
         ClientPlatformHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
+    }
+
+    @EventCalled
+    private static void registerItemColors(ClientPlatformHelper.ItemColorEvent event) {
+        event.register(CartographersQuillItem::getItemColor,
+                QuarkCompatImpl.CARTOGRAPHERS_QUILL.get());
+
     }
 
     public static boolean shouldHaveButtonOnRight() {

@@ -131,14 +131,14 @@ dependencies {
     modImplementation("curse.maven:farmers-delight-398521:3999157")
 
     modImplementation("curse.maven:jei-238222:3928388")
-    modImplementation("curse.maven:configured-457570:4011355")
+    modImplementation("curse.maven:configured-457570:4462837")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:3904454")
     modImplementation("curse.maven:curios-309927:3924518")
     modImplementation("curse.maven:autoreglib-250363:4100299")
     modImplementation("curse.maven:quark-oddities-301051:3575623")
-    //modImplementation("curse.maven:quark-243121:4463411")
-    modImplementation("vazkii.quark:Quark:3.4-400")
+    modImplementation("curse.maven:quark-243121:4538962")
+    //modImplementation("vazkii.quark:Quark:3.4-400")
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:waystones-245755:3835119")
@@ -153,7 +153,7 @@ dependencies {
     modImplementation("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-362528:3941638")
     modImplementation("curse.maven:map-atlases-forge-519759:3949437")
-    modImplementation("curse.maven:create-328085:4011414")
+    modImplementation("curse.maven:create-328085:4547147")
     //modCompileOnly("curse.maven:biomes-o-plenty-220318:4128419")
     modImplementation("curse.maven:terrablender-563928:4013816")
     modImplementation("curse.maven:tetra-289712:4414851")
@@ -161,9 +161,9 @@ dependencies {
     modImplementation("curse.maven:breezy-690628:4055467")
     modImplementation("curse.maven:geckolib-388172:4064451")
     modImplementation("curse.maven:farmers-respite-551453:4081312")
-    modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
+    //modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
-    // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
+    modImplementation("curse.maven:flywheel-486392:4341471")
 
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")

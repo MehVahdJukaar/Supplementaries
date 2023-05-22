@@ -4,26 +4,26 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
-import com.simibubi.create.content.logistics.block.display.DisplayBehaviour;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
+import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
+import com.simibubi.create.content.trains.display.FlapDisplaySection;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.ponder.PonderTag;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -90,36 +90,36 @@ public class CreateCompatImpl {
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.PULLEY_BLOCK.get(), new PulleyBehavior());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
             DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
 
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("speaker_block_display_target"),
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("blackboard_display_target"),
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
 
             //sources
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_source"),
                     new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("clock_source"),
                     new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
 
@@ -128,11 +128,11 @@ public class CreateCompatImpl {
                     new ItemDisplayDisplaySource());
 
             AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.STATUE_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
 
@@ -142,18 +142,17 @@ public class CreateCompatImpl {
     }
 
     public static void setupClient() {
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
-        //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
+        PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
-
+        //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
 
     }
 
@@ -183,10 +182,9 @@ public class CreateCompatImpl {
         }
 
         @Override
-        public boolean renderAsNormalTileEntity() {
+        public boolean renderAsNormalBlockEntity() {
             return true;
         }
-
 
         //@Override
         //public void visitNewPosition(MovementContext context, BlockPos pos) {
@@ -246,7 +244,7 @@ public class CreateCompatImpl {
         private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
         private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
-            CompoundTag com = context.tileData;
+            CompoundTag com = context.blockEntityData;
             if (com == null) return;
             long lastTicked = com.getLong("LastTicked");
             if (!this.isOnCooldown(world, lastTicked)) {
@@ -257,7 +255,7 @@ public class CreateCompatImpl {
                 com = DUMMY.saveWithFullMetadata();
                 lastTicked = world.getGameTime();
                 com.putLong("LastTicked", lastTicked);
-                context.tileData = com;
+                context.blockEntityData = com;
             }
         }
 
@@ -282,7 +280,7 @@ public class CreateCompatImpl {
             Direction dir = state.getValue(HourGlassBlock.FACING);
             Rotation rotation = isClockWise(rot, dir);
 
-            CompoundTag com = context.tileData;
+            CompoundTag com = context.blockEntityData;
             this.sandData = HourglassTimeData.EMPTY;
             var prevSandData = this.sandData;
             NonNullList<ItemStack> l = NonNullList.create();
@@ -339,7 +337,6 @@ public class CreateCompatImpl {
 
         private static final PulleyBlockTile DUMMY = new PulleyBlockTile(BlockPos.ZERO, ModRegistry.PULLEY_BLOCK.get().defaultBlockState());
 
-
         @Override
         public void visitNewPosition(MovementContext context, BlockPos pos) {
             BlockState state = context.state;
@@ -347,7 +344,6 @@ public class CreateCompatImpl {
             if (axis == Direction.Axis.Y) return;
             changeState(context, state.cycle(PulleyBlock.FLIPPED));
             Direction dir = null;
-            var center = context.contraption.anchor;
             if (axis == Direction.Axis.X) {
                 dir = Direction.NORTH;
             } else if (axis == Direction.Axis.Z) {
@@ -355,12 +351,14 @@ public class CreateCompatImpl {
             }
             if (dir == null) return;
 
-            DUMMY.load(context.tileData);
+            DUMMY.load(context.blockEntityData);
             DUMMY.setLevel(context.world);
 
             Rotation rot = context.relativeMotion.length() > 0 ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
             DUMMY.handleRotation(rot, pos);
-            context.tileData = DUMMY.saveWithFullMetadata();
+            context.blockEntityData = DUMMY.saveWithFullMetadata();
+
+            DUMMY.setLevel(null);
         }
 
     }
@@ -369,7 +367,7 @@ public class CreateCompatImpl {
 
         @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof NoticeBoardBlockTile lectern) {
                 ItemStack book = lectern.getDisplayedItem();
                 if (!book.isEmpty()) {
@@ -383,7 +381,7 @@ public class CreateCompatImpl {
 
                         for (int i = 0; i - line < text.size() && i < 50; ++i) {
                             if (tag.size() <= i) {
-                                tag.add(StringTag.valueOf(i < line ? "" : Component.Serializer.toJson((Component) text.get(i - line))));
+                                tag.add(StringTag.valueOf(i < line ? "" : Component.Serializer.toJson(text.get(i - line))));
                             } else if (i >= line) {
                                 if (i - line == 0) {
                                     reserve(i, lectern, context);
@@ -393,7 +391,7 @@ public class CreateCompatImpl {
                                     break;
                                 }
 
-                                tag.set(i, StringTag.valueOf(Component.Serializer.toJson((Component) text.get(i - line))));
+                                tag.set(i, StringTag.valueOf(Component.Serializer.toJson(text.get(i - line))));
                             }
 
                             changed = true;
@@ -437,13 +435,13 @@ public class CreateCompatImpl {
 
         @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof ITextHolderProvider th) {
                 var textHolder = th.getTextHolder();
                 boolean changed = false;
 
                 if (th instanceof HangingSignBlockTile hs && (hs.isEmpty() || hs.hasFakeItem())) {
-                    var source = context.getSourceTE();
+                    var source = context.getSourceBlockEntity();
                     ItemStack copyStack = getDisplayedItem(context, source, i -> !i.isEmpty());
                     hs.setItem(copyStack);
                     hs.setFakeItem(true);
@@ -468,7 +466,7 @@ public class CreateCompatImpl {
 
         @Override
         public DisplayTargetStats provideStats(DisplayLinkContext context) {
-            var textHolder = ((ITextHolderProvider) context.getTargetTE()).getTextHolder();
+            var textHolder = ((ITextHolderProvider) context.getTargetBlockEntity()).getTextHolder();
             return new DisplayTargetStats(textHolder.size(), textHolder.getMaxLineCharacters(), this);
         }
     }
@@ -477,7 +475,7 @@ public class CreateCompatImpl {
 
         @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
                 reserve(line, te, context);
                 tile.setMessage(text.get(0).getString());
@@ -499,7 +497,7 @@ public class CreateCompatImpl {
         } else {
             for (int i = 0; i < 32; ++i) {
                 var pos = context.getSourcePos();
-                TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
+                TransportedItemStackHandlerBehaviour behaviour = BlockEntityBehaviour.get(
                         context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
                 );
                 if (behaviour == null) {
@@ -523,9 +521,9 @@ public class CreateCompatImpl {
 
         @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
-                var source = context.getSourceTE();
+                var source = context.getSourceBlockEntity();
                 if (!parseText(text.get(0).getString(), tile)) {
                     ItemStack copyStack = getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                     if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
@@ -580,7 +578,7 @@ public class CreateCompatImpl {
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             Level level = context.level();
             if (level instanceof ServerLevel sLevel) {
-                if (context.getSourceTE() instanceof ClockBlockTile tile) {
+                if (context.getSourceBlockEntity() instanceof ClockBlockTile tile) {
                     boolean c12 = context.sourceConfig().getInt("Cycle") == 0;
                     boolean isNatural = sLevel.dimensionType().natural();
                     int dayTime = (int) (sLevel.getDayTime() % 24000L);
@@ -649,7 +647,7 @@ public class CreateCompatImpl {
 
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-            if (context.getSourceTE() instanceof GlobeBlockTile tile) {
+            if (context.getSourceBlockEntity() instanceof GlobeBlockTile tile) {
                 BlockPos pos = context.getSourcePos();
                 return Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ());
             } else {
@@ -683,7 +681,7 @@ public class CreateCompatImpl {
 
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-            if (context.getSourceTE() instanceof NoticeBoardBlockTile tile) {
+            if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
                 tile.updateText();
                 return Component.literal(tile.getText());
             } else {
@@ -718,7 +716,7 @@ public class CreateCompatImpl {
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             MutableComponent combined = EMPTY_LINE.copy();
 
-            if (context.getSourceTE() instanceof ItemDisplayTile te && !te.isEmpty()) {
+            if (context.getSourceBlockEntity() instanceof ItemDisplayTile te && !te.isEmpty()) {
                 combined = combined.append(te.getDisplayedItem().getHoverName());
             }
             //else if(context.level().getBlockState(context.getSourcePos()) instanceof WorldlyContainerHolder wc){
@@ -753,7 +751,7 @@ public class CreateCompatImpl {
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             if (context.sourceConfig().getInt("Mode") == 2) {
-                if (context.getSourceTE() instanceof ISoftFluidTankProvider tp) {
+                if (context.getSourceBlockEntity() instanceof ISoftFluidTankProvider tp) {
                     return Components.literal(tp.getSoftFluidTank().getCount() + " mBtl");
                 }
             }
@@ -762,8 +760,7 @@ public class CreateCompatImpl {
 
         @Override
         protected Float getProgress(DisplayLinkContext context) {
-            BlockEntity te = context.getSourceTE();
-            if (te instanceof ISoftFluidTankProvider tp) {
+            if (context.getSourceBlockEntity() instanceof ISoftFluidTankProvider tp) {
                 return tp.getSoftFluidTank().getHeight(1);
             }
             return null;

@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigS
 
 public class CompatHandlerClientImpl {
 
-    public static void doSetup() {
+    public static void loaderSpecificSetup() {
         if (CompatHandler.CONFIGURED && ClientConfigs.General.CUSTOM_CONFIGURED_SCREEN.get()) {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }

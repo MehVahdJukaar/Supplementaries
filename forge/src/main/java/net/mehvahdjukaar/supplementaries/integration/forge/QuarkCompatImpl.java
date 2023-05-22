@@ -9,14 +9,13 @@ import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.quark.AdventurersQuillItem;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.CartographersQuillItem;
 import net.mehvahdjukaar.supplementaries.integration.forge.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -40,8 +39,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -83,7 +82,7 @@ public class QuarkCompatImpl {
 
     public static final Supplier<Block> TATER_IN_A_JAR;
     public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
-    public static final Supplier<Item> ADVENTURER_QUILL;
+    public static final Supplier<Item> CARTOGRAPHERS_QUILL;
 
     static {
         TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
@@ -92,7 +91,7 @@ public class QuarkCompatImpl {
         TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
 
-        ADVENTURER_QUILL = RegUtils.regItem("adventurers_quill", AdventurersQuillItem::new);
+        CARTOGRAPHERS_QUILL = RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
     }
 
     public static void init() {
@@ -320,7 +319,7 @@ public class QuarkCompatImpl {
         }
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel level, TagKey<Structure> tag) {
-        return AdventurersQuillItem.forStructure(level, tag);
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @javax.annotation.Nullable String name, int color) {
+       return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown,zoom, destinationType, name, color);
     }
 }

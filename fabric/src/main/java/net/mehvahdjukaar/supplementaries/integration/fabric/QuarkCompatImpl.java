@@ -13,7 +13,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
+
+import javax.annotation.Nullable;
 
 public class QuarkCompatImpl {
 
@@ -84,8 +87,9 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel level, TagKey<Structure> tag) {
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @Nullable String name, int color) {
         return ItemStack.EMPTY;
     }
+
 
 }

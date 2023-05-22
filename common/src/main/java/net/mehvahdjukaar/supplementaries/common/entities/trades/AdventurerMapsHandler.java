@@ -39,8 +39,6 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -79,7 +77,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
 
-    public static final int SEARCH_RADIUS = 100;
+    public static final int SEARCH_RADIUS = 150;
     private static final List<AdventurerMapTrade> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
     private static final Map<TagKey<Structure>,
@@ -114,14 +112,10 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             if (structure.is(v.getKey())) {
                 res = v.getValue().getFirst();
                 color = v.getValue().getSecond();
+                break;
             }
         }
         return Pair.of(res, color);
-    }
-
-    private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
-        var g = DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(new ResourceLocation("selene:generic_structure"), -1));
-        return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
     }
 
     public static void addTradesCallback() {
@@ -162,63 +156,70 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         @Override
         public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
-            int maxPrice = 13;
-            int minPrice = 7;
+            int maxPrice = 11;
+            int minPrice = 6;
             int price = random.nextInt(maxPrice - minPrice + 1) + minPrice;
 
             ItemStack itemstack = createMap(entity.level, entity.blockPosition());
             if (itemstack.isEmpty()) return null;
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, price), new ItemStack(Items.COMPASS), itemstack, 12, 10, 0.2F);
+            int uses = CommonConfigs.Tweaks.QUILL_MAX_TRADES.get();
+            int x = 6;
+            int xp = (int) ((x * 12) / (float) uses);
+            int cost = (int) (price * CommonConfigs.Tweaks.QUILL_TRADE_PRICE_MULT.get());
+
+            return new MerchantOffer(new ItemStack(Items.EMERALD, cost), new ItemStack(Items.COMPASS), itemstack,
+                    uses, xp, 0.2F);
         }
 
         private ItemStack createMap(Level level, BlockPos pos) {
             if (level instanceof ServerLevel serverLevel) {
-
-                if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
-                    return QuarkCompat.makeAdventurerQuill(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
-                }
-
-                if (!serverLevel.getServer().getWorldData().worldGenSettings().generateStructures())
-                    return ItemStack.EMPTY;
-
-                var found = StructureLocator.findNearestRandomMapFeature(
-                        serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS,
-                        pos, 250, true);
-                if (found != null) {
-                    BlockPos toPos = found.getFirst();
-                    return createStructureMap(serverLevel, toPos, found.getSecond(), 2,
-                            null, "filled_map.adventure",0x78151a);
-                }
-
+                return createMapOrQuill(pos, serverLevel, null,
+                        2, null, "filled_map.adventure", 0x78151a);
             }
             return ItemStack.EMPTY;
         }
     }
 
+    private static ItemStack createMapOrQuill(BlockPos pos, ServerLevel serverLevel,@Nullable TagKey<Structure> tag,
+                                              int zoom, @Nullable ResourceLocation mapMarker,
+                                              @Nullable String name, int color) {
+        if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
+            var item = QuarkCompat.makeAdventurerQuill(serverLevel, tag,
+                    SEARCH_RADIUS, true, zoom, null, name, color);
+            item.setHoverName(Component.translatable(name));
+            return item;
+        }
+
+        if (!serverLevel.getServer().getWorldData().worldGenSettings().generateStructures())
+            return ItemStack.EMPTY;
+
+        var found = StructureLocator.findNearestRandomMapFeature(
+                serverLevel, tag, pos, SEARCH_RADIUS, true);
+
+        if (found != null) {
+            BlockPos toPos = found.getFirst();
+            return createStructureMap(serverLevel, toPos, found.getSecond(), zoom, mapMarker, name, color);
+        }
+        return ItemStack.EMPTY;
+    }
+
     @NotNull
     public static ItemStack createStructureMap(ServerLevel level, BlockPos pos, Holder<Structure> structure, int zoom,
-                                               @Nullable MapDecoration.Type vanillaDeco, @Nullable String name,
+                                               @Nullable ResourceLocation decoration, @Nullable String name,
                                                int color) {
         ItemStack stack = MapItem.create(level, pos.getX(), pos.getZ(), (byte) zoom, true, true);
         MapItem.renderBiomePreviewMap(level, stack);
 
         //adds custom decoration
-        ResourceLocation decoId;
-        if (vanillaDeco == null) {
+        if (decoration == null) {
             var s = getStructureMarker(structure);
-            decoId = s.getFirst();
-            if(color == 0){
+            decoration = s.getFirst();
+            if (color == 0) {
                 color = s.getSecond();
             }
-        } else {
-            //vanilla deco
-            decoId = new ResourceLocation(vanillaDeco.toString().toLowerCase(Locale.ROOT));
-            if(color == 0 && vanillaDeco.hasMapColor()){
-                color = vanillaDeco.getMapColor();
-            }
         }
-        MapHelper.addDecorationToMap(stack, pos, decoId, color);
+        MapHelper.addDecorationToMap(stack, pos, decoration, color);
 
         if (name != null) {
             stack.setHoverName(Component.translatable(name));
@@ -230,42 +231,13 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     public static ItemStack createCustomMap(Level world, BlockPos pos, ResourceLocation structureName,
                                             @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
 
-        var destination = TagKey.create(Registry.STRUCTURE_REGISTRY, structureName);
-
         if (world instanceof ServerLevel serverLevel) {
+            var destination = TagKey.create(Registry.STRUCTURE_REGISTRY, structureName);
+            String name = mapName == null ?
+                    "filled_map." + structureName.getPath().toLowerCase(Locale.ROOT) : mapName;
 
-            BlockPos toPos = serverLevel.findNearestMapStructure(destination, pos, SEARCH_RADIUS, true);
-            if (toPos == null) {
-                return ItemStack.EMPTY;
-            } else {
-                ItemStack stack = MapItem.create(world, toPos.getX(), toPos.getZ(), (byte) 2, true, true);
-                MapItem.renderBiomePreviewMap(serverLevel, stack);
-
-
-                //vanilla maps for backwards compat
-                if (structureName.getPath().equals("ocean_monument")) {
-                    MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.MONUMENT);
-                } else if (structureName.getPath().equals("woodland_mansion")) {
-                    MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.MANSION);
-                } else {
-                    //adds custom decoration
-
-                    var decoration = getStructureMarker(destination);
-
-                    int color = mapColor == 0xffffff ? decoration.getSecond() : mapColor;
-                    if (mapMarker == null) {
-                        MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), color);
-                    } else {
-                        MapHelper.addDecorationToMap(stack, toPos, mapMarker, color);
-                    }
-
-                }
-
-                Component name = Component.translatable(mapName == null ?
-                        "filled_map." + structureName.getPath().toLowerCase(Locale.ROOT) : mapName);
-                stack.setHoverName(name);
-                return stack;
-            }
+            return createMapOrQuill(pos, serverLevel, destination,
+                    2, mapMarker, name, mapColor);
         }
         return ItemStack.EMPTY;
     }

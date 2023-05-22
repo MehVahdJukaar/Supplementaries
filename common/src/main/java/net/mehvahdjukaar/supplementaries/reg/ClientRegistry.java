@@ -139,12 +139,12 @@ public class ClientRegistry {
 
     }
 
+    private static boolean finishedSetup = false;
 
     public static void setup() {
 
         //compat
         CompatHandlerClient.setup(); //if this fails other stuff below will to. In other words we'll at least know that it failed since nothing will work anymore
-
         //map markers
         ModMapMarkersClient.init();
 
@@ -260,6 +260,13 @@ public class ClientRegistry {
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
 
+        finishedSetup = true;
+    }
+
+    public static void checkIfFailed() {
+        if(!finishedSetup){
+            throw new RuntimeException("Failed to run client setup. This is likely due to the mod integration code being outdated, crashing with other mods new versions. Terminating");
+        }
     }
 
     private static class GlobeProperty implements ClampedItemPropertyFunction {
