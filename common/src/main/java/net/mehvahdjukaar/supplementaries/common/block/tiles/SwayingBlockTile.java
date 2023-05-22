@@ -1,48 +1,43 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HangingSignBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
 
 public abstract class SwayingBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
     public static final ModelDataKey<Boolean> FANCY = ModBlockProperties.FANCY;
 
-    public final SwingAnimation animation = new PendulumAnimation(ClientConfigs.Blocks.WALL_LANTERN_CONFIG,
-            this::getNormalRotationAxis);
-
-    // lod stuff
+    // lod stuff (client)
     protected boolean shouldHaveTESR = false; // current
     protected boolean currentlyHasTESR = false; // old
     private int ticksToSwitchMode = 0;
 
+    public final SwingAnimation animation;
+
     protected SwayingBlockTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
+
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            animation = new PendulumAnimation(ClientConfigs.Blocks.WALL_LANTERN_CONFIG, this::getRotationAxis);
+        } else {
+            animation = null;
+        }
     }
 
     public boolean isAlwaysFast() {
@@ -108,6 +103,6 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     }
 
     //rotation axis rotate 90 deg
-    public abstract Vec3i getNormalRotationAxis(BlockState state);
+    public abstract Vec3i getRotationAxis(BlockState state);
 
 }

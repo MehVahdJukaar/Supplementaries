@@ -151,7 +151,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
     }
 
     @Override
-    public Vec3i getNormalRotationAxis(BlockState state) {
+    public Vec3i getRotationAxis(BlockState state) {
         return state.getValue(HangingSignBlock.AXIS) == Direction.Axis.X ? new Vec3i(0, 0, -1) : new Vec3i(1, 0, 0);
     }
 

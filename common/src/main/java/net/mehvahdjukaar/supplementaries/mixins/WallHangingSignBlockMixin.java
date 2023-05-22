@@ -66,7 +66,7 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
         super.entityInside(state, level, pos, entity);
         if (level.isClientSide && ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() &&
                 level.getBlockEntity(pos) instanceof IExtendedHangingSign tile) {
-            tile.getExtension().hitByEntity(entity, state, pos);
+            tile.getExtension().animation.hitByEntity(entity, state, pos);
         }
     }
 
@@ -75,7 +75,7 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return Utils.getTicker(pBlockEntityType, BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) -> {
             if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get()) {
-                ((IExtendedHangingSign) blockEntity).getExtension().tick(level, blockPos, blockState);
+                ((IExtendedHangingSign) blockEntity).getExtension().clientTick(level, blockPos, blockState);
             }
         } : null);
     }

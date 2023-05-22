@@ -70,7 +70,7 @@ public class HangingSignRendererExtension {
         model.plank.visible = false;
 
         if (wallSign) model.normalChains.visible = false;
-        poseStack.mulPose(Axis.XP.rotationDegrees(sign.getAngle(partialTicks)));
+        poseStack.mulPose(Axis.XP.rotationDegrees(sign.animation.getAngle(partialTicks)));
         poseStack.translate(0, 0.25, 0);
 
         model.root.render(poseStack, vertexConsumer, packedLight, packedOverlay);

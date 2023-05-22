@@ -578,6 +578,8 @@ public class CommonConfigs {
                     .define("player_loot", false);
             ONLY_ALLOW_HARMFUL = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("only_allow_harmful_effects", true);
+            TIPPED_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
+                    .define("populate_creative_tab", true);
             builder.pop();
 
             builder.push("urn");
@@ -625,6 +627,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
         public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
+        public static final Supplier<Boolean> TIPPED_SPIKES_TAB;
+
         public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL;
         public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 

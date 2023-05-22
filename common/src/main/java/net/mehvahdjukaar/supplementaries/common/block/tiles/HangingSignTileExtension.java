@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class HangingSignTileExtension extends PendulumAnimation {
+public class HangingSignTileExtension {
 
     @Nullable
     private ModBlockProperties.PostType leftAttachment = null;
@@ -25,23 +26,32 @@ public class HangingSignTileExtension extends PendulumAnimation {
     @Nullable
     private ModBlockProperties.PostType rightAttachment = null;
 
+    private final boolean isCeiling;
+
     private boolean canSwing = true;
 
-    public HangingSignTileExtension() {
-        super(ClientConfigs.Blocks.HANGING_SIGN_CONFIG, HangingSignTileExtension::getAxis);
+    public final SwingAnimation animation;
+
+    public HangingSignTileExtension(BlockState state) {
+        super();
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            animation = new PendulumAnimation(ClientConfigs.Blocks.HANGING_SIGN_CONFIG, this::getRotationAxis);
+        } else {
+            animation = null;
+        }
+        isCeiling = state.getBlock() instanceof CeilingHangingSignBlock;
 
     }
 
-    @Override
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if(!canSwing){
-            this.reset();
-        }else{
-            super.tick(level, pos, state);
+    public void clientTick(Level level, BlockPos pos, BlockState state) {
+        if (!canSwing || isCeiling) {
+            animation. reset();
+        } else {
+            animation.tick(level, pos, state);
         }
     }
 
-    private static Vec3i getAxis(BlockState state) {
+    private Vec3i getRotationAxis(BlockState state) {
         return state.getValue(WallHangingSignBlock.FACING).getClockWise().getNormal();
     }
 
@@ -79,8 +89,10 @@ public class HangingSignTileExtension extends PendulumAnimation {
     }
 
 
+    //just called by wall hanging sign
     public void updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                             BlockPos pos, BlockPos neighborPos) {
+
         Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
         if (direction == selfFacing.getClockWise()) {
             rightAttachment = ModBlockProperties.PostType.get(neighborState, true);

@@ -579,7 +579,7 @@ public class ModCreativeTabs {
         var items = new ArrayList<ItemStack>();
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
             items.add(ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance());
-            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get()) {
+            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && CommonConfigs.Functional.TIPPED_SPIKES_TAB.get()) {
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.LONG_POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.STRONG_POISON));

@@ -18,10 +18,11 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class HangingSignBlockEntityMixin extends BlockEntity implements IExtendedHangingSign {
 
     @Unique
-    private final HangingSignTileExtension extension = new HangingSignTileExtension();
+    private final HangingSignTileExtension extension;
 
     protected HangingSignBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
+        extension = new HangingSignTileExtension(blockState);
     }
 
     @PlatformOnly(PlatformOnly.FORGE)

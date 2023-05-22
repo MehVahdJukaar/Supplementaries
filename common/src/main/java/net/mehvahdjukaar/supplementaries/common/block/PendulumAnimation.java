@@ -4,12 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,6 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PendulumAnimation extends SwingAnimation {
+    private static final RandomSource RAND = RandomSource.create();
 
     private final Supplier<Config> config;
     private float angularVel = 0.0001f;
@@ -30,7 +31,9 @@ public class PendulumAnimation extends SwingAnimation {
     public PendulumAnimation(Supplier<Config> config, Function<BlockState, Vec3i> axisGetter) {
         super(axisGetter);
         this.config = config;
-        //TODO: initialize velocity and angle at random
+        Config c = config.get();
+        this.angle = (RAND.nextFloat() - 0.5f) * c.getMinAngle() * 2;
+        this.angularVel = capVelocity(c.k, 1000, angle, c.minAngleEnergy);
     }
 
 
@@ -55,6 +58,7 @@ public class PendulumAnimation extends SwingAnimation {
         float energy = 0;
 
         Config config = this.config.get();
+        config = new Config();
 
         float k = config.k;
 
@@ -142,7 +146,7 @@ public class PendulumAnimation extends SwingAnimation {
         if (eVel.length() < 0.01) return false; //too little
 
         Config config = ClientConfigs.Blocks.HANGING_SIGN_CONFIG.get();
-
+        config = new Config();
         double eMass;
         if (config.considerEntityHitbox) {
             AABB boundingBox = entity.getBoundingBox();
@@ -222,7 +226,7 @@ public class PendulumAnimation extends SwingAnimation {
         //we cant set that as its client only
         //entity.setDeltaMovement(eVel.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
 
-        entity.getLevel().playSound(Minecraft.getInstance().player, pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
+        entity.getLevel().playLocalSound(pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f, false);
 
         return true;
     }
@@ -351,7 +355,7 @@ public class PendulumAnimation extends SwingAnimation {
         }
 
         public Config() {
-            this(0.8f, 45, 0.5f, 0.10f, true, 1, 50);
+            this(0.8f, 60, 0.5f, 0.60f, true, 1f, 15);
         }
 
         public float getMinAngle() {

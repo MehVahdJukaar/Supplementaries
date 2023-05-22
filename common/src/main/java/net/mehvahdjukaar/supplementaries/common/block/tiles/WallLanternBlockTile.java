@@ -55,7 +55,7 @@ public class WallLanternBlockTile  extends SwayingBlockTile implements IBlockHol
     }
 
     @Override
-    public Vec3i getNormalRotationAxis(BlockState state) {
+    public Vec3i getRotationAxis(BlockState state) {
         return state.getValue(WallLanternBlock.FACING).getNormal();
     }
 

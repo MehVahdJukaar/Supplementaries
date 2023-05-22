@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
@@ -25,6 +26,14 @@ public class ClientConfigs {
     static WeakReference<ConfigBuilder> builderReference;
 
     static {
+        if(!PlatHelper.getPhysicalSide().isClient()){
+            String message = "Tried to load client configs on a dedicated server";
+            Supplementaries.LOGGER.error(message);
+            if(PlatHelper.isDev()){
+                throw new AssertionError(message);
+            }
+        }
+
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
         builderReference = new WeakReference<>(builder);
 
@@ -211,7 +220,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CLOCK_24H;
         public static final Supplier<Boolean> GLOBE_RANDOM;
         public static final Supplier<Boolean> GLOBE_COORDINATES;
-        public static final Supplier<Boolean> TIPPED_BAMBOO_SPIKES_TAB;
 
         public static final Supplier<GraphicsFanciness> FLAG_FANCINESS;
         public static final Supplier<Boolean> FLAG_BANNER;
@@ -347,11 +355,6 @@ public class ClientConfigs {
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_signs", false);
 
-            builder.pop();
-
-            builder.push("bamboo_spikes");
-            TIPPED_BAMBOO_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
-                    .define("populate_creative_tab", true);
             builder.pop();
 
             builder.push("turn_table");
