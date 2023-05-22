@@ -130,7 +130,7 @@ public class PendulumAnimation extends SwingAnimation {
     }
 
     private static float angleToEnergy(float k, float radAngle) {
-        //E = mgh
+        //E = mgh, m =1
         return k * (1 - Mth.cos(radAngle));
     }
 
@@ -339,6 +339,8 @@ public class PendulumAnimation extends SwingAnimation {
             this.frequency = frequency;
             // g/L. L = length = 1 k=g
             // spring constant of pendulum and other constants included here like gravity
+            //can this be scaled too? what does t affect? it should be equivalent to increase length
+            //freq is proportional to k so increasing f is like increasing l. mass doesnt play a role here
             k = (float) Math.pow(2 * Math.PI * frequency, 2);
             maxAngleEnergy = angleToEnergy(k, (float) Math.toRadians(maxAngle));
             minAngleEnergy = angleToEnergy(k, (float) Math.toRadians(minAngle));
@@ -349,7 +351,7 @@ public class PendulumAnimation extends SwingAnimation {
         }
 
         public Config() {
-            this(0.8f, 45, 0.5f, 0.30f, true, 1, 50);
+            this(0.8f, 45, 0.5f, 0.10f, true, 1, 50);
         }
 
         public float getMinAngle() {
