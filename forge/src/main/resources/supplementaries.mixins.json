@@ -14,7 +14,7 @@
     "SelfSpeakerBlockTileMixin",
     "SelfSlingshotMixin",
     "SelfWrenchMixin",
-    "SerfOpeneableContainerMixin",
+    "SelfOpenableContainerMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
     "SelfSafeMixin",

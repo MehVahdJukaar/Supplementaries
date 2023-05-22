@@ -17,9 +17,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import javax.annotation.Nullable;
 
 @Mixin(OpeneableContainerBlockEntity.class)
-public abstract class SerfOpeneableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {
+public abstract class SelfOpenableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {
 
-    protected SerfOpeneableContainerMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
+    protected SelfOpenableContainerMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
         super(arg, arg2, arg3);
     }
 

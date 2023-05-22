@@ -2,4 +2,7 @@
 - It functions like Quarks pathfinders quills but for structures, searching for them off thread with no lag spikes
 - You can now wash pets with soap
 - Added an option to use dyes directly on blocks
-- Fixed wax not denring on skull candles
+- Fixed wax not rendering on skull candles
+- Fixed sugar block not falling correctly
+- Fixed crash with latest create
+- Fixed quiver keybind working in chat screen
