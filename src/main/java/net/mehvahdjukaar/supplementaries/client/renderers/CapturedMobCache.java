@@ -77,5 +77,6 @@ public class CapturedMobCache {
     public static void unloadLevel(){
         pedestalCrystal = null;
         defaultPig = null;
+        MOB_CACHE.invalidateAll();
     }
 }

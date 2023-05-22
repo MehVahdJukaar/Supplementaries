@@ -97,7 +97,7 @@ public class WallLanternBlockTile extends EnhancedLanternBlockTile implements IB
         this.mimic = state;
 
 
-        int light = state.getLightEmission();
+        int light = state.getLightEmission(level,worldPosition);
         boolean lit = true;
         if (this.mimic.getBlock().getRegistryName().toString().equals("charm:redstone_lantern")) {
             this.isRedstoneLantern = true;
