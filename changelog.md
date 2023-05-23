@@ -1,1 +1,2 @@
-- actually fixed server crash
+- fixed crash with modded signs
+- altered pendulum physics parameters

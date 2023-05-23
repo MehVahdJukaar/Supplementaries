@@ -90,6 +90,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("utilities", Items.BARREL);
         addIcon("functional", Items.AMETHYST_SHARD);
         addIcon("tools", Items.GOLDEN_PICKAXE);
+        addIcon("enhanced hanging signs", Items.OAK_HANGING_SIGN);
     }
 
 

@@ -32,7 +32,7 @@ public class PendulumAnimation extends SwingAnimation {
         super(axisGetter);
         this.config = config;
         Config c = config.get();
-        this.angle = (RAND.nextFloat() - 0.5f) * c.getMinAngle() * 2;
+        this.angle = (RAND.nextFloat() - 0.5f) * c.minAngle * 2;
         this.angularVel = capVelocity(c.k, 1000, angle, c.minAngleEnergy);
     }
 
@@ -44,7 +44,7 @@ public class PendulumAnimation extends SwingAnimation {
 
     @Override
     public void reset() {
-        angle = config.get().getMinAngle();
+        angle = config.get().minAngle;
         angularVel = 0;
     }
 
@@ -58,7 +58,6 @@ public class PendulumAnimation extends SwingAnimation {
         float energy = 0;
 
         Config config = this.config.get();
-        config = new Config();
 
         float k = config.k;
 
@@ -146,7 +145,6 @@ public class PendulumAnimation extends SwingAnimation {
         if (eVel.length() < 0.01) return false; //too little
 
         Config config = ClientConfigs.Blocks.HANGING_SIGN_CONFIG.get();
-        config = new Config();
         double eMass;
         if (config.considerEntityHitbox) {
             AABB boundingBox = entity.getBoundingBox();
@@ -337,8 +335,8 @@ public class PendulumAnimation extends SwingAnimation {
 
 
         public Config(float minAngle, float maxAngle, float damping, float frequency, boolean hitbox, float mass, float force) {
-            this.minAngle = minAngle;
-            this.maxAngle = maxAngle;
+            this.minAngle = (float) Math.toRadians(minAngle);
+            this.maxAngle = (float) Math.toRadians(maxAngle);
             this.damping = damping;
             this.frequency = frequency;
             // g/L. L = length = 1 k=g
@@ -346,8 +344,8 @@ public class PendulumAnimation extends SwingAnimation {
             //can this be scaled too? what does t affect? it should be equivalent to increase length
             //freq is proportional to k so increasing f is like increasing l. mass doesnt play a role here
             k = (float) Math.pow(2 * Math.PI * frequency, 2);
-            maxAngleEnergy = angleToEnergy(k, (float) Math.toRadians(maxAngle));
-            minAngleEnergy = angleToEnergy(k, (float) Math.toRadians(minAngle));
+            maxAngleEnergy = angleToEnergy(k, maxAngle);
+            minAngleEnergy = angleToEnergy(k, minAngle);
 
             this.considerEntityHitbox = hitbox;
             this.collisionInertia = mass;
@@ -358,9 +356,6 @@ public class PendulumAnimation extends SwingAnimation {
             this(0.8f, 60, 0.5f, 0.60f, true, 1f, 15);
         }
 
-        public float getMinAngle() {
-            return minAngle;
-        }
     }
 }
 
