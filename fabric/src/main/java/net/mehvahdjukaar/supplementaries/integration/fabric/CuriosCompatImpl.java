@@ -9,7 +9,7 @@ public class CuriosCompatImpl {
         return KeyLockableTile.KeyStatus.NO_KEY;
     }
 
-    @javax.annotation.Nullable
+    @org.jetbrains.annotations.Nullable
     public static ItemStack getEquippedQuiver(Player player) {
         return null;
     }

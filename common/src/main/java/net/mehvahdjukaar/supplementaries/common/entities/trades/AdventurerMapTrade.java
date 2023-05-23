@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, int minPrice, int maxPrice,
@@ -35,7 +35,7 @@ public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, 
 
 
     @Override
-    public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+    public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
 
         int i = Math.max(1, random.nextInt(Math.max(1, maxPrice - minPrice)) + minPrice);
 

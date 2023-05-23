@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +43,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
 
     @Nullable
     private Consumer<Boolean> onOutOfBounds = null;
-    @Nonnull
+    @NotNull
     private String text = "";
 
     private int frameTick;

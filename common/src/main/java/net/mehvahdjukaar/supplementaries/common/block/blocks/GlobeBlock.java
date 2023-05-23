@@ -46,7 +46,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);
@@ -203,7 +203,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
+    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
         return true;
     }
 

@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EndermanSkullBlock extends SkullBlock {
 
@@ -54,17 +54,17 @@ public class EndermanSkullBlock extends SkullBlock {
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
         return Utils.getTicker(type, ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTile::tick);
     }
 
     @Override
-    public boolean isSignalSource(@Nonnull BlockState state) {
+    public boolean isSignalSource(@NotNull BlockState state) {
         return true;
     }
 
     @Override
-    public int getSignal(BlockState blockState, @Nonnull BlockGetter blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
+    public int getSignal(BlockState blockState, @NotNull BlockGetter blockAccess, @NotNull BlockPos pos, @NotNull Direction side) {
         return blockState.getValue(POWER);
     }
 

@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 /**
  * Author: MehVahdJukaar
@@ -96,7 +96,7 @@ public interface ICatchableMob {
      *
      * @return should always render with water
      */
-    @Nonnull
+    @NotNull
     default Optional<SoftFluid> shouldRenderWithFluid() {
         return Optional.empty();
     }

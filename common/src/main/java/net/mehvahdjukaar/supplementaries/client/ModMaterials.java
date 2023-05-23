@@ -7,15 +7,15 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -69,7 +69,13 @@ public class ModMaterials {
     public static final Supplier<Map<net.minecraft.world.level.block.state.properties.WoodType, Material>> HANGING_SIGN_EXTENSIONS =
             Suppliers.memoize(() -> net.minecraft.world.level.block.state.properties.WoodType.values().collect(Collectors.toMap(
                     Function.identity(),
-                    w -> new Material(SIGN_SHEET, Supplementaries.res("entity/signs/hanging/extension_" + w.name())),
+                    w -> {
+                        String str = w.name();
+                        if (str.contains(":")) {
+                            str = str.replace(":", "/extension_");
+                        } else str = "extension_" + str;
+                        return new Material(SIGN_SHEET, Supplementaries.res("entity/signs/hanging/" + str));
+                    },
                     (v1, v2) -> v1,
                     IdentityHashMap::new)));
 

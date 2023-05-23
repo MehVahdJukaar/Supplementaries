@@ -254,7 +254,7 @@ public class ClientRegistry {
     private static class GlobeProperty implements ClampedItemPropertyFunction {
 
         @Override
-        public float call(ItemStack itemStack, @javax.annotation.Nullable ClientLevel clientLevel, @javax.annotation.Nullable LivingEntity livingEntity, int i) {
+        public float call(ItemStack itemStack, @org.jetbrains.annotations.Nullable ClientLevel clientLevel, @org.jetbrains.annotations.Nullable LivingEntity livingEntity, int i) {
             CompoundTag compoundTag = itemStack.getTagElement("display");
             if (compoundTag != null) {
                 var n = compoundTag.getString("Name");

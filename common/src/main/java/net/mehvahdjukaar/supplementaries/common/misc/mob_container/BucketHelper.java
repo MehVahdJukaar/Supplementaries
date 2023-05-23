@@ -25,7 +25,7 @@ import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 //this is still a mess

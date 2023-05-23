@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class WaystoneMarker extends NamedMapBlockMarker<CustomMapDecoration> {
 

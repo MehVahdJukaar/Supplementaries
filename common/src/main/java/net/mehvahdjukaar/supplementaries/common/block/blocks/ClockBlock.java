@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ClockBlock extends WaterBlock implements EntityBlock {
 
@@ -123,7 +123,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
+    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
         return true;
     }
 

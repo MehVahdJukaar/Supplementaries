@@ -6,36 +6,36 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FlanCompat {
 
     @Contract
     @ExpectPlatform
-    public static boolean canBreak(@Nonnull Player player, @Nonnull BlockPos pos) {
+    public static boolean canBreak(@NotNull Player player, @NotNull BlockPos pos) {
         throw new AssertionError();
     }
 
     @Contract
     @ExpectPlatform
-    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos) {
+    public static boolean canPlace(@NotNull Player player, @NotNull BlockPos pos) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos) {
-        throw new AssertionError();
-    }
-
-    @Contract
-    @ExpectPlatform
-    public static boolean canAttack(@Nonnull Player player, @Nonnull Entity victim) {
+    public static boolean canReplace(@NotNull Player player, @NotNull BlockPos pos) {
         throw new AssertionError();
     }
 
     @Contract
     @ExpectPlatform
-    public static boolean canInteract(@Nonnull Player player, @Nonnull BlockPos targetPos) {
+    public static boolean canAttack(@NotNull Player player, @NotNull Entity victim) {
+        throw new AssertionError();
+    }
+
+    @Contract
+    @ExpectPlatform
+    public static boolean canInteract(@NotNull Player player, @NotNull BlockPos targetPos) {
         throw new AssertionError();
     }
 

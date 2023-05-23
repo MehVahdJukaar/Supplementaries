@@ -37,8 +37,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,7 +130,7 @@ public class PearlMarker extends Entity {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return PlatHelper.getEntitySpawnPacket(this);

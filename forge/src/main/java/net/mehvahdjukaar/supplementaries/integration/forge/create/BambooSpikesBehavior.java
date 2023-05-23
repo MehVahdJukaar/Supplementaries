@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class BambooSpikesBehavior implements MovementBehaviour {
@@ -95,7 +95,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
 
     private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
-    private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
+    private void doTileStuff(MovementContext context, @NotNull Level world, LivingEntity le) {
         CompoundTag com = context.tileData;
         if (com == null) return;
         long lastTicked = com.getLong("LastTicked");

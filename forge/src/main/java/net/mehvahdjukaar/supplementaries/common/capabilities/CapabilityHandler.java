@@ -52,13 +52,13 @@ public class CapabilityHandler {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @javax.annotation.Nullable
+    @org.jetbrains.annotations.Nullable
     public static <T> T get(ICapabilityProvider provider, Capability<T> cap){
         return provider.getCapability(cap).orElse(null);
     }
 
     @SuppressWarnings("ConstantConditions")
-    @javax.annotation.Nullable
+    @org.jetbrains.annotations.Nullable
     public static <T> T get(ICapabilityProvider provider, Capability<T> cap, Direction dir){
         return provider.getCapability(cap, dir).orElse(null);
     }

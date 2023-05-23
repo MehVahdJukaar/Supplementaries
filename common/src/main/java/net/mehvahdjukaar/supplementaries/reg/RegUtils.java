@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
