@@ -41,8 +41,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
@@ -155,7 +155,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     private static class RandomAdventureMapTrade implements VillagerTrades.ItemListing {
 
         @Override
-        public MerchantOffer getOffer(@Nonnull Entity entity, @Nonnull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
             int maxPrice = 11;
             int minPrice = 6;
             int price = random.nextInt(maxPrice - minPrice + 1) + minPrice;

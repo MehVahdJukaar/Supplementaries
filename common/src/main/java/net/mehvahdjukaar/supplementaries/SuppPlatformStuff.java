@@ -21,8 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class SuppPlatformStuff {
@@ -35,7 +35,7 @@ public class SuppPlatformStuff {
     @ExpectPlatform
     @Nullable
     @Contract
-    public static <T> T getForgeCap(@Nonnull Object object, Class<T> capClass) {
+    public static <T> T getForgeCap(@NotNull Object object, Class<T> capClass) {
         throw new AssertionError();
     }
 

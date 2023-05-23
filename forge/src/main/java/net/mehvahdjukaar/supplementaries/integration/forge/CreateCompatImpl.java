@@ -75,7 +75,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -243,7 +243,7 @@ public class CreateCompatImpl {
 
         private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
-        private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
+        private void doTileStuff(MovementContext context, @NotNull Level world, LivingEntity le) {
             CompoundTag com = context.blockEntityData;
             if (com == null) return;
             long lastTicked = com.getLong("LastTicked");

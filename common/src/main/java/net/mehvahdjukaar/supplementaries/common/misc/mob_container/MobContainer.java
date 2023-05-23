@@ -32,8 +32,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -119,7 +119,7 @@ public class MobContainer {
      */
     //TODO: make this holder store an actual mob so one can modify it when inside the container. in other words save this entity to this mob data when done
     @Nullable
-    public static Entity createStaticMob(MobNBTData.Entity data, @Nonnull Level world, BlockPos pos) {
+    public static Entity createStaticMob(MobNBTData.Entity data, @NotNull Level world, BlockPos pos) {
         Entity entity = null;
         if (data != null) {
             entity = createEntityFromNBT(data.mobTag, data.uuid, world);

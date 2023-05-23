@@ -13,11 +13,11 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class FlanCompatImpl {
 
-    public static boolean canBreak(@Nonnull Player player, @Nonnull BlockPos pos) {
+    public static boolean canBreak(@NotNull Player player, @NotNull BlockPos pos) {
         if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
@@ -29,7 +29,7 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canPlace(@Nonnull Player player, @Nonnull BlockPos pos) {
+    public static boolean canPlace(@NotNull Player player, @NotNull BlockPos pos) {
         if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
@@ -41,7 +41,7 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canReplace(@Nonnull Player player, @Nonnull BlockPos pos) {
+    public static boolean canReplace(@NotNull Player player, @NotNull BlockPos pos) {
         if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
@@ -53,7 +53,7 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canAttack(@Nonnull Player player, @Nonnull Entity victim) {
+    public static boolean canAttack(@NotNull Player player, @NotNull Entity victim) {
         if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);
@@ -65,7 +65,7 @@ public final class FlanCompatImpl {
         }
     }
 
-    public static boolean canInteract(@Nonnull Player player, @Nonnull BlockPos targetPos) {
+    public static boolean canInteract(@NotNull Player player, @NotNull BlockPos targetPos) {
         if (player.level.isClientSide) return true; //should only be used from server but client can call too
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level);

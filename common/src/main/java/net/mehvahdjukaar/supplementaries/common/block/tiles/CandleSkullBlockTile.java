@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 

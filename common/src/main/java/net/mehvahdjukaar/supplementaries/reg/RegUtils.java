@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -52,7 +52,7 @@ public class RegUtils {
     }
 
     //gets the tab given or null if the item is disabled
-    @Nonnull
+    @NotNull
     public static CreativeModeTab getTab(CreativeModeTab g, String regName) {
         if (CommonConfigs.isEnabled(regName)) {
             return ModCreativeTabs.MOD_TAB == null ? g : ModCreativeTabs.MOD_TAB;

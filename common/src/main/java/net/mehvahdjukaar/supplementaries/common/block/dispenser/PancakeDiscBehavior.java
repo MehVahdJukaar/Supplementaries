@@ -14,13 +14,13 @@ import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 class PancakeDiscBehavior extends OptionalDispenseItemBehavior {
 
     @Override
-    @Nonnull
-    protected ItemStack execute(BlockSource source, @Nonnull ItemStack stack) {
+    @NotNull
+    protected ItemStack execute(BlockSource source, @NotNull ItemStack stack) {
         Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
         BlockPos pos = source.getPos().relative(dir);
         Level world = source.getLevel();

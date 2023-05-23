@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.spongepowered.asm.mixin.Mixin;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Mixin(OpeneableContainerBlockEntity.class)
 public abstract class SelfOpenableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {

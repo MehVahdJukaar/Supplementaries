@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 public class GlobeData extends SavedData {

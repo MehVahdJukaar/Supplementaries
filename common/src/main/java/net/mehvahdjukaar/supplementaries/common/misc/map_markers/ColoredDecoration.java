@@ -8,13 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ColoredDecoration extends CustomMapDecoration {
     private final DyeColor color;
     private final int value;
 
-    public ColoredDecoration(MapDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @Nonnull DyeColor color) {
+    public ColoredDecoration(MapDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @NotNull DyeColor color) {
         super(type, x, y, rot, displayName);
         this.color = color;
         this.value = ColorHelper.pack(color.getTextureDiffuseColors());

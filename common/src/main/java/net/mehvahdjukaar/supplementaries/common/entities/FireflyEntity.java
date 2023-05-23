@@ -37,7 +37,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;//package net.mehvahdj
 //import net.minecraftforge.fmllegacy.network.NetworkHooks;
 //import net.minecraftforge.registries.ForgeRegistries;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //import java.util.EnumSet;
 //import java.util.Random;
 //

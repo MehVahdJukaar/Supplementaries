@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ClockBlockTile extends BlockEntity {
 
@@ -43,7 +43,7 @@ public class ClockBlockTile extends BlockEntity {
     }
 
     @Override
-    public void load(@Nonnull CompoundTag compound) {
+    public void load(@NotNull CompoundTag compound) {
         super.load(compound);
         this.roll = compound.getFloat("MinRoll");
         this.prevRoll = this.roll;

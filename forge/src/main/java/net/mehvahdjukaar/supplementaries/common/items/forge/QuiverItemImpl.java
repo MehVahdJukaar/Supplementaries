@@ -22,7 +22,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +61,7 @@ public class QuiverItemImpl {
 
         //Provider
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
+        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
             var v = ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, lazyOptional);
             if (v.isPresent()) return v;
             v = CapabilityHandler.QUIVER_ITEM_HANDLER.orEmpty(cap, lazyOptional2);

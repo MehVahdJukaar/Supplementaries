@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @Mixin(IronGolemRenderer.class)
 public abstract class IronGolemRendererMixin {
 
     @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
-    public void getEntityTexture(@Nonnull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
+    public void getEntityTexture(@NotNull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
         if (entity.getUUID().getLeastSignificantBits() % 420 == 0)
             info.setReturnValue(ModTextures.THICK_GOLEM);
     }

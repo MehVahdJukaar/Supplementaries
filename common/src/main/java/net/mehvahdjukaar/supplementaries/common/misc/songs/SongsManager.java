@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         CURRENTLY_PAYING.remove(id);
     }
 
-    @Nonnull
+    @NotNull
     private static String selectRandomSong(RandomSource random) {
         Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
         return song.map(WeightedEntry.Wrapper::getData).orElseGet(() ->"");

@@ -18,7 +18,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class QuarkCompat {
 

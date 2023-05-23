@@ -18,7 +18,7 @@ import xfacthd.framedblocks.api.util.FramedBlockData;
 import xfacthd.framedblocks.api.util.Utils;
 import xfacthd.framedblocks.common.FBContent;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static xfacthd.framedblocks.api.block.FramedBlockEntity.MSG_BLACKLISTED;
 import static xfacthd.framedblocks.api.block.FramedBlockEntity.MSG_BLOCK_ENTITY;

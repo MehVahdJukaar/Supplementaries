@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 
 public class BambooSpikesBlockTile extends BlockEntity {
@@ -85,7 +85,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //returns true if BlockState needs to be changed
     //will be called from moving block so it needs a world
-    public boolean interactWithEntity(LivingEntity le, @Nonnull Level world) {
+    public boolean interactWithEntity(LivingEntity le, @NotNull Level world) {
         if (this.hasPotion() && !this.isOnCooldown(world)) {
             boolean used = false;
             for (MobEffectInstance effect : this.potion.getEffects()) {

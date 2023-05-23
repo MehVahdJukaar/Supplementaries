@@ -24,8 +24,8 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -96,7 +96,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @Nonnull RandomSource rand) {
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @NotNull RandomSource rand) {
 
         BakedModel model;
         //for special flowers
