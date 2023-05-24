@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.Blocks;
@@ -33,6 +34,16 @@ public class EMICompat implements EmiPlugin {
                         .output(EmiStack.of(ModRegistry.RAKED_GRAVEL.get()))
                         .build()
         );
+
+        registry.addRecipe(
+                EmiWorldInteractionRecipe.builder()
+                        .id(new ResourceLocation(Supplementaries.MOD_ID, "ash_burn"))
+                        .leftInput(EmiIngredient.of(ItemTags.LOGS_THAT_BURN))
+                        .rightInput(EmiStack.of(Blocks.FIRE), false)
+                        .output(EmiStack.of(ModRegistry.ASH_BLOCK.get()))
+                        .build()
+        );
+
 
         registry.setDefaultComparison(EmiStack.of(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()), c -> c.copy().nbt(true).build());
     }

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

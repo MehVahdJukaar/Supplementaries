@@ -23,7 +23,7 @@ public class PendulumAnimation extends SwingAnimation {
     private static final RandomSource RAND = RandomSource.create();
 
     private final Supplier<Config> config;
-    private float angularVel = 0.0001f;
+    private float angularVel;
     private boolean hasDrag = true;
     private float lastImpulse;
     private int immunity = 0;
@@ -310,8 +310,8 @@ public class PendulumAnimation extends SwingAnimation {
 
     public static class Config {
         public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.floatRange(0, 360).fieldOf("min_angle").forGetter(c -> c.minAngle),
-                Codec.floatRange(0, 360).fieldOf("max_angle").forGetter(c -> c.maxAngle),
+                Codec.floatRange(0, 360).fieldOf("min_angle").forGetter(c -> (float) Math.toDegrees(c.minAngle)),
+                Codec.floatRange(0, 360).fieldOf("max_angle").forGetter(c -> (float) Math.toDegrees(c.maxAngle)),
                 Codec.FLOAT.fieldOf("damping").forGetter(c -> c.damping),
                 Codec.FLOAT.fieldOf("frequency").forGetter(c -> c.frequency),
                 Codec.BOOL.fieldOf("collision_considers_entity_hitbox").forGetter(c -> c.considerEntityHitbox),
@@ -344,8 +344,8 @@ public class PendulumAnimation extends SwingAnimation {
             //can this be scaled too? what does t affect? it should be equivalent to increase length
             //freq is proportional to k so increasing f is like increasing l. mass doesnt play a role here
             k = (float) Math.pow(2 * Math.PI * frequency, 2);
-            maxAngleEnergy = angleToEnergy(k, maxAngle);
-            minAngleEnergy = angleToEnergy(k, minAngle);
+            maxAngleEnergy = angleToEnergy(k, this.minAngle);
+            minAngleEnergy = angleToEnergy(k, this.maxAngle);
 
             this.considerEntityHitbox = hitbox;
             this.collisionInertia = mass;

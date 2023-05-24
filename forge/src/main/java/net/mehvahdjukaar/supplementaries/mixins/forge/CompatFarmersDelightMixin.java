@@ -17,7 +17,6 @@ public abstract class CompatFarmersDelightMixin extends Block {
         super(arg);
     }
 
-    //break protection
     @Inject(method = "attemptRopeClimb", at = @At(value = "INVOKE",
             ordinal = 14,
             shift = At.Shift.BEFORE), cancellable = true, require = 0, remap = false)
