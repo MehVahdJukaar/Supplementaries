@@ -128,6 +128,7 @@ public class ClientRegistry {
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
     }
 
+    private static boolean setupCompleted = false;
 
     public static void setup() {
 
@@ -249,6 +250,7 @@ public class ClientRegistry {
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
 
+        setupCompleted = true;
     }
 
     private static class GlobeProperty implements ClampedItemPropertyFunction {
