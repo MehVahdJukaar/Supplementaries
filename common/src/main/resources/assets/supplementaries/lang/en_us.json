@@ -430,6 +430,8 @@
   "message.supplementaries.tattered": "Tattered",
   "item.supplementaries.cartographers_quill": "Cartographer's Quill",
   "message.supplementaries.cartographers_quill": "Unknown",
+  "message.supplementaries.quill_failed": "A Cartographer's Quill has failed its search.",
+  "message.supplementaries.quill_finished": "A Cartographer Map has been completed.",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",

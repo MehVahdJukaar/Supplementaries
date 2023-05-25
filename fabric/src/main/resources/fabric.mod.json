@@ -42,5 +42,8 @@
     "fabric": "*",
     "minecraft": ">=1.19.1",
     "moonlight": ">=${required_moonlight_version}"
+  },
+  "suggests": {
+    "sleep_tight": "*"
   }
 }

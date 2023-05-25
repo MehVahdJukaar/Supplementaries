@@ -83,6 +83,16 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     @Override
+    protected String getFailedMessage() {
+        return "message.supplementaries.quill_failed";
+    }
+
+    @Override
+    protected String getFinishedMessage() {
+        return "message.supplementaries.quill_finished";
+    }
+
+    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (this.category != null) {
             if (group == category || group == CreativeModeTab.TAB_SEARCH) {
