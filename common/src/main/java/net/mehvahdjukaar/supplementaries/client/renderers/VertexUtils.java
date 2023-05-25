@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
@@ -14,6 +15,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 //TODO: move to lib
 public class VertexUtils {
@@ -160,18 +167,18 @@ public class VertexUtils {
 
         //addQuadTop(builder, matrixStackIn, -l+dx1, w, l, l, w, -l, minU, minV, maxU, maxV2, r, g, b, a, lu, lv, 0, 1, 0);
         //top
-        addVert(builder, matrixStackIn, -l - usw, l + usw, l + usw, minU, maxV2, cUsw, lu, lv, 0, 1, 0);
-        addVert(builder, matrixStackIn, l + use, l + use, l + use, maxU, maxV2, cUse, lu, lv, 0, 1, 0);
-        addVert(builder, matrixStackIn, l + une, l + une, -l - une, maxU, minV, cUne, lu, lv, 0, 1, 0);
-        addVert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, 0, 1, 0);
+        vert(builder, matrixStackIn, -l - usw, l + usw, l + usw, minU, maxV2, cUsw, lu, lv, 0, 1, 0);
+        vert(builder, matrixStackIn, l + use, l + use, l + use, maxU, maxV2, cUse, lu, lv, 0, 1, 0);
+        vert(builder, matrixStackIn, l + une, l + une, -l - une, maxU, minV, cUne, lu, lv, 0, 1, 0);
+        vert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, 0, 1, 0);
 
 
         //addQuadTop(builder, matrixStackIn, -l, 0, -l, l, 0, l, minU, minV, maxU, maxV2, r5, g5, b5, a, lu, lv, 0, -1, 0);
 
-        addVert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, minU, maxV2, cDnw, lu, lv, 0, -1, 0);
-        addVert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, maxU, maxV2, cDne, lu, lv, 0, -1, 0);
-        addVert(builder, matrixStackIn, l + dse, -l - dse, l + dse, maxU, minV, cDse, lu, lv, 0, -1, 0);
-        addVert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, minU, minV, cDsw, lu, lv, 0, -1, 0);
+        vert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, minU, maxV2, cDnw, lu, lv, 0, -1, 0);
+        vert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, maxU, maxV2, cDne, lu, lv, 0, -1, 0);
+        vert(builder, matrixStackIn, l + dse, -l - dse, l + dse, maxU, minV, cDse, lu, lv, 0, -1, 0);
+        vert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, minU, minV, cDsw, lu, lv, 0, -1, 0);
 
         if (flippedY) {
             float temp = minV;
@@ -182,75 +189,84 @@ public class VertexUtils {
         // north z-
         // x y z u v r g b a lu lv
         //addQuadSide(builder, matrixStackIn, l, 0, -l, -l, w, -l, minU, minV, maxU, maxV, r8, g8, b8, a, lu, lv, 0, 0, 1);
-        addVert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, minU, maxV, cDne, lu, lv, 0, 0, 1);
-        addVert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, maxU, maxV, cDnw, lu, lv, 0, 0, 1);
-        addVert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, maxU, minV, cUnw, lu, lv, 0, 0, 1);
-        addVert(builder, matrixStackIn, l + une, l + une, -l - une, minU, minV, cUne, lu, lv, 0, 0, 1);
+        vert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, minU, maxV, cDne, lu, lv, 0, 0, 1);
+        vert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, maxU, maxV, cDnw, lu, lv, 0, 0, 1);
+        vert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, maxU, minV, cUnw, lu, lv, 0, 0, 1);
+        vert(builder, matrixStackIn, l + une, l + une, -l - une, minU, minV, cUne, lu, lv, 0, 0, 1);
         // west
         //addQuadSide(builder, matrixStackIn, -l, 0, -l, -l, w, l, minU, minV, maxU, maxV, r6, g6, b6, a, lu, lv, -1, 0, 0);
-        addVert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, minU, maxV, cDnw, lu, lv, -1, 0, 0);
-        addVert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, maxU, maxV, cDsw, lu, lv, -1, 0, 0);
-        addVert(builder, matrixStackIn, -l - usw, l + usw, l + usw, maxU, minV, cUsw, lu, lv, -1, 0, 0);
-        addVert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, -1, 0, 0);
+        vert(builder, matrixStackIn, -l - dnw, -l - dnw, -l - dnw, minU, maxV, cDnw, lu, lv, -1, 0, 0);
+        vert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, maxU, maxV, cDsw, lu, lv, -1, 0, 0);
+        vert(builder, matrixStackIn, -l - usw, l + usw, l + usw, maxU, minV, cUsw, lu, lv, -1, 0, 0);
+        vert(builder, matrixStackIn, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, -1, 0, 0);
         // south
         //addQuadSide(builder, matrixStackIn, -l, 0, l, l, w, l, minU, minV, maxU, maxV, r8, g8, b8, a, lu, lv, 0, 0, -1);
-        addVert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, minU, maxV, cDsw, lu, lv, 0, 0, -1);
-        addVert(builder, matrixStackIn, l + dse, -l - dse, l + dse, maxU, maxV, cDse, lu, lv, 0, 0, -1);
-        addVert(builder, matrixStackIn, l + use, l + use, l + use, maxU, minV, cUse, lu, lv, 0, 0, -1);
-        addVert(builder, matrixStackIn, -l - usw, l + usw, l + usw, minU, minV, cUsw, lu, lv, 0, 0, -1);
+        vert(builder, matrixStackIn, -l - dsw, -l - dsw, l + dsw, minU, maxV, cDsw, lu, lv, 0, 0, -1);
+        vert(builder, matrixStackIn, l + dse, -l - dse, l + dse, maxU, maxV, cDse, lu, lv, 0, 0, -1);
+        vert(builder, matrixStackIn, l + use, l + use, l + use, maxU, minV, cUse, lu, lv, 0, 0, -1);
+        vert(builder, matrixStackIn, -l - usw, l + usw, l + usw, minU, minV, cUsw, lu, lv, 0, 0, -1);
         // east
         //addQuadSide(builder, matrixStackIn, l, 0, l, l, w, -l, minU, minV, maxU, maxV, r6, g6, b6, a, lu, lv, 1, 0, 0);
-        addVert(builder, matrixStackIn, l + dse, -l - dse, l + dse, minU, maxV, cDse, lu, lv, 1, 0, 0);
-        addVert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, maxU, maxV, cDne, lu, lv, 1, 0, 0);
-        addVert(builder, matrixStackIn, l + une, l + une, -l - une, maxU, minV, cUne, lu, lv, 1, 0, 0);
-        addVert(builder, matrixStackIn, l + use, l + use, l + use, minU, minV, cUse, lu, lv, 1, 0, 0);
+        vert(builder, matrixStackIn, l + dse, -l - dse, l + dse, minU, maxV, cDse, lu, lv, 1, 0, 0);
+        vert(builder, matrixStackIn, l + dne, -l - dne, -l - dne, maxU, maxV, cDne, lu, lv, 1, 0, 0);
+        vert(builder, matrixStackIn, l + une, l + une, -l - une, maxU, minV, cUne, lu, lv, 1, 0, 0);
+        vert(builder, matrixStackIn, l + use, l + use, l + use, minU, minV, cUse, lu, lv, 1, 0, 0);
     }
 
 
-    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, int color, int lu, int lv, float nx, float ny, float nz) {
+    public static void vert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, int color, int lu, int lv, float nx, float ny, float nz) {
         builder.vertex(matrixStackIn.last().pose(), x, y, z).color(color).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
                 .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
-    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
-                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
+    public static void addQuadSide(VertexConsumer builder, PoseStack poseStack,
+                                   float x0, float y0, float z0,
+                                   float x1, float y1, float z1,
+                                   float u0, float v0,
+                                   float u1, float v1,
+                                   float r, float g, float b, float a,
+                                   int lu, int lv,
+                                   float nx, float ny, float nz) {
+        vert(builder, poseStack, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    public static void addQuadSide(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
-                                   float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
+    public static void addQuadSide(VertexConsumer builder, PoseStack poseStack,
+                                   float x0, float y0, float z0,
+                                   float x1, float y1, float z1,
+                                   float u0, float v0,
+                                   float u1, float v1,
+                                   float r, float g, float b, float a,
+                                   int lu, int lv,
+                                   float nx, float ny, float nz,
+                                   TextureAtlasSprite sprite) {
 
         u0 = getRelativeU(sprite, u0);
         u1 = getRelativeU(sprite, u1);
         v0 = getRelativeV(sprite, v0);
         v1 = getRelativeV(sprite, v1);
-
-        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        addQuadSide(builder, poseStack, x0, y0, z0, x1, y1, z1, u0, v0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    public static void addQuadTop(VertexConsumer builder, PoseStack matrixStackIn, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
+    public static void addQuadTop(VertexConsumer builder, PoseStack poseStack, float x0, float y0, float z0, float x1, float y1, float z1, float u0, float v0, float u1, float v1, float r, float g,
                                   float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        addVert(builder, matrixStackIn, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y0, z0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        addVert(builder, matrixStackIn, x0, y1, z1, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x1, y0, z0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        vert(builder, poseStack, x0, y1, z1, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
 
-    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
-                               float b, float a, int lu, int lv, float nx, float ny, float nz) {
+    public static void vert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
+                            float b, float a, int lu, int lv, float nx, float ny, float nz) {
         builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
                 .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
 
-    public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
-                               float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
+    public static void vert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
+                            float b, float a, int lu, int lv, float nx, float ny, float nz, TextureAtlasSprite sprite) {
         builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(getRelativeU(sprite, u), getRelativeV(sprite, v))
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv).normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
     }
@@ -294,10 +310,10 @@ public class VertexUtils {
 
         for (int k = 0; k < 2; k++) {
             for (int j = 0; j < 2; j++) {
-                addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), -hh + ho, +wo, minu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-                addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-                addVert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
-                addVert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                vert(builder, matrixStackIn, hw - Math.abs(wo / 2), -hh + ho, +wo, minu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                vert(builder, matrixStackIn, -hw + Math.abs(wo / 2), -hh + ho, -wo, maxu, maxv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                vert(builder, matrixStackIn, -hw + Math.abs(wo / 2), hh + ho, -wo, maxu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
+                vert(builder, matrixStackIn, hw - Math.abs(wo / 2), hh + ho, +wo, minu, minv, 1, 1, 1, 1, lu, lv, 0, 1, 0);
                 matrixStackIn.mulPose(RotHlpr.Y180);
                 float temp = minu;
                 minu = maxu;
@@ -309,6 +325,8 @@ public class VertexUtils {
 
         }
     }
+
+
 
 
 }

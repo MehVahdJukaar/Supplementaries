@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.fabric.MLFabricSetupCallbacks;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ClientEventsFabric;
 import net.mehvahdjukaar.supplementaries.common.events.fabric.ServerEventsFabric;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 
 public class SupplementariesFabric implements ModInitializer {
@@ -17,7 +18,7 @@ public class SupplementariesFabric implements ModInitializer {
         ServerEventsFabric.init();
 
         if (PlatHelper.getPhysicalSide().isClient()) {
-            throwIfFabricRenderingAPIHasBeenNuked();
+            VibeChecker.checkVibe();
             ClientEventsFabric.init();
             SupplementariesFabricClient.clientInitAndSetup();
         }
@@ -25,13 +26,5 @@ public class SupplementariesFabric implements ModInitializer {
         MLFabricSetupCallbacks.COMMON_SETUP.add(ModSetup::setup);
         MLFabricSetupCallbacks.COMMON_SETUP.add(ModSetup::asyncSetup);
 
-    }
-
-    //I hate this. I've got to do what I've got to do. Cant stand random reports anymore
-    public static void throwIfFabricRenderingAPIHasBeenNuked() {
-        if (PlatHelper.isModLoaded("sodium") && !PlatHelper.isModLoaded("indium")) {
-            throw new IllegalStateException("You seem to have installed Sodium which breaks fabric rendering API." +
-                    "To fix you must install Indium as Supplementaries, as many other mods, rely on said API");
-        }
     }
 }

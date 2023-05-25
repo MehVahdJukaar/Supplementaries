@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -15,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
@@ -181,14 +179,14 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(hw, 0, 0);
 
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, nx, 0, nz);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, nx, 0, nz);
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
 
         matrixStack.popPose();
 
@@ -197,14 +195,14 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(-hw, 0, 0);
 
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, -nx, 0, nz);
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, -nx, 0, nz);
 
         matrixStack.popPose();
 
@@ -213,17 +211,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(hw, 0, 0);
 
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, 0, 1, 0);
         matrixStack.translate(-w, 0, 0);
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, u, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, maxU, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
         matrixStack.mulPose(rotation2);
         matrixStack.translate(w, 0, 0);
-        VertexUtils.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 1, 0);
 
         matrixStack.popPose();
 
@@ -232,17 +230,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(-hw, 0, 0);
 
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, u, pV, r, g, b, 1, lu, lv, 0, -1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, pV, r, g, b, 1, lu, lv, 0, -1, 0);
         matrixStack.translate(w, 0, 0);
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
 
         matrixStack.mulPose(rotation);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
         matrixStack.mulPose(rotation2);
         matrixStack.translate(-w, 0, 0);
-        VertexUtils.addVert(builder, matrixStack, 0, 0, 0, maxU, pV, r, g, b, 1, lu, lv, 0, -1, 0);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, pV, r, g, b, 1, lu, lv, 0, -1, 0);
 
 
         matrixStack.popPose();
@@ -256,13 +254,13 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             matrixStack.mulPose(rotation2);
             matrixStack.translate(-hw, 0, 0);
 
-            VertexUtils.addVert(builder, matrixStack, 0, h, 0, pU, v, r, g, b, 1, lu, lv, 0, 0, 1);
-            VertexUtils.addVert(builder, matrixStack, 0, 0, 0, pU, maxV, r, g, b, 1, lu, lv, 0, 0, 1);
+            VertexUtils.vert(builder, matrixStack, 0, h, 0, pU, v, r, g, b, 1, lu, lv, 0, 0, 1);
+            VertexUtils.vert(builder, matrixStack, 0, 0, 0, pU, maxV, r, g, b, 1, lu, lv, 0, 0, 1);
 
             matrixStack.translate(w, 0, 0);
 
-            VertexUtils.addVert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, 0, 1);
-            VertexUtils.addVert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 0, 1);
+            VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, 0, 1);
+            VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 0, 1);
 
             matrixStack.popPose();
         }

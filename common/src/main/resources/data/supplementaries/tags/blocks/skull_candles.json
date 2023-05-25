@@ -3,7 +3,7 @@
   "values": [
     {"id":"supplementaries:skull_candle","required":false},
     {"id":"supplementaries:skull_candle_soul","required":false},
-    {"id":"supplementaries:soul_candle_wall","required":false},
-    {"id":"supplementaries:soul_candle_soul_wall","required":false}
+    {"id":"supplementaries:skull_candle_wall","required":false},
+    {"id":"supplementaries:skull_candle_soul_wall","required":false}
   ]
 }

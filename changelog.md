@@ -1,2 +1,1 @@
-- fixed crash with modded signs
-- altered pendulum physics parameters
+- fixed crash with old haning signs
