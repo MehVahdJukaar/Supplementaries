@@ -17,7 +17,10 @@
       "uuid": "77e6fa0a-992b-48b3-9383-9490f4cdd1e7",
       "has_globe": true
     },
-    "Synthestra": {},
+    "Synthestra": {
+       "uuid": "948cdb5c-9ba3-4ba9-96e7-ff97daff63ea",
+       "has_statue": true
+    },
     "n7": {
       "uuid": "5f7b3c4e-34bd-435f-b3f2-491fba2eb554",
       "has_statue": true
