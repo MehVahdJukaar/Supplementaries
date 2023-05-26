@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 
-import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -23,7 +20,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
@@ -62,6 +58,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
         QuarkCompatImpl.removeStuffFromARLHack();
     }
+
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return ModSounds.JAR;

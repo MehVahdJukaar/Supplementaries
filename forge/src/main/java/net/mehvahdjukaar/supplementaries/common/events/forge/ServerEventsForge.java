@@ -13,12 +13,14 @@ import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.forge.VibeCheck;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -189,6 +191,13 @@ public class ServerEventsForge {
             CapturedMobCache.clear();
         } else {
             WeatheredMapRecipe.onWorldUnload();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWorldLoad(LevelEvent.Load event){
+        if(event.getLevel().isClientSide()) {
+            VibeCheck.checkVibe((Level) event.getLevel());
         }
     }
 }
