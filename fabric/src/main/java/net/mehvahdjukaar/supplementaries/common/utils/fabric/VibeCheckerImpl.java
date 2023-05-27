@@ -1,6 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeCheckerImpl {
     public static void checkVibe() {
@@ -25,4 +32,5 @@ public class VibeCheckerImpl {
                     "To fix you must install Indium as Supplementaries, as many other mods, rely on said API");
         }
     }
+
 }

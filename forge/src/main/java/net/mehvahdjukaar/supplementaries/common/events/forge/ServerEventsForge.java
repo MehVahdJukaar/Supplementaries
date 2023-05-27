@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecip
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -22,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -198,5 +200,11 @@ public class ServerEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onLevelLoad(LevelEvent.Load event) {
+        if(event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()){
+            VibeChecker.checkVibe((Level) event.getLevel());
+        }
+    }
 
 }
