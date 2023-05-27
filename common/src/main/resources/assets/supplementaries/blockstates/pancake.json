@@ -95,6 +95,31 @@
     },
     "pancakes=8,topping=chocolate": {
       "model": "supplementaries:block/pancakes/pancake_8_chocolate"
+    },
+
+    "pancakes=1,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_1_jam"
+    },
+    "pancakes=2,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_2_jam"
+    },
+    "pancakes=3,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_3_jam"
+    },
+    "pancakes=4,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_4_jam"
+    },
+    "pancakes=5,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_5_jam"
+    },
+    "pancakes=6,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_6_jam"
+    },
+    "pancakes=7,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_7_jam"
+    },
+    "pancakes=8,topping=jam": {
+      "model": "supplementaries:block/pancakes/pancake_8_jam"
     }
   }
 }

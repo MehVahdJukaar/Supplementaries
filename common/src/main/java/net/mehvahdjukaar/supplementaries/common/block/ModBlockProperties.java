@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.VanillaSoftFluids;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
@@ -23,8 +24,8 @@ import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -205,7 +206,8 @@ public class ModBlockProperties {
         NONE("none"),
         HONEY("honey"),
         SYRUP("syrup"),
-        CHOCOLATE("chocolate");
+        CHOCOLATE("chocolate"),
+        JAM("jam");
 
         private final String name;
 
@@ -221,6 +223,7 @@ public class ModBlockProperties {
         public static Topping fromFluid(SoftFluid s) {
             if (s == VanillaSoftFluids.HONEY.get()) return HONEY;
             String name = Utils.getID(s).getPath();
+            if (name.contains("jam")) return JAM;
             if (name.equals("chocolate")) return CHOCOLATE;
             var containers = s.getFilledContainer(Items.GLASS_BOTTLE);
             if (containers.isPresent() && containers.get().builtInRegistryHolder().is(ModTags.SYRUP)) return SYRUP;
@@ -229,6 +232,10 @@ public class ModBlockProperties {
 
         public static Topping fromItem(ItemStack stack) {
             Item item = stack.getItem();
+            var f = SoftFluidRegistry.fromItem(stack.getItem());
+            var ff = fromFluid(f);
+            if (ff != NONE) return ff;
+            if (stack.is(Items.SWEET_BERRIES)) return JAM;
             if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
             if (item instanceof HoneyBottleItem) return Topping.HONEY;
             var tag = Registry.ITEM.getTag(ModTags.CHOCOLATE_BARS);

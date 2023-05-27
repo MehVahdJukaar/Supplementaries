@@ -71,20 +71,19 @@ public class ItemsUtilImpl {
                         return true;
                     } else {
                         //this is a mess and probably not even correct
-                        CompoundTag newTag = new CompoundTag();
-                        newTag.put("BlockEntityTag", handlerAndTe.getSecond().saveWithoutMetadata());
+                        CompoundTag tileTag = handlerAndTe.getSecond().saveWithoutMetadata();
                         if (inSlot) {
                             stack.setCount(result.getCount());
                             ItemStack newStack = containerStack.copy();
+                            newStack.getOrCreateTag().put("BlockEntityTag", tileTag);
                             if (slot.mayPlace(newStack)) {
-                                newStack.setTag(newTag);
                                 slot.set(newStack);
                                 return true;
                             }
                         } else {
                             int i = stack.getCount() - result.getCount();
                             slot.safeTake(i, i, player);
-                            containerStack.setTag(newTag);
+                            containerStack.getOrCreateTag().put("BlockEntityTag", tileTag);
                             return true;
                         }
                     }
