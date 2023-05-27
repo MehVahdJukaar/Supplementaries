@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;

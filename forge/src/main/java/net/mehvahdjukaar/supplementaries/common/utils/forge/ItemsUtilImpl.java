@@ -45,9 +45,7 @@ public class ItemsUtilImpl {
 
                         if (slot.mayPlace(dropped)) {
                             slot.set(dropped);
-                            CompoundTag newTag = new CompoundTag();
-                            newTag.put("BlockEntityTag", handlerAndTe.getSecond().saveWithoutMetadata());
-                            containerStack.setTag(newTag);
+                            containerStack.getOrCreateTag().put("BlockEntityTag", handlerAndTe.getSecond().saveWithoutMetadata());
                             return true;
                         }
                         return false;
