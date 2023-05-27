@@ -20,3 +20,4 @@ classes/
 .settings
 *.launch
 /forge/mods/
+/forge/src/main/java/net/mehvahdjukaar/supplementaries/forge/VibeCheck.java
