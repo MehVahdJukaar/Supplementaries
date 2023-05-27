@@ -138,6 +138,8 @@ dependencies {
     modImplementation("curse.maven:autoreglib-250363:4100299")
     modImplementation("curse.maven:quark-oddities-301051:3575623")
     modImplementation("curse.maven:quark-243121:4551115")
+    modImplementation("curse.maven:vanillatweaks-272637:4438981")
+
     //modImplementation("vazkii.quark:Quark:3.4-400")
 
     modImplementation("curse.maven:framedblocks-441647:3881493")
@@ -147,10 +149,10 @@ dependencies {
 
     modCompileOnly("curse.maven:balm-531761:3881348")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
-    modImplementation("curse.maven:additional-banners-230137:3901622")
+   // modImplementation("curse.maven:additional-banners-230137:3901622")
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     modImplementation("curse.maven:the-bumblezone-forge-362479:4103196")
-    modImplementation("curse.maven:bookshelf-228525:3927538")
+   // modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-362528:3941638")
     modImplementation("curse.maven:map-atlases-forge-519759:3949437")
     modImplementation("curse.maven:create-328085:4547147")
@@ -158,7 +160,7 @@ dependencies {
     modImplementation("curse.maven:terrablender-563928:4013816")
     modImplementation("curse.maven:tetra-289712:4414851")
     modImplementation("curse.maven:mutil-351914:3941314")
-    modImplementation("curse.maven:breezy-690628:4055467")
+    modCompileOnly("curse.maven:breezy-690628:4055467")
     modImplementation("curse.maven:geckolib-388172:4064451")
     modImplementation("curse.maven:farmers-respite-551453:4081312")
     //modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")

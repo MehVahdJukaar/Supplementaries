@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VibeCheck;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.worldgen.DimensionTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
@@ -196,7 +198,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onWorldLoad(LevelEvent.Load event){
-        if(event.getLevel().isClientSide()) {
+        if(event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()) {
             VibeCheck.checkVibe((Level) event.getLevel());
         }
     }
