@@ -12,7 +12,7 @@ public class VibeChecker {
     //I hate this. I've got to do what I've got to do. Cant stand random reports anymore and mods wont work like this anyways
     private static void crashIfFabricRenderingAPIHasBeenNuked() {
         if (PlatformHelper.isModLoaded("sodium") && !PlatformHelper.isModLoaded("indium")) {
-            throw new IllegalStateException("You seem to have installed Sodium which breaks fabric rendering API." +
+            throw new UnsupportedModException("You seem to have installed Sodium which breaks fabric rendering API." +
                     "To fix you must install Indium as Supplementaries, as many other mods, rely on said API");
         }
     }
@@ -22,7 +22,14 @@ public class VibeChecker {
     private static void crashWhenStolenMod() {
         String s = "creaturesfromthesnow";
         if (PlatformHelper.isModLoaded(s)) {
-            throw new IllegalStateException("The mod "+s+" contains stolen assets and code from Frozen Up which is ARR. Enforcing its license by refusing to continue further");
+            throw new UnsupportedModException("The mod "+s+" contains stolen assets and code from Frozen Up which is ARR. Enforcing its license by refusing to continue further");
+        }
+    }
+
+    private static class UnsupportedModException extends RuntimeException{
+
+        public UnsupportedModException(String s) {
+            super(s);
         }
     }
 }
