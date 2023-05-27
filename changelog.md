@@ -1,1 +1,2 @@
-literally no change. just trying to recompile. idk why it crashes for some with vanilla stuff i just updated creae module from .10 ...
+- fixed sack drop in making them lose their item tag (including name)
+- you can put berries and jam onto pancakes
