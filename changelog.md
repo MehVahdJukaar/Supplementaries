@@ -1,2 +1,1 @@
-- fixed sack drop in making them lose their item tag (including name)
-- you can put berries and jam onto pancakes
+less warnings
