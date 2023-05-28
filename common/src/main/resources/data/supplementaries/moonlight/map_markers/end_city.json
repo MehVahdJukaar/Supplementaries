@@ -1,3 +1,4 @@
 {
-  "id": "supplementaries:end_city"
+  "target_structures": "#minecraft:end_city",
+  "map_color": "0x9c73ab"
 }

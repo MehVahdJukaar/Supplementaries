@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
@@ -82,47 +83,6 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     public static final int SEARCH_RADIUS = 100;
     private static final List<AdventurerMapTrade> CUSTOM_MAPS_TRADES = new ArrayList<>();
 
-    private static final Map<TagKey<Structure>,
-            Pair<ResourceLocation, Integer>> DEFAULT_STRUCTURE_MARKERS = new HashMap<>();
-
-
-    private static void associateStructureMarker(TagKey<Structure> tag, ResourceLocation res, int color) {
-        DEFAULT_STRUCTURE_MARKERS.put(tag, Pair.of(res, color));
-    }
-
-    static {
-        associateStructureMarker(StructureTags.SHIPWRECK, ModMapMarkers.SHIPWRECK_TYPE, 0x34200f);
-        associateStructureMarker(ModTags.ANCIENT_CITY, ModMapMarkers.ANCIENT_CITY_TYPE, 0x063970);
-        associateStructureMarker(ModTags.IGLOO, ModMapMarkers.IGLOO_TYPE, 0x99bdc2);
-        associateStructureMarker(StructureTags.RUINED_PORTAL, ModMapMarkers.RUINED_PORTAL_TYPE, 0x5f30b5);
-        associateStructureMarker(StructureTags.VILLAGE, ModMapMarkers.VILLAGE_TYPE, 0xba8755);
-        associateStructureMarker(StructureTags.OCEAN_RUIN, ModMapMarkers.OCEAN_RUIN_TYPE, 0x3a694d);
-        associateStructureMarker(ModTags.PILLAGER_OUTPOST, ModMapMarkers.PILLAGER_OUTPOST_TYPE, 0x1f1100);
-        associateStructureMarker(ModTags.DESERT_PYRAMID, ModMapMarkers.DESERT_PYRAMID_TYPE, 0x806d3f);
-        associateStructureMarker(ModTags.JUNGLE_TEMPLE, ModMapMarkers.JUNGLE_TEMPLE_TYPE, 0x526638);
-        associateStructureMarker(ModTags.BASTION_REMNANT, ModMapMarkers.BASTION_TYPE, 0x2c292f);
-        associateStructureMarker(ModTags.END_CITY, ModMapMarkers.END_CITY_TYPE, 0x9c73ab);
-        associateStructureMarker(ModTags.SWAMP_HUT, ModMapMarkers.SWAMP_HUT_TYPE, 0x1b411f);
-        associateStructureMarker(ModTags.NETHER_FORTRESS, ModMapMarkers.NETHER_FORTRESS, 0x3c080b);
-        associateStructureMarker(StructureTags.MINESHAFT, ModMapMarkers.MINESHAFT_TYPE, 0x808080);
-    }
-
-    private static Pair<ResourceLocation, Integer> getStructureMarker(Holder<Structure> structure) {
-        ResourceLocation res = structure.unwrapKey().get().location();
-        int color = 0;
-        for (var v : DEFAULT_STRUCTURE_MARKERS.entrySet()) {
-            if (structure.is(v.getKey())) {
-                res = v.getValue().getFirst();
-                color = v.getValue().getSecond();
-            }
-        }
-        return Pair.of(res, color);
-    }
-
-    private static Pair<MapDecorationType<?, ?>, Integer> getStructureMarker(TagKey<Structure> tag) {
-        var g = DEFAULT_STRUCTURE_MARKERS.getOrDefault(tag, Pair.of(new ResourceLocation("selene:generic_structure"), -1));
-        return Pair.of(MapDecorationRegistry.get(g.getFirst()), g.getSecond());
-    }
 
     public static void addTradesCallback() {
 
@@ -207,10 +167,10 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         //adds custom decoration
         ResourceLocation decoId;
         if (vanillaDeco == null) {
-            var s = getStructureMarker(structure);
-            decoId = s.getFirst();
+            var type = MapDecorationRegistry.getAssociatedType(structure);
+            decoId = Utils.getID(type);
             if(color == 0){
-                color = s.getSecond();
+                color = type.getDefaultMapColor();
             }
         } else {
             //vanilla deco
@@ -248,13 +208,17 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
                 } else if (structureName.getPath().equals("woodland_mansion")) {
                     MapItemSavedData.addTargetDecoration(stack, pos, "+", MapDecoration.Type.MANSION);
                 } else {
-                    //adds custom decoration
+                    //adds custom idecoration
 
-                    var decoration = getStructureMarker(destination);
+                    MapDecorationType<?,?> type = MapDecorationRegistry.getGenericStructure();
+                   for(var v :  serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(destination)){
+                       type = MapDecorationRegistry.getAssociatedType(v);
+                       break;
+                   }
 
-                    int color = mapColor == 0xffffff ? decoration.getSecond() : mapColor;
+                    int color = mapColor == 0xffffff ? type.getDefaultMapColor() : mapColor;
                     if (mapMarker == null) {
-                        MapHelper.addDecorationToMap(stack, toPos, decoration.getFirst(), color);
+                        MapHelper.addDecorationToMap(stack, toPos, Utils.getID(type), color);
                     } else {
                         MapHelper.addDecorationToMap(stack, toPos, mapMarker, color);
                     }

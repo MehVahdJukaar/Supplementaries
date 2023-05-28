@@ -28,10 +28,10 @@ public class FlagMarker extends NamedMapBlockMarker<ColoredDecoration> {
     }
 
     @Override
-    public CompoundTag saveToNBT(CompoundTag compoundnbt) {
-        super.saveToNBT(compoundnbt);
-        compoundnbt.putString("Color", this.color.getName());
-        return compoundnbt;
+    public CompoundTag saveToNBT(CompoundTag compound) {
+        super.saveToNBT(compound);
+        compound.putString("Color", this.color.getName());
+        return compound;
     }
 
     @Override

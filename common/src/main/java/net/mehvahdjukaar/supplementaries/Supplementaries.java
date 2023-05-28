@@ -70,7 +70,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
+AdventurerMapsHandler
         Credits.fetchFromServer();
 
         CommonConfigs.init();

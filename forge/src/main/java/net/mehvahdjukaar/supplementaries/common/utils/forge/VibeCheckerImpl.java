@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 
@@ -16,7 +17,7 @@ public class VibeCheckerImpl {
             new BakedQuad(new int[]{}, 0, Direction.UP, null, true, false);
         } catch (Exception e) {
             if (e instanceof NoSuchMethodException) {
-                throw new Error("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
+                throw new VibeChecker.UnsupportedModError("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
             }
         }
     }

@@ -21,8 +21,6 @@ public class ModMapMarkers {
             Supplementaries.res("flag"), FlagMarker::new, FlagMarker::getFromWorld, ColoredDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("nether_portal"), NetherPortalMarker::new, NetherPortalMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<CustomMapDecoration, EndPortalMarker> END_PORTAL_DECORATION_TYPE = new CustomDecorationType<>(
-            Supplementaries.res("end_portal"), EndPortalMarker::new, EndPortalMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, BeaconMarker> BEACON_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("beacon"), BeaconMarker::new, BeaconMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<ColoredDecoration, CeilingBannerMarker> BANNER_DECORATION_TYPE = new CustomDecorationType<>(
@@ -31,16 +29,6 @@ public class ModMapMarkers {
             Supplementaries.res("chest"), ChestMarker::new, ChestMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
-
-    //  public static final CustomDecorationType<CustomMapDecoration, ConduitMarker> CONDUIT_DECORATION_TYPE = new CustomDecorationType<>(
-    //          Supplementaries.res("conduit"), ConduitMarker::new, ConduitMarker::getFromWorld, CustomMapDecoration::new);
-    // public static final CustomDecorationType<CustomMapDecoration, RespawnAnchorMarker> RESPAWN_ANCHOR_DECORATION_TYPE = new CustomDecorationType<>(
-    //          Supplementaries.res("respawn_anchor"), RespawnAnchorMarker::new, RespawnAnchorMarker::getFromWorld, CustomMapDecoration::new);
-    //public static final CustomDecorationType<CustomMapDecoration, LodestoneMarker> LODESTONE_DECORATION_TYPE = new CustomDecorationType<>(
-    //        Supplementaries.res("lodestone"), LodestoneMarker::new, LodestoneMarker::getFromWorld, CustomMapDecoration::new);
-    //public static final CustomDecorationType<CustomMapDecoration, EndGatewayMarker> END_GATEWAY_DECORATION_TYPE = new CustomDecorationType<>(
-    //        Supplementaries.res("end_gateway"), EndGatewayMarker::new, EndGatewayMarker::getFromWorld, CustomMapDecoration::new);
-
 
     //simple for structures. Handled via datapack
     public static final ResourceLocation VILLAGE_TYPE = Supplementaries.res("village");
@@ -68,7 +56,6 @@ public class ModMapMarkers {
         MapDecorationRegistry.registerCustomType(BANNER_DECORATION_TYPE);
         MapDecorationRegistry.registerCustomType(CHEST_DECORATION_TYPE);
         MapDecorationRegistry.registerCustomType(WAYSTONE_DECORATION_TYPE);
-        MapDecorationRegistry.registerCustomType(END_PORTAL_DECORATION_TYPE);
     }
 
 }
