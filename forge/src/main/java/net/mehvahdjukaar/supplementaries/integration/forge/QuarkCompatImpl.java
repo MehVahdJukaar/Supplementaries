@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
@@ -319,7 +320,12 @@ public class QuarkCompatImpl {
         }
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @org.jetbrains.annotations.Nullable String name, int color) {
-        return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown,zoom, destinationType, name, color);
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> targets,
+                                                int radius, boolean skipKnown, int zoom,
+                                                MapDecoration.Type destinationType, @Nullable String name, int color) {
+        return CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown,zoom, destinationType, name, color);
+    }
+
+    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
     }
 }

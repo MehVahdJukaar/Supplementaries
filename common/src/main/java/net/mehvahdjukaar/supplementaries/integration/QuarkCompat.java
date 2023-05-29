@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
@@ -17,7 +20,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Contract;
-
 import org.jetbrains.annotations.Nullable;
 
 public class QuarkCompat {
@@ -113,10 +115,27 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, @Nullable TagKey<Structure> destination,
+                                                int radius, boolean skipKnown, int zoom,
+                                                MapDecoration.Type destinationType, @Nullable String name, int color) {
+        HolderSet<Structure> targets = null;
+        if (destination != null) {
+            var v = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destination);
+            if (v.isEmpty()) {
+                return ItemStack.EMPTY;
+            } else targets = v.get();
+        }
+        return makeAdventurerQuill(serverLevel, targets, radius, skipKnown, zoom, destinationType, name, color);
+    }
+
     @ExpectPlatform
-    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination,
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, @Nullable HolderSet<Structure> targets,
                                                 int radius, boolean skipKnown, int zoom,
                                                 MapDecoration.Type destinationType, @Nullable String name, int color) {
         throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
     }
 }

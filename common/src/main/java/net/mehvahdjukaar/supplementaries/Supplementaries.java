@@ -89,14 +89,13 @@ public class Supplementaries {
     }
     //yes this is where I write crap. deal with it XD
 
-    //TODO: merge FD planters
-
+    //Tree chat gtp
+    //tree splash text
     //lectern colors in gui
 
-    //soap wolves
+    //dummy goes down and hay particles
 
     //rope slide animation and sound instance
-    //jeed multi
     //finish bedbugs
     //blaze head ghast
     //spring launcher sand auto launch

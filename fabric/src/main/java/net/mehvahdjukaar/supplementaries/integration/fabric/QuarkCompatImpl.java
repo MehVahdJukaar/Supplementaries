@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
@@ -86,8 +87,8 @@ public class QuarkCompatImpl {
     public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @Nullable String name, int color) {
-        return ItemStack.EMPTY;
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> targets, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @Nullable String name, int color) {
+    return ItemStack.EMPTY;
     }
 
 }

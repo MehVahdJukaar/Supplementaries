@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureManager;
@@ -22,42 +24,40 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
 
 public class StructureLocator {
 
-    private static int dist(BlockPos pos1, BlockPos pos2) {
-        int i = pos2.getX() - pos1.getX();
-        int j = pos2.getZ() - pos1.getZ();
-        return (int) (Mth.sqrt((float) (i * i + j * j)));
-    }
+    private static final Comparator<Vector2i> COMPARATOR = (o1, o2) -> Float.compare(o1.lengthSquared(), o2.lengthSquared());
 
     @Nullable
     public static Pair<BlockPos, Holder<Structure>> findNearestRandomMapFeature(
-            ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
+            ServerLevel level, @NotNull HolderSet<Structure> targets, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated) {
-        var found = findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, 1, false);
-
+        var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
+                newlyGenerated, 1, true);
         if (!found.isEmpty()) return found.get(0);
         return null;
     }
 
     public static List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
-            ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount) {
-        return findNearestMapFeatures(level, tagKey, pos, maximumChunkDistance, newlyGenerated, requiredCount, false);
+            ServerLevel level, @NotNull TagKey<Structure> tagKey, BlockPos pos,
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
+
+        var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey).orElse(null);
+        if (targets == null) return List.of();
+        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated, requiredCount, selectRandom);
     }
 
 
-    private static final Comparator<Vector2i> COMPARATOR = (o1, o2) -> Float.compare(o1.lengthSquared(), o2.lengthSquared());
-
     public static List<Pair<BlockPos, Holder<Structure>>> findNearestMapFeatures(
-            ServerLevel level, TagKey<Structure> tagKey, BlockPos pos,
+            ServerLevel level, HolderSet<Structure> taggedStructures, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
 
         List<Pair<BlockPos, Holder<Structure>>> foundStructures = new ArrayList<>();
@@ -65,10 +65,8 @@ public class StructureLocator {
         if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return foundStructures;
         }
-        Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);
-        if (taggedStructures.isEmpty()) return foundStructures;
 
-        List<Holder<Structure>> selectedTargets = taggedStructures.get().stream().toList();
+        List<Holder<Structure>> selectedTargets = taggedStructures.stream().toList();
 
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
         double maxDist = Double.MAX_VALUE;

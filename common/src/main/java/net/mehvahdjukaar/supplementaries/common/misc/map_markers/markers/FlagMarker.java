@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class FlagMarker extends NamedMapBlockMarker<ColoredDecoration> {
 
-    private DyeColor color;
+    private DyeColor color = DyeColor.WHITE;
 
     public FlagMarker() {
         super(ModMapMarkers.FLAG_DECORATION_TYPE);

@@ -77,15 +77,6 @@ public class ModTags {
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
-    public static final TagKey<Structure> BASTION_REMNANT = MCstructureTag("bastion_remnant");
-    public static final TagKey<Structure> DESERT_PYRAMID = MCstructureTag("desert_pyramid");
-    public static final TagKey<Structure> END_CITY = MCstructureTag("end_city");
-    public static final TagKey<Structure> NETHER_FORTRESS = MCstructureTag("fortress");
-    public static final TagKey<Structure> IGLOO = MCstructureTag("igloo");
-    public static final TagKey<Structure> ANCIENT_CITY = MCstructureTag("ancient_city");
-    public static final TagKey<Structure> JUNGLE_TEMPLE = MCstructureTag("jungle_pyramid");
-    public static final TagKey<Structure> PILLAGER_OUTPOST = MCstructureTag("pillager_outpost");
-    public static final TagKey<Structure> SWAMP_HUT = MCstructureTag("swamp_hut");
 
     public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
     public static final TagKey<Potion> TIPPED_SPIKES_POTION_BLACKLIST = potionTag("tipped_spikes_blacklist");

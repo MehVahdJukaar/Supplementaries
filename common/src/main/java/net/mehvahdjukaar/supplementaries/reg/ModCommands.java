@@ -10,7 +10,7 @@ import net.minecraft.commands.Commands;
 
 public class ModCommands {
 
-    public static void init(){
+    public static void init() {
         RegHelper.addCommandRegistration(ModCommands::register);
     }
 
@@ -18,7 +18,7 @@ public class ModCommands {
         dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
-                                    .requires((p) -> p.hasPermission(2))
+                                .requires((p) -> p.hasPermission(2))
                                 .then(ChangeGlobeSeedCommand.register(dispatcher))
                                 .then(ResetGlobeSeedCommand.register(dispatcher))
                         )
@@ -27,6 +27,12 @@ public class ModCommands {
                         .then(IUsedToRollTheDice.register(dispatcher))
                         .then(AddCageMobCommand.register(dispatcher, context))
                         .then(RecordSongCommand.register(dispatcher))
+                        .then(Commands.literal("map")
+                                .requires((p) -> p.hasPermission(2))
+                                .then(MapMarkerCommand.register(dispatcher, context))
+                                .then(StructureMapCommand.register(dispatcher, context))
+                        )
+
         );
     }
 }

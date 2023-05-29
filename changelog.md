@@ -1,3 +1,3 @@
-- Fixed hanging sign animations using wrong angles
-- You can place berries and modded jams on pancakes
-- Added some new map markers. updated to the new system
+- added command to add map markers to map
+- added command to generate structure leading maps
+- fixed some issues related to map markers

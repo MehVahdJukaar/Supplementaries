@@ -4,14 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -19,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +25,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -42,7 +40,10 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
@@ -122,7 +123,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             int price = random.nextInt(maxPrice - minPrice + 1) + minPrice;
 
             if (entity.level instanceof ServerLevel serverLevel) {
-                ItemStack itemstack = createMapOrQuill(entity.blockPosition(), serverLevel, null,
+                ItemStack itemstack = createMapOrQuill(serverLevel, entity.blockPosition(), null,
                         2, null, "filled_map.adventure", 0x78151a);
 
                 int uses = CommonConfigs.Tweaks.QUILL_MAX_TRADES.get();
@@ -137,11 +138,11 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         }
     }
 
-    private static ItemStack createMapOrQuill(BlockPos pos, ServerLevel serverLevel, @Nullable TagKey<Structure> tag,
-                                              int zoom, @Nullable ResourceLocation mapMarker,
-                                              @Nullable String name, int color) {
+    public static ItemStack createMapOrQuill(ServerLevel serverLevel, BlockPos pos, @Nullable HolderSet<Structure> targets,
+                                             int zoom, @Nullable ResourceLocation mapMarker,
+                                             @Nullable String name, int color) {
         if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
-            var item = QuarkCompat.makeAdventurerQuill(serverLevel, tag,
+            var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
                     SEARCH_RADIUS, true, zoom, null, name, color);
             item.setHoverName(Component.translatable(name));
             return item;
@@ -150,8 +151,14 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         if (!serverLevel.getServer().getWorldData().worldGenOptions().generateStructures())
             return ItemStack.EMPTY;
 
+        if (targets == null) {
+            targets = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(ModTags.ADVENTURE_MAP_DESTINATIONS)
+                    .orElse(null);
+            if (targets == null) targets = HolderSet.direct();
+        }
+
         var found = StructureLocator.findNearestRandomMapFeature(
-                serverLevel, tag, pos, SEARCH_RADIUS, true);
+                serverLevel, targets, pos, SEARCH_RADIUS, true);
 
         if (found != null) {
             BlockPos toPos = found.getFirst();
@@ -184,16 +191,19 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
 
-    public static ItemStack createCustomMapForTrade(Level world, BlockPos pos, ResourceLocation structureName,
+    public static ItemStack createCustomMapForTrade(Level level, BlockPos pos, ResourceLocation structureName,
                                                     @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
 
-        if (world instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             var destination = TagKey.create(Registries.STRUCTURE, structureName);
             String name = mapName == null ?
                     "filled_map." + structureName.getPath().toLowerCase(Locale.ROOT) : mapName;
+            var targets = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                    .getTag(destination).orElse(null);
 
-            return createMapOrQuill(pos, serverLevel, destination,
-                    2, mapMarker, name, mapColor);
+            if (targets != null) {
+                return createMapOrQuill(serverLevel, pos, targets, 2, mapMarker, name, mapColor);
+            }
         }
         return ItemStack.EMPTY;
     }

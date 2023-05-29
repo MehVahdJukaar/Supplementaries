@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
@@ -24,7 +23,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
@@ -442,10 +440,10 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag, int searchRadius,
+    public static ItemStack forStructure(ServerLevel level, @Nullable HolderSet<Structure> targets, int searchRadius,
                                          boolean skipKnown, int zoom, @Nullable MapDecoration.Type deco,
                                          @Nullable String name, int color) {
-        ItemStack stack = forStructure(level, tag);
+        ItemStack stack = forStructure(level, targets);
         var t = stack.getOrCreateTag();
         t.putInt(TAG_SEARCH_RADIUS, searchRadius);
         t.putBoolean(TAG_SKIP_KNOWN, skipKnown);
@@ -473,7 +471,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag) {
+    public static ItemStack forStructure(ServerLevel level, @Nullable HolderSet<Structure> tag) {
         ItemStack stack = QuarkCompatImpl.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
         if (tag != null) {
             //adventurer ones are always random
@@ -486,25 +484,24 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     @Nullable
     private static String selectRandomTarget(ServerLevel level, TagKey<Structure> tag) {
-        Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess()
-                .registryOrThrow(Registries.STRUCTURE).getTag(tag);
-        if (taggedStructures.isPresent()) {
+        var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tag);
+        return targets.map(holders -> selectRandomTarget(level, holders)).orElse(null);
+    }
 
-            List<Holder<Structure>> reachable = new ArrayList<>();
-            ServerChunkCache source = level.getChunkSource();
-            for (var s : taggedStructures.get()) {
-                var randomState = level.getChunkSource().getGeneratorState();
-                if (!randomState.getPlacementsForStructure(s).isEmpty()) {
-                    reachable.add(s);
-                }
-            }
-            if (!reachable.isEmpty()) {
-                Holder<Structure> selected = reachable.get(level.random.nextInt(reachable.size()));
-                return selected.unwrapKey().get().location().toString();
+    @Nullable
+    private static String selectRandomTarget(ServerLevel level, HolderSet<Structure> taggedStructures) {
+        List<Holder<Structure>> reachable = new ArrayList<>();
+        for (var s : taggedStructures) {
+            var randomState = level.getChunkSource().getGeneratorState();
+            if (!randomState.getPlacementsForStructure(s).isEmpty()) {
+                reachable.add(s);
             }
         }
+        if (!reachable.isEmpty()) {
+            Holder<Structure> selected = reachable.get(level.random.nextInt(reachable.size()));
+            return selected.unwrapKey().get().location().toString();
+        }
         return null;
-
     }
 
     //in the end we dont even need this. iterating over those 3 looks is not what slows this down

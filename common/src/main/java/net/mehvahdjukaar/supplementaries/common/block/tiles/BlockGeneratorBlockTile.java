@@ -48,7 +48,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                 try {
                     tile.threadResult.set(StructureLocator.findNearestMapFeatures(
                             serverLevel, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
-                            false, 2));
+                            false, 2, false));
                 } catch (Exception ignored) {
                 }
             });

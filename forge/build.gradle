@@ -138,10 +138,10 @@ dependencies {
     modCompileOnly("curse.maven:autoreglib-250363:4100299")
     modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     //modImplementation("curse.maven:quark-243121:4463411")
-    modImplementation("curse.maven:quark-243121:4551115")
+    modCompileOnly("curse.maven:quark-243121:4551115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
-    modCompileOnly("curse.maven:haunted-harvest-541753:4556878")
+    modImplementation("curse.maven:haunted-harvest-541753:4557328")
     modCompileOnly("curse.maven:waystones-245755:3835119")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")

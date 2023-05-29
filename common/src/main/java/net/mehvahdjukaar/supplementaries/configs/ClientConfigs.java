@@ -324,7 +324,6 @@ public class ClientConfigs {
             FLAG_BANNER = builder.comment("Makes flags render as sideways banner. Ignores many of the previously defined configs")
                     .define("render_as_banner", false);
             builder.pop();
-            //TODO: add more(hourGlass, sawying blocks...)
 
             builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
