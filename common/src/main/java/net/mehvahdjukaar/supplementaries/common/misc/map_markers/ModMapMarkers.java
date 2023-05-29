@@ -30,22 +30,6 @@ public class ModMapMarkers {
     public static final CustomDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
 
-    //simple for structures. Handled via datapack
-    public static final ResourceLocation VILLAGE_TYPE = Supplementaries.res("village");
-    public static final ResourceLocation JUNGLE_TEMPLE_TYPE = Supplementaries.res("jungle_temple");
-    public static final ResourceLocation DESERT_PYRAMID_TYPE = Supplementaries.res("desert_pyramid");
-    public static final ResourceLocation SHIPWRECK_TYPE = Supplementaries.res("shipwreck");
-    public static final ResourceLocation RUINED_PORTAL_TYPE = Supplementaries.res("ruined_portal");
-    public static final ResourceLocation IGLOO_TYPE = Supplementaries.res("igloo");
-    public static final ResourceLocation END_CITY_TYPE = Supplementaries.res("end_city");
-    public static final ResourceLocation NETHER_FORTRESS = Supplementaries.res("nether_fortress");
-    public static final ResourceLocation PILLAGER_OUTPOST_TYPE = Supplementaries.res("pillager_outpost");
-    public static final ResourceLocation BASTION_TYPE = Supplementaries.res("bastion");
-    public static final ResourceLocation STRONGHOLD_TYPE = Supplementaries.res("stronghold");
-    public static final ResourceLocation MINESHAFT_TYPE = Supplementaries.res("mineshaft");
-    public static final ResourceLocation SWAMP_HUT_TYPE = Supplementaries.res("swamp_hut");
-    public static final ResourceLocation OCEAN_RUIN_TYPE = Supplementaries.res("ocean_ruin");
-    public static final ResourceLocation ANCIENT_CITY_TYPE = Supplementaries.res("ancient_city");
 
     public static void init() {
         MapDecorationRegistry.registerCustomType(SIGN_POST_DECORATION_TYPE);

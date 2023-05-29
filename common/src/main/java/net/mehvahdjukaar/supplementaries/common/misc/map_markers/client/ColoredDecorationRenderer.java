@@ -11,7 +11,8 @@ public class ColoredDecorationRenderer extends DecorationRenderer<ColoredDecorat
     }
 
     @Override
-    public int getMapColor(ColoredDecoration decoration) {
+    public int getColor(ColoredDecoration decoration) {
         return decoration.getColorValue();
     }
+
 }

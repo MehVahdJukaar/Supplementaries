@@ -1,5 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
+import net.mehvahdjukaar.moonlight.api.map.client.MapDecorationClientManager;
+import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -16,7 +22,11 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +39,8 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
+
+import java.nio.file.Path;
 
 public class ClientEventsForge {
 
@@ -88,6 +100,7 @@ public class ClientEventsForge {
     public static void clientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientEvents.onClientTick(Minecraft.getInstance());
+
         }
     }
 

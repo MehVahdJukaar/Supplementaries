@@ -1,1 +1,3 @@
-- fixed crash with old haning signs
+- Fixed hanging sign animations using wrong angles
+- You can place berries and modded jams on pancakes
+- Added some new map markers. updated to the new system

@@ -4,14 +4,10 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
-import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -19,37 +15,15 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.minecraft.client.RecipeBookCategories;
-import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.client.renderer.blockentity.DecoratedPotRenderer;
-import net.minecraft.client.renderer.blockentity.SuspiciousSandRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.stats.RecipeBook;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.DecoratedPotRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.block.DecoratedPotBlock;
-import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
-import net.minecraft.world.level.block.entity.SuspiciousSandBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 
 public class Supplementaries {
@@ -70,7 +44,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-AdventurerMapsHandler
+
         Credits.fetchFromServer();
 
         CommonConfigs.init();
@@ -105,7 +79,7 @@ AdventurerMapsHandler
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
 
-            ClientHelper.addClientReloadListener(WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
+            ClientHelper.addClientReloadListener(() -> WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"));
             } catch (Exception e) {

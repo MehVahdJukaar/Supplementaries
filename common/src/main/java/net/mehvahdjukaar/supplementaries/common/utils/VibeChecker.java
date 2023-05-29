@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +38,7 @@ public class VibeChecker {
                 i.tick();
             }
         }catch (Exception e){
+            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intented");
             e.printStackTrace();
         }
     }
@@ -46,7 +48,7 @@ public class VibeChecker {
     private static void crashWhenStolenMod() {
         String s = "creaturesfromthesnow";
         if (PlatHelper.isModLoaded(s)) {
-            throw new VibeChecker.UnsupportedModError("The mod "+s+" contains stolen assets and code from Frozen Up which is ARR. Enforcing its license by refusing to continue further");
+            Supplementaries.LOGGER.error("[!!!] The mod "+s+" contains stolen assets and code from Frozen Up which is ARR.");
         }
     }
 

@@ -338,7 +338,7 @@ public class ClientConfigs {
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_lanterns", false);
 
-            WALL_LANTERN_CONFIG = builder.defineObject("physics",
+            WALL_LANTERN_CONFIG = builder.defineObject("swing_physics",
                     PendulumAnimation.Config::new,
                     PendulumAnimation.Config.CODEC);
             builder.pop();
@@ -347,7 +347,7 @@ public class ClientConfigs {
             ENHANCED_HANGING_SIGNS = builder.comment("Modifies vanilla hanging signs to make them like old Supplementaries ones")
                     .define("enabled", true);
 
-            HANGING_SIGN_CONFIG = builder.defineObject("physics",
+            HANGING_SIGN_CONFIG = builder.defineObject("swing_physics",
                     PendulumAnimation.Config::new,
                     PendulumAnimation.Config.CODEC);
 
